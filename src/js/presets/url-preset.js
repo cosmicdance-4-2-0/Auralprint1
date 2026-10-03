@@ -2,6 +2,7 @@ import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEM
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
 import { preferences, replacePreferences, resolveSettings, sanitizeOrbBandIds, normalizeOrbDef } from "../core/preferences.js";
+import { normalizeOrbCollection } from "../core/orb-collection.js";
 
 /* =============================================================================
    URL Presets (v2/v3/v4/v5 compatible)
@@ -180,7 +181,7 @@ const UrlPreset = (() => {
       // into preferences. New fields must be added there first, then here, then
       // in writeHashFromPrefs, then PRESET_SCHEMA_VERSION must be bumped.
       const defaults = CONFIG.defaults.orbs;
-      next.orbs = incoming.orbs.map((orb, i) => {
+      next.orbs = normalizeOrbCollection(incoming.orbs.map((orb, i) => {
         const mappedOrb = (orb && typeof orb === "object") ? deepClone(orb) : orb;
         if (mappedOrb && !Array.isArray(mappedOrb.bandIds) && Array.isArray(mappedOrb.bandNames)) {
           mappedOrb.bandIds = sanitizeOrbBandIds(undefined, mappedOrb.bandNames);
@@ -198,7 +199,7 @@ const UrlPreset = (() => {
           mappedOrb.trace = { ...base.trace, ...(incoming.trace || {}) };
         }
         return normalizeOrbDef(mappedOrb, defaults[i % defaults.length]);
-      });
+      }));
     }
 
     if (next.bands && typeof next.bands === "object") delete next.bands.names;
@@ -235,10 +236,7 @@ const UrlPreset = (() => {
     // be added to normalizeOrbDef's return object, sanitizeAndApply, and trigger a
     // PRESET_SCHEMA_VERSION bump so migration code stays honest.
     if (Array.isArray(encodedPrefs.orbs)) {
-      encodedPrefs.orbs = encodedPrefs.orbs.map((orb, i) => {
-        const fallback = CONFIG.defaults.orbs[i % CONFIG.defaults.orbs.length];
-        return normalizeOrbDef(orb, fallback);
-      });
+      encodedPrefs.orbs = normalizeOrbCollection(encodedPrefs.orbs);
     }
 
     const hash = encodePrefsToHash(encodedPrefs);

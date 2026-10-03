@@ -2,6 +2,7 @@ import { clamp, fmt, deepClone, rgb01ToCss } from "../core/utils.js";
 import { RAD_TO_DEG } from "../core/constants.js";
 import { CONFIG } from "../core/config.js";
 import { preferences, runtime, resolveSettings, BAND_NAMES, replacePreferences, normalizeOrbDef } from "../core/preferences.js";
+import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { state } from "../core/state.js";
 import { UrlPreset } from "../presets/url-preset.js";
 import { BandBankController } from "../audio/band-bank-controller.js";
@@ -217,13 +218,15 @@ function readSourceUiModel({
 }
 
 function readBulkOrbValue(orbs, group, field) {
-  if (!Array.isArray(orbs) || !orbs.length) return { mixed: false, value: undefined };
+  if (!Array.isArray(orbs) || !orbs.length) return { available: false, mixed: false, value: undefined };
   const value = orbs[0][group][field];
-  return { mixed: orbs.some((orb) => orb[group][field] !== value), value };
+  return { available: true, mixed: orbs.some((orb) => orb[group][field] !== value), value };
 }
 
 function applyBulkOrbValue(orbs, group, field, value) {
+  if (!Array.isArray(orbs) || !orbs.length) return false;
   for (const orb of orbs) orb[group][field] = value;
+  return true;
 }
 
 const UI = (() => {
@@ -557,12 +560,9 @@ const UI = (() => {
   }
 
   function applyOrbPrefChange(orbIndex, reason, { structural = false } = {}) {
+    if (!Array.isArray(preferences.orbs) || !preferences.orbs[orbIndex]) return false;
     const defaults = CONFIG.defaults.orbs;
     const fallback = defaults[orbIndex % defaults.length];
-    if (!Array.isArray(preferences.orbs)) preferences.orbs = deepClone(defaults);
-    while (preferences.orbs.length <= orbIndex) {
-      preferences.orbs.push(deepClone(defaults[preferences.orbs.length % defaults.length]));
-    }
     preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], fallback);
     applyPrefs(reason);
     if (structural) {
@@ -571,12 +571,17 @@ const UI = (() => {
     } else {
       syncOrbsFromSettings();
     }
+    return true;
   }
 
   function refreshOrbPanelUi(p) {
-    const defaults = CONFIG.defaults.orbs;
-    const orb0 = (p.orbs && p.orbs[0]) ? p.orbs[0] : defaults[0];
-    const orb1 = (p.orbs && p.orbs[1]) ? p.orbs[1] : defaults[1];
+    const count = Array.isArray(p.orbs) ? p.orbs.length : 0;
+    ui.simStatus.textContent = count === 0 ? "No Orbs in scene" : (count > 2 ? `Showing 2 of ${count} Orbs` : `Showing ${count} Orb${count === 1 ? "" : "s"}`);
+    ui.orbCards.forEach((card, index) => { card.hidden = index >= count; });
+    const orb0 = p.orbs && p.orbs[0];
+    const orb1 = p.orbs && p.orbs[1];
+
+    if (orb0) {
 
     ui.selOrb0Chan.value = orb0.chanId;
     ui.valOrb0Chan.textContent = orb0.chanId;
@@ -592,7 +597,9 @@ const UI = (() => {
     ui.valOrb0CenterY.textContent = fmt(orb0.centerYFrac, 2);
     if (document.activeElement !== ui.txtOrb0Bands && ui.txtOrb0Bands.getAttribute("aria-invalid") !== "true") ui.txtOrb0Bands.value = formatOrbBandIdsText(orb0.bandIds);
     ui.valOrb0Bands.textContent = describeOrbBandSelection(orb0.bandIds);
+    }
 
+    if (orb1) {
     ui.selOrb1Chan.value = orb1.chanId;
     ui.valOrb1Chan.textContent = orb1.chanId;
     ui.selOrb1Chir.value = String(orb1.chirality);
@@ -607,9 +614,11 @@ const UI = (() => {
     ui.valOrb1CenterY.textContent = fmt(orb1.centerYFrac, 2);
     if (document.activeElement !== ui.txtOrb1Bands && ui.txtOrb1Bands.getAttribute("aria-invalid") !== "true") ui.txtOrb1Bands.value = formatOrbBandIdsText(orb1.bandIds);
     ui.valOrb1Bands.textContent = describeOrbBandSelection(orb1.bandIds);
+    }
   }
 
   function commitOrbBandIdsFromUi(orbIndex, reason) {
+    if (!Array.isArray(preferences.orbs) || !preferences.orbs[orbIndex]) return false;
     const input = orbIndex === 0 ? ui.txtOrb0Bands : ui.txtOrb1Bands;
     const valEl = orbIndex === 0 ? ui.valOrb0Bands : ui.valOrb1Bands;
     const parsed = parseBandSelection(input.value);
@@ -626,6 +635,7 @@ const UI = (() => {
     const normalized = preferences.orbs[orbIndex].bandIds;
     input.value = formatOrbBandIdsText(normalized);
     valEl.textContent = describeOrbBandSelection(normalized);
+    return true;
   }
 
   function syncOrbBandPickers() {
@@ -636,11 +646,13 @@ const UI = (() => {
     ui.orbPickerSettings = runtime.settings;
     ui.orbPickerEdges = state.bands.lowHz;
     ui.orbBandPickers.forEach((picker, index) => {
-      if (picker) picker.sync(preferences.orbs[index].bandIds);
+      const orb = preferences.orbs[index];
+      if (!orb) return;
+      if (picker) picker.sync(orb.bandIds);
       const input = index === 0 ? ui.txtOrb0Bands : ui.txtOrb1Bands;
       if (input) {
         input.setAttribute("aria-invalid", "false");
-        input.value = formatOrbBandIdsText(preferences.orbs[index].bandIds);
+        input.value = formatOrbBandIdsText(orb.bandIds);
       }
       const errorEl = document.getElementById(`orb${index}BandError`);
       if (errorEl) errorEl.textContent = "";
@@ -651,9 +663,7 @@ const UI = (() => {
     const { rebuildBandsOnDefinitionChange = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
-    for (let i = 0; i < preferences.orbs.length; i++) {
-      preferences.orbs[i] = normalizeOrbDef(preferences.orbs[i], CONFIG.defaults.orbs[i % CONFIG.defaults.orbs.length]);
-    }
+    preferences.orbs = normalizeOrbCollection(preferences.orbs);
 
     resolveSettings();
     syncOrbsFromSettings();
@@ -1496,6 +1506,12 @@ const UI = (() => {
 
     const bulk = (group, field, control, output, format) => {
       const model = readBulkOrbValue(p.orbs, group, field);
+      control.disabled = !model.available;
+      if (!model.available) {
+        output.textContent = "—";
+        if (control.type === "checkbox") control.indeterminate = false;
+        return model;
+      }
       if (!model.mixed) control.value = String(model.value);
       output.textContent = model.mixed ? "mixed" : format(model.value);
       if (control.type === "checkbox") {
@@ -1613,6 +1629,7 @@ const UI = (() => {
       document.getElementById(`orb${index}BandPicker`), {
         orbLabel: `Orb ${index + 1}`,
         onChange(ids) {
+          if (!preferences.orbs[index]) return;
           preferences.orbs[index].bandIds = ids;
           applyOrbPrefChange(index, `orb ${index + 1} bands`);
         },
@@ -2170,26 +2187,32 @@ const UI = (() => {
     }
 
     ui.selOrb0Chan.addEventListener("change", () => {
+      if (!preferences.orbs[0]) return;
       preferences.orbs[0].chanId = ui.selOrb0Chan.value;
       applyOrbPrefChange(0, "ORB0 channel", { structural: true });
     });
     ui.selOrb0Chir.addEventListener("change", () => {
+      if (!preferences.orbs[0]) return;
       preferences.orbs[0].chirality = Number(ui.selOrb0Chir.value);
       applyOrbPrefChange(0, "ORB0 chirality", { structural: true });
     });
     ui.rngOrb0Hue.addEventListener("input", () => {
+      if (!preferences.orbs[0]) return;
       preferences.orbs[0].hueOffsetDeg = Number(ui.rngOrb0Hue.value);
       applyOrbPrefChange(0, "ORB0 hue offset", { structural: false });
     });
     ui.selOrb0ColorSrc.addEventListener("change", () => {
+      if (!preferences.orbs[0]) return;
       preferences.orbs[0].colorSource = ui.selOrb0ColorSrc.value;
       applyOrbPrefChange(0, "ORB0 color source", { structural: false });
     });
     ui.rngOrb0CenterX.addEventListener("input", () => {
+      if (!preferences.orbs[0]) return;
       preferences.orbs[0].centerXFrac = Number(ui.rngOrb0CenterX.value);
       applyOrbPrefChange(0, "ORB0 center X", { structural: false });
     });
     ui.rngOrb0CenterY.addEventListener("input", () => {
+      if (!preferences.orbs[0]) return;
       preferences.orbs[0].centerYFrac = Number(ui.rngOrb0CenterY.value);
       applyOrbPrefChange(0, "ORB0 center Y", { structural: false });
     });
@@ -2197,26 +2220,32 @@ const UI = (() => {
       commitOrbBandIdsFromUi(0, "ORB0 band indices");
     });
     ui.selOrb1Chan.addEventListener("change", () => {
+      if (!preferences.orbs[1]) return;
       preferences.orbs[1].chanId = ui.selOrb1Chan.value;
       applyOrbPrefChange(1, "ORB1 channel", { structural: true });
     });
     ui.selOrb1Chir.addEventListener("change", () => {
+      if (!preferences.orbs[1]) return;
       preferences.orbs[1].chirality = Number(ui.selOrb1Chir.value);
       applyOrbPrefChange(1, "ORB1 chirality", { structural: true });
     });
     ui.rngOrb1Hue.addEventListener("input", () => {
+      if (!preferences.orbs[1]) return;
       preferences.orbs[1].hueOffsetDeg = Number(ui.rngOrb1Hue.value);
       applyOrbPrefChange(1, "ORB1 hue offset", { structural: false });
     });
     ui.selOrb1ColorSrc.addEventListener("change", () => {
+      if (!preferences.orbs[1]) return;
       preferences.orbs[1].colorSource = ui.selOrb1ColorSrc.value;
       applyOrbPrefChange(1, "ORB1 color source", { structural: false });
     });
     ui.rngOrb1CenterX.addEventListener("input", () => {
+      if (!preferences.orbs[1]) return;
       preferences.orbs[1].centerXFrac = Number(ui.rngOrb1CenterX.value);
       applyOrbPrefChange(1, "ORB1 center X", { structural: false });
     });
     ui.rngOrb1CenterY.addEventListener("input", () => {
+      if (!preferences.orbs[1]) return;
       preferences.orbs[1].centerYFrac = Number(ui.rngOrb1CenterY.value);
       applyOrbPrefChange(1, "ORB1 center Y", { structural: false });
     });

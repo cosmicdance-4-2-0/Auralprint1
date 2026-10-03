@@ -37,6 +37,9 @@ class Orb {
   resetTrail() { this.trail.reset(); }
 
   syncFromDef(def) {
+    this.chanId = normalizeOrbChannelId(def.chanId, def.bandId);
+    this.chirality = def.chirality;
+    this.startAngleRad = def.startAngleRad;
     this.hueOffsetDeg = def.hueOffsetDeg;
     this.colorSource = def.colorSource;
     this.centerXFrac = def.centerXFrac;
