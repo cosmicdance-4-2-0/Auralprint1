@@ -15,10 +15,18 @@ function primeDomCache() {
     ui.audioPanel = document.getElementById("audioPanel");
     ui.simPanel = document.getElementById("simPanel");
     ui.bandsPanel = document.getElementById("bandsPanel");
+    ui.visualizersPanel = document.getElementById("visualizersPanel");
+    ui.visualizersStatus = document.getElementById("visualizersStatus");
+    ui.visualizerList = document.getElementById("visualizerList");
+    ui.btnHideVisualizers = document.getElementById("btnHideVisualizers");
+    ui.btnVisualizersOpenOrbs = document.getElementById("btnVisualizersOpenOrbs");
+    ui.btnVisualizersOpenBandOverlay = document.getElementById("btnVisualizersOpenBandOverlay");
+    ui.bandOverlaySection = document.getElementById("bandOverlaySection");
     ui.loadHint = document.getElementById("loadHint");
     ui.workspaceLauncher = document.getElementById("workspaceLauncher");
     ui.btnToggleWorkspaceLauncher = document.getElementById("btnToggleWorkspaceLauncher");
     ui.openAudio = document.getElementById("openAudio");
+    ui.openVisualizers = document.getElementById("openVisualizers");
     ui.openSim = document.getElementById("openSim");
     ui.openBands = document.getElementById("openBands");
     ui.openQueue = document.getElementById("openQueue");
@@ -177,6 +185,7 @@ function primeDomCache() {
     ui.bandHudIntervalMs = 100;
 
     ui.btnOpenAudio = document.getElementById("btnOpenAudio");
+    ui.btnOpenVisualizers = document.getElementById("btnOpenVisualizers");
     ui.btnOpenSim = document.getElementById("btnOpenSim");
     ui.btnOpenBands = document.getElementById("btnOpenBands");
 

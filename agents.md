@@ -194,7 +194,8 @@ Rules:
 Panels:
 - Audio
 - Queue
-- Sim
+- Visualizers
+- Sim / Orbs
 - Bands
 
 Rules:
@@ -230,6 +231,10 @@ Avoid:
 - UI feature modules must not import `ui.js`; dependencies flow toward the coordinator.
 - UI refresh functions must not mutate persistent settings merely to render state or fabricate missing visualizer instances.
 - Listener initialization must be idempotent for the same DOM controls and must not accumulate duplicate handlers.
+- The Visualizers panel is a read-only representation and navigation surface over canonical runtime/configuration state unless a later stage explicitly grants mutation ownership.
+- Visualizer inventory order follows `VisualizerRuntime`; display numbering communicates composition position and never replaces persistent identity.
+- Visualizer UI must not fabricate runtime instances. During staged migration, writable configuration retains one UI owner and navigation points to that owner rather than duplicating controls.
+- Visualizers inventory refresh must not rebuild dynamic DOM when both the settings and runtime collection references are unchanged.
 
 ---
 

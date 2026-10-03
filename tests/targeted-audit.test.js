@@ -14,6 +14,7 @@ import { Queue } from "../src/js/audio/queue.js";
 import { Scrubber, buildWaveformPeaks } from "../src/js/audio/scrubber.js";
 import { UrlPreset } from "../src/js/presets/url-preset.js";
 import { RecorderEngine } from "../src/js/recording/recorder-engine.js";
+import { initOrbs } from "../src/js/render/orb-runtime.js";
 import { UI, readSourceUiModel, shouldShowActiveQueueItem } from "../src/js/ui/ui.js";
 import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
@@ -619,6 +620,12 @@ function createStubUiElement(tagName = "div") {
       if (child && child.tagName === "OPTION") this.options.push(child);
       return child;
     },
+    append(...children) {
+      this.children.push(...children);
+    },
+    replaceChildren(...children) {
+      this.children = children.flatMap((child) => child && child.isFragment ? child.children : [child]);
+    },
     remove() {},
     focus() {},
     contains() {
@@ -712,6 +719,11 @@ function createUiWireHarness() {
     },
     createElement(tag) {
       return createStubUiElement(tag);
+    },
+    createDocumentFragment() {
+      const fragment = createStubUiElement("fragment");
+      fragment.isFragment = true;
+      return fragment;
     },
     body,
     querySelectorAll() {
@@ -901,6 +913,27 @@ test("UI refreshAllUiText reflects Build 115 per-orb sim panel fields", async ()
     assert.equal(state.ui.selOrb1ColorSrc.value, "fixed");
     assert.equal(state.ui.valOrb1Bands.textContent, "full spectrum");
   });
+});
+
+test("UI refreshAllUiText represents the current VisualizerRuntime composition", async () => {
+  const previousOrbs = structuredClone(preferences.orbs);
+  try {
+    preferences.orbs = ["ORB0", "ORB7", "ORB3"].map((id, index) => normalizeOrbDef({
+      ...CONFIG.defaults.orbs[index % CONFIG.defaults.orbs.length],
+      id,
+    }, CONFIG.defaults.orbs[index % CONFIG.defaults.orbs.length]));
+    resolveSettings();
+    initOrbs();
+    await withUiWireHarnessState({}, ({ getElement }) => {
+      UI.refreshAllUiText();
+      assert.equal(getElement("visualizersStatus").textContent, "4 visualizers · 3 Orbs");
+      assert.equal(getElement("visualizerList").children.length, 4);
+    });
+  } finally {
+    preferences.orbs = previousOrbs;
+    resolveSettings();
+    initOrbs();
+  }
 });
 
 test("URL preset schema 8 orb payloads migrate to Build 115 defaults", () => {

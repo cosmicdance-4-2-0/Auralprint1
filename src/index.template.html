@@ -93,6 +93,16 @@
   </div>
 
   <!-- Build 115: progressive controls; visibility is session-only. -->
+  <div id="visualizersPanel" class="panel" style="display:none" role="region" aria-label="Visualizers">
+    <div class="panel-header"><div><h2 class="panel-title">Visualizers</h2><p class="panel-description">See what is drawing the current scene.</p></div><button id="btnHideVisualizers" aria-label="Hide Visualizers panel">Hide</button></div>
+    <div class="muted panel-status" id="visualizersStatus" role="status" aria-live="polite">0 visualizers · 0 Orbs</div>
+    <div id="visualizerList" class="visualizer-list" role="list" aria-label="Visualizers in scene"></div>
+    <div class="panel-actions visualizers-actions" aria-label="Visualizer control navigation">
+      <button id="btnVisualizersOpenOrbs" type="button">Open Orb Controls</button>
+      <button id="btnVisualizersOpenBandOverlay" type="button">Open Band Overlay Controls</button>
+    </div>
+  </div>
+
   <div id="simPanel" class="panel" style="display:none" role="region" aria-label="Orbs and motion">
     <div class="panel-header"><div><h2 class="panel-title">Orbs &amp; motion</h2><p class="panel-description">Give each orb its own spectral target.</p></div><button id="btnHideSim" aria-label="Hide orbs panel">Hide</button></div>
     <div class="panel-actions"><button id="btnResetVisuals" title="Reset orb phases and clear trails (keyboard: R)">Reset Visuals</button></div>
@@ -320,7 +330,7 @@
     </div>
 
 </div></details>
-    <details class="settings-section"><summary>Band overlay</summary><div class="section-body">
+    <details id="bandOverlaySection" class="settings-section"><summary>Band Overlay</summary><div class="section-body">
     <div class="row">
       <label for="chkBandOverlay">Enable overlay</label>
       <input id="chkBandOverlay" type="checkbox" />
@@ -477,6 +487,10 @@
 
     <div id="openAudio" class="launcher">
       <button id="btnOpenAudio" type="button" aria-controls="audioPanel" title="Show audio source panel" aria-label="Show audio source panel" aria-pressed="true">Audio</button>
+    </div>
+
+    <div id="openVisualizers" class="launcher">
+      <button id="btnOpenVisualizers" type="button" aria-controls="visualizersPanel" title="Show Visualizers panel" aria-label="Show Visualizers panel" aria-pressed="false">Visualizers</button>
     </div>
 
     <div id="openSim" class="launcher">
