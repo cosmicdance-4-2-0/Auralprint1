@@ -11,11 +11,13 @@ import { AudioEngine } from "../audio/audio-engine.js";
 import { Scrubber } from "../audio/scrubber.js";
 import { InputSourceManager } from "../audio/input-source-manager.js";
 import { ColorPolicy } from "../render/color-policy.js";
+import { VisualizerRuntime } from "../render/visualizer-runtime.js";
 import { RecorderEngine } from "../recording/recorder-engine.js";
 import { initOrbs, resetVisualizers, syncOrbsFromSettings } from "../render/orb-runtime.js";
 import { primeDomCache } from "./dom-cache.js";
 import { createWorkspaceUi } from "./workspace.js";
 import { createOrbCompatUi } from "./orb-compat-ui.js";
+import { createVisualizersPanelUi } from "./visualizers-panel.js";
 
 /* =============================================================================
    UI
@@ -330,6 +332,19 @@ const UI = (() => {
     commitOrbChange: applyOrbPrefChange,
     commitPreferences: applyPrefs,
     showStatus: simStatusToast,
+  });
+  const visualizersPanelUi = createVisualizersPanelUi({
+    ui,
+    getVisualizers: () => VisualizerRuntime.getVisualizers(),
+    getSettings: () => runtime.settings,
+    openOrbControls: () => workspace.showSimPanel(),
+    openBandOverlayControls: () => {
+      workspace.showBandsPanel();
+      if (!ui.bandOverlaySection) return;
+      ui.bandOverlaySection.open = true;
+      const summary = ui.bandOverlaySection.querySelector("summary");
+      if (summary) summary.focus();
+    },
   });
 
   function simStatusToast(msg, holdMs = 2500) {
@@ -1207,6 +1222,7 @@ const UI = (() => {
     ui.valVol.textContent = fmt(p.audio.volume, 2);
 
     orbCompatUi.refresh(p);
+    visualizersPanelUi.refresh();
 
     ui.rngRmsGain.value = String(p.audio.rmsGain);
     ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
@@ -1295,6 +1311,7 @@ const UI = (() => {
     primeDomCache();
 
     orbCompatUi.init();
+    visualizersPanelUi.init();
 
     initConfigTooltips();
 
