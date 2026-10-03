@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 3, 2026. Development revision: `v0.1.15f` / Build 115. Preset schema: 10.
+Updated: October 3, 2026. Development revision: `v0.1.15f.a` / Build 115. Preset schema: 10.
 
 The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: the menu reorganization and editing of two existing Orbs have substantially landed, schema-10 per-Orb ownership and the dynamic Orb runtime are complete, while per-Orb management UI, later panels, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
@@ -52,6 +52,8 @@ Existing Node tests and a successful offline single-file build are useful regres
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the current Band Overlay participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is present, while its final UI is absent and the user-facing Band Overlay has not been promoted or renamed. Build 116 remains blocked.
 
 The current source substantially contains the reorganized menu and per-instance editing for the two pre-existing Orbs. Users cannot yet add, remove, or duplicate Orbs through the temporary fixed editor; those model/runtime operations are available for the later UI. Motion, radius-response, particle, and trace settings are Orb-owned; their existing shared controls are temporary bulk controls with mixed-value display. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
+
+Revision 115F.A tactically hardens the accepted UI decomposition with focused Orb compatibility tests; it does not change the architecture or preset schema.
 
 The intended data direction is `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Scene / Renderer → Camera → Canvas`. Visualizers consume analysis; they do not own or perform it. The Camera stage belongs to Build 116 and is not ready to begin.
 

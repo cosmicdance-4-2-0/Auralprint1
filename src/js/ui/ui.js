@@ -1161,7 +1161,6 @@ const UI = (() => {
   function refreshAllUiText(analysisFrame) {
     const p = preferences;
     maybeRefreshRecordingUi();
-    orbCompatUi.syncBandPickers();
 
     const bandText = analysisFrame && analysisFrame.ready
       ? (analysisFrame.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
