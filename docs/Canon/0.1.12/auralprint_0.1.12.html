@@ -1,0 +1,4109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="description" content="Auralprint is a waveform analysis tool, designed for audio - offline-capable: no hosting required." />
+  <meta name="keywords" content="auralprint, waveform analyzer, audio analyzer, audio visualizer, analysis, audio, generative art, web audio, canvas, single file" />
+  <meta name="author" content="Christopher 'Kisuul' Lohman" />
+  <title>Auralprint - Waveform Analysis Tool - v0.1.12</title>
+  <!-- 1. Legacy fallback (ancient browsers + RSS + pinned tabs) -->
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <!-- 2. Modern PNG fallback (96×96 is the most requested size today) -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <!-- 3. SVG (scalable, dark-mode ready, tiny file size) -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <!-- 4. Apple home screen (180×180 is the current standard) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <!-- 5. Name for iOS home screen -->
+  <meta name="apple-mobile-web-app-title" content="Auralprint">
+  <!-- 6. PWA manifest (Android + installable) -->
+  <link rel="manifest" href="/site.webmanifest">
+  
+  <style>
+    :root {
+      --ui-panel-bg: rgba(0,0,0,0.72);
+      --ui-panel-blur: 6px;
+      --ui-pad: 10px;
+      --ui-gap: 10px;
+      --ui-radius: 10px;
+      --ui-font: system-ui, sans-serif;
+
+      /* Two-row audio panel clearance. Value is derived, not guessed:
+         --ui-audio-h = pad(10) + scrubber(36) + gap(10) + --ui-icon(40) + pad(10) = 106px.
+         #audioPanel uses grid-template-rows: 36px var(--ui-icon) (scrubber row first).
+         Side panels and #queuePanel use this for their bottom clearance anchor.
+         setCssVarsFromConfig() overrides this at boot from CONFIG.ui.audioPanelHeightPx. */
+      --ui-audio-h: 106px;
+      --ui-queue-clearance: calc(var(--ui-audio-h) + var(--ui-gap));
+      --ui-icon: 40px;
+
+      --ui-safe-b: env(safe-area-inset-bottom, 0px);
+      --ui-safe-r: env(safe-area-inset-right, 0px);
+      --ui-safe-l: env(safe-area-inset-left, 0px);
+      --ui-safe-t: env(safe-area-inset-top, 0px);
+
+      /* Shared focus styling for interactive controls on dark translucent UI. */
+      --ui-focus-ring-color: rgba(125, 213, 255, 0.95);
+      --ui-focus-ring-glow: rgba(125, 213, 255, 0.28);
+      --ui-focus-ring-width: 2px;
+      --ui-focus-ring-offset: 2px;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: var(--ui-font);
+      overflow: hidden;
+    }
+
+	#c {
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100vh;
+		display: block;
+	}
+
+    .panel {
+		background: var(--ui-panel-bg);
+		backdrop-filter: blur(var(--ui-panel-blur));
+		border-radius: var(--ui-radius);
+		box-sizing: border-box;
+    }
+
+    button, select { cursor: pointer; font: inherit; }
+    input[type="range"] { width: 260px; }
+
+    .muted {
+      opacity: 0.85;
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sectionTitle { margin: 10px 0 6px; font-size: 12px; opacity: 0.75; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 160px 1fr 140px;
+      gap: 10px;
+      align-items: center;
+      margin: 6px 0;
+    }
+
+    .val {
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      opacity: 0.85;
+      justify-self: end;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Bottom audio panel — two-row grid.
+      */
+#audioPanel {
+  position: fixed;
+  left: calc(var(--ui-pad) + var(--ui-safe-l));
+  right: calc(var(--ui-pad) + var(--ui-safe-r));
+  bottom: calc(var(--ui-pad) + var(--ui-safe-b));
+  height: auto;
+  padding: var(--ui-pad);
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto 1fr auto auto;
+  grid-template-rows: 36px var(--ui-icon);
+  gap: var(--ui-gap);
+  align-items: center;
+  z-index: 20;
+}
+
+    #audioPanel .track { min-width: 0; }
+
+    /* Sim config panel (left) */
+    #simPanel {
+      position: fixed;
+      top: calc(var(--ui-pad) + var(--ui-safe-t));
+      left: calc(var(--ui-pad) + var(--ui-safe-l));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-audio-h) + var(--ui-gap));
+      width: min(460px, calc(100vw - 2 * var(--ui-pad)));
+      padding: var(--ui-pad);
+      overflow: auto;
+      z-index: 30;
+    }
+
+    /* Bands + colors panel (right) */
+    #bandsPanel {
+      position: fixed;
+      top: calc(var(--ui-pad) + var(--ui-safe-t));
+      right: calc(var(--ui-pad) + var(--ui-safe-r));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-audio-h) + var(--ui-gap));
+      width: min(520px, calc(100vw - 2 * var(--ui-pad)));
+      padding: var(--ui-pad);
+      overflow: auto;
+      z-index: 30;
+    }
+
+    /* Launchers shown when panels are hidden */
+    .launcher {
+      position: fixed;
+      width: var(--ui-icon);
+      height: var(--ui-icon);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      z-index: 40;
+      user-select: none;
+    }
+
+    #openAudio { left: calc(var(--ui-pad) + var(--ui-safe-l)); bottom: calc(var(--ui-pad) + var(--ui-safe-b)); }
+    #openSim { left: calc(var(--ui-pad) + var(--ui-safe-l)); top: calc(var(--ui-pad) + var(--ui-safe-t)); }
+    #openBands { right: calc(var(--ui-pad) + var(--ui-safe-r)); top: calc(var(--ui-pad) + var(--ui-safe-t)); }
+
+    .launcher button {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--ui-panel-bg);
+      backdrop-filter: blur(var(--ui-panel-blur));
+      border: none;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    input[type="color"] {
+      width: 44px;
+      height: 26px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* Bands HUD */
+    #bandTable {
+      display: grid;
+      grid-template-columns: 36px minmax(120px, 1fr) minmax(120px, auto) 160px;
+      gap: 8px 10px;
+      align-items: center;
+      margin-top: 8px;
+      min-width: 0;
+    }
+
+    .bandIdx { font-size: 12px; opacity: 0.75; text-align: right; }
+    .bandName { font-size: 12px; opacity: 0.90; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bandRange {
+      font-size: 11px;
+      opacity: 0.72;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      text-align: right;
+      min-width: 0;
+    }
+    .bandBar {
+      height: 10px;
+      min-width: 96px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      overflow: hidden;
+      position: relative;
+    }
+    .bandFill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+    }
+    .bandMeta {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      opacity: 0.65;
+      margin: 6px 0 2px;
+    }
+    .dominantBadge {
+      display: inline-block;
+      max-width: 100%;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      font-size: 12px;
+      opacity: 0.9;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #bandDebug {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    /* Responsive panel layout on <=980px: clamp #bandsPanel/#simPanel widths to viewport-safe bounds,
+       and anchor #bandsPanel to the left edge (clear right anchor) so both side panels share alignment. */
+    @media (max-width: 980px) {
+      #bandsPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
+      #simPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); }
+    }
+
+    @media (max-width: 920px) {
+      #bandTable {
+        grid-template-columns: 30px minmax(86px, 1fr) minmax(72px, 1fr) minmax(74px, 0.9fr);
+        gap: 6px 8px;
+      }
+
+      .bandRange {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .bandBar {
+        min-width: 72px;
+      }
+    }
+    /* First-run hint: visible until audio is loaded */
+    #loadHint {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.6s ease;
+    }
+    #loadHint.hidden { opacity: 0; }
+    #loadHint .hint-title {
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      opacity: 0.45;
+      text-transform: uppercase;
+    }
+    #loadHint .hint-sub {
+      font-size: clamp(12px, 1.5vw, 15px);
+      opacity: 0.25;
+      letter-spacing: 0.08em;
+    }
+
+    /* Scrubber row — second row inside #audioPanel.
+       grid-column: 1 / -1 spans all 10 columns so the scrubber fills the full width.
+       The canvas element draws: waveform overview + live playhead + seek affordance. */
+	
+	#scrubberRow {
+		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: var(--ui-gap);
+		min-width: 0;
+	}
+    
+	#scrubberCanvas {
+      width: 100%;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      cursor: pointer;
+      display: block;
+    }
+    #scrubberTime {
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      opacity: 0.7;
+      white-space: nowrap;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    /* Z-index stack for all fixed panels (documented once, here):
+         canvas    : 0  (no z-index; sits behind everything)
+         loadHint  : 10 (full-screen hint overlay; below all UI)
+         audioPanel: 20 (bottom transport bar)
+         queuePanel: 25 (floats above audio panel; below side config panels)
+         simPanel  : 30 (left config panel)
+         bandsPanel: 30 (right config panel)
+         launchers : 40 (always reachable; must clear all panels)
+    */
+
+    /* Queue panel — floats above the audio panel, full-width like audio panel.
+       Bottom offset is derived from audio dock height + one intentional gap. */
+    #queuePanel {
+      position: fixed;
+      left: calc(var(--ui-pad) + var(--ui-safe-l));
+      right: calc(var(--ui-pad) + var(--ui-safe-r));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
+      max-height: 240px;
+      overflow-y: auto;
+      padding: var(--ui-pad);
+      z-index: 25;
+    }
+
+    #queuePanel .queue-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    #queuePanel .queue-title {
+      font-size: 12px;
+      opacity: 0.75;
+      flex: 1;
+    }
+
+    /* Each queue item row: index | filename | remove button */
+    .queue-item {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 6px;
+      align-items: center;
+      padding: 4px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .queue-item:hover { background: rgba(255,255,255,0.07); }
+    .queue-item.active { background: rgba(255,255,255,0.12); }
+    .queue-item .q-idx {
+      font-size: 11px;
+      opacity: 0.55;
+      text-align: right;
+      user-select: none;
+    }
+    .queue-item .q-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+    .queue-item.active .q-name { opacity: 1.0; }
+    .queue-item .q-remove {
+      font-size: 11px;
+      opacity: 0.4;
+      padding: 2px 6px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 4px;
+      background: none;
+      border: none;
+      color: inherit;
+    }
+    .queue-item .q-remove:hover { opacity: 0.9; background: rgba(255,80,80,0.2); }
+
+    /* Queue row keyboard focus visibility (112): row is now an explicit activator. */
+    .queue-item:focus-visible {
+      outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring-color);
+      outline-offset: var(--ui-focus-ring-offset);
+      box-shadow: 0 0 0 4px var(--ui-focus-ring-glow);
+    }
+
+    /* Shared focus visibility framework (112) for current interactive controls. */
+    button:focus-visible,
+    select:focus-visible,
+    input[type="range"]:focus-visible,
+    input[type="checkbox"]:focus-visible,
+    input[type="color"]:focus-visible,
+    .queue-item .q-remove:focus-visible {
+      outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring-color);
+      outline-offset: var(--ui-focus-ring-offset);
+      box-shadow: 0 0 0 4px var(--ui-focus-ring-glow);
+    }
+
+    /* Prevent duplicate rings where :focus-visible is supported. */
+    button:focus:not(:focus-visible),
+    select:focus:not(:focus-visible),
+    input[type="range"]:focus:not(:focus-visible),
+    input[type="checkbox"]:focus:not(:focus-visible),
+    input[type="color"]:focus:not(:focus-visible) {
+      outline: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <!-- First-run hint overlay: hidden once audio is loaded -->
+  <div id="loadHint">
+    <div class="hint-title">Auralprint</div>
+    <div class="hint-sub">Press Load to begin</div>
+  </div>
+
+<!-- Bottom Audio Panel
+     Row 1 (36px): [scrubber canvas 1fr] [time]
+     Row 2 (40px): Load | Prev | Next | Play | Stop | Repeat | Shuffle | Mute | Vol | [status 1fr] | Queue | HideAudio -->
+ <div id="audioPanel" class="panel">
+  <!-- Scrubber row: row 1 (top of panel), scrubber only -->
+  <div id="scrubberRow">
+    <canvas id="scrubberCanvas" width="1" height="36"></canvas>
+    <span id="scrubberTime" class="muted">--:-- / --:--</span>
+  </div>
+
+  <button id="btnLoad">Load</button>
+  <button id="btnPrev" disabled title="Previous track (P)">&#9664;&#9664;</button>
+  <button id="btnNext" disabled title="Next track (N)">&#9654;&#9654;</button>
+  <button id="btnPlay" disabled>Play</button>
+  <button id="btnStop" disabled>Stop</button>
+
+  <button id="btnRepeat">Repeat: Off</button>
+  <button id="btnShuffle" title="Shuffle playlist">Shuffle</button>
+
+  <label style="display:flex; gap:6px; align-items:center;">
+    <input id="chkMute" type="checkbox" />
+    <span class="muted">Mute</span>
+  </label>
+
+  <div style="display:flex; gap:10px; align-items:center;">
+    <span class="muted">Vol</span>
+    <input id="rngVol" type="range" />
+    <span id="valVol" class="val"></span>
+  </div>
+
+  <div id="audioStatus" class="muted track">No audio loaded.</div>
+  <button id="btnToggleQueue" title="Toggle queue panel">&#9776;</button>
+  <button id="btnHideAudio" title="Hide audio panel (launcher remains available)">&#9662;</button>
+</div>
+
+  <!-- Queue panel — floats above the audio panel with extra scrubber clearance. Hidden by default.
+       Populated dynamically by refreshQueuePanel() inside UI.wireControls(). -->
+  <div id="queuePanel" class="panel" style="display:none">
+    <div class="queue-header">
+      <span class="queue-title">Queue</span>
+      <button id="btnClearQueue" style="font-size:11px;">Clear</button>
+    </div>
+    <div id="queueList"></div>
+  </div>
+
+  <!-- Sim config panel (left) -->
+  <div id="simPanel" class="panel">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+      <button id="btnShare">Share Link</button>
+      <button id="btnApplyUrl">Apply URL</button>
+      <button id="btnResetPrefs">Reset Prefs</button>
+      <button id="btnResetVisuals" title="Reset orb phases and clear trails (keyboard: R)">Reset Visuals</button>
+      <button id="btnHideSim" title="Hide sim panel (launcher remains available)">◂</button>
+    </div>
+
+    <div class="muted" id="simStatus">Sim panel: trace, particles, motion, analysis.</div>
+
+    <div class="sectionTitle">Trace</div>
+
+    <div class="row">
+      <label for="chkLines">Lines</label>
+      <input id="chkLines" type="checkbox" />
+      <div id="valLines" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngNumLines">Num lines</label>
+      <input id="rngNumLines" type="range" />
+      <div id="valNumLines" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selLineColorMode">Line color mode</label>
+      <select id="selLineColorMode"></select>
+      <div id="valLineColorMode" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Particles</div>
+
+    <div class="row">
+      <label for="rngEmit">Emit rate</label>
+      <input id="rngEmit" type="range" />
+      <div id="valEmit" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSizeMax">Size max</label>
+      <input id="rngSizeMax" type="range" />
+      <div id="valSizeMax" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSizeMin">Size min</label>
+      <input id="rngSizeMin" type="range" />
+      <div id="valSizeMin" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSizeToMin">Size decay time</label>
+      <input id="rngSizeToMin" type="range" />
+      <div id="valSizeToMin" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngTTL">TTL</label>
+      <input id="rngTTL" type="range" />
+      <div id="valTTL" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngOverlap">Overlap radius</label>
+      <input id="rngOverlap" type="range" />
+      <div id="valOverlap" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Motion</div>
+
+    <div class="row">
+      <label for="rngOmega">Angular speed</label>
+      <input id="rngOmega" type="range" />
+      <div id="valOmega" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngWfDisp">Waveform Displacement</label>
+      <input id="rngWfDisp" type="range" />
+      <div id="valWfDisp" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Audio analysis</div>
+
+    <div class="row">
+      <label for="rngRmsGain">RMS gain</label>
+      <input id="rngRmsGain" type="range" />
+      <div id="valRmsGain" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngMinRad">Min radius</label>
+      <input id="rngMinRad" type="range" />
+      <div id="valMinRad" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngMaxRad">Max radius</label>
+      <input id="rngMaxRad" type="range" />
+      <div id="valMaxRad" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSmooth">Analyser smoothing</label>
+      <input id="rngSmooth" type="range" />
+      <div id="valSmooth" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selFFT">FFT size</label>
+      <select id="selFFT"></select>
+      <div id="valFFT" class="val"></div>
+    </div>
+  </div>
+
+  <!-- Bands + Colors panel (right) -->
+  <div id="bandsPanel" class="panel">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+      <div class="muted">Rainbow Instrumentation 🌈</div>
+      <button id="btnHideBands" title="Hide bands panel (launcher remains available)">▸</button>
+    </div>
+
+    <div class="muted" id="bandsStatus">Bands panel: colors + spectral HUD.</div>
+
+    <div class="sectionTitle">Colors</div>
+
+    <div class="row">
+      <label>Background</label>
+      <input id="clrBg" type="color" />
+      <div id="valBg" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label>Particle color</label>
+      <input id="clrParticle" type="color" />
+      <div id="valParticle" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selParticleColorSrc">Particle color src</label>
+      <select id="selParticleColorSrc"></select>
+      <div id="valParticleSrc" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Band overlay</div>
+
+    <div class="row">
+      <label for="chkBandOverlay">Enable overlay</label>
+      <input id="chkBandOverlay" type="checkbox" />
+      <div id="valBandOverlay" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="chkBandConnect">Connect adjacent</label>
+      <input id="chkBandConnect" type="checkbox" />
+      <div id="valBandConnect" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandAlpha">Overlay alpha</label>
+      <input id="rngBandAlpha" type="range" />
+      <div id="valBandAlpha" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandPoint">Point size</label>
+      <input id="rngBandPoint" type="range" />
+      <div id="valBandPoint" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandOverlayMinRad">Overlay Min Radius</label>
+      <input id="rngBandOverlayMinRad" type="range" />
+      <div id="valBandOverlayMinRad" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandOverlayMaxRad">Overlay Max Radius</label>
+      <input id="rngBandOverlayMaxRad" type="range" />
+      <div id="valBandOverlayMaxRad" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandOverlayWfDisp">Overlay waveform disp</label>
+      <input id="rngBandOverlayWfDisp" type="range" />
+      <div id="valBandOverlayWfDisp" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selRingPhaseMode">Ring phase mode</label>
+      <select id="selRingPhaseMode"></select>
+      <div id="valRingPhaseMode" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngRingSpeed">Ring speed</label>
+      <input id="rngRingSpeed" type="range" />
+      <div id="valRingSpeed" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Rainbow palette</div>
+
+    <div class="row">
+      <label for="rngHueOff">Hue offset</label>
+      <input id="rngHueOff" type="range" />
+      <div id="valHueOff" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSat">Saturation</label>
+      <input id="rngSat" type="range" />
+      <div id="valSat" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngVal">Brightness (Value)</label>
+      <input id="rngVal" type="range" />
+      <div id="valVal" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Band HUD</div>
+    <div class="muted" id="bandDebug"><span class="dominantBadge">Dominant: (none)</span></div>
+    <div class="bandMeta" id="bandMeta">Bands metadata pending…</div>
+    <div id="bandTable"></div>
+  </div>
+
+  <!-- Launchers shown when panels are hidden -->
+  <div id="openAudio" class="launcher" style="display:none">
+    <button id="btnOpenAudio" title="Show audio panel" aria-label="Show audio panel">🔈</button>
+  </div>
+
+  <div id="openSim" class="launcher" style="display:none">
+    <button id="btnOpenSim" title="Show sim panel" aria-label="Show sim panel">🧪</button>
+  </div>
+
+  <div id="openBands" class="launcher" style="display:none">
+    <button id="btnOpenBands" title="Show bands panel" aria-label="Show bands panel">🌈</button>
+  </div>
+
+  <input id="fileInput" type="file" multiple accept="audio/*" style="display:none" />
+
+<script>
+"use strict";
+
+/* =============================================================================
+   Auralprint
+   0.1.12
+   The 'Jukebox' Release. Now functions as such. No more manual file loading.
+   Enjoy the Queues! Real playlists coming 'soon'™
+   
+   Onward and upward on the path to minor version 2! 
+   Next step: WEBM and MP4 recording. 
+   
+   ========================================================================== */
+	
+const TAU = Math.PI * 2;
+const RAD_TO_DEG = 180 / Math.PI;
+
+const PRESET_SCHEMA_VERSION = 7; // v7 = overlay-specific min/max radius controls
+const LEGACY_SCHEMA_V2 = 2;
+const LEGACY_SCHEMA_V3 = 3;
+const LEGACY_SCHEMA_V4 = 4;
+const LEGACY_SCHEMA_V5 = 5; // v5 existed in transitional builds — accept for safe migration
+const LEGACY_SCHEMA_V6 = 6;
+
+/* ------------------------------ Utilities -------------------------------- */
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function fmt(n, d) { return Number(n).toFixed(d); }
+
+function deepFreeze(obj) {
+  Object.freeze(obj);
+  for (const k of Object.keys(obj)) {
+    const v = obj[k];
+    if (v && typeof v === "object" && !Object.isFrozen(v)) deepFreeze(v);
+  }
+  return obj;
+}
+
+function deepClone(obj) {
+  if (typeof structuredClone === "function") return structuredClone(obj);
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function hexToRgb01(hex) {
+  const h = hex.replace("#", "");
+  return {
+    r: parseInt(h.slice(0, 2), 16) / 255,
+    g: parseInt(h.slice(2, 4), 16) / 255,
+    b: parseInt(h.slice(4, 6), 16) / 255,
+  };
+}
+
+function rgb01ToCss({r,g,b}, alpha = 1) {
+  const R = Math.round(clamp(r,0,1) * 255);
+  const G = Math.round(clamp(g,0,1) * 255);
+  const B = Math.round(clamp(b,0,1) * 255);
+  return `rgba(${R},${G},${B},${clamp(alpha,0,1)})`;
+}
+
+function lerpRgb01(a, b, t) {
+  return { r: lerp(a.r, b.r, t), g: lerp(a.g, b.g, t), b: lerp(a.b, b.b, t) };
+}
+
+function dot(a, b, stride = 1) {
+  let s = 0;
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i += stride) s += a[i] * b[i];
+  return s;
+}
+
+function hsvToRgb01(hDeg, s, v) {
+  const h = ((hDeg % 360) + 360) % 360;
+  const c = v * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = v - c;
+
+  let rp=0, gp=0, bp=0;
+  if (h < 60) { rp = c; gp = x; bp = 0; }
+  else if (h < 120) { rp = x; gp = c; bp = 0; }
+  else if (h < 180) { rp = 0; gp = c; bp = x; }
+  else if (h < 240) { rp = 0; gp = x; bp = c; }
+  else if (h < 300) { rp = x; gp = 0; bp = c; }
+  else { rp = c; gp = 0; bp = x; }
+
+  return { r: rp + m, g: gp + m, b: bp + m };
+}
+
+/* =============================================================================
+   CONFIG — Canonical truth (never mutated)
+   ========================================================================== */
+const CONFIG = deepFreeze({
+  bandNames: [
+// 0–31  Planetary Core – The Iron-Nickel Heart of the World (deepest sub-bass)
+  "Eternal Core",
+  "Nickel Forge",
+  "Iron Heartbeat",
+  "Primordial Mantle",
+  "Lithic Roar",
+  "Subduction Song",
+  "Magma Heart",
+  "Rift Whisper",
+  "Volcanic Pulse",
+  "Crustal Thunder",
+  "Tectonic Echo",
+  "Seismic Lullaby",
+  "Planetary Forge",
+  "Core Resonance",
+  "Mantle Dream",
+  "Abyssal Maw",
+  "Hadal Thunder",
+  "Trench Oracle",
+  "Benthic Choir",
+  "Pressure Veil",
+  "Deep Mantle Song",
+  "Geothermal Hum",
+  "Iron Core Pulse",
+  "Nickel Veil",
+  "Primordial Roar",
+  "Subterranean Whisper",
+  "Lithosphere Pulse",
+  "Mantle Chamber",
+  "Core Song",
+  "Planetary Heart",
+  "Eternal Forge",
+  "Deepest Resonance",
+
+  // 32–63  Oceans & Tectonics – Fluid Foundations of Life
+  "Mariana Pulse",
+  "Hadal Depths",
+  "Oceanic Spine",
+  "Continental Rumble",
+  "Mountain Root",
+  "Ancient Soil",
+  "Seabed Choir",
+  "Trench Echo",
+  "Pelagic Dream",
+  "Abyssal Current",
+  "Hydrothermal Song",
+  "Pressure Chamber",
+  "Oceanic Veil",
+  "Tectonic Drift",
+  "Rift Valley Hum",
+  "Submarine Thunder",
+  "Coral Heart",
+  "Deep Current Pulse",
+  "Ocean Floor Forge",
+  "Benthic Resonance",
+  "Mariana Whisper",
+  "Hadal Lullaby",
+  "Pelagic Roar",
+  "Continental Song",
+  "Seabed Pulse",
+  "Trench Heart",
+  "Abyssal Forge",
+  "Oceanic Dream",
+  "Pressure Song",
+  "Deep Sea Resonance",
+  "Hydrothermal Veil",
+  "Mariana Core",
+
+  // 64–95  Biosphere & Living Crust – Where Life First Awakens
+  "Forest Floor",
+  "Canopy Breath",
+  "Jungle Canopy",
+  "Savanna Heart",
+  "River Stone",
+  "Earth Breath",
+  "Gaia Hum",
+  "Biosphere Song",
+  "Thunder Root",
+  "Storm Cradle",
+  "Wind Weaver",
+  "Cloud Chamber",
+  "Dawn Chorus",
+  "Human Veil",
+  "Vocal Ridge",
+  "Breath Chamber",
+  "Presence Spark",
+  "Clarity Thread",
+  "Life Resonance",
+  "Soil Symphony",
+  "Root Network",
+  "Leaf Whisper",
+  "Pollen Pulse",
+  "Mycelial Song",
+  "Rainforest Hum",
+  "Savanna Pulse",
+  "River Echo",
+  "Earth Song",
+  "Gaia Pulse",
+  "Biosphere Veil",
+  "Life Thread",
+  "Organic Resonance",
+
+  // 96–127  Human Voice & Emotional Presence – The Heart of the Mix
+  "Vocal Spark",
+  "Throat Chamber",
+  "Chest Resonance",
+  "Nasal Veil",
+  "Presence Ridge",
+  "Clarity Peak",
+  "Sibilant Edge",
+  "Bite Burst",
+  "Air Shelf",
+  "Breath Spark",
+  "Voice Thread",
+  "Human Hum",
+  "Emotional Core",
+  "Soul Whisper",
+  "Heartbeat Echo",
+  "Vocal Forge",
+  "Presence Veil",
+  "Clarity Song",
+  "Sibilance Dream",
+  "Air Resonance",
+  "Breath Pulse",
+  "Voice Lullaby",
+  "Human Spark",
+  "Emotional Veil",
+  "Soul Pulse",
+  "Heart Song",
+  "Vocal Dream",
+  "Presence Core",
+  "Clarity Forge",
+  "Sibilant Whisper",
+  "Air Heart",
+  "Breath Resonance",
+
+  // 128–159  Lower Atmosphere – Sky Begins to Open
+  "Tropospheric Dance",
+  "Cloud Weaver",
+  "Storm Pulse",
+  "Rain Veil",
+  "Lightning Thread",
+  "Wind Ridge",
+  "Fog Chamber",
+  "Mist Spark",
+  "Dawn Veil",
+  "Dusk Echo",
+  "Twilight Hum",
+  "Atmosphere Song",
+  "Weather Pulse",
+  "Cumulus Heart",
+  "Stratus Whisper",
+  "Nimbus Resonance",
+  "Thunder Song",
+  "Lightning Dream",
+  "Raindrop Pulse",
+  "Wind Forge",
+  "Cloud Veil",
+  "Mist Thread",
+  "Fog Resonance",
+  "Dawn Spark",
+  "Dusk Lullaby",
+  "Twilight Pulse",
+  "Atmosphere Veil",
+  "Weather Song",
+  "Cumulus Echo",
+  "Stratus Dream",
+  "Nimbus Heart",
+  "Thunder Veil",
+
+  // 160–191  Upper Atmosphere & Ionosphere – Light & Electricity
+  "Lightning Veil",
+  "Aurora Thread",
+  "Ion Whisper",
+  "Magnetosphere Ring",
+  "Solar Wind Hymn",
+  "Helios Harp",
+  "Van Allen Veil",
+  "Orbital Echo",
+  "Lunar Reflection",
+  "Meteor Shimmer",
+  "Exospheric Spark",
+  "Satellite Choir",
+  "Stratospheric Veil",
+  "Ionospheric Dance",
+  "Aurora Pulse",
+  "Magneto Song",
+  "Solar Veil",
+  "Helios Dream",
+  "Van Allen Pulse",
+  "Orbital Whisper",
+  "Lunar Heart",
+  "Meteor Forge",
+  "Exospheric Hum",
+  "Satellite Resonance",
+  "Stratospheric Song",
+  "Ionospheric Spark",
+  "Aurora Lullaby",
+  "Magneto Veil",
+  "Solar Pulse",
+  "Helios Resonance",
+  "Van Allen Dream",
+  "Orbital Song",
+
+  // 192–223  Solar System – Planets, Moons & Solar Winds
+  "Lunar Reflection",
+  "Mars Dust",
+  "Jovian Thunder",
+  "Saturn Ring Song",
+  "Venus Veil",
+  "Mercury Pulse",
+  "Neptune Whisper",
+  "Uranus Dream",
+  "Pluto Edge",
+  "Asteroid Shimmer",
+  "Comet Trail",
+  "Solar Flare Heart",
+  "Coronal Song",
+  "Heliosphere Veil",
+  "Interplanetary Hum",
+  "Moonlit Resonance",
+  "Jupiter Pulse",
+  "Saturn Echo",
+  "Venus Spark",
+  "Mercury Forge",
+  "Neptune Lullaby",
+  "Uranus Veil",
+  "Pluto Song",
+  "Asteroid Dream",
+  "Comet Pulse",
+  "Solar Flare Whisper",
+  "Coronal Resonance",
+  "Heliosphere Song",
+  "Interplanetary Veil",
+  "Moonlit Pulse",
+  "Jovian Dream",
+  "Saturn Heart",
+
+  // 224–255  Stellar to Quantum Eternity – The Farthest Reaches
+  "Stellar Drift",
+  "Nebula Heart",
+  "Galactic Pulse",
+  "Cosmic Root",
+  "Quasar Whisper",
+  "Black Hole Lullaby",
+  "Dark Matter Song",
+  "Cosmic Microwave",
+  "Quantum Foam",
+  "Void Resonance",
+  "Star Forge",
+  "Nebula Veil",
+  "Galactic Edge",
+  "Observable Dream",
+  "Universal Hum",
+  "Eternity’s Resonance",
+  "Photon Veil",
+  "Neutrino Song",
+  "Graviton Pulse",
+  "Singularity Heart",
+  "Big Bang Echo",
+  "Multiverse Whisper",
+  "Cosmic Horizon",
+  "Dark Energy Dream",
+  "Stellar Nursery",
+  "Supernova Spark",
+  "Pulsar Choir",
+  "Quasar Forge",
+  "Black Hole Veil",
+  "Cosmic Infinity",
+  "Observable Edge",
+  "Eternal Resonance"
+  ],
+
+  ui: {
+    panelBackgroundRgba: "rgba(0,0,0,0.72)",
+    panelBlurPx: 6,
+    panelPaddingPx: 10,
+    panelGapPx: 10,
+    panelRadiusPx: 10,
+    audioPanelHeightPx: 106, // pad(10) + scrubber(36) + gap(10) + transport(var(--ui-icon)=40) + pad(10) = 106px
+    iconButtonSizePx: 40,
+    volume: { min: 0, max: 1, step: 0.01 },
+  },
+
+  defaults: {
+    visuals: {
+      backgroundColor: "#000000",
+      particleColor: "#ffffff",
+    },
+
+    trace: {
+      lines: true,
+      numLines: 10,
+      lineAlpha: 0.35,
+      lineWidthPx: 2,
+      lineColorMode: "dominantBand", // "fixed" | "lastParticle" | "dominantBand"
+    },
+
+    particles: {
+      emitPerSecond: 180,
+      sizeMaxPx: 8,
+      sizeMinPx: 1,
+      sizeToMinSec: 3.0,
+      ttlSec: 6.0,
+      overlapRadiusPx: 6.0,
+    },
+
+    motion: {
+      angularSpeedRadPerSec: Math.PI * 0.75,
+      waveformRadialDisplaceFrac: 0.18,
+    },
+
+    audio: {
+      fftSize: 8192,
+      smoothingTimeConstant: 0.50,
+      rmsGain: 2.0,
+      minRadiusFrac: 0.01,
+      maxRadiusFrac: 0.80,
+
+      // Playback knobs (do NOT affect analysis)
+      repeatMode: "none",
+      muted: false,
+      volume: 1.0,
+    },
+
+    // Orbs: each orb chooses an analyser channel via `chanId` and can optionally
+    // target specific spectral bands with `bandIds`.
+    // Empty `bandIds` means full-band energy.
+    //
+    // ENGINE-COMPLETE fields (fully working in sim, no UI yet — do not re-implement):
+    //   chanId        — L/R/C channel routing (engine done; UI deferred)
+    //   bandIds       — per-orb spectral band targeting, avg energy (engine done; UI deferred)
+    //   chirality     — +1 or -1 rotation direction (engine done; UI deferred)
+    //   startAngleRad — initial phase offset in radians (engine done; UI deferred)
+    //
+    // FUTURE fields (not yet in engine — add here + sanitizeAndApply + schema bump):
+    //   hueOffsetDeg  — per-orb color phase offset (planned Build 115)
+    //   centerX/Y     — orb origin offset in sim space (planned Build 115)
+    orbs: [
+      { id: "ORB0", chanId: "R", bandIds: [], chirality: -1, startAngleRad: 0 },
+	  { id: "ORB1", chanId: "L", bandIds: [], chirality: -1, startAngleRad: Math.PI },
+    ],
+
+bands: {
+  // Ceiling adjusted (Now 20K) to restore band 255 functionality. Should now be 20K to 24K (Effectively, depending on nyquist)
+  // To others: Ceiling should be under assumed Nyquist cap: To prevent band 255 death. 
+  // If configured above the actual Nyquist ceiling: Band 255 will become effectively Nyquist to Nyquist, so: Dead.
+  // I question if this is a bug, or a configuration limit to be aware of. 
+  
+  count: 256,
+  floorHz: 20,
+  ceilingHz: 20000,
+  logSpacing: true,
+
+      overlay: {
+        enabled: false,
+        connectAdjacent: true,
+        alpha: 0.65,
+        pointSizePx: 3,
+        minRadiusFrac: 0.01,
+        maxRadiusFrac: 0.80,
+        waveformRadialDisplaceFrac: 0.18,
+        lineAlpha: 0.35,
+        lineWidthPx: 1,
+
+        phaseMode: "free",        // "orb" | "free"
+        ringSpeedRadPerSec: 0.35 // used when phaseMode="free"
+      },
+
+      rainbow: {
+        hueOffsetDeg: 0,
+        saturation: 0.90,
+        value: 1.00,
+      },
+
+      particleColorSource: "dominant", // "fixed" | "dominant" | "angle"
+    },
+
+    timing: {
+      maxDeltaTimeSec: 1 / 30,
+    },
+  },
+
+  limits: {
+    trace: {
+      numLines: { min: 10, max: 1000, step: 10 },
+      lineAlpha: { min: 0, max: 1, step: 0.01 },
+      lineWidthPx: { min: 1, max: 6, step: 1 },
+    },
+
+    particles: {
+      emitPerSecond: { min: 10, max: 1000, step: 10 },
+      sizeMaxPx: { min: 1, max: 9, step: 0.1 },
+      sizeMinPx: { min: 0.5, max: 6, step: 0.1 },
+      sizeToMinSec: { min: 0.1, max: 120, step: 0.1 },
+      ttlSec: { min: 0.1, max: 600, step: 0.1 },
+      overlapRadiusPx: { min: 0.5, max: 10, step: 0.1 },
+    },
+
+    motion: {
+      angularSpeedRadPerSec: { min: 0.01, max: 3, step: 0.01 },
+      waveformRadialDisplaceFrac: { min: 0.01, max: 1.00, step: 0.01 },
+    },
+
+    audio: {
+      rmsGain: { min: 0.05, max: 10, step: 0.01 },
+      minRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
+      maxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
+      smoothingTimeConstant: { min: 0.01, max: 0.99, step: 0.01 },
+      fftSizes: [256, 512, 1024, 2048, 4096, 8192, 16384],
+    },
+
+    bands: {
+      overlayAlpha: { min: 0, max: 1, step: 0.01 },
+      pointSizePx: { min: 1, max: 10, step: 1 },
+      overlayMinRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
+      overlayMaxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
+      overlayWaveformRadialDisplaceFrac: { min: 0.01, max: 1.00, step: 0.01 },
+      hueOffsetDeg: { min: 0, max: 360, step: 1 },
+      saturation: { min: 0, max: 1, step: 0.01 },
+      value: { min: 0, max: 1, step: 0.01 },
+
+      ringSpeedRadPerSec: { min: 0, max: TAU, step: 0.01 }
+    },
+
+    monoDetect: {
+      rightSilenceRms: 0.002,
+      lrCorrelationStride: 8,
+      lrCorrelationMonoThresh: 0.995
+    }
+  }
+});
+
+/* =============================================================================
+   Preferences + Runtime settings (derived)
+   ========================================================================== */
+let preferences = deepClone(CONFIG.defaults);
+const runtime = { settings: deepClone(CONFIG.defaults) };
+
+const BAND_NAMES = CONFIG.bandNames;
+const BAND_NAME_TO_INDEX = new Map(BAND_NAMES.map((name, index) => [name, index]));
+
+function resolveSettings() { runtime.settings = deepClone(preferences); }
+
+
+function normalizeOrbChannelId(rawChanId, rawLegacyBandId) {
+  const candidate = typeof rawChanId === "string"
+    ? rawChanId
+    : (typeof rawLegacyBandId === "string" ? rawLegacyBandId : "");
+  const up = candidate.toUpperCase();
+  return ["L", "R", "C"].includes(up) ? up : "C";
+}
+
+function sanitizeOrbBandIds(rawBandIds, rawBandNames) {
+  const bandCount = BAND_NAMES.length;
+
+  if (Array.isArray(rawBandIds)) {
+    const out = [];
+    const seen = new Set();
+    for (const v of rawBandIds) {
+      const n = Number(v);
+      if (!Number.isInteger(n)) continue;
+      if (n < 0 || n >= bandCount) continue;
+      if (seen.has(n)) continue;
+      seen.add(n);
+      out.push(n);
+    }
+    return out;
+  }
+
+  if (Array.isArray(rawBandNames) && bandCount) {
+    const out = [];
+    const seen = new Set();
+    for (const bandName of rawBandNames) {
+      if (typeof bandName !== "string") continue;
+      const idx = BAND_NAME_TO_INDEX.get(bandName);
+      if (!Number.isInteger(idx) || seen.has(idx)) continue;
+      seen.add(idx);
+      out.push(idx);
+    }
+    return out;
+  }
+
+  return [];
+}
+
+function normalizeOrbDef(incomingOrb, fallbackOrb) {
+  // Canonical orb fields (v6 schema): id, chanId, bandIds, chirality, startAngleRad.
+  // When new fields are added (Build 115+), add them here AND in sanitizeAndApply,
+  // AND bump PRESET_SCHEMA_VERSION so migration code stays honest.
+  const fallback = fallbackOrb || {};
+  const orb = (incomingOrb && typeof incomingOrb === "object") ? incomingOrb : {};
+
+  const id = typeof orb.id === "string" && orb.id.trim()
+    ? orb.id
+    : (typeof fallback.id === "string" ? fallback.id : "ORB");
+
+  const chiralityRaw = Number.isFinite(orb.chirality) ? orb.chirality : fallback.chirality;
+  const chirality = chiralityRaw >= 0 ? 1 : -1;
+
+  const startAngleRad = Number.isFinite(orb.startAngleRad)
+    ? orb.startAngleRad
+    : (Number.isFinite(fallback.startAngleRad) ? fallback.startAngleRad : 0);
+
+  const chanId = normalizeOrbChannelId(orb.chanId, orb.bandId);
+  const bandIds = sanitizeOrbBandIds(orb.bandIds, orb.bandNames);
+
+  return { id, chanId, bandIds, chirality, startAngleRad };
+}
+
+/* =============================================================================
+   App State
+   ========================================================================== */
+const state = {
+  canvas: null,
+  ctx: null,
+  widthPx: 0,
+  heightPx: 0,
+  dpr: 1,
+
+  time: { lastTimestampMs: null, simPaused: false },
+
+  audio: { isLoaded: false, isPlaying: false, filename: "", transportError: "" },
+
+  orbs: [],
+
+  bands: {
+    lowHz: [],
+    highHz: [],
+    energies01: [],
+    meta: {
+      sampleRateHz: null,
+      nyquistHz: null,
+      configCeilingHz: null,
+      effectiveCeilingHz: null,
+    },
+    dominantIndex: 0,
+    dominantName: "",
+    ringPhaseRad: 0,
+  },
+
+  ui: {}
+};
+
+/* =============================================================================
+   Sim space vs Screen space
+   ========================================================================== */
+const Spaces = (() => {
+  function centerPx() {
+    return { x: state.widthPx * 0.5, y: state.heightPx * 0.5 };
+  }
+  function simToScreen(xSim, ySim) {
+    const c = centerPx();
+    return { x: c.x + xSim, y: c.y - ySim };
+  }
+  return { centerPx, simToScreen };
+})();
+
+/* =============================================================================
+   Canvas sizing
+   ========================================================================== */
+function resizeCanvasToDisplaySize() {
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = state.canvas.clientWidth;
+  const cssH = state.canvas.clientHeight;
+
+  const pxW = Math.floor(cssW * dpr);
+  const pxH = Math.floor(cssH * dpr);
+
+  if (pxW !== state.widthPx || pxH !== state.heightPx || dpr !== state.dpr) {
+    state.dpr = dpr;
+    state.widthPx = pxW;
+    state.heightPx = pxH;
+    state.canvas.width = pxW;
+    state.canvas.height = pxH;
+  }
+}
+
+/* =============================================================================
+   URL Presets (v2/v3/v4/v5 compatible)
+   ========================================================================== */
+const UrlPreset = (() => {
+  function base64UrlEncode(bytes) {
+    let b64 = btoa(String.fromCharCode(...bytes));
+    return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  }
+
+  function base64UrlDecodeToBytes(b64url) {
+    const b64 = b64url.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((b64url.length + 3) % 4);
+    const bin = atob(b64);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  function encodePrefsToHash(prefs) {
+    const payload = { schema: PRESET_SCHEMA_VERSION, prefs };
+    const json = JSON.stringify(payload);
+    const bytes = new TextEncoder().encode(json);
+    return "#p=" + base64UrlEncode(bytes);
+  }
+
+  function decodePrefsFromHash(hash) {
+    if (!hash || !hash.startsWith("#p=")) return null;
+    const token = hash.slice(3);
+    const bytes = base64UrlDecodeToBytes(token);
+    const json = new TextDecoder().decode(bytes);
+    const obj = JSON.parse(json);
+    if (!obj || !obj.prefs) return null;
+
+    if (![PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2].includes(obj.schema)) return null;
+    return obj.prefs;
+  }
+
+  function sanitizeAndApply(incoming) {
+    const next = deepClone(preferences);
+
+    if (incoming.visuals) {
+      if (typeof incoming.visuals.backgroundColor === "string") next.visuals.backgroundColor = incoming.visuals.backgroundColor;
+      if (typeof incoming.visuals.particleColor === "string") next.visuals.particleColor = incoming.visuals.particleColor;
+    }
+
+    if (incoming.trace) {
+      if (typeof incoming.trace.lines === "boolean") next.trace.lines = incoming.trace.lines;
+      if (Number.isFinite(incoming.trace.numLines)) {
+        const lim = CONFIG.limits.trace.numLines;
+        next.trace.numLines = clamp(incoming.trace.numLines, lim.min, lim.max);
+      }
+      if (typeof incoming.trace.lineColorMode === "string") {
+        if (["fixed","lastParticle","dominantBand"].includes(incoming.trace.lineColorMode)) {
+          next.trace.lineColorMode = incoming.trace.lineColorMode;
+        }
+      }
+    }
+
+    if (incoming.particles) {
+      for (const k of ["emitPerSecond","sizeMaxPx","sizeMinPx","sizeToMinSec","ttlSec","overlapRadiusPx"]) {
+        if (Number.isFinite(incoming.particles[k])) {
+          const lim = CONFIG.limits.particles[k];
+          next.particles[k] = clamp(incoming.particles[k], lim.min, lim.max);
+        }
+      }
+    }
+
+    if (incoming.motion) {
+      if (Number.isFinite(incoming.motion.angularSpeedRadPerSec)) {
+        const lim = CONFIG.limits.motion.angularSpeedRadPerSec;
+        next.motion.angularSpeedRadPerSec = clamp(incoming.motion.angularSpeedRadPerSec, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.motion.waveformRadialDisplaceFrac)) {
+        const lim = CONFIG.limits.motion.waveformRadialDisplaceFrac;
+        next.motion.waveformRadialDisplaceFrac = clamp(incoming.motion.waveformRadialDisplaceFrac, lim.min, lim.max);
+      }
+    }
+
+    if (incoming.audio) {
+      if (Number.isFinite(incoming.audio.rmsGain)) {
+        const lim = CONFIG.limits.audio.rmsGain;
+        next.audio.rmsGain = clamp(incoming.audio.rmsGain, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.minRadiusFrac)) {
+        const lim = CONFIG.limits.audio.minRadiusFrac;
+        next.audio.minRadiusFrac = clamp(incoming.audio.minRadiusFrac, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.maxRadiusFrac)) {
+        const lim = CONFIG.limits.audio.maxRadiusFrac;
+        next.audio.maxRadiusFrac = clamp(incoming.audio.maxRadiusFrac, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.smoothingTimeConstant)) {
+        const lim = CONFIG.limits.audio.smoothingTimeConstant;
+        next.audio.smoothingTimeConstant = clamp(incoming.audio.smoothingTimeConstant, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.fftSize) && CONFIG.limits.audio.fftSizes.includes(incoming.audio.fftSize)) {
+        next.audio.fftSize = incoming.audio.fftSize;
+      }
+
+      if (["none", "one", "all"].includes(incoming.audio.repeatMode)) next.audio.repeatMode = incoming.audio.repeatMode;
+      else if (typeof incoming.audio.loop === "boolean") next.audio.repeatMode = incoming.audio.loop ? "one" : "none";
+      if (typeof incoming.audio.muted === "boolean") next.audio.muted = incoming.audio.muted;
+      if (Number.isFinite(incoming.audio.volume)) {
+        next.audio.volume = clamp(incoming.audio.volume, CONFIG.ui.volume.min, CONFIG.ui.volume.max);
+      }
+    }
+
+    if (incoming.bands) {
+      if (incoming.bands.overlay) {
+        if (typeof incoming.bands.overlay.enabled === "boolean") next.bands.overlay.enabled = incoming.bands.overlay.enabled;
+        if (typeof incoming.bands.overlay.connectAdjacent === "boolean") next.bands.overlay.connectAdjacent = incoming.bands.overlay.connectAdjacent;
+
+        if (Number.isFinite(incoming.bands.overlay.alpha)) {
+          const lim = CONFIG.limits.bands.overlayAlpha;
+          next.bands.overlay.alpha = clamp(incoming.bands.overlay.alpha, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.overlay.pointSizePx)) {
+          const lim = CONFIG.limits.bands.pointSizePx;
+          next.bands.overlay.pointSizePx = clamp(incoming.bands.overlay.pointSizePx, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.overlay.minRadiusFrac)) {
+          const lim = CONFIG.limits.bands.overlayMinRadiusFrac;
+          next.bands.overlay.minRadiusFrac = clamp(incoming.bands.overlay.minRadiusFrac, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.overlay.maxRadiusFrac)) {
+          const lim = CONFIG.limits.bands.overlayMaxRadiusFrac;
+          next.bands.overlay.maxRadiusFrac = clamp(incoming.bands.overlay.maxRadiusFrac, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.overlay.waveformRadialDisplaceFrac)) {
+          const lim = CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac;
+          next.bands.overlay.waveformRadialDisplaceFrac = clamp(incoming.bands.overlay.waveformRadialDisplaceFrac, lim.min, lim.max);
+        }
+
+        if (typeof incoming.bands.overlay.phaseMode === "string") {
+          if (["orb","free"].includes(incoming.bands.overlay.phaseMode)) {
+            next.bands.overlay.phaseMode = incoming.bands.overlay.phaseMode;
+          }
+        }
+        if (Number.isFinite(incoming.bands.overlay.ringSpeedRadPerSec)) {
+          const lim = CONFIG.limits.bands.ringSpeedRadPerSec;
+          next.bands.overlay.ringSpeedRadPerSec = clamp(incoming.bands.overlay.ringSpeedRadPerSec, lim.min, lim.max);
+        }
+      }
+
+      if (incoming.bands.rainbow) {
+        if (Number.isFinite(incoming.bands.rainbow.hueOffsetDeg)) {
+          const lim = CONFIG.limits.bands.hueOffsetDeg;
+          next.bands.rainbow.hueOffsetDeg = clamp(incoming.bands.rainbow.hueOffsetDeg, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.rainbow.saturation)) {
+          const lim = CONFIG.limits.bands.saturation;
+          next.bands.rainbow.saturation = clamp(incoming.bands.rainbow.saturation, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.rainbow.value)) {
+          const lim = CONFIG.limits.bands.value;
+          next.bands.rainbow.value = clamp(incoming.bands.rainbow.value, lim.min, lim.max);
+        }
+      }
+
+      if (typeof incoming.bands.particleColorSource === "string") {
+        if (["fixed","dominant","angle"].includes(incoming.bands.particleColorSource)) {
+          next.bands.particleColorSource = incoming.bands.particleColorSource;
+        }
+      }
+    }
+
+
+    if (Array.isArray(incoming.orbs)) {
+      // Orb field sanitization rule (enforced on both encode and decode):
+      // normalizeOrbDef is the canonical filter — only its returned fields survive
+      // into preferences. New fields must be added there first, then here, then
+      // in writeHashFromPrefs, then PRESET_SCHEMA_VERSION must be bumped.
+      const defaults = CONFIG.defaults.orbs;
+      next.orbs = incoming.orbs.map((orb, i) => {
+        const mappedOrb = (orb && typeof orb === "object") ? deepClone(orb) : orb;
+        if (mappedOrb && !Array.isArray(mappedOrb.bandIds) && Array.isArray(mappedOrb.bandNames)) {
+          mappedOrb.bandIds = sanitizeOrbBandIds(undefined, mappedOrb.bandNames);
+        }
+        if (mappedOrb && typeof mappedOrb === "object") delete mappedOrb.bandNames;
+        return normalizeOrbDef(mappedOrb, defaults[i % defaults.length]);
+      });
+    }
+
+    if (next.bands && typeof next.bands === "object") delete next.bands.names;
+
+    next.particles.sizeMinPx = Math.min(next.particles.sizeMinPx, next.particles.sizeMaxPx);
+    next.particles.ttlSec = Math.max(next.particles.ttlSec, next.particles.sizeToMinSec);
+
+    preferences = next;
+    resolveSettings();
+    return true;
+  }
+
+  function applyFromLocationHash() {
+    try {
+      const decoded = decodePrefsFromHash(location.hash);
+      if (!decoded) return false;
+      return sanitizeAndApply(decoded);
+    } catch {
+      return false;
+    }
+  }
+
+  function writeHashFromPrefs() {
+    const encodedPrefs = deepClone(preferences);
+    if (encodedPrefs.bands && typeof encodedPrefs.bands === "object") delete encodedPrefs.bands.names;
+
+    // Orb field sanitization rule (enforced on both encode and decode):
+    // Only the fields returned by normalizeOrbDef are ever written into a preset URL.
+    // This means adding a new field to preferences.orbs is NOT enough — it must also
+    // be added to normalizeOrbDef's return object, sanitizeAndApply, and trigger a
+    // PRESET_SCHEMA_VERSION bump so migration code stays honest.
+    if (Array.isArray(encodedPrefs.orbs)) {
+      encodedPrefs.orbs = encodedPrefs.orbs.map((orb, i) => {
+        const fallback = CONFIG.defaults.orbs[i % CONFIG.defaults.orbs.length];
+        return normalizeOrbDef(orb, fallback);
+      });
+    }
+
+    const hash = encodePrefsToHash(encodedPrefs);
+    history.replaceState(null, "", location.pathname + location.search + hash);
+  }
+
+  return { applyFromLocationHash, writeHashFromPrefs };
+})();
+
+/* =============================================================================
+   BandBank — defines 256 bands and maps FFT bins -> band energies
+   ========================================================================== */
+const BandBankController = (() => {
+  const bandConfig = {
+    count: CONFIG.defaults.bands.count,
+    floorHz: CONFIG.defaults.bands.floorHz,
+    configCeilingHz: CONFIG.defaults.bands.ceilingHz,
+    logSpacing: !!CONFIG.defaults.bands.logSpacing,
+  };
+
+  let sampleRateHz = null;
+
+  function readBandDefKey(sourceSettings) {
+    const s = sourceSettings || runtime.settings;
+    return [s.bands.count, s.bands.floorHz, s.bands.ceilingHz, s.bands.logSpacing ? 1 : 0].join("|");
+  }
+
+  function syncFromSettings(sourceSettings) {
+    const s = sourceSettings || runtime.settings;
+    bandConfig.count = s.bands.count;
+    bandConfig.floorHz = s.bands.floorHz;
+    bandConfig.configCeilingHz = s.bands.ceilingHz;
+    bandConfig.logSpacing = !!s.bands.logSpacing;
+  }
+
+  function getNyquistHz() {
+    return Number.isFinite(sampleRateHz) ? sampleRateHz * 0.5 : null;
+  }
+
+  function getEffectiveCeilingHz() {
+    const nyquistHz = getNyquistHz();
+    return Number.isFinite(nyquistHz)
+      ? Math.min(bandConfig.configCeilingHz, nyquistHz)
+      : bandConfig.configCeilingHz;
+  }
+
+  function onAudioContextKnown(nextSampleRateHz) {
+    const wasKnown = Number.isFinite(sampleRateHz);
+    const prevEffective = getEffectiveCeilingHz();
+
+    sampleRateHz = Number.isFinite(nextSampleRateHz) ? nextSampleRateHz : null;
+
+    const nextEffective = getEffectiveCeilingHz();
+    const becameKnown = !wasKnown && Number.isFinite(sampleRateHz);
+    const effectiveChanged = nextEffective !== prevEffective;
+
+    return becameKnown || effectiveChanged;
+  }
+
+  function rebuildNow() {
+    BandBank.rebuild(getEffectiveCeilingHz(), sampleRateHz);
+  }
+
+  return {
+    syncFromSettings,
+    readBandDefKey,
+    onAudioContextKnown,
+    rebuildNow,
+  };
+})();
+
+const BandBank = (() => {
+  function getBandRangeData(index) {
+    const n = runtime.settings.bands.count;
+    if (!Number.isInteger(index) || index < 0 || index >= n) return null;
+
+    const lowHz = state.bands.lowHz[index];
+    const highHzRaw = state.bands.highHz[index];
+    const meta = state.bands.meta;
+    const nyquistHz = Number.isFinite(meta.nyquistHz) ? meta.nyquistHz : null;
+
+    const highHzDisplay = Number.isFinite(nyquistHz)
+      ? Math.min(nyquistHz, highHzRaw === Infinity ? nyquistHz : highHzRaw)
+      : highHzRaw;
+
+    return {
+      index,
+      lowHz,
+      highHzRaw,
+      highHzDisplay,
+      floorHz: runtime.settings.bands.floorHz,
+      effectiveCeilingHz: meta.effectiveCeilingHz,
+      nyquistHz,
+      isFloorBand: index === 0,
+      isTopBand: index === n - 1,
+      isOpenEnded: highHzRaw === Infinity,
+      isNyquistLimited: highHzRaw === Infinity && Number.isFinite(nyquistHz),
+    };
+  }
+
+  function formatBandFrequencyHz(hz) {
+    if (hz === Infinity) return "∞";
+    if (!Number.isFinite(hz)) return "n/a";
+    if (hz >= 1000) return `${fmt(hz / 1000, hz >= 10000 ? 1 : 2)} kHz`;
+    return `${fmt(hz, hz >= 100 ? 0 : 1)} Hz`;
+  }
+
+  function formatBandRangeText(index) {
+    const range = getBandRangeData(index);
+    if (!range) return "n/a";
+    return `${formatBandFrequencyHz(range.lowHz)}–${formatBandFrequencyHz(range.highHzDisplay)}`;
+  }
+
+  function rebuild(effectiveCeilingHz, sampleRateHz = null) {
+    const s = runtime.settings;
+    const n = s.bands.count;
+    const f0 = s.bands.floorHz;
+    const configCeilingHz = s.bands.ceilingHz;
+    const f1 = Math.max(f0, Number.isFinite(effectiveCeilingHz) ? effectiveCeilingHz : configCeilingHz);
+
+    state.bands.lowHz = new Array(n);
+    state.bands.highHz = new Array(n);
+
+    state.bands.lowHz[0] = 0;
+    state.bands.highHz[0] = f0;
+
+    const interiorBands = n - 2;
+    const ratio = s.bands.logSpacing
+      ? Math.pow(f1 / f0, 1 / interiorBands)
+      : null;
+
+    for (let i = 0; i < interiorBands; i++) {
+      const idx = 1 + i;
+      if (s.bands.logSpacing) {
+        const lo = f0 * Math.pow(ratio, i);
+        const hi = f0 * Math.pow(ratio, i + 1);
+        state.bands.lowHz[idx] = lo;
+        state.bands.highHz[idx] = hi;
+      } else {
+        const lo = lerp(f0, f1, i / interiorBands);
+        const hi = lerp(f0, f1, (i + 1) / interiorBands);
+        state.bands.lowHz[idx] = lo;
+        state.bands.highHz[idx] = hi;
+      }
+    }
+
+    state.bands.lowHz[n - 1] = f1;
+    state.bands.highHz[n - 1] = Infinity;
+
+    state.bands.energies01 = new Array(n).fill(0);
+    state.bands.meta.sampleRateHz = Number.isFinite(sampleRateHz) ? sampleRateHz : null;
+    state.bands.meta.nyquistHz = Number.isFinite(sampleRateHz) ? sampleRateHz * 0.5 : null;
+    state.bands.meta.configCeilingHz = configCeilingHz;
+    state.bands.meta.effectiveCeilingHz = f1;
+  }
+
+  function bandIndexFromAngleRad(angleRad) {
+    const n = runtime.settings.bands.count;
+    const a01 = ((angleRad % TAU) + TAU) % TAU / TAU;
+    let idx = Math.floor(a01 * n);
+    idx = clamp(idx, 0, n - 1);
+    return idx;
+  }
+
+  function computeEnergiesFromCAnalyser(cBand, audioContextSampleRate) {
+    const s = runtime.settings;
+    const n = s.bands.count;
+    if (!cBand || !cBand.freqDb) return;
+
+    const nyquist = audioContextSampleRate * 0.5;
+    const bins = cBand.freqDb.length;
+
+    const minDb = cBand.analyser.minDecibels;
+    const maxDb = cBand.analyser.maxDecibels;
+    const dbSpan = Math.max(1e-6, (maxDb - minDb));
+
+    let dominant = 0;
+    let dominantVal = -1;
+
+    for (let i = 0; i < n; i++) {
+      const loHz = state.bands.lowHz[i];
+      const hiHzRaw = state.bands.highHz[i];
+      const hiHz = Math.min(nyquist, (hiHzRaw === Infinity ? nyquist : hiHzRaw));
+
+      const loBin = Math.floor((loHz / nyquist) * (bins - 1));
+      const hiBin = Math.ceil((hiHz / nyquist) * (bins - 1));
+
+      const a = clamp(loBin, 0, bins - 1);
+      const b = clamp(hiBin, 0, bins - 1);
+
+      if (b < a) {
+        state.bands.energies01[i] = 0;
+        continue;
+      }
+
+      let sum = 0;
+      let count = 0;
+      for (let k = a; k <= b; k++) {
+        const t = clamp((cBand.freqDb[k] - minDb) / dbSpan, 0, 1);
+        sum += t;
+        count += 1;
+      }
+
+      const avg = count > 0 ? (sum / count) : 0;
+      state.bands.energies01[i] = avg;
+
+      if (avg > dominantVal) {
+        dominantVal = avg;
+        dominant = i;
+      }
+    }
+
+    state.bands.dominantIndex = dominant;
+    const name = BAND_NAMES[dominant] || `Band ${dominant}`;
+    state.bands.dominantName = name;
+  }
+
+  return { rebuild, bandIndexFromAngleRad, computeEnergiesFromCAnalyser, getBandRangeData, formatBandRangeText };
+})();
+
+/* =============================================================================
+   ColorPolicy
+   ========================================================================== */
+const ColorPolicy = (() => {
+  function bandRgb01(index) {
+    const s = runtime.settings;
+    const n = s.bands.count;
+    const hueStep = 360 / n;
+    const hue = s.bands.rainbow.hueOffsetDeg + index * hueStep;
+    return hsvToRgb01(hue, s.bands.rainbow.saturation, s.bands.rainbow.value);
+  }
+
+  function pickParticleColorRgb01(angleRad) {
+    const s = runtime.settings;
+
+    if (s.bands.particleColorSource === "fixed") return hexToRgb01(s.visuals.particleColor);
+    if (s.bands.particleColorSource === "angle") return bandRgb01(BandBank.bandIndexFromAngleRad(angleRad));
+
+    return bandRgb01(state.bands.dominantIndex); // dominant
+  }
+
+  function pickLineColorRgb01(particles) {
+    const s = runtime.settings;
+    if (s.trace.lineColorMode === "dominantBand") return bandRgb01(state.bands.dominantIndex);
+
+    if (s.trace.lineColorMode === "lastParticle") {
+      const last = particles && particles.length ? particles[particles.length - 1] : null;
+      if (last && last.rgbStart) return last.rgbStart;
+      return hexToRgb01(s.visuals.particleColor);
+    }
+
+    return hexToRgb01(s.visuals.particleColor); // fixed
+  }
+
+  return { bandRgb01, pickParticleColorRgb01, pickLineColorRgb01 };
+})();
+
+
+/* =============================================================================
+   Queue
+     Owns the ordered list of files to play and the cursor (current index).
+      All track-change entry points (Load, drag-drop, Next, Prev, click-to-jump)
+      call into Queue for data, then call loadAndPlay() for the actual playback.
+     Queue state is runtime-only until the Playlist module replaces it.
+   ========================================================================== */
+const Queue = (() => {
+  // Each item: { file: File, name: string }
+  let _items = [];
+  let _cursor = -1; // -1 = nothing loaded
+
+  // Add a file to the end of the queue. Returns the new item index.
+  function add(file) {
+    _items.push({ file, name: file.name });
+    return _items.length - 1;
+  }
+
+  // Remove item at index. Adjusts cursor:
+  //   - If removing the current track: cursor stays at same index (now points to
+  //     the next track), clamped to valid range. Returns the new current file
+  //     (or null if queue is now empty) so the caller can decide whether to load it.
+  //   - If removing a track before the cursor: cursor decrements to stay on same track.
+  //   - If removing a track after the cursor: cursor unchanged.
+  function remove(index) {
+    if (index < 0 || index >= _items.length) return null;
+    _items.splice(index, 1);
+    if (_items.length === 0) {
+      _cursor = -1;
+      return null;
+    }
+    if (index < _cursor) {
+      _cursor -= 1; // track before us removed; stay on same track
+    } else if (index === _cursor) {
+      _cursor = Math.min(_cursor, _items.length - 1); // removed current; point to next (or last)
+    }
+    // index > _cursor: cursor unchanged
+    return _items[_cursor] ? _items[_cursor].file : null;
+  }
+
+  // Remove all items and reset cursor.
+  function clear() {
+    _items = [];
+    _cursor = -1;
+  }
+
+  // Move cursor to index and return that file, or null if out of range.
+  function goTo(index) {
+    if (index < 0 || index >= _items.length) return null;
+    _cursor = index;
+    return _items[_cursor].file;
+  }
+
+  // Advance to next track. Returns file, or null if already at end (or queue empty).
+  function next() {
+    if (!canNext()) return null;
+    _cursor += 1;
+    return _items[_cursor].file;
+  }
+
+  // Move to previous track. Returns file, or null if already at start (or queue empty).
+  function prev() {
+    if (!canPrev()) return null;
+    _cursor -= 1;
+    return _items[_cursor].file;
+  }
+
+  // The file currently at the cursor, or null.
+  function current() {
+    if (_cursor < 0 || _cursor >= _items.length) return null;
+    return _items[_cursor].file;
+  }
+
+  function canNext() { return _items.length > 0 && _cursor < _items.length - 1; }
+  function canPrev() { return _items.length > 0 && _cursor > 0; }
+
+  // One-time queue reorder. Preserves currently playing track/cursor item.
+  function shuffle() {
+    if (_items.length < 3) return false;
+
+    const currentItem = (_cursor >= 0 && _cursor < _items.length) ? _items[_cursor] : null;
+
+    for (let i = _items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [_items[i], _items[j]] = [_items[j], _items[i]];
+    }
+
+    if (currentItem) _cursor = _items.indexOf(currentItem);
+    return true;
+  }
+
+  // Read-only snapshot for UI rendering — returns plain objects, not file refs.
+  function snapshot() {
+    return {
+      items: _items.map((it, i) => ({ index: i, name: it.name, active: i === _cursor })),
+      cursor: _cursor,
+      length: _items.length,
+    };
+  }
+
+  return { add, remove, clear, goTo, next, prev, current, canNext, canPrev, shuffle, snapshot,
+    get length() { return _items.length; },
+    get currentIndex() { return _cursor; },
+    // Direct cursor write — used when add() triggers the first auto-play.
+    setCursor(i) { if (i >= 0 && i < _items.length) _cursor = i; },
+  };
+})();
+
+/* =============================================================================
+   Audio Engine (L/R/C) + freq data for C
+   ========================================================================== */
+const AudioEngine = (() => {
+  let audioContext = null;
+
+  let mediaEl = null;
+  let mediaElAbort = null; // AbortController — cancels all mediaEl listeners on teardown
+  let mediaObjectUrl = null;
+  let sourceNode = null;
+  let outputGain = null;
+
+  let splitter = null;
+  let sumNode = null;
+  let sumGainL = null;
+  let sumGainR = null;
+
+  const bands = new Map();
+  const status = {
+    ready: false,
+    monoLike: true,
+    rmsL: 0, rmsR: 0, corrLR: 0,
+  };
+
+  function revokeObjectUrl(url) {
+    if (!url) return;
+    try { URL.revokeObjectURL(url); } catch {}
+  }
+
+  function releaseMediaElement(el, objectUrl) {
+    if (!el) {
+      revokeObjectUrl(objectUrl);
+      return;
+    }
+    try { el.pause(); } catch {}
+    try { el.currentTime = 0; } catch {}
+    try { el.removeAttribute("src"); } catch {}
+    try { el.load(); } catch {}
+    revokeObjectUrl(objectUrl);
+  }
+
+  function describePlaybackError(err) {
+    if (!err) return "Playback failed.";
+    if (err.name === "NotSupportedError") return "Playback failed: unsupported or unreadable audio file.";
+    if (err.name === "AbortError") return "Playback was interrupted before start.";
+    return `Playback failed: ${err.message || err.name || "unknown error"}`;
+  }
+
+  function ensureContext() {
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (BandBankController.onAudioContextKnown(audioContext.sampleRate)) {
+      BandBankController.rebuildNow();
+    }
+    return audioContext;
+  }
+
+  function teardown() {
+    try { if (sourceNode) sourceNode.disconnect(); } catch {}
+    try { if (splitter) splitter.disconnect(); } catch {}
+    try { if (sumNode) sumNode.disconnect(); } catch {}
+    try { if (outputGain) outputGain.disconnect(); } catch {}
+
+    bands.clear();
+    sourceNode = null;
+    splitter = null;
+    sumNode = null;
+    sumGainL = null;
+    sumGainR = null;
+    outputGain = null;
+
+    const oldAbort = mediaElAbort;
+    const oldMediaEl = mediaEl;
+    const oldObjectUrl = mediaObjectUrl;
+    mediaElAbort = null;
+    mediaEl = null;
+    mediaObjectUrl = null;
+    if (oldAbort) oldAbort.abort();
+    releaseMediaElement(oldMediaEl, oldObjectUrl);
+
+    status.ready = false;
+    status.monoLike = true;
+    status.rmsL = 0;
+    status.rmsR = 0;
+    status.corrLR = 0;
+  }
+
+  function makeAnalyserBand(id, label) {
+    const ctx = ensureContext();
+    const a = ctx.createAnalyser();
+    a.fftSize = runtime.settings.audio.fftSize;
+    a.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
+
+    const timeDomain = new Float32Array(a.fftSize);
+    const freqDb = new Float32Array(a.frequencyBinCount);
+
+    return { id, label, analyser: a, timeDomain, freqDb, rms: 0, energy01: 0 };
+  }
+
+  function applyPlaybackSettingsLive() {
+    if (!outputGain || !mediaEl) return;
+    const s = runtime.settings;
+    outputGain.gain.value = s.audio.muted ? 0 : s.audio.volume;
+  }
+
+  function applyAnalyserSettingsLive() {
+    for (const band of bands.values()) {
+      band.analyser.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
+      if (band.analyser.fftSize !== runtime.settings.audio.fftSize) {
+        band.analyser.fftSize = runtime.settings.audio.fftSize;
+        band.timeDomain = new Float32Array(band.analyser.fftSize);
+        band.freqDb = new Float32Array(band.analyser.frequencyBinCount);
+      }
+    }
+  }
+
+  function buildGraph() {
+    const ctx = ensureContext();
+
+    outputGain = ctx.createGain();
+    splitter = ctx.createChannelSplitter(2);
+
+    sumNode = ctx.createGain();
+    sumGainL = ctx.createGain();
+    sumGainR = ctx.createGain();
+    sumGainL.gain.value = 0.5;
+    sumGainR.gain.value = 0.5;
+
+    const bandL = makeAnalyserBand("L", "Left");
+    const bandR = makeAnalyserBand("R", "Right");
+    const bandC = makeAnalyserBand("C", "Center");
+
+    bands.set("L", bandL);
+    bands.set("R", bandR);
+    bands.set("C", bandC);
+
+    sourceNode.connect(splitter);
+
+    splitter.connect(bandL.analyser, 0);
+    splitter.connect(bandR.analyser, 1);
+
+    splitter.connect(sumGainL, 0);
+    splitter.connect(sumGainR, 1);
+    sumGainL.connect(sumNode);
+    sumGainR.connect(sumNode);
+    sumNode.connect(bandC.analyser);
+
+    sourceNode.connect(outputGain);
+    outputGain.connect(ctx.destination);
+
+    applyPlaybackSettingsLive();
+    applyAnalyserSettingsLive();
+
+    status.ready = true;
+  }
+
+  async function loadFile(file, requestId = null, opts = {}) {
+    const autoPlay = opts && opts.autoPlay === false ? false : true;
+    const isCurrentRequest = () => {
+      if (requestId == null) return true;
+      if (typeof AudioEngine._isLoadRequestCurrent !== "function") return true;
+      return AudioEngine._isLoadRequestCurrent(requestId);
+    };
+
+    const ctx = ensureContext();
+    if (ctx.state === "suspended") await ctx.resume();
+
+    if (!isCurrentRequest()) return false;
+
+    teardown();
+
+    const nextMediaEl = document.createElement("audio");
+    nextMediaEl.preload = "auto";
+
+    const nextAbort = new AbortController();
+    const sig = { signal: nextAbort.signal };
+
+    const url = URL.createObjectURL(file);
+    nextMediaEl.src = url;
+
+    mediaEl = nextMediaEl;
+    mediaElAbort = nextAbort;
+    mediaObjectUrl = url;
+
+    nextMediaEl.addEventListener("loadeddata", () => {
+      if (mediaObjectUrl === url) mediaObjectUrl = null;
+      revokeObjectUrl(url);
+    }, { once: true, ...sig });
+    nextMediaEl.addEventListener("error", () => {
+      if (mediaObjectUrl === url) mediaObjectUrl = null;
+      revokeObjectUrl(url);
+      state.audio.isPlaying = false;
+      state.audio.transportError = "Playback error: unsupported or unreadable audio file.";
+    }, { once: true, ...sig });
+
+    nextMediaEl.addEventListener("play", () => {
+      state.audio.isPlaying = true;
+      state.audio.transportError = "";
+    }, sig);
+    nextMediaEl.addEventListener("pause", () => {
+      state.audio.isPlaying = false;
+    }, sig);
+    nextMediaEl.addEventListener("ended", () => {
+      state.audio.isPlaying = false;
+      if (typeof AudioEngine._onTrackEnded === "function") {
+        AudioEngine._onTrackEnded();
+      }
+    }, sig);
+
+    sourceNode = ctx.createMediaElementSource(nextMediaEl);
+    buildGraph();
+
+    let playErr = null;
+    if (autoPlay) {
+      playErr = await nextMediaEl.play().then(() => null).catch((err) => err);
+    }
+
+    if (!isCurrentRequest() || mediaEl !== nextMediaEl) {
+      releaseMediaElement(nextMediaEl, url);
+      return false;
+    }
+
+    state.audio.isLoaded = !playErr;
+    state.audio.filename = !playErr ? file.name : "";
+    state.audio.transportError = playErr ? describePlaybackError(playErr) : "";
+    state.audio.isPlaying = !playErr && autoPlay && !nextMediaEl.paused;
+
+    return !playErr;
+  }
+
+  async function playPause() {
+    if (!mediaEl) return;
+    const ctx = ensureContext();
+    if (ctx.state === "suspended") await ctx.resume();
+
+    if (mediaEl.paused) {
+      const err = await mediaEl.play().then(() => null).catch((e) => e);
+      if (err) {
+        state.audio.isPlaying = false;
+        state.audio.transportError = describePlaybackError(err);
+        return;
+      }
+    } else mediaEl.pause();
+
+    state.audio.isPlaying = !mediaEl.paused;
+  }
+
+  function stop() {
+    if (!mediaEl) return;
+    mediaEl.pause();
+    try { mediaEl.currentTime = 0; } catch {}
+    state.audio.isPlaying = false;
+  }
+
+  // Full transport release: pause + detach media src + tear down graph/listeners.
+  // Unlike stop(), this leaves no track loaded in the engine.
+  function unload() {
+    teardown();
+    state.audio.isPlaying = false;
+  }
+
+  function computeRmsFromWaveform(wf) {
+    let sumSq = 0;
+    for (let i = 0; i < wf.length; i++) {
+      const v = wf[i];
+      sumSq += v * v;
+    }
+    return Math.sqrt(sumSq / Math.max(1, wf.length));
+  }
+
+  function computeEnergy01(rms) {
+    const g = runtime.settings.audio.rmsGain;
+    return clamp(rms * g, 0, 1);
+  }
+
+  function updateMonoDetection(bandL, bandR) {
+    const silenceThresh = CONFIG.limits.monoDetect.rightSilenceRms;
+    const stride = CONFIG.limits.monoDetect.lrCorrelationStride;
+    const corrThresh = CONFIG.limits.monoDetect.lrCorrelationMonoThresh;
+
+    const rmsL = bandL.rms;
+    const rmsR = bandR.rms;
+
+    status.rmsL = rmsL;
+    status.rmsR = rmsR;
+
+    if (rmsR < silenceThresh) {
+      status.corrLR = 0;
+      status.monoLike = true;
+      return;
+    }
+
+    const L = bandL.timeDomain;
+    const R = bandR.timeDomain;
+
+    const dLR = dot(L, R, stride);
+    const dLL = dot(L, L, stride);
+    const dRR = dot(R, R, stride);
+
+    const denom = Math.sqrt(Math.max(1e-12, dLL * dRR));
+    const corr = dLR / denom;
+
+    status.corrLR = corr;
+    status.monoLike = corr >= corrThresh;
+  }
+
+  function adjustCenterMixing() {
+    if (!sumGainL || !sumGainR) return;
+    const rSilent = status.rmsR < CONFIG.limits.monoDetect.rightSilenceRms;
+    if (rSilent) {
+      sumGainL.gain.value = 1.0;
+      sumGainR.gain.value = 0.0;
+    } else {
+      sumGainL.gain.value = 0.5;
+      sumGainR.gain.value = 0.5;
+    }
+  }
+
+  function sample() {
+    if (!status.ready) return { ready: false, monoLike: true };
+
+    const bandL = bands.get("L");
+    const bandR = bands.get("R");
+    const bandC = bands.get("C");
+
+    bandL.analyser.getFloatTimeDomainData(bandL.timeDomain);
+    bandR.analyser.getFloatTimeDomainData(bandR.timeDomain);
+
+    bandL.rms = computeRmsFromWaveform(bandL.timeDomain);
+    bandR.rms = computeRmsFromWaveform(bandR.timeDomain);
+
+    updateMonoDetection(bandL, bandR);
+    adjustCenterMixing();
+
+    bandC.analyser.getFloatTimeDomainData(bandC.timeDomain);
+    bandC.rms = computeRmsFromWaveform(bandC.timeDomain);
+
+    bandL.energy01 = computeEnergy01(bandL.rms);
+    bandR.energy01 = computeEnergy01(bandR.rms);
+    bandC.energy01 = computeEnergy01(bandC.rms);
+
+    bandC.analyser.getFloatFrequencyData(bandC.freqDb);
+    BandBank.computeEnergiesFromCAnalyser(bandC, ensureContext().sampleRate);
+
+    return { ready: true, monoLike: status.monoLike, bands: { L: bandL, R: bandR, C: bandC }, debug: { corrLR: status.corrLR } };
+  }
+
+  let _onTrackEnded = null;
+  let _isLoadRequestCurrent = null;
+
+  return { loadFile, playPause, stop, unload, sample, applyPlaybackSettingsLive, applyAnalyserSettingsLive,
+    // Exposed for Scrubber use only — reading/seeking currentTime/duration.
+    // Do not use this to attach new event listeners; use the _onTrackEnded hook instead.
+    getMediaEl() { return mediaEl; },
+    get _onTrackEnded() { return _onTrackEnded; },
+    set _onTrackEnded(fn) { _onTrackEnded = (typeof fn === "function") ? fn : null; },
+    get _isLoadRequestCurrent() { return _isLoadRequestCurrent; },
+    set _isLoadRequestCurrent(fn) { _isLoadRequestCurrent = (typeof fn === "function") ? fn : null; },
+  };
+})();
+
+/* =============================================================================
+   Scrubber
+   Draws waveform overview + played progress + live playhead on #scrubberCanvas.
+   Handles click/drag seeking.
+   Decodes audio asynchronously (non-blocking): playback starts immediately;
+   waveform renders when decode completes. Explicit states are shown for
+   no-track, decoding, ready, and waveform-unavailable.
+   ========================================================================== */
+const Scrubber = (() => {
+  let _canvas = null;
+  let _ctx2d = null;
+  let _waveform = null;    // Float32Array of normalised peak samples, or null
+  let _dragging = false;
+  let _decodeToken = 0;
+  let _decodeInFlight = false;
+  let _waveformStatus = "empty"; // empty | decoding | ready | unavailable
+
+  function init(canvasEl) {
+    _canvas = canvasEl;
+    _ctx2d = _canvas.getContext("2d");
+    _canvas.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    _canvas.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd);
+  }
+
+  // Called on every new file load. Decodes the file for the waveform overview,
+  // completely independently of the media element used for playback. Does not
+  // block — decode runs async; draw() will pick up _waveform once it is ready.
+  async function loadFile(file) {
+    const decodeToken = ++_decodeToken;
+    _decodeInFlight = true;
+    _waveformStatus = "decoding";
+    _waveform = null; // clear old waveform immediately
+    draw();           // render explicit decoding state immediately
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      if (decodeToken !== _decodeToken) return;
+      // Use a throw-away AudioContext for offline decode — does not affect playback.
+      const offlineCtx = new OfflineAudioContext(1, 1, 44100);
+      const audioBuffer = await offlineCtx.decodeAudioData(arrayBuffer);
+      if (decodeToken !== _decodeToken) return;
+      // Downsample channel 0 to a manageable number of peak buckets.
+      const src = audioBuffer.getChannelData(0);
+      const buckets = 512;
+      const bucketSize = Math.max(1, Math.floor(src.length / buckets));
+      const peaks = new Float32Array(buckets);
+      for (let b = 0; b < buckets; b++) {
+        let max = 0;
+        const start = b * bucketSize;
+        for (let s = 0; s < bucketSize; s++) {
+          const abs = Math.abs(src[start + s] || 0);
+          if (abs > max) max = abs;
+        }
+        peaks[b] = max;
+      }
+      _waveform = peaks;
+      _waveformStatus = "ready";
+    } catch {
+      // 3.5 — Waveform decode error handling:
+      // decodeAudioData() can fail for corrupt files, unsupported codecs, or
+      // stream sources. _waveform stays null and status becomes unavailable.
+      // in the null branch — playback is completely unaffected because the
+      // Scrubber decode runs on a throw-away OfflineAudioContext that is
+      // entirely independent of the media element used for playback.
+      // DoD satisfied: decode failure degrades gracefully; no crash, no block.
+      if (decodeToken === _decodeToken) {
+        _waveform = null;
+        _waveformStatus = "unavailable";
+      }
+    } finally {
+      if (decodeToken === _decodeToken) _decodeInFlight = false;
+    }
+    if (decodeToken === _decodeToken) draw();
+  }
+
+  // Reset: clear waveform and redraw blank canvas. Called on queue clear.
+  function reset() {
+    _decodeToken++;
+    _decodeInFlight = false;
+    _waveformStatus = "empty";
+    _waveform = null;
+    draw();
+  }
+
+  // Get the <audio> element from AudioEngine internals. AudioEngine exposes
+  // a getMediaEl() accessor added in this build for scrubber and seek use only.
+  function getMediaEl() {
+    return AudioEngine.getMediaEl ? AudioEngine.getMediaEl() : null;
+  }
+
+  function formatTime(sec) {
+    if (!Number.isFinite(sec) || sec < 0) return "--:--";
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  function draw() {
+    if (!_canvas || !_ctx2d) return;
+
+    // Sync canvas pixel dimensions to CSS dimensions each frame.
+    const w = _canvas.clientWidth;
+    const h = _canvas.clientHeight;
+    if (_canvas.width !== w || _canvas.height !== h) {
+      _canvas.width = w;
+      _canvas.height = h;
+    }
+    if (w === 0 || h === 0) return;
+
+    const c = _ctx2d;
+    c.clearRect(0, 0, w, h);
+
+    const s = runtime.settings;
+    const bg = hexToRgb01(s.visuals.backgroundColor);
+    const particle = hexToRgb01(s.visuals.particleColor);
+    const trackBg = lerpRgb01(bg, particle, 0.14);
+    const waveUnplayed = lerpRgb01(particle, bg, 0.62);
+    const wavePlayed = lerpRgb01(particle, bg, 0.18);
+    const playheadColor = lerpRgb01(particle, bg, 0.03);
+    const unavailableColor = lerpRgb01({ r: 1, g: 0.45, b: 0.45 }, bg, 0.35);
+
+    c.fillStyle = rgb01ToCss(trackBg, 0.95);
+    c.fillRect(0, 0, w, h);
+
+    const midY = h * 0.5;
+    const el = getMediaEl();
+    const hasLoadedTrack = !!el && state.audio.isLoaded;
+    const hasSeekableDuration = hasLoadedTrack && Number.isFinite(el.duration) && el.duration > 0;
+    const playbackFrac = hasSeekableDuration
+      ? clamp(el.currentTime / el.duration, 0, 1)
+      : 0;
+    const playedPx = playbackFrac * w;
+
+    // Waveform overview: unplayed baseline first, then played overlay clipped to playback.
+    if (_waveform && _waveform.length > 0) {
+      c.fillStyle = rgb01ToCss(waveUnplayed, 0.66);
+      const buckets = _waveform.length;
+      for (let b = 0; b < buckets; b++) {
+        const x = (b / buckets) * w;
+        const bw = Math.max(1, (w / buckets) - 0.5);
+        const amp = _waveform[b] * midY * 0.92;
+        c.fillRect(x, midY - amp, bw, amp * 2);
+      }
+
+      if (playedPx > 0) {
+        c.save();
+        c.beginPath();
+        c.rect(0, 0, playedPx, h);
+        c.clip();
+        c.fillStyle = rgb01ToCss(wavePlayed, 0.92);
+        for (let b = 0; b < buckets; b++) {
+          const x = (b / buckets) * w;
+          const bw = Math.max(1, (w / buckets) - 0.5);
+          const amp = _waveform[b] * midY * 0.92;
+          c.fillRect(x, midY - amp, bw, amp * 2);
+        }
+        c.restore();
+      }
+    } else {
+      // Flat centre-line fallback with explicit status styling.
+      const fallbackAlpha = _waveformStatus === "decoding" ? 0.48 : (_waveformStatus === "unavailable" ? 0.52 : 0.34);
+      c.strokeStyle = _waveformStatus === "unavailable" ? rgb01ToCss(unavailableColor, fallbackAlpha) : rgb01ToCss(waveUnplayed, fallbackAlpha);
+      c.lineWidth = 1.5;
+      c.beginPath();
+      c.moveTo(0, midY);
+      c.lineTo(w, midY);
+      c.stroke();
+
+      if (playedPx > 0) {
+        c.strokeStyle = _waveformStatus === "unavailable" ? rgb01ToCss(unavailableColor, 0.78) : rgb01ToCss(wavePlayed, _waveformStatus === "decoding" ? 0.78 : 0.65);
+        c.beginPath();
+        c.moveTo(0, midY);
+        c.lineTo(playedPx, midY);
+        c.stroke();
+      }
+    }
+
+    // Playhead line is drawn last so it stays highest-contrast/readable.
+    if (hasSeekableDuration) {
+      c.strokeStyle = rgb01ToCss(playheadColor, 0.98);
+      c.lineWidth = 2;
+      c.beginPath();
+      c.moveTo(playedPx, 0);
+      c.lineTo(playedPx, h);
+      c.stroke();
+
+      // Time display
+      const timeEl = document.getElementById("scrubberTime");
+      if (timeEl) {
+        const statusText = _waveformStatus === "decoding" ? " • decoding waveform"
+          : (_waveformStatus === "unavailable" ? " • waveform unavailable" : "");
+        timeEl.textContent = `${formatTime(el.currentTime)} / ${formatTime(el.duration)}${statusText}`;
+      }
+    } else if (hasLoadedTrack) {
+      const timeEl = document.getElementById("scrubberTime");
+      if (timeEl) {
+        const statusText = _waveformStatus === "decoding" ? " • decoding waveform"
+          : (_waveformStatus === "unavailable" ? " • waveform unavailable" : "");
+        timeEl.textContent = `--:-- / --:--${statusText}`;
+      }
+    } else {
+      const timeEl = document.getElementById("scrubberTime");
+      if (timeEl) timeEl.textContent = "--:-- / --:-- • no track loaded";
+    }
+  }
+
+  function seekToFraction(frac) {
+    const el = getMediaEl();
+    if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
+    el.currentTime = clamp(frac, 0, 1) * el.duration;
+  }
+
+  function fractionFromEvent(e) {
+    const rect = _canvas.getBoundingClientRect();
+    return clamp((e.clientX - rect.left) / rect.width, 0, 1);
+  }
+
+  function fractionFromTouch(e) {
+    const rect = _canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    return clamp((t.clientX - rect.left) / rect.width, 0, 1);
+  }
+
+  function onMouseDown(e) { _dragging = true; seekToFraction(fractionFromEvent(e)); }
+  function onMouseMove(e) { if (_dragging) seekToFraction(fractionFromEvent(e)); }
+  function onMouseUp()    { _dragging = false; }
+
+  function onTouchStart(e) { e.preventDefault(); _dragging = true; seekToFraction(fractionFromTouch(e)); }
+  function onTouchMove(e)  { e.preventDefault(); if (_dragging) seekToFraction(fractionFromTouch(e)); }
+  function onTouchEnd()    { _dragging = false; }
+
+  return { init, loadFile, reset, draw };
+})();
+
+/* =============================================================================
+   TrailSystem
+   ========================================================================== */
+class TrailSystem {
+  constructor() {
+    this.particles = []; // { xSim, ySim, bornSec, rgbStart }
+    this.emitAccumulator = 0;
+  }
+
+  reset() {
+    this.particles.length = 0;
+    this.emitAccumulator = 0;
+  }
+
+  removeOverlaps(xSim, ySim, rPx) {
+    if (rPx <= 0) return;
+    const r2 = rPx * rPx;
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      const dx = p.xSim - xSim;
+      const dy = p.ySim - ySim;
+      if ((dx*dx + dy*dy) <= r2) this.particles.splice(i, 1);
+    }
+  }
+
+  emitAt(xSim, ySim, nowSec, rgbStart) {
+    const s = runtime.settings;
+    this.removeOverlaps(xSim, ySim, s.particles.overlapRadiusPx * state.dpr);
+    this.particles.push({ xSim, ySim, bornSec: nowSec, rgbStart });
+  }
+
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart) {
+    const s = runtime.settings;
+
+    const ttl = Math.max(0.0001, s.particles.ttlSec);
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      if ((nowSec - this.particles[i].bornSec) >= ttl) this.particles.splice(i, 1);
+    }
+
+    this.emitAccumulator += s.particles.emitPerSecond * dtSec;
+
+    const maxEmitThisFrame = Math.ceil(s.particles.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
+
+    let emits = 0;
+    while (this.emitAccumulator >= 1 && emits < maxEmitThisFrame) {
+      this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart);
+      this.emitAccumulator -= 1;
+      emits += 1;
+    }
+  }
+}
+
+/* =============================================================================
+   Orb
+   ========================================================================== */
+class Orb {
+  constructor(def) {
+    this.id = def.id;
+    this.chanId = normalizeOrbChannelId(def.chanId, def.bandId);
+    this.bandIds = sanitizeOrbBandIds(def.bandIds, def.bandNames);
+    this.chirality = def.chirality;
+    this.startAngleRad = def.startAngleRad;
+    this.angleRad = this.startAngleRad;
+
+    this.trail = new TrailSystem();
+
+    this.xSim = 0;
+    this.ySim = 0;
+    this.baseRadiusPx = 0;
+    this.radialDispPx = 0;
+  }
+
+  resetPhase() { this.angleRad = this.startAngleRad; }
+  resetTrail() { this.trail.reset(); }
+
+  step(dtSec, nowSec, band, energyOverride01) {
+    const s = runtime.settings;
+
+    this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
+    this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
+
+    const minDim = Math.min(state.widthPx, state.heightPx);
+    const minR = minDim * s.audio.minRadiusFrac;
+    const maxR = minDim * s.audio.maxRadiusFrac;
+    const safeMin = Math.min(minR, maxR);
+    const safeMax = Math.max(minR, maxR);
+
+    const energy01 = Number.isFinite(energyOverride01)
+      ? clamp(energyOverride01, 0, 1)
+      : (band ? band.energy01 : 0);
+    this.baseRadiusPx = safeMin + (safeMax - safeMin) * energy01;
+
+    const wf = band ? band.timeDomain : null;
+    if (wf && wf.length > 0) {
+      const phase01 = this.angleRad / TAU;
+      const idx = Math.floor(phase01 * (wf.length - 1));
+      const sample = wf[idx];
+      this.radialDispPx = this.baseRadiusPx * s.motion.waveformRadialDisplaceFrac * sample;
+    } else {
+      this.radialDispPx = 0;
+    }
+
+    const radius = this.baseRadiusPx + this.radialDispPx;
+
+    this.xSim = radius * Math.cos(this.angleRad);
+    this.ySim = radius * Math.sin(this.angleRad);
+
+    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad);
+    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
+  }
+}
+
+/* =============================================================================
+   Renderer
+   ========================================================================== */
+const Renderer = (() => {
+  function clearFrame() {
+    const ctx = state.ctx;
+    const s = runtime.settings;
+    ctx.fillStyle = s.visuals.backgroundColor;
+    ctx.fillRect(0, 0, state.widthPx, state.heightPx);
+  }
+
+  function drawTrailLines(particles) {
+    const s = runtime.settings;
+    if (!s.trace.lines) return;
+
+    const segments = s.trace.numLines;
+    const neededPts = segments + 1;
+    if (!particles || particles.length < 2) return;
+
+    const startIdx = Math.max(0, particles.length - neededPts);
+    const slice = particles.slice(startIdx);
+    if (slice.length < 2) return;
+
+    const ctx = state.ctx;
+    const rgb = ColorPolicy.pickLineColorRgb01(particles);
+    const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
+
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = s.trace.lineWidthPx * state.dpr;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    const p0 = Spaces.simToScreen(slice[0].xSim, slice[0].ySim);
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+
+    for (let i = 1; i < slice.length; i++) {
+      const pi = Spaces.simToScreen(slice[i].xSim, slice[i].ySim);
+      ctx.lineTo(pi.x, pi.y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawParticles(particles, nowSec) {
+    const s = runtime.settings;
+    const ctx = state.ctx;
+
+    const bg = hexToRgb01(s.visuals.backgroundColor);
+
+    const sizeMax = s.particles.sizeMaxPx * state.dpr;
+    const sizeMin = Math.min(s.particles.sizeMinPx, s.particles.sizeMaxPx) * state.dpr;
+
+    const toMin = Math.max(0.0001, s.particles.sizeToMinSec);
+    const ttl = Math.max(0.0001, s.particles.ttlSec);
+    const fadeSec = Math.max(0.0001, ttl - toMin);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      const age = nowSec - p.bornSec;
+
+      let size = sizeMin;
+      if (age < toMin) {
+        const t = clamp(age / toMin, 0, 1);
+        size = lerp(sizeMax, sizeMin, t);
+      }
+
+      const fg = p.rgbStart || hexToRgb01(s.visuals.particleColor);
+
+      let color = fg;
+      if (age >= toMin) {
+        const t = clamp((age - toMin) / fadeSec, 0, 1);
+        color = lerpRgb01(fg, bg, t);
+      }
+
+      const ps = Spaces.simToScreen(p.xSim, p.ySim);
+      ctx.fillStyle = rgb01ToCss(color, 1);
+      ctx.beginPath();
+      ctx.arc(ps.x, ps.y, size, 0, TAU);
+      ctx.fill();
+    }
+  }
+
+  function overlayWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
+    if (!waveform || waveform.length === 0) return 0;
+    const phase01 = ((angleRad % TAU) + TAU) % TAU / TAU;
+    const idx = Math.floor(phase01 * (waveform.length - 1));
+    const sample = waveform[idx];
+    // Overlay displacement ownership stays within bands.overlay.
+    return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
+  }
+
+  function drawBandOverlay(bandC) {
+    const bands = runtime.settings.bands;
+    const overlay = bands.overlay;
+    if (!overlay.enabled || !bandC) return;
+
+    const ctx = state.ctx;
+    const n = bands.count;
+    const phase = state.bands.ringPhaseRad;
+
+    const wf = bandC.timeDomain;
+
+    const minDim = Math.min(state.widthPx, state.heightPx);
+    // Overlay radius contract is independent from orb/audio radius controls.
+    const minR = minDim * overlay.minRadiusFrac;
+    const maxR = minDim * overlay.maxRadiusFrac;
+    const safeMin = Math.min(minR, maxR);
+    const safeMax = Math.max(minR, maxR);
+
+    const pts = new Array(n);
+
+    for (let i = 0; i < n; i++) {
+      const angle = phase + (i * TAU / n);
+      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
+      const baseR = safeMin + (safeMax - safeMin) * e;
+      const disp = overlayWaveformDisplacementPx(baseR, angle, wf, overlay);
+
+      const r = baseR + disp;
+      const xSim = r * Math.cos(angle);
+      const ySim = r * Math.sin(angle);
+
+      pts[i] = { xSim, ySim };
+    }
+
+    if (overlay.connectAdjacent) {
+      ctx.save();
+      ctx.lineWidth = overlay.lineWidthPx * state.dpr;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+
+      for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n;
+        const c = ColorPolicy.bandRgb01(i);
+        ctx.strokeStyle = rgb01ToCss(c, overlay.lineAlpha);
+
+        const a = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
+        const b = Spaces.simToScreen(pts[j].xSim, pts[j].ySim);
+
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    ctx.save();
+    const rPx = overlay.pointSizePx * state.dpr;
+    for (let i = 0; i < n; i++) {
+      const c = ColorPolicy.bandRgb01(i);
+      ctx.fillStyle = rgb01ToCss(c, overlay.alpha);
+      const p = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, rPx, 0, TAU);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function renderFrame(nowSec, bandC) {
+    clearFrame();
+    drawBandOverlay(bandC);
+    for (const orb of state.orbs) {
+      const particles = orb.trail.particles;
+      drawTrailLines(particles);
+      drawParticles(particles, nowSec);
+    }
+  }
+
+  return { renderFrame };
+})();
+
+/* =============================================================================
+   UI
+   ========================================================================== */
+const UI = (() => {
+  const ui = state.ui;
+
+  function setCssVarsFromConfig() {
+    const r = document.documentElement.style;
+    r.setProperty("--ui-panel-bg", CONFIG.ui.panelBackgroundRgba);
+    r.setProperty("--ui-panel-blur", CONFIG.ui.panelBlurPx + "px");
+    r.setProperty("--ui-pad", CONFIG.ui.panelPaddingPx + "px");
+    r.setProperty("--ui-gap", CONFIG.ui.panelGapPx + "px");
+    r.setProperty("--ui-radius", CONFIG.ui.panelRadiusPx + "px");
+    r.setProperty("--ui-audio-h", CONFIG.ui.audioPanelHeightPx + "px");
+    r.setProperty("--ui-icon", CONFIG.ui.iconButtonSizePx + "px");
+  }
+
+  function bindRange(el, lim) {
+    el.min = String(lim.min);
+    el.max = String(lim.max);
+    el.step = String(lim.step);
+  }
+
+  function hideAudioPanel() {
+    ui.audioPanel.style.display = "none";
+    ui.openAudio.style.display = "block";
+    // Queue panel is anchored above the audio panel — hide it with audio panel
+    // so it doesn't float orphaned when panels are toggled with H.
+    if (ui.queuePanel) ui.queuePanel.style.display = "none";
+    if (document.activeElement && ui.audioPanel.contains(document.activeElement)) ui.btnOpenAudio.focus();
+  }
+  function showAudioPanel() {
+    ui.audioPanel.style.display = "grid";
+    ui.openAudio.style.display = "none";
+    // Queue panel is NOT automatically reopened — user controls its visibility via ☰.
+    if (document.activeElement === ui.btnOpenAudio) ui.btnHideAudio.focus();
+  }
+
+  function hideSimPanel() {
+    ui.simPanel.style.display = "none";
+    ui.openSim.style.display = "block";
+    if (document.activeElement && ui.simPanel.contains(document.activeElement)) ui.btnOpenSim.focus();
+  }
+  function showSimPanel() {
+    ui.simPanel.style.display = "block";
+    ui.openSim.style.display = "none";
+    if (document.activeElement === ui.btnOpenSim) ui.btnHideSim.focus();
+  }
+
+  function hideBandsPanel() {
+    ui.bandsPanel.style.display = "none";
+    ui.openBands.style.display = "block";
+    if (document.activeElement && ui.bandsPanel.contains(document.activeElement)) ui.btnOpenBands.focus();
+  }
+  function showBandsPanel() {
+    ui.bandsPanel.style.display = "block";
+    ui.openBands.style.display = "none";
+    if (document.activeElement === ui.btnOpenBands) ui.btnHideBands.focus();
+  }
+
+  function togglePanels() {
+    const aVisible = ui.audioPanel.style.display !== "none";
+    const sVisible = ui.simPanel.style.display !== "none";
+    const bVisible = ui.bandsPanel.style.display !== "none";
+    const qVisible = ui.queuePanel && ui.queuePanel.style.display !== "none";
+
+    if (aVisible || sVisible || bVisible || qVisible) {
+      hideAudioPanel(); hideSimPanel(); hideBandsPanel();
+      // hideAudioPanel already closes queuePanel
+    } else {
+      showAudioPanel(); showSimPanel(); showBandsPanel();
+    }
+  }
+
+  // 112 status-lane routing:
+  // - sim lane carries sim/config toasts.
+  // - audio lane carries transport/audio toasts (rendered through audioStatus).
+  const STATUS_DEFAULT_SIM = "Sim panel: trace, particles, motion, analysis.";
+  const STATUS_DEFAULT_BANDS = "Bands panel: colors + spectral HUD.";
+  let _simStatusToastTimer = null;
+  let _audioStatusToastText = "";
+  let _audioStatusToastUntilMs = 0;
+
+  function simStatusToast(msg, holdMs = 2500) {
+    ui.simStatus.textContent = msg;
+    if (_simStatusToastTimer) clearTimeout(_simStatusToastTimer);
+    _simStatusToastTimer = setTimeout(() => {
+      ui.simStatus.textContent = STATUS_DEFAULT_SIM;
+      _simStatusToastTimer = null;
+    }, holdMs);
+  }
+
+  function audioStatusToast(msg, holdMs = 2500) {
+    _audioStatusToastText = msg;
+    _audioStatusToastUntilMs = performance.now() + holdMs;
+  }
+
+  function applyPrefs(reason, options = {}) {
+    const { rebuildBandsOnDefinitionChange = false } = options;
+    const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
+
+    preferences.particles.sizeMinPx = Math.min(preferences.particles.sizeMinPx, preferences.particles.sizeMaxPx);
+    preferences.particles.ttlSec = Math.max(preferences.particles.ttlSec, preferences.particles.sizeToMinSec);
+
+    resolveSettings();
+
+    BandBankController.syncFromSettings();
+    const bandDefinitionChanged = BandBankController.readBandDefKey(runtime.settings) !== prevBandDefKey;
+    if (rebuildBandsOnDefinitionChange && bandDefinitionChanged) {
+      BandBankController.rebuildNow();
+    }
+
+    AudioEngine.applyAnalyserSettingsLive();
+    AudioEngine.applyPlaybackSettingsLive();
+
+    if (reason) simStatusToast(`Updated: ${reason}`);
+    ui.bandsStatus.textContent = STATUS_DEFAULT_BANDS;
+  }
+
+  function resetOrbsToDesignedPhases() {
+    for (const orb of state.orbs) {
+      orb.resetPhase();
+      orb.resetTrail();
+    }
+    state.bands.ringPhaseRad = state.orbs.length ? state.orbs[0].angleRad : 0;
+  }
+
+  function resetPrefs() {
+    preferences = deepClone(CONFIG.defaults);
+    applyPrefs("prefs reset", { rebuildBandsOnDefinitionChange: true });
+    initOrbs();
+    resetOrbsToDesignedPhases();
+  }
+
+  async function shareLink() {
+    UrlPreset.writeHashFromPrefs();
+    const url = location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      simStatusToast("Share link copied to clipboard.", 4000);
+    } catch {
+      simStatusToast("Share link written to URL — copy from address bar.", 4000);
+    }
+  }
+
+  function applyUrlNow() {
+    const ok = UrlPreset.applyFromLocationHash();
+    if (ok) {
+      applyPrefs("applied URL preset", { rebuildBandsOnDefinitionChange: true });
+      initOrbs();
+      resetOrbsToDesignedPhases();
+    } else {
+      simStatusToast("No valid preset in URL hash.", 4000);
+    }
+  }
+
+  function buildBandHudRows() {
+    // Builds (or rebuilds) the band HUD rows from scratch.
+    // Called by ensureBandHudBuilt() on first use, and by rebuildBandHud()
+    // whenever band count changes (future builds that expose band config).
+    ui.bandRowEls = [];
+    ui.bandTable.innerHTML = "";
+
+    const n = runtime.settings.bands.count;
+
+    for (let i = 0; i < n; i++) {
+      const idx = document.createElement("div");
+      idx.className = "bandIdx";
+      idx.textContent = String(i);
+
+      const name = document.createElement("div");
+      name.className = "bandName";
+      name.textContent = BAND_NAMES[i] || `Band ${i}`;
+
+      const range = document.createElement("div");
+      range.className = "bandRange";
+      range.textContent = BandBank.formatBandRangeText(i);
+
+      const bar = document.createElement("div");
+      bar.className = "bandBar";
+
+      const fill = document.createElement("div");
+      fill.className = "bandFill";
+      bar.appendChild(fill);
+
+      ui.bandTable.appendChild(idx);
+      ui.bandTable.appendChild(name);
+      ui.bandTable.appendChild(range);
+      ui.bandTable.appendChild(bar);
+
+      ui.bandRowEls.push({ idx, name, range, fill });
+    }
+
+    ui.bandRowsBuilt = true;
+    ui.bandHudBandCount = n; // remember what count these rows were built for
+  }
+
+  function ensureBandHudBuilt() {
+    // Rebuild if never built, or if band count has since changed.
+    const n = runtime.settings.bands.count;
+    if (!ui.bandRowsBuilt || ui.bandHudBandCount !== n) buildBandHudRows();
+  }
+
+  function rebuildBandHud() {
+    // Forced rebuild — call this whenever band definition changes.
+    // Currently band count is fixed at 256; this is the hook for 115+ when it becomes configurable.
+    ui.bandRowsBuilt = false;
+    ensureBandHudBuilt();
+  }
+
+  function refreshBandHud() {
+    ensureBandHudBuilt();
+
+    const s = runtime.settings;
+    const n = s.bands.count;
+
+    for (let i = 0; i < n; i++) {
+      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
+      const pct = Math.round(e * 100);
+
+      const c = ColorPolicy.bandRgb01(i);
+      const alpha = 0.80;
+
+      ui.bandRowEls[i].fill.style.width = pct + "%";
+      ui.bandRowEls[i].fill.style.background = rgb01ToCss(c, alpha);
+
+      const isDom = i === state.bands.dominantIndex;
+      ui.bandRowEls[i].name.style.opacity = isDom ? "1.0" : "0.75";
+      ui.bandRowEls[i].idx.style.opacity = isDom ? "1.0" : "0.65";
+      ui.bandRowEls[i].range.style.opacity = isDom ? "0.96" : "0.72";
+      ui.bandRowEls[i].range.textContent = BandBank.formatBandRangeText(i);
+    }
+
+    const domIdx = clamp(state.bands.dominantIndex, 0, n - 1);
+    const domName = state.bands.dominantName || BAND_NAMES[domIdx] || `Band ${domIdx}`;
+    const domRange = BandBank.formatBandRangeText(domIdx);
+    ui.bandDebug.innerHTML = `<span class="dominantBadge">Dominant [${domIdx}] ${domName} — ${domRange}</span>`;
+  }
+
+  function formatBandMetaHz(hz) {
+    if (!Number.isFinite(hz)) return "n/a";
+    if (hz >= 1000) return `${fmt(hz / 1000, 2)} kHz`;
+    return `${fmt(hz, 1)} Hz`;
+  }
+
+  function refreshBandMetaText() {
+    const m = state.bands.meta;
+    const bandCount = runtime.settings.bands.count;
+    const sampleRateText = Number.isFinite(m.sampleRateHz)
+      ? formatBandMetaHz(m.sampleRateHz)
+      : "pending audio context";
+    ui.bandMeta.textContent = `${bandCount} bands • Nyquist ${formatBandMetaHz(m.nyquistHz)} • ceiling configured ${formatBandMetaHz(m.configCeilingHz)}`;
+  }
+
+  function collectOperatorFacingControls() {
+    // 112 
+    // This intentionally excludes buttons and transport-only affordances.
+    const selectors = [
+      "#audioPanel input",
+      "#audioPanel select",
+      "#simPanel input",
+      "#simPanel select",
+      "#bandsPanel input",
+      "#bandsPanel select",
+    ];
+    const controls = [];
+    const seenIds = new Set();
+    for (const selector of selectors) {
+      for (const el of document.querySelectorAll(selector)) {
+        if (!el || !el.id || el.type === "hidden" || el.type === "file") continue;
+        if (seenIds.has(el.id)) continue;
+        seenIds.add(el.id);
+        controls.push(el);
+      }
+    }
+    return controls;
+  }
+
+  function findLabelForControl(control) {
+    if (!control) return "Control";
+
+    const ownLabel = control.closest("label");
+    if (ownLabel) return ownLabel.textContent.replace(/\s+/g, " ").trim();
+
+    const allLabels = document.querySelectorAll("label[for]");
+    for (const label of allLabels) {
+      if (label.htmlFor === control.id) return label.textContent.replace(/\s+/g, " ").trim();
+    }
+
+    const row = control.closest(".row");
+    const rowLabel = row ? row.querySelector("label") : null;
+    if (rowLabel) return rowLabel.textContent.replace(/\s+/g, " ").trim();
+
+    return control.id;
+  }
+
+  function findValueElementForControl(control) {
+    if (!control) return null;
+    const row = control.closest(".row");
+    return row ? row.querySelector(".val") : null;
+  }
+
+  function fallbackFeedbackValue(control) {
+    if (!control) return "";
+    if (control.type === "checkbox") return control.checked ? "on" : "off";
+    if (control.type === "color") return String(control.value || "").toLowerCase();
+    if (control.tagName === "SELECT") {
+      const option = control.options && control.selectedIndex >= 0 ? control.options[control.selectedIndex] : null;
+      return option ? option.textContent.trim() : String(control.value || "");
+    }
+    return String(control.value || "");
+  }
+
+  function initConfigTooltips() {
+    const controls = collectOperatorFacingControls();
+    ui.configTooltipSpecs = controls.map((control) => ({
+      control,
+      label: findLabelForControl(control),
+      valueEl: findValueElementForControl(control),
+      staticTitle: (control.getAttribute("title") || "").trim(),
+    }));
+
+    ui.configTooltipByControl = new Map();
+    for (const spec of ui.configTooltipSpecs) ui.configTooltipByControl.set(spec.control, spec);
+  }
+
+  function getConfigTooltipLiveValue(spec) {
+    if (!spec || !spec.control) return "";
+    const control = spec.control;
+    const fromReadout = spec.valueEl && spec.valueEl.textContent
+      ? spec.valueEl.textContent.trim()
+      : "";
+    return fromReadout || fallbackFeedbackValue(control).trim();
+  }
+
+  function refreshConfigTooltipForControl(control) {
+    if (!control || !ui.configTooltipByControl) return;
+    const spec = ui.configTooltipByControl.get(control);
+    if (!spec) return;
+
+    const liveValue = getConfigTooltipLiveValue(spec);
+    const liveTitle = `${spec.label}: ${liveValue}`;
+    control.title = spec.staticTitle ? `${spec.staticTitle}\n${liveTitle}` : liveTitle;
+  }
+
+  function refreshConfigTooltips() {
+    const specs = Array.isArray(ui.configTooltipSpecs) ? ui.configTooltipSpecs : [];
+    for (const spec of specs) refreshConfigTooltipForControl(spec.control);
+  }
+
+  function wireConfigTooltipFeedbackEvents() {
+    const specs = Array.isArray(ui.configTooltipSpecs) ? ui.configTooltipSpecs : [];
+    for (const spec of specs) {
+      const control = spec.control;
+      if (!control) continue;
+      const eventName = (control.type === "checkbox" || control.tagName === "SELECT") ? "change" : "input";
+      control.addEventListener(eventName, () => {
+        // Apply handlers run in the same event turn. Queue after them so titles
+        // reflect the same formatted value text that .val readouts display.
+        queueMicrotask(() => refreshConfigTooltipForControl(control));
+      });
+      control.addEventListener("focus", () => refreshConfigTooltipForControl(control));
+      control.addEventListener("mouseenter", () => refreshConfigTooltipForControl(control));
+    }
+  }
+
+  function refreshAllUiText(bandSnapshot) {
+    const p = preferences;
+
+    const bandText = bandSnapshot && bandSnapshot.ready
+      ? (bandSnapshot.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
+      : "n/a";
+
+    // audioStatus: always show [pos/len] queue position when audio is loaded.
+    // Guarded to avoid invalid display if transport and queue are temporarily out of sync.
+    const hasAudioToast = performance.now() < _audioStatusToastUntilMs;
+
+    if (state.audio.isLoaded) {
+      const qLen = Queue.length;
+      const qPos = qLen > 0 ? clamp(Queue.currentIndex + 1, 1, qLen) : 0; // 1-based for display
+      const playState = state.audio.isPlaying ? " (playing)" : " (paused)";
+      const errText = state.audio.transportError ? ` — Error: ${state.audio.transportError}` : "";
+      const computedAudioStatus = `[${qPos}/${qLen}] ${state.audio.filename}${playState} — Bands: ${bandText}${errText}`;
+      ui.audioStatus.textContent = hasAudioToast ? _audioStatusToastText : computedAudioStatus;
+    } else {
+      const computedAudioStatus = state.audio.transportError ? `No audio loaded. Error: ${state.audio.transportError}` : "No audio loaded.";
+      ui.audioStatus.textContent = hasAudioToast ? _audioStatusToastText : computedAudioStatus;
+    }
+
+    ui.btnPlay.disabled = !state.audio.isLoaded;
+    ui.btnStop.disabled = !state.audio.isLoaded;
+    ui.btnPlay.textContent = state.audio.isPlaying ? "Pause" : "Play";
+
+    // Manual transport buttons: boundary-aware by default; wrap at boundaries when Repeat=All.
+    const repeatAllWrap = preferences.audio.repeatMode === "all" && Queue.length > 1;
+    ui.btnPrev.disabled = !(Queue.canPrev() || repeatAllWrap);
+    ui.btnNext.disabled = !(Queue.canNext() || repeatAllWrap);
+
+    ui.btnRepeat.textContent = `Repeat: ${p.audio.repeatMode === "one" ? "One" : (p.audio.repeatMode === "all" ? "All" : "Off")}`;
+    ui.btnShuffle.disabled = Queue.length < 3;
+    ui.chkMute.checked = !!p.audio.muted;
+    ui.rngVol.value = String(p.audio.volume);
+    ui.valVol.textContent = fmt(p.audio.volume, 2);
+
+    ui.chkLines.checked = !!p.trace.lines;
+    ui.valLines.textContent = p.trace.lines ? "on" : "off";
+    ui.rngNumLines.value = String(p.trace.numLines);
+    ui.valNumLines.textContent = `${p.trace.numLines}`;
+
+    ui.selLineColorMode.value = p.trace.lineColorMode;
+    ui.valLineColorMode.textContent = p.trace.lineColorMode;
+
+    ui.rngEmit.value = String(p.particles.emitPerSecond);
+    ui.valEmit.textContent = `${p.particles.emitPerSecond}/s`;
+
+    ui.rngSizeMax.value = String(p.particles.sizeMaxPx);
+    ui.valSizeMax.textContent = `${p.particles.sizeMaxPx}px`;
+
+    ui.rngSizeMin.value = String(p.particles.sizeMinPx);
+    ui.valSizeMin.textContent = `${p.particles.sizeMinPx}px`;
+
+    ui.rngSizeToMin.value = String(p.particles.sizeToMinSec);
+    ui.valSizeToMin.textContent = `${fmt(p.particles.sizeToMinSec, 1)}s`;
+
+    ui.rngTTL.value = String(p.particles.ttlSec);
+    const fadeSec = Math.max(0, p.particles.ttlSec - p.particles.sizeToMinSec);
+    ui.valTTL.textContent = `${fmt(p.particles.ttlSec, 1)}s (fade ${fmt(fadeSec, 1)}s)`;
+
+    ui.rngOverlap.value = String(p.particles.overlapRadiusPx);
+    ui.valOverlap.textContent = `${fmt(p.particles.overlapRadiusPx, 1)}px`;
+
+    ui.rngOmega.value = String(p.motion.angularSpeedRadPerSec);
+    ui.valOmega.textContent = `${fmt(p.motion.angularSpeedRadPerSec, 3)} rad/s (${fmt(p.motion.angularSpeedRadPerSec * RAD_TO_DEG, 1)}°/s)`;
+
+    ui.rngWfDisp.value = String(p.motion.waveformRadialDisplaceFrac);
+    ui.valWfDisp.textContent = fmt(p.motion.waveformRadialDisplaceFrac, 3);
+
+    ui.rngRmsGain.value = String(p.audio.rmsGain);
+    ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
+
+    ui.rngMinRad.value = String(p.audio.minRadiusFrac);
+    ui.valMinRad.textContent = fmt(p.audio.minRadiusFrac, 3);
+
+    ui.rngMaxRad.value = String(p.audio.maxRadiusFrac);
+    ui.valMaxRad.textContent = fmt(p.audio.maxRadiusFrac, 3);
+
+    ui.rngSmooth.value = String(p.audio.smoothingTimeConstant);
+    ui.valSmooth.textContent = fmt(p.audio.smoothingTimeConstant, 2);
+
+    ui.selFFT.value = String(p.audio.fftSize);
+    ui.valFFT.textContent = `${p.audio.fftSize}`;
+
+    ui.clrBg.value = p.visuals.backgroundColor;
+    ui.valBg.textContent = p.visuals.backgroundColor;
+
+    ui.clrParticle.value = p.visuals.particleColor;
+    ui.valParticle.textContent = p.visuals.particleColor;
+
+    ui.selParticleColorSrc.value = p.bands.particleColorSource;
+    ui.valParticleSrc.textContent = p.bands.particleColorSource;
+
+    ui.chkBandOverlay.checked = !!p.bands.overlay.enabled;
+    ui.valBandOverlay.textContent = p.bands.overlay.enabled ? "on" : "off";
+
+    ui.chkBandConnect.checked = !!p.bands.overlay.connectAdjacent;
+    ui.valBandConnect.textContent = p.bands.overlay.connectAdjacent ? "on" : "off";
+
+    ui.rngBandAlpha.value = String(p.bands.overlay.alpha);
+    ui.valBandAlpha.textContent = fmt(p.bands.overlay.alpha, 2);
+
+    ui.rngBandPoint.value = String(p.bands.overlay.pointSizePx);
+    ui.valBandPoint.textContent = `${p.bands.overlay.pointSizePx}px`;
+
+    ui.rngBandOverlayMinRad.value = String(p.bands.overlay.minRadiusFrac);
+    ui.valBandOverlayMinRad.textContent = fmt(p.bands.overlay.minRadiusFrac, 3);
+
+    ui.rngBandOverlayMaxRad.value = String(p.bands.overlay.maxRadiusFrac);
+    ui.valBandOverlayMaxRad.textContent = fmt(p.bands.overlay.maxRadiusFrac, 3);
+
+    ui.rngBandOverlayWfDisp.value = String(p.bands.overlay.waveformRadialDisplaceFrac);
+    ui.valBandOverlayWfDisp.textContent = fmt(p.bands.overlay.waveformRadialDisplaceFrac, 3);
+
+    ui.selRingPhaseMode.value = p.bands.overlay.phaseMode;
+    ui.valRingPhaseMode.textContent = p.bands.overlay.phaseMode;
+
+    ui.rngRingSpeed.value = String(p.bands.overlay.ringSpeedRadPerSec);
+    ui.valRingSpeed.textContent = `${fmt(p.bands.overlay.ringSpeedRadPerSec, 2)} rad/s`;
+
+    ui.rngHueOff.value = String(p.bands.rainbow.hueOffsetDeg);
+    ui.valHueOff.textContent = `${p.bands.rainbow.hueOffsetDeg}°`;
+
+    ui.rngSat.value = String(p.bands.rainbow.saturation);
+    ui.valSat.textContent = fmt(p.bands.rainbow.saturation, 2);
+
+    ui.rngVal.value = String(p.bands.rainbow.value);
+    ui.valVal.textContent = fmt(p.bands.rainbow.value, 2);
+
+    refreshConfigTooltips();
+
+    refreshBandMetaText();
+
+    if (bandSnapshot && bandSnapshot.ready) {
+      const nowMs = performance.now();
+      const hudIntervalMs = ui.bandHudIntervalMs || 100;
+      const bandsPanelVisible = ui.bandsPanel && ui.bandsPanel.style.display !== "none";
+      const canRefreshHud = bandsPanelVisible && (nowMs - ui.lastBandHudUpdateMs >= hudIntervalMs);
+      if (canRefreshHud) {
+        refreshBandHud();
+        ui.lastBandHudUpdateMs = nowMs;
+      }
+    }
+  }
+
+  function wireControls() {
+    ui.audioPanel = document.getElementById("audioPanel");
+    ui.simPanel = document.getElementById("simPanel");
+    ui.bandsPanel = document.getElementById("bandsPanel");
+    ui.openAudio = document.getElementById("openAudio");
+    ui.openSim = document.getElementById("openSim");
+    ui.openBands = document.getElementById("openBands");
+
+    ui.btnLoad = document.getElementById("btnLoad");
+    ui.btnPrev = document.getElementById("btnPrev");
+    ui.btnNext = document.getElementById("btnNext");
+    ui.btnPlay = document.getElementById("btnPlay");
+    ui.btnStop = document.getElementById("btnStop");
+    ui.btnRepeat = document.getElementById("btnRepeat");
+    ui.btnShuffle = document.getElementById("btnShuffle");
+    ui.chkMute = document.getElementById("chkMute");
+    ui.rngVol = document.getElementById("rngVol");
+    ui.valVol = document.getElementById("valVol");
+    ui.audioStatus = document.getElementById("audioStatus");
+    ui.btnHideAudio = document.getElementById("btnHideAudio");
+    ui.btnToggleQueue = document.getElementById("btnToggleQueue");
+    // scrubberCanvas and scrubberTime are NOT cached here — Scrubber.init()
+    // receives the canvas directly from main(), and Scrubber.draw() queries
+    // scrubberTime by ID. The UI module has no business reaching into Scrubber's elements.
+    ui.queuePanel = document.getElementById("queuePanel");
+    ui.queueList = document.getElementById("queueList");
+    ui.btnClearQueue = document.getElementById("btnClearQueue");
+
+    ui.btnShare = document.getElementById("btnShare");
+    ui.btnApplyUrl = document.getElementById("btnApplyUrl");
+    ui.btnResetPrefs = document.getElementById("btnResetPrefs");
+    ui.btnResetVisuals = document.getElementById("btnResetVisuals");
+    ui.btnHideSim = document.getElementById("btnHideSim");
+
+    ui.simStatus = document.getElementById("simStatus");
+    ui.bandsStatus = document.getElementById("bandsStatus");
+
+    ui.chkLines = document.getElementById("chkLines");
+    ui.valLines = document.getElementById("valLines");
+    ui.rngNumLines = document.getElementById("rngNumLines");
+    ui.valNumLines = document.getElementById("valNumLines");
+
+    ui.selLineColorMode = document.getElementById("selLineColorMode");
+    ui.valLineColorMode = document.getElementById("valLineColorMode");
+
+    ui.rngEmit = document.getElementById("rngEmit");
+    ui.valEmit = document.getElementById("valEmit");
+    ui.rngSizeMax = document.getElementById("rngSizeMax");
+    ui.valSizeMax = document.getElementById("valSizeMax");
+    ui.rngSizeMin = document.getElementById("rngSizeMin");
+    ui.valSizeMin = document.getElementById("valSizeMin");
+    ui.rngSizeToMin = document.getElementById("rngSizeToMin");
+    ui.valSizeToMin = document.getElementById("valSizeToMin");
+    ui.rngTTL = document.getElementById("rngTTL");
+    ui.valTTL = document.getElementById("valTTL");
+    ui.rngOverlap = document.getElementById("rngOverlap");
+    ui.valOverlap = document.getElementById("valOverlap");
+
+    ui.rngOmega = document.getElementById("rngOmega");
+    ui.valOmega = document.getElementById("valOmega");
+    ui.rngWfDisp = document.getElementById("rngWfDisp");
+    ui.valWfDisp = document.getElementById("valWfDisp");
+
+    ui.rngRmsGain = document.getElementById("rngRmsGain");
+    ui.valRmsGain = document.getElementById("valRmsGain");
+    ui.rngMinRad = document.getElementById("rngMinRad");
+    ui.valMinRad = document.getElementById("valMinRad");
+    ui.rngMaxRad = document.getElementById("rngMaxRad");
+    ui.valMaxRad = document.getElementById("valMaxRad");
+    ui.rngSmooth = document.getElementById("rngSmooth");
+    ui.valSmooth = document.getElementById("valSmooth");
+    ui.selFFT = document.getElementById("selFFT");
+    ui.valFFT = document.getElementById("valFFT");
+
+    ui.btnHideBands = document.getElementById("btnHideBands");
+
+    ui.clrBg = document.getElementById("clrBg");
+    ui.valBg = document.getElementById("valBg");
+    ui.clrParticle = document.getElementById("clrParticle");
+    ui.valParticle = document.getElementById("valParticle");
+
+    ui.selParticleColorSrc = document.getElementById("selParticleColorSrc");
+    ui.valParticleSrc = document.getElementById("valParticleSrc");
+
+    ui.chkBandOverlay = document.getElementById("chkBandOverlay");
+    ui.valBandOverlay = document.getElementById("valBandOverlay");
+    ui.chkBandConnect = document.getElementById("chkBandConnect");
+    ui.valBandConnect = document.getElementById("valBandConnect");
+
+    ui.rngBandAlpha = document.getElementById("rngBandAlpha");
+    ui.valBandAlpha = document.getElementById("valBandAlpha");
+
+    ui.rngBandPoint = document.getElementById("rngBandPoint");
+    ui.valBandPoint = document.getElementById("valBandPoint");
+
+    ui.rngBandOverlayMinRad = document.getElementById("rngBandOverlayMinRad");
+    ui.valBandOverlayMinRad = document.getElementById("valBandOverlayMinRad");
+    ui.rngBandOverlayMaxRad = document.getElementById("rngBandOverlayMaxRad");
+    ui.valBandOverlayMaxRad = document.getElementById("valBandOverlayMaxRad");
+    ui.rngBandOverlayWfDisp = document.getElementById("rngBandOverlayWfDisp");
+    ui.valBandOverlayWfDisp = document.getElementById("valBandOverlayWfDisp");
+
+    ui.selRingPhaseMode = document.getElementById("selRingPhaseMode");
+    ui.valRingPhaseMode = document.getElementById("valRingPhaseMode");
+
+    ui.rngRingSpeed = document.getElementById("rngRingSpeed");
+    ui.valRingSpeed = document.getElementById("valRingSpeed");
+
+    ui.rngHueOff = document.getElementById("rngHueOff");
+    ui.valHueOff = document.getElementById("valHueOff");
+    ui.rngSat = document.getElementById("rngSat");
+    ui.valSat = document.getElementById("valSat");
+    ui.rngVal = document.getElementById("rngVal");
+    ui.valVal = document.getElementById("valVal");
+
+    ui.bandDebug = document.getElementById("bandDebug");
+    ui.bandMeta = document.getElementById("bandMeta");
+    ui.bandTable = document.getElementById("bandTable");
+    ui.lastBandHudUpdateMs = 0;
+    ui.bandHudIntervalMs = 100;
+
+    initConfigTooltips();
+
+    ui.btnOpenAudio = document.getElementById("btnOpenAudio");
+    ui.btnOpenSim = document.getElementById("btnOpenSim");
+    ui.btnOpenBands = document.getElementById("btnOpenBands");
+
+    ui.fileInput = document.getElementById("fileInput");
+
+    bindRange(ui.rngVol, CONFIG.ui.volume);
+    bindRange(ui.rngNumLines, CONFIG.limits.trace.numLines);
+
+    bindRange(ui.rngEmit, CONFIG.limits.particles.emitPerSecond);
+    bindRange(ui.rngSizeMax, CONFIG.limits.particles.sizeMaxPx);
+    bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
+    bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
+    bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
+    bindRange(ui.rngOverlap, CONFIG.limits.particles.overlapRadiusPx);
+
+    bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
+    bindRange(ui.rngWfDisp, CONFIG.limits.motion.waveformRadialDisplaceFrac);
+
+    bindRange(ui.rngRmsGain, CONFIG.limits.audio.rmsGain);
+    bindRange(ui.rngMinRad, CONFIG.limits.audio.minRadiusFrac);
+    bindRange(ui.rngMaxRad, CONFIG.limits.audio.maxRadiusFrac);
+    bindRange(ui.rngSmooth, CONFIG.limits.audio.smoothingTimeConstant);
+
+    bindRange(ui.rngBandAlpha, CONFIG.limits.bands.overlayAlpha);
+    bindRange(ui.rngBandPoint, CONFIG.limits.bands.pointSizePx);
+    bindRange(ui.rngBandOverlayMinRad, CONFIG.limits.bands.overlayMinRadiusFrac);
+    bindRange(ui.rngBandOverlayMaxRad, CONFIG.limits.bands.overlayMaxRadiusFrac);
+    bindRange(ui.rngBandOverlayWfDisp, CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac);
+    bindRange(ui.rngHueOff, CONFIG.limits.bands.hueOffsetDeg);
+    bindRange(ui.rngSat, CONFIG.limits.bands.saturation);
+    bindRange(ui.rngVal, CONFIG.limits.bands.value);
+
+    bindRange(ui.rngRingSpeed, CONFIG.limits.bands.ringSpeedRadPerSec);
+
+    for (const size of CONFIG.limits.audio.fftSizes) {
+      const opt = document.createElement("option");
+      opt.value = String(size);
+      opt.textContent = String(size);
+      ui.selFFT.appendChild(opt);
+    }
+
+    const srcs = [
+      { v: "dominant", t: "dominant band" },
+      { v: "angle", t: "phase locked (Glitch Mode)" },
+      { v: "fixed", t: "fixed particle color" },
+    ];
+    for (const s of srcs) {
+      const opt = document.createElement("option");
+      opt.value = s.v;
+      opt.textContent = s.t;
+      ui.selParticleColorSrc.appendChild(opt);
+    }
+
+    const lineModes = [
+      { v: "fixed", t: "fixed (particle color)" },
+      { v: "lastParticle", t: "last particle color" },
+      { v: "dominantBand", t: "dominant band color" },
+    ];
+    for (const m of lineModes) {
+      const opt = document.createElement("option");
+      opt.value = m.v;
+      opt.textContent = m.t;
+      ui.selLineColorMode.appendChild(opt);
+    }
+
+    const phaseModes = [
+      { v: "orb", t: "lock to orb phase" },
+      { v: "free", t: "free-run (ring speed)" },
+    ];
+    for (const m of phaseModes) {
+      const opt = document.createElement("option");
+      opt.value = m.v;
+      opt.textContent = m.t;
+      ui.selRingPhaseMode.appendChild(opt);
+    }
+
+    /* -------------------------------------------------------------------------
+       clearAudioState() — canonical clean-slate reset for all stop/clear paths.
+
+       3.4 — Clear queue clean-slate audit. Every item the checklist requires:
+         ✓ state.audio.isLoaded = false    — set explicitly below
+         ✓ state.audio.filename = ""       — set explicitly below
+         ✓ state.audio.isPlaying = false   — set explicitly below
+         ✓ AudioEngine.unload()            — caller must call before this function
+         ✓ All orb trails reset            — loop below
+         ✓ Scrubber blank                  — Scrubber.reset()
+         ✓ Play/Stop buttons disabled      — driven by state.audio.isLoaded in refreshAllUiText
+         ✓ Prev/Next buttons disabled      — driven by Queue.canPrev/canNext;
+                                             caller must call Queue.clear() first
+         ✓ No blob URLs left alive         — revoked by loadeddata/error during track
+                                             lifetime; AudioEngine.unload() performs
+                                             teardown() and final release safety.
+       Called by: remove-button handler (active track removed, queue now empty)
+                  btnClearQueue handler
+       Callers must call AudioEngine.unload() and Queue.clear() before this.
+       ------------------------------------------------------------------------- */
+    function clearAudioState() {
+      state.audio.isLoaded = false;
+      state.audio.isPlaying = false;
+      state.audio.filename = "";
+      state.audio.transportError = "";
+      resetTrackVisualState();
+    }
+
+    function resetTrackVisualState() {
+      Scrubber.reset();
+      for (const orb of state.orbs) orb.resetTrail();
+      state.bands.energies01.fill(0);
+      state.bands.dominantIndex = 0;
+      state.bands.dominantName = "(none)";
+      refreshBandHud();
+    }
+
+    /* -------------------------------------------------------------------------
+       loadAndPlay — single shared helper for all track-change paths.
+
+       3.1 — Entry-point audit. Every path that changes the current track routes
+       through here so trail reset + scrubber reset happen in exactly one place:
+         (1) _onTrackEnded repeat policy → loadAndPlay/stop     [auto-advance/repeat]
+         (2) fileInput change → loadAndPlay                    [Load button, 1st track]
+         (3) drop handler    → loadAndPlay                     [drag-drop, 1st track]
+         (4) btnNext click   → Queue.next() → loadAndPlay
+         (5) btnPrev click   → Queue.prev() → loadAndPlay
+         (6) queue row click → Queue.goTo() → loadAndPlay      [click-to-jump]
+         (7) remove handler  → loadAndPlay  (wasActive && nextFile case)
+       DoD: no trail bleed between tracks; scrubber never shows stale waveform.
+       ------------------------------------------------------------------------- */
+    let activeLoadRequestId = 0;
+
+    async function loadAndPlay(file, opts = {}) {
+      if (!file) return false;
+      const requestId = ++activeLoadRequestId;
+      state.audio.transportError = "";
+      // Hard reset visual state immediately on every track switch so no stale
+      // waveform/playhead, trail particles, or dominant band state can persist.
+      resetTrackVisualState();
+      const ok = await AudioEngine.loadFile(file, requestId, opts);
+      if (requestId !== activeLoadRequestId) return false;
+      if (!ok) {
+        audioStatusToast(state.audio.transportError || "Playback failed.", 6000);
+        refreshQueuePanel();
+        return false;
+      }
+      Scrubber.loadFile(file); // async — decode in background; playback may be play or paused by opts
+      applyPrefs(null);
+      audioStatusToast(`Loaded: ${file.name}`, 2500);
+      // Dismiss first-run hint permanently on first successful load
+      const hint = document.getElementById("loadHint");
+      if (hint) { hint.classList.add("hidden"); setTimeout(() => hint.remove(), 700); }
+      refreshQueuePanel();
+      return true;
+    }
+
+    /* Register _onTrackEnded hook once at boot.
+       Single source of truth for queue-aware repeat behavior on natural track end.
+       The hook survives teardown() intentionally — registered once at boot,
+       must persist across track loads. Documented in 111c/111d. */
+    AudioEngine._isLoadRequestCurrent = (requestId) => requestId === activeLoadRequestId;
+
+    AudioEngine._onTrackEnded = () => {
+      const mode = preferences.audio.repeatMode;
+
+      if (mode === "one") {
+        const file = Queue.current();
+        if (file) loadAndPlay(file);
+        return;
+      }
+
+      if (Queue.canNext()) {
+        const file = Queue.next();
+        if (file) loadAndPlay(file);
+        return;
+      }
+
+      if (mode === "all" && Queue.length > 1) {
+        const file = Queue.goTo(0);
+        if (file) loadAndPlay(file);
+      }
+      // mode=none at queue end: stop at end (no further action).
+    };
+
+    function activateQueueRow(trackIndex) {
+      const file = Queue.goTo(trackIndex);
+      if (file) loadAndPlay(file);
+    }
+
+    /* Queue panel renderer — rebuilds list DOM from Queue.snapshot().
+       each row is keyboard-reachable and declared as a button-like activator. */
+    function refreshQueuePanel() {
+      if (!ui.queueList) return;
+      const snap = Queue.snapshot();
+      ui.queueList.innerHTML = "";
+      for (const item of snap.items) {
+        const row = document.createElement("div");
+        row.className = "queue-item" + (item.active ? " active" : "");
+        row.title = item.name;
+        row.tabIndex = 0;
+        row.setAttribute("role", "button");
+        row.setAttribute("aria-label", `Play queue item ${item.index + 1}: ${item.name}`);
+        row.setAttribute("aria-current", item.active ? "true" : "false");
+
+        const idx = document.createElement("span");
+        idx.className = "q-idx";
+        idx.textContent = String(item.index + 1);
+
+        const name = document.createElement("span");
+        name.className = "q-name";
+        name.textContent = item.name;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "q-remove";
+        removeBtn.textContent = "×";
+        removeBtn.title = "Remove from queue";
+        removeBtn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            removeBtn.click();
+          }
+        });
+        removeBtn.addEventListener("click", (e) => {
+          e.stopPropagation(); // prevent row click-to-jump
+          const wasActive = item.active;
+          const wasPlaying = state.audio.isPlaying;
+          const nextFile = Queue.remove(item.index);
+          if (wasActive && nextFile) {
+            // Removed active track. Successor is loaded preserving prior play/pause intent.
+            loadAndPlay(nextFile, { autoPlay: wasPlaying });
+          } else if (wasActive && Queue.length === 0) {
+            // Removed the active track and queue is now empty — full clean slate.
+            AudioEngine.unload();
+            clearAudioState(); // 3.4 — via shared helper; see clearAudioState() for audit
+          }
+          // wasActive === false: non-active track removed, playback unaffected.
+          refreshQueuePanel();
+        });
+
+        row.appendChild(idx);
+        row.appendChild(name);
+        row.appendChild(removeBtn);
+
+        // Row activation: click or keyboard (Enter/Space) jumps to that track.
+        row.addEventListener("click", () => {
+          activateQueueRow(item.index);
+        });
+        row.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activateQueueRow(item.index);
+          }
+        });
+
+        ui.queueList.appendChild(row);
+      }
+    }
+
+    wireConfigTooltipFeedbackEvents();
+
+    /* Events */
+    // fileInput.value reset (checklist 3.7): cleared before every picker open so
+    // the same file can be loaded a second time. The drag-drop path uses
+    // dataTransfer.files directly — it never touches fileInput — so no reset
+    // is needed there. This is the only fileInput add path; invariant maintained.
+    ui.btnLoad.addEventListener("click", () => { ui.fileInput.value = ""; ui.fileInput.click(); });
+
+	ui.fileInput.addEventListener("change", async () => {
+		const files = Array.from(ui.fileInput.files || []).filter(f => f.type.startsWith("audio/"));
+		if (!files.length) return;
+
+		for (const file of files) {
+			const wasEmpty = Queue.length === 0;
+			const idx = Queue.add(file);
+			if (wasEmpty) {
+				Queue.setCursor(idx);
+				await loadAndPlay(file);
+			}
+		}
+		refreshQueuePanel();
+	});
+
+    ui.btnPlay.addEventListener("click", async () => {
+      await AudioEngine.playPause();
+      if (state.audio.transportError) audioStatusToast(state.audio.transportError, 6000);
+    });
+    ui.btnStop.addEventListener("click", () => { AudioEngine.stop(); state.audio.transportError = ""; });
+
+    function pickManualPrevFile() {
+      if (Queue.canPrev()) return Queue.prev();
+      if (preferences.audio.repeatMode === "all" && Queue.length > 1) return Queue.goTo(Queue.length - 1);
+      return null;
+    }
+
+    function pickManualNextFile() {
+      if (Queue.canNext()) return Queue.next();
+      if (preferences.audio.repeatMode === "all" && Queue.length > 1) return Queue.goTo(0);
+      return null;
+    }
+
+    ui.btnPrev.addEventListener("click", async () => {
+      const file = pickManualPrevFile();
+      if (file) await loadAndPlay(file);
+    });
+    ui.btnNext.addEventListener("click", async () => {
+      const file = pickManualNextFile();
+      if (file) await loadAndPlay(file);
+    });
+
+    ui.btnToggleQueue.addEventListener("click", () => {
+      const visible = ui.queuePanel.style.display !== "none";
+      ui.queuePanel.style.display = visible ? "none" : "block";
+      if (!visible) refreshQueuePanel(); // refresh on open
+    });
+
+    ui.btnClearQueue.addEventListener("click", () => {
+      // 3.4 — Clear queue clean-slate path. Order matters:
+      // Queue.clear() first so Prev/Next disable correctly in next refreshAllUiText.
+      // AudioEngine.unload() before clearAudioState() so no media remains attached.
+      Queue.clear();
+      AudioEngine.unload();
+      clearAudioState(); // sets isLoaded/isPlaying/filename, resets scrubber + trails
+      refreshQueuePanel();
+    });
+
+    ui.btnRepeat.addEventListener("click", () => {
+      const mode = preferences.audio.repeatMode;
+      preferences.audio.repeatMode = mode === "none" ? "one" : (mode === "one" ? "all" : "none");
+      applyPrefs("repeat");
+    });
+    if (ui.btnShuffle) {
+      ui.btnShuffle.addEventListener("click", () => {
+        if (Queue.shuffle()) refreshQueuePanel();
+      });
+    }
+    ui.chkMute.addEventListener("change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute"); });
+
+    ui.rngVol.addEventListener("input", () => {
+      preferences.audio.volume = Number(ui.rngVol.value);
+      applyPrefs("volume (playback only)");
+    });
+
+    ui.btnHideAudio.addEventListener("click", hideAudioPanel);
+    ui.btnOpenAudio.addEventListener("click", showAudioPanel);
+
+    ui.btnHideSim.addEventListener("click", hideSimPanel);
+    ui.btnOpenSim.addEventListener("click", showSimPanel);
+
+    ui.btnHideBands.addEventListener("click", hideBandsPanel);
+    ui.btnOpenBands.addEventListener("click", showBandsPanel);
+
+    ui.btnShare.addEventListener("click", shareLink);
+    ui.btnApplyUrl.addEventListener("click", applyUrlNow);
+    ui.btnResetPrefs.addEventListener("click", resetPrefs);
+    ui.btnResetVisuals.addEventListener("click", () => { resetOrbsToDesignedPhases(); simStatusToast("Visuals reset."); });
+
+    ui.chkLines.addEventListener("change", () => { preferences.trace.lines = !!ui.chkLines.checked; applyPrefs("lines"); });
+    ui.rngNumLines.addEventListener("input", () => { preferences.trace.numLines = Number(ui.rngNumLines.value); applyPrefs("num lines"); });
+
+    ui.selLineColorMode.addEventListener("change", () => {
+      preferences.trace.lineColorMode = ui.selLineColorMode.value;
+      applyPrefs("line color mode");
+    });
+
+    ui.rngEmit.addEventListener("input", () => { preferences.particles.emitPerSecond = Number(ui.rngEmit.value); applyPrefs("emit rate"); });
+    ui.rngSizeMax.addEventListener("input", () => { preferences.particles.sizeMaxPx = Number(ui.rngSizeMax.value); applyPrefs("size max"); });
+    ui.rngSizeMin.addEventListener("input", () => { preferences.particles.sizeMinPx = Number(ui.rngSizeMin.value); applyPrefs("size min"); });
+    ui.rngSizeToMin.addEventListener("input", () => { preferences.particles.sizeToMinSec = Number(ui.rngSizeToMin.value); applyPrefs("time to min"); });
+    ui.rngTTL.addEventListener("input", () => { preferences.particles.ttlSec = Number(ui.rngTTL.value); applyPrefs("ttl"); });
+    ui.rngOverlap.addEventListener("input", () => { preferences.particles.overlapRadiusPx = Number(ui.rngOverlap.value); applyPrefs("overlap radius"); });
+
+    ui.rngOmega.addEventListener("input", () => { preferences.motion.angularSpeedRadPerSec = Number(ui.rngOmega.value); applyPrefs("angular speed"); });
+    ui.rngWfDisp.addEventListener("input", () => { preferences.motion.waveformRadialDisplaceFrac = Number(ui.rngWfDisp.value); applyPrefs("orb waveform disp"); });
+
+    ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)"); });
+    ui.rngMinRad.addEventListener("input", () => { preferences.audio.minRadiusFrac = Number(ui.rngMinRad.value); applyPrefs("min radius"); });
+    ui.rngMaxRad.addEventListener("input", () => { preferences.audio.maxRadiusFrac = Number(ui.rngMaxRad.value); applyPrefs("max radius"); });
+    ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing"); });
+    ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size"); });
+
+    ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; applyPrefs("background"); });
+    ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; applyPrefs("particle color"); });
+
+    ui.selParticleColorSrc.addEventListener("change", () => {
+      preferences.bands.particleColorSource = ui.selParticleColorSrc.value;
+      applyPrefs("particle color source");
+    });
+
+    ui.chkBandOverlay.addEventListener("change", () => { preferences.bands.overlay.enabled = !!ui.chkBandOverlay.checked; applyPrefs("band overlay"); });
+    ui.chkBandConnect.addEventListener("change", () => { preferences.bands.overlay.connectAdjacent = !!ui.chkBandConnect.checked; applyPrefs("band connect"); });
+
+    ui.rngBandAlpha.addEventListener("input", () => { preferences.bands.overlay.alpha = Number(ui.rngBandAlpha.value); applyPrefs("overlay alpha"); });
+    ui.rngBandPoint.addEventListener("input", () => { preferences.bands.overlay.pointSizePx = Number(ui.rngBandPoint.value); applyPrefs("overlay point size"); });
+    ui.rngBandOverlayMinRad.addEventListener("input", () => { preferences.bands.overlay.minRadiusFrac = Number(ui.rngBandOverlayMinRad.value); applyPrefs("overlay min radius"); });
+    ui.rngBandOverlayMaxRad.addEventListener("input", () => { preferences.bands.overlay.maxRadiusFrac = Number(ui.rngBandOverlayMaxRad.value); applyPrefs("overlay max radius"); });
+    ui.rngBandOverlayWfDisp.addEventListener("input", () => { preferences.bands.overlay.waveformRadialDisplaceFrac = Number(ui.rngBandOverlayWfDisp.value); applyPrefs("overlay waveform disp"); });
+
+    ui.selRingPhaseMode.addEventListener("change", () => {
+      preferences.bands.overlay.phaseMode = ui.selRingPhaseMode.value;
+      applyPrefs("ring phase mode");
+    });
+
+    ui.rngRingSpeed.addEventListener("input", () => {
+      preferences.bands.overlay.ringSpeedRadPerSec = Number(ui.rngRingSpeed.value);
+      applyPrefs("ring speed");
+    });
+
+    ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); applyPrefs("hue offset"); });
+    ui.rngSat.addEventListener("input", () => { preferences.bands.rainbow.saturation = Number(ui.rngSat.value); applyPrefs("saturation"); });
+    ui.rngVal.addEventListener("input", () => { preferences.bands.rainbow.value = Number(ui.rngVal.value); applyPrefs("value"); });
+
+    /* Drag-drop onto canvas — multi-file entry point.
+       All dropped audio files are enqueued. If the queue was empty before the
+       drop, the first file starts playing immediately. Additional files append
+       silently. Non-audio files are silently ignored. */
+    state.canvas.addEventListener("dragover", (e) => {
+      e.preventDefault(); // required to allow drop
+      e.dataTransfer.dropEffect = "copy";
+    });
+    state.canvas.addEventListener("drop", async (e) => {
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("audio/"));
+      if (!files.length) return;
+      for (const file of files) {
+        const wasEmpty = Queue.length === 0;
+        const idx = Queue.add(file);
+        if (wasEmpty) {
+          Queue.setCursor(idx);
+          await loadAndPlay(file);
+        }
+      }
+      refreshQueuePanel();
+    });
+
+    // Safety net: dropping files outside the canvas should never navigate away.
+    // Canvas keeps ownership of the actual queue add/load behavior above.
+    window.addEventListener("dragover", (e) => {
+      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault();
+    });
+    window.addEventListener("drop", (e) => {
+      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault();
+    });
+
+    function hasFocusedInteractiveTarget(event) {
+      const target = event.target;
+      if (!(target instanceof Element)) return false;
+      if (target.closest('input, select, textarea, button, [contenteditable="true"], [role="button"]')) return true;
+      return false;
+    }
+
+    // Global shortcuts are intentionally suppressed while a control has focus,
+    // so typing/adjusting controls never triggers transport/panel side effects.
+    window.addEventListener("keydown", (e) => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (hasFocusedInteractiveTarget(e)) return;
+
+      if (e.code === "KeyH") {
+        togglePanels();
+        return;
+      }
+      if (e.code === "Space") {
+        e.preventDefault();
+        state.time.simPaused = !state.time.simPaused;
+        return;
+      }
+      if (e.code === "KeyR") {
+        resetOrbsToDesignedPhases();
+        return;
+      }
+
+      // Track navigation — N: next, P: prev (Repeat=All wraps at boundaries).
+      if (e.code === "KeyN") {
+        const file = pickManualNextFile();
+        if (file) loadAndPlay(file);
+        return;
+      }
+      if (e.code === "KeyP") {
+        const file = pickManualPrevFile();
+        if (file) loadAndPlay(file);
+        return;
+      }
+
+      // Seek — arrow keys ±5 seconds, Shift+arrows ±30 seconds.
+      // preventDefault stops page scroll.
+      if (e.code === "ArrowRight" || e.code === "ArrowLeft") {
+        e.preventDefault();
+        const el = AudioEngine.getMediaEl();
+        if (el && Number.isFinite(el.duration)) {
+          const step = e.shiftKey ? 30 : 5;
+          const delta = (e.code === "ArrowRight" ? step : -step);
+          el.currentTime = clamp(el.currentTime + delta, 0, el.duration);
+        }
+      }
+    }, { passive: false });
+
+    window.addEventListener("hashchange", () => {
+      const ok = UrlPreset.applyFromLocationHash();
+      if (ok) {
+        applyPrefs("hash preset loaded", { rebuildBandsOnDefinitionChange: true });
+        initOrbs();
+        resetOrbsToDesignedPhases();
+      }
+    });
+  } // end wireControls
+
+  return { setCssVarsFromConfig, wireControls, refreshAllUiText, applyPrefs };
+})();
+
+/* =============================================================================
+   Boot / loop
+   ========================================================================== */
+function initOrbs() {
+  state.orbs.length = 0;
+  for (const def of runtime.settings.orbs) state.orbs.push(new Orb(def));
+}
+
+function getBandForOrb(orb, snapshot) {
+  const channel = normalizeOrbChannelId(orb && orb.chanId, orb && orb.bandId);
+  const sourceBand = channel === "L"
+    ? snapshot.bands.L
+    : (channel === "R" ? snapshot.bands.R : snapshot.bands.C);
+
+  const bandIds = Array.isArray(orb && orb.bandIds) ? orb.bandIds : [];
+  if (!bandIds.length) return { band: sourceBand, energyOverride01: null };
+
+  const energies = state.bands.energies01;
+  if (!Array.isArray(energies) || !energies.length) return { band: sourceBand, energyOverride01: null };
+
+  let sum = 0;
+  for (const idx of bandIds) sum += energies[idx] || 0;
+  const avg = sum / bandIds.length;
+
+  return { band: sourceBand, energyOverride01: clamp(avg, 0, 1) };
+}
+
+let lastBandSnapshot = null;
+
+function onAnimationFrame(tsMs) {
+  requestAnimationFrame(onAnimationFrame);
+
+  resizeCanvasToDisplaySize();
+
+  if (state.time.lastTimestampMs === null) {
+    state.time.lastTimestampMs = tsMs;
+    return;
+  }
+
+  const dtSecRaw = (tsMs - state.time.lastTimestampMs) / 1000;
+  state.time.lastTimestampMs = tsMs;
+
+  // Integrate with real frame time, but cap to a single "slow frame" (~33 ms)
+  // so tab-switch or GC spikes can't cause huge jumps. Normal 60/120 Hz frames
+  // stay untouched, lower bound remains 0, and downstream emit overflow guards stay valid.
+  const dtSec = clamp(dtSecRaw, 0, runtime.settings.timing.maxDeltaTimeSec);
+  const nowSec = performance.now() / 1000;
+
+  lastBandSnapshot = AudioEngine.sample();
+  const bandC = (lastBandSnapshot && lastBandSnapshot.ready) ? lastBandSnapshot.bands.C : null;
+
+  // Ring phase:
+  // - orb: lock to carrier orb angle (coherent)
+  // - free: integrate a ring angular velocity independent of the orb
+  const o = runtime.settings.bands.overlay;
+  if (o.phaseMode === "orb") {
+    state.bands.ringPhaseRad = (state.orbs.length ? state.orbs[0].angleRad : state.bands.ringPhaseRad);
+  } else {
+    state.bands.ringPhaseRad = ((state.bands.ringPhaseRad + o.ringSpeedRadPerSec * dtSec) % TAU + TAU) % TAU;
+  }
+
+  if (!state.time.simPaused) {
+    for (const orb of state.orbs) {
+      const selection = (lastBandSnapshot && lastBandSnapshot.ready)
+        ? getBandForOrb(orb, lastBandSnapshot)
+        : null;
+      const orbBand = selection ? selection.band : null;
+      const energyOverride01 = selection ? selection.energyOverride01 : null;
+      orb.step(dtSec, nowSec, orbBand, energyOverride01);
+    }
+  }
+
+  Renderer.renderFrame(nowSec, bandC);
+  UI.refreshAllUiText(lastBandSnapshot);
+  Scrubber.draw(); // update playhead position every frame
+}
+
+function main() {
+  UI.setCssVarsFromConfig();
+
+  state.canvas = document.getElementById("c");
+  state.ctx = state.canvas.getContext("2d", { alpha: false });
+
+  resolveSettings();
+  UrlPreset.applyFromLocationHash();
+  resolveSettings();
+
+  BandBankController.syncFromSettings();
+  BandBankController.rebuildNow();
+  initOrbs();
+
+  UI.wireControls();
+  UI.applyPrefs(null); // null = silent boot; no "Updated: boot" toast on first load
+
+  Scrubber.init(document.getElementById("scrubberCanvas"));
+
+  resizeCanvasToDisplaySize();
+  window.addEventListener("resize", resizeCanvasToDisplaySize);
+
+  requestAnimationFrame(onAnimationFrame);
+}
+
+main();
+</script>
+</body>
+</html>

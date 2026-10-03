@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="description" content="Auralprint is a waveform analysis tool, designed for audio - offline-capable: no hosting required." />
+  <meta name="keywords" content="auralprint, waveform analyzer, audio analyzer, audio visualizer, analysis, audio, generative art, web audio, canvas, single file" />
+  <meta name="author" content="Christopher 'Kisuul' Lohman" />
+  <title>Auralprint - Waveform Analysis Tool</title>
+
+  <style>
+    :root {
+      --ui-panel-bg: rgba(0,0,0,0.72);
+      --ui-panel-blur: 6px;
+      --ui-pad: 10px;
+      --ui-gap: 10px;
+      --ui-radius: 10px;
+      --ui-font: system-ui, sans-serif;
+
+      --ui-audio-h: 64px;
+      --ui-icon: 40px;
+
+      --ui-safe-b: env(safe-area-inset-bottom, 0px);
+      --ui-safe-r: env(safe-area-inset-right, 0px);
+      --ui-safe-l: env(safe-area-inset-left, 0px);
+      --ui-safe-t: env(safe-area-inset-top, 0px);
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: var(--ui-font);
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+
+    .panel {
+      background: var(--ui-panel-bg);
+      backdrop-filter: blur(var(--ui-panel-blur));
+      border-radius: var(--ui-radius);
+      box-sizing: border-box;
+    }
+
+    button, select { cursor: pointer; font: inherit; }
+    input[type="range"] { width: 260px; }
+
+    .muted {
+      opacity: 0.85;
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sectionTitle { margin: 10px 0 6px; font-size: 12px; opacity: 0.75; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 160px 1fr 140px;
+      gap: 10px;
+      align-items: center;
+      margin: 6px 0;
+    }
+
+    .val {
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      opacity: 0.85;
+      justify-self: end;
+    }
+
+    /* Bottom audio panel */
+    #audioPanel {
+      position: fixed;
+      left: calc(var(--ui-pad) + var(--ui-safe-l));
+      right: calc(var(--ui-pad) + var(--ui-safe-r));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b));
+      height: var(--ui-audio-h);
+      padding: var(--ui-pad);
+      display: grid;
+      grid-template-columns: auto auto auto auto auto 1fr auto;
+      gap: var(--ui-gap);
+      align-items: center;
+      z-index: 20;
+    }
+
+    #audioPanel .track { min-width: 0; }
+
+    /* Sim config panel (left) */
+    #simPanel {
+      position: fixed;
+      top: calc(var(--ui-pad) + var(--ui-safe-t));
+      left: calc(var(--ui-pad) + var(--ui-safe-l));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-audio-h) + var(--ui-gap));
+      width: min(460px, calc(100vw - 2 * var(--ui-pad)));
+      padding: var(--ui-pad);
+      overflow: auto;
+      z-index: 30;
+    }
+
+    /* Bands + colors panel (right) */
+    #bandsPanel {
+      position: fixed;
+      top: calc(var(--ui-pad) + var(--ui-safe-t));
+      right: calc(var(--ui-pad) + var(--ui-safe-r));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-audio-h) + var(--ui-gap));
+      width: min(520px, calc(100vw - 2 * var(--ui-pad)));
+      padding: var(--ui-pad);
+      overflow: auto;
+      z-index: 30;
+    }
+
+    /* Launchers shown when panels are hidden */
+    .launcher {
+      position: fixed;
+      width: var(--ui-icon);
+      height: var(--ui-icon);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      z-index: 40;
+      user-select: none;
+    }
+
+    #openAudio { left: calc(var(--ui-pad) + var(--ui-safe-l)); bottom: calc(var(--ui-pad) + var(--ui-safe-b)); }
+    #openSim { left: calc(var(--ui-pad) + var(--ui-safe-l)); top: calc(var(--ui-pad) + var(--ui-safe-t)); }
+    #openBands { right: calc(var(--ui-pad) + var(--ui-safe-r)); top: calc(var(--ui-pad) + var(--ui-safe-t)); }
+
+    .launcher button {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--ui-panel-bg);
+      backdrop-filter: blur(var(--ui-panel-blur));
+      border: none;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    /* Debug hint */
+    #hint {
+      position: fixed;
+      left: calc(var(--ui-pad) + var(--ui-safe-l));
+      top: calc(var(--ui-pad) + var(--ui-safe-t));
+      z-index: 50;
+      font-size: 12px;
+      opacity: 0.60;
+      pointer-events: none;
+    }
+
+    input[type="color"] {
+      width: 44px;
+      height: 26px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* Bands HUD */
+    #bandTable {
+      display: grid;
+      grid-template-columns: 40px 1fr 160px;
+      gap: 8px 10px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .bandIdx { font-size: 12px; opacity: 0.75; text-align: right; }
+    .bandName { font-size: 12px; opacity: 0.90; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bandBar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      overflow: hidden;
+      position: relative;
+    }
+    .bandFill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+    }
+    .bandMeta {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      opacity: 0.65;
+      margin: 6px 0 2px;
+    }
+    .dominantBadge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    /* Responsive: on narrow viewports, don’t force two big side panels */
+    @media (max-width: 980px) {
+      #bandsPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
+      #simPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <!-- Bottom Audio Panel -->
+  <div id="audioPanel" class="panel">
+    <button id="btnLoad">Load</button>
+    <button id="btnPlay" disabled>Play</button>
+    <button id="btnStop" disabled>Stop</button>
+
+    <label style="display:flex; gap:6px; align-items:center;">
+      <input id="chkLoop" type="checkbox" />
+      <span class="muted">Loop</span>
+    </label>
+
+    <label style="display:flex; gap:6px; align-items:center;">
+      <input id="chkMute" type="checkbox" />
+      <span class="muted">Mute</span>
+    </label>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span class="muted">Vol</span>
+      <input id="rngVol" type="range" />
+      <span id="valVol" class="val"></span>
+    </div>
+
+    <div id="audioStatus" class="muted track">No audio loaded.</div>
+    <button id="btnHideAudio" title="Hide audio panel">▾</button>
+  </div>
+
+  <!-- Sim config panel (left) -->
+  <div id="simPanel" class="panel">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+      <button id="btnShare">Share Link</button>
+      <button id="btnApplyUrl">Apply URL</button>
+      <button id="btnResetPrefs">Reset Prefs</button>
+      <button id="btnHideSim" title="Hide sim panel">◂</button>
+    </div>
+
+    <div class="muted" id="simStatus">Sim panel: trace, particles, motion, analysis.</div>
+
+    <div class="sectionTitle">Trace</div>
+
+    <div class="row">
+      <label for="chkLines">Lines</label>
+      <input id="chkLines" type="checkbox" />
+      <div id="valLines" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngNumLines">Num lines</label>
+      <input id="rngNumLines" type="range" />
+      <div id="valNumLines" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selLineColorMode">Line color mode</label>
+      <select id="selLineColorMode"></select>
+      <div id="valLineColorMode" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Particles</div>
+
+    <div class="row">
+      <label for="rngEmit">Emit rate</label>
+      <input id="rngEmit" type="range" />
+      <div id="valEmit" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSizeMax">Size max</label>
+      <input id="rngSizeMax" type="range" />
+      <div id="valSizeMax" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSizeMin">Size min</label>
+      <input id="rngSizeMin" type="range" />
+      <div id="valSizeMin" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSizeToMin">Time to min</label>
+      <input id="rngSizeToMin" type="range" />
+      <div id="valSizeToMin" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngTTL">TTL</label>
+      <input id="rngTTL" type="range" />
+      <div id="valTTL" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngOverlap">Overlap radius</label>
+      <input id="rngOverlap" type="range" />
+      <div id="valOverlap" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Motion</div>
+
+    <div class="row">
+      <label for="rngOmega">Angular speed</label>
+      <input id="rngOmega" type="range" />
+      <div id="valOmega" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngWfDisp">Waveform disp</label>
+      <input id="rngWfDisp" type="range" />
+      <div id="valWfDisp" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Audio analysis</div>
+
+    <div class="row">
+      <label for="rngRmsGain">RMS gain</label>
+      <input id="rngRmsGain" type="range" />
+      <div id="valRmsGain" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngMinRad">Min radius</label>
+      <input id="rngMinRad" type="range" />
+      <div id="valMinRad" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngMaxRad">Max radius</label>
+      <input id="rngMaxRad" type="range" />
+      <div id="valMaxRad" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSmooth">Smoothing</label>
+      <input id="rngSmooth" type="range" />
+      <div id="valSmooth" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selFFT">FFT size</label>
+      <select id="selFFT"></select>
+      <div id="valFFT" class="val"></div>
+    </div>
+  </div>
+
+  <!-- Bands + Colors panel (right) -->
+  <div id="bandsPanel" class="panel">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+      <div class="muted">Rainbow Disco Instrumentation 🌈</div>
+      <button id="btnHideBands" title="Hide bands panel">▸</button>
+    </div>
+
+    <div class="muted" id="bandsStatus">Bands panel: colors + spectral HUD.</div>
+
+    <div class="sectionTitle">Colors</div>
+
+    <div class="row">
+      <label>Background</label>
+      <input id="clrBg" type="color" />
+      <div id="valBg" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label>Particle color</label>
+      <input id="clrParticle" type="color" />
+      <div id="valParticle" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selParticleColorSrc">Particle color src</label>
+      <select id="selParticleColorSrc"></select>
+      <div id="valParticleSrc" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Band overlay</div>
+
+    <div class="row">
+      <label for="chkBandOverlay">Enable overlay</label>
+      <input id="chkBandOverlay" type="checkbox" />
+      <div id="valBandOverlay" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="chkBandConnect">Connect adjacent</label>
+      <input id="chkBandConnect" type="checkbox" />
+      <div id="valBandConnect" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandAlpha">Overlay alpha</label>
+      <input id="rngBandAlpha" type="range" />
+      <div id="valBandAlpha" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngBandPoint">Point size</label>
+      <input id="rngBandPoint" type="range" />
+      <div id="valBandPoint" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="selRingPhaseMode">Ring phase mode</label>
+      <select id="selRingPhaseMode"></select>
+      <div id="valRingPhaseMode" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngRingSpeed">Ring speed</label>
+      <input id="rngRingSpeed" type="range" />
+      <div id="valRingSpeed" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Rainbow palette</div>
+
+    <div class="row">
+      <label for="rngHueOff">Hue offset</label>
+      <input id="rngHueOff" type="range" />
+      <div id="valHueOff" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngSat">Saturation</label>
+      <input id="rngSat" type="range" />
+      <div id="valSat" class="val"></div>
+    </div>
+
+    <div class="row">
+      <label for="rngVal">Value</label>
+      <input id="rngVal" type="range" />
+      <div id="valVal" class="val"></div>
+    </div>
+
+    <div class="sectionTitle">Band HUD</div>
+    <div class="muted" id="bandDebug"><span class="dominantBadge">Dominant: (none)</span></div>
+    <div class="bandMeta" id="bandMeta">256 bands — 0 is ≤10Hz, 255 is ≥26kHz.</div>
+    <div id="bandTable"></div>
+  </div>
+
+  <!-- Launchers shown when panels are hidden -->
+  <div id="openAudio" class="launcher" style="display:none">
+    <button id="btnOpenAudio" title="Show audio panel">🔈</button>
+  </div>
+
+  <div id="openSim" class="launcher" style="display:none">
+    <button id="btnOpenSim" title="Show sim panel">🧪</button>
+  </div>
+
+  <div id="openBands" class="launcher" style="display:none">
+    <button id="btnOpenBands" title="Show bands panel">🌈</button>
+  </div>
+
+  <input id="fileInput" type="file" accept="audio/*" style="display:none" />
+
+<script>
+"use strict";
+
+/* =============================================================================
+   AudioAnalyzer
+   0.1.10
+   Canonical first minor version at Build # 10
+    1) Project name changed from AudioVis to AudioAnalyzer. 
+	2) Iterated ideas from 0.0.9
+	3) Expanded options
+	4) Tweaked strings 
+	5) Adjusted constants 
+	6) Added second orb tracking L.eft channel
+	6 a) Adjusted original orb to track R.ight channel
+	6 b) Orb 2 set at offset of Pi radians from Orb 1. 
+	7) Chirality of both Orbs set at -1. 
+	
+	Next versions should focus on Orbs system overhauls and Camera system overhauls. 
+	
+    Orb Upgrades plan
+	TODO: Refactor Orbs: BandID to ChanID, so that BandID is available to contain a list of chosen bands per Orb. 
+    TODO: A “band picker” per-orb (so orbs can lock to Kraken vs Air Shelf vs Dog Whistle Alley, etc.)
+	TODO: Orbs need to get color phase space assignment per orb, so opposed orbs can have opposed color spaces: etc, et al
+	TODO: Orbs need center coords fields (X,Y,Z), so orbs can occupy offset locations. 
+	
+	Upgrade to '3D space'
+	TODO: Refactor Orbs, allow to specify direction of orb rotation on all 3 axis. 
+	TODO: Implement 'Camera controls', so that render space can be actuated apart from simulation space. 
+	      Focus on center of simulation space
+		  Implement zoom
+		  Implement rotation
+		  
+		  
+   ========================================================================== */
+
+const TAU = Math.PI * 2;
+const RAD_TO_DEG = 180 / Math.PI;
+
+const PRESET_SCHEMA_VERSION = 5; // v5 = 0.0.9
+const LEGACY_SCHEMA_V2 = 2;
+const LEGACY_SCHEMA_V3 = 3;
+const LEGACY_SCHEMA_V4 = 4;
+
+/* ------------------------------ Utilities -------------------------------- */
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function fmt(n, d) { return Number(n).toFixed(d); }
+
+function deepFreeze(obj) {
+  Object.freeze(obj);
+  for (const k of Object.keys(obj)) {
+    const v = obj[k];
+    if (v && typeof v === "object" && !Object.isFrozen(v)) deepFreeze(v);
+  }
+  return obj;
+}
+
+function deepClone(obj) {
+  if (typeof structuredClone === "function") return structuredClone(obj);
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function hexToRgb01(hex) {
+  const h = hex.replace("#", "");
+  return {
+    r: parseInt(h.slice(0, 2), 16) / 255,
+    g: parseInt(h.slice(2, 4), 16) / 255,
+    b: parseInt(h.slice(4, 6), 16) / 255,
+  };
+}
+
+function rgb01ToCss({r,g,b}, alpha = 1) {
+  const R = Math.round(clamp(r,0,1) * 255);
+  const G = Math.round(clamp(g,0,1) * 255);
+  const B = Math.round(clamp(b,0,1) * 255);
+  return `rgba(${R},${G},${B},${clamp(alpha,0,1)})`;
+}
+
+function lerpRgb01(a, b, t) {
+  return { r: lerp(a.r, b.r, t), g: lerp(a.g, b.g, t), b: lerp(a.b, b.b, t) };
+}
+
+function dot(a, b, stride = 1) {
+  let s = 0;
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i += stride) s += a[i] * b[i];
+  return s;
+}
+
+function hsvToRgb01(hDeg, s, v) {
+  const h = ((hDeg % 360) + 360) % 360;
+  const c = v * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = v - c;
+
+  let rp=0, gp=0, bp=0;
+  if (h < 60) { rp = c; gp = x; bp = 0; }
+  else if (h < 120) { rp = x; gp = c; bp = 0; }
+  else if (h < 180) { rp = 0; gp = c; bp = x; }
+  else if (h < 240) { rp = 0; gp = x; bp = c; }
+  else if (h < 300) { rp = x; gp = 0; bp = c; }
+  else { rp = c; gp = 0; bp = x; }
+
+  return { r: rp + m, g: gp + m, b: bp + m };
+}
+
+/* =============================================================================
+   CONFIG — Canonical truth (never mutated)
+   ========================================================================== */
+const CONFIG = deepFreeze({
+  ui: {
+    panelBackgroundRgba: "rgba(0,0,0,0.72)",
+    panelBlurPx: 6,
+    panelPaddingPx: 10,
+    panelGapPx: 10,
+    panelRadiusPx: 10,
+    audioPanelHeightPx: 64,
+    iconButtonSizePx: 40,
+    volume: { min: 0, max: 1, step: 0.01 },
+  },
+
+  defaults: {
+    visuals: {
+      backgroundColor: "#000000",
+      particleColor: "#ffffff",
+    },
+
+    trace: {
+      lines: false,
+      numLines: 5,
+      lineAlpha: 0.35,
+      lineWidthPx: 2,
+      lineColorMode: "fixed", // "fixed" | "lastParticle" | "dominantBand"
+    },
+
+    particles: {
+      emitPerSecond: 180,
+      sizeMaxPx: 6,
+      sizeMinPx: 1,
+      sizeToMinSec: 3.0,
+      ttlSec: 6.0,
+      overlapRadiusPx: 6.0,
+    },
+
+    motion: {
+      angularSpeedRadPerSec: Math.PI * 0.75,
+      waveformRadialDisplaceFrac: 0.18,
+    },
+
+    audio: {
+      fftSize: 2048,
+      smoothingTimeConstant: 0.50,
+      rmsGain: 6.0,
+      minRadiusFrac: 0.01,
+      maxRadiusFrac: 0.80,
+
+      // Playback knobs (do NOT affect analysis)
+      loop: true,
+      muted: false,
+      volume: 1.0,
+    },
+
+    // Orbs: Lets GO Stereo!
+    orbs: [
+      { id: "ORB0", bandId: "R", chirality: -1, startAngleRad: 0 },
+	  { id: "ORB1", bandId: "L", chirality: -1, startAngleRad: Math.PI },
+    ],
+
+bands: {
+  count: 256,
+  floorHz: 10,
+  ceilingHz: 26000,
+  logSpacing: true,
+  // Fun band names (256 total)
+  names: [
+// 0–31  Planetary Core – The Iron-Nickel Heart of the World (deepest sub-bass)
+  "Eternal Core",
+  "Nickel Forge",
+  "Iron Heartbeat",
+  "Primordial Mantle",
+  "Lithic Roar",
+  "Subduction Song",
+  "Magma Heart",
+  "Rift Whisper",
+  "Volcanic Pulse",
+  "Crustal Thunder",
+  "Tectonic Echo",
+  "Seismic Lullaby",
+  "Planetary Forge",
+  "Core Resonance",
+  "Mantle Dream",
+  "Abyssal Maw",
+  "Hadal Thunder",
+  "Trench Oracle",
+  "Benthic Choir",
+  "Pressure Veil",
+  "Deep Mantle Song",
+  "Geothermal Hum",
+  "Iron Core Pulse",
+  "Nickel Veil",
+  "Primordial Roar",
+  "Subterranean Whisper",
+  "Lithosphere Pulse",
+  "Mantle Chamber",
+  "Core Song",
+  "Planetary Heart",
+  "Eternal Forge",
+  "Deepest Resonance",
+
+  // 32–63  Oceans & Tectonics – Fluid Foundations of Life
+  "Mariana Pulse",
+  "Hadal Depths",
+  "Oceanic Spine",
+  "Continental Rumble",
+  "Mountain Root",
+  "Ancient Soil",
+  "Seabed Choir",
+  "Trench Echo",
+  "Pelagic Dream",
+  "Abyssal Current",
+  "Hydrothermal Song",
+  "Pressure Chamber",
+  "Oceanic Veil",
+  "Tectonic Drift",
+  "Rift Valley Hum",
+  "Submarine Thunder",
+  "Coral Heart",
+  "Deep Current Pulse",
+  "Ocean Floor Forge",
+  "Benthic Resonance",
+  "Mariana Whisper",
+  "Hadal Lullaby",
+  "Pelagic Roar",
+  "Continental Song",
+  "Seabed Pulse",
+  "Trench Heart",
+  "Abyssal Forge",
+  "Oceanic Dream",
+  "Pressure Song",
+  "Deep Sea Resonance",
+  "Hydrothermal Veil",
+  "Mariana Core",
+
+  // 64–95  Biosphere & Living Crust – Where Life First Awakens
+  "Forest Floor",
+  "Canopy Breath",
+  "Jungle Canopy",
+  "Savanna Heart",
+  "River Stone",
+  "Earth Breath",
+  "Gaia Hum",
+  "Biosphere Song",
+  "Thunder Root",
+  "Storm Cradle",
+  "Wind Weaver",
+  "Cloud Chamber",
+  "Dawn Chorus",
+  "Human Veil",
+  "Vocal Ridge",
+  "Breath Chamber",
+  "Presence Spark",
+  "Clarity Thread",
+  "Life Resonance",
+  "Soil Symphony",
+  "Root Network",
+  "Leaf Whisper",
+  "Pollen Pulse",
+  "Mycelial Song",
+  "Rainforest Hum",
+  "Savanna Pulse",
+  "River Echo",
+  "Earth Song",
+  "Gaia Pulse",
+  "Biosphere Veil",
+  "Life Thread",
+  "Organic Resonance",
+
+  // 96–127  Human Voice & Emotional Presence – The Heart of the Mix
+  "Vocal Spark",
+  "Throat Chamber",
+  "Chest Resonance",
+  "Nasal Veil",
+  "Presence Ridge",
+  "Clarity Peak",
+  "Sibilant Edge",
+  "Bite Burst",
+  "Air Shelf",
+  "Breath Spark",
+  "Voice Thread",
+  "Human Hum",
+  "Emotional Core",
+  "Soul Whisper",
+  "Heartbeat Echo",
+  "Vocal Forge",
+  "Presence Veil",
+  "Clarity Song",
+  "Sibilance Dream",
+  "Air Resonance",
+  "Breath Pulse",
+  "Voice Lullaby",
+  "Human Spark",
+  "Emotional Veil",
+  "Soul Pulse",
+  "Heart Song",
+  "Vocal Dream",
+  "Presence Core",
+  "Clarity Forge",
+  "Sibilant Whisper",
+  "Air Heart",
+  "Breath Resonance",
+
+  // 128–159  Lower Atmosphere – Sky Begins to Open
+  "Tropospheric Dance",
+  "Cloud Weaver",
+  "Storm Pulse",
+  "Rain Veil",
+  "Lightning Thread",
+  "Wind Ridge",
+  "Fog Chamber",
+  "Mist Spark",
+  "Dawn Veil",
+  "Dusk Echo",
+  "Twilight Hum",
+  "Atmosphere Song",
+  "Weather Pulse",
+  "Cumulus Heart",
+  "Stratus Whisper",
+  "Nimbus Resonance",
+  "Thunder Song",
+  "Lightning Dream",
+  "Raindrop Pulse",
+  "Wind Forge",
+  "Cloud Veil",
+  "Mist Thread",
+  "Fog Resonance",
+  "Dawn Spark",
+  "Dusk Lullaby",
+  "Twilight Pulse",
+  "Atmosphere Veil",
+  "Weather Song",
+  "Cumulus Echo",
+  "Stratus Dream",
+  "Nimbus Heart",
+  "Thunder Veil",
+
+  // 160–191  Upper Atmosphere & Ionosphere – Light & Electricity
+  "Lightning Veil",
+  "Aurora Thread",
+  "Ion Whisper",
+  "Magnetosphere Ring",
+  "Solar Wind Hymn",
+  "Helios Harp",
+  "Van Allen Veil",
+  "Orbital Echo",
+  "Lunar Reflection",
+  "Meteor Shimmer",
+  "Exospheric Spark",
+  "Satellite Choir",
+  "Stratospheric Veil",
+  "Ionospheric Dance",
+  "Aurora Pulse",
+  "Magneto Song",
+  "Solar Veil",
+  "Helios Dream",
+  "Van Allen Pulse",
+  "Orbital Whisper",
+  "Lunar Heart",
+  "Meteor Forge",
+  "Exospheric Hum",
+  "Satellite Resonance",
+  "Stratospheric Song",
+  "Ionospheric Spark",
+  "Aurora Lullaby",
+  "Magneto Veil",
+  "Solar Pulse",
+  "Helios Resonance",
+  "Van Allen Dream",
+  "Orbital Song",
+
+  // 192–223  Solar System – Planets, Moons & Solar Winds
+  "Lunar Reflection",
+  "Mars Dust",
+  "Jovian Thunder",
+  "Saturn Ring Song",
+  "Venus Veil",
+  "Mercury Pulse",
+  "Neptune Whisper",
+  "Uranus Dream",
+  "Pluto Edge",
+  "Asteroid Shimmer",
+  "Comet Trail",
+  "Solar Flare Heart",
+  "Coronal Song",
+  "Heliosphere Veil",
+  "Interplanetary Hum",
+  "Moonlit Resonance",
+  "Jupiter Pulse",
+  "Saturn Echo",
+  "Venus Spark",
+  "Mercury Forge",
+  "Neptune Lullaby",
+  "Uranus Veil",
+  "Pluto Song",
+  "Asteroid Dream",
+  "Comet Pulse",
+  "Solar Flare Whisper",
+  "Coronal Resonance",
+  "Heliosphere Song",
+  "Interplanetary Veil",
+  "Moonlit Pulse",
+  "Jovian Dream",
+  "Saturn Heart",
+
+  // 224–255  Stellar to Quantum Eternity – The Farthest Reaches
+  "Stellar Drift",
+  "Nebula Heart",
+  "Galactic Pulse",
+  "Cosmic Root",
+  "Quasar Whisper",
+  "Black Hole Lullaby",
+  "Dark Matter Song",
+  "Cosmic Microwave",
+  "Quantum Foam",
+  "Void Resonance",
+  "Star Forge",
+  "Nebula Veil",
+  "Galactic Edge",
+  "Observable Dream",
+  "Universal Hum",
+  "Eternity’s Resonance",
+  "Photon Veil",
+  "Neutrino Song",
+  "Graviton Pulse",
+  "Singularity Heart",
+  "Big Bang Echo",
+  "Multiverse Whisper",
+  "Cosmic Horizon",
+  "Dark Energy Dream",
+  "Stellar Nursery",
+  "Supernova Spark",
+  "Pulsar Choir",
+  "Quasar Forge",
+  "Black Hole Veil",
+  "Cosmic Infinity",
+  "Observable Edge",
+  "Eternal Resonance"
+  ],
+
+      overlay: {
+        enabled: true,
+        connectAdjacent: true,
+        alpha: 0.65,
+        pointSizePx: 3,
+        lineAlpha: 0.35,
+        lineWidthPx: 1,
+
+        phaseMode: "orb",        // "orb" | "free"
+        ringSpeedRadPerSec: 0.35 // used when phaseMode="free"
+      },
+
+      rainbow: {
+        hueOffsetDeg: 0,
+        saturation: 0.90,
+        value: 1.00,
+      },
+
+      particleColorSource: "dominant", // "fixed" | "dominant" | "angle"
+    },
+
+    timing: {
+      maxDeltaTimeSec: 1 / 200,
+    },
+  },
+
+  limits: {
+    trace: {
+      numLines: { min: 1, max: 1000, step: 1 },
+      lineAlpha: { min: 0, max: 1, step: 0.01 },
+      lineWidthPx: { min: 1, max: 6, step: 1 },
+    },
+
+    particles: {
+      emitPerSecond: { min: 4, max: 420, step: 1 },
+      sizeMaxPx: { min: 1, max: 8, step: 0.1 },
+      sizeMinPx: { min: 0.5, max: 6, step: 0.1 },
+      sizeToMinSec: { min: 1, max: 240, step: 1 },
+      ttlSec: { min: 1, max: 480, step: 1 },
+      overlapRadiusPx: { min: 0.5, max: 40, step: 0.5 },
+    },
+
+    motion: {
+      angularSpeedRadPerSec: { min: 0.01, max: TAU, step: 0.01 },
+      waveformRadialDisplaceFrac: { min: 0.001, max: 1.00, step: 0.001 },
+    },
+
+    audio: {
+      rmsGain: { min: 0.05, max: 10, step: 0.05 },
+      minRadiusFrac: { min: 0.01, max: 0.3, step: 0.01 },
+      maxRadiusFrac: { min: 0.05, max: 1, step: 0.01 },
+      smoothingTimeConstant: { min: 0.00, max: 0.99, step: 0.01 },
+      fftSizes: [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
+    },
+
+    bands: {
+      overlayAlpha: { min: 0, max: 1, step: 0.01 },
+      pointSizePx: { min: 1, max: 10, step: 1 },
+      hueOffsetDeg: { min: 0, max: 360, step: 1 },
+      saturation: { min: 0, max: 1, step: 0.01 },
+      value: { min: 0, max: 1, step: 0.01 },
+
+      ringSpeedRadPerSec: { min: 0, max: TAU, step: 0.01 }
+    },
+
+    monoDetect: {
+      rightSilenceRms: 0.002,
+      lrCorrelationStride: 8,
+      lrCorrelationMonoThresh: 0.995
+    }
+  }
+});
+
+/* =============================================================================
+   Preferences + Runtime settings (derived)
+   ========================================================================== */
+let preferences = deepClone(CONFIG.defaults);
+const runtime = { settings: deepClone(CONFIG.defaults) };
+
+function resolveSettings() { runtime.settings = deepClone(preferences); }
+
+/* =============================================================================
+   App State
+   ========================================================================== */
+const state = {
+  canvas: null,
+  ctx: null,
+  widthPx: 0,
+  heightPx: 0,
+  dpr: 1,
+
+  time: { lastTimestampMs: null, simPaused: false },
+
+  audio: { isLoaded: false, isPlaying: false, filename: "" },
+
+  orbs: [],
+
+  bands: {
+    lowHz: [],
+    highHz: [],
+    energies01: [],
+    dominantIndex: 0,
+    dominantName: "",
+    dominantHz: "",
+    ringPhaseRad: 0,
+  },
+
+  ui: {}
+};
+
+/* =============================================================================
+   Sim space vs Screen space
+   ========================================================================== */
+const Spaces = (() => {
+  function centerPx() {
+    return { x: state.widthPx * 0.5, y: state.heightPx * 0.5 };
+  }
+  function simToScreen(xSim, ySim) {
+    const c = centerPx();
+    return { x: c.x + xSim, y: c.y - ySim };
+  }
+  return { centerPx, simToScreen };
+})();
+
+/* =============================================================================
+   Canvas sizing
+   ========================================================================== */
+function resizeCanvasToDisplaySize() {
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = state.canvas.clientWidth;
+  const cssH = state.canvas.clientHeight;
+
+  const pxW = Math.floor(cssW * dpr);
+  const pxH = Math.floor(cssH * dpr);
+
+  if (pxW !== state.widthPx || pxH !== state.heightPx || dpr !== state.dpr) {
+    state.dpr = dpr;
+    state.widthPx = pxW;
+    state.heightPx = pxH;
+    state.canvas.width = pxW;
+    state.canvas.height = pxH;
+  }
+}
+
+/* =============================================================================
+   URL Presets (v2/v3/v4/v5 compatible)
+   ========================================================================== */
+const UrlPreset = (() => {
+  function base64UrlEncode(bytes) {
+    let b64 = btoa(String.fromCharCode(...bytes));
+    return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  }
+
+  function base64UrlDecodeToBytes(b64url) {
+    const b64 = b64url.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((b64url.length + 3) % 4);
+    const bin = atob(b64);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  function encodePrefsToHash(prefs) {
+    const payload = { schema: PRESET_SCHEMA_VERSION, prefs };
+    const json = JSON.stringify(payload);
+    const bytes = new TextEncoder().encode(json);
+    return "#p=" + base64UrlEncode(bytes);
+  }
+
+  function decodePrefsFromHash(hash) {
+    if (!hash || !hash.startsWith("#p=")) return null;
+    const token = hash.slice(3);
+    const bytes = base64UrlDecodeToBytes(token);
+    const json = new TextDecoder().decode(bytes);
+    const obj = JSON.parse(json);
+    if (!obj || !obj.prefs) return null;
+
+    if (![PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2].includes(obj.schema)) return null;
+    return obj.prefs;
+  }
+
+  function sanitizeAndApply(incoming) {
+    const next = deepClone(preferences);
+
+    if (incoming.visuals) {
+      if (typeof incoming.visuals.backgroundColor === "string") next.visuals.backgroundColor = incoming.visuals.backgroundColor;
+      if (typeof incoming.visuals.particleColor === "string") next.visuals.particleColor = incoming.visuals.particleColor;
+    }
+
+    if (incoming.trace) {
+      if (typeof incoming.trace.lines === "boolean") next.trace.lines = incoming.trace.lines;
+      if (Number.isFinite(incoming.trace.numLines)) {
+        const lim = CONFIG.limits.trace.numLines;
+        next.trace.numLines = clamp(incoming.trace.numLines, lim.min, lim.max);
+      }
+      if (typeof incoming.trace.lineColorMode === "string") {
+        if (["fixed","lastParticle","dominantBand"].includes(incoming.trace.lineColorMode)) {
+          next.trace.lineColorMode = incoming.trace.lineColorMode;
+        }
+      }
+    }
+
+    if (incoming.particles) {
+      for (const k of ["emitPerSecond","sizeMaxPx","sizeMinPx","sizeToMinSec","ttlSec","overlapRadiusPx"]) {
+        if (Number.isFinite(incoming.particles[k])) {
+          const lim = CONFIG.limits.particles[k];
+          next.particles[k] = clamp(incoming.particles[k], lim.min, lim.max);
+        }
+      }
+    }
+
+    if (incoming.motion) {
+      if (Number.isFinite(incoming.motion.angularSpeedRadPerSec)) {
+        const lim = CONFIG.limits.motion.angularSpeedRadPerSec;
+        next.motion.angularSpeedRadPerSec = clamp(incoming.motion.angularSpeedRadPerSec, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.motion.waveformRadialDisplaceFrac)) {
+        const lim = CONFIG.limits.motion.waveformRadialDisplaceFrac;
+        next.motion.waveformRadialDisplaceFrac = clamp(incoming.motion.waveformRadialDisplaceFrac, lim.min, lim.max);
+      }
+    }
+
+    if (incoming.audio) {
+      if (Number.isFinite(incoming.audio.rmsGain)) {
+        const lim = CONFIG.limits.audio.rmsGain;
+        next.audio.rmsGain = clamp(incoming.audio.rmsGain, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.minRadiusFrac)) {
+        const lim = CONFIG.limits.audio.minRadiusFrac;
+        next.audio.minRadiusFrac = clamp(incoming.audio.minRadiusFrac, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.maxRadiusFrac)) {
+        const lim = CONFIG.limits.audio.maxRadiusFrac;
+        next.audio.maxRadiusFrac = clamp(incoming.audio.maxRadiusFrac, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.smoothingTimeConstant)) {
+        const lim = CONFIG.limits.audio.smoothingTimeConstant;
+        next.audio.smoothingTimeConstant = clamp(incoming.audio.smoothingTimeConstant, lim.min, lim.max);
+      }
+      if (Number.isFinite(incoming.audio.fftSize) && CONFIG.limits.audio.fftSizes.includes(incoming.audio.fftSize)) {
+        next.audio.fftSize = incoming.audio.fftSize;
+      }
+
+      if (typeof incoming.audio.loop === "boolean") next.audio.loop = incoming.audio.loop;
+      if (typeof incoming.audio.muted === "boolean") next.audio.muted = incoming.audio.muted;
+      if (Number.isFinite(incoming.audio.volume)) {
+        next.audio.volume = clamp(incoming.audio.volume, CONFIG.ui.volume.min, CONFIG.ui.volume.max);
+      }
+    }
+
+    if (incoming.bands) {
+      if (incoming.bands.overlay) {
+        if (typeof incoming.bands.overlay.enabled === "boolean") next.bands.overlay.enabled = incoming.bands.overlay.enabled;
+        if (typeof incoming.bands.overlay.connectAdjacent === "boolean") next.bands.overlay.connectAdjacent = incoming.bands.overlay.connectAdjacent;
+
+        if (Number.isFinite(incoming.bands.overlay.alpha)) {
+          const lim = CONFIG.limits.bands.overlayAlpha;
+          next.bands.overlay.alpha = clamp(incoming.bands.overlay.alpha, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.overlay.pointSizePx)) {
+          const lim = CONFIG.limits.bands.pointSizePx;
+          next.bands.overlay.pointSizePx = clamp(incoming.bands.overlay.pointSizePx, lim.min, lim.max);
+        }
+
+        if (typeof incoming.bands.overlay.phaseMode === "string") {
+          if (["orb","free"].includes(incoming.bands.overlay.phaseMode)) {
+            next.bands.overlay.phaseMode = incoming.bands.overlay.phaseMode;
+          }
+        }
+        if (Number.isFinite(incoming.bands.overlay.ringSpeedRadPerSec)) {
+          const lim = CONFIG.limits.bands.ringSpeedRadPerSec;
+          next.bands.overlay.ringSpeedRadPerSec = clamp(incoming.bands.overlay.ringSpeedRadPerSec, lim.min, lim.max);
+        }
+      }
+
+      if (incoming.bands.rainbow) {
+        if (Number.isFinite(incoming.bands.rainbow.hueOffsetDeg)) {
+          const lim = CONFIG.limits.bands.hueOffsetDeg;
+          next.bands.rainbow.hueOffsetDeg = clamp(incoming.bands.rainbow.hueOffsetDeg, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.rainbow.saturation)) {
+          const lim = CONFIG.limits.bands.saturation;
+          next.bands.rainbow.saturation = clamp(incoming.bands.rainbow.saturation, lim.min, lim.max);
+        }
+        if (Number.isFinite(incoming.bands.rainbow.value)) {
+          const lim = CONFIG.limits.bands.value;
+          next.bands.rainbow.value = clamp(incoming.bands.rainbow.value, lim.min, lim.max);
+        }
+      }
+
+      if (typeof incoming.bands.particleColorSource === "string") {
+        if (["fixed","dominant","angle"].includes(incoming.bands.particleColorSource)) {
+          next.bands.particleColorSource = incoming.bands.particleColorSource;
+        }
+      }
+    }
+
+    next.particles.sizeMinPx = Math.min(next.particles.sizeMinPx, next.particles.sizeMaxPx);
+    next.particles.ttlSec = Math.max(next.particles.ttlSec, next.particles.sizeToMinSec);
+
+    preferences = next;
+    resolveSettings();
+    return true;
+  }
+
+  function applyFromLocationHash() {
+    try {
+      const decoded = decodePrefsFromHash(location.hash);
+      if (!decoded) return false;
+      return sanitizeAndApply(decoded);
+    } catch {
+      return false;
+    }
+  }
+
+  function writeHashFromPrefs() {
+    const hash = encodePrefsToHash(preferences);
+    history.replaceState(null, "", location.pathname + location.search + hash);
+  }
+
+  return { applyFromLocationHash, writeHashFromPrefs };
+})();
+
+/* =============================================================================
+   BandBank — defines 256 bands and maps FFT bins -> band energies
+   ========================================================================== */
+const BandBank = (() => {
+  function rebuild() {
+    const s = runtime.settings;
+    const n = s.bands.count;
+    const f0 = s.bands.floorHz;
+    const f1 = s.bands.ceilingHz;
+
+    state.bands.lowHz = new Array(n);
+    state.bands.highHz = new Array(n);
+
+    state.bands.lowHz[0] = 0;
+    state.bands.highHz[0] = f0;
+
+    const interiorBands = n - 2;
+    const ratio = s.bands.logSpacing
+      ? Math.pow(f1 / f0, 1 / interiorBands)
+      : null;
+
+    for (let i = 0; i < interiorBands; i++) {
+      const idx = 1 + i;
+      if (s.bands.logSpacing) {
+        const lo = f0 * Math.pow(ratio, i);
+        const hi = f0 * Math.pow(ratio, i + 1);
+        state.bands.lowHz[idx] = lo;
+        state.bands.highHz[idx] = hi;
+      } else {
+        const lo = lerp(f0, f1, i / interiorBands);
+        const hi = lerp(f0, f1, (i + 1) / interiorBands);
+        state.bands.lowHz[idx] = lo;
+        state.bands.highHz[idx] = hi;
+      }
+    }
+
+    state.bands.lowHz[n - 1] = f1;
+    state.bands.highHz[n - 1] = Infinity;
+
+    state.bands.energies01 = new Array(n).fill(0);
+  }
+
+  function bandIndexFromAngleRad(angleRad) {
+    const n = runtime.settings.bands.count;
+    const a01 = ((angleRad % TAU) + TAU) % TAU / TAU;
+    let idx = Math.floor(a01 * n);
+    idx = clamp(idx, 0, n - 1);
+    return idx;
+  }
+
+  function computeEnergiesFromCAnalyser(cBand, audioContextSampleRate) {
+    const s = runtime.settings;
+    const n = s.bands.count;
+    if (!cBand || !cBand.freqDb) return;
+
+    const nyquist = audioContextSampleRate * 0.5;
+    const bins = cBand.freqDb.length;
+
+    const minDb = cBand.analyser.minDecibels;
+    const maxDb = cBand.analyser.maxDecibels;
+    const dbSpan = Math.max(1e-6, (maxDb - minDb));
+
+    let dominant = 0;
+    let dominantVal = -1;
+
+    for (let i = 0; i < n; i++) {
+      const loHz = state.bands.lowHz[i];
+      const hiHzRaw = state.bands.highHz[i];
+      const hiHz = Math.min(nyquist, (hiHzRaw === Infinity ? nyquist : hiHzRaw));
+
+      const loBin = Math.floor((loHz / nyquist) * (bins - 1));
+      const hiBin = Math.ceil((hiHz / nyquist) * (bins - 1));
+
+      const a = clamp(loBin, 0, bins - 1);
+      const b = clamp(hiBin, 0, bins - 1);
+
+      if (b <= a) {
+        state.bands.energies01[i] = 0;
+        continue;
+      }
+
+      let sum = 0;
+      let count = 0;
+      for (let k = a; k <= b; k++) {
+        const t = clamp((cBand.freqDb[k] - minDb) / dbSpan, 0, 1);
+        sum += t;
+        count += 1;
+      }
+
+      const avg = count > 0 ? (sum / count) : 0;
+      state.bands.energies01[i] = avg;
+
+      if (avg > dominantVal) {
+        dominantVal = avg;
+        dominant = i;
+      }
+    }
+
+    state.bands.dominantIndex = dominant;
+    const name = (s.bands.names && s.bands.names[dominant]) ? s.bands.names[dominant] : `Band ${dominant}`;
+    state.bands.dominantName = name;
+
+    const lo = state.bands.lowHz[dominant];
+    const hi = state.bands.highHz[dominant];
+    state.bands.dominantHz = `${fmt(lo, 0)}–${hi === Infinity ? "∞" : fmt(hi, 0)} Hz`;
+  }
+
+  return { rebuild, bandIndexFromAngleRad, computeEnergiesFromCAnalyser };
+})();
+
+/* =============================================================================
+   ColorPolicy
+   ========================================================================== */
+const ColorPolicy = (() => {
+  function bandRgb01(index) {
+    const s = runtime.settings;
+    const n = s.bands.count;
+    const hueStep = 360 / n;
+    const hue = s.bands.rainbow.hueOffsetDeg + index * hueStep;
+    return hsvToRgb01(hue, s.bands.rainbow.saturation, s.bands.rainbow.value);
+  }
+
+  function pickParticleColorRgb01(angleRad) {
+    const s = runtime.settings;
+
+    if (s.bands.particleColorSource === "fixed") return hexToRgb01(s.visuals.particleColor);
+    if (s.bands.particleColorSource === "angle") return bandRgb01(BandBank.bandIndexFromAngleRad(angleRad));
+
+    return bandRgb01(state.bands.dominantIndex); // dominant
+  }
+
+  function pickLineColorRgb01(particles) {
+    const s = runtime.settings;
+    if (s.trace.lineColorMode === "dominantBand") return bandRgb01(state.bands.dominantIndex);
+
+    if (s.trace.lineColorMode === "lastParticle") {
+      const last = particles && particles.length ? particles[particles.length - 1] : null;
+      if (last && last.rgbStart) return last.rgbStart;
+      return hexToRgb01(s.visuals.particleColor);
+    }
+
+    return hexToRgb01(s.visuals.particleColor); // fixed
+  }
+
+  return { bandRgb01, pickParticleColorRgb01, pickLineColorRgb01 };
+})();
+
+/* =============================================================================
+   Audio Engine (L/R/C) + freq data for C
+   ========================================================================== */
+const AudioEngine = (() => {
+  let audioContext = null;
+
+  let mediaEl = null;
+  let sourceNode = null;
+  let outputGain = null;
+
+  let splitter = null;
+  let sumNode = null;
+  let sumGainL = null;
+  let sumGainR = null;
+
+  const bands = new Map();
+  const status = {
+    ready: false,
+    monoLike: true,
+    rmsL: 0, rmsR: 0, corrLR: 0,
+  };
+
+  function ensureContext() {
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    return audioContext;
+  }
+
+  function teardown() {
+    try { if (sourceNode) sourceNode.disconnect(); } catch {}
+    try { if (splitter) splitter.disconnect(); } catch {}
+    try { if (sumNode) sumNode.disconnect(); } catch {}
+    try { if (outputGain) outputGain.disconnect(); } catch {}
+
+    bands.clear();
+    sourceNode = null;
+    splitter = null;
+    sumNode = null;
+    sumGainL = null;
+    sumGainR = null;
+    outputGain = null;
+
+    mediaEl = null;
+
+    status.ready = false;
+    status.monoLike = true;
+    status.rmsL = 0;
+    status.rmsR = 0;
+    status.corrLR = 0;
+  }
+
+  function makeAnalyserBand(id, label) {
+    const ctx = ensureContext();
+    const a = ctx.createAnalyser();
+    a.fftSize = runtime.settings.audio.fftSize;
+    a.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
+
+    const timeDomain = new Float32Array(a.fftSize);
+    const freqDb = new Float32Array(a.frequencyBinCount);
+
+    return { id, label, analyser: a, timeDomain, freqDb, rms: 0, energy01: 0 };
+  }
+
+  function applyPlaybackSettingsLive() {
+    if (!outputGain || !mediaEl) return;
+    const s = runtime.settings;
+    mediaEl.loop = !!s.audio.loop;
+    outputGain.gain.value = s.audio.muted ? 0 : s.audio.volume;
+  }
+
+  function applyAnalyserSettingsLive() {
+    for (const band of bands.values()) {
+      band.analyser.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
+      if (band.analyser.fftSize !== runtime.settings.audio.fftSize) {
+        band.analyser.fftSize = runtime.settings.audio.fftSize;
+        band.timeDomain = new Float32Array(band.analyser.fftSize);
+        band.freqDb = new Float32Array(band.analyser.frequencyBinCount);
+      }
+    }
+  }
+
+  function buildGraph() {
+    const ctx = ensureContext();
+
+    outputGain = ctx.createGain();
+    splitter = ctx.createChannelSplitter(2);
+
+    sumNode = ctx.createGain();
+    sumGainL = ctx.createGain();
+    sumGainR = ctx.createGain();
+    sumGainL.gain.value = 0.5;
+    sumGainR.gain.value = 0.5;
+
+    const bandL = makeAnalyserBand("L", "Left");
+    const bandR = makeAnalyserBand("R", "Right");
+    const bandC = makeAnalyserBand("C", "Center");
+
+    bands.set("L", bandL);
+    bands.set("R", bandR);
+    bands.set("C", bandC);
+
+    sourceNode.connect(splitter);
+
+    splitter.connect(bandL.analyser, 0);
+    splitter.connect(bandR.analyser, 1);
+
+    splitter.connect(sumGainL, 0);
+    splitter.connect(sumGainR, 1);
+    sumGainL.connect(sumNode);
+    sumGainR.connect(sumNode);
+    sumNode.connect(bandC.analyser);
+
+    sourceNode.connect(outputGain);
+    outputGain.connect(ctx.destination);
+
+    applyPlaybackSettingsLive();
+    applyAnalyserSettingsLive();
+
+    status.ready = true;
+  }
+
+  async function loadFile(file) {
+    const ctx = ensureContext();
+    if (ctx.state === "suspended") await ctx.resume();
+
+    teardown();
+
+    mediaEl = document.createElement("audio");
+    mediaEl.preload = "auto";
+
+    const url = URL.createObjectURL(file);
+    mediaEl.src = url;
+
+    sourceNode = ctx.createMediaElementSource(mediaEl);
+    buildGraph();
+
+    state.audio.isLoaded = true;
+    state.audio.filename = file.name;
+
+    await mediaEl.play().catch(() => {});
+    state.audio.isPlaying = !mediaEl.paused;
+
+    mediaEl.addEventListener("loadeddata", () => {
+      try { URL.revokeObjectURL(url); } catch {}
+    }, { once: true });
+
+    return true;
+  }
+
+  async function playPause() {
+    if (!mediaEl) return;
+    const ctx = ensureContext();
+    if (ctx.state === "suspended") await ctx.resume();
+
+    if (mediaEl.paused) await mediaEl.play().catch(() => {});
+    else mediaEl.pause();
+
+    state.audio.isPlaying = !mediaEl.paused;
+  }
+
+  function stop() {
+    if (!mediaEl) return;
+    mediaEl.pause();
+    try { mediaEl.currentTime = 0; } catch {}
+    state.audio.isPlaying = false;
+  }
+
+  function computeRmsFromWaveform(wf) {
+    let sumSq = 0;
+    for (let i = 0; i < wf.length; i++) {
+      const v = wf[i];
+      sumSq += v * v;
+    }
+    return Math.sqrt(sumSq / Math.max(1, wf.length));
+  }
+
+  function computeEnergy01(rms) {
+    const g = runtime.settings.audio.rmsGain;
+    return clamp(rms * g, 0, 1);
+  }
+
+  function updateMonoDetection(bandL, bandR) {
+    const silenceThresh = CONFIG.limits.monoDetect.rightSilenceRms;
+    const stride = CONFIG.limits.monoDetect.lrCorrelationStride;
+    const corrThresh = CONFIG.limits.monoDetect.lrCorrelationMonoThresh;
+
+    const rmsL = bandL.rms;
+    const rmsR = bandR.rms;
+
+    status.rmsL = rmsL;
+    status.rmsR = rmsR;
+
+    if (rmsR < silenceThresh) {
+      status.corrLR = 0;
+      status.monoLike = true;
+      return;
+    }
+
+    const L = bandL.timeDomain;
+    const R = bandR.timeDomain;
+
+    const dLR = dot(L, R, stride);
+    const dLL = dot(L, L, stride);
+    const dRR = dot(R, R, stride);
+
+    const denom = Math.sqrt(Math.max(1e-12, dLL * dRR));
+    const corr = dLR / denom;
+
+    status.corrLR = corr;
+    status.monoLike = corr >= corrThresh;
+  }
+
+  function adjustCenterMixing() {
+    if (!sumGainL || !sumGainR) return;
+    const rSilent = status.rmsR < CONFIG.limits.monoDetect.rightSilenceRms;
+    if (rSilent) {
+      sumGainL.gain.value = 1.0;
+      sumGainR.gain.value = 0.0;
+    } else {
+      sumGainL.gain.value = 0.5;
+      sumGainR.gain.value = 0.5;
+    }
+  }
+
+  function sample() {
+    if (!status.ready) return { ready: false, monoLike: true };
+
+    const bandL = bands.get("L");
+    const bandR = bands.get("R");
+    const bandC = bands.get("C");
+
+    bandL.analyser.getFloatTimeDomainData(bandL.timeDomain);
+    bandR.analyser.getFloatTimeDomainData(bandR.timeDomain);
+
+    bandL.rms = computeRmsFromWaveform(bandL.timeDomain);
+    bandR.rms = computeRmsFromWaveform(bandR.timeDomain);
+
+    updateMonoDetection(bandL, bandR);
+    adjustCenterMixing();
+
+    bandC.analyser.getFloatTimeDomainData(bandC.timeDomain);
+    bandC.rms = computeRmsFromWaveform(bandC.timeDomain);
+
+    bandL.energy01 = computeEnergy01(bandL.rms);
+    bandR.energy01 = computeEnergy01(bandR.rms);
+    bandC.energy01 = computeEnergy01(bandC.rms);
+
+    bandC.analyser.getFloatFrequencyData(bandC.freqDb);
+    BandBank.computeEnergiesFromCAnalyser(bandC, ensureContext().sampleRate);
+
+    return { ready: true, monoLike: status.monoLike, bands: { L: bandL, R: bandR, C: bandC }, debug: { corrLR: status.corrLR } };
+  }
+
+  return { loadFile, playPause, stop, sample, applyPlaybackSettingsLive, applyAnalyserSettingsLive };
+})();
+
+/* =============================================================================
+   TrailSystem
+   ========================================================================== */
+class TrailSystem {
+  constructor() {
+    this.particles = []; // { xSim, ySim, bornSec, rgbStart }
+    this.emitAccumulator = 0;
+  }
+
+  reset() {
+    this.particles.length = 0;
+    this.emitAccumulator = 0;
+  }
+
+  removeOverlaps(xSim, ySim, rPx) {
+    if (rPx <= 0) return;
+    const r2 = rPx * rPx;
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      const dx = p.xSim - xSim;
+      const dy = p.ySim - ySim;
+      if ((dx*dx + dy*dy) <= r2) this.particles.splice(i, 1);
+    }
+  }
+
+  emitAt(xSim, ySim, nowSec, rgbStart) {
+    const s = runtime.settings;
+    this.removeOverlaps(xSim, ySim, s.particles.overlapRadiusPx * state.dpr);
+    this.particles.push({ xSim, ySim, bornSec: nowSec, rgbStart });
+  }
+
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart) {
+    const s = runtime.settings;
+
+    const ttl = Math.max(0.0001, s.particles.ttlSec);
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      if ((nowSec - this.particles[i].bornSec) >= ttl) this.particles.splice(i, 1);
+    }
+
+    this.emitAccumulator += s.particles.emitPerSecond * dtSec;
+
+    const maxEmitThisFrame = Math.ceil(s.particles.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
+
+    let emits = 0;
+    while (this.emitAccumulator >= 1 && emits < maxEmitThisFrame) {
+      this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart);
+      this.emitAccumulator -= 1;
+      emits += 1;
+    }
+  }
+}
+
+/* =============================================================================
+   Orb
+   ========================================================================== */
+class Orb {
+  constructor(def) {
+    this.id = def.id;
+    this.bandId = def.bandId;
+    this.chirality = def.chirality;
+    this.angleRad = def.startAngleRad;
+
+    this.trail = new TrailSystem();
+
+    this.xSim = 0;
+    this.ySim = 0;
+    this.baseRadiusPx = 0;
+    this.radialDispPx = 0;
+  }
+
+  resetPhase() { this.angleRad = 0; }
+  resetTrail() { this.trail.reset(); }
+
+  step(dtSec, nowSec, bandC) {
+    const s = runtime.settings;
+
+    this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
+    this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
+
+    const minDim = Math.min(state.widthPx, state.heightPx);
+    const minR = minDim * s.audio.minRadiusFrac;
+    const maxR = minDim * s.audio.maxRadiusFrac;
+    const safeMin = Math.min(minR, maxR);
+    const safeMax = Math.max(minR, maxR);
+
+    const energy01 = bandC ? bandC.energy01 : 0;
+    this.baseRadiusPx = safeMin + (safeMax - safeMin) * energy01;
+
+    const wf = bandC ? bandC.timeDomain : null;
+    if (wf && wf.length > 0) {
+      const phase01 = this.angleRad / TAU;
+      const idx = Math.floor(phase01 * (wf.length - 1));
+      const sample = wf[idx];
+      this.radialDispPx = this.baseRadiusPx * s.motion.waveformRadialDisplaceFrac * sample;
+    } else {
+      this.radialDispPx = 0;
+    }
+
+    const radius = this.baseRadiusPx + this.radialDispPx;
+
+    this.xSim = radius * Math.cos(this.angleRad);
+    this.ySim = radius * Math.sin(this.angleRad);
+
+    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad);
+    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
+  }
+}
+
+/* =============================================================================
+   Renderer
+   ========================================================================== */
+const Renderer = (() => {
+  function clearFrame() {
+    const ctx = state.ctx;
+    const s = runtime.settings;
+    ctx.fillStyle = s.visuals.backgroundColor;
+    ctx.fillRect(0, 0, state.widthPx, state.heightPx);
+  }
+
+  function drawTrailLines(particles) {
+    const s = runtime.settings;
+    if (!s.trace.lines) return;
+
+    const segments = s.trace.numLines;
+    const neededPts = segments + 1;
+    if (!particles || particles.length < 2) return;
+
+    const startIdx = Math.max(0, particles.length - neededPts);
+    const slice = particles.slice(startIdx);
+    if (slice.length < 2) return;
+
+    const ctx = state.ctx;
+    const rgb = ColorPolicy.pickLineColorRgb01(particles);
+    const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
+
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = s.trace.lineWidthPx * state.dpr;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    const p0 = Spaces.simToScreen(slice[0].xSim, slice[0].ySim);
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+
+    for (let i = 1; i < slice.length; i++) {
+      const pi = Spaces.simToScreen(slice[i].xSim, slice[i].ySim);
+      ctx.lineTo(pi.x, pi.y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawParticles(particles, nowSec) {
+    const s = runtime.settings;
+    const ctx = state.ctx;
+
+    const bg = hexToRgb01(s.visuals.backgroundColor);
+
+    const sizeMax = s.particles.sizeMaxPx * state.dpr;
+    const sizeMin = Math.min(s.particles.sizeMinPx, s.particles.sizeMaxPx) * state.dpr;
+
+    const toMin = Math.max(0.0001, s.particles.sizeToMinSec);
+    const ttl = Math.max(0.0001, s.particles.ttlSec);
+    const fadeSec = Math.max(0.0001, ttl - toMin);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      const age = nowSec - p.bornSec;
+
+      let size = sizeMin;
+      if (age < toMin) {
+        const t = clamp(age / toMin, 0, 1);
+        size = lerp(sizeMax, sizeMin, t);
+      }
+
+      const fg = p.rgbStart || hexToRgb01(s.visuals.particleColor);
+
+      let color = fg;
+      if (age >= toMin) {
+        const t = clamp((age - toMin) / fadeSec, 0, 1);
+        color = lerpRgb01(fg, bg, t);
+      }
+
+      const ps = Spaces.simToScreen(p.xSim, p.ySim);
+      ctx.fillStyle = rgb01ToCss(color, 1);
+      ctx.beginPath();
+      ctx.arc(ps.x, ps.y, size, 0, TAU);
+      ctx.fill();
+    }
+  }
+
+  function drawBandOverlay(bandC) {
+    const s = runtime.settings;
+    const o = s.bands.overlay;
+    if (!o.enabled || !bandC) return;
+
+    const ctx = state.ctx;
+    const n = s.bands.count;
+    const phase = state.bands.ringPhaseRad;
+
+    const wf = bandC.timeDomain;
+
+    const minDim = Math.min(state.widthPx, state.heightPx);
+    const minR = minDim * s.audio.minRadiusFrac;
+    const maxR = minDim * s.audio.maxRadiusFrac;
+    const safeMin = Math.min(minR, maxR);
+    const safeMax = Math.max(minR, maxR);
+
+    const pts = new Array(n);
+
+    for (let i = 0; i < n; i++) {
+      const angle = phase + (i * TAU / n);
+      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
+      const baseR = safeMin + (safeMax - safeMin) * e;
+
+      let disp = 0;
+      if (wf && wf.length > 0) {
+        const phase01 = ((angle % TAU) + TAU) % TAU / TAU;
+        const idx = Math.floor(phase01 * (wf.length - 1));
+        const sample = wf[idx];
+        disp = baseR * s.motion.waveformRadialDisplaceFrac * sample;
+      }
+
+      const r = baseR + disp;
+      const xSim = r * Math.cos(angle);
+      const ySim = r * Math.sin(angle);
+
+      pts[i] = { xSim, ySim };
+    }
+
+    if (o.connectAdjacent) {
+      ctx.save();
+      ctx.lineWidth = o.lineWidthPx * state.dpr;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+
+      for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n;
+        const c = ColorPolicy.bandRgb01(i);
+        ctx.strokeStyle = rgb01ToCss(c, o.lineAlpha);
+
+        const a = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
+        const b = Spaces.simToScreen(pts[j].xSim, pts[j].ySim);
+
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    ctx.save();
+    const rPx = o.pointSizePx * state.dpr;
+    for (let i = 0; i < n; i++) {
+      const c = ColorPolicy.bandRgb01(i);
+      ctx.fillStyle = rgb01ToCss(c, o.alpha);
+      const p = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, rPx, 0, TAU);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function renderFrame(nowSec, bandC) {
+    clearFrame();
+    drawBandOverlay(bandC);
+    for (const orb of state.orbs) {
+      const particles = orb.trail.particles;
+      drawTrailLines(particles);
+      drawParticles(particles, nowSec);
+    }
+  }
+
+  return { renderFrame };
+})();
+
+/* =============================================================================
+   UI
+   ========================================================================== */
+const UI = (() => {
+  const ui = state.ui;
+
+  function setCssVarsFromConfig() {
+    const r = document.documentElement.style;
+    r.setProperty("--ui-panel-bg", CONFIG.ui.panelBackgroundRgba);
+    r.setProperty("--ui-panel-blur", CONFIG.ui.panelBlurPx + "px");
+    r.setProperty("--ui-pad", CONFIG.ui.panelPaddingPx + "px");
+    r.setProperty("--ui-gap", CONFIG.ui.panelGapPx + "px");
+    r.setProperty("--ui-radius", CONFIG.ui.panelRadiusPx + "px");
+    r.setProperty("--ui-audio-h", CONFIG.ui.audioPanelHeightPx + "px");
+    r.setProperty("--ui-icon", CONFIG.ui.iconButtonSizePx + "px");
+  }
+
+  function bindRange(el, lim) {
+    el.min = String(lim.min);
+    el.max = String(lim.max);
+    el.step = String(lim.step);
+  }
+
+  function hideAudioPanel() { ui.audioPanel.style.display = "none"; ui.openAudio.style.display = "block"; }
+  function showAudioPanel() { ui.audioPanel.style.display = "grid"; ui.openAudio.style.display = "none"; }
+
+  function hideSimPanel() { ui.simPanel.style.display = "none"; ui.openSim.style.display = "block"; }
+  function showSimPanel() { ui.simPanel.style.display = "block"; ui.openSim.style.display = "none"; }
+
+  function hideBandsPanel() { ui.bandsPanel.style.display = "none"; ui.openBands.style.display = "block"; }
+  function showBandsPanel() { ui.bandsPanel.style.display = "block"; ui.openBands.style.display = "none"; }
+
+  function togglePanels() {
+    const aVisible = ui.audioPanel.style.display !== "none";
+    const sVisible = ui.simPanel.style.display !== "none";
+    const bVisible = ui.bandsPanel.style.display !== "none";
+
+    if (aVisible || sVisible || bVisible) {
+      hideAudioPanel(); hideSimPanel(); hideBandsPanel();
+    } else {
+      showAudioPanel(); showSimPanel(); showBandsPanel();
+    }
+  }
+
+  function applyPrefs(reason) {
+    preferences.particles.sizeMinPx = Math.min(preferences.particles.sizeMinPx, preferences.particles.sizeMaxPx);
+    preferences.particles.ttlSec = Math.max(preferences.particles.ttlSec, preferences.particles.sizeToMinSec);
+
+    resolveSettings();
+
+    AudioEngine.applyAnalyserSettingsLive();
+    AudioEngine.applyPlaybackSettingsLive();
+
+    BandBank.rebuild();
+
+    ui.simStatus.textContent = reason ? `Updated: ${reason}` : "Sim panel: trace, particles, motion, analysis.";
+    ui.bandsStatus.textContent = "Bands panel: colors + spectral HUD.";
+  }
+
+  function resetPrefs() {
+    preferences = deepClone(CONFIG.defaults);
+    resolveSettings();
+    BandBank.rebuild();
+    applyPrefs("prefs reset");
+    for (const orb of state.orbs) orb.resetTrail();
+  }
+
+  async function shareLink() {
+    UrlPreset.writeHashFromPrefs();
+    const url = location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      ui.simStatus.textContent = "Share link copied to clipboard.";
+    } catch {
+      ui.simStatus.textContent = "Share link written to URL (copy from address bar).";
+    }
+  }
+
+  function applyUrlNow() {
+    const ok = UrlPreset.applyFromLocationHash();
+    if (ok) {
+      applyPrefs("applied URL preset");
+      for (const orb of state.orbs) orb.resetTrail();
+    } else {
+      ui.simStatus.textContent = "No valid preset in URL hash.";
+    }
+  }
+
+  function ensureBandHudBuilt() {
+    if (ui.bandRowsBuilt) return;
+
+    ui.bandRowsBuilt = true;
+    ui.bandRowEls = [];
+
+    const n = runtime.settings.bands.count;
+    ui.bandTable.innerHTML = "";
+
+    for (let i = 0; i < n; i++) {
+      const idx = document.createElement("div");
+      idx.className = "bandIdx";
+      idx.textContent = String(i);
+
+      const name = document.createElement("div");
+      name.className = "bandName";
+      name.textContent = runtime.settings.bands.names[i] || `Band ${i}`;
+
+      const bar = document.createElement("div");
+      bar.className = "bandBar";
+
+      const fill = document.createElement("div");
+      fill.className = "bandFill";
+      bar.appendChild(fill);
+
+      ui.bandTable.appendChild(idx);
+      ui.bandTable.appendChild(name);
+      ui.bandTable.appendChild(bar);
+
+      ui.bandRowEls.push({ idx, name, fill });
+    }
+  }
+
+  function refreshBandHud() {
+    ensureBandHudBuilt();
+
+    const s = runtime.settings;
+    const n = s.bands.count;
+
+    for (let i = 0; i < n; i++) {
+      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
+      const pct = Math.round(e * 100);
+
+      const c = ColorPolicy.bandRgb01(i);
+      const alpha = 0.80;
+
+      ui.bandRowEls[i].fill.style.width = pct + "%";
+      ui.bandRowEls[i].fill.style.background = rgb01ToCss(c, alpha);
+
+      const isDom = i === state.bands.dominantIndex;
+      ui.bandRowEls[i].name.style.opacity = isDom ? "1.0" : "0.75";
+      ui.bandRowEls[i].idx.style.opacity = isDom ? "1.0" : "0.65";
+    }
+
+    const domName = state.bands.dominantName || "(none)";
+    const domHz = state.bands.dominantHz || "";
+    ui.bandDebug.innerHTML = `<span class="dominantBadge">Dominant: [${state.bands.dominantIndex}] ${domName} ${domHz ? "— " + domHz : ""}</span>`;
+  }
+
+  function refreshAllUiText(bandSnapshot) {
+    const p = preferences;
+
+    const bandText = bandSnapshot && bandSnapshot.ready
+      ? (bandSnapshot.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
+      : "n/a";
+
+    ui.audioStatus.textContent = state.audio.isLoaded
+      ? `Loaded: ${state.audio.filename}${state.audio.isPlaying ? " (playing)" : " (paused)"} — Bands: ${bandText}`
+      : "No audio loaded.";
+
+    ui.btnPlay.disabled = !state.audio.isLoaded;
+    ui.btnStop.disabled = !state.audio.isLoaded;
+    ui.btnPlay.textContent = state.audio.isPlaying ? "Pause" : "Play";
+
+    ui.chkLoop.checked = !!p.audio.loop;
+    ui.chkMute.checked = !!p.audio.muted;
+    ui.rngVol.value = String(p.audio.volume);
+    ui.valVol.textContent = fmt(p.audio.volume, 2);
+
+    ui.chkLines.checked = !!p.trace.lines;
+    ui.valLines.textContent = p.trace.lines ? "on" : "off";
+    ui.rngNumLines.value = String(p.trace.numLines);
+    ui.valNumLines.textContent = `${p.trace.numLines}`;
+
+    ui.selLineColorMode.value = p.trace.lineColorMode;
+    ui.valLineColorMode.textContent = p.trace.lineColorMode;
+
+    ui.rngEmit.value = String(p.particles.emitPerSecond);
+    ui.valEmit.textContent = `${p.particles.emitPerSecond}/s`;
+
+    ui.rngSizeMax.value = String(p.particles.sizeMaxPx);
+    ui.valSizeMax.textContent = `${p.particles.sizeMaxPx}px`;
+
+    ui.rngSizeMin.value = String(p.particles.sizeMinPx);
+    ui.valSizeMin.textContent = `${p.particles.sizeMinPx}px`;
+
+    ui.rngSizeToMin.value = String(p.particles.sizeToMinSec);
+    ui.valSizeToMin.textContent = `${fmt(p.particles.sizeToMinSec, 1)}s`;
+
+    ui.rngTTL.value = String(p.particles.ttlSec);
+    const fadeSec = Math.max(0, p.particles.ttlSec - p.particles.sizeToMinSec);
+    ui.valTTL.textContent = `${fmt(p.particles.ttlSec, 1)}s (fade ${fmt(fadeSec, 1)}s)`;
+
+    ui.rngOverlap.value = String(p.particles.overlapRadiusPx);
+    ui.valOverlap.textContent = `${fmt(p.particles.overlapRadiusPx, 1)}px`;
+
+    ui.rngOmega.value = String(p.motion.angularSpeedRadPerSec);
+    ui.valOmega.textContent = `${fmt(p.motion.angularSpeedRadPerSec, 3)} rad/s (${fmt(p.motion.angularSpeedRadPerSec * RAD_TO_DEG, 1)}°/s)`;
+
+    ui.rngWfDisp.value = String(p.motion.waveformRadialDisplaceFrac);
+    ui.valWfDisp.textContent = fmt(p.motion.waveformRadialDisplaceFrac, 3);
+
+    ui.rngRmsGain.value = String(p.audio.rmsGain);
+    ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
+
+    ui.rngMinRad.value = String(p.audio.minRadiusFrac);
+    ui.valMinRad.textContent = fmt(p.audio.minRadiusFrac, 3);
+
+    ui.rngMaxRad.value = String(p.audio.maxRadiusFrac);
+    ui.valMaxRad.textContent = fmt(p.audio.maxRadiusFrac, 3);
+
+    ui.rngSmooth.value = String(p.audio.smoothingTimeConstant);
+    ui.valSmooth.textContent = fmt(p.audio.smoothingTimeConstant, 2);
+
+    ui.selFFT.value = String(p.audio.fftSize);
+    ui.valFFT.textContent = `${p.audio.fftSize}`;
+
+    ui.clrBg.value = p.visuals.backgroundColor;
+    ui.valBg.textContent = p.visuals.backgroundColor;
+
+    ui.clrParticle.value = p.visuals.particleColor;
+    ui.valParticle.textContent = p.visuals.particleColor;
+
+    ui.selParticleColorSrc.value = p.bands.particleColorSource;
+    ui.valParticleSrc.textContent = p.bands.particleColorSource;
+
+    ui.chkBandOverlay.checked = !!p.bands.overlay.enabled;
+    ui.valBandOverlay.textContent = p.bands.overlay.enabled ? "on" : "off";
+
+    ui.chkBandConnect.checked = !!p.bands.overlay.connectAdjacent;
+    ui.valBandConnect.textContent = p.bands.overlay.connectAdjacent ? "on" : "off";
+
+    ui.rngBandAlpha.value = String(p.bands.overlay.alpha);
+    ui.valBandAlpha.textContent = fmt(p.bands.overlay.alpha, 2);
+
+    ui.rngBandPoint.value = String(p.bands.overlay.pointSizePx);
+    ui.valBandPoint.textContent = `${p.bands.overlay.pointSizePx}px`;
+
+    ui.selRingPhaseMode.value = p.bands.overlay.phaseMode;
+    ui.valRingPhaseMode.textContent = p.bands.overlay.phaseMode;
+
+    ui.rngRingSpeed.value = String(p.bands.overlay.ringSpeedRadPerSec);
+    ui.valRingSpeed.textContent = `${fmt(p.bands.overlay.ringSpeedRadPerSec, 2)} rad/s`;
+
+    ui.rngHueOff.value = String(p.bands.rainbow.hueOffsetDeg);
+    ui.valHueOff.textContent = `${p.bands.rainbow.hueOffsetDeg}°`;
+
+    ui.rngSat.value = String(p.bands.rainbow.saturation);
+    ui.valSat.textContent = fmt(p.bands.rainbow.saturation, 2);
+
+    ui.rngVal.value = String(p.bands.rainbow.value);
+    ui.valVal.textContent = fmt(p.bands.rainbow.value, 2);
+
+    if (bandSnapshot && bandSnapshot.ready) refreshBandHud();
+  }
+
+  function wireControls() {
+    ui.audioPanel = document.getElementById("audioPanel");
+    ui.simPanel = document.getElementById("simPanel");
+    ui.bandsPanel = document.getElementById("bandsPanel");
+    ui.openAudio = document.getElementById("openAudio");
+    ui.openSim = document.getElementById("openSim");
+    ui.openBands = document.getElementById("openBands");
+
+    ui.btnLoad = document.getElementById("btnLoad");
+    ui.btnPlay = document.getElementById("btnPlay");
+    ui.btnStop = document.getElementById("btnStop");
+    ui.chkLoop = document.getElementById("chkLoop");
+    ui.chkMute = document.getElementById("chkMute");
+    ui.rngVol = document.getElementById("rngVol");
+    ui.valVol = document.getElementById("valVol");
+    ui.audioStatus = document.getElementById("audioStatus");
+    ui.btnHideAudio = document.getElementById("btnHideAudio");
+
+    ui.btnShare = document.getElementById("btnShare");
+    ui.btnApplyUrl = document.getElementById("btnApplyUrl");
+    ui.btnResetPrefs = document.getElementById("btnResetPrefs");
+    ui.btnHideSim = document.getElementById("btnHideSim");
+
+    ui.simStatus = document.getElementById("simStatus");
+    ui.bandsStatus = document.getElementById("bandsStatus");
+
+    ui.chkLines = document.getElementById("chkLines");
+    ui.valLines = document.getElementById("valLines");
+    ui.rngNumLines = document.getElementById("rngNumLines");
+    ui.valNumLines = document.getElementById("valNumLines");
+
+    ui.selLineColorMode = document.getElementById("selLineColorMode");
+    ui.valLineColorMode = document.getElementById("valLineColorMode");
+
+    ui.rngEmit = document.getElementById("rngEmit");
+    ui.valEmit = document.getElementById("valEmit");
+    ui.rngSizeMax = document.getElementById("rngSizeMax");
+    ui.valSizeMax = document.getElementById("valSizeMax");
+    ui.rngSizeMin = document.getElementById("rngSizeMin");
+    ui.valSizeMin = document.getElementById("valSizeMin");
+    ui.rngSizeToMin = document.getElementById("rngSizeToMin");
+    ui.valSizeToMin = document.getElementById("valSizeToMin");
+    ui.rngTTL = document.getElementById("rngTTL");
+    ui.valTTL = document.getElementById("valTTL");
+    ui.rngOverlap = document.getElementById("rngOverlap");
+    ui.valOverlap = document.getElementById("valOverlap");
+
+    ui.rngOmega = document.getElementById("rngOmega");
+    ui.valOmega = document.getElementById("valOmega");
+    ui.rngWfDisp = document.getElementById("rngWfDisp");
+    ui.valWfDisp = document.getElementById("valWfDisp");
+
+    ui.rngRmsGain = document.getElementById("rngRmsGain");
+    ui.valRmsGain = document.getElementById("valRmsGain");
+    ui.rngMinRad = document.getElementById("rngMinRad");
+    ui.valMinRad = document.getElementById("valMinRad");
+    ui.rngMaxRad = document.getElementById("rngMaxRad");
+    ui.valMaxRad = document.getElementById("valMaxRad");
+    ui.rngSmooth = document.getElementById("rngSmooth");
+    ui.valSmooth = document.getElementById("valSmooth");
+    ui.selFFT = document.getElementById("selFFT");
+    ui.valFFT = document.getElementById("valFFT");
+
+    ui.btnHideBands = document.getElementById("btnHideBands");
+
+    ui.clrBg = document.getElementById("clrBg");
+    ui.valBg = document.getElementById("valBg");
+    ui.clrParticle = document.getElementById("clrParticle");
+    ui.valParticle = document.getElementById("valParticle");
+
+    ui.selParticleColorSrc = document.getElementById("selParticleColorSrc");
+    ui.valParticleSrc = document.getElementById("valParticleSrc");
+
+    ui.chkBandOverlay = document.getElementById("chkBandOverlay");
+    ui.valBandOverlay = document.getElementById("valBandOverlay");
+    ui.chkBandConnect = document.getElementById("chkBandConnect");
+    ui.valBandConnect = document.getElementById("valBandConnect");
+
+    ui.rngBandAlpha = document.getElementById("rngBandAlpha");
+    ui.valBandAlpha = document.getElementById("valBandAlpha");
+
+    ui.rngBandPoint = document.getElementById("rngBandPoint");
+    ui.valBandPoint = document.getElementById("valBandPoint");
+
+    ui.selRingPhaseMode = document.getElementById("selRingPhaseMode");
+    ui.valRingPhaseMode = document.getElementById("valRingPhaseMode");
+
+    ui.rngRingSpeed = document.getElementById("rngRingSpeed");
+    ui.valRingSpeed = document.getElementById("valRingSpeed");
+
+    ui.rngHueOff = document.getElementById("rngHueOff");
+    ui.valHueOff = document.getElementById("valHueOff");
+    ui.rngSat = document.getElementById("rngSat");
+    ui.valSat = document.getElementById("valSat");
+    ui.rngVal = document.getElementById("rngVal");
+    ui.valVal = document.getElementById("valVal");
+
+    ui.bandDebug = document.getElementById("bandDebug");
+    ui.bandMeta = document.getElementById("bandMeta");
+    ui.bandTable = document.getElementById("bandTable");
+
+    ui.btnOpenAudio = document.getElementById("btnOpenAudio");
+    ui.btnOpenSim = document.getElementById("btnOpenSim");
+    ui.btnOpenBands = document.getElementById("btnOpenBands");
+
+    ui.fileInput = document.getElementById("fileInput");
+
+    bindRange(ui.rngVol, CONFIG.ui.volume);
+    bindRange(ui.rngNumLines, CONFIG.limits.trace.numLines);
+
+    bindRange(ui.rngEmit, CONFIG.limits.particles.emitPerSecond);
+    bindRange(ui.rngSizeMax, CONFIG.limits.particles.sizeMaxPx);
+    bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
+    bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
+    bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
+    bindRange(ui.rngOverlap, CONFIG.limits.particles.overlapRadiusPx);
+
+    bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
+    bindRange(ui.rngWfDisp, CONFIG.limits.motion.waveformRadialDisplaceFrac);
+
+    bindRange(ui.rngRmsGain, CONFIG.limits.audio.rmsGain);
+    bindRange(ui.rngMinRad, CONFIG.limits.audio.minRadiusFrac);
+    bindRange(ui.rngMaxRad, CONFIG.limits.audio.maxRadiusFrac);
+    bindRange(ui.rngSmooth, CONFIG.limits.audio.smoothingTimeConstant);
+
+    bindRange(ui.rngBandAlpha, CONFIG.limits.bands.overlayAlpha);
+    bindRange(ui.rngBandPoint, CONFIG.limits.bands.pointSizePx);
+    bindRange(ui.rngHueOff, CONFIG.limits.bands.hueOffsetDeg);
+    bindRange(ui.rngSat, CONFIG.limits.bands.saturation);
+    bindRange(ui.rngVal, CONFIG.limits.bands.value);
+
+    bindRange(ui.rngRingSpeed, CONFIG.limits.bands.ringSpeedRadPerSec);
+
+    for (const size of CONFIG.limits.audio.fftSizes) {
+      const opt = document.createElement("option");
+      opt.value = String(size);
+      opt.textContent = String(size);
+      ui.selFFT.appendChild(opt);
+    }
+
+    const srcs = [
+      { v: "dominant", t: "dominant band" },
+      { v: "angle", t: "phase locked (Glitch Mode)" },
+      { v: "fixed", t: "fixed particle color" },
+    ];
+    for (const s of srcs) {
+      const opt = document.createElement("option");
+      opt.value = s.v;
+      opt.textContent = s.t;
+      ui.selParticleColorSrc.appendChild(opt);
+    }
+
+    const lineModes = [
+      { v: "fixed", t: "fixed (particle color)" },
+      { v: "lastParticle", t: "last particle color" },
+      { v: "dominantBand", t: "dominant band color" },
+    ];
+    for (const m of lineModes) {
+      const opt = document.createElement("option");
+      opt.value = m.v;
+      opt.textContent = m.t;
+      ui.selLineColorMode.appendChild(opt);
+    }
+
+    const phaseModes = [
+      { v: "orb", t: "lock to orb phase" },
+      { v: "free", t: "free-run (ring speed)" },
+    ];
+    for (const m of phaseModes) {
+      const opt = document.createElement("option");
+      opt.value = m.v;
+      opt.textContent = m.t;
+      ui.selRingPhaseMode.appendChild(opt);
+    }
+
+    /* Events */
+    ui.btnLoad.addEventListener("click", () => { ui.fileInput.value = ""; ui.fileInput.click(); });
+
+    ui.fileInput.addEventListener("change", async () => {
+      const file = ui.fileInput.files && ui.fileInput.files[0];
+      if (!file) return;
+      const ok = await AudioEngine.loadFile(file);
+      if (ok) {
+        applyPrefs("audio loaded");
+        for (const orb of state.orbs) orb.resetTrail();
+      }
+    });
+
+    ui.btnPlay.addEventListener("click", async () => { await AudioEngine.playPause(); });
+    ui.btnStop.addEventListener("click", () => { AudioEngine.stop(); });
+
+    ui.chkLoop.addEventListener("change", () => { preferences.audio.loop = !!ui.chkLoop.checked; applyPrefs("loop"); });
+    ui.chkMute.addEventListener("change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute"); });
+
+    ui.rngVol.addEventListener("input", () => {
+      preferences.audio.volume = Number(ui.rngVol.value);
+      applyPrefs("volume (playback only)");
+    });
+
+    ui.btnHideAudio.addEventListener("click", hideAudioPanel);
+    ui.btnOpenAudio.addEventListener("click", showAudioPanel);
+
+    ui.btnHideSim.addEventListener("click", hideSimPanel);
+    ui.btnOpenSim.addEventListener("click", showSimPanel);
+
+    ui.btnHideBands.addEventListener("click", hideBandsPanel);
+    ui.btnOpenBands.addEventListener("click", showBandsPanel);
+
+    ui.btnShare.addEventListener("click", shareLink);
+    ui.btnApplyUrl.addEventListener("click", applyUrlNow);
+    ui.btnResetPrefs.addEventListener("click", resetPrefs);
+
+    ui.chkLines.addEventListener("change", () => { preferences.trace.lines = !!ui.chkLines.checked; applyPrefs("lines"); });
+    ui.rngNumLines.addEventListener("input", () => { preferences.trace.numLines = Number(ui.rngNumLines.value); applyPrefs("num lines"); });
+
+    ui.selLineColorMode.addEventListener("change", () => {
+      preferences.trace.lineColorMode = ui.selLineColorMode.value;
+      applyPrefs("line color mode");
+    });
+
+    ui.rngEmit.addEventListener("input", () => { preferences.particles.emitPerSecond = Number(ui.rngEmit.value); applyPrefs("emit rate"); });
+    ui.rngSizeMax.addEventListener("input", () => { preferences.particles.sizeMaxPx = Number(ui.rngSizeMax.value); applyPrefs("size max"); });
+    ui.rngSizeMin.addEventListener("input", () => { preferences.particles.sizeMinPx = Number(ui.rngSizeMin.value); applyPrefs("size min"); });
+    ui.rngSizeToMin.addEventListener("input", () => { preferences.particles.sizeToMinSec = Number(ui.rngSizeToMin.value); applyPrefs("time to min"); });
+    ui.rngTTL.addEventListener("input", () => { preferences.particles.ttlSec = Number(ui.rngTTL.value); applyPrefs("ttl"); });
+    ui.rngOverlap.addEventListener("input", () => { preferences.particles.overlapRadiusPx = Number(ui.rngOverlap.value); applyPrefs("overlap radius"); });
+
+    ui.rngOmega.addEventListener("input", () => { preferences.motion.angularSpeedRadPerSec = Number(ui.rngOmega.value); applyPrefs("angular speed"); });
+    ui.rngWfDisp.addEventListener("input", () => { preferences.motion.waveformRadialDisplaceFrac = Number(ui.rngWfDisp.value); applyPrefs("waveform disp"); });
+
+    ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)"); });
+    ui.rngMinRad.addEventListener("input", () => { preferences.audio.minRadiusFrac = Number(ui.rngMinRad.value); applyPrefs("min radius"); });
+    ui.rngMaxRad.addEventListener("input", () => { preferences.audio.maxRadiusFrac = Number(ui.rngMaxRad.value); applyPrefs("max radius"); });
+    ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing"); });
+    ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size"); });
+
+    ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; applyPrefs("background"); });
+    ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; applyPrefs("particle color"); });
+
+    ui.selParticleColorSrc.addEventListener("change", () => {
+      preferences.bands.particleColorSource = ui.selParticleColorSrc.value;
+      applyPrefs("particle color source");
+    });
+
+    ui.chkBandOverlay.addEventListener("change", () => { preferences.bands.overlay.enabled = !!ui.chkBandOverlay.checked; applyPrefs("band overlay"); });
+    ui.chkBandConnect.addEventListener("change", () => { preferences.bands.overlay.connectAdjacent = !!ui.chkBandConnect.checked; applyPrefs("band connect"); });
+
+    ui.rngBandAlpha.addEventListener("input", () => { preferences.bands.overlay.alpha = Number(ui.rngBandAlpha.value); applyPrefs("overlay alpha"); });
+    ui.rngBandPoint.addEventListener("input", () => { preferences.bands.overlay.pointSizePx = Number(ui.rngBandPoint.value); applyPrefs("overlay point size"); });
+
+    ui.selRingPhaseMode.addEventListener("change", () => {
+      preferences.bands.overlay.phaseMode = ui.selRingPhaseMode.value;
+      applyPrefs("ring phase mode");
+    });
+
+    ui.rngRingSpeed.addEventListener("input", () => {
+      preferences.bands.overlay.ringSpeedRadPerSec = Number(ui.rngRingSpeed.value);
+      applyPrefs("ring speed");
+    });
+
+    ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); applyPrefs("hue offset"); });
+    ui.rngSat.addEventListener("input", () => { preferences.bands.rainbow.saturation = Number(ui.rngSat.value); applyPrefs("saturation"); });
+    ui.rngVal.addEventListener("input", () => { preferences.bands.rainbow.value = Number(ui.rngVal.value); applyPrefs("value"); });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "KeyH") togglePanels();
+      if (e.code === "Space") { e.preventDefault(); state.time.simPaused = !state.time.simPaused; }
+      if (e.code === "KeyR") {
+        for (const orb of state.orbs) { orb.resetPhase(); orb.resetTrail(); }
+        state.bands.ringPhaseRad = 0;
+      }
+    }, { passive: false });
+
+    window.addEventListener("hashchange", () => {
+      const ok = UrlPreset.applyFromLocationHash();
+      if (ok) {
+        applyPrefs("hash preset loaded");
+        for (const orb of state.orbs) orb.resetTrail();
+      }
+    });
+  }
+
+  return { setCssVarsFromConfig, wireControls, refreshAllUiText, applyPrefs };
+})();
+
+/* =============================================================================
+   Boot / loop
+   ========================================================================== */
+function initOrbs() {
+  state.orbs.length = 0;
+  for (const def of runtime.settings.orbs) state.orbs.push(new Orb(def));
+}
+
+let lastBandSnapshot = null;
+
+function onAnimationFrame(tsMs) {
+  requestAnimationFrame(onAnimationFrame);
+
+  resizeCanvasToDisplaySize();
+
+  if (state.time.lastTimestampMs === null) {
+    state.time.lastTimestampMs = tsMs;
+    return;
+  }
+
+  const dtSecRaw = (tsMs - state.time.lastTimestampMs) / 1000;
+  state.time.lastTimestampMs = tsMs;
+
+  const dtSec = clamp(dtSecRaw, 0, runtime.settings.timing.maxDeltaTimeSec);
+  const nowSec = performance.now() / 1000;
+
+  lastBandSnapshot = AudioEngine.sample();
+  const bandC = (lastBandSnapshot && lastBandSnapshot.ready) ? lastBandSnapshot.bands.C : null;
+
+  // Ring phase:
+  // - orb: lock to carrier orb angle (coherent)
+  // - free: integrate a ring angular velocity independent of the orb
+  const o = runtime.settings.bands.overlay;
+  if (o.phaseMode === "orb") {
+    state.bands.ringPhaseRad = (state.orbs.length ? state.orbs[0].angleRad : state.bands.ringPhaseRad);
+  } else {
+    state.bands.ringPhaseRad = ((state.bands.ringPhaseRad + o.ringSpeedRadPerSec * dtSec) % TAU + TAU) % TAU;
+  }
+
+  if (!state.time.simPaused) {
+    for (const orb of state.orbs) orb.step(dtSec, nowSec, bandC);
+  }
+
+  Renderer.renderFrame(nowSec, bandC);
+  UI.refreshAllUiText(lastBandSnapshot);
+}
+
+function main() {
+  UI.setCssVarsFromConfig();
+
+  state.canvas = document.getElementById("c");
+  state.ctx = state.canvas.getContext("2d", { alpha: false });
+
+  resolveSettings();
+  UrlPreset.applyFromLocationHash();
+  resolveSettings();
+
+  BandBank.rebuild();
+  initOrbs();
+
+  UI.wireControls();
+  UI.applyPrefs("boot");
+
+  resizeCanvasToDisplaySize();
+  window.addEventListener("resize", resizeCanvasToDisplaySize);
+
+  requestAnimationFrame(onAnimationFrame);
+}
+
+main();
+</script>
+</body>
+</html>
