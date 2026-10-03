@@ -55,12 +55,12 @@ test("current visualizers have stable identities and deterministic overlay-befor
   const order = [];
   const runtime = createVisualizerRuntime({
     createBandOverlay: () => ({
-      id: BAND_OVERLAY_VISUALIZER_ID, type: "band-overlay", isEnabled: () => true,
+      id: BAND_OVERLAY_VISUALIZER_ID, type: "band-overlay", isVisible: () => true,
       update: () => order.push("update:overlay"), render: () => order.push("render:overlay"),
       reset() {}, dispose() {},
     }),
     createOrb: (orb) => ({
-      id: orb.id, type: "orb", orb, isEnabled: () => true,
+      id: orb.id, type: "orb", orb, isVisible: () => true,
       update: () => order.push(`update:${orb.id}`), render: () => order.push(`render:${orb.id}`),
       reset() {}, dispose() {},
     }),
@@ -164,11 +164,11 @@ test("rebuild disposes old participants exactly once and wraps only current Orb 
   const disposed = [];
   const runtime = createVisualizerRuntime({
     createBandOverlay: () => ({
-      id: "band-overlay", type: "band-overlay", isEnabled: () => true,
+      id: "band-overlay", type: "band-overlay", isVisible: () => true,
       update() {}, render() {}, reset() {}, dispose() { disposed.push("overlay"); },
     }),
     createOrb: (orb) => ({
-      id: orb.id, type: "orb", orb, isEnabled: () => true,
+      id: orb.id, type: "orb", orb, isVisible: () => true,
       update() {}, render() {}, reset() {}, dispose() { disposed.push(orb); },
     }),
   });

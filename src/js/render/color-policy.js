@@ -31,11 +31,11 @@ const ColorPolicy = (() => {
     return bandRgb01(dominantBandIndex, extraHue); // dominant
   }
 
-  function pickLineColorRgb01(particles, dominantBandIndex = 0) {
+  function pickLineColorRgb01(particles, dominantBandIndex = 0, lineColorMode = "fixed") {
     const s = runtime.settings;
-    if (s.trace.lineColorMode === "dominantBand") return bandRgb01(dominantBandIndex);
+    if (lineColorMode === "dominantBand") return bandRgb01(dominantBandIndex);
 
-    if (s.trace.lineColorMode === "lastParticle") {
+    if (lineColorMode === "lastParticle") {
       const last = particles && particles.length ? particles[particles.length - 1] : null;
       if (last && last.rgbStart) return last.rgbStart;
       return hexToRgb01(s.visuals.particleColor);

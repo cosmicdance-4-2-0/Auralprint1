@@ -68,7 +68,7 @@ function normalizeOrbColorSource(raw, fallback) {
 }
 
 function normalizeOrbDef(incomingOrb, fallbackOrb) {
-  // Canonical orb fields (v9 schema): see agents.md §4.2.
+  // Canonical orb fields (v10 schema): see agents.md §4.2.
   const fallback = fallbackOrb || {};
   const orb = (incomingOrb && typeof incomingOrb === "object") ? incomingOrb : {};
   const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
@@ -116,6 +116,37 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     orbLim.centerYFrac.max,
   );
 
+  const nestedNumber = (group, key, limits) => {
+    const source = orb[group] && typeof orb[group] === "object" ? orb[group] : {};
+    const defaults = fallback[group] && typeof fallback[group] === "object" ? fallback[group] : {};
+    const raw = Number.isFinite(source[key]) ? source[key] : defaults[key];
+    return clamp(Number.isFinite(raw) ? raw : limits.min, limits.min, limits.max);
+  };
+  const motion = {
+    angularSpeedRadPerSec: nestedNumber("motion", "angularSpeedRadPerSec", CONFIG.limits.motion.angularSpeedRadPerSec),
+  };
+  const response = {
+    minRadiusFrac: nestedNumber("response", "minRadiusFrac", orbLim.response.minRadiusFrac),
+    maxRadiusFrac: nestedNumber("response", "maxRadiusFrac", orbLim.response.maxRadiusFrac),
+    waveformRadialDisplaceFrac: nestedNumber("response", "waveformRadialDisplaceFrac", CONFIG.limits.motion.waveformRadialDisplaceFrac),
+  };
+  const particles = {};
+  for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "overlapRadiusPx"]) {
+    particles[key] = nestedNumber("particles", key, CONFIG.limits.particles[key]);
+  }
+  particles.sizeMinPx = Math.min(particles.sizeMinPx, particles.sizeMaxPx);
+  particles.ttlSec = Math.max(particles.ttlSec, particles.sizeToMinSec);
+  const traceSource = orb.trace && typeof orb.trace === "object" ? orb.trace : {};
+  const traceFallback = fallback.trace && typeof fallback.trace === "object" ? fallback.trace : {};
+  const mode = typeof traceSource.lineColorMode === "string" ? traceSource.lineColorMode : traceFallback.lineColorMode;
+  const trace = {
+    lines: typeof traceSource.lines === "boolean" ? traceSource.lines : !!traceFallback.lines,
+    numLines: nestedNumber("trace", "numLines", CONFIG.limits.trace.numLines),
+    lineAlpha: nestedNumber("trace", "lineAlpha", CONFIG.limits.trace.lineAlpha),
+    lineWidthPx: nestedNumber("trace", "lineWidthPx", CONFIG.limits.trace.lineWidthPx),
+    lineColorMode: ["fixed", "lastParticle", "dominantBand"].includes(mode) ? mode : "dominantBand",
+  };
+
   return {
     id,
     chanId,
@@ -126,6 +157,10 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     colorSource,
     centerXFrac,
     centerYFrac,
+    motion,
+    response,
+    particles,
+    trace,
   };
 }
 

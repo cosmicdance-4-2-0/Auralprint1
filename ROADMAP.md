@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 3, 2026. Development revision: `v0.1.15c` / Build 115. Preset schema: 9.
+Updated: October 3, 2026. Development revision: `v0.1.15d` / Build 115. Preset schema: 10.
 
 The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: the menu reorganization and editing of two existing Orbs have substantially landed, while remaining per-Orb ownership, dynamic Orb management, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
@@ -18,19 +18,19 @@ The following capabilities are present in the current source. Passing unit tests
 | Orbs | Per-orb channel, chooser-backed band selection with advanced exact indices, direction, starting angle, hue offset, color source, and simulation-space center | Starting angle is a preset/code configuration field rather than a dedicated control |
 | Visuals | Trails and particles, band overlay, global color controls, reset visuals | Related settings are scattered across long panels; first-use and advanced controls compete for space |
 | Capture | Recording panel, canvas video and optional source audio, negotiated formats, target frame rate, latest-export download | Capture actions and availability must remain visible and truthful across file/live/recording states |
-| Presets | URL configuration serialization; schema 9 orb fields; accepted legacy schemas and migrations | No dedicated preset-file import/export workflow yet |
+| Presets | URL configuration serialization; schema 10 complete Orb fields; accepted legacy schemas and migrations | No dedicated preset-file import/export workflow yet |
 | Workspace | Panel show/hide controls, unified launcher, launcher collapse, global panel visibility shortcut | Launchers need visible names; long panels and queue recovery need improvement |
 
 Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are planned. A separate scene/compositor architecture is not a prerequisite for finishing the current interface.
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. The first three stages are complete at revision 115C; later stages must not be inferred from their presence in this plan.
+Build 115 proceeds in this order. The first four stages are complete at revision 115D; later stages must not be inferred from their presence in this plan.
 
 1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
 2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
 3. **Visualizer lifecycle** — current Band Overlay and Orb instances share the runtime lifecycle. *(115C complete)*
-4. **Per-Orb ownership** — move the remaining applicable visual/simulation settings out of global ownership.
+4. **Per-Orb ownership** — move the remaining applicable visual/simulation settings out of global ownership. *(115D complete)*
 5. **Dynamic Orb runtime** — support runtime instance creation and removal without changing analysis ownership.
 6. **UI decomposition** — split only the UI seams needed for dynamic visualizers.
 7. **Visualizers panel** — establish a home for visualizer instances and their controls.
@@ -47,11 +47,11 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: actively under development; revision 115C establishes the minimal Visualizer lifecycle.**
+**Status: actively under development; revision 115D establishes schema-10 per-Orb visual ownership.**
 
-AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isEnabled()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the current Band Overlay participates first, followed by adapters around each current Orb. Persistence remains schema 9, dynamic Orb management is absent, the user-facing Band Overlay has not been promoted or renamed, and global motion/radius/particle/trace ownership remains future 115D work. Build 116 remains blocked.
+AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the current Band Overlay participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb management is absent and the user-facing Band Overlay has not been promoted or renamed. Build 116 remains blocked.
 
-The current source substantially contains the reorganized menu and per-instance editing for the two pre-existing Orbs. Users cannot yet add, remove, or duplicate Orbs. Several motion, radius-response, particle, and trace settings still have global ownership. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
+The current source substantially contains the reorganized menu and per-instance editing for the two pre-existing Orbs. Users cannot yet add, remove, or duplicate Orbs. Motion, radius-response, particle, and trace settings are Orb-owned; their existing shared controls are temporary bulk controls with mixed-value display. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
 
 The intended data direction is `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Scene / Renderer → Camera → Canvas`. Visualizers consume analysis; they do not own or perform it. The Camera stage belongs to Build 116 and is not ready to begin.
 
@@ -60,7 +60,7 @@ The intended data direction is `Audio Sources → Audio / Spectral Analysis → 
 - Selected Orb band IDs average the existing combined/center-channel band energies; the Orb channel independently chooses its waveform and full-spectrum energy. Empty `bandIds` means full spectrum.
 - Preset schema remains 9 until a later stage deliberately changes persisted configuration through the full migration pipeline.
 - `state.bands` may remain producer state while the consumer boundary is extracted; visual state such as ring phase does not become analysis data.
-- No dynamic Orb management, Camera behavior, or speculative schema is part of revisions 115A–115C.
+- No dynamic Orb management or Camera behavior is part of revisions 115A–115D; schema 10 is limited to per-Orb ownership migration.
 - Track/source/recording ownership, immutable configuration, Nyquist-aware ceilings, and single-file output remain protected.
 
 ### Current regression evidence
@@ -98,7 +98,7 @@ Acceptance gates:
 
 **Status: planned; the basic chooser ships with Build 115 completion.**
 
-Extend the proven chooser with better frequency-oriented inspection, named selections, and visual confirmation in the analysis display. Add only controls that correspond to implemented analysis behavior. Weighted aggregation remains a separate design decision, not an implied capability.
+Expand the spectral system with frequency-aware selection and inspection, visual confirmation, configurable practical band-table sizes, curated counts envisioned around 5/64/256/1024/2048, deterministic thematic naming from planetary/core through cosmic/quantum imagery, and sensible generated fallbacks. The current canonical 256-band implementation remains unchanged until that work. Add only controls that correspond to implemented analysis behavior. Weighted aggregation remains a separate design decision, not an implied capability.
 
 Acceptance gates:
 

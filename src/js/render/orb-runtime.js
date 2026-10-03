@@ -14,6 +14,10 @@ function initOrbs() {
 
 const getBandForOrb = selectOrbAnalysis;
 
+function resetVisualizers(reason) {
+  VisualizerRuntime.reset(reason);
+}
+
 function resetOrbsToDesignedPhases() {
   VisualizerRuntime.reset("visuals");
 }
@@ -22,14 +26,15 @@ function resetOrbTrailsForTrack() {
   VisualizerRuntime.reset("track");
 }
 
-function syncOrbCosmeticsFromSettings() {
+function syncOrbsFromSettings() {
   const defs = runtime.settings.orbs;
   for (let i = 0; i < state.orbs.length; i++) {
     const def = defs[i];
     const orb = state.orbs[i];
     if (!def || !orb) continue;
-    orb.syncCosmeticFromDef(def);
+    orb.syncFromDef(def);
   }
 }
 
-export { initOrbs, getBandForOrb, resetOrbsToDesignedPhases, resetOrbTrailsForTrack, syncOrbCosmeticsFromSettings };
+const syncOrbCosmeticsFromSettings = syncOrbsFromSettings;
+export { initOrbs, getBandForOrb, resetVisualizers, resetOrbsToDesignedPhases, resetOrbTrailsForTrack, syncOrbsFromSettings, syncOrbCosmeticsFromSettings };

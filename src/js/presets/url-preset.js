@@ -1,4 +1,4 @@
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
 import { preferences, replacePreferences, resolveSettings, sanitizeOrbBandIds, normalizeOrbDef } from "../core/preferences.js";
@@ -37,11 +37,13 @@ const UrlPreset = (() => {
     const obj = JSON.parse(json);
     if (!obj || !obj.prefs) return null;
 
-    if (![PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2].includes(obj.schema)) return null;
-    return obj.prefs;
+    if (![PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2].includes(obj.schema)) return null;
+    return { schema: obj.schema, prefs: obj.prefs };
   }
 
-  function sanitizeAndApply(incoming) {
+  function sanitizeAndApply(decoded) {
+    const schema = decoded && Number.isInteger(decoded.schema) ? decoded.schema : PRESET_SCHEMA_VERSION;
+    const incoming = decoded && decoded.prefs ? decoded.prefs : decoded;
     // Presets are full configuration snapshots. Always migrate/sanitize from
     // canonical defaults so older or partial payloads cannot inherit live state.
     const next = deepClone(CONFIG.defaults);
@@ -51,59 +53,10 @@ const UrlPreset = (() => {
       if (isValidHexColor(incoming.visuals.particleColor)) next.visuals.particleColor = incoming.visuals.particleColor;
     }
 
-    if (incoming.trace) {
-      if (typeof incoming.trace.lines === "boolean") next.trace.lines = incoming.trace.lines;
-      if (Number.isFinite(incoming.trace.numLines)) {
-        const lim = CONFIG.limits.trace.numLines;
-        next.trace.numLines = clamp(incoming.trace.numLines, lim.min, lim.max);
-      }
-      if (Number.isFinite(incoming.trace.lineAlpha)) {
-        const lim = CONFIG.limits.trace.lineAlpha;
-        next.trace.lineAlpha = clamp(incoming.trace.lineAlpha, lim.min, lim.max);
-      }
-      if (Number.isFinite(incoming.trace.lineWidthPx)) {
-        const lim = CONFIG.limits.trace.lineWidthPx;
-        next.trace.lineWidthPx = clamp(incoming.trace.lineWidthPx, lim.min, lim.max);
-      }
-      if (typeof incoming.trace.lineColorMode === "string") {
-        if (["fixed","lastParticle","dominantBand"].includes(incoming.trace.lineColorMode)) {
-          next.trace.lineColorMode = incoming.trace.lineColorMode;
-        }
-      }
-    }
-
-    if (incoming.particles) {
-      for (const k of ["emitPerSecond","sizeMaxPx","sizeMinPx","sizeToMinSec","ttlSec","overlapRadiusPx"]) {
-        if (Number.isFinite(incoming.particles[k])) {
-          const lim = CONFIG.limits.particles[k];
-          next.particles[k] = clamp(incoming.particles[k], lim.min, lim.max);
-        }
-      }
-    }
-
-    if (incoming.motion) {
-      if (Number.isFinite(incoming.motion.angularSpeedRadPerSec)) {
-        const lim = CONFIG.limits.motion.angularSpeedRadPerSec;
-        next.motion.angularSpeedRadPerSec = clamp(incoming.motion.angularSpeedRadPerSec, lim.min, lim.max);
-      }
-      if (Number.isFinite(incoming.motion.waveformRadialDisplaceFrac)) {
-        const lim = CONFIG.limits.motion.waveformRadialDisplaceFrac;
-        next.motion.waveformRadialDisplaceFrac = clamp(incoming.motion.waveformRadialDisplaceFrac, lim.min, lim.max);
-      }
-    }
-
     if (incoming.audio) {
       if (Number.isFinite(incoming.audio.rmsGain)) {
         const lim = CONFIG.limits.audio.rmsGain;
         next.audio.rmsGain = clamp(incoming.audio.rmsGain, lim.min, lim.max);
-      }
-      if (Number.isFinite(incoming.audio.minRadiusFrac)) {
-        const lim = CONFIG.limits.audio.minRadiusFrac;
-        next.audio.minRadiusFrac = clamp(incoming.audio.minRadiusFrac, lim.min, lim.max);
-      }
-      if (Number.isFinite(incoming.audio.maxRadiusFrac)) {
-        const lim = CONFIG.limits.audio.maxRadiusFrac;
-        next.audio.maxRadiusFrac = clamp(incoming.audio.maxRadiusFrac, lim.min, lim.max);
       }
       if (Number.isFinite(incoming.audio.smoothingTimeConstant)) {
         const lim = CONFIG.limits.audio.smoothingTimeConstant;
@@ -233,14 +186,22 @@ const UrlPreset = (() => {
           mappedOrb.bandIds = sanitizeOrbBandIds(undefined, mappedOrb.bandNames);
         }
         if (mappedOrb && typeof mappedOrb === "object") delete mappedOrb.bandNames;
+        if (schema <= LEGACY_SCHEMA_V9 && mappedOrb && typeof mappedOrb === "object") {
+          const base = defaults[i % defaults.length];
+          mappedOrb.motion = { angularSpeedRadPerSec: incoming.motion && incoming.motion.angularSpeedRadPerSec };
+          mappedOrb.response = {
+            minRadiusFrac: incoming.audio && incoming.audio.minRadiusFrac,
+            maxRadiusFrac: incoming.audio && incoming.audio.maxRadiusFrac,
+            waveformRadialDisplaceFrac: incoming.motion && incoming.motion.waveformRadialDisplaceFrac,
+          };
+          mappedOrb.particles = { ...base.particles, ...(incoming.particles || {}) };
+          mappedOrb.trace = { ...base.trace, ...(incoming.trace || {}) };
+        }
         return normalizeOrbDef(mappedOrb, defaults[i % defaults.length]);
       });
     }
 
     if (next.bands && typeof next.bands === "object") delete next.bands.names;
-
-    next.particles.sizeMinPx = Math.min(next.particles.sizeMinPx, next.particles.sizeMaxPx);
-    next.particles.ttlSec = Math.max(next.particles.ttlSec, next.particles.sizeToMinSec);
 
     replacePreferences(next);
     resolveSettings();
@@ -259,6 +220,13 @@ const UrlPreset = (() => {
 
   function writeHashFromPrefs() {
     const encodedPrefs = deepClone(preferences);
+    delete encodedPrefs.motion;
+    delete encodedPrefs.particles;
+    delete encodedPrefs.trace;
+    if (encodedPrefs.audio) {
+      delete encodedPrefs.audio.minRadiusFrac;
+      delete encodedPrefs.audio.maxRadiusFrac;
+    }
     if (encodedPrefs.bands && typeof encodedPrefs.bands === "object") delete encodedPrefs.bands.names;
 
     // Orb field sanitization rule (enforced on both encode and decode):

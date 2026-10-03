@@ -1569,8 +1569,8 @@ test("URL preset round-trips persisted config fields that were previously droppe
   };
 
   try {
-    preferences.trace.lineAlpha = 0.12;
-    preferences.trace.lineWidthPx = 5;
+    preferences.orbs[0].trace.lineAlpha = 0.12;
+    preferences.orbs[0].trace.lineWidthPx = 5;
     preferences.bands.count = 128;
     preferences.bands.floorHz = 40;
     preferences.bands.ceilingHz = 18000;
@@ -1585,8 +1585,8 @@ test("URL preset round-trips persisted config fields that were previously droppe
 
     const ok = UrlPreset.applyFromLocationHash();
     assert.equal(ok, true);
-    assert.equal(preferences.trace.lineAlpha, 0.12);
-    assert.equal(preferences.trace.lineWidthPx, 5);
+    assert.equal(preferences.orbs[0].trace.lineAlpha, 0.12);
+    assert.equal(preferences.orbs[0].trace.lineWidthPx, 5);
     assert.equal(preferences.bands.count, 128);
     assert.equal(preferences.bands.floorHz, 40);
     assert.equal(preferences.bands.ceilingHz, 18000);

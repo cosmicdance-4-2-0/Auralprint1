@@ -29,7 +29,7 @@ function createBandOverlayVisualizer({ settingsRef = runtime, stateRef = state }
   return {
     id: BAND_OVERLAY_VISUALIZER_ID,
     type: "band-overlay",
-    isEnabled() {
+    isVisible() {
       return !!settingsRef.settings.bands.overlay.enabled;
     },
     update({ dtSec }) {
@@ -63,7 +63,7 @@ function createOrbVisualizer(orb) {
     id: orb.id,
     type: "orb",
     orb,
-    isEnabled() { return true; },
+    isVisible() { return true; },
     update({ dtSec, nowSec, simPaused, analysisFrame }) {
       if (simPaused) return;
       const selection = analysisFrame.ready ? selectOrbAnalysis(orb, analysisFrame) : null;
@@ -106,7 +106,7 @@ function createVisualizerRuntime({
   function render(renderer, frameContext) {
     renderer.clearFrame();
     for (const visualizer of visualizers) {
-      if (visualizer.isEnabled()) visualizer.render(renderer, frameContext);
+      if (visualizer.isVisible()) visualizer.render(renderer, frameContext);
     }
   }
 

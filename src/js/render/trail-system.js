@@ -26,27 +26,26 @@ class TrailSystem {
     }
   }
 
-  emitAt(xSim, ySim, nowSec, rgbStart) {
-    const s = runtime.settings;
-    this.removeOverlaps(xSim, ySim, s.particles.overlapRadiusPx * state.dpr);
+  emitAt(xSim, ySim, nowSec, rgbStart, particleSettings) {
+    this.removeOverlaps(xSim, ySim, particleSettings.overlapRadiusPx * state.dpr);
     this.particles.push({ xSim, ySim, bornSec: nowSec, rgbStart });
   }
 
-  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart) {
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings) {
     const s = runtime.settings;
 
-    const ttl = Math.max(0.0001, s.particles.ttlSec);
+    const ttl = Math.max(0.0001, particleSettings.ttlSec);
     for (let i = this.particles.length - 1; i >= 0; i--) {
       if ((nowSec - this.particles[i].bornSec) >= ttl) this.particles.splice(i, 1);
     }
 
-    this.emitAccumulator += s.particles.emitPerSecond * dtSec;
+    this.emitAccumulator += particleSettings.emitPerSecond * dtSec;
 
-    const maxEmitThisFrame = Math.ceil(s.particles.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
+    const maxEmitThisFrame = Math.ceil(particleSettings.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
 
     let emits = 0;
     while (this.emitAccumulator >= 1 && emits < maxEmitThisFrame) {
-      this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart);
+      this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart, particleSettings);
       this.emitAccumulator -= 1;
       emits += 1;
     }
