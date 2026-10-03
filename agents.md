@@ -131,6 +131,14 @@ Violation results in:
 
 ## 4. Analysis Engine Constraints
 
+### 4.0 Analysis and Consumer Ownership
+
+- Analysis modules own extraction and normalization of information from audio and may maintain internal analysis state.
+- Build 115 establishes an explicit analysis-consumer interface. Downstream visual systems consume that representation instead of independently reading unrelated `AudioEngine`, analyser-node, and global band-state details.
+- When a stable analysis interface exists, visualizers MUST NOT reach into Web Audio internals.
+- Consumers may read producer-owned analysis arrays and buffers but MUST NOT mutate them.
+- Visualization-specific response and presentation state should ultimately belong to the visualizer instance that uses it. Build 115 does not yet declare a final persisted Visualizer schema.
+
 ### 4.1 Band System
 
 - Band count: 256 (canonical)
@@ -253,11 +261,17 @@ Agents MUST align work with roadmap builds:
 
 - **113**: Recording / capture (MediaRecorder, WebM-first)
 - **114**: Live inputs (mic / stream)
-- **115**: Orb overhaul (per-orb bands + color phase)
+- **115**: Visualizer architecture + Orb overhaul v1
 - **116**: Camera (render ≠ sim)
 
 If a change does not map to a roadmap item:
 → It is likely out of scope.
+
+### 8.1 Camera Boundary
+
+> Camera/projection changes render space, never simulation or analysis state.
+
+Camera remains Build 116 and MUST stay behind completion of the Build 115 analysis/visualization and ownership work.
 
 ---
 
@@ -316,4 +330,3 @@ When in doubt:
 ---
 
 **End of Contract**
-

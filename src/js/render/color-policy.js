@@ -1,6 +1,5 @@
 import { hexToRgb01, hsvToRgb01 } from "../core/utils.js";
 import { runtime } from "../core/preferences.js";
-import { state } from "../core/state.js";
 import { BandBank } from "../audio/band-bank.js";
 
 /* =============================================================================
@@ -21,7 +20,7 @@ const ColorPolicy = (() => {
     return orb.colorSource;
   }
 
-  function pickParticleColorRgb01(angleRad, orb = null) {
+  function pickParticleColorRgb01(angleRad, orb = null, dominantBandIndex = 0) {
     const s = runtime.settings;
     const extraHue = orb && Number.isFinite(orb.hueOffsetDeg) ? orb.hueOffsetDeg : 0;
     const source = resolveParticleColorSource(orb);
@@ -29,12 +28,12 @@ const ColorPolicy = (() => {
     if (source === "fixed") return hexToRgb01(s.visuals.particleColor);
     if (source === "angle") return bandRgb01(BandBank.bandIndexFromAngleRad(angleRad), extraHue);
 
-    return bandRgb01(state.bands.dominantIndex, extraHue); // dominant
+    return bandRgb01(dominantBandIndex, extraHue); // dominant
   }
 
-  function pickLineColorRgb01(particles) {
+  function pickLineColorRgb01(particles, dominantBandIndex = 0) {
     const s = runtime.settings;
-    if (s.trace.lineColorMode === "dominantBand") return bandRgb01(state.bands.dominantIndex);
+    if (s.trace.lineColorMode === "dominantBand") return bandRgb01(dominantBandIndex);
 
     if (s.trace.lineColorMode === "lastParticle") {
       const last = particles && particles.length ? particles[particles.length - 1] : null;

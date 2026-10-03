@@ -40,7 +40,7 @@ class Orb {
     this.bandIds = sanitizeOrbBandIds(def.bandIds, def.bandNames);
   }
 
-  step(dtSec, nowSec, band, energyOverride01) {
+  step(dtSec, nowSec, band, energyOverride01, dominantBandIndex) {
     const s = runtime.settings;
 
     this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
@@ -57,7 +57,7 @@ class Orb {
       : (band ? band.energy01 : 0);
     this.baseRadiusPx = safeMin + (safeMax - safeMin) * energy01;
 
-    const wf = band ? band.timeDomain : null;
+    const wf = band ? band.waveform : null;
     if (wf && wf.length > 0) {
       const phase01 = this.angleRad / TAU;
       const idx = Math.floor(phase01 * (wf.length - 1));
@@ -72,7 +72,7 @@ class Orb {
     this.xSim = radius * Math.cos(this.angleRad) + this.centerXFrac * minDim;
     this.ySim = radius * Math.sin(this.angleRad) + this.centerYFrac * minDim;
 
-    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad, this);
+    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad, this, dominantBandIndex);
     this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
   }
 }

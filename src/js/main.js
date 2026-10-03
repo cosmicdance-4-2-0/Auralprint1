@@ -7,6 +7,7 @@ import { resizeCanvasToDisplaySize } from "./core/spaces.js";
 import { UrlPreset } from "./presets/url-preset.js";
 import { BandBankController } from "./audio/band-bank-controller.js";
 import { AudioEngine } from "./audio/audio-engine.js";
+import { createAnalysisFrame, updateAnalysisFrame } from "./audio/analysis-frame.js";
 import { InputSourceManager } from "./audio/input-source-manager.js";
 import { Scrubber } from "./audio/scrubber.js";
 import { Renderer } from "./render/renderer.js";
@@ -17,7 +18,7 @@ import { initOrbs, getBandForOrb } from "./render/orb-runtime.js";
 /* =============================================================================
    Boot / loop
    ========================================================================== */
-let lastBandSnapshot = null;
+const analysisFrame = createAnalysisFrame();
 
 function onAnimationFrame(tsMs) {
   requestAnimationFrame(onAnimationFrame);
@@ -38,8 +39,7 @@ function onAnimationFrame(tsMs) {
   const dtSec = clamp(dtSecRaw, 0, runtime.settings.timing.maxDeltaTimeSec);
   const nowSec = performance.now() / 1000;
 
-  lastBandSnapshot = AudioEngine.sample();
-  const bandC = (lastBandSnapshot && lastBandSnapshot.ready) ? lastBandSnapshot.bands.C : null;
+  updateAnalysisFrame(analysisFrame, AudioEngine.sample(), state.bands);
 
   // Ring phase:
   // - orb: lock to carrier orb angle (coherent)
@@ -53,17 +53,17 @@ function onAnimationFrame(tsMs) {
 
   if (!state.time.simPaused) {
     for (const orb of state.orbs) {
-      const selection = (lastBandSnapshot && lastBandSnapshot.ready)
-        ? getBandForOrb(orb, lastBandSnapshot)
+      const selection = analysisFrame.ready
+        ? getBandForOrb(orb, analysisFrame)
         : null;
       const orbBand = selection ? selection.band : null;
       const energyOverride01 = selection ? selection.energyOverride01 : null;
-      orb.step(dtSec, nowSec, orbBand, energyOverride01);
+      orb.step(dtSec, nowSec, orbBand, energyOverride01, analysisFrame.spectrum.dominantIndex);
     }
   }
 
-  Renderer.renderFrame(nowSec, bandC);
-  UI.refreshAllUiText(lastBandSnapshot);
+  Renderer.renderFrame(nowSec, analysisFrame);
+  UI.refreshAllUiText(analysisFrame);
   Scrubber.draw(); // update playhead position every frame
 }
 
@@ -103,7 +103,7 @@ function main() {
   UI.refreshRecordingUi();
 
   Scrubber.init(document.getElementById("scrubberCanvas"));
-  UI.refreshAllUiText(lastBandSnapshot);
+  UI.refreshAllUiText(analysisFrame);
 
   resizeCanvasToDisplaySize();
   window.addEventListener("resize", resizeCanvasToDisplaySize);

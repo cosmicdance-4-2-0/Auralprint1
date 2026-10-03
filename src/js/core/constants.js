@@ -1,9 +1,9 @@
 /* =============================================================================
    Auralprint
-   0.1.15
+   0.1.15b
 
-   Build 115 — Orbs overhaul v1
-   Per-orb hue offset, color source, sim-space center; preset schema v9.
+   Build 115 — Visualizer Architecture + Orb Overhaul v1
+   AnalysisFrame consumer boundary; preset schema remains v9.
    ========================================================================== */
 
 const TAU = Math.PI * 2;

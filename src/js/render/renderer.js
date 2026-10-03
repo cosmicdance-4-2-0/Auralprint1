@@ -16,7 +16,7 @@ const Renderer = (() => {
     ctx.fillRect(0, 0, state.widthPx, state.heightPx);
   }
 
-  function drawTrailLines(particles) {
+  function drawTrailLines(particles, dominantBandIndex) {
     const s = runtime.settings;
     if (!s.trace.lines) return;
 
@@ -29,7 +29,7 @@ const Renderer = (() => {
     if (slice.length < 2) return;
 
     const ctx = state.ctx;
-    const rgb = ColorPolicy.pickLineColorRgb01(particles);
+    const rgb = ColorPolicy.pickLineColorRgb01(particles, dominantBandIndex);
     const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
 
     ctx.save();
@@ -99,16 +99,17 @@ const Renderer = (() => {
     return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
   }
 
-  function drawBandOverlay(bandC) {
+  function drawBandOverlay(analysisFrame) {
     const bands = runtime.settings.bands;
     const overlay = bands.overlay;
-    if (!overlay.enabled || !bandC) return;
+    if (!overlay.enabled || !analysisFrame || !analysisFrame.ready) return;
 
     const ctx = state.ctx;
     const n = bands.count;
     const phase = state.bands.ringPhaseRad;
 
-    const wf = bandC.timeDomain;
+    const wf = analysisFrame.channels.C.waveform;
+    const energies = analysisFrame.spectrum.energies01;
 
     const minDim = Math.min(state.widthPx, state.heightPx);
     // Overlay radius contract is independent from orb/audio radius controls.
@@ -121,7 +122,7 @@ const Renderer = (() => {
 
     for (let i = 0; i < n; i++) {
       const angle = phase + (i * TAU / n);
-      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
+      const e = clamp((energies && energies[i]) || 0, 0, 1);
       const baseR = safeMin + (safeMax - safeMin) * e;
       const disp = overlayWaveformDisplacementPx(baseR, angle, wf, overlay);
 
@@ -167,12 +168,13 @@ const Renderer = (() => {
     ctx.restore();
   }
 
-  function renderFrame(nowSec, bandC) {
+  function renderFrame(nowSec, analysisFrame) {
     clearFrame();
-    drawBandOverlay(bandC);
+    drawBandOverlay(analysisFrame);
+    const dominantBandIndex = analysisFrame ? analysisFrame.spectrum.dominantIndex : 0;
     for (const orb of state.orbs) {
       const particles = orb.trail.particles;
-      drawTrailLines(particles);
+      drawTrailLines(particles, dominantBandIndex);
       drawParticles(particles, nowSec);
     }
   }
