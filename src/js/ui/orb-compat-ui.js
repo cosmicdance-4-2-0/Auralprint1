@@ -92,7 +92,9 @@ function createOrbCompatUi({ ui = state.ui, commitOrbChange, commitPreferences, 
       formatRange: BandBank.formatBandRangeText,
       describeBank: () => `${preferences.bands.distributionMode.toUpperCase()} distribution · ${BAND_NAMES.length} bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}`,
     }));
-    const bulk = (control, event, group, field, read, reason) => control.addEventListener(event, () => { applyBulkOrbValue(preferences.orbs, group, field, read(control)); commitPreferences(reason); });
+    const bulk = (control, event, group, field, read, reason) => control.addEventListener(event, () => {
+      if (applyBulkOrbValue(preferences.orbs, group, field, read(control))) commitPreferences(reason);
+    });
     bulk(ui.chkLines, "change", "trace", "lines", (c) => !!c.checked, "lines"); bulk(ui.rngNumLines, "input", "trace", "numLines", (c) => Number(c.value), "num lines"); bulk(ui.selLineColorMode, "change", "trace", "lineColorMode", (c) => c.value, "line color mode");
     for (const [control, group, field, reason] of [[ui.rngEmit,"particles","emitPerSecond","emit rate"],[ui.rngSizeMax,"particles","sizeMaxPx","size max"],[ui.rngSizeMin,"particles","sizeMinPx","size min"],[ui.rngSizeToMin,"particles","sizeToMinSec","time to min"],[ui.rngTTL,"particles","ttlSec","ttl"],[ui.rngOverlap,"particles","overlapRadiusPx","overlap radius"],[ui.rngOmega,"motion","angularSpeedRadPerSec","angular speed"],[ui.rngWfDisp,"response","waveformRadialDisplaceFrac","orb waveform disp"],[ui.rngMinRad,"response","minRadiusFrac","min radius"],[ui.rngMaxRad,"response","maxRadiusFrac","max radius"]]) bulk(control, "input", group, field, (c) => Number(c.value), reason);
     for (let index = 0; index < 2; index++) {
