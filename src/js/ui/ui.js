@@ -744,14 +744,15 @@ const UI = (() => {
     ensureBandHudBuilt();
   }
 
-  function refreshBandHud() {
+  function refreshBandHud(analysisFrame = null) {
     ensureBandHudBuilt();
 
     const s = runtime.settings;
     const n = s.bands.count;
+    const spectrum = analysisFrame ? analysisFrame.spectrum : state.bands;
 
     for (let i = 0; i < n; i++) {
-      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
+      const e = clamp((spectrum.energies01 && spectrum.energies01[i]) || 0, 0, 1);
       const pct = Math.round(e * 100);
 
       const c = ColorPolicy.bandRgb01(i);
@@ -760,15 +761,15 @@ const UI = (() => {
       ui.bandRowEls[i].fill.style.width = pct + "%";
       ui.bandRowEls[i].fill.style.background = rgb01ToCss(c, alpha);
 
-      const isDom = i === state.bands.dominantIndex;
+      const isDom = i === spectrum.dominantIndex;
       ui.bandRowEls[i].name.style.opacity = isDom ? "1.0" : "0.75";
       ui.bandRowEls[i].idx.style.opacity = isDom ? "1.0" : "0.65";
       ui.bandRowEls[i].range.style.opacity = isDom ? "0.96" : "0.72";
       ui.bandRowEls[i].range.textContent = BandBank.formatBandRangeText(i);
     }
 
-    const domIdx = clamp(state.bands.dominantIndex, 0, n - 1);
-    const domName = state.bands.dominantName || BAND_NAMES[domIdx] || `Band ${domIdx}`;
+    const domIdx = clamp(spectrum.dominantIndex, 0, n - 1);
+    const domName = spectrum.dominantName || BAND_NAMES[domIdx] || `Band ${domIdx}`;
     const domRange = BandBank.formatBandRangeText(domIdx);
     ui.bandDebug.textContent = "";
     const span = document.createElement("span");
@@ -783,8 +784,8 @@ const UI = (() => {
     return `${fmt(hz, 1)} Hz`;
   }
 
-  function refreshBandMetaText() {
-    const m = state.bands.meta;
+  function refreshBandMetaText(analysisFrame = null) {
+    const m = analysisFrame ? analysisFrame.spectrum.metadata : state.bands.meta;
     const bandCount = runtime.settings.bands.count;
     const sampleRateText = Number.isFinite(m.sampleRateHz)
       ? formatBandMetaHz(m.sampleRateHz)
@@ -1432,13 +1433,13 @@ const UI = (() => {
     return sourceSwitchDispatcher(kind);
   }
 
-  function refreshAllUiText(bandSnapshot) {
+  function refreshAllUiText(analysisFrame) {
     const p = preferences;
     maybeRefreshRecordingUi();
     syncOrbBandPickers();
 
-    const bandText = bandSnapshot && bandSnapshot.ready
-      ? (bandSnapshot.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
+    const bandText = analysisFrame && analysisFrame.ready
+      ? (analysisFrame.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
       : "n/a";
 
     const recordingStatusText = formatRecordingAudioStatusSummary(state.recording);
@@ -1582,15 +1583,15 @@ const UI = (() => {
     refreshConfigTooltips();
     refreshRecordingUi();
 
-    refreshBandMetaText();
+    refreshBandMetaText(analysisFrame);
 
-    if (bandSnapshot && bandSnapshot.ready) {
+    if (analysisFrame && analysisFrame.ready) {
       const nowMs = performance.now();
       const hudIntervalMs = ui.bandHudIntervalMs || 100;
       const bandsPanelVisible = ui.bandsPanel && ui.bandsPanel.style.display !== "none";
       const canRefreshHud = bandsPanelVisible && (nowMs - ui.lastBandHudUpdateMs >= hudIntervalMs);
       if (canRefreshHud) {
-        refreshBandHud();
+        refreshBandHud(analysisFrame);
         ui.lastBandHudUpdateMs = nowMs;
       }
     }

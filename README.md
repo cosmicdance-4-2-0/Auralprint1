@@ -2,9 +2,9 @@
 
 This repo tracks **Auralprint** an offline-capable audio analysis suite.(“analyzer cosplaying as a visualizer”).
 
-The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). The current work completes Build 115's interface before adding camera controls. Its basic band chooser has been pulled forward from Build 118; browser acceptance is still pending.
+The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). Build 115 is actively under development as **Visualizer Architecture + Orb Overhaul v1**. The new menu organization and editing of the two existing Orb instances have substantially landed, but Orb lifecycle management (add/remove/duplicate), ownership of still-global simulation/particle/trace settings, and the separation of analysis from visualization remain unfinished. Build 116 Camera work is explicitly blocked until that decomposition and its UX are complete.
 
-To try the development build, run `npm test`, then `npm run build` (sequentially), and open `dist/auralprint_0.1.15.html`. Start with **Load audio**. **Orbs** opens per-orb targeting; **Bands** contains spectral and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused.
+To try a development revision, read the canonical root `version`, run `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15b.html`). Start with **Load audio**. **Orbs** opens per-orb targeting; **Bands** contains spectral and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused. Passing Node tests and producing the single-file build are regression evidence, not evidence that Build 115 is nearly ready for canonization.
 
 ## Versioning and what the numbers mean
 
@@ -34,7 +34,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 | — | In Progress | Orbs overhaul v1 (per-orb spectral + color phase) |
+| 115 | v0.1.15 (`v0.1.15b` development revision) | — | In Progress | Visualizer Architecture + Orb Overhaul v1 |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Per-orb band picker UI |
@@ -125,19 +125,21 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ---
 
-## Build 115 — v0.1.15: Orbs Overhaul (v1)
+## Build 115 — v0.1.15: Visualizer Architecture + Orb Overhaul v1
 
-**Goal:** orbs become first-class Visualizers inside the scene/compositor architecture.
+**Goal:** establish a clean analysis-consumer boundary and make Orbs first-class visualizers before camera work begins.
 
 **Scope**
-- Per-orb spectral targeting (band IDs / ranges)
-- Per-orb aggregation rules (avg now; weighted later)
-- Per-orb color phase space / palette modes
-- Backward-compatible preset migration for orb config
+- The reorganized menus and editing for two existing Orb instances are substantially present.
+- Per-Orb channel, spectral targeting, chirality, start angle, hue offset, color source, and center fields exist.
+- Analysis/visualization separation, visualizer lifecycle, and dynamic Orb creation/removal/duplication remain future Build 115 stages.
+- Motion, radius response, particle, and trace ownership is still partly global and must be assigned conservatively.
+- The Band Overlay remains in place while its eventual Spectral Ring role and ownership are designed.
 
 **DoD**
-- Orbs can lock to different bands cleanly
-- Presets round-trip without corruption
+- Complete the staged Build 115 plan in `ROADMAP.md`, including browser/media/accessibility/performance acceptance.
+- Preserve preset compatibility and observable audio/visual behavior at each architectural seam.
+- Keep Build 116 Camera work blocked until Build 115 is complete.
 
 ---
 

@@ -11,16 +11,16 @@ function initOrbs() {
   for (const def of runtime.settings.orbs) state.orbs.push(new Orb(def));
 }
 
-function getBandForOrb(orb, snapshot) {
+function getBandForOrb(orb, analysisFrame) {
   const channel = normalizeOrbChannelId(orb && orb.chanId, orb && orb.bandId);
   const sourceBand = channel === "L"
-    ? snapshot.bands.L
-    : (channel === "R" ? snapshot.bands.R : snapshot.bands.C);
+    ? analysisFrame.channels.L
+    : (channel === "R" ? analysisFrame.channels.R : analysisFrame.channels.C);
 
   const bandIds = Array.isArray(orb && orb.bandIds) ? orb.bandIds : [];
   if (!bandIds.length) return { band: sourceBand, energyOverride01: null };
 
-  const energies = state.bands.energies01;
+  const energies = analysisFrame.spectrum.energies01;
   if (!Array.isArray(energies) || !energies.length) return { band: sourceBand, energyOverride01: null };
 
   let sum = 0;

@@ -8,6 +8,7 @@ import { CONFIG } from "../src/js/core/config.js";
 import { normalizeOrbDef, preferences, runtime, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
 import { state } from "../src/js/core/state.js";
 import { AudioEngine } from "../src/js/audio/audio-engine.js";
+import { createAnalysisFrame, updateAnalysisFrame } from "../src/js/audio/analysis-frame.js";
 import { InputSourceManager, createInputSourceManager } from "../src/js/audio/input-source-manager.js";
 import { Queue } from "../src/js/audio/queue.js";
 import { Scrubber, buildWaveformPeaks } from "../src/js/audio/scrubber.js";
@@ -98,6 +99,10 @@ function snapshotSourceAndAudioState() {
     source: JSON.parse(JSON.stringify(state.source)),
     audio: { ...state.audio },
   };
+}
+
+function analysisFrameForUi(monoLike) {
+  return updateAnalysisFrame(createAnalysisFrame(), { ready: true, monoLike, bands: {} }, state.bands);
 }
 
 function applySourceAndAudioState(snapshot) {
@@ -1748,10 +1753,7 @@ test("UI refreshAllUiText keeps file-mode status and selector copy honest in idl
     },
     queueNames: ["demo.wav", "bonus.wav"],
     currentIndex: 0,
-    bandSnapshot: {
-      ready: true,
-      monoLike: false,
-    },
+    bandSnapshot: analysisFrameForUi(false),
     repeatMode: "all",
   }, () => {
     assert.equal(state.ui.audioStatus.textContent, "File [1/2]: demo.wav - Paused - Bands: stereo (L\u2260R)");
@@ -1875,10 +1877,7 @@ test("UI disables file-only controls with clear file-mode-only affordances in li
       filename: "stale.wav",
       transportError: "",
     },
-    bandSnapshot: {
-      ready: true,
-      monoLike: true,
-    },
+    bandSnapshot: analysisFrameForUi(true),
   }, () => {
     assert.match(state.ui.audioStatus.textContent, /Microphone live: Podcast Mic - Bands: mono-ish/);
     assert.doesNotMatch(state.ui.audioStatus.textContent, /stale\.wav/);
@@ -1922,10 +1921,7 @@ test("UI disables file-only controls with clear file-mode-only affordances in li
       filename: "stale.wav",
       transportError: "",
     },
-    bandSnapshot: {
-      ready: true,
-      monoLike: false,
-    },
+    bandSnapshot: analysisFrameForUi(false),
   }, () => {
     assert.equal(state.ui.audioStatus.textContent, "Stream live: Browser Tab - Bands: stereo (L\u2260R)");
     assert.doesNotMatch(state.ui.audioStatus.textContent, /stale\.wav/);

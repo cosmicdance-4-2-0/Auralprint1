@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 2, 2026. App baseline: `v0.1.15` / Build 115. Preset schema: 9.
+Updated: October 3, 2026. Development revision: `v0.1.15b` / Build 115. Preset schema: 9.
 
-The immediate priority is to make the existing analysis and orb controls usable. New engine capabilities follow a working interface, a reliable preset path, and a verified offline single-file build.
+The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: the menu reorganization and editing of two existing Orbs have substantially landed, while analysis/visualization separation, visualizer lifecycle, remaining per-Orb ownership, dynamic Orb management, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -23,73 +23,49 @@ The following capabilities are present in the current source. Passing unit tests
 
 Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are planned. A separate scene/compositor architecture is not a prerequisite for finishing the current interface.
 
-## Delivery order
+## Build 115 staged delivery plan
 
-1. Complete Build 115 usability and prove the existing orb features work through the interface.
-2. Add Build 116 camera controls with an explicit separation between rendering and simulation.
-3. Harden performance and interaction behavior in Build 117 using measurements and reported friction.
-4. Extend spectral selection in Build 118 after the basic chooser has been used and validated.
-5. Deliver preset-file workflows in Build 119.
-6. Reassess the optional Build 120 3D experiment against stability and performance evidence.
+Build 115 proceeds in this order. The first two stages are complete at revision 115B; later stages must not be inferred from their presence in this plan.
 
-The basic band chooser is deliberately pulled forward from Build 118 into Build 115 completion. It exposes the existing `bandIds` configuration; it does not introduce a new analysis model or preset field. The numbered milestones retain their themes.
+1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
+2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
+3. **Visualizer lifecycle** — define the generalized lifecycle after the consumer seam is proven.
+4. **Per-Orb ownership** — move the remaining applicable visual/simulation settings out of global ownership.
+5. **Dynamic Orb runtime** — support runtime instance creation and removal without changing analysis ownership.
+6. **UI decomposition** — split only the UI seams needed for dynamic visualizers.
+7. **Visualizers panel** — establish a home for visualizer instances and their controls.
+8. **Dynamic Orb management UI** — add, remove, and duplicate Orb instances.
+9. **Complete per-Orb controls** — expose the remaining properly owned Orb settings.
+10. **Dedicated Analysis panel** — separate analysis configuration from visualization configuration.
+11. **Band Overlay → Spectral Ring promotion** — promote the existing rendering feature after lifecycle support exists.
+12. **Explicit color ownership** — clarify and implement visualizer/color-policy boundaries.
+13. **Preset/lifecycle hardening** — persist only deliberately designed configuration with migrations.
+14. **Final acceptance** — complete browser, real-media, accessibility, and constrained-hardware performance validation.
+15. **Canonization** — mark Build 115 complete only after every applicable gate has evidence.
 
-## Build 115 completion: usable controls for the existing engine
+Existing Node tests and a successful offline single-file build are useful regression evidence. They are **not Build 115 completion evidence** and do not replace browser, media, accessibility, or performance validation.
 
-**Status: interface implemented in the working tree; browser/media acceptance remains open.**
+## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-### Implementation checkpoint — October 2
+**Status: actively under development; revision 115B establishes the AnalysisFrame consumer seam.**
 
-Implemented a lazy per-orb band chooser with name/index search, validated range replacement, individual checkboxes, actual BandBank frequency labels, and explicit full-spectrum restoration. Sparse selections remain sparse. Exact-ID drafts survive ordinary UI refresh; invalid input leaves preferences unchanged and shows an inline error. Configuration and band-edge changes synchronize the chooser without rebuilding it on animation frames.
+AnalysisFrame now gives Orb routing, the renderer/Band Overlay, and analysis-related UI refreshes an explicit data-only view. It reuses producer-owned waveform and band arrays by read-only contract, follows replacement arrays after BandBank rebuilds, and exposes no Web Audio nodes. Observable analysis, Orb routing, and Band Overlay behavior are unchanged. Visualizer lifecycle extraction is next; visualizers are not dynamic, global Orb simulation/particle/trace ownership remains unresolved, preset schema remains 9, and Build 116 remains blocked.
 
-Orbs now appear first in collapsible settings groups. Audio, Queue, Orbs, Bands, and Record have named launchers; unwired placeholders are removed. Audio and the side panels can hide independently; Queue has its own launcher and close action. View/H restores the previous panel selection. Transport wraps, and panel clearance follows its measured height. A more opaque panel surface improves text legibility over the canvas. This changes UI metadata only; preset schema 9 and transport ownership are unchanged.
+The current source substantially contains the reorganized menu and per-instance editing for the two pre-existing Orbs. Users cannot yet add, remove, or duplicate Orbs. Several motion, radius-response, particle, and trace settings still have global ownership. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
 
-Validation so far: **84/84 Node tests pass**, including new component interaction, independent targeting, invalid-input, draft-preservation, row-reuse, queue-recovery, disclosure-keyboard, and panel-restoration cases. The existing schema 9 round-trip, schema 8 migration, source-lifecycle and recording-lock tests pass. Static markup inspection confirms balanced tags, 167 unique IDs, and resolvable labels/cached controls. The single-file build succeeds.
+The intended data direction is `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Scene / Renderer → Camera → Canvas`. Visualizers consume analysis; they do not own or perform it. The Camera stage belongs to Build 116 and is not ready to begin.
 
-Browser validation is **not complete**. The in-app browser remained on a loopback connection-error page, and Browser Use rejected that page's `data:` URL under its HTTP/HTTPS-only policy. A local server reported listening, but no successful preview load was observed. Do not treat the unit tests or build as evidence of correct rendered layout, live playback, actual device permissions, or real recording export.
+### Protected semantics and limits
 
-Next acceptance work: load the generated HTML in a working browser session; check desktop and narrow layouts, both orb selections and a URL reload, keyboard focus, panel overlap/recovery, generated-audio playback/queue/seek/auto-advance, sample-rate-dependent frequency labels, and recording export. Keep Build 116 behind those gates.
+- Selected Orb band IDs average the existing combined/center-channel band energies; the Orb channel independently chooses its waveform and full-spectrum energy. Empty `bandIds` means full spectrum.
+- Preset schema remains 9 until a later stage deliberately changes persisted configuration through the full migration pipeline.
+- `state.bands` may remain producer state while the consumer boundary is extracted; visual state such as ring phase does not become analysis data.
+- No dynamic Orb runtime, generalized Visualizer lifecycle, Camera behavior, or speculative schema is part of revisions 115A/115B.
+- Track/source/recording ownership, immutable configuration, Nyquist-aware ceilings, and single-file output remain protected.
 
-### Configuration still accessible through presets/code only
+### Current regression evidence
 
-The current interface does not yet expose `orbs[*].startAngleRad`, `trace.lineAlpha`, `trace.lineWidthPx`, `bands.floorHz`, `bands.ceilingHz`, or the overlay's connecting-line alpha/width. Band count remains canonical at 256; timing and mono-detection tuning remain engine controls. Consider start angle and trace styling in the next Build 115 usability pass after browser acceptance. Frequency-bound controls need explicit validation and Nyquist-aware feedback before exposure.
-
-Targeting semantics remain those of the existing engine: selected IDs aggregate **combined-channel** band energies; Channel selects the waveform and full-spectrum channel energy. Dominant color refers to the global dominant band. The chooser does not imply per-channel selected-band analysis or per-selection dominant colors.
-
-### Work to deliver now
-
-- Replace mandatory manual band-index entry with a per-orb chooser supporting search and contiguous range selection. Keep an explicit full-spectrum action and visible selection summary. Retain precise index editing as an advanced affordance when useful.
-- Make empty selection semantics clear: the existing empty `bandIds` array means full spectrum. A chooser must not imply that the orb is muted or has no target when it writes this value.
-- Derive chooser names, valid indices, and displayed ranges from the configured band system. Respect the active distribution and Nyquist ceiling when describing frequencies.
-- Group related controls into keyboard-accessible collapsible sections. Keep common orb controls easy to find; reveal detailed particle, motion, analysis, and overlay controls progressively.
-- Give the workspace launchers visible names. Keep each panel recoverable and give Queue an accessible route independent of Audio panel visibility.
-- Make transport and panel layouts usable at narrow widths, with scrolling contained inside panels and sufficient canvas space to see the result.
-- Keep source and capture status understandable. File-only actions remain disabled for live sources, and recording finalization continues to protect destructive transport changes.
-
-### Architectural limits for this milestone
-
-- Use the existing `preferences.orbs[*].bandIds` pipeline and `normalizeOrbDef()`; preserve schema 9 unless an actual persisted field changes.
-- Store section expansion, search text, and chooser interaction state only as ephemeral UI state. They are not presets.
-- Leave track changes on `loadAndPlay()` and retain the single `_onTrackEnded` hook.
-- Preserve immutable `CONFIG`, settings derived by `resolveSettings()`, offline operation, and the current single-file output.
-- Avoid unrelated refactors, new runtime dependencies, speculative scene abstractions, or camera behavior inside orb simulation.
-- Refresh selection UI on user actions and configuration changes; do not add band-chooser DOM work to the animation loop.
-
-### Acceptance gates
-
-- A user can assign different spectral targets to the two default orbs, switch either back to full spectrum, and understand the selected result without memorizing indices.
-- A URL preset preserves each orb's channel, targets, hue, color source, direction, start angle, and center. Schema 8 presets continue to receive the expected Build 115 defaults.
-- Search, range selection, and preset application keep the displayed selection consistent with actual preferences. Invalid input cannot silently produce a misleading selection summary.
-- Audio, Queue, Sim, Bands, and available recording controls remain recoverable after individual hides, launcher collapse, global hide, and source changes.
-- Keyboard activation, visible focus, control labels, and focus recovery work. Collapsed or hidden controls cannot remain in the tab sequence.
-- Narrow and desktop layouts keep transport, panel scrolling, close actions, and launchers usable without overlap that blocks access.
-- File loading, next/previous, queue jump/removal, seeking, repeat, and track-end advance retain their lifecycle behavior. Live-source failures remain recoverable, and recording locks remain correct.
-- Run `npm test`, then `npm run build` sequentially. Verify the generated standalone HTML in a browser with no normal-flow console errors and no duplicate actions after repeated open/close cycles.
-- Check playback and analysis with real or generated audio, including a sample rate whose Nyquist frequency is below the configured ceiling. Verify that controls change analysis/visual behavior and that the highest bands do not collapse because of an unclamped ceiling.
-
-**Baseline evidence:** the existing suite passed 78/78 tests before the usability work. The existing build command succeeded. The suite covers source lifecycle, recording restrictions, several panel recovery paths, waveform seeking behavior, schema 9 orb round trips, schema 8 orb migration, and exclusion of runtime source/recording data from presets. These are baseline results, not completion evidence for the new interface.
-
-The current build-directory test temporarily renames `.build` and `dist`. Running a build or watcher at the same time can invalidate that test or interfere with its output restoration. Keep validation sequential.
+The existing Node suite and build cover valuable preset, source-lifecycle, recording, chooser, and packaging behavior. Browser validation is not complete, so this evidence does not establish rendered layout, live playback, device permission, recording export, accessibility, or performance acceptance. Validation commands must remain sequential because a build and the build-directory test can interfere with each other.
 
 ## Build 116: camera controls, render separate from simulation
 
