@@ -34,7 +34,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 | — | ✅ Shipped (Internal) | Orbs overhaul v1 (per-orb spectral + color phase) |
+| 115 | v0.1.15 | — | In Progress | Orbs overhaul v1 (per-orb spectral + color phase) |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Per-orb band picker UI |
