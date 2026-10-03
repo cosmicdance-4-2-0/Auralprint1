@@ -180,3 +180,39 @@ test("rebuild disposes old participants exactly once and wraps only current Orb 
   assert.equal(runtime.getVisualizers()[1].orb, currentOrb);
   assert.notEqual(runtime.getVisualizers()[1].orb, oldOrb);
 });
+
+test("reconcile retains surviving adapters, disposes removals once, and reorders by Orb order", () => {
+  const disposed = [];
+  const created = [];
+  const runtime = createVisualizerRuntime({
+    createBandOverlay: () => ({ id: BAND_OVERLAY_VISUALIZER_ID, type: "band-overlay", isVisible: () => true, update() {}, render() {}, reset() {}, dispose() { disposed.push("overlay"); } }),
+    createOrb: (orb) => {
+      const adapter = { id: orb.id, type: "orb", orb, isVisible: () => true, update() {}, render() {}, reset() {}, dispose() { disposed.push(orb.id); } };
+      created.push(adapter);
+      return adapter;
+    },
+  });
+  const [a, b, c] = [fakeOrb("A"), fakeOrb("B"), fakeOrb("C")];
+  runtime.rebuild([a, b, c]);
+  const [, aa, ba, ca] = runtime.getVisualizers();
+  const d = fakeOrb("D");
+  runtime.reconcile([a, d, c]);
+  assert.equal(runtime.getVisualizers()[1], aa);
+  assert.equal(runtime.getVisualizers()[3], ca);
+  assert.deepEqual(disposed, ["B"]);
+  runtime.reconcile([c, a, d]);
+  assert.deepEqual(runtime.getVisualizers().slice(1).map((v) => v.orb), [c, a, d]);
+  assert.equal(runtime.getVisualizers()[1], ca);
+  assert.equal(runtime.getVisualizers()[2], aa);
+  assert.deepEqual(disposed, ["B"]);
+  assert.equal(created.includes(ba), true);
+});
+
+test("zero-Orb orb-locked Band Overlay remains stable and resets safely", () => {
+  const harness = overlayHarness({ phaseMode: "orb", orbs: [] });
+  const visualizer = createBandOverlayVisualizer(harness);
+  visualizer.update(frame());
+  assert.equal(harness.stateRef.bands.ringPhaseRad, 1);
+  visualizer.reset("visuals");
+  assert.equal(harness.stateRef.bands.ringPhaseRad, 0);
+});

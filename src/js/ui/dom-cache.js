@@ -57,6 +57,7 @@ function primeDomCache() {
     ui.btnHideSim = document.getElementById("btnHideSim");
 
     ui.simStatus = document.getElementById("simStatus");
+    ui.orbCards = [document.getElementById("orbCard0"), document.getElementById("orbCard1")];
     ui.bandsStatus = document.getElementById("bandsStatus");
 
     ui.chkLines = document.getElementById("chkLines");

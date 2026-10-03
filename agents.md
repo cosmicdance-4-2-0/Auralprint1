@@ -172,7 +172,7 @@ Rules:
 
 ---
 
-### 4.2 Visualizer Lifecycle
+### 4.3 Visualizer Lifecycle
 
 - Visualizers consume `AnalysisFrame`; they MUST NOT read Web Audio internals.
 - Visualizer-specific runtime behavior belongs behind the lifecycle contract: `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`.
@@ -180,6 +180,12 @@ Rules:
 - Adding a future visualizer must not add type-specific simulation or phase behavior to the main animation loop.
 - Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Shared Motion/Radius/Particles/Trace controls are temporary bulk controls and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
+
+### 4.4 Dynamic Orb Collection
+
+- `preferences.orbs[]` order defines composition order; `orb.id` defines stable identity. Collection mutation must never renumber survivors.
+- Zero Orbs is valid. Runtime reconciliation is ID-based and preserves surviving Orb objects and ephemeral phase/trail/emission state.
+- Duplication copies configuration, never live simulation history. UI must not fabricate missing instances or implicitly create an Orb by accessing an indexed slot.
 
 ## 5. UI System Constraints
 

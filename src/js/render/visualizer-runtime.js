@@ -99,6 +99,29 @@ function createVisualizerRuntime({
     return visualizers;
   }
 
+  function reconcile(orbs = state.orbs) {
+    let overlay = visualizers.find((visualizer) => visualizer.type === "band-overlay");
+    if (!overlay) overlay = createBandOverlay();
+    const existing = new Map(
+      visualizers.filter((visualizer) => visualizer.type === "orb").map((visualizer) => [visualizer.id, visualizer]),
+    );
+    const next = [overlay];
+    for (const orb of orbs) {
+      const retained = existing.get(orb.id);
+      if (retained && retained.orb === orb) {
+        next.push(retained);
+        existing.delete(orb.id);
+      } else {
+        if (retained) retained.dispose();
+        next.push(createOrb(orb));
+        existing.delete(orb.id);
+      }
+    }
+    for (const removed of existing.values()) removed.dispose();
+    visualizers = next;
+    return visualizers;
+  }
+
   function update(frameContext) {
     for (const visualizer of visualizers) visualizer.update(frameContext);
   }
@@ -123,7 +146,7 @@ function createVisualizerRuntime({
     return visualizers;
   }
 
-  return { rebuild, update, render, reset, dispose, getVisualizers };
+  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers };
 }
 
 const VisualizerRuntime = createVisualizerRuntime();

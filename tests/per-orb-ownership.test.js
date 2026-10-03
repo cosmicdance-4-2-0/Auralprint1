@@ -95,8 +95,38 @@ test("runtime Orbs use independent motion, response, waveform, and particle sett
 
 test("bulk Orb helpers report mixed state without mutation and unify only on interaction", () => {
   const orbs = structuredClone(CONFIG.defaults.orbs); orbs[1].trace.lines = false;
-  assert.deepEqual(readBulkOrbValue(orbs, "trace", "lines"), { mixed: true, value: true });
+  assert.deepEqual(readBulkOrbValue(orbs, "trace", "lines"), { available: true, mixed: true, value: true });
   assert.equal(orbs[1].trace.lines, false);
   applyBulkOrbValue(orbs, "trace", "lines", true);
-  assert.deepEqual(readBulkOrbValue(orbs, "trace", "lines"), { mixed: false, value: true });
+  assert.deepEqual(readBulkOrbValue(orbs, "trace", "lines"), { available: true, mixed: false, value: true });
+});
+
+test("schema 10 round-trips zero, one, two, and many Orb collections without defaults", () => withLocation((location) => {
+  const old = structuredClone(preferences);
+  try {
+    for (const count of [0, 1, 2, 5]) {
+      const next = structuredClone(CONFIG.defaults);
+      next.orbs = Array.from({ length: count }, (_, index) => ({
+        ...structuredClone(CONFIG.defaults.orbs[index % CONFIG.defaults.orbs.length]),
+        id: `CUSTOM-${index}`,
+        centerXFrac: index / 10,
+      }));
+      replacePreferences(next); resolveSettings(); UrlPreset.writeHashFromPrefs();
+      replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings();
+      assert.equal(UrlPreset.applyFromLocationHash(), true);
+      assert.equal(preferences.orbs.length, count);
+      assert.deepEqual(preferences.orbs.map((orb) => orb.id), next.orbs.map((orb) => orb.id));
+      assert.deepEqual(preferences.orbs.map((orb) => orb.centerXFrac), next.orbs.map((orb) => orb.centerXFrac));
+      assert.equal(JSON.parse(Buffer.from(location.hash.slice(3), "base64url")).schema, PRESET_SCHEMA_VERSION);
+    }
+  } finally {
+    replacePreferences(old); resolveSettings();
+  }
+}));
+
+test("zero-Orb bulk reads and writes are explicit harmless no-ops", () => {
+  const orbs = [];
+  assert.deepEqual(readBulkOrbValue(orbs, "trace", "lines"), { available: false, mixed: false, value: undefined });
+  assert.equal(applyBulkOrbValue(orbs, "trace", "lines", true), false);
+  assert.deepEqual(orbs, []);
 });
