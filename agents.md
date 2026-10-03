@@ -150,16 +150,13 @@ Agents MUST:
 
 Canonical orb fields:
 ```
-id, chanId, bandIds, chirality, startAngleRad
+id, chanId, bandIds, chirality, startAngleRad,
+hueOffsetDeg, colorSource, centerXFrac, centerYFrac
 ```
 
 Rules:
 - Only fields returned by `normalizeOrbDef()` are valid
 - Adding a field requires full preset pipeline update (Section 2)
-
-Planned extensions (do not pre-implement without roadmap alignment):
-- hueOffsetDeg
-- centerX / centerY
 
 ---
 

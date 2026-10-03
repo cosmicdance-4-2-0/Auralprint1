@@ -12,7 +12,7 @@ import { Scrubber } from "./audio/scrubber.js";
 import { Renderer } from "./render/renderer.js";
 import { RecorderEngine } from "./recording/recorder-engine.js";
 import { UI } from "./ui/ui.js";
-import { getActiveOrbPrimaryAngleRad, initOrbs } from "./render/orb-runtime.js";
+import { initOrbs, getBandForOrb } from "./render/orb-runtime.js";
 
 /* =============================================================================
    Boot / loop
@@ -39,23 +39,30 @@ function onAnimationFrame(tsMs) {
   const nowSec = performance.now() / 1000;
 
   lastBandSnapshot = AudioEngine.sample();
+  const bandC = (lastBandSnapshot && lastBandSnapshot.ready) ? lastBandSnapshot.bands.C : null;
 
   // Ring phase:
   // - orb: lock to carrier orb angle (coherent)
   // - free: integrate a ring angular velocity independent of the orb
   const o = runtime.settings.bands.overlay;
   if (o.phaseMode === "orb") {
-    const primaryOrbAngleRad = getActiveOrbPrimaryAngleRad();
-    state.bands.ringPhaseRad = Number.isFinite(primaryOrbAngleRad) ? primaryOrbAngleRad : state.bands.ringPhaseRad;
+    state.bands.ringPhaseRad = (state.orbs.length ? state.orbs[0].angleRad : state.bands.ringPhaseRad);
   } else {
     state.bands.ringPhaseRad = ((state.bands.ringPhaseRad + o.ringSpeedRadPerSec * dtSec) % TAU + TAU) % TAU;
   }
 
-  Renderer.renderFrame({
-    bandSnapshot: lastBandSnapshot,
-    dtSec,
-    nowSec,
-  });
+  if (!state.time.simPaused) {
+    for (const orb of state.orbs) {
+      const selection = (lastBandSnapshot && lastBandSnapshot.ready)
+        ? getBandForOrb(orb, lastBandSnapshot)
+        : null;
+      const orbBand = selection ? selection.band : null;
+      const energyOverride01 = selection ? selection.energyOverride01 : null;
+      orb.step(dtSec, nowSec, orbBand, energyOverride01);
+    }
+  }
+
+  Renderer.renderFrame(nowSec, bandC);
   UI.refreshAllUiText(lastBandSnapshot);
   Scrubber.draw(); // update playhead position every frame
 }
@@ -67,7 +74,7 @@ function main() {
   state.ctx = state.canvas.getContext("2d", { alpha: false });
 
   resolveSettings();
-  const bootPresetResult = UrlPreset.applyFromLocationHash();
+  UrlPreset.applyFromLocationHash();
   resolveSettings();
   InputSourceManager.init({
     onExternalLiveInputReset: UI.resetTrackVisualState,
@@ -93,7 +100,6 @@ function main() {
 
   UI.wireControls();
   UI.applyPrefs(null); // null = silent boot; no "Updated: boot" toast on first load
-  UI.ingestPresetApplyResult(bootPresetResult, { source: "boot" });
   UI.refreshRecordingUi();
 
   Scrubber.init(document.getElementById("scrubberCanvas"));

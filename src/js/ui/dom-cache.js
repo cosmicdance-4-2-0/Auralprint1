@@ -13,12 +13,18 @@ function bindRange(el, lim) {
 function primeDomCache() {
   const ui = state.ui;
     ui.audioPanel = document.getElementById("audioPanel");
-    ui.analysisPanel = document.getElementById("analysisPanel");
-    ui.bankingPanel = document.getElementById("bankingPanel");
-    ui.scenePanel = document.getElementById("scenePanel");
-    ui.workspacePanel = document.getElementById("workspacePanel");
-    ui.statusPanel = document.getElementById("statusPanel");
+    ui.simPanel = document.getElementById("simPanel");
+    ui.bandsPanel = document.getElementById("bandsPanel");
     ui.loadHint = document.getElementById("loadHint");
+    ui.workspaceLauncher = document.getElementById("workspaceLauncher");
+    ui.btnToggleWorkspaceLauncher = document.getElementById("btnToggleWorkspaceLauncher");
+    ui.openAudio = document.getElementById("openAudio");
+    ui.openSim = document.getElementById("openSim");
+    ui.openBands = document.getElementById("openBands");
+    ui.openQueue = document.getElementById("openQueue");
+    ui.btnOpenQueue = document.getElementById("btnOpenQueue");
+    ui.btnHideQueue = document.getElementById("btnHideQueue");
+    ui.btnTogglePanels = document.getElementById("btnTogglePanels");
 
     ui.btnLoad = document.getElementById("btnLoad");
     ui.sourceSwitch = document.getElementById("sourceSwitch");
@@ -48,33 +54,10 @@ function primeDomCache() {
     ui.btnApplyUrl = document.getElementById("btnApplyUrl");
     ui.btnResetPrefs = document.getElementById("btnResetPrefs");
     ui.btnResetVisuals = document.getElementById("btnResetVisuals");
-    ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
-    ui.btnHideBanking = document.getElementById("btnHideBanking");
-    ui.btnHideScene = document.getElementById("btnHideScene");
-    ui.btnHideWorkspace = document.getElementById("btnHideWorkspace");
+    ui.btnHideSim = document.getElementById("btnHideSim");
 
-    ui.analysisStatus = document.getElementById("analysisStatus");
-    ui.bankingStatus = document.getElementById("bankingStatus");
-    ui.sceneStatus = document.getElementById("sceneStatus");
-    ui.workspaceStatus = document.getElementById("workspaceStatus");
-    ui.sceneSummaryPrimary = document.getElementById("sceneSummaryPrimary");
-    ui.sceneSummaryActive = document.getElementById("sceneSummaryActive");
-    ui.sceneSummarySelected = document.getElementById("sceneSummarySelected");
-    ui.sceneCameraCard = document.getElementById("sceneCameraCard");
-    ui.sceneCameraPrimary = document.getElementById("sceneCameraPrimary");
-    ui.sceneCameraMode = document.getElementById("sceneCameraMode");
-    ui.sceneCameraScope = document.getElementById("sceneCameraScope");
-    ui.sceneCameraNote = document.getElementById("sceneCameraNote");
-    ui.sceneNodeEmpty = document.getElementById("sceneNodeEmpty");
-    ui.sceneNodeList = document.getElementById("sceneNodeList");
-    ui.sceneInspectorEmpty = document.getElementById("sceneInspectorEmpty");
-    ui.sceneInspectorPanel = document.getElementById("sceneInspectorPanel");
-    ui.sceneInspectorTitle = document.getElementById("sceneInspectorTitle");
-    ui.sceneInspectorType = document.getElementById("sceneInspectorType");
-    ui.sceneInspectorNodeId = document.getElementById("sceneInspectorNodeId");
-    ui.sceneInspectorOrder = document.getElementById("sceneInspectorOrder");
-    ui.sceneInspectorEnabled = document.getElementById("sceneInspectorEnabled");
-    ui.sceneInspectorFields = document.getElementById("sceneInspectorFields");
+    ui.simStatus = document.getElementById("simStatus");
+    ui.bandsStatus = document.getElementById("bandsStatus");
 
     ui.chkLines = document.getElementById("chkLines");
     ui.valLines = document.getElementById("valLines");
@@ -102,6 +85,35 @@ function primeDomCache() {
     ui.rngWfDisp = document.getElementById("rngWfDisp");
     ui.valWfDisp = document.getElementById("valWfDisp");
 
+    ui.selOrb0Chan = document.getElementById("selOrb0Chan");
+    ui.valOrb0Chan = document.getElementById("valOrb0Chan");
+    ui.selOrb0Chir = document.getElementById("selOrb0Chir");
+    ui.valOrb0Chir = document.getElementById("valOrb0Chir");
+    ui.rngOrb0Hue = document.getElementById("rngOrb0Hue");
+    ui.valOrb0Hue = document.getElementById("valOrb0Hue");
+    ui.selOrb0ColorSrc = document.getElementById("selOrb0ColorSrc");
+    ui.valOrb0ColorSrc = document.getElementById("valOrb0ColorSrc");
+    ui.rngOrb0CenterX = document.getElementById("rngOrb0CenterX");
+    ui.valOrb0CenterX = document.getElementById("valOrb0CenterX");
+    ui.rngOrb0CenterY = document.getElementById("rngOrb0CenterY");
+    ui.valOrb0CenterY = document.getElementById("valOrb0CenterY");
+    ui.txtOrb0Bands = document.getElementById("txtOrb0Bands");
+    ui.valOrb0Bands = document.getElementById("valOrb0Bands");
+    ui.selOrb1Chan = document.getElementById("selOrb1Chan");
+    ui.valOrb1Chan = document.getElementById("valOrb1Chan");
+    ui.selOrb1Chir = document.getElementById("selOrb1Chir");
+    ui.valOrb1Chir = document.getElementById("valOrb1Chir");
+    ui.rngOrb1Hue = document.getElementById("rngOrb1Hue");
+    ui.valOrb1Hue = document.getElementById("valOrb1Hue");
+    ui.selOrb1ColorSrc = document.getElementById("selOrb1ColorSrc");
+    ui.valOrb1ColorSrc = document.getElementById("valOrb1ColorSrc");
+    ui.rngOrb1CenterX = document.getElementById("rngOrb1CenterX");
+    ui.valOrb1CenterX = document.getElementById("valOrb1CenterX");
+    ui.rngOrb1CenterY = document.getElementById("rngOrb1CenterY");
+    ui.valOrb1CenterY = document.getElementById("valOrb1CenterY");
+    ui.txtOrb1Bands = document.getElementById("txtOrb1Bands");
+    ui.valOrb1Bands = document.getElementById("valOrb1Bands");
+
     ui.rngRmsGain = document.getElementById("rngRmsGain");
     ui.valRmsGain = document.getElementById("valRmsGain");
     ui.rngMinRad = document.getElementById("rngMinRad");
@@ -112,6 +124,8 @@ function primeDomCache() {
     ui.valSmooth = document.getElementById("valSmooth");
     ui.selFFT = document.getElementById("selFFT");
     ui.valFFT = document.getElementById("valFFT");
+
+    ui.btnHideBands = document.getElementById("btnHideBands");
 
     ui.clrBg = document.getElementById("clrBg");
     ui.valBg = document.getElementById("valBg");
@@ -156,48 +170,22 @@ function primeDomCache() {
     ui.valVal = document.getElementById("valVal");
 
     ui.bandDebug = document.getElementById("bandDebug");
-    ui.bandDominantRange = document.getElementById("bandDominantRange");
-    ui.bandDominantEnergy = document.getElementById("bandDominantEnergy");
     ui.bandMeta = document.getElementById("bandMeta");
-    ui.bandMetaCount = document.getElementById("bandMetaCount");
-    ui.bandMetaDistribution = document.getElementById("bandMetaDistribution");
-    ui.bandMetaFloor = document.getElementById("bandMetaFloor");
-    ui.bandMetaCeiling = document.getElementById("bandMetaCeiling");
-    ui.bandMetaEffectiveCeiling = document.getElementById("bandMetaEffectiveCeiling");
-    ui.bandMetaNyquist = document.getElementById("bandMetaNyquist");
-    ui.bandMetaContext = document.getElementById("bandMetaContext");
-    ui.btnToggleBandInspector = document.getElementById("btnToggleBandInspector");
-    ui.bandInspectorPanel = document.getElementById("bandInspectorPanel");
     ui.bandTable = document.getElementById("bandTable");
-    ui.bandInspectorOpen = false;
     ui.lastBandHudUpdateMs = 0;
     ui.bandHudIntervalMs = 100;
 
-    ui.launcherBar = document.getElementById("launcherBar");
-    ui.launcherBarItems = document.getElementById("launcherBarItems");
-    ui.btnLauncherToggle = document.getElementById("btnLauncherToggle");
-    ui.btnLauncherAudioSource = document.getElementById("btnLauncherAudioSource");
-    ui.btnLauncherAnalysis = document.getElementById("btnLauncherAnalysis");
-    ui.btnLauncherBanking = document.getElementById("btnLauncherBanking");
-    ui.btnLauncherScene = document.getElementById("btnLauncherScene");
-    ui.btnLauncherRecording = document.getElementById("btnLauncherRecording");
-    ui.btnLauncherWorkspace = document.getElementById("btnLauncherWorkspace");
-    ui.btnLauncherStatus = document.getElementById("btnLauncherStatus");
-    ui.launcherButtons = {
-      audioSource: ui.btnLauncherAudioSource,
-      analysis: ui.btnLauncherAnalysis,
-      banking: ui.btnLauncherBanking,
-      scene: ui.btnLauncherScene,
-      recording: ui.btnLauncherRecording,
-      workspace: ui.btnLauncherWorkspace,
-      status: ui.btnLauncherStatus,
-    };
+    ui.btnOpenAudio = document.getElementById("btnOpenAudio");
+    ui.btnOpenSim = document.getElementById("btnOpenSim");
+    ui.btnOpenBands = document.getElementById("btnOpenBands");
 
     // Build 113 recording UI.
     // Keep all record controls routed through this dedicated panel/launcher path;
     // do not fold them into #audioPanel or create parallel recording UI state.
     ui.recordPanel = document.getElementById("recordPanel");
+    ui.openRecord = document.getElementById("openRecord");
     ui.btnHideRecord = document.getElementById("btnHideRecord");
+    ui.btnOpenRecord = document.getElementById("btnOpenRecord");
     ui.btnRecordStart = document.getElementById("btnRecordStart");
     ui.btnRecordStop = document.getElementById("btnRecordStop");
     ui.btnRecordDownloadLast = document.getElementById("btnRecordDownloadLast");
@@ -214,11 +202,6 @@ function primeDomCache() {
     ui.recordSupport = document.getElementById("recordSupport");
     ui.recordSettingsNote = document.getElementById("recordSettingsNote");
 
-    ui.btnHideStatus = document.getElementById("btnHideStatus");
-    ui.btnClearStatusLog = document.getElementById("btnClearStatusLog");
-    ui.statusLogEmpty = document.getElementById("statusLogEmpty");
-    ui.statusLogList = document.getElementById("statusLogList");
-
     ui.fileInput = document.getElementById("fileInput");
 
     bindRange(ui.rngVol, CONFIG.ui.volume);
@@ -233,6 +216,12 @@ function primeDomCache() {
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.motion.waveformRadialDisplaceFrac);
+    bindRange(ui.rngOrb0Hue, CONFIG.limits.orbs.hueOffsetDeg);
+    bindRange(ui.rngOrb1Hue, CONFIG.limits.orbs.hueOffsetDeg);
+    bindRange(ui.rngOrb0CenterX, CONFIG.limits.orbs.centerXFrac);
+    bindRange(ui.rngOrb0CenterY, CONFIG.limits.orbs.centerYFrac);
+    bindRange(ui.rngOrb1CenterX, CONFIG.limits.orbs.centerXFrac);
+    bindRange(ui.rngOrb1CenterY, CONFIG.limits.orbs.centerYFrac);
 
     bindRange(ui.rngRmsGain, CONFIG.limits.audio.rmsGain);
     bindRange(ui.rngMinRad, CONFIG.limits.audio.minRadiusFrac);
@@ -297,6 +286,39 @@ function primeDomCache() {
       opt.value = mode;
       opt.textContent = mode;
       ui.selDistMode.appendChild(opt);
+    }
+
+    for (const sel of [ui.selOrb0Chan, ui.selOrb1Chan]) {
+      for (const ch of CONFIG.limits.orbs.channels) {
+        const opt = document.createElement("option");
+        opt.value = ch;
+        opt.textContent = ch;
+        sel.appendChild(opt);
+      }
+    }
+
+    for (const sel of [ui.selOrb0Chir, ui.selOrb1Chir]) {
+      for (const pair of [{ v: "1", t: "+1 (CCW)" }, { v: "-1", t: "-1 (CW)" }]) {
+        const opt = document.createElement("option");
+        opt.value = pair.v;
+        opt.textContent = pair.t;
+        sel.appendChild(opt);
+      }
+    }
+
+    const orbColorSrcs = [
+      { v: "inherit", t: "inherit global" },
+      { v: "dominant", t: "dominant band" },
+      { v: "angle", t: "phase locked (Glitch Mode)" },
+      { v: "fixed", t: "fixed particle color" },
+    ];
+    for (const sel of [ui.selOrb0ColorSrc, ui.selOrb1ColorSrc]) {
+      for (const src of orbColorSrcs) {
+        const opt = document.createElement("option");
+        opt.value = src.v;
+        opt.textContent = src.t;
+        sel.appendChild(opt);
+      }
     }
 }
 

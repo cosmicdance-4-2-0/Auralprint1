@@ -1,10 +1,10 @@
 @import "./panels.css";
 @import "./audio-panel.css";
 @import "./queue-panel.css";
-@import "./compact-panels.css";
 @import "./sim-panel.css";
 @import "./bands-panel.css";
 @import "./record-panel.css";
+@import "./workspace.css";
 
     :root {
       --ui-panel-bg: rgba(0,0,0,0.72);
@@ -13,6 +13,9 @@
       --ui-gap: 10px;
       --ui-radius: 10px;
       --ui-font: system-ui, sans-serif;
+      --ui-launcher-pad: 4px;
+      --ui-launcher-clearance: calc(var(--ui-icon) + (2 * var(--ui-launcher-pad)) + var(--ui-gap));
+      --ui-audio-bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance));
 
       /* Two-row audio panel clearance. Value is derived, not guessed:
          --ui-audio-h = pad(10) + scrubber(36) + gap(10) + --ui-icon(40) + pad(10) = 106px.
@@ -20,20 +23,15 @@
          Side panels and #queuePanel use this for their bottom clearance anchor.
          setCssVarsFromConfig() overrides this at boot from CONFIG.ui.audioPanelHeightPx. */
       --ui-audio-h: 106px;
-      --ui-launcher-shell-h: calc(var(--ui-icon) + (2 * var(--ui-pad)));
-      --ui-launcher-clearance: calc(var(--ui-launcher-shell-h) + var(--ui-gap));
-      --ui-queue-clearance: calc(var(--ui-audio-h) + var(--ui-gap));
       --ui-icon: 40px;
-      --ui-compact-panel-w: min(330px, calc((100vw - var(--ui-safe-l) - var(--ui-safe-r) - (3 * var(--ui-pad))) / 2));
-      --ui-compact-panel-stack-h: 190px;
-      --ui-column-panel-top: calc(var(--ui-pad) + var(--ui-safe-t) + var(--ui-compact-panel-stack-h) + var(--ui-gap));
+      --ui-queue-clearance: calc(var(--ui-launcher-clearance) + var(--ui-audio-h) + var(--ui-gap));
 
       /* Build 113 recording UI placement hooks.
          The dedicated record panel/launcher reads these directly. */
       --ui-record-panel-left: auto;
       --ui-record-panel-right: calc(var(--ui-pad) + var(--ui-safe-r));
       --ui-record-panel-top: auto;
-      --ui-record-panel-bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-queue-clearance));
+      --ui-record-panel-bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
       --ui-record-launcher-left: auto;
       --ui-record-launcher-right: calc(var(--ui-pad) + var(--ui-safe-r));
       --ui-record-launcher-top: auto;
@@ -79,8 +77,8 @@
 		height: 100vh;
 		display: block;
 	}
-    button, select { cursor: pointer; font: inherit; }
-    input[type="range"] { width: 260px; }
+    button, select { cursor: pointer; font-family: inherit; }
+    input[type="range"] { width: 100%; min-width: 0; }
     input[type="color"] {
       width: 44px;
       height: 26px;
@@ -88,16 +86,4 @@
       border: none;
       background: transparent;
       cursor: pointer;
-    }
-
-    .srOnly {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
     }

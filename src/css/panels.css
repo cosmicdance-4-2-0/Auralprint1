@@ -18,44 +18,6 @@
 
     .sectionTitle { margin: 10px 0 6px; font-size: 12px; opacity: 0.75; }
 
-    .panelHeader {
-      display: flex;
-      gap: var(--ui-gap);
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .panelHeader .sectionTitle {
-      margin: 0 0 6px;
-    }
-
-    .panelHeaderText {
-      flex: 1 1 180px;
-      min-width: 0;
-    }
-
-    .panelCopy {
-      white-space: normal;
-      overflow: visible;
-      text-overflow: clip;
-      line-height: 1.35;
-    }
-
-    .panelActionRow {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .panelActionStack {
-      display: grid;
-      gap: 8px;
-      margin-top: var(--ui-gap);
-      margin-bottom: var(--ui-gap);
-    }
-
     .row {
       display: grid;
       grid-template-columns: 160px 1fr 140px;
@@ -74,208 +36,71 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .launcherBar {
+    /* Build 115 unified workspace launcher bar. */
+    .workspace-launcher {
       position: fixed;
-      left: calc(var(--ui-pad) + var(--ui-safe-l));
-      right: calc(var(--ui-pad) + var(--ui-safe-r));
+      left: 50%;
       bottom: calc(var(--ui-pad) + var(--ui-safe-b));
-      min-height: var(--ui-launcher-shell-h);
-      padding: var(--ui-pad);
-      display: flex;
+      transform: translateX(-50%);
+      display: inline-grid;
+      grid-auto-flow: column;
+      gap: 4px;
       align-items: center;
-      gap: 6px;
-      box-sizing: border-box;
-      border-radius: 999px;
+      padding: var(--ui-launcher-pad);
+      max-width: calc(100vw - 2 * var(--ui-pad) - var(--ui-safe-l) - var(--ui-safe-r));
+      overflow-x: auto;
       background: var(--ui-panel-bg);
       backdrop-filter: blur(var(--ui-panel-blur));
+      border-radius: 999px;
       z-index: 40;
+      user-select: none;
     }
 
-    .launcherBar[data-collapsed="true"] {
-      right: auto;
-      width: calc(var(--ui-icon) + (2 * var(--ui-pad)));
-      justify-content: center;
+    .workspace-launcher[data-collapsed="true"] .launcher {
+      display: none !important;
     }
 
-    .launcherBarToggle,
-    .launcherBarButton {
+    .workspace-launcher-toggle,
+    .launcher button {
       width: var(--ui-icon);
       height: var(--ui-icon);
-      min-width: var(--ui-icon);
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
       color: #fff;
-      display: inline-grid;
-      place-items: center;
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1;
-      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
     }
 
-    .launcherBarToggle:hover,
-    .launcherBarButton:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.28);
-    }
-
-    .launcherBarToggle {
+    .workspace-launcher-toggle {
       flex: 0 0 auto;
     }
 
-    .launcherBar[data-collapsed="true"] .launcherBarToggle {
-      transform: rotate(-90deg);
+    .launcher {
+      position: static;
+      width: var(--ui-icon);
+      height: var(--ui-icon);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      user-select: none;
     }
 
-    .launcherBarItems {
-      display: flex;
-      gap: 6px;
-      flex: 1 1 auto;
-      min-width: 0;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: none;
+    .launcher.is-active button {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.38);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
     }
 
-    .launcherBarItems::-webkit-scrollbar {
-      display: none;
-    }
-
-    .launcherBar[data-collapsed="true"] .launcherBarItems {
-      display: none;
-    }
-
-    .launcherBarButton[data-presented-open="true"] {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.24);
-    }
-
-    .launcherBarButton[data-presented-open="true"][data-active="true"] {
-      background: rgba(255,255,255,0.2);
-      border-color: rgba(255,255,255,0.4);
-      transform: translateY(-1px);
-    }
-
-    .launcherBarButton:disabled {
-      opacity: 0.45;
+    .launcher.is-placeholder button {
+      opacity: 0.38;
       cursor: not-allowed;
     }
-
-    .launcherBarButton[data-has-unread="true"] {
-      position: relative;
-    }
-
-    .launcherBarButton[data-has-unread="true"]::after {
-      content: "";
-      position: absolute;
-      top: 7px;
-      right: 7px;
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #ffd76c;
-      box-shadow: 0 0 0 1px rgba(12, 14, 18, 0.9);
-      pointer-events: none;
-    }
-
-    #statusPanel {
-      position: fixed;
-      left: 50%;
-      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-audio-h) + var(--ui-gap));
-      width: min(440px, calc(100vw - 2 * var(--ui-pad)));
-      padding: var(--ui-pad);
-      transform: translateX(-50%);
-      z-index: 26;
-    }
-
-    .statusHeader {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--ui-gap);
-      margin-bottom: 10px;
-    }
-
-    .statusHeader .panelHeaderText {
-      min-width: 0;
-    }
-
-    .statusHeader .sectionTitle {
-      margin: 0 0 4px;
-    }
-
-    .statusEmpty {
-      padding: 10px 12px;
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 12px;
-      line-height: 1.45;
-    }
-
-    .statusLogList {
-      display: grid;
-      gap: 8px;
-      max-height: min(320px, 42vh);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-    }
-
-    .statusLogList:empty {
-      display: none;
-    }
-
-    .statusLogEntry {
-      display: grid;
-      gap: 6px;
-      padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.04);
-    }
-
-    .statusLogEntry[data-level="warn"] {
-      border-color: rgba(255, 206, 120, 0.24);
-      background: rgba(255, 206, 120, 0.06);
-    }
-
-    .statusLogEntry[data-level="error"] {
-      border-color: rgba(255, 134, 134, 0.28);
-      background: rgba(255, 134, 134, 0.08);
-    }
-
-    .statusLogMeta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      font-size: 11px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      opacity: 0.72;
-    }
-
-    .statusLogCategory {
-      font-weight: 600;
-    }
-
-    .statusLogTime {
-      opacity: 0.8;
-    }
-
-    .statusLogMessage {
-      line-height: 1.45;
-      white-space: normal;
-      word-break: break-word;
-    }
-    /* Responsive panel layout on <=980px: clamp the scene/banking columns and compact panels to viewport-safe bounds. */
+    /* Responsive panel layout on <=980px: clamp #bandsPanel/#simPanel widths to viewport-safe bounds,
+       and anchor #bandsPanel to the left edge (clear right anchor) so both side panels share alignment. */
     @media (max-width: 980px) {
-      #bankingPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
-      #scenePanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); }
-      #analysisPanel,
-      #workspacePanel { width: min(300px, calc((100vw - 3 * var(--ui-pad)) / 2)); }
+      #bandsPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
+      #simPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); }
     }
 
     @media (max-width: 920px) {
@@ -306,10 +131,6 @@
       #recordPanel .recordInlineValue,
       #recordPanel .recordRow .val {
         justify-self: start;
-      }
-
-      .panelHeader {
-        align-items: stretch;
       }
     }
     /* First-run hint: visible until audio is loaded */
@@ -344,10 +165,9 @@
          audioPanel: 20 (bottom transport bar)
          queuePanel: 25 (floats above audio panel; below side config panels)
          recordPanel: 26 (dedicated recording panel; above queue, below side panels)
-         statusPanel: 26 (status/log mirror; above queue, below side panels)
          simPanel  : 30 (left config panel)
          bandsPanel: 30 (right config panel)
-         launcherBar: 40 (always reachable; must clear all panels)
+         workspace launcher : 40 (always reachable; must clear all panels)
     */
 
     /* Queue panel — floats above the audio panel, full-width like audio panel.
@@ -356,7 +176,7 @@
       position: fixed;
       left: calc(var(--ui-pad) + var(--ui-safe-l));
       right: calc(var(--ui-pad) + var(--ui-safe-r));
-      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-queue-clearance));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
       max-height: 240px;
       overflow-y: auto;
       padding: var(--ui-pad);
@@ -441,17 +261,4 @@
     input[type="color"]:focus:not(:focus-visible) {
       outline: none;
       box-shadow: none;
-    }
-
-    @media (max-width: 740px) {
-      .launcherBar {
-        width: auto;
-      }
-
-      #statusPanel {
-        left: calc(var(--ui-pad) + var(--ui-safe-l));
-        right: calc(var(--ui-pad) + var(--ui-safe-r));
-        width: auto;
-        transform: none;
-      }
     }

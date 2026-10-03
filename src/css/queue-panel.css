@@ -4,7 +4,7 @@
       position: fixed;
       left: calc(var(--ui-pad) + var(--ui-safe-l));
       right: calc(var(--ui-pad) + var(--ui-safe-r));
-      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-queue-clearance));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
       max-height: 240px;
       overflow-y: auto;
       padding: var(--ui-pad);

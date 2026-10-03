@@ -1,130 +1,59 @@
-    /* Banking panel (right) */
-    #bankingPanel {
+    /* Bands + colors panel (right) */
+    #bandsPanel {
       position: fixed;
-      top: var(--ui-column-panel-top);
+      top: calc(var(--ui-pad) + var(--ui-safe-t));
       right: calc(var(--ui-pad) + var(--ui-safe-r));
-      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-audio-h) + var(--ui-gap));
+      bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
       width: min(520px, calc(100vw - 2 * var(--ui-pad)));
       padding: var(--ui-pad);
       overflow: auto;
       z-index: 30;
     }
-
-    .bankingSummaryCard {
-      margin: 8px 0 14px;
-      padding: 12px;
-      border-radius: calc(var(--ui-radius) - 2px);
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04)),
-        rgba(0,0,0,0.16);
-    }
-
-    .bankingSummaryEyebrow,
-    .bankingMetaLabel,
-    .bandInspectorLabel {
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      opacity: 0.6;
-      text-transform: uppercase;
-    }
-
-    #bandDebug {
-      margin-top: 6px;
-      min-width: 0;
-      max-width: 100%;
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 1.3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .bankingSummaryStats,
-    .bankingMetaGrid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .bankingSummaryStats {
-      margin-top: 12px;
-    }
-
-    .bankingSummaryStat,
-    .bankingMetaItem {
-      min-width: 0;
-      padding: 10px;
-      border-radius: calc(var(--ui-radius) - 4px);
-      background: rgba(255,255,255,0.045);
-    }
-
-    .bankingSummaryStatLabel {
-      font-size: 11px;
-      opacity: 0.64;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .bankingSummaryStatValue,
-    .bankingMetaValue {
-      margin-top: 4px;
-      min-width: 0;
-      font-size: 13px;
-      font-variant-numeric: tabular-nums;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .bandMeta {
-      margin-top: 8px;
-    }
-
-    .bandMetaContext {
-      margin: 8px 0 16px;
-      font-size: 11px;
-      line-height: 1.4;
-    }
-
-    .inspectorCopy {
-      margin-bottom: 8px;
-    }
-
-    .inspectorToggle {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .bandInspector {
-      padding: 10px;
-      border-radius: calc(var(--ui-radius) - 2px);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-    }
-
-    #bandInspectorPanel[hidden] {
-      display: none;
-    }
-
-    /* Bands inspector table */
+    /* Bands HUD */
     #bandTable {
       display: grid;
       grid-template-columns: 36px minmax(120px, 1fr) minmax(120px, auto) 160px;
       gap: 8px 10px;
       align-items: center;
-      margin-top: 12px;
+      margin-top: 8px;
       min-width: 0;
     }
 
-    .bandIdx {
-      font-size: 12px;
-      opacity: 0.75;
+    .bandIdx { font-size: 12px; opacity: 0.75; text-align: right; }
+    .bandName { font-size: 12px; opacity: 0.90; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bandRange {
+      font-size: 11px;
+      opacity: 0.72;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
       text-align: right;
+      min-width: 0;
     }
-
-    .bandName {
+    .bandBar {
+      height: 10px;
+      min-width: 96px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      overflow: hidden;
+      position: relative;
+    }
+    .bandFill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+    }
+    .bandMeta {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      opacity: 0.65;
+      margin: 6px 0 2px;
+    }
+    .dominantBadge {
+      display: inline-block;
+      max-width: 100%;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
       font-size: 12px;
       opacity: 0.9;
       overflow: hidden;
@@ -132,33 +61,7 @@
       white-space: nowrap;
     }
 
-    .bandRange {
-      font-size: 11px;
-      opacity: 0.72;
-      font-variant-numeric: tabular-nums;
+    #bandDebug {
       min-width: 0;
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    .bandBar {
-      position: relative;
-      min-width: 96px;
-      height: 10px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-    }
-
-    .bandFill {
-      width: 0%;
-      height: 100%;
-      border-radius: 999px;
-    }
-
-    @media (max-width: 920px) {
-      .bankingSummaryStats,
-      .bankingMetaGrid {
-        grid-template-columns: 1fr;
-      }
+      max-width: 100%;
     }

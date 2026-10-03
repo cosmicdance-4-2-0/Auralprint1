@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { deepClone } from "./utils.js";
+import { clamp, deepClone } from "./utils.js";
 
 /* =============================================================================
    Preferences + Runtime settings (derived)
@@ -61,13 +61,18 @@ function sanitizeOrbBandIds(rawBandIds, rawBandNames) {
   return [];
 }
 
+function normalizeOrbColorSource(raw, fallback) {
+  const lim = CONFIG.limits.orbs.colorSources;
+  const candidate = typeof raw === "string" ? raw : fallback;
+  return lim.includes(candidate) ? candidate : "inherit";
+}
+
 function normalizeOrbDef(incomingOrb, fallbackOrb) {
-  // Canonical orb fields (v6 schema): id, chanId, bandIds, chirality, startAngleRad.
-  // When new fields are added (Build 115+), add them here AND in sanitizeAndApply,
-  // AND bump PRESET_SCHEMA_VERSION so migration code stays honest.
+  // Canonical orb fields (v9 schema): see agents.md §4.2.
   const fallback = fallbackOrb || {};
   const orb = (incomingOrb && typeof incomingOrb === "object") ? incomingOrb : {};
   const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+  const orbLim = CONFIG.limits.orbs;
 
   const id = typeof orb.id === "string" && orb.id.trim()
     ? orb.id
@@ -87,7 +92,41 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     ? sanitizeOrbBandIds(orb.bandIds, orb.bandNames)
     : sanitizeOrbBandIds(fallback.bandIds, fallback.bandNames);
 
-  return { id, chanId, bandIds, chirality, startAngleRad };
+  const hueRaw = Number.isFinite(orb.hueOffsetDeg) ? orb.hueOffsetDeg : fallback.hueOffsetDeg;
+  const hueOffsetDeg = clamp(
+    Number.isFinite(hueRaw) ? hueRaw : 0,
+    orbLim.hueOffsetDeg.min,
+    orbLim.hueOffsetDeg.max,
+  );
+
+  const colorSource = hasOwn(orb, "colorSource")
+    ? normalizeOrbColorSource(orb.colorSource, fallback.colorSource)
+    : normalizeOrbColorSource(fallback.colorSource, "inherit");
+
+  const centerXRaw = Number.isFinite(orb.centerXFrac) ? orb.centerXFrac : fallback.centerXFrac;
+  const centerYRaw = Number.isFinite(orb.centerYFrac) ? orb.centerYFrac : fallback.centerYFrac;
+  const centerXFrac = clamp(
+    Number.isFinite(centerXRaw) ? centerXRaw : 0,
+    orbLim.centerXFrac.min,
+    orbLim.centerXFrac.max,
+  );
+  const centerYFrac = clamp(
+    Number.isFinite(centerYRaw) ? centerYRaw : 0,
+    orbLim.centerYFrac.min,
+    orbLim.centerYFrac.max,
+  );
+
+  return {
+    id,
+    chanId,
+    bandIds,
+    chirality,
+    startAngleRad,
+    hueOffsetDeg,
+    colorSource,
+    centerXFrac,
+    centerYFrac,
+  };
 }
 
 export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef };

@@ -1,7 +1,7 @@
 import { clamp, fmt, deepClone, rgb01ToCss } from "../core/utils.js";
 import { RAD_TO_DEG } from "../core/constants.js";
 import { CONFIG } from "../core/config.js";
-import { preferences, runtime, resolveSettings, BAND_NAMES, replacePreferences } from "../core/preferences.js";
+import { preferences, runtime, resolveSettings, BAND_NAMES, replacePreferences, normalizeOrbDef } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { UrlPreset } from "../presets/url-preset.js";
 import { BandBankController } from "../audio/band-bank-controller.js";
@@ -11,46 +11,10 @@ import { AudioEngine } from "../audio/audio-engine.js";
 import { Scrubber } from "../audio/scrubber.js";
 import { InputSourceManager } from "../audio/input-source-manager.js";
 import { ColorPolicy } from "../render/color-policy.js";
-import {
-  addSceneOrb,
-  moveSceneNode,
-  readSceneNodeDisplayName,
-  readSceneSettingsSchema,
-  readSceneSnapshot,
-  readSelectedSceneNode,
-  removeSceneOrb,
-  resetSceneRuntimeFromPreferences,
-  selectSceneNode,
-  syncSceneNodeFromCompatPreferences,
-  syncSceneRuntimeFromPreferences,
-  toggleSceneNodeEnabled,
-  updateSceneNodeSettings,
-  updateSceneOrb,
-} from "../render/scene-runtime.js";
-import { isIdentityViewTransform, normalizeViewTransform } from "../render/view-transform.js";
 import { RecorderEngine } from "../recording/recorder-engine.js";
-import { initOrbs, resetOrbTrails, resetOrbsToDesignedPhases } from "../render/orb-runtime.js";
+import { initOrbs, resetOrbsToDesignedPhases, syncOrbCosmeticsFromSettings } from "../render/orb-runtime.js";
 import { primeDomCache } from "./dom-cache.js";
-import {
-  appendRuntimeLogEntry,
-  buildRuntimeLogUiSyncKey,
-  clearRuntimeLog,
-  ensureRuntimeLogState,
-  markRuntimeLogRead,
-} from "./runtime-log.js";
-import {
-  LAUNCHER_IDS,
-  LAUNCHER_TARGETS,
-  activateLauncher,
-  ensureLauncherForTarget,
-  ensurePanelShellState,
-  getPanelShellStateSnapshot,
-  isTargetOpen,
-  readLauncherTarget,
-  setPanelTargetOpen,
-  toggleGlobalPanelVisibility,
-  toggleLauncherCollapsed,
-} from "./panel-state.js";
+import { createOrbBandPicker, parseBandSelection } from "./orb-band-picker.js";
 
 /* =============================================================================
    UI
@@ -276,11 +240,11 @@ const UI = (() => {
     if (edgeY === "top") {
       edgeVars.top = "calc(var(--ui-pad) + var(--ui-safe-t))";
     } else if (placement.anchorAboveQueuePanel) {
-      edgeVars.bottom = "calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-queue-clearance))";
+      edgeVars.bottom = "calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance))";
     } else if (placement.anchorAboveAudioPanel) {
-      edgeVars.bottom = "calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance) + var(--ui-audio-h) + var(--ui-gap))";
+      edgeVars.bottom = "calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-audio-h) + var(--ui-gap))";
     } else {
-      edgeVars.bottom = "calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance))";
+      edgeVars.bottom = "calc(var(--ui-pad) + var(--ui-safe-b))";
     }
 
     return edgeVars;
@@ -348,654 +312,218 @@ const UI = (() => {
     ui.loadHint.setAttribute("aria-hidden", "true");
   }
 
+  function isPanelVisible(panel) {
+    return !!(panel && !panel.hidden && panel.style.display !== "none");
+  }
+
+  function syncLauncherControl(launcher, button, { visible = true, active = false, label = "" } = {}) {
+    if (!launcher) return;
+    launcher.hidden = !visible;
+    launcher.setAttribute("aria-hidden", visible ? "false" : "true");
+    launcher.style.display = visible ? "grid" : "none";
+    launcher.classList.toggle("is-active", !!active);
+
+    if (!button) return;
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    if (label) {
+      if (button.title !== label) button.title = label;
+      if (button.getAttribute("aria-label") !== label) button.setAttribute("aria-label", label);
+    }
+  }
+
+  function syncWorkspaceLauncherState() {
+    syncLauncherControl(ui.openAudio, ui.btnOpenAudio, {
+      active: isPanelVisible(ui.audioPanel),
+      label: isPanelVisible(ui.audioPanel) ? "Hide audio source panel" : "Show audio source panel",
+    });
+    syncLauncherControl(ui.openSim, ui.btnOpenSim, {
+      active: isPanelVisible(ui.simPanel),
+      label: isPanelVisible(ui.simPanel) ? "Hide orbs panel" : "Show orbs panel",
+    });
+    syncLauncherControl(ui.openBands, ui.btnOpenBands, {
+      active: isPanelVisible(ui.bandsPanel),
+      label: isPanelVisible(ui.bandsPanel) ? "Hide bands panel" : "Show bands panel",
+    });
+    syncLauncherControl(ui.openQueue, ui.btnOpenQueue, {
+      active: isPanelVisible(ui.queuePanel),
+      label: isPanelVisible(ui.queuePanel) ? "Hide queue panel" : "Show queue panel",
+    });
+    syncLauncherControl(ui.openRecord, ui.btnOpenRecord, {
+      visible: !!(state.recording && state.recording.hooksEnabled),
+      active: !!ui.recordingPanelVisible,
+      label: readRecordingLauncherLabel(state.recording, !!ui.recordingPanelVisible),
+    });
+  }
+
+  function setWorkspaceLauncherCollapsed(collapsed) {
+    ui.workspaceLauncherCollapsed = !!collapsed;
+    if (ui.workspaceLauncher) {
+      ui.workspaceLauncher.dataset.collapsed = ui.workspaceLauncherCollapsed ? "true" : "false";
+    }
+    if (ui.btnToggleWorkspaceLauncher) {
+      const label = ui.workspaceLauncherCollapsed ? "Expand launcher bar" : "Collapse launcher bar";
+      ui.btnToggleWorkspaceLauncher.title = label;
+      ui.btnToggleWorkspaceLauncher.setAttribute("aria-label", label);
+      ui.btnToggleWorkspaceLauncher.setAttribute("aria-expanded", ui.workspaceLauncherCollapsed ? "false" : "true");
+      ui.btnToggleWorkspaceLauncher.textContent = ui.workspaceLauncherCollapsed ? "⌃" : "⌄";
+    }
+  }
+
+  function toggleWorkspaceLauncherCollapsed() {
+    setWorkspaceLauncherCollapsed(!ui.workspaceLauncherCollapsed);
+  }
+
+  function bringPanelForward(panel) {
+    for (const candidate of [ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) {
+      if (candidate) candidate.classList.toggle("panel-front", candidate === panel);
+    }
+  }
+
+  function restoreLauncherFocus(button) {
+    setWorkspaceLauncherCollapsed(false);
+    if (button) button.focus();
+  }
+
+  function syncAudioDockHeight() {
+    if (!ui.audioPanel || typeof ui.audioPanel.getBoundingClientRect !== "function") return;
+    const height = isPanelVisible(ui.audioPanel) ? Math.ceil(ui.audioPanel.getBoundingClientRect().height) : 0;
+    if (height === ui.audioDockHeight) return;
+    ui.audioDockHeight = height;
+    document.documentElement.style.setProperty("--ui-audio-h", `${height}px`);
+  }
+
+  function hideQueuePanel() {
+    if (!ui.queuePanel) return;
+    ui.queuePanel.style.display = "none";
+    syncWorkspaceLauncherState();
+    if (document.activeElement && ui.queuePanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenQueue);
+  }
+
+  function showQueuePanel() {
+    if (!ui.queuePanel) return;
+    ui.queuePanel.style.display = "block";
+    queuePanelRefresher();
+    bringPanelForward(ui.queuePanel);
+    syncWorkspaceLauncherState();
+    if (document.activeElement === ui.btnOpenQueue && ui.btnHideQueue) ui.btnHideQueue.focus();
+  }
+
   function hideAudioPanel() {
-    return closePanelTarget("audioSource", { focusLauncher: true });
+    ui.audioPanel.style.display = "none";
+    syncAudioDockHeight();
+    syncWorkspaceLauncherState();
+    if (document.activeElement && ui.audioPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenAudio);
   }
-
   function showAudioPanel() {
-    return openPanelTarget("audioSource", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
+    ui.audioPanel.style.display = "grid";
+    syncAudioDockHeight();
+    syncWorkspaceLauncherState();
+    if (document.activeElement === ui.btnOpenAudio) ui.btnHideAudio.focus();
   }
 
-  function hideAnalysisPanel() {
-    return closePanelTarget("analysis", { focusLauncher: true });
+  function hideSimPanel() {
+    ui.simPanel.style.display = "none";
+    syncWorkspaceLauncherState();
+    if (document.activeElement && ui.simPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenSim);
+  }
+  function showSimPanel() {
+    ui.simPanel.style.display = "block";
+    bringPanelForward(ui.simPanel);
+    syncWorkspaceLauncherState();
+    if (document.activeElement === ui.btnOpenSim) ui.btnHideSim.focus();
   }
 
-  function showAnalysisPanel() {
-    return openPanelTarget("analysis", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
+  function hideBandsPanel() {
+    ui.bandsPanel.style.display = "none";
+    syncWorkspaceLauncherState();
+    if (document.activeElement && ui.bandsPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenBands);
+  }
+  function showBandsPanel() {
+    ui.bandsPanel.style.display = "block";
+    bringPanelForward(ui.bandsPanel);
+    syncWorkspaceLauncherState();
+    if (document.activeElement === ui.btnOpenBands) ui.btnHideBands.focus();
   }
 
-  function hideBankingPanel() {
-    return closePanelTarget("banking", { focusLauncher: true });
+  // Build 115 keeps recording in the unified launcher bar while preserving the
+  // dedicated panel/launcher IDs from Build 113.
+  function setRecordPanelVisibility(visible) {
+    if (!ui.recordPanel || !ui.openRecord) return;
+
+    const nextVisible = !!visible && !!state.recording.hooksEnabled;
+    ui.recordingPanelVisible = nextVisible;
+    ui.recordPanel.hidden = !nextVisible;
+    ui.recordPanel.setAttribute("aria-hidden", nextVisible ? "false" : "true");
+    ui.recordPanel.style.display = nextVisible ? "block" : "none";
+    syncWorkspaceLauncherState();
   }
 
-  function showBankingPanel() {
-    return openPanelTarget("banking", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
-  }
-
-  function hideScenePanel() {
-    return closePanelTarget("scene", { focusLauncher: true });
-  }
-
-  function showScenePanel() {
-    return openPanelTarget("scene", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
-  }
-
-  function hideWorkspacePanel() {
-    return closePanelTarget("workspace", { focusLauncher: true });
-  }
-
-  function showWorkspacePanel() {
-    return openPanelTarget("workspace", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
-  }
-
-  function hideRecordPanel() {
-    return closePanelTarget("recording", { focusLauncher: true });
+  function hideRecordPanel(options = {}) {
+    if (!ui.recordPanel || !ui.openRecord) return;
+    const preserveRestoreFlag = !!options.preserveRestoreFlag;
+    if (!preserveRestoreFlag) ui.recordingPanelRestoreAfterGlobalHide = false;
+    setRecordPanelVisibility(false);
+    if (document.activeElement && ui.recordPanel.contains(document.activeElement) && ui.btnOpenRecord) {
+      restoreLauncherFocus(ui.btnOpenRecord);
+    }
   }
 
   function showRecordPanel() {
-    return openPanelTarget("recording", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
+    if (!ui.recordPanel || !ui.openRecord || !state.recording.hooksEnabled) return;
+    ui.recordingPanelRestoreAfterGlobalHide = false;
+    setRecordPanelVisibility(true);
+    bringPanelForward(ui.recordPanel);
+    if (document.activeElement === ui.btnOpenRecord && ui.btnHideRecord) ui.btnHideRecord.focus();
   }
 
   function primeRecordUi() {
-    syncPanelShellUi();
+    if (!ui.recordPanel || !ui.openRecord) return;
+    if (!state.recording.hooksEnabled) ui.recordingPanelRestoreAfterGlobalHide = false;
+    const shouldShowPanel = !!state.recording.hooksEnabled && !!ui.recordingPanelVisible;
+    setRecordPanelVisibility(shouldShowPanel);
   }
 
   function togglePanels() {
-    toggleGlobalPanelVisibility(readPanelShell());
-    syncPanelShellUi();
-  }
+    const aVisible = ui.audioPanel.style.display !== "none";
+    const sVisible = ui.simPanel.style.display !== "none";
+    const bVisible = ui.bandsPanel.style.display !== "none";
+    const qVisible = ui.queuePanel && ui.queuePanel.style.display !== "none";
+    const rVisible = ui.recordPanel && ui.recordPanel.style.display !== "none";
 
-  const PANEL_DISPLAY_MODES = Object.freeze({
-    audioSource: "grid",
-    queue: "block",
-    analysis: "block",
-    banking: "block",
-    scene: "block",
-    recording: "block",
-    workspace: "block",
-    status: "block",
-  });
-
-  function readPanelShell() {
-    ui.panelShell = ensurePanelShellState(ui.panelShell);
-    return ui.panelShell;
-  }
-
-  function readPanelElement(targetId) {
-    switch (targetId) {
-      case "audioSource": return ui.audioPanel;
-      case "queue": return ui.queuePanel;
-      case "analysis": return ui.analysisPanel;
-      case "banking": return ui.bankingPanel;
-      case "scene": return ui.scenePanel;
-      case "recording": return ui.recordPanel;
-      case "workspace": return ui.workspacePanel;
-      case "status": return ui.statusPanel;
-      default: return null;
+    if (aVisible || sVisible || bVisible || qVisible || rVisible) {
+      ui.panelRestoreSnapshot = { audio: aVisible, sim: sVisible, bands: bVisible, queue: qVisible, record: rVisible };
+      ui.recordingPanelRestoreAfterGlobalHide = !!rVisible;
+      hideAudioPanel(); hideSimPanel(); hideBandsPanel(); hideQueuePanel();
+      if (rVisible) hideRecordPanel({ preserveRestoreFlag: true });
+    } else {
+      const restore = ui.panelRestoreSnapshot || { audio: true };
+      if (restore.audio) showAudioPanel();
+      if (restore.sim) showSimPanel();
+      if (restore.bands) showBandsPanel();
+      if (restore.queue) showQueuePanel();
+      const shouldRestoreRecordingPanel = !!ui.recordingPanelRestoreAfterGlobalHide;
+      ui.recordingPanelRestoreAfterGlobalHide = false;
+      if (shouldRestoreRecordingPanel) showRecordPanel();
     }
   }
 
-  function readLauncherButton(launcherId) {
-    return ui.launcherButtons && Object.prototype.hasOwnProperty.call(ui.launcherButtons, launcherId)
-      ? ui.launcherButtons[launcherId]
-      : null;
-  }
-
-  function applyPanelElementVisibility(targetId, visible) {
-    const el = readPanelElement(targetId);
-    if (!el) return;
-    el.hidden = !visible;
-    el.setAttribute("aria-hidden", visible ? "false" : "true");
-    el.style.display = visible ? PANEL_DISPLAY_MODES[targetId] : "none";
-  }
-
-  function focusPreferredPanelControl(targetId) {
-    switch (targetId) {
-      case "audioSource":
-        if (ui.btnHideAudio) ui.btnHideAudio.focus();
-        break;
-      case "analysis":
-        if (ui.btnHideAnalysis) ui.btnHideAnalysis.focus();
-        break;
-      case "banking":
-        if (ui.btnHideBanking) ui.btnHideBanking.focus();
-        break;
-      case "scene":
-        if (ui.btnHideScene) ui.btnHideScene.focus();
-        break;
-      case "recording":
-        if (ui.btnHideRecord) ui.btnHideRecord.focus();
-        break;
-      case "workspace":
-        if (ui.btnHideWorkspace) ui.btnHideWorkspace.focus();
-        break;
-      case "status":
-        if (ui.btnHideStatus) ui.btnHideStatus.focus();
-        break;
-      default:
-        break;
-    }
-  }
-
-  function focusLauncherForTarget(targetId) {
-    const shell = readPanelShell();
-    ensureLauncherForTarget(shell, targetId);
-    const launcherButton = readLauncherButton(shell.activeLauncherId);
-    if (launcherButton) launcherButton.focus();
-  }
-
-  function syncLauncherBarUi(recordingPhase = state.recording.phase) {
-    const shell = readPanelShell();
-    if (ui.launcherBar) {
-      ui.launcherBar.dataset.collapsed = shell.launcherCollapsed ? "true" : "false";
-      ui.launcherBar.dataset.recordingPhase = recordingPhase || "";
-    }
-
-    if (ui.btnLauncherToggle) {
-      const expanded = !shell.launcherCollapsed;
-      const toggleCopy = expanded ? "Collapse launcher bar" : "Expand launcher bar";
-      ui.btnLauncherToggle.setAttribute("aria-expanded", expanded ? "true" : "false");
-      if (ui.btnLauncherToggle.title !== toggleCopy) ui.btnLauncherToggle.title = toggleCopy;
-      if (ui.btnLauncherToggle.getAttribute("aria-label") !== toggleCopy) {
-        ui.btnLauncherToggle.setAttribute("aria-label", toggleCopy);
-      }
-      ui.btnLauncherToggle.classList.toggle(
-        "is-recording-cue",
-        shell.launcherCollapsed && state.recording.phase === "recording"
-      );
-    }
-
-    for (const launcherId of LAUNCHER_IDS) {
-      const button = readLauncherButton(launcherId);
-      if (!button) continue;
-      const targetId = LAUNCHER_TARGETS[launcherId];
-      const targetOpen = isTargetOpen(shell, targetId);
-      const active = shell.activeLauncherId === launcherId;
-      const presentedOpen = targetOpen && active;
-      button.dataset.targetOpen = targetOpen ? "true" : "false";
-      button.dataset.presentedOpen = presentedOpen ? "true" : "false";
-      button.dataset.active = active ? "true" : "false";
-      button.dataset.hasUnread = launcherId === "status" && readRuntimeLog().hasUnread ? "true" : "false";
-      button.setAttribute("aria-pressed", presentedOpen ? "true" : "false");
-
-      if (launcherId === "recording") {
-        button.disabled = !state.recording.hooksEnabled;
-        button.classList.toggle("is-recording", state.recording.phase === "recording");
-      }
-    }
-  }
-
-  function syncPanelShellUi() {
-    const shell = readPanelShell();
-    if (!state.recording.hooksEnabled && isTargetOpen(shell, "recording")) {
-      setPanelTargetOpen(shell, "recording", false);
-    }
-
-    const statusPanelOpen = isTargetOpen(shell, "status");
-    if (statusPanelOpen) markRuntimeLogRead(readRuntimeLog());
-
-    applyPanelElementVisibility("audioSource", isTargetOpen(shell, "audioSource"));
-    applyPanelElementVisibility("queue", isTargetOpen(shell, "queue"));
-    applyPanelElementVisibility("analysis", isTargetOpen(shell, "analysis"));
-    applyPanelElementVisibility("banking", isTargetOpen(shell, "banking"));
-    applyPanelElementVisibility("scene", isTargetOpen(shell, "scene"));
-    applyPanelElementVisibility("recording", isTargetOpen(shell, "recording") && !!state.recording.hooksEnabled);
-    applyPanelElementVisibility("workspace", isTargetOpen(shell, "workspace"));
-    applyPanelElementVisibility("status", isTargetOpen(shell, "status"));
-    syncLauncherBarUi();
-    refreshRuntimeLogUi();
-  }
-
-  function openPanelTarget(targetId, options = {}) {
-    const shell = readPanelShell();
-    if (targetId === "recording" && !state.recording.hooksEnabled) return false;
-    if (options.launcherId) shell.activeLauncherId = options.launcherId;
-    else ensureLauncherForTarget(shell, targetId);
-    const changed = setPanelTargetOpen(shell, targetId, true);
-    syncPanelShellUi();
-    if (options.focusPanel) focusPreferredPanelControl(targetId);
-    return changed;
-  }
-
-  function closePanelTarget(targetId, options = {}) {
-    const panelEl = readPanelElement(targetId);
-    const shouldFocusLauncher = !!options.focusLauncher
-      && !!panelEl
-      && !!document.activeElement
-      && panelEl.contains(document.activeElement);
-    const changed = setPanelTargetOpen(readPanelShell(), targetId, false);
-    syncPanelShellUi();
-    if (shouldFocusLauncher) focusLauncherForTarget(targetId);
-    return changed;
-  }
-
-  function hideStatusPanel() {
-    return closePanelTarget("status", { focusLauncher: true });
-  }
-
-  function showStatusPanel() {
-    return openPanelTarget("status", {
-      focusPanel: document.activeElement === readLauncherButton(readPanelShell().activeLauncherId),
-    });
-  }
-
-  function handleLauncherActivation(launcherId) {
-    if (launcherId === "recording" && !state.recording.hooksEnabled) return false;
-    const action = activateLauncher(readPanelShell(), launcherId);
-    syncPanelShellUi();
-    if (action.ok && action.opened && action.targetId && isTargetOpen(readPanelShell(), action.targetId)) {
-      focusPreferredPanelControl(action.targetId);
-    }
-    return action.ok;
-  }
-
-  const STATUS_DEFAULTS = Object.freeze({
-    analysis: "Analysis panel: FFT, smoothing, RMS gain.",
-    banking: "Banking panel: dominant band, distribution, color policy, and optional detailed inspection.",
-    scene: "Scene panel: manage active visualizers and the runtime-only camera hook while keeping legacy visual controls available below.",
-    workspace: "Workspace / Presets panel: share, apply URL presets, and reset preferences.",
-  });
-  const panelStatusToastTimers = Object.create(null);
-  let _audioStatusRefreshTimer = null;
+  // 112 status-lane routing:
+  // - sim lane carries sim/config toasts.
+  // - audio lane carries transport/audio toasts plus a short recording-state summary.
+  const STATUS_DEFAULT_SIM = "Choose an orb to shape its response.";
+  const STATUS_DEFAULT_BANDS = "Colors and spectral analysis.";
+  let _simStatusToastTimer = null;
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
 
-  function readPanelStatusElement(targetId) {
-    switch (targetId) {
-      case "analysis": return ui.analysisStatus;
-      case "banking": return ui.bankingStatus;
-      case "scene": return ui.sceneStatus;
-      case "workspace": return ui.workspaceStatus;
-      default: return null;
-    }
-  }
-
-  function readRuntimeLog() {
-    ui.runtimeLog = ensureRuntimeLogState(ui.runtimeLog);
-    return ui.runtimeLog;
-  }
-
-  function readRuntimeLogObserver() {
-    if (!ui.runtimeLogObserver || typeof ui.runtimeLogObserver !== "object") {
-      ui.runtimeLogObserver = {
-        sourceSnapshot: null,
-        recordingSnapshot: null,
-      };
-    }
-    return ui.runtimeLogObserver;
-  }
-
-  function padTimePart(value) {
-    return String(value).padStart(2, "0");
-  }
-
-  function formatRuntimeLogTime(timestampMs) {
-    const date = new Date(Number.isFinite(timestampMs) ? timestampMs : Date.now());
-    return `${padTimePart(date.getHours())}:${padTimePart(date.getMinutes())}:${padTimePart(date.getSeconds())}`;
-  }
-
-  function readRuntimeLogCategoryLabel(category) {
-    switch (category) {
-      case "source": return "Source";
-      case "recording": return "Recording";
-      case "workspace": return "Workspace";
-      default: return "Runtime";
-    }
-  }
-
-  function refreshRuntimeLogUi(force = false) {
-    const runtimeLog = readRuntimeLog();
-    if (!ui.statusLogList || !ui.statusLogEmpty) return;
-
-    const syncKey = buildRuntimeLogUiSyncKey(runtimeLog);
-    if (!force && ui.runtimeLogUiSyncKey === syncKey) return;
-
-    ui.statusLogList.innerHTML = "";
-    for (const entry of runtimeLog.entries) {
-      const item = document.createElement("li");
-      item.className = "statusLogEntry";
-      item.dataset.level = entry.level;
-      item.dataset.category = entry.category;
-      if (entry.code) item.dataset.code = entry.code;
-
-      const meta = document.createElement("div");
-      meta.className = "statusLogMeta";
-
-      const category = document.createElement("span");
-      category.className = "statusLogCategory";
-      category.textContent = readRuntimeLogCategoryLabel(entry.category);
-
-      const time = document.createElement("span");
-      time.className = "statusLogTime";
-      time.textContent = formatRuntimeLogTime(entry.timestampMs);
-
-      meta.appendChild(category);
-      meta.appendChild(time);
-
-      const message = document.createElement("div");
-      message.className = "statusLogMessage";
-      message.textContent = entry.message;
-
-      item.appendChild(meta);
-      item.appendChild(message);
-      ui.statusLogList.appendChild(item);
-    }
-
-    const hasEntries = runtimeLog.entries.length > 0;
-    ui.statusLogEmpty.hidden = hasEntries;
-    ui.statusLogEmpty.setAttribute("aria-hidden", hasEntries ? "true" : "false");
-    ui.statusLogList.hidden = !hasEntries;
-    ui.statusLogList.setAttribute("aria-hidden", hasEntries ? "false" : "true");
-    if (ui.btnClearStatusLog) ui.btnClearStatusLog.disabled = !hasEntries;
-
-    ui.runtimeLogUiSyncKey = syncKey;
-  }
-
-  function appendStatusLogEntry(entry) {
-    const appended = appendRuntimeLogEntry(readRuntimeLog(), entry, {
-      markUnread: !isTargetOpen(readPanelShell(), "status"),
-    });
-    if (!appended) return null;
-    refreshRuntimeLogUi();
-    syncLauncherBarUi();
-    return appended;
-  }
-
-  function clearStatusLogEntries() {
-    clearRuntimeLog(readRuntimeLog());
-    ui.runtimeLogUiSyncKey = "";
-    refreshRuntimeLogUi(true);
-    syncLauncherBarUi();
-  }
-
-  function snapshotSourceRuntimeState(sourceState = state.source) {
-    const kind = readSourceKind(sourceState);
-    return {
-      kind,
-      status: readSourceStatus(sourceState),
-      label: readSourceLabel(kind, sourceState),
-      errorCode: sourceState && typeof sourceState.errorCode === "string" ? sourceState.errorCode : "",
-      errorMessage: sourceState && typeof sourceState.errorMessage === "string"
-        ? sourceState.errorMessage.trim()
-        : "",
-      sessionActive: !!(sourceState && sourceState.sessionActive),
-    };
-  }
-
-  function readSourceRuntimeLogLevel(errorCode = "") {
-    switch (errorCode) {
-      case "mic-denied":
-      case "mic-interrupted":
-      case "mic-unavailable":
-      case "mic-busy":
-      case "mic-unsupported":
-      case "stream-denied-or-cancelled":
-      case "stream-blocked":
-      case "stream-interrupted":
-      case "stream-unavailable":
-      case "stream-busy":
-      case "stream-unsupported":
-      case "mic-ended":
-      case "stream-ended":
-        return "warn";
-      default:
-        return "error";
-    }
-  }
-
-  function observeSourceRuntimeEvents() {
-    const observer = readRuntimeLogObserver();
-    const nextSnapshot = snapshotSourceRuntimeState();
-    const previousSnapshot = observer.sourceSnapshot;
-    observer.sourceSnapshot = nextSnapshot;
-
-    if (!previousSnapshot) return;
-
-    if (
-      nextSnapshot.kind === "mic"
-      && nextSnapshot.status === "active"
-      && nextSnapshot.sessionActive
-      && (
-        previousSnapshot.kind !== nextSnapshot.kind
-        || previousSnapshot.status !== nextSnapshot.status
-        || previousSnapshot.label !== nextSnapshot.label
-        || previousSnapshot.sessionActive !== nextSnapshot.sessionActive
-      )
-    ) {
-      appendStatusLogEntry({
-        level: "info",
-        category: "source",
-        code: "mic-live",
-        message: `Switched to microphone input. Permission granted for ${nextSnapshot.label || "Microphone"}.`,
-      });
-      return;
-    }
-
-    if (
-      nextSnapshot.kind === "stream"
-      && nextSnapshot.status === "active"
-      && nextSnapshot.sessionActive
-      && (
-        previousSnapshot.kind !== nextSnapshot.kind
-        || previousSnapshot.status !== nextSnapshot.status
-        || previousSnapshot.label !== nextSnapshot.label
-        || previousSnapshot.sessionActive !== nextSnapshot.sessionActive
-      )
-    ) {
-      appendStatusLogEntry({
-        level: "info",
-        category: "source",
-        code: "stream-live",
-        message: `Switched to shared stream input: ${nextSnapshot.label || "Shared stream"}.`,
-      });
-      return;
-    }
-
-    const leftLiveWorkflow = nextSnapshot.kind === "none"
-      && nextSnapshot.status === "idle"
-      && !nextSnapshot.errorCode
-      && (previousSnapshot.kind === "mic" || previousSnapshot.kind === "stream")
-      && (
-        previousSnapshot.sessionActive
-        || previousSnapshot.status === "active"
-        || previousSnapshot.status === "requesting"
-        || previousSnapshot.status === "error"
-      );
-    if (leftLiveWorkflow) {
-      appendStatusLogEntry({
-        level: "info",
-        category: "source",
-        code: "file-workflow",
-        message: "Switched to file workflow.",
-      });
-      return;
-    }
-
-    const failureChanged = !!nextSnapshot.errorCode && (
-      nextSnapshot.errorCode !== previousSnapshot.errorCode
-      || nextSnapshot.errorMessage !== previousSnapshot.errorMessage
-      || nextSnapshot.kind !== previousSnapshot.kind
-      || nextSnapshot.status !== previousSnapshot.status
-    );
-    if (!failureChanged) return;
-
-    if (
-      nextSnapshot.status === "error"
-      || nextSnapshot.status === "unsupported"
-      || (nextSnapshot.kind === "none" && nextSnapshot.status === "idle")
-    ) {
-      appendStatusLogEntry({
-        level: readSourceRuntimeLogLevel(nextSnapshot.errorCode),
-        category: "source",
-        code: nextSnapshot.errorCode,
-        message: nextSnapshot.errorMessage || "Source workflow changed.",
-      });
-    }
-  }
-
-  function snapshotRecordingRuntimeState(recording = state.recording) {
-    return {
-      phase: recording && typeof recording.phase === "string" ? recording.phase : "",
-      lastCode: recording && typeof recording.lastCode === "string" ? recording.lastCode : "",
-      lastMessage: recording && typeof recording.lastMessage === "string"
-        ? recording.lastMessage.trim()
-        : "",
-      lastExportFileName: recording && typeof recording.lastExportFileName === "string"
-        ? recording.lastExportFileName
-        : "",
-    };
-  }
-
-  function observeRecordingRuntimeEvents() {
-    const observer = readRuntimeLogObserver();
-    const nextSnapshot = snapshotRecordingRuntimeState();
-    const previousSnapshot = observer.recordingSnapshot;
-    observer.recordingSnapshot = nextSnapshot;
-
-    if (!previousSnapshot) return;
-    if (
-      nextSnapshot.phase === previousSnapshot.phase
-      && nextSnapshot.lastCode === previousSnapshot.lastCode
-      && nextSnapshot.lastMessage === previousSnapshot.lastMessage
-      && nextSnapshot.lastExportFileName === previousSnapshot.lastExportFileName
-    ) {
-      return;
-    }
-
-    if (nextSnapshot.phase === "recording" && previousSnapshot.phase !== "recording") {
-      appendStatusLogEntry({
-        level: "info",
-        category: "recording",
-        code: nextSnapshot.lastCode || "recording-started",
-        message: nextSnapshot.lastMessage || "Recording started.",
-      });
-      return;
-    }
-
-    if (nextSnapshot.phase === "finalizing" && previousSnapshot.phase !== "finalizing") {
-      appendStatusLogEntry({
-        level: "info",
-        category: "recording",
-        code: nextSnapshot.lastCode || "recording-finalizing",
-        message: nextSnapshot.lastMessage || "Finalizing recording export...",
-      });
-      return;
-    }
-
-    if (
-      nextSnapshot.phase === "complete"
-      && (
-        previousSnapshot.phase !== "complete"
-        || nextSnapshot.lastExportFileName !== previousSnapshot.lastExportFileName
-        || nextSnapshot.lastCode !== previousSnapshot.lastCode
-      )
-    ) {
-      const fileNameSuffix = nextSnapshot.lastExportFileName
-        ? ` (${nextSnapshot.lastExportFileName})`
-        : "";
-      appendStatusLogEntry({
-        level: "info",
-        category: "recording",
-        code: nextSnapshot.lastCode || "recording-complete",
-        message: `${nextSnapshot.lastMessage || "Recording export ready."}${fileNameSuffix}`,
-      });
-      return;
-    }
-
-    if (
-      nextSnapshot.phase === "error"
-      && (
-        previousSnapshot.phase !== "error"
-        || nextSnapshot.lastCode !== previousSnapshot.lastCode
-        || nextSnapshot.lastMessage !== previousSnapshot.lastMessage
-      )
-    ) {
-      appendStatusLogEntry({
-        level: "error",
-        category: "recording",
-        code: nextSnapshot.lastCode || "recording-error",
-        message: nextSnapshot.lastMessage || "Recording failed.",
-      });
-      return;
-    }
-
-    const activeWarningCodes = new Set(["audio-unloaded", "track-change-failed"]);
-    if (
-      (nextSnapshot.phase === "recording" || nextSnapshot.phase === "finalizing")
-      && activeWarningCodes.has(nextSnapshot.lastCode)
-      && (
-        nextSnapshot.lastCode !== previousSnapshot.lastCode
-        || nextSnapshot.lastMessage !== previousSnapshot.lastMessage
-        || nextSnapshot.phase !== previousSnapshot.phase
-      )
-    ) {
-      appendStatusLogEntry({
-        level: "warn",
-        category: "recording",
-        code: nextSnapshot.lastCode,
-        message: nextSnapshot.lastMessage || "Recording source changed.",
-      });
-    }
-  }
-
-  function buildPresetApplyLogEntry(result, options = {}) {
-    if (!result || typeof result !== "object") return null;
-    if (result.ok) {
-      if (result.migratedFromSchema != null) {
-        return {
-          level: "info",
-          category: "workspace",
-          code: "preset-migrated",
-          message: `Applied preset from schema v${result.migratedFromSchema} using current compatibility rules.`,
-        };
-      }
-      return {
-        level: "info",
-        category: "workspace",
-        code: "preset-applied",
-        message: options.source === "boot"
-          ? "Applied startup preset from URL hash."
-          : "Applied preset from URL hash.",
-      };
-    }
-
-    if (result.code === "missing-hash" && !options.includeMissingHash) return null;
-    if (result.code === "unsupported-schema") {
-      return {
-        level: "warn",
-        category: "workspace",
-        code: "preset-unsupported-schema",
-        message: result.schema != null
-          ? `Preset in URL hash uses unsupported schema v${result.schema}.`
-          : "Preset in URL hash uses an unsupported schema.",
-      };
-    }
-
-    return {
-      level: "warn",
-      category: "workspace",
-      code: result.code || "preset-invalid-hash",
-      message: "No valid preset in URL hash.",
-    };
-  }
-
-  function ingestPresetApplyResult(result, options = {}) {
-    const entry = buildPresetApplyLogEntry(result, options);
-    if (!entry) return null;
-    return appendStatusLogEntry(entry);
+  function simStatusToast(msg, holdMs = 2500) {
+    ui.simStatus.textContent = msg;
+    if (_simStatusToastTimer) clearTimeout(_simStatusToastTimer);
+    _simStatusToastTimer = setTimeout(() => {
+      ui.simStatus.textContent = STATUS_DEFAULT_SIM;
+      _simStatusToastTimer = null;
+    }, holdMs);
   }
 
   function audioStatusToast(msg, holdMs = 2500) {
@@ -1003,51 +531,120 @@ const UI = (() => {
     _audioStatusToastUntilMs = performance.now() + holdMs;
   }
 
-  function panelStatusToast(targetId, msg, holdMs = 2500) {
-    if (targetId === "audioSource") {
-      audioStatusToast(msg, holdMs);
-      if (ui.audioStatus) ui.audioStatus.textContent = msg;
-      if (_audioStatusRefreshTimer) clearTimeout(_audioStatusRefreshTimer);
-      _audioStatusRefreshTimer = setTimeout(() => {
-        _audioStatusRefreshTimer = null;
-        refreshAllUiText();
-      }, holdMs);
-      return;
-    }
-
-    const statusEl = readPanelStatusElement(targetId);
-    const defaultText = Object.prototype.hasOwnProperty.call(STATUS_DEFAULTS, targetId)
-      ? STATUS_DEFAULTS[targetId]
-      : "";
-    if (!statusEl || !defaultText) return;
-
-    statusEl.textContent = msg;
-    if (panelStatusToastTimers[targetId]) clearTimeout(panelStatusToastTimers[targetId]);
-    panelStatusToastTimers[targetId] = setTimeout(() => {
-      statusEl.textContent = defaultText;
-      panelStatusToastTimers[targetId] = null;
-    }, holdMs);
-  }
-
   function clearAudioStatusToast() {
     _audioStatusToastText = "";
     _audioStatusToastUntilMs = 0;
   }
 
+  function formatOrbBandIdsText(bandIds) {
+    if (!Array.isArray(bandIds) || !bandIds.length) return "";
+    return bandIds.join(", ");
+  }
+
+  function describeOrbBandSelection(bandIds) {
+    if (!Array.isArray(bandIds) || !bandIds.length) return "full spectrum";
+    return `${bandIds.length} band${bandIds.length === 1 ? "" : "s"}`;
+  }
+
+  function applyOrbPrefChange(orbIndex, reason, { structural = false } = {}) {
+    const defaults = CONFIG.defaults.orbs;
+    const fallback = defaults[orbIndex % defaults.length];
+    if (!Array.isArray(preferences.orbs)) preferences.orbs = deepClone(defaults);
+    while (preferences.orbs.length <= orbIndex) {
+      preferences.orbs.push(deepClone(defaults[preferences.orbs.length % defaults.length]));
+    }
+    preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], fallback);
+    applyPrefs(reason);
+    if (structural) {
+      initOrbs();
+      resetOrbsToDesignedPhases();
+    } else {
+      syncOrbCosmeticsFromSettings();
+    }
+  }
+
+  function refreshOrbPanelUi(p) {
+    const defaults = CONFIG.defaults.orbs;
+    const orb0 = (p.orbs && p.orbs[0]) ? p.orbs[0] : defaults[0];
+    const orb1 = (p.orbs && p.orbs[1]) ? p.orbs[1] : defaults[1];
+
+    ui.selOrb0Chan.value = orb0.chanId;
+    ui.valOrb0Chan.textContent = orb0.chanId;
+    ui.selOrb0Chir.value = String(orb0.chirality);
+    ui.valOrb0Chir.textContent = orb0.chirality >= 0 ? "+1" : "-1";
+    ui.rngOrb0Hue.value = String(orb0.hueOffsetDeg);
+    ui.valOrb0Hue.textContent = `${orb0.hueOffsetDeg}°`;
+    ui.selOrb0ColorSrc.value = orb0.colorSource;
+    ui.valOrb0ColorSrc.textContent = orb0.colorSource;
+    ui.rngOrb0CenterX.value = String(orb0.centerXFrac);
+    ui.valOrb0CenterX.textContent = fmt(orb0.centerXFrac, 2);
+    ui.rngOrb0CenterY.value = String(orb0.centerYFrac);
+    ui.valOrb0CenterY.textContent = fmt(orb0.centerYFrac, 2);
+    if (document.activeElement !== ui.txtOrb0Bands && ui.txtOrb0Bands.getAttribute("aria-invalid") !== "true") ui.txtOrb0Bands.value = formatOrbBandIdsText(orb0.bandIds);
+    ui.valOrb0Bands.textContent = describeOrbBandSelection(orb0.bandIds);
+
+    ui.selOrb1Chan.value = orb1.chanId;
+    ui.valOrb1Chan.textContent = orb1.chanId;
+    ui.selOrb1Chir.value = String(orb1.chirality);
+    ui.valOrb1Chir.textContent = orb1.chirality >= 0 ? "+1" : "-1";
+    ui.rngOrb1Hue.value = String(orb1.hueOffsetDeg);
+    ui.valOrb1Hue.textContent = `${orb1.hueOffsetDeg}°`;
+    ui.selOrb1ColorSrc.value = orb1.colorSource;
+    ui.valOrb1ColorSrc.textContent = orb1.colorSource;
+    ui.rngOrb1CenterX.value = String(orb1.centerXFrac);
+    ui.valOrb1CenterX.textContent = fmt(orb1.centerXFrac, 2);
+    ui.rngOrb1CenterY.value = String(orb1.centerYFrac);
+    ui.valOrb1CenterY.textContent = fmt(orb1.centerYFrac, 2);
+    if (document.activeElement !== ui.txtOrb1Bands && ui.txtOrb1Bands.getAttribute("aria-invalid") !== "true") ui.txtOrb1Bands.value = formatOrbBandIdsText(orb1.bandIds);
+    ui.valOrb1Bands.textContent = describeOrbBandSelection(orb1.bandIds);
+  }
+
+  function commitOrbBandIdsFromUi(orbIndex, reason) {
+    const input = orbIndex === 0 ? ui.txtOrb0Bands : ui.txtOrb1Bands;
+    const valEl = orbIndex === 0 ? ui.valOrb0Bands : ui.valOrb1Bands;
+    const parsed = parseBandSelection(input.value);
+    input.setAttribute("aria-invalid", parsed.error ? "true" : "false");
+    const errorEl = document.getElementById(`orb${orbIndex}BandError`);
+    if (errorEl) errorEl.textContent = parsed.error;
+    if (parsed.error) {
+      valEl.textContent = "Invalid indices";
+      simStatusToast(parsed.error);
+      return;
+    }
+    preferences.orbs[orbIndex].bandIds = parsed.ids;
+    applyOrbPrefChange(orbIndex, reason, { structural: false });
+    const normalized = preferences.orbs[orbIndex].bandIds;
+    input.value = formatOrbBandIdsText(normalized);
+    valEl.textContent = describeOrbBandSelection(normalized);
+  }
+
+  function syncOrbBandPickers() {
+    if (!ui.orbBandPickers) return;
+    // BandBank replaces its edges when distribution/sample rate changes.
+    // Reference checks avoid allocating or touching picker DOM on ordinary frames.
+    if (ui.orbPickerSettings === runtime.settings && ui.orbPickerEdges === state.bands.lowHz) return;
+    ui.orbPickerSettings = runtime.settings;
+    ui.orbPickerEdges = state.bands.lowHz;
+    ui.orbBandPickers.forEach((picker, index) => {
+      if (picker) picker.sync(preferences.orbs[index].bandIds);
+      const input = index === 0 ? ui.txtOrb0Bands : ui.txtOrb1Bands;
+      if (input) {
+        input.setAttribute("aria-invalid", "false");
+        input.value = formatOrbBandIdsText(preferences.orbs[index].bandIds);
+      }
+      const errorEl = document.getElementById(`orb${index}BandError`);
+      if (errorEl) errorEl.textContent = "";
+    });
+  }
+
   function applyPrefs(reason, options = {}) {
-    const {
-      rebuildBandsOnDefinitionChange = false,
-      statusTarget = "scene",
-      resetSceneFromPreferences = false,
-    } = options;
+    const { rebuildBandsOnDefinitionChange = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.particles.sizeMinPx = Math.min(preferences.particles.sizeMinPx, preferences.particles.sizeMaxPx);
     preferences.particles.ttlSec = Math.max(preferences.particles.ttlSec, preferences.particles.sizeToMinSec);
 
     resolveSettings();
-    if (resetSceneFromPreferences) resetSceneRuntimeFromPreferences();
-    else syncSceneRuntimeFromPreferences();
 
     BandBankController.syncFromSettings();
     const bandDefinitionChanged = BandBankController.readBandDefKey(runtime.settings) !== prevBandDefKey;
@@ -1057,19 +654,16 @@ const UI = (() => {
 
     AudioEngine.applyAnalyserSettingsLive();
     AudioEngine.applyPlaybackSettingsLive();
+    syncOrbBandPickers();
 
-    if (reason) panelStatusToast(statusTarget, `Updated: ${reason}`);
-    refreshScenePanel();
+    if (reason) simStatusToast(`Updated: ${reason}`);
+    ui.bandsStatus.textContent = STATUS_DEFAULT_BANDS;
   }
 
 
   function resetPrefs() {
     replacePreferences(deepClone(CONFIG.defaults));
-    applyPrefs("prefs reset", {
-      rebuildBandsOnDefinitionChange: true,
-      statusTarget: "workspace",
-      resetSceneFromPreferences: true,
-    });
+    applyPrefs("prefs reset", { rebuildBandsOnDefinitionChange: true });
     initOrbs();
     resetOrbsToDesignedPhases();
   }
@@ -1079,29 +673,20 @@ const UI = (() => {
     const url = location.href;
     try {
       await navigator.clipboard.writeText(url);
-      panelStatusToast("workspace", "Share link copied to clipboard.", 4000);
+      simStatusToast("Share link copied to clipboard.", 4000);
     } catch {
-      panelStatusToast("workspace", "Share link written to URL - copy from address bar.", 4000);
+      simStatusToast("Share link written to URL — copy from address bar.", 4000);
     }
   }
 
   function applyUrlNow() {
-    const result = UrlPreset.applyFromLocationHash();
-    if (result.ok) {
-      applyPrefs("applied URL preset", {
-        rebuildBandsOnDefinitionChange: true,
-        statusTarget: "workspace",
-        resetSceneFromPreferences: true,
-      });
+    const ok = UrlPreset.applyFromLocationHash();
+    if (ok) {
+      applyPrefs("applied URL preset", { rebuildBandsOnDefinitionChange: true });
       initOrbs();
       resetOrbsToDesignedPhases();
-      ingestPresetApplyResult(result, { source: "manual" });
     } else {
-      panelStatusToast("workspace", "No valid preset in URL hash.", 4000);
-      ingestPresetApplyResult(result, {
-        includeMissingHash: true,
-        source: "manual",
-      });
+      simStatusToast("No valid preset in URL hash.", 4000);
     }
   }
 
@@ -1153,77 +738,13 @@ const UI = (() => {
   }
 
   function rebuildBandHud() {
-    // Forced rebuild â€” call this whenever band definition changes.
+    // Forced rebuild — call this whenever band definition changes.
     // Currently band count is fixed at 256; this is the hook for 115+ when it becomes configurable.
     ui.bandRowsBuilt = false;
-    if (isBandInspectorOpen()) ensureBandHudBuilt();
-  }
-
-  function setTextIfChanged(el, text) {
-    if (!el) return;
-    if (el.textContent !== text) el.textContent = text;
-  }
-
-  function isBandInspectorOpen() {
-    return !!ui.bandInspectorOpen;
-  }
-
-  function setBandInspectorOpen(nextOpen) {
-    ui.bandInspectorOpen = !!nextOpen;
-
-    if (ui.bankingPanel) ui.bankingPanel.dataset.inspectorOpen = ui.bandInspectorOpen ? "true" : "false";
-
-    if (ui.btnToggleBandInspector) {
-      ui.btnToggleBandInspector.setAttribute("aria-expanded", ui.bandInspectorOpen ? "true" : "false");
-      setTextIfChanged(
-        ui.btnToggleBandInspector,
-        ui.bandInspectorOpen ? "Hide live band inspector" : "Show live band inspector"
-      );
-    }
-
-    if (ui.bandInspectorPanel) {
-      ui.bandInspectorPanel.hidden = !ui.bandInspectorOpen;
-      ui.bandInspectorPanel.setAttribute("aria-hidden", ui.bandInspectorOpen ? "false" : "true");
-    }
-  }
-
-  function refreshDominantBandSummary() {
-    const n = runtime.settings.bands.count;
-    const hasBandGeometry = n > 0 && state.bands.lowHz.length === n && state.bands.highHz.length === n;
-
-    if (!hasBandGeometry) {
-      setTextIfChanged(ui.bandDebug, "No dominant band yet");
-      setTextIfChanged(ui.bandDominantRange, "Awaiting analysis");
-      setTextIfChanged(ui.bandDominantEnergy, "0% energy");
-      return;
-    }
-
-    const domIdx = clamp(state.bands.dominantIndex, 0, n - 1);
-    const domEnergy = clamp(state.bands.energies01[domIdx] || 0, 0, 1);
-    const domPct = Math.round(domEnergy * 100);
-    const hasNamedDominant = typeof state.bands.dominantName === "string"
-      && state.bands.dominantName.trim()
-      && state.bands.dominantName !== "(none)";
-    const domName = hasNamedDominant
-      ? state.bands.dominantName
-      : (BAND_NAMES[domIdx] || `Band ${domIdx}`);
-
-    if (domEnergy <= 0) {
-      setTextIfChanged(ui.bandDebug, "No dominant band yet");
-      setTextIfChanged(ui.bandDominantRange, "Awaiting analysis");
-      setTextIfChanged(ui.bandDominantEnergy, "0% energy");
-      return;
-    }
-
-    setTextIfChanged(ui.bandDebug, `Dominant band [${domIdx}] ${domName}`);
-    setTextIfChanged(ui.bandDominantRange, BandBank.formatBandRangeText(domIdx));
-    setTextIfChanged(ui.bandDominantEnergy, domPct === 0 ? "<1% energy" : `${domPct}% energy`);
+    ensureBandHudBuilt();
   }
 
   function refreshBandHud() {
-    refreshDominantBandSummary();
-    if (!isBandInspectorOpen()) return;
-
     ensureBandHudBuilt();
 
     const s = runtime.settings;
@@ -1245,606 +766,15 @@ const UI = (() => {
       ui.bandRowEls[i].range.style.opacity = isDom ? "0.96" : "0.72";
       ui.bandRowEls[i].range.textContent = BandBank.formatBandRangeText(i);
     }
-  }
 
-  function readSceneUiModel() {
-    const snapshot = readSceneSnapshot();
-    const viewTransform = normalizeViewTransform(snapshot.viewTransform);
-    const identityViewTransform = isIdentityViewTransform(viewTransform);
-    const nodes = snapshot.nodes.map((node, index) => ({
-      ...node,
-      displayName: readSceneNodeDisplayName(node.type),
-      order: index + 1,
-      selected: snapshot.selectedNodeId === node.id,
-    }));
-    const selectedSceneNode = readSelectedSceneNode();
-    const selectedNode = selectedSceneNode
-      ? {
-        ...selectedSceneNode,
-        displayName: readSceneNodeDisplayName(selectedSceneNode.type),
-        order: Math.max(1, nodes.findIndex((node) => node.id === selectedSceneNode.id) + 1),
-        selected: true,
-      }
-      : null;
-
-    return {
-      nodeCount: nodes.length,
-      activeCount: nodes.filter((node) => node.enabled).length,
-      nodes,
-      selectedNode,
-      viewTransform,
-      camera: {
-        mode: identityViewTransform ? "identity" : (viewTransform.mode || "placeholder"),
-        modeText: identityViewTransform ? "Identity" : "Placeholder",
-        scope: viewTransform.runtimeOnly ? "runtime-only" : "persisted",
-        scopeText: viewTransform.runtimeOnly ? "Runtime only" : "Persisted",
-        primaryText: identityViewTransform
-          ? "Identity ViewTransform active"
-          : "Placeholder ViewTransform active",
-        noteText: "Camera controls are deferred to Build 116. Build 115 keeps ViewTransform as a runtime-only seam through the compositor.",
-        controlsDeferred: true,
-      },
-    };
-  }
-
-  function buildSceneUiSyncKey() {
-    return JSON.stringify(readSceneSnapshot());
-  }
-
-  function sceneControlId(...parts) {
-    return parts
-      .map((part) => String(part).replace(/[^a-zA-Z0-9_-]+/g, "-"))
-      .join("-");
-  }
-
-  function formatSceneFieldValue(value, fieldSchema = null) {
-    if (fieldSchema && fieldSchema.type === "boolean") return value ? "on" : "off";
-    if (typeof value === "boolean") return value ? "on" : "off";
-    if (Number.isFinite(value)) return Number.isInteger(value) ? `${value}` : fmt(value, 3);
-    if (value == null || value === "") return "n/a";
-    return String(value);
-  }
-
-  function formatSceneBandIdsText(bandIds) {
-    return Array.isArray(bandIds) && bandIds.length ? bandIds.join(", ") : "";
-  }
-
-  function readSceneBandIdsSummaryText(bandIds) {
-    const text = formatSceneBandIdsText(bandIds);
-    return text || "No explicit band IDs";
-  }
-
-  function parseSceneBandIdsInput(value) {
-    if (typeof value !== "string" || !value.trim()) return [];
-    return value
-      .split(",")
-      .map((token) => Number(token.trim()))
-      .filter((token) => Number.isInteger(token));
-  }
-
-  function createSceneInspectorRow({ labelText, controlId, control, valueText }) {
-    const row = document.createElement("div");
-    row.className = "row";
-
-    const label = document.createElement("label");
-    label.textContent = labelText;
-    if (controlId) label.setAttribute("for", controlId);
-
-    const value = document.createElement("div");
-    value.className = "val";
-    value.textContent = valueText;
-
-    row.appendChild(label);
-    row.appendChild(control);
-    row.appendChild(value);
-
-    return { row, value };
-  }
-
-  function commitSceneOverlaySetting(nodeId, fieldName, nextValue, reason) {
-    updateSceneNodeSettings(nodeId, (currentSettings) => ({
-      ...(currentSettings && typeof currentSettings === "object" ? currentSettings : {}),
-      [fieldName]: nextValue,
-    }), { persist: true });
-    applyPrefs(reason, { statusTarget: "scene" });
-    refreshScenePanel(true);
-  }
-
-  function commitSceneOrbPatch(nodeId, orbIndex, patch, reason) {
-    updateSceneOrb(nodeId, orbIndex, patch);
-    applyPrefs(reason, { statusTarget: "scene" });
-    refreshScenePanel(true);
-  }
-
-  function commitSceneOrbAdd(nodeId) {
-    addSceneOrb(nodeId);
-    applyPrefs("scene orb added", { statusTarget: "scene" });
-    refreshScenePanel(true);
-  }
-
-  function commitSceneOrbRemove(nodeId, orbIndex) {
-    removeSceneOrb(nodeId, orbIndex);
-    applyPrefs("scene orb removed", { statusTarget: "scene" });
-    refreshScenePanel(true);
-  }
-
-  function appendSceneSchemaField(container, nodeId, fieldName, fieldSchema, fieldValue) {
-    if (!container || !fieldSchema || fieldName === "enabled") return;
-
-    const controlId = sceneControlId("scene", nodeId, fieldName);
-    const labelText = fieldName
-      .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (letter) => letter.toUpperCase());
-
-    if (fieldSchema.type === "boolean") {
-      const input = document.createElement("input");
-      input.id = controlId;
-      input.type = "checkbox";
-      input.checked = !!fieldValue;
-      const { row, value } = createSceneInspectorRow({
-        labelText,
-        controlId,
-        control: input,
-        valueText: formatSceneFieldValue(input.checked, fieldSchema),
-      });
-      input.addEventListener("change", () => {
-        value.textContent = formatSceneFieldValue(input.checked, fieldSchema);
-        commitSceneOverlaySetting(nodeId, fieldName, input.checked, `scene ${labelText.toLowerCase()}`);
-      });
-      container.appendChild(row);
-      return;
-    }
-
-    if ((fieldSchema.type === "string" || fieldSchema.type === "number") && Array.isArray(fieldSchema.enum)) {
-      const select = document.createElement("select");
-      select.id = controlId;
-      for (const optionValue of fieldSchema.enum) {
-        const option = document.createElement("option");
-        option.value = String(optionValue);
-        option.textContent = String(optionValue);
-        select.appendChild(option);
-      }
-      select.value = String(fieldValue);
-      const { row, value } = createSceneInspectorRow({
-        labelText,
-        controlId,
-        control: select,
-        valueText: formatSceneFieldValue(fieldValue, fieldSchema),
-      });
-      select.addEventListener("change", () => {
-        const nextValue = fieldSchema.type === "number" ? Number(select.value) : select.value;
-        value.textContent = formatSceneFieldValue(nextValue, fieldSchema);
-        commitSceneOverlaySetting(nodeId, fieldName, nextValue, `scene ${labelText.toLowerCase()}`);
-      });
-      container.appendChild(row);
-      return;
-    }
-
-    if (fieldSchema.type === "number") {
-      const input = document.createElement("input");
-      input.id = controlId;
-      input.type = "range";
-      if (Number.isFinite(fieldSchema.min)) input.min = String(fieldSchema.min);
-      if (Number.isFinite(fieldSchema.max)) input.max = String(fieldSchema.max);
-      if (Number.isFinite(fieldSchema.step)) input.step = String(fieldSchema.step);
-      input.value = String(fieldValue);
-      const { row, value } = createSceneInspectorRow({
-        labelText,
-        controlId,
-        control: input,
-        valueText: formatSceneFieldValue(Number(input.value), fieldSchema),
-      });
-      input.addEventListener("input", () => {
-        value.textContent = formatSceneFieldValue(Number(input.value), fieldSchema);
-      });
-      input.addEventListener("change", () => {
-        commitSceneOverlaySetting(nodeId, fieldName, Number(input.value), `scene ${labelText.toLowerCase()}`);
-      });
-      container.appendChild(row);
-      return;
-    }
-
-    const input = document.createElement("input");
-    input.id = controlId;
-    input.type = "text";
-    input.value = fieldValue == null ? "" : String(fieldValue);
-    const { row } = createSceneInspectorRow({
-      labelText,
-      controlId,
-      control: input,
-      valueText: formatSceneFieldValue(fieldValue, fieldSchema),
-    });
-    input.addEventListener("change", () => {
-      commitSceneOverlaySetting(nodeId, fieldName, input.value, `scene ${labelText.toLowerCase()}`);
-    });
-    container.appendChild(row);
-  }
-
-  function appendSceneOrbRow(container, { controlId, labelText, valueText, input }) {
-    const safeValueText = typeof valueText === "string"
-      ? valueText.replace(/\u00C2\u00B0/g, " deg").replace(/\u00B0/g, " deg")
-      : valueText;
-    const { row } = createSceneInspectorRow({
-      labelText,
-      controlId,
-      control: input,
-      valueText: safeValueText,
-    });
-    container.appendChild(row);
-  }
-
-  function renderBandOverlayInspector(node) {
-    const fieldsContainer = ui.sceneInspectorFields;
-    if (!fieldsContainer) return;
-
-    const hint = document.createElement("div");
-    hint.className = "sceneInspectorHint";
-    hint.textContent = "This inspector edits the current band overlay node through the visualizer schema. Node enable stays in the list above.";
-    fieldsContainer.appendChild(hint);
-
-    const schema = readSceneSettingsSchema(node.type);
-    const fieldEntries = Object.entries((schema && schema.fields) || {});
-    for (const [fieldName, fieldSchema] of fieldEntries) {
-      appendSceneSchemaField(fieldsContainer, node.id, fieldName, fieldSchema, node.settings[fieldName]);
-    }
-  }
-
-  function renderOrbInspector(node) {
-    const fieldsContainer = ui.sceneInspectorFields;
-    if (!fieldsContainer) return;
-
-    const hint = document.createElement("div");
-    hint.className = "sceneInspectorHint";
-    hint.textContent = "Scene panel v1 now exposes per-orb routing, hue phase, and center offsets. In Schema 9 these orb-specific fields persist under scene.nodes settings rather than the legacy root orb list.";
-    fieldsContainer.appendChild(hint);
-
-    const orbActions = document.createElement("div");
-    orbActions.className = "sceneInspectorActionRow";
-
-    const addOrbButton = document.createElement("button");
-    addOrbButton.type = "button";
-    addOrbButton.textContent = "Add Orb";
-    addOrbButton.addEventListener("click", () => {
-      commitSceneOrbAdd(node.id);
-    });
-    orbActions.appendChild(addOrbButton);
-    fieldsContainer.appendChild(orbActions);
-
-    const orbList = document.createElement("div");
-    orbList.className = "sceneOrbList";
-    fieldsContainer.appendChild(orbList);
-
-    const itemFields = (((readSceneSettingsSchema(node.type) || {}).item || {}).fields) || {};
-    const channelOptions = Array.isArray(itemFields.chanId && itemFields.chanId.enum)
-      ? itemFields.chanId.enum
-      : ["L", "R", "C"];
-    const chiralityOptions = Array.isArray(itemFields.chirality && itemFields.chirality.enum)
-      ? itemFields.chirality.enum
-      : [-1, 1];
-
-    node.settings.forEach((orb, orbIndex) => {
-      const card = document.createElement("div");
-      card.className = "sceneOrbCard";
-
-      const cardHeader = document.createElement("div");
-      cardHeader.className = "sceneOrbCardHeader";
-
-      const title = document.createElement("div");
-      title.className = "sceneOrbTitle";
-      title.textContent = orb.id || `Orb ${orbIndex + 1}`;
-      cardHeader.appendChild(title);
-
-      const removeOrbButton = document.createElement("button");
-      removeOrbButton.type = "button";
-      removeOrbButton.textContent = "Remove";
-      removeOrbButton.disabled = node.settings.length <= 1;
-      removeOrbButton.addEventListener("click", () => {
-        commitSceneOrbRemove(node.id, orbIndex);
-      });
-      cardHeader.appendChild(removeOrbButton);
-      card.appendChild(cardHeader);
-
-      const idInput = document.createElement("input");
-      idInput.id = sceneControlId(node.id, "orb", orbIndex, "id");
-      idInput.type = "text";
-      idInput.value = orb.id || "";
-      idInput.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { id: idInput.value }, "scene orb id");
-      });
-      appendSceneOrbRow(card, {
-        controlId: idInput.id,
-        labelText: "ID",
-        valueText: orb.id || "n/a",
-        input: idInput,
-      });
-
-      const channelSelect = document.createElement("select");
-      channelSelect.id = sceneControlId(node.id, "orb", orbIndex, "chanId");
-      for (const channel of channelOptions) {
-        const option = document.createElement("option");
-        option.value = channel;
-        option.textContent = channel;
-        channelSelect.appendChild(option);
-      }
-      channelSelect.value = orb.chanId;
-      channelSelect.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { chanId: channelSelect.value }, "scene orb channel");
-      });
-      appendSceneOrbRow(card, {
-        controlId: channelSelect.id,
-        labelText: "Channel",
-        valueText: orb.chanId,
-        input: channelSelect,
-      });
-
-      const bandsInput = document.createElement("input");
-      bandsInput.id = sceneControlId(node.id, "orb", orbIndex, "bandIds");
-      bandsInput.type = "text";
-      bandsInput.value = formatSceneBandIdsText(orb.bandIds);
-      bandsInput.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { bandIds: parseSceneBandIdsInput(bandsInput.value) }, "scene orb bands");
-      });
-      appendSceneOrbRow(card, {
-        controlId: bandsInput.id,
-        labelText: "Band IDs",
-        valueText: readSceneBandIdsSummaryText(orb.bandIds),
-        input: bandsInput,
-      });
-
-      const chiralitySelect = document.createElement("select");
-      chiralitySelect.id = sceneControlId(node.id, "orb", orbIndex, "chirality");
-      for (const chirality of chiralityOptions) {
-        const option = document.createElement("option");
-        option.value = String(chirality);
-        option.textContent = Number(chirality) < 0 ? "-1 (CCW)" : "1 (CW)";
-        chiralitySelect.appendChild(option);
-      }
-      chiralitySelect.value = String(orb.chirality);
-      chiralitySelect.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { chirality: Number(chiralitySelect.value) }, "scene orb chirality");
-      });
-      appendSceneOrbRow(card, {
-        controlId: chiralitySelect.id,
-        labelText: "Chirality",
-        valueText: Number(orb.chirality) < 0 ? "-1 (CCW)" : "1 (CW)",
-        input: chiralitySelect,
-      });
-
-      const angleInput = document.createElement("input");
-      angleInput.id = sceneControlId(node.id, "orb", orbIndex, "startAngleRad");
-      angleInput.type = "number";
-      angleInput.step = String(itemFields.startAngleRad && itemFields.startAngleRad.step ? itemFields.startAngleRad.step : 0.001);
-      angleInput.value = String(orb.startAngleRad);
-      angleInput.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { startAngleRad: Number(angleInput.value) }, "scene orb start angle");
-      });
-      appendSceneOrbRow(card, {
-        controlId: angleInput.id,
-        labelText: "Start Angle",
-        valueText: `${formatSceneFieldValue(orb.startAngleRad)} rad`,
-        input: angleInput,
-      });
-
-      const hueInput = document.createElement("input");
-      hueInput.id = sceneControlId(node.id, "orb", orbIndex, "hueOffsetDeg");
-      hueInput.type = "number";
-      if (Number.isFinite(itemFields.hueOffsetDeg && itemFields.hueOffsetDeg.min)) {
-        hueInput.min = String(itemFields.hueOffsetDeg.min);
-      }
-      if (Number.isFinite(itemFields.hueOffsetDeg && itemFields.hueOffsetDeg.max)) {
-        hueInput.max = String(itemFields.hueOffsetDeg.max);
-      }
-      hueInput.step = String(itemFields.hueOffsetDeg && itemFields.hueOffsetDeg.step ? itemFields.hueOffsetDeg.step : 1);
-      hueInput.value = String(orb.hueOffsetDeg);
-      hueInput.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { hueOffsetDeg: Number(hueInput.value) }, "scene orb hue offset");
-      });
-      appendSceneOrbRow(card, {
-        controlId: hueInput.id,
-        labelText: "Hue Offset",
-        valueText: `${formatSceneFieldValue(orb.hueOffsetDeg)}°`,
-        input: hueInput,
-      });
-
-      const centerXInput = document.createElement("input");
-      centerXInput.id = sceneControlId(node.id, "orb", orbIndex, "centerX");
-      centerXInput.type = "number";
-      if (Number.isFinite(itemFields.centerX && itemFields.centerX.min)) centerXInput.min = String(itemFields.centerX.min);
-      if (Number.isFinite(itemFields.centerX && itemFields.centerX.max)) centerXInput.max = String(itemFields.centerX.max);
-      centerXInput.step = String(itemFields.centerX && itemFields.centerX.step ? itemFields.centerX.step : 0.01);
-      centerXInput.value = String(orb.centerX);
-      centerXInput.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { centerX: Number(centerXInput.value) }, "scene orb center x");
-      });
-      appendSceneOrbRow(card, {
-        controlId: centerXInput.id,
-        labelText: "Center X",
-        valueText: formatSceneFieldValue(orb.centerX),
-        input: centerXInput,
-      });
-
-      const centerYInput = document.createElement("input");
-      centerYInput.id = sceneControlId(node.id, "orb", orbIndex, "centerY");
-      centerYInput.type = "number";
-      if (Number.isFinite(itemFields.centerY && itemFields.centerY.min)) centerYInput.min = String(itemFields.centerY.min);
-      if (Number.isFinite(itemFields.centerY && itemFields.centerY.max)) centerYInput.max = String(itemFields.centerY.max);
-      centerYInput.step = String(itemFields.centerY && itemFields.centerY.step ? itemFields.centerY.step : 0.01);
-      centerYInput.value = String(orb.centerY);
-      centerYInput.addEventListener("change", () => {
-        commitSceneOrbPatch(node.id, orbIndex, { centerY: Number(centerYInput.value) }, "scene orb center y");
-      });
-      appendSceneOrbRow(card, {
-        controlId: centerYInput.id,
-        labelText: "Center Y",
-        valueText: formatSceneFieldValue(orb.centerY),
-        input: centerYInput,
-      });
-
-      orbList.appendChild(card);
-    });
-  }
-
-  function renderSelectedSceneInspector(model) {
-    const selectedNode = model.selectedNode;
-
-    if (!selectedNode) {
-      if (ui.sceneInspectorEmpty) {
-        ui.sceneInspectorEmpty.hidden = false;
-        ui.sceneInspectorEmpty.setAttribute("aria-hidden", "false");
-      }
-      if (ui.sceneInspectorPanel) {
-        ui.sceneInspectorPanel.hidden = true;
-        ui.sceneInspectorPanel.setAttribute("aria-hidden", "true");
-      }
-      return;
-    }
-
-    if (ui.sceneInspectorEmpty) {
-      ui.sceneInspectorEmpty.hidden = true;
-      ui.sceneInspectorEmpty.setAttribute("aria-hidden", "true");
-    }
-    if (ui.sceneInspectorPanel) {
-      ui.sceneInspectorPanel.hidden = false;
-      ui.sceneInspectorPanel.setAttribute("aria-hidden", "false");
-    }
-
-    setTextIfChanged(ui.sceneInspectorTitle, selectedNode.displayName);
-    setTextIfChanged(ui.sceneInspectorType, selectedNode.type);
-    setTextIfChanged(ui.sceneInspectorNodeId, selectedNode.id);
-    setTextIfChanged(ui.sceneInspectorOrder, `${selectedNode.order} of ${model.nodeCount} (z ${selectedNode.zIndex})`);
-    setTextIfChanged(ui.sceneInspectorEnabled, selectedNode.enabled ? "Enabled" : "Disabled");
-
-    if (!ui.sceneInspectorFields) return;
-    ui.sceneInspectorFields.innerHTML = "";
-
-    if (selectedNode.type === "bandOverlay") {
-      renderBandOverlayInspector(selectedNode);
-      return;
-    }
-
-    if (selectedNode.type === "orbs") renderOrbInspector(selectedNode);
-  }
-
-  function refreshScenePanel(force = false) {
-    if (!ui.sceneNodeList) return;
-
-    const syncKey = buildSceneUiSyncKey();
-    if (!force && ui.sceneUiSyncKey === syncKey) return;
-
-    const model = readSceneUiModel();
-    const selectedLabel = model.selectedNode ? model.selectedNode.displayName : "None";
-
-    setTextIfChanged(
-      ui.sceneSummaryPrimary,
-      model.nodeCount === 1
-        ? "1 visualizer in the runtime scene"
-        : `${model.nodeCount} visualizers in the runtime scene`
-    );
-    setTextIfChanged(
-      ui.sceneSummaryActive,
-      model.activeCount === 1 ? "1 active" : `${model.activeCount} active`
-    );
-    setTextIfChanged(ui.sceneSummarySelected, selectedLabel);
-    setTextIfChanged(ui.sceneCameraPrimary, model.camera.primaryText);
-    setTextIfChanged(ui.sceneCameraMode, model.camera.modeText);
-    setTextIfChanged(ui.sceneCameraScope, model.camera.scopeText);
-    setTextIfChanged(ui.sceneCameraNote, model.camera.noteText);
-
-    if (ui.sceneNodeEmpty) {
-      const hasNodes = model.nodeCount > 0;
-      ui.sceneNodeEmpty.hidden = hasNodes;
-      ui.sceneNodeEmpty.setAttribute("aria-hidden", hasNodes ? "true" : "false");
-    }
-
-    ui.sceneNodeList.innerHTML = "";
-    for (const node of model.nodes) {
-      const row = document.createElement("div");
-      row.className = "sceneNodeRow";
-      row.dataset.selected = node.selected ? "true" : "false";
-      row.dataset.nodeId = node.id;
-
-      const top = document.createElement("div");
-      top.className = "sceneNodeRowTop";
-
-      const text = document.createElement("div");
-      text.className = "sceneNodeText";
-
-      const title = document.createElement("div");
-      title.className = "sceneNodeTitle";
-      title.textContent = node.displayName;
-      text.appendChild(title);
-
-      const meta = document.createElement("div");
-      meta.className = "sceneNodeMeta";
-      meta.textContent = `${node.type} · ${node.id} · order ${node.order}/${model.nodeCount} · z ${node.zIndex}`;
-      text.appendChild(meta);
-      top.appendChild(text);
-
-      const badge = document.createElement("div");
-      badge.className = "sceneNodeBadge";
-      badge.textContent = node.enabled ? "Enabled" : "Disabled";
-      top.appendChild(badge);
-      row.appendChild(top);
-
-      const actions = document.createElement("div");
-      actions.className = "sceneNodeActions";
-
-      const selectButton = document.createElement("button");
-      selectButton.type = "button";
-      selectButton.textContent = node.selected ? "Selected" : "Inspect";
-      selectButton.disabled = node.selected;
-      selectButton.addEventListener("click", () => {
-        selectSceneNode(node.id);
-        refreshScenePanel(true);
-      });
-      actions.appendChild(selectButton);
-
-      const enabledLabel = document.createElement("label");
-      enabledLabel.className = "sceneNodeToggleLabel";
-
-      const enabledInput = document.createElement("input");
-      enabledInput.type = "checkbox";
-      enabledInput.checked = !!node.enabled;
-      enabledInput.addEventListener("change", () => {
-        toggleSceneNodeEnabled(node.id, enabledInput.checked);
-        panelStatusToast("scene", enabledInput.checked ? `${node.displayName} enabled.` : `${node.displayName} disabled.`);
-        refreshScenePanel(true);
-      });
-      enabledLabel.appendChild(enabledInput);
-
-      const enabledText = document.createElement("span");
-      enabledText.textContent = "Enabled";
-      enabledLabel.appendChild(enabledText);
-      actions.appendChild(enabledLabel);
-
-      const moveBackwardButton = document.createElement("button");
-      moveBackwardButton.type = "button";
-      moveBackwardButton.textContent = "Move Backward";
-      moveBackwardButton.disabled = node.order === 1;
-      moveBackwardButton.addEventListener("click", () => {
-        moveSceneNode(node.id, -1);
-        panelStatusToast("scene", `${node.displayName} moved backward.`);
-        refreshScenePanel(true);
-      });
-      actions.appendChild(moveBackwardButton);
-
-      const moveForwardButton = document.createElement("button");
-      moveForwardButton.type = "button";
-      moveForwardButton.textContent = "Move Forward";
-      moveForwardButton.disabled = node.order === model.nodeCount;
-      moveForwardButton.addEventListener("click", () => {
-        moveSceneNode(node.id, 1);
-        panelStatusToast("scene", `${node.displayName} moved forward.`);
-        refreshScenePanel(true);
-      });
-      actions.appendChild(moveForwardButton);
-
-      row.appendChild(actions);
-      ui.sceneNodeList.appendChild(row);
-    }
-
-    renderSelectedSceneInspector(model);
-    ui.sceneUiSyncKey = syncKey;
+    const domIdx = clamp(state.bands.dominantIndex, 0, n - 1);
+    const domName = state.bands.dominantName || BAND_NAMES[domIdx] || `Band ${domIdx}`;
+    const domRange = BandBank.formatBandRangeText(domIdx);
+    ui.bandDebug.textContent = "";
+    const span = document.createElement("span");
+    span.className = "dominantBadge";
+    span.textContent = `Dominant [${domIdx}] ${domName} — ${domRange}`;
+    ui.bandDebug.appendChild(span);
   }
 
   function formatBandMetaHz(hz) {
@@ -1855,27 +785,11 @@ const UI = (() => {
 
   function refreshBandMetaText() {
     const m = state.bands.meta;
-    const bandSettings = runtime.settings.bands;
-    const nyquistKnown = Number.isFinite(m.nyquistHz);
-    const effectiveClamped = Number.isFinite(m.effectiveCeilingHz)
-      && m.effectiveCeilingHz < bandSettings.ceilingHz;
-    let contextText = "Band count, floor, and ceiling stay read-only in this phase.";
-    if (!nyquistKnown) {
-      contextText += " Effective ceiling resolves once the audio context is available.";
-    } else if (effectiveClamped) {
-      contextText += " Effective ceiling is currently clamped to Nyquist.";
-    }
-
-    setTextIfChanged(ui.bandMetaCount, `${bandSettings.count}`);
-    setTextIfChanged(ui.bandMetaDistribution, bandSettings.distributionMode);
-    setTextIfChanged(ui.bandMetaFloor, formatBandMetaHz(bandSettings.floorHz));
-    setTextIfChanged(ui.bandMetaCeiling, formatBandMetaHz(bandSettings.ceilingHz));
-    setTextIfChanged(
-      ui.bandMetaEffectiveCeiling,
-      formatBandMetaHz(Number.isFinite(m.effectiveCeilingHz) ? m.effectiveCeilingHz : bandSettings.ceilingHz)
-    );
-    setTextIfChanged(ui.bandMetaNyquist, nyquistKnown ? formatBandMetaHz(m.nyquistHz) : "pending audio context");
-    setTextIfChanged(ui.bandMetaContext, contextText);
+    const bandCount = runtime.settings.bands.count;
+    const sampleRateText = Number.isFinite(m.sampleRateHz)
+      ? formatBandMetaHz(m.sampleRateHz)
+      : "pending audio context";
+    ui.bandMeta.textContent = `${bandCount} bands • Nyquist ${formatBandMetaHz(m.nyquistHz)} • ceiling configured ${formatBandMetaHz(m.configCeilingHz)}`;
   }
 
   function collectOperatorFacingControls() {
@@ -1884,12 +798,10 @@ const UI = (() => {
     const selectors = [
       "#audioPanel input",
       "#audioPanel select",
-      "#analysisPanel input",
-      "#analysisPanel select",
-      "#bankingPanel input",
-      "#bankingPanel select",
-      "#scenePanel input",
-      "#scenePanel select",
+      "#simPanel input",
+      "#simPanel select",
+      "#bandsPanel input",
+      "#bandsPanel select",
       "#recordPanel input",
       "#recordPanel select",
     ];
@@ -2132,17 +1044,18 @@ const UI = (() => {
     return formatRecordingElapsedMs(showCapturedDuration ? recording.elapsedMs : 0);
   }
 
-  function readRecordingLauncherLabel(recording) {
-    if (!recording || !recording.hooksEnabled) return "Show recording panel";
+  function readRecordingLauncherLabel(recording, panelVisible = false) {
+    const verb = panelVisible ? "Hide" : "Show";
+    if (!recording || !recording.hooksEnabled) return `${verb} recording panel`;
     switch (recording.phase) {
       case "recording":
-        return "Show recording panel (recording active)";
+        return `${verb} recording panel (recording active)`;
       case "finalizing":
-        return "Show recording panel (finalizing export)";
+        return `${verb} recording panel (finalizing export)`;
       case "unsupported":
-        return "Show recording panel (recording unavailable)";
+        return `${verb} recording panel (recording unavailable)`;
       default:
-        return "Show recording panel";
+        return `${verb} recording panel`;
     }
   }
 
@@ -2228,7 +1141,7 @@ const UI = (() => {
       config: CONFIG.recording,
       recording,
       includeAudio,
-      panelVisible: isTargetOpen(readPanelShell(), "recording"),
+      panelVisible: !!ui.recordingPanelVisible,
       canStart: recording.hooksEnabled
         && recording.isSupported === true
         && hasRecordableSource()
@@ -2239,7 +1152,7 @@ const UI = (() => {
       canToggleIncludeAudio: canEditSettings,
       canSelectTargetFps: canEditSettings,
       timerText: readRecordingTimerText(recording),
-      launcherLabel: readRecordingLauncherLabel(recording),
+      launcherLabel: readRecordingLauncherLabel(recording, !!ui.recordingPanelVisible),
       primaryStatusText: formatRecordingPrimaryStatus(recording),
       supportText: formatRecordingSupportText(recording),
       exportMetaText: formatRecordingExportMeta(recording),
@@ -2291,7 +1204,7 @@ const UI = (() => {
   function syncFileControlAffordances(sourceUi = readSourceUiModel()) {
     const fileControlsDisabled = !!sourceUi.disableFileControls;
     const fileTransportMutationLocked = !!sourceUi.fileTransportMutationLocked;
-    const queueVisible = isTargetOpen(readPanelShell(), "queue");
+    const queueVisible = !!(ui.queuePanel && ui.queuePanel.style.display !== "none");
     const repeatModeText = preferences.audio.repeatMode === "one"
       ? "One"
       : (preferences.audio.repeatMode === "all" ? "All" : "Off");
@@ -2374,7 +1287,7 @@ const UI = (() => {
       state.audio.isLoaded ? "1" : "0",
       state.source && state.source.kind ? state.source.kind : "none",
       state.source && state.source.sessionActive ? "1" : "0",
-      isTargetOpen(readPanelShell(), "recording") ? "1" : "0",
+      ui.recordingPanelVisible ? "1" : "0",
     ].join("|");
   }
 
@@ -2396,7 +1309,7 @@ const UI = (() => {
       ui.queuePanelSyncKey = nextSyncKey;
       return;
     }
-    if (!isTargetOpen(readPanelShell(), "queue")) {
+    if (ui.queuePanel.style.display === "none") {
       ui.queuePanelSyncKey = nextSyncKey;
       return;
     }
@@ -2414,12 +1327,17 @@ const UI = (() => {
       ui.recordPanel.dataset.recordingPhase = recording.phase;
     }
     if (ui.recordPanel) ui.recordPanel.setAttribute("aria-busy", recording.phase === "finalizing" ? "true" : "false");
-    if (ui.btnLauncherRecording) {
-      if (ui.btnLauncherRecording.title !== model.launcherLabel) ui.btnLauncherRecording.title = model.launcherLabel;
-      if (ui.btnLauncherRecording.getAttribute("aria-label") !== model.launcherLabel) {
-        ui.btnLauncherRecording.setAttribute("aria-label", model.launcherLabel);
+    if (ui.openRecord && ui.openRecord.dataset.recordingPhase !== recording.phase) {
+      ui.openRecord.dataset.recordingPhase = recording.phase;
+    }
+    if (ui.openRecord) ui.openRecord.classList.toggle("is-recording", recording.phase === "recording");
+    if (ui.btnOpenRecord) {
+      if (ui.btnOpenRecord.title !== model.launcherLabel) ui.btnOpenRecord.title = model.launcherLabel;
+      if (ui.btnOpenRecord.getAttribute("aria-label") !== model.launcherLabel) {
+        ui.btnOpenRecord.setAttribute("aria-label", model.launcherLabel);
       }
     }
+    syncWorkspaceLauncherState();
 
     syncRecordingMimeOptions(model);
     syncRecordingTargetFpsOptions(model);
@@ -2461,9 +1379,7 @@ const UI = (() => {
     if (ui.btnRecordDownloadLast) ui.btnRecordDownloadLast.disabled = !model.canDownload;
     if (ui.selRecordMime) ui.selRecordMime.disabled = !model.canSelectMime;
     if (ui.selRecordTargetFps) ui.selRecordTargetFps.disabled = !model.canSelectTargetFps;
-    observeRecordingRuntimeEvents();
     syncVisibleQueuePanel();
-    syncLauncherBarUi(recording.phase);
     ui.recordingUiSyncKey = buildRecordingUiSyncKey();
   }
 
@@ -2519,9 +1435,10 @@ const UI = (() => {
   function refreshAllUiText(bandSnapshot) {
     const p = preferences;
     maybeRefreshRecordingUi();
+    syncOrbBandPickers();
 
     const bandText = bandSnapshot && bandSnapshot.ready
-      ? (bandSnapshot.monoLike ? "mono-ish (L\u2248R)" : "stereo (L\u2260R)")
+      ? (bandSnapshot.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
       : "n/a";
 
     const recordingStatusText = formatRecordingAudioStatusSummary(state.recording);
@@ -2560,7 +1477,6 @@ const UI = (() => {
     ui.btnToggleQueue.disabled = fileControlsDisabled;
     ui.btnClearQueue.disabled = fileControlsDisabled || fileTransportMutationLocked || Queue.length === 0;
     syncFileControlAffordances(sourceUi);
-    refreshScenePanel();
     ui.chkMute.checked = !!p.audio.muted;
     ui.rngVol.value = String(p.audio.volume);
     ui.valVol.textContent = fmt(p.audio.volume, 2);
@@ -2593,10 +1509,12 @@ const UI = (() => {
     ui.valOverlap.textContent = `${fmt(p.particles.overlapRadiusPx, 1)}px`;
 
     ui.rngOmega.value = String(p.motion.angularSpeedRadPerSec);
-    ui.valOmega.textContent = `${fmt(p.motion.angularSpeedRadPerSec, 3)} rad/s (${fmt(p.motion.angularSpeedRadPerSec * RAD_TO_DEG, 1)}Â°/s)`;
+    ui.valOmega.textContent = `${fmt(p.motion.angularSpeedRadPerSec, 3)} rad/s (${fmt(p.motion.angularSpeedRadPerSec * RAD_TO_DEG, 1)}°/s)`;
 
     ui.rngWfDisp.value = String(p.motion.waveformRadialDisplaceFrac);
     ui.valWfDisp.textContent = fmt(p.motion.waveformRadialDisplaceFrac, 3);
+
+    refreshOrbPanelUi(p);
 
     ui.rngRmsGain.value = String(p.audio.rmsGain);
     ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
@@ -2653,7 +1571,7 @@ const UI = (() => {
     ui.valRingSpeed.textContent = `${fmt(p.bands.overlay.ringSpeedRadPerSec, 2)} rad/s`;
 
     ui.rngHueOff.value = String(p.bands.rainbow.hueOffsetDeg);
-    ui.valHueOff.textContent = `${p.bands.rainbow.hueOffsetDeg}Â°`;
+    ui.valHueOff.textContent = `${p.bands.rainbow.hueOffsetDeg}°`;
 
     ui.rngSat.value = String(p.bands.rainbow.saturation);
     ui.valSat.textContent = fmt(p.bands.rainbow.saturation, 2);
@@ -2662,8 +1580,6 @@ const UI = (() => {
     ui.valVal.textContent = fmt(p.bands.rainbow.value, 2);
 
     refreshConfigTooltips();
-    observeSourceRuntimeEvents();
-    syncPanelShellUi();
     refreshRecordingUi();
 
     refreshBandMetaText();
@@ -2671,8 +1587,8 @@ const UI = (() => {
     if (bandSnapshot && bandSnapshot.ready) {
       const nowMs = performance.now();
       const hudIntervalMs = ui.bandHudIntervalMs || 100;
-      const bankingPanelVisible = isTargetOpen(readPanelShell(), "banking");
-      const canRefreshHud = bankingPanelVisible && (nowMs - ui.lastBandHudUpdateMs >= hudIntervalMs);
+      const bandsPanelVisible = ui.bandsPanel && ui.bandsPanel.style.display !== "none";
+      const canRefreshHud = bandsPanelVisible && (nowMs - ui.lastBandHudUpdateMs >= hudIntervalMs);
       if (canRefreshHud) {
         refreshBandHud();
         ui.lastBandHudUpdateMs = nowMs;
@@ -2682,7 +1598,7 @@ const UI = (() => {
 
   function resetTrackVisualState() {
     Scrubber.reset();
-    resetOrbTrails();
+    for (const orb of state.orbs) orb.resetTrail();
     state.bands.energies01.fill(0);
     state.bands.dominantIndex = 0;
     state.bands.dominantName = "(none)";
@@ -2691,38 +1607,44 @@ const UI = (() => {
 
   function wireControls() {
     primeDomCache();
-    ui.sceneUiSyncKey = "";
-    syncSceneRuntimeFromPreferences();
-    setBandInspectorOpen(false);
+
+    ui.orbPickerSettings = null;
+    ui.orbPickerEdges = null;
+    ui.orbBandPickers = CONFIG.defaults.orbs.map((_, index) => createOrbBandPicker(
+      document.getElementById(`orb${index}BandPicker`), {
+        orbLabel: `Orb ${index + 1}`,
+        onChange(ids) {
+          preferences.orbs[index].bandIds = ids;
+          applyOrbPrefChange(index, `orb ${index + 1} bands`);
+        },
+        formatRange: BandBank.formatBandRangeText,
+        describeBank: () => `${preferences.bands.distributionMode.toUpperCase()} distribution · ${BAND_NAMES.length} bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}`,
+      }
+    ));
+    if (ui.audioDockObserver) ui.audioDockObserver.disconnect();
+    if (typeof ResizeObserver === "function") {
+      ui.audioDockObserver = new ResizeObserver(syncAudioDockHeight);
+      ui.audioDockObserver.observe(ui.audioPanel);
+    }
+    syncAudioDockHeight();
 
     initConfigTooltips();
-    clearAudioStatusToast();
-    if (_audioStatusRefreshTimer) {
-      clearTimeout(_audioStatusRefreshTimer);
-      _audioStatusRefreshTimer = null;
-    }
-    ui.runtimeLogUiSyncKey = "";
-    readRuntimeLogObserver().sourceSnapshot = snapshotSourceRuntimeState();
-    readRuntimeLogObserver().recordingSnapshot = snapshotRecordingRuntimeState();
-    refreshRuntimeLogUi(true);
-    syncLauncherBarUi();
-    refreshScenePanel(true);
 
 
     /* -------------------------------------------------------------------------
-       clearAudioState() â€” canonical clean-slate reset for all stop/clear paths.
+       clearAudioState() — canonical clean-slate reset for all stop/clear paths.
 
-       3.4 â€” Clear queue clean-slate audit. Every item the checklist requires:
-         âœ“ state.audio.isLoaded = false    â€” set explicitly below
-         âœ“ state.audio.filename = ""       â€” set explicitly below
-         âœ“ state.audio.isPlaying = false   â€” set explicitly below
-         âœ“ InputSourceManager teardown     â€” caller must invoke teardown before this function
-         âœ“ All orb trails reset            â€” loop below
-         âœ“ Scrubber blank                  â€” Scrubber.reset()
-         âœ“ Play/Stop buttons disabled      â€” driven by state.audio.isLoaded in refreshAllUiText
-         âœ“ Prev/Next buttons disabled      â€” driven by Queue.canPrev/canNext;
+       3.4 — Clear queue clean-slate audit. Every item the checklist requires:
+         ✓ state.audio.isLoaded = false    — set explicitly below
+         ✓ state.audio.filename = ""       — set explicitly below
+         ✓ state.audio.isPlaying = false   — set explicitly below
+         ✓ InputSourceManager teardown     — caller must invoke teardown before this function
+         ✓ All orb trails reset            — loop below
+         ✓ Scrubber blank                  — Scrubber.reset()
+         ✓ Play/Stop buttons disabled      — driven by state.audio.isLoaded in refreshAllUiText
+         ✓ Prev/Next buttons disabled      — driven by Queue.canPrev/canNext;
                                              caller must call Queue.clear() first
-         âœ“ No blob URLs left alive         â€” revoked by loadeddata/error during track
+         ✓ No blob URLs left alive         — revoked by loadeddata/error during track
                                              lifetime; source teardown performs
                                              teardown() and final release safety.
       Build 113 policy: queue clear/unload stays transport-owned here. If recording is
@@ -2757,17 +1679,17 @@ const UI = (() => {
     }
 
     /* -------------------------------------------------------------------------
-       loadAndPlay â€” single shared helper for all track-change paths.
+       loadAndPlay — single shared helper for all track-change paths.
 
-       3.1 â€” Entry-point audit. Every path that changes the current track routes
+       3.1 — Entry-point audit. Every path that changes the current track routes
        through here so trail reset + scrubber reset happen in exactly one place:
-         (1) _onTrackEnded repeat policy â†’ loadAndPlay/stop     [auto-advance/repeat]
-         (2) fileInput change â†’ loadAndPlay                    [Load button, 1st track]
-         (3) drop handler    â†’ loadAndPlay                     [drag-drop, 1st track]
-         (4) btnNext click   â†’ Queue.next() â†’ loadAndPlay
-         (5) btnPrev click   â†’ Queue.prev() â†’ loadAndPlay
-         (6) queue row click â†’ Queue.goTo() â†’ loadAndPlay      [click-to-jump]
-         (7) remove handler  â†’ loadAndPlay  (wasActive && nextFile case)
+         (1) _onTrackEnded repeat policy → loadAndPlay/stop     [auto-advance/repeat]
+         (2) fileInput change → loadAndPlay                    [Load button, 1st track]
+         (3) drop handler    → loadAndPlay                     [drag-drop, 1st track]
+         (4) btnNext click   → Queue.next() → loadAndPlay
+         (5) btnPrev click   → Queue.prev() → loadAndPlay
+         (6) queue row click → Queue.goTo() → loadAndPlay      [click-to-jump]
+         (7) remove handler  → loadAndPlay  (wasActive && nextFile case)
       Build 113 policy: active recording spans track changes through this path.
       Notify RecorderEngine, but do not add recorder-specific transport branching.
        DoD: no trail bleed between tracks; scrubber never shows stale waveform.
@@ -2787,8 +1709,7 @@ const UI = (() => {
       invalidatePendingTrackLoads();
       clearAudioStatusToast();
       clearAudioState();
-      setPanelTargetOpen(readPanelShell(), "queue", false);
-      syncPanelShellUi();
+      hideQueuePanel();
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "switch-to-mic",
       });
@@ -2807,8 +1728,7 @@ const UI = (() => {
       invalidatePendingTrackLoads();
       clearAudioStatusToast();
       clearAudioState();
-      setPanelTargetOpen(readPanelShell(), "queue", false);
-      syncPanelShellUi();
+      hideQueuePanel();
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "switch-to-stream",
       });
@@ -2826,12 +1746,6 @@ const UI = (() => {
           clearAudioStatusToast();
           RecorderEngine.getSupportStatus();
           refreshQueuePanel();
-          appendStatusLogEntry({
-            level: "info",
-            category: "source",
-            code: "file-workflow",
-            message: "Switched to file workflow.",
-          });
         }
         return clearedRecoverableIdleError;
       }
@@ -2840,8 +1754,7 @@ const UI = (() => {
       clearAudioStatusToast();
       await InputSourceManager.teardownActiveSource({ reason: "switch-to-file-mode" });
       clearAudioState();
-      setPanelTargetOpen(readPanelShell(), "queue", false);
-      syncPanelShellUi();
+      hideQueuePanel();
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "switch-to-file-mode",
       });
@@ -2890,7 +1803,7 @@ const UI = (() => {
         refreshQueuePanel();
         return false;
       }
-      Scrubber.loadFile(file); // async â€” decode in background; playback may be play or paused by opts
+      Scrubber.loadFile(file); // async — decode in background; playback may be play or paused by opts
       applyPrefs(null);
       RecorderEngine.onTransportMutation("track-change-complete", {
         requestId,
@@ -2904,7 +1817,7 @@ const UI = (() => {
 
     /* Register _onTrackEnded hook once at boot.
        Single source of truth for queue-aware repeat behavior on natural track end.
-       The hook survives teardown() intentionally â€” registered once at boot,
+       The hook survives teardown() intentionally — registered once at boot,
        must persist across track loads. Documented in 111c/111d. */
     AudioEngine._isLoadRequestCurrent = (requestId) => requestId === activeLoadRequestId;
 
@@ -2945,7 +1858,7 @@ const UI = (() => {
       if (file) loadAndPlay(file);
     }
 
-    /* Queue panel renderer â€” rebuilds list DOM from Queue.snapshot().
+    /* Queue panel renderer — rebuilds list DOM from Queue.snapshot().
        each row is keyboard-reachable and declared as a button-like activator. */
     function refreshQueuePanel() {
       if (!ui.queueList) return;
@@ -2987,7 +1900,7 @@ const UI = (() => {
 
         const removeBtn = document.createElement("button");
         removeBtn.className = "q-remove";
-        removeBtn.textContent = "Ã—";
+        removeBtn.textContent = "×";
         removeBtn.title = fileTransportMutationLocked ? queueLockText : "Remove from queue";
         removeBtn.disabled = !allowQueueInteraction;
         removeBtn.addEventListener("keydown", (e) => {
@@ -3008,8 +1921,8 @@ const UI = (() => {
             // Removed active track. Successor is loaded preserving prior play/pause intent.
             loadAndPlay(nextFile, { autoPlay: wasPlaying });
           } else if (Queue.length === 0) {
-            // Removed the final queued track â€” return to the canonical empty File workflow.
-            resetEmptyFileWorkflowState(wasActive ? "active-remove-empty-queue" : "remove-empty-queue"); // 3.4 â€” via shared helper; see clearAudioState() for audit
+            // Removed the final queued track — return to the canonical empty File workflow.
+            resetEmptyFileWorkflowState(wasActive ? "active-remove-empty-queue" : "remove-empty-queue"); // 3.4 — via shared helper; see clearAudioState() for audit
           }
           if (wasActive && Queue.length === 0) {
             RecorderEngine.onTransportMutation("audio-unloaded", {
@@ -3044,29 +1957,17 @@ const UI = (() => {
     queuePanelRefresher = refreshQueuePanel;
 
     wireConfigTooltipFeedbackEvents();
+    setWorkspaceLauncherCollapsed(!!ui.workspaceLauncherCollapsed);
     primeRecordUi();
     refreshRecordingUi();
 
     if (ui.btnHideRecord) ui.btnHideRecord.addEventListener("click", () => {
       hideRecordPanel();
     });
-    if (ui.btnHideStatus) ui.btnHideStatus.addEventListener("click", () => {
-      hideStatusPanel();
+    if (ui.btnOpenRecord) ui.btnOpenRecord.addEventListener("click", () => {
+      if (ui.recordingPanelVisible) hideRecordPanel();
+      else showRecordPanel();
     });
-    if (ui.btnClearStatusLog) ui.btnClearStatusLog.addEventListener("click", () => {
-      clearStatusLogEntries();
-    });
-    if (ui.btnLauncherToggle) ui.btnLauncherToggle.addEventListener("click", () => {
-      toggleLauncherCollapsed(readPanelShell());
-      syncPanelShellUi();
-    });
-    for (const launcherId of LAUNCHER_IDS) {
-      const launcherButton = readLauncherButton(launcherId);
-      if (!launcherButton) continue;
-      launcherButton.addEventListener("click", () => {
-        handleLauncherActivation(launcherId);
-      });
-    }
     if (ui.btnRecordStart) ui.btnRecordStart.addEventListener("click", () => {
       dispatchRecordingAction("start");
     });
@@ -3103,7 +2004,7 @@ const UI = (() => {
 
     // fileInput.value reset (checklist 3.7): cleared before every picker open so
     // the same file can be loaded a second time. The drag-drop path uses
-    // dataTransfer.files directly â€” it never touches fileInput â€” so no reset
+    // dataTransfer.files directly — it never touches fileInput — so no reset
     // is needed there. This is the only fileInput add path; invariant maintained.
     ui.btnLoad.addEventListener("click", () => {
       if (!isFileWorkflowMode(state.source)) {
@@ -3185,11 +2086,16 @@ const UI = (() => {
 
     ui.btnToggleQueue.addEventListener("click", () => {
       if (!isFileWorkflowMode(state.source)) return;
-      const visible = isTargetOpen(readPanelShell(), "queue");
-      setPanelTargetOpen(readPanelShell(), "queue", !visible);
-      syncPanelShellUi();
-      if (!visible) refreshQueuePanel(); // refresh on open
+      if (isPanelVisible(ui.queuePanel)) hideQueuePanel(); else showQueuePanel();
     });
+    if (ui.btnOpenQueue) ui.btnOpenQueue.addEventListener("click", () => {
+      if (isPanelVisible(ui.queuePanel)) hideQueuePanel(); else showQueuePanel();
+    });
+    if (ui.btnHideQueue) ui.btnHideQueue.addEventListener("click", hideQueuePanel);
+    if (ui.btnTogglePanels) ui.btnTogglePanels.addEventListener("click", togglePanels);
+    for (const panel of [ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) {
+      if (panel) panel.addEventListener("pointerdown", () => bringPanelForward(panel));
+    }
 
     ui.btnClearQueue.addEventListener("click", () => {
       if (!isFileWorkflowMode(state.source)) return;
@@ -3197,7 +2103,7 @@ const UI = (() => {
         toastFinalizingTransportLock();
         return;
       }
-      // 3.4 â€” Clear queue clean-slate path. Order matters:
+      // 3.4 — Clear queue clean-slate path. Order matters:
       // Queue.clear() first so Prev/Next disable correctly in next refreshAllUiText.
       // Source teardown before clearAudioState() so no media remains attached.
       Queue.clear();
@@ -3212,7 +2118,7 @@ const UI = (() => {
       if (!isFileWorkflowMode(state.source)) return;
       const mode = preferences.audio.repeatMode;
       preferences.audio.repeatMode = mode === "none" ? "one" : (mode === "one" ? "all" : "none");
-      applyPrefs("repeat", { statusTarget: "audioSource" });
+      applyPrefs("repeat");
     });
     if (ui.btnShuffle) {
       ui.btnShuffle.addEventListener("click", () => {
@@ -3220,141 +2126,154 @@ const UI = (() => {
         if (Queue.shuffle()) refreshQueuePanel();
       });
     }
-    ui.chkMute.addEventListener("change", () => {
-      preferences.audio.muted = !!ui.chkMute.checked;
-      applyPrefs("mute", { statusTarget: "audioSource" });
-    });
+    ui.chkMute.addEventListener("change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute"); });
 
     ui.rngVol.addEventListener("input", () => {
       preferences.audio.volume = Number(ui.rngVol.value);
-      applyPrefs("volume (playback only)", { statusTarget: "audioSource" });
+      applyPrefs("volume (playback only)");
     });
 
-    ui.btnHideAudio.addEventListener("click", hideAudioPanel);
+    if (ui.btnToggleWorkspaceLauncher) ui.btnToggleWorkspaceLauncher.addEventListener("click", toggleWorkspaceLauncherCollapsed);
 
-    if (ui.btnHideAnalysis) ui.btnHideAnalysis.addEventListener("click", hideAnalysisPanel);
-    if (ui.btnHideBanking) ui.btnHideBanking.addEventListener("click", hideBankingPanel);
-    if (ui.btnHideScene) ui.btnHideScene.addEventListener("click", hideScenePanel);
-    if (ui.btnHideWorkspace) ui.btnHideWorkspace.addEventListener("click", hideWorkspacePanel);
-    if (ui.btnToggleBandInspector) {
-      ui.btnToggleBandInspector.addEventListener("click", () => {
-        setBandInspectorOpen(!isBandInspectorOpen());
-        if (isBandInspectorOpen()) {
-          refreshBandHud();
-          ui.lastBandHudUpdateMs = performance.now();
-        }
-      });
-    }
+    ui.btnHideAudio.addEventListener("click", hideAudioPanel);
+    ui.btnOpenAudio.addEventListener("click", () => {
+      if (isPanelVisible(ui.audioPanel)) hideAudioPanel();
+      else showAudioPanel();
+    });
+
+    ui.btnHideSim.addEventListener("click", hideSimPanel);
+    ui.btnOpenSim.addEventListener("click", () => {
+      if (isPanelVisible(ui.simPanel)) hideSimPanel();
+      else showSimPanel();
+    });
+
+    ui.btnHideBands.addEventListener("click", hideBandsPanel);
+    ui.btnOpenBands.addEventListener("click", () => {
+      if (isPanelVisible(ui.bandsPanel)) hideBandsPanel();
+      else showBandsPanel();
+    });
 
     ui.btnShare.addEventListener("click", shareLink);
     ui.btnApplyUrl.addEventListener("click", applyUrlNow);
     ui.btnResetPrefs.addEventListener("click", resetPrefs);
-    ui.btnResetVisuals.addEventListener("click", () => {
-      resetOrbsToDesignedPhases();
-      panelStatusToast("scene", "Visuals reset.");
-    });
+    ui.btnResetVisuals.addEventListener("click", () => { resetOrbsToDesignedPhases(); simStatusToast("Visuals reset."); });
 
-    ui.chkLines.addEventListener("change", () => {
-      preferences.trace.lines = !!ui.chkLines.checked;
-      applyPrefs("lines", { statusTarget: "scene" });
-    });
-    ui.rngNumLines.addEventListener("input", () => {
-      preferences.trace.numLines = Number(ui.rngNumLines.value);
-      applyPrefs("num lines", { statusTarget: "scene" });
-    });
+    ui.chkLines.addEventListener("change", () => { preferences.trace.lines = !!ui.chkLines.checked; applyPrefs("lines"); });
+    ui.rngNumLines.addEventListener("input", () => { preferences.trace.numLines = Number(ui.rngNumLines.value); applyPrefs("num lines"); });
 
     ui.selLineColorMode.addEventListener("change", () => {
       preferences.trace.lineColorMode = ui.selLineColorMode.value;
-      applyPrefs("line color mode", { statusTarget: "banking" });
+      applyPrefs("line color mode");
     });
 
-    ui.rngEmit.addEventListener("input", () => { preferences.particles.emitPerSecond = Number(ui.rngEmit.value); applyPrefs("emit rate", { statusTarget: "scene" }); });
-    ui.rngSizeMax.addEventListener("input", () => { preferences.particles.sizeMaxPx = Number(ui.rngSizeMax.value); applyPrefs("size max", { statusTarget: "scene" }); });
-    ui.rngSizeMin.addEventListener("input", () => { preferences.particles.sizeMinPx = Number(ui.rngSizeMin.value); applyPrefs("size min", { statusTarget: "scene" }); });
-    ui.rngSizeToMin.addEventListener("input", () => { preferences.particles.sizeToMinSec = Number(ui.rngSizeToMin.value); applyPrefs("time to min", { statusTarget: "scene" }); });
-    ui.rngTTL.addEventListener("input", () => { preferences.particles.ttlSec = Number(ui.rngTTL.value); applyPrefs("ttl", { statusTarget: "scene" }); });
-    ui.rngOverlap.addEventListener("input", () => { preferences.particles.overlapRadiusPx = Number(ui.rngOverlap.value); applyPrefs("overlap radius", { statusTarget: "scene" }); });
+    ui.rngEmit.addEventListener("input", () => { preferences.particles.emitPerSecond = Number(ui.rngEmit.value); applyPrefs("emit rate"); });
+    ui.rngSizeMax.addEventListener("input", () => { preferences.particles.sizeMaxPx = Number(ui.rngSizeMax.value); applyPrefs("size max"); });
+    ui.rngSizeMin.addEventListener("input", () => { preferences.particles.sizeMinPx = Number(ui.rngSizeMin.value); applyPrefs("size min"); });
+    ui.rngSizeToMin.addEventListener("input", () => { preferences.particles.sizeToMinSec = Number(ui.rngSizeToMin.value); applyPrefs("time to min"); });
+    ui.rngTTL.addEventListener("input", () => { preferences.particles.ttlSec = Number(ui.rngTTL.value); applyPrefs("ttl"); });
+    ui.rngOverlap.addEventListener("input", () => { preferences.particles.overlapRadiusPx = Number(ui.rngOverlap.value); applyPrefs("overlap radius"); });
 
-    ui.rngOmega.addEventListener("input", () => { preferences.motion.angularSpeedRadPerSec = Number(ui.rngOmega.value); applyPrefs("angular speed", { statusTarget: "scene" }); });
-    ui.rngWfDisp.addEventListener("input", () => { preferences.motion.waveformRadialDisplaceFrac = Number(ui.rngWfDisp.value); applyPrefs("orb waveform disp", { statusTarget: "scene" }); });
+    ui.rngOmega.addEventListener("input", () => { preferences.motion.angularSpeedRadPerSec = Number(ui.rngOmega.value); applyPrefs("angular speed"); });
+    ui.rngWfDisp.addEventListener("input", () => { preferences.motion.waveformRadialDisplaceFrac = Number(ui.rngWfDisp.value); applyPrefs("orb waveform disp"); });
 
-    ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)", { statusTarget: "analysis" }); });
-    ui.rngMinRad.addEventListener("input", () => { preferences.audio.minRadiusFrac = Number(ui.rngMinRad.value); applyPrefs("min radius", { statusTarget: "scene" }); });
-    ui.rngMaxRad.addEventListener("input", () => { preferences.audio.maxRadiusFrac = Number(ui.rngMaxRad.value); applyPrefs("max radius", { statusTarget: "scene" }); });
-    ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing", { statusTarget: "analysis" }); });
-    ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size", { statusTarget: "analysis" }); });
+    ui.selOrb0Chan.addEventListener("change", () => {
+      preferences.orbs[0].chanId = ui.selOrb0Chan.value;
+      applyOrbPrefChange(0, "ORB0 channel", { structural: true });
+    });
+    ui.selOrb0Chir.addEventListener("change", () => {
+      preferences.orbs[0].chirality = Number(ui.selOrb0Chir.value);
+      applyOrbPrefChange(0, "ORB0 chirality", { structural: true });
+    });
+    ui.rngOrb0Hue.addEventListener("input", () => {
+      preferences.orbs[0].hueOffsetDeg = Number(ui.rngOrb0Hue.value);
+      applyOrbPrefChange(0, "ORB0 hue offset", { structural: false });
+    });
+    ui.selOrb0ColorSrc.addEventListener("change", () => {
+      preferences.orbs[0].colorSource = ui.selOrb0ColorSrc.value;
+      applyOrbPrefChange(0, "ORB0 color source", { structural: false });
+    });
+    ui.rngOrb0CenterX.addEventListener("input", () => {
+      preferences.orbs[0].centerXFrac = Number(ui.rngOrb0CenterX.value);
+      applyOrbPrefChange(0, "ORB0 center X", { structural: false });
+    });
+    ui.rngOrb0CenterY.addEventListener("input", () => {
+      preferences.orbs[0].centerYFrac = Number(ui.rngOrb0CenterY.value);
+      applyOrbPrefChange(0, "ORB0 center Y", { structural: false });
+    });
+    ui.txtOrb0Bands.addEventListener("change", () => {
+      commitOrbBandIdsFromUi(0, "ORB0 band indices");
+    });
+    ui.selOrb1Chan.addEventListener("change", () => {
+      preferences.orbs[1].chanId = ui.selOrb1Chan.value;
+      applyOrbPrefChange(1, "ORB1 channel", { structural: true });
+    });
+    ui.selOrb1Chir.addEventListener("change", () => {
+      preferences.orbs[1].chirality = Number(ui.selOrb1Chir.value);
+      applyOrbPrefChange(1, "ORB1 chirality", { structural: true });
+    });
+    ui.rngOrb1Hue.addEventListener("input", () => {
+      preferences.orbs[1].hueOffsetDeg = Number(ui.rngOrb1Hue.value);
+      applyOrbPrefChange(1, "ORB1 hue offset", { structural: false });
+    });
+    ui.selOrb1ColorSrc.addEventListener("change", () => {
+      preferences.orbs[1].colorSource = ui.selOrb1ColorSrc.value;
+      applyOrbPrefChange(1, "ORB1 color source", { structural: false });
+    });
+    ui.rngOrb1CenterX.addEventListener("input", () => {
+      preferences.orbs[1].centerXFrac = Number(ui.rngOrb1CenterX.value);
+      applyOrbPrefChange(1, "ORB1 center X", { structural: false });
+    });
+    ui.rngOrb1CenterY.addEventListener("input", () => {
+      preferences.orbs[1].centerYFrac = Number(ui.rngOrb1CenterY.value);
+      applyOrbPrefChange(1, "ORB1 center Y", { structural: false });
+    });
+    ui.txtOrb1Bands.addEventListener("change", () => {
+      commitOrbBandIdsFromUi(1, "ORB1 band indices");
+    });
 
-    ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; applyPrefs("background", { statusTarget: "scene" }); });
-    ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; applyPrefs("particle color", { statusTarget: "scene" }); });
+    ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)"); });
+    ui.rngMinRad.addEventListener("input", () => { preferences.audio.minRadiusFrac = Number(ui.rngMinRad.value); applyPrefs("min radius"); });
+    ui.rngMaxRad.addEventListener("input", () => { preferences.audio.maxRadiusFrac = Number(ui.rngMaxRad.value); applyPrefs("max radius"); });
+    ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing"); });
+    ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size"); });
+
+    ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; applyPrefs("background"); });
+    ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; applyPrefs("particle color"); });
 
     ui.selParticleColorSrc.addEventListener("change", () => {
       preferences.bands.particleColorSource = ui.selParticleColorSrc.value;
-      applyPrefs("particle color source", { statusTarget: "banking" });
+      applyPrefs("particle color source");
     });
 
-    ui.chkBandOverlay.addEventListener("change", () => {
-      const enabled = !!ui.chkBandOverlay.checked;
-      preferences.bands.overlay.enabled = enabled;
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: enabled });
-      applyPrefs("band overlay", { statusTarget: "banking" });
-    });
-    ui.chkBandConnect.addEventListener("change", () => {
-      preferences.bands.overlay.connectAdjacent = !!ui.chkBandConnect.checked;
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("band connect", { statusTarget: "banking" });
-    });
+    ui.chkBandOverlay.addEventListener("change", () => { preferences.bands.overlay.enabled = !!ui.chkBandOverlay.checked; applyPrefs("band overlay"); });
+    ui.chkBandConnect.addEventListener("change", () => { preferences.bands.overlay.connectAdjacent = !!ui.chkBandConnect.checked; applyPrefs("band connect"); });
 
-    ui.rngBandAlpha.addEventListener("input", () => {
-      preferences.bands.overlay.alpha = Number(ui.rngBandAlpha.value);
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("overlay alpha", { statusTarget: "banking" });
-    });
-    ui.rngBandPoint.addEventListener("input", () => {
-      preferences.bands.overlay.pointSizePx = Number(ui.rngBandPoint.value);
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("overlay point size", { statusTarget: "banking" });
-    });
-    ui.rngBandOverlayMinRad.addEventListener("input", () => {
-      preferences.bands.overlay.minRadiusFrac = Number(ui.rngBandOverlayMinRad.value);
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("overlay min radius", { statusTarget: "banking" });
-    });
-    ui.rngBandOverlayMaxRad.addEventListener("input", () => {
-      preferences.bands.overlay.maxRadiusFrac = Number(ui.rngBandOverlayMaxRad.value);
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("overlay max radius", { statusTarget: "banking" });
-    });
-    ui.rngBandOverlayWfDisp.addEventListener("input", () => {
-      preferences.bands.overlay.waveformRadialDisplaceFrac = Number(ui.rngBandOverlayWfDisp.value);
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("overlay waveform disp", { statusTarget: "banking" });
-    });
+    ui.rngBandAlpha.addEventListener("input", () => { preferences.bands.overlay.alpha = Number(ui.rngBandAlpha.value); applyPrefs("overlay alpha"); });
+    ui.rngBandPoint.addEventListener("input", () => { preferences.bands.overlay.pointSizePx = Number(ui.rngBandPoint.value); applyPrefs("overlay point size"); });
+    ui.rngBandOverlayMinRad.addEventListener("input", () => { preferences.bands.overlay.minRadiusFrac = Number(ui.rngBandOverlayMinRad.value); applyPrefs("overlay min radius"); });
+    ui.rngBandOverlayMaxRad.addEventListener("input", () => { preferences.bands.overlay.maxRadiusFrac = Number(ui.rngBandOverlayMaxRad.value); applyPrefs("overlay max radius"); });
+    ui.rngBandOverlayWfDisp.addEventListener("input", () => { preferences.bands.overlay.waveformRadialDisplaceFrac = Number(ui.rngBandOverlayWfDisp.value); applyPrefs("overlay waveform disp"); });
 
     ui.selRingPhaseMode.addEventListener("change", () => {
       preferences.bands.overlay.phaseMode = ui.selRingPhaseMode.value;
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("ring phase mode", { statusTarget: "banking" });
+      applyPrefs("ring phase mode");
     });
 
     ui.selDistMode.addEventListener("change", () => {
       preferences.bands.distributionMode = ui.selDistMode.value;
-      applyPrefs("band distribution mode", {
-        rebuildBandsOnDefinitionChange: true,
-        statusTarget: "banking",
-      });
+      applyPrefs("band distribution mode", { rebuildBandsOnDefinitionChange: true });
     });
 
     ui.rngRingSpeed.addEventListener("input", () => {
       preferences.bands.overlay.ringSpeedRadPerSec = Number(ui.rngRingSpeed.value);
-      syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
-      applyPrefs("ring speed", { statusTarget: "banking" });
+      applyPrefs("ring speed");
     });
 
-    ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); applyPrefs("hue offset", { statusTarget: "banking" }); });
-    ui.rngSat.addEventListener("input", () => { preferences.bands.rainbow.saturation = Number(ui.rngSat.value); applyPrefs("saturation", { statusTarget: "banking" }); });
-    ui.rngVal.addEventListener("input", () => { preferences.bands.rainbow.value = Number(ui.rngVal.value); applyPrefs("value", { statusTarget: "banking" }); });
+    ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); applyPrefs("hue offset"); });
+    ui.rngSat.addEventListener("input", () => { preferences.bands.rainbow.saturation = Number(ui.rngSat.value); applyPrefs("saturation"); });
+    ui.rngVal.addEventListener("input", () => { preferences.bands.rainbow.value = Number(ui.rngVal.value); applyPrefs("value"); });
 
-    /* Drag-drop onto canvas â€” multi-file entry point.
+    /* Drag-drop onto canvas — multi-file entry point.
        All dropped audio files are enqueued. If the queue was empty before the
        drop, the first file starts playing immediately. Additional files append
        silently. Non-audio files are silently ignored. */
@@ -3397,7 +2316,7 @@ const UI = (() => {
     function hasFocusedInteractiveTarget(event) {
       const target = event.target;
       if (!(target instanceof Element)) return false;
-      if (target.closest('input, select, textarea, button, [contenteditable="true"], [role="button"]')) return true;
+      if (target.closest('input, select, textarea, button, summary, [contenteditable="true"], [role="button"]')) return true;
       return false;
     }
 
@@ -3421,7 +2340,7 @@ const UI = (() => {
         return;
       }
 
-      // Track navigation â€” N: next, P: prev (Repeat=All wraps at boundaries).
+      // Track navigation — N: next, P: prev (Repeat=All wraps at boundaries).
       if (e.code === "KeyN") {
         if (!isFileWorkflowMode(state.source)) return;
         if (isFinalizingFileTransportLocked()) {
@@ -3443,7 +2362,7 @@ const UI = (() => {
         return;
       }
 
-      // Seek â€” arrow keys Â±5 seconds, Shift+arrows Â±30 seconds.
+      // Seek — arrow keys ±5 seconds, Shift+arrows ±30 seconds.
       // preventDefault stops page scroll.
       if (e.code === "ArrowRight" || e.code === "ArrowLeft") {
         if (!isFileWorkflowMode(state.source)) return;
@@ -3458,42 +2377,15 @@ const UI = (() => {
     }, { passive: false });
 
     window.addEventListener("hashchange", () => {
-      const result = UrlPreset.applyFromLocationHash();
-      if (result.ok) {
-        applyPrefs("hash preset loaded", {
-          rebuildBandsOnDefinitionChange: true,
-          statusTarget: "workspace",
-          resetSceneFromPreferences: true,
-        });
+      const ok = UrlPreset.applyFromLocationHash();
+      if (ok) {
+        applyPrefs("hash preset loaded", { rebuildBandsOnDefinitionChange: true });
         initOrbs();
         resetOrbsToDesignedPhases();
-        ingestPresetApplyResult(result, { source: "hashchange" });
-      } else {
-        ingestPresetApplyResult(result, { source: "hashchange" });
       }
     });
 
   } // end wireControls
-
-  function getPanelShellModel() {
-    const shell = getPanelShellStateSnapshot(readPanelShell());
-    return {
-      ...shell,
-      launcherItems: LAUNCHER_IDS.map((launcherId) => ({
-        launcherId,
-        targetId: LAUNCHER_TARGETS[launcherId],
-        active: shell.activeLauncherId === launcherId,
-        hasUnread: launcherId === "status" && readRuntimeLog().hasUnread,
-        targetOpen: !!shell.openTargets[LAUNCHER_TARGETS[launcherId]],
-        presentedOpen: shell.activeLauncherId === launcherId
-          && !!shell.openTargets[LAUNCHER_TARGETS[launcherId]],
-      })),
-    };
-  }
-
-  function getSceneUiModel() {
-    return readSceneUiModel();
-  }
 
   return {
     setCssVarsFromConfig,
@@ -3501,13 +2393,10 @@ const UI = (() => {
     refreshAllUiText,
     refreshRecordingUi,
     getRecordingUiModel,
-    getPanelShellModel,
-    getSceneUiModel,
     dispatchSourceSwitchAction,
     showRecordPanel,
     hideRecordPanel,
     dispatchRecordingAction,
-    ingestPresetApplyResult,
     applyPrefs,
     resetTrackVisualState,
   };

@@ -2,6 +2,10 @@
 
 This repo tracks **Auralprint** an offline-capable audio analysis suite.(“analyzer cosplaying as a visualizer”).
 
+The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). The current work completes Build 115's interface before adding camera controls. Its basic band chooser has been pulled forward from Build 118; browser acceptance is still pending.
+
+To try the development build, run `npm test`, then `npm run build` (sequentially), and open `dist/auralprint_0.1.15.html`. Start with **Load audio**. **Orbs** opens per-orb targeting; **Bands** contains spectral and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused.
+
 ## Versioning and what the numbers mean
 
 Auralprint uses three related identifiers:
@@ -30,7 +34,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 | — | RC-1 (release gate) | Orbs overhaul v1 (per-orb spectral + color phase) |
+| 115 | v0.1.15 | — | ✅ Shipped (Internal) | Orbs overhaul v1 (per-orb spectral + color phase) |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Per-orb band picker UI |
@@ -123,7 +127,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 115 — v0.1.15: Orbs Overhaul (v1)
 
-**Goal:** Build 115 makes orbs first-class Visualizers inside the scene/compositor architecture.
+**Goal:** orbs become first-class Visualizers inside the scene/compositor architecture.
 
 **Scope**
 - Per-orb spectral targeting (band IDs / ranges)
@@ -134,10 +138,6 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 **DoD**
 - Orbs can lock to different bands cleanly
 - Presets round-trip without corruption
-
-**Release-gate status**
-- Current candidate: `v0.1.15.RC-1`
-- Build 113 remains the canonical shipped baseline until the Build 115 release-gate audit in `docs/BUILD_115_RELEASE_GATE.md` is completed and accepted.
 
 ---
 

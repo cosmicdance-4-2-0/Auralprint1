@@ -280,7 +280,7 @@ const CONFIG = deepFreeze({
   ],
 
   ui: {
-    panelBackgroundRgba: "rgba(0,0,0,0.72)",
+    panelBackgroundRgba: "rgba(17,25,30,0.96)",
     panelBlurPx: 6,
     panelPaddingPx: 10,
     panelGapPx: 10,
@@ -367,21 +367,6 @@ const CONFIG = deepFreeze({
     },
   },
 
-  visualizers: {
-    orbs: {
-      defaults: {
-        hueOffsetDeg: 0,
-        centerX: 0,
-        centerY: 0,
-      },
-      limits: {
-        hueOffsetDeg: { min: 0, max: 360, step: 1 },
-        centerX: { min: -1, max: 1, step: 0.01 },
-        centerY: { min: -1, max: 1, step: 0.01 },
-      },
-    },
-  },
-
   defaults: {
     visuals: {
       backgroundColor: "#000000",
@@ -426,77 +411,30 @@ const CONFIG = deepFreeze({
     // Orbs: each orb chooses an analyser channel via `chanId` and can optionally
     // target specific spectral bands with `bandIds`.
     // Empty `bandIds` means full-band energy.
-    //
-    // ENGINE-COMPLETE fields (fully working in sim, no UI yet — do not re-implement):
-    //   chanId        — L/R/C channel routing (engine done; UI deferred)
-    //   bandIds       — per-orb spectral band targeting, avg energy (engine done; UI deferred)
-    //   chirality     — +1 or -1 rotation direction (engine done; UI deferred)
-    //   startAngleRad — initial phase offset in radians (engine done; UI deferred)
-    //
-    // Scene-only orb-overhaul fields live under CONFIG.visualizers.orbs and the
-    // canonical Scene runtime/preset path:
-    //   hueOffsetDeg  — per-orb color phase offset
-    //   centerX/Y     — orb origin offset in sim space
     orbs: [
-      { id: "ORB0", chanId: "R", bandIds: [], chirality: -1, startAngleRad: 0 },
-	  { id: "ORB1", chanId: "L", bandIds: [], chirality: -1, startAngleRad: Math.PI },
+      {
+        id: "ORB0",
+        chanId: "R",
+        bandIds: [],
+        chirality: -1,
+        startAngleRad: 0,
+        hueOffsetDeg: 0,
+        colorSource: "inherit",
+        centerXFrac: 0,
+        centerYFrac: 0,
+      },
+      {
+        id: "ORB1",
+        chanId: "L",
+        bandIds: [],
+        chirality: -1,
+        startAngleRad: Math.PI,
+        hueOffsetDeg: 0,
+        colorSource: "inherit",
+        centerXFrac: 0,
+        centerYFrac: 0,
+      },
     ],
-
-    scene: {
-      nodes: [
-        {
-          id: "orbs-1",
-          type: "orbs",
-          enabled: true,
-          zIndex: 0,
-          bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
-          anchor: { x: 0.5, y: 0.5 },
-          settings: [
-            {
-              id: "ORB0",
-              chanId: "R",
-              bandIds: [],
-              chirality: -1,
-              startAngleRad: 0,
-              hueOffsetDeg: 0,
-              centerX: 0,
-              centerY: 0,
-            },
-            {
-              id: "ORB1",
-              chanId: "L",
-              bandIds: [],
-              chirality: -1,
-              startAngleRad: Math.PI,
-              hueOffsetDeg: 0,
-              centerX: 0,
-              centerY: 0,
-            },
-          ],
-        },
-        {
-          id: "overlay-1",
-          type: "bandOverlay",
-          enabled: true,
-          zIndex: 1,
-          bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
-          anchor: { x: 0.5, y: 0.5 },
-          settings: {
-            enabled: true,
-            connectAdjacent: true,
-            alpha: 0.65,
-            pointSizePx: 3,
-            minRadiusFrac: 0.01,
-            maxRadiusFrac: 0.80,
-            waveformRadialDisplaceFrac: 0.18,
-            lineAlpha: 0.35,
-            lineWidthPx: 1,
-            phaseMode: "free",
-            ringSpeedRadPerSec: 0.0,
-          },
-        },
-      ],
-    },
 
 bands: {
   // Ceiling adjusted (Now 22.5K) to restore band 255 functionality. Should now be 22.5K to 24K (Effectively, depending on nyquist)
@@ -510,7 +448,7 @@ bands: {
   distributionMode: "erb",  // "linear" | "log" | "mel" | "bark" | "erb"
 
       overlay: {
-        enabled: true,
+        enabled: false,
         connectAdjacent: true,
         alpha: 0.65,
         pointSizePx: 3,
@@ -585,7 +523,15 @@ bands: {
       rightSilenceRms: 0.002,
       lrCorrelationStride: 8,
       lrCorrelationMonoThresh: 0.995
-    }
+    },
+
+    orbs: {
+      hueOffsetDeg: { min: 0, max: 360, step: 1 },
+      centerXFrac: { min: -0.95, max: 0.95, step: 0.01 },
+      centerYFrac: { min: -0.95, max: 0.95, step: 0.01 },
+      colorSources: ["inherit", "fixed", "dominant", "angle"],
+      channels: ["L", "R", "C"],
+    },
   }
 });
 
