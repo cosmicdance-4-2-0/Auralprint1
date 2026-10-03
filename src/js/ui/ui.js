@@ -12,7 +12,7 @@ import { Scrubber } from "../audio/scrubber.js";
 import { InputSourceManager } from "../audio/input-source-manager.js";
 import { ColorPolicy } from "../render/color-policy.js";
 import { RecorderEngine } from "../recording/recorder-engine.js";
-import { initOrbs, resetOrbsToDesignedPhases, resetOrbTrailsForTrack, syncOrbCosmeticsFromSettings } from "../render/orb-runtime.js";
+import { initOrbs, resetVisualizers, syncOrbsFromSettings } from "../render/orb-runtime.js";
 import { primeDomCache } from "./dom-cache.js";
 import { createOrbBandPicker, parseBandSelection } from "./orb-band-picker.js";
 
@@ -214,6 +214,16 @@ function readSourceUiModel({
     audioStatusText: hasAudioToast ? audioToastText : withRecording,
     sourceSelectorCopy: readSourceSelectorCopy({ sourceState, audioState, recordingState, queueLength }),
   };
+}
+
+function readBulkOrbValue(orbs, group, field) {
+  if (!Array.isArray(orbs) || !orbs.length) return { mixed: false, value: undefined };
+  const value = orbs[0][group][field];
+  return { mixed: orbs.some((orb) => orb[group][field] !== value), value };
+}
+
+function applyBulkOrbValue(orbs, group, field, value) {
+  for (const orb of orbs) orb[group][field] = value;
 }
 
 const UI = (() => {
@@ -557,9 +567,9 @@ const UI = (() => {
     applyPrefs(reason);
     if (structural) {
       initOrbs();
-      resetOrbsToDesignedPhases();
+      resetVisualizers("visuals");
     } else {
-      syncOrbCosmeticsFromSettings();
+      syncOrbsFromSettings();
     }
   }
 
@@ -641,10 +651,12 @@ const UI = (() => {
     const { rebuildBandsOnDefinitionChange = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
-    preferences.particles.sizeMinPx = Math.min(preferences.particles.sizeMinPx, preferences.particles.sizeMaxPx);
-    preferences.particles.ttlSec = Math.max(preferences.particles.ttlSec, preferences.particles.sizeToMinSec);
+    for (let i = 0; i < preferences.orbs.length; i++) {
+      preferences.orbs[i] = normalizeOrbDef(preferences.orbs[i], CONFIG.defaults.orbs[i % CONFIG.defaults.orbs.length]);
+    }
 
     resolveSettings();
+    syncOrbsFromSettings();
 
     BandBankController.syncFromSettings();
     const bandDefinitionChanged = BandBankController.readBandDefKey(runtime.settings) !== prevBandDefKey;
@@ -665,7 +677,7 @@ const UI = (() => {
     replacePreferences(deepClone(CONFIG.defaults));
     applyPrefs("prefs reset", { rebuildBandsOnDefinitionChange: true });
     initOrbs();
-    resetOrbsToDesignedPhases();
+    resetVisualizers("visuals");
   }
 
   async function shareLink() {
@@ -684,7 +696,7 @@ const UI = (() => {
     if (ok) {
       applyPrefs("applied URL preset", { rebuildBandsOnDefinitionChange: true });
       initOrbs();
-      resetOrbsToDesignedPhases();
+      resetVisualizers("visuals");
     } else {
       simStatusToast("No valid preset in URL hash.", 4000);
     }
@@ -1482,49 +1494,35 @@ const UI = (() => {
     ui.rngVol.value = String(p.audio.volume);
     ui.valVol.textContent = fmt(p.audio.volume, 2);
 
-    ui.chkLines.checked = !!p.trace.lines;
-    ui.valLines.textContent = p.trace.lines ? "on" : "off";
-    ui.rngNumLines.value = String(p.trace.numLines);
-    ui.valNumLines.textContent = `${p.trace.numLines}`;
-
-    ui.selLineColorMode.value = p.trace.lineColorMode;
-    ui.valLineColorMode.textContent = p.trace.lineColorMode;
-
-    ui.rngEmit.value = String(p.particles.emitPerSecond);
-    ui.valEmit.textContent = `${p.particles.emitPerSecond}/s`;
-
-    ui.rngSizeMax.value = String(p.particles.sizeMaxPx);
-    ui.valSizeMax.textContent = `${p.particles.sizeMaxPx}px`;
-
-    ui.rngSizeMin.value = String(p.particles.sizeMinPx);
-    ui.valSizeMin.textContent = `${p.particles.sizeMinPx}px`;
-
-    ui.rngSizeToMin.value = String(p.particles.sizeToMinSec);
-    ui.valSizeToMin.textContent = `${fmt(p.particles.sizeToMinSec, 1)}s`;
-
-    ui.rngTTL.value = String(p.particles.ttlSec);
-    const fadeSec = Math.max(0, p.particles.ttlSec - p.particles.sizeToMinSec);
-    ui.valTTL.textContent = `${fmt(p.particles.ttlSec, 1)}s (fade ${fmt(fadeSec, 1)}s)`;
-
-    ui.rngOverlap.value = String(p.particles.overlapRadiusPx);
-    ui.valOverlap.textContent = `${fmt(p.particles.overlapRadiusPx, 1)}px`;
-
-    ui.rngOmega.value = String(p.motion.angularSpeedRadPerSec);
-    ui.valOmega.textContent = `${fmt(p.motion.angularSpeedRadPerSec, 3)} rad/s (${fmt(p.motion.angularSpeedRadPerSec * RAD_TO_DEG, 1)}°/s)`;
-
-    ui.rngWfDisp.value = String(p.motion.waveformRadialDisplaceFrac);
-    ui.valWfDisp.textContent = fmt(p.motion.waveformRadialDisplaceFrac, 3);
+    const bulk = (group, field, control, output, format) => {
+      const model = readBulkOrbValue(p.orbs, group, field);
+      if (!model.mixed) control.value = String(model.value);
+      output.textContent = model.mixed ? "mixed" : format(model.value);
+      if (control.type === "checkbox") {
+        control.indeterminate = model.mixed;
+        if (!model.mixed) control.checked = !!model.value;
+      }
+      return model;
+    };
+    bulk("trace", "lines", ui.chkLines, ui.valLines, (v) => v ? "on" : "off");
+    bulk("trace", "numLines", ui.rngNumLines, ui.valNumLines, String);
+    bulk("trace", "lineColorMode", ui.selLineColorMode, ui.valLineColorMode, String);
+    bulk("particles", "emitPerSecond", ui.rngEmit, ui.valEmit, (v) => `${v}/s`);
+    bulk("particles", "sizeMaxPx", ui.rngSizeMax, ui.valSizeMax, (v) => `${v}px`);
+    bulk("particles", "sizeMinPx", ui.rngSizeMin, ui.valSizeMin, (v) => `${v}px`);
+    bulk("particles", "sizeToMinSec", ui.rngSizeToMin, ui.valSizeToMin, (v) => `${fmt(v, 1)}s`);
+    bulk("particles", "ttlSec", ui.rngTTL, ui.valTTL, (v) => `${fmt(v, 1)}s`);
+    bulk("particles", "overlapRadiusPx", ui.rngOverlap, ui.valOverlap, (v) => `${fmt(v, 1)}px`);
+    bulk("motion", "angularSpeedRadPerSec", ui.rngOmega, ui.valOmega, (v) => `${fmt(v, 3)} rad/s (${fmt(v * RAD_TO_DEG, 1)}°/s)`);
+    bulk("response", "waveformRadialDisplaceFrac", ui.rngWfDisp, ui.valWfDisp, (v) => fmt(v, 3));
 
     refreshOrbPanelUi(p);
 
     ui.rngRmsGain.value = String(p.audio.rmsGain);
     ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
 
-    ui.rngMinRad.value = String(p.audio.minRadiusFrac);
-    ui.valMinRad.textContent = fmt(p.audio.minRadiusFrac, 3);
-
-    ui.rngMaxRad.value = String(p.audio.maxRadiusFrac);
-    ui.valMaxRad.textContent = fmt(p.audio.maxRadiusFrac, 3);
+    bulk("response", "minRadiusFrac", ui.rngMinRad, ui.valMinRad, (v) => fmt(v, 3));
+    bulk("response", "maxRadiusFrac", ui.rngMaxRad, ui.valMaxRad, (v) => fmt(v, 3));
 
     ui.rngSmooth.value = String(p.audio.smoothingTimeConstant);
     ui.valSmooth.textContent = fmt(p.audio.smoothingTimeConstant, 2);
@@ -1599,7 +1597,7 @@ const UI = (() => {
 
   function resetTrackVisualState() {
     Scrubber.reset();
-    resetOrbTrailsForTrack();
+    resetVisualizers("track");
     state.bands.energies01.fill(0);
     state.bands.dominantIndex = 0;
     state.bands.dominantName = "(none)";
@@ -2157,25 +2155,19 @@ const UI = (() => {
     ui.btnShare.addEventListener("click", shareLink);
     ui.btnApplyUrl.addEventListener("click", applyUrlNow);
     ui.btnResetPrefs.addEventListener("click", resetPrefs);
-    ui.btnResetVisuals.addEventListener("click", () => { resetOrbsToDesignedPhases(); simStatusToast("Visuals reset."); });
+    ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); simStatusToast("Visuals reset."); });
 
-    ui.chkLines.addEventListener("change", () => { preferences.trace.lines = !!ui.chkLines.checked; applyPrefs("lines"); });
-    ui.rngNumLines.addEventListener("input", () => { preferences.trace.numLines = Number(ui.rngNumLines.value); applyPrefs("num lines"); });
+    ui.chkLines.addEventListener("change", () => { applyBulkOrbValue(preferences.orbs, "trace", "lines", !!ui.chkLines.checked); applyPrefs("lines"); });
+    ui.rngNumLines.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, "trace", "numLines", Number(ui.rngNumLines.value)); applyPrefs("num lines"); });
 
     ui.selLineColorMode.addEventListener("change", () => {
-      preferences.trace.lineColorMode = ui.selLineColorMode.value;
+      applyBulkOrbValue(preferences.orbs, "trace", "lineColorMode", ui.selLineColorMode.value);
       applyPrefs("line color mode");
     });
 
-    ui.rngEmit.addEventListener("input", () => { preferences.particles.emitPerSecond = Number(ui.rngEmit.value); applyPrefs("emit rate"); });
-    ui.rngSizeMax.addEventListener("input", () => { preferences.particles.sizeMaxPx = Number(ui.rngSizeMax.value); applyPrefs("size max"); });
-    ui.rngSizeMin.addEventListener("input", () => { preferences.particles.sizeMinPx = Number(ui.rngSizeMin.value); applyPrefs("size min"); });
-    ui.rngSizeToMin.addEventListener("input", () => { preferences.particles.sizeToMinSec = Number(ui.rngSizeToMin.value); applyPrefs("time to min"); });
-    ui.rngTTL.addEventListener("input", () => { preferences.particles.ttlSec = Number(ui.rngTTL.value); applyPrefs("ttl"); });
-    ui.rngOverlap.addEventListener("input", () => { preferences.particles.overlapRadiusPx = Number(ui.rngOverlap.value); applyPrefs("overlap radius"); });
-
-    ui.rngOmega.addEventListener("input", () => { preferences.motion.angularSpeedRadPerSec = Number(ui.rngOmega.value); applyPrefs("angular speed"); });
-    ui.rngWfDisp.addEventListener("input", () => { preferences.motion.waveformRadialDisplaceFrac = Number(ui.rngWfDisp.value); applyPrefs("orb waveform disp"); });
+    for (const [control, group, field, reason] of [[ui.rngEmit,"particles","emitPerSecond","emit rate"],[ui.rngSizeMax,"particles","sizeMaxPx","size max"],[ui.rngSizeMin,"particles","sizeMinPx","size min"],[ui.rngSizeToMin,"particles","sizeToMinSec","time to min"],[ui.rngTTL,"particles","ttlSec","ttl"],[ui.rngOverlap,"particles","overlapRadiusPx","overlap radius"],[ui.rngOmega,"motion","angularSpeedRadPerSec","angular speed"],[ui.rngWfDisp,"response","waveformRadialDisplaceFrac","orb waveform disp"]]) {
+      control.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, group, field, Number(control.value)); applyPrefs(reason); });
+    }
 
     ui.selOrb0Chan.addEventListener("change", () => {
       preferences.orbs[0].chanId = ui.selOrb0Chan.value;
@@ -2233,8 +2225,8 @@ const UI = (() => {
     });
 
     ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)"); });
-    ui.rngMinRad.addEventListener("input", () => { preferences.audio.minRadiusFrac = Number(ui.rngMinRad.value); applyPrefs("min radius"); });
-    ui.rngMaxRad.addEventListener("input", () => { preferences.audio.maxRadiusFrac = Number(ui.rngMaxRad.value); applyPrefs("max radius"); });
+    ui.rngMinRad.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, "response", "minRadiusFrac", Number(ui.rngMinRad.value)); applyPrefs("min radius"); });
+    ui.rngMaxRad.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, "response", "maxRadiusFrac", Number(ui.rngMaxRad.value)); applyPrefs("max radius"); });
     ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing"); });
     ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size"); });
 
@@ -2337,7 +2329,7 @@ const UI = (() => {
         return;
       }
       if (e.code === "KeyR") {
-        resetOrbsToDesignedPhases();
+        resetVisualizers("visuals");
         return;
       }
 
@@ -2382,7 +2374,7 @@ const UI = (() => {
       if (ok) {
         applyPrefs("hash preset loaded", { rebuildBandsOnDefinitionChange: true });
         initOrbs();
-        resetOrbsToDesignedPhases();
+        resetVisualizers("visuals");
       }
     });
 
@@ -2403,4 +2395,4 @@ const UI = (() => {
   };
 })();
 
-export { UI, isFileWorkflowMode, shouldShowActiveQueueItem, readSourceUiModel };
+export { UI, isFileWorkflowMode, shouldShowActiveQueueItem, readSourceUiModel, readBulkOrbValue, applyBulkOrbValue };

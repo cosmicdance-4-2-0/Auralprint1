@@ -137,7 +137,7 @@ Violation results in:
 - Build 115 establishes an explicit analysis-consumer interface. Downstream visual systems consume that representation instead of independently reading unrelated `AudioEngine`, analyser-node, and global band-state details.
 - When a stable analysis interface exists, visualizers MUST NOT reach into Web Audio internals.
 - Consumers may read producer-owned analysis arrays and buffers but MUST NOT mutate them.
-- Visualization-specific response and presentation state should ultimately belong to the visualizer instance that uses it. Build 115 does not yet declare a final persisted Visualizer schema.
+- Visualization-specific response and presentation state should ultimately belong to the visualizer instance that uses it. Schema 10 makes Orb motion, response, particles, and trace persistent Orb-owned state; color ownership remains a later Build 115 stage.
 
 ### 4.1 Band System
 
@@ -159,7 +159,11 @@ Agents MUST:
 Canonical orb fields:
 ```
 id, chanId, bandIds, chirality, startAngleRad,
-hueOffsetDeg, colorSource, centerXFrac, centerYFrac
+hueOffsetDeg, colorSource, centerXFrac, centerYFrac,
+motion { angularSpeedRadPerSec },
+response { minRadiusFrac, maxRadiusFrac, waveformRadialDisplaceFrac },
+particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, overlapRadiusPx },
+trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 ```
 
 Rules:
@@ -171,10 +175,10 @@ Rules:
 ### 4.2 Visualizer Lifecycle
 
 - Visualizers consume `AnalysisFrame`; they MUST NOT read Web Audio internals.
-- Visualizer-specific runtime behavior belongs behind the lifecycle contract: `id`, `type`, `isEnabled()`, `update()`, `render()`, `reset(reason)`, and `dispose()`.
+- Visualizer-specific runtime behavior belongs behind the lifecycle contract: `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`.
 - `VisualizerRuntime` owns active composition order and lifecycle dispatch. Renderer owns canonical canvas and drawing mechanics; each visualizer owns its behavior and participation in composition.
 - Adding a future visualizer must not add type-specific simulation or phase behavior to the main animation loop.
-- Lifecycle runtime state is not automatically preset state. Schema 9 remains `preferences.orbs[]` and `preferences.bands.overlay`.
+- Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Shared Motion/Radius/Particles/Trace controls are temporary bulk controls and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
 
 ## 5. UI System Constraints

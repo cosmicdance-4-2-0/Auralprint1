@@ -16,11 +16,10 @@ const Renderer = (() => {
     ctx.fillRect(0, 0, state.widthPx, state.heightPx);
   }
 
-  function drawTrailLines(particles, dominantBandIndex) {
-    const s = runtime.settings;
-    if (!s.trace.lines) return;
+  function drawTrailLines(particles, dominantBandIndex, trace) {
+    if (!trace.lines) return;
 
-    const segments = s.trace.numLines;
+    const segments = trace.numLines;
     const neededPts = segments + 1;
     if (!particles || particles.length < 2) return;
 
@@ -29,13 +28,13 @@ const Renderer = (() => {
     if (slice.length < 2) return;
 
     const ctx = state.ctx;
-    const rgb = ColorPolicy.pickLineColorRgb01(particles, dominantBandIndex);
-    const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
+    const rgb = ColorPolicy.pickLineColorRgb01(particles, dominantBandIndex, trace.lineColorMode);
+    const stroke = rgb01ToCss(rgb, trace.lineAlpha);
 
     ctx.save();
     ctx.globalAlpha = 1;
     ctx.strokeStyle = stroke;
-    ctx.lineWidth = s.trace.lineWidthPx * state.dpr;
+    ctx.lineWidth = trace.lineWidthPx * state.dpr;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
 
@@ -51,17 +50,17 @@ const Renderer = (() => {
     ctx.restore();
   }
 
-  function drawParticles(particles, nowSec) {
+  function drawParticles(particles, nowSec, particleSettings) {
     const s = runtime.settings;
     const ctx = state.ctx;
 
     const bg = hexToRgb01(s.visuals.backgroundColor);
 
-    const sizeMax = s.particles.sizeMaxPx * state.dpr;
-    const sizeMin = Math.min(s.particles.sizeMinPx, s.particles.sizeMaxPx) * state.dpr;
+    const sizeMax = particleSettings.sizeMaxPx * state.dpr;
+    const sizeMin = Math.min(particleSettings.sizeMinPx, particleSettings.sizeMaxPx) * state.dpr;
 
-    const toMin = Math.max(0.0001, s.particles.sizeToMinSec);
-    const ttl = Math.max(0.0001, s.particles.ttlSec);
+    const toMin = Math.max(0.0001, particleSettings.sizeToMinSec);
+    const ttl = Math.max(0.0001, particleSettings.ttlSec);
     const fadeSec = Math.max(0.0001, ttl - toMin);
 
     for (let i = 0; i < particles.length; i++) {
@@ -170,8 +169,8 @@ const Renderer = (() => {
 
   function drawOrb(orb, nowSec, dominantBandIndex) {
     const particles = orb.trail.particles;
-    drawTrailLines(particles, dominantBandIndex);
-    drawParticles(particles, nowSec);
+    drawTrailLines(particles, dominantBandIndex, orb.trace);
+    drawParticles(particles, nowSec, orb.particles);
   }
 
   // RecorderEngine owns captureStream() and any MediaStream lifecycle.

@@ -1,6 +1,6 @@
 import { clamp } from "../core/utils.js";
 import { TAU } from "../core/constants.js";
-import { runtime, normalizeOrbChannelId, sanitizeOrbBandIds } from "../core/preferences.js";
+import { normalizeOrbChannelId, sanitizeOrbBandIds } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { TrailSystem } from "./trail-system.js";
 import { ColorPolicy } from "./color-policy.js";
@@ -19,6 +19,10 @@ class Orb {
     this.colorSource = def.colorSource;
     this.centerXFrac = def.centerXFrac;
     this.centerYFrac = def.centerYFrac;
+    this.motion = def.motion;
+    this.response = def.response;
+    this.particles = def.particles;
+    this.trace = def.trace;
     this.angleRad = this.startAngleRad;
 
     this.trail = new TrailSystem();
@@ -32,23 +36,25 @@ class Orb {
   resetPhase() { this.angleRad = this.startAngleRad; }
   resetTrail() { this.trail.reset(); }
 
-  syncCosmeticFromDef(def) {
+  syncFromDef(def) {
     this.hueOffsetDeg = def.hueOffsetDeg;
     this.colorSource = def.colorSource;
     this.centerXFrac = def.centerXFrac;
     this.centerYFrac = def.centerYFrac;
     this.bandIds = sanitizeOrbBandIds(def.bandIds, def.bandNames);
+    this.motion = def.motion;
+    this.response = def.response;
+    this.particles = def.particles;
+    this.trace = def.trace;
   }
 
   step(dtSec, nowSec, band, energyOverride01, dominantBandIndex) {
-    const s = runtime.settings;
-
-    this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
+    this.angleRad += this.chirality * this.motion.angularSpeedRadPerSec * dtSec;
     this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
 
     const minDim = Math.min(state.widthPx, state.heightPx);
-    const minR = minDim * s.audio.minRadiusFrac;
-    const maxR = minDim * s.audio.maxRadiusFrac;
+    const minR = minDim * this.response.minRadiusFrac;
+    const maxR = minDim * this.response.maxRadiusFrac;
     const safeMin = Math.min(minR, maxR);
     const safeMax = Math.max(minR, maxR);
 
@@ -62,7 +68,7 @@ class Orb {
       const phase01 = this.angleRad / TAU;
       const idx = Math.floor(phase01 * (wf.length - 1));
       const sample = wf[idx];
-      this.radialDispPx = this.baseRadiusPx * s.motion.waveformRadialDisplaceFrac * sample;
+      this.radialDispPx = this.baseRadiusPx * this.response.waveformRadialDisplaceFrac * sample;
     } else {
       this.radialDispPx = 0;
     }
@@ -73,7 +79,7 @@ class Orb {
     this.ySim = radius * Math.sin(this.angleRad) + this.centerYFrac * minDim;
 
     const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad, this, dominantBandIndex);
-    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
+    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles);
   }
 }
 

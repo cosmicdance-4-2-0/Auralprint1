@@ -2,9 +2,9 @@
 
 This repo tracks **Auralprint** an offline-capable audio analysis suite.(“analyzer cosplaying as a visualizer”).
 
-The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). Build 115 is actively under development as **Visualizer Architecture + Orb Overhaul v1**. The new menu organization and editing of the two existing Orb instances have substantially landed, and the AnalysisFrame/Visualizer lifecycle seams have landed, but Orb lifecycle management (add/remove/duplicate) and ownership of still-global simulation/particle/trace settings remain unfinished. Build 116 Camera work is explicitly blocked until that decomposition and its UX are complete.
+The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). Build 115 is actively under development as **Visualizer Architecture + Orb Overhaul v1**. The new menu organization and editing of the two existing Orb instances have substantially landed, and the AnalysisFrame/Visualizer lifecycle seams have landed, and schema-10 per-Orb motion/response/particle/trace ownership has landed; Orb lifecycle management (add/remove/duplicate) remains unfinished. Build 116 Camera work is explicitly blocked until that decomposition and its UX are complete.
 
-To try a development revision, read the canonical root `version`, run `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15c.html`). Start with **Load audio**. **Orbs** opens per-orb targeting; **Bands** contains spectral and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused. Passing Node tests and producing the single-file build are regression evidence, not evidence that Build 115 is nearly ready for canonization.
+To try a development revision, read the canonical root `version`, run `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15d.html`). Start with **Load audio**. **Orbs** opens per-orb targeting; **Bands** contains spectral and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused. Passing Node tests and producing the single-file build are regression evidence, not evidence that Build 115 is nearly ready for canonization.
 
 ## Versioning and what the numbers mean
 
@@ -34,7 +34,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 (`v0.1.15c` development revision) | — | In Progress | Visualizer Architecture + Orb Overhaul v1 |
+| 115 | v0.1.15 (`v0.1.15d` development revision) | — | In Progress | Visualizer Architecture + Orb Overhaul v1 |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Richer spectral selection |
@@ -127,13 +127,15 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 115 — v0.1.15: Visualizer Architecture + Orb Overhaul v1
 
+**Staged status:** 115A complete; 115B complete; 115C complete; 115D complete. Final per-Orb UI, dynamic Orb management, and panel decomposition remain future Build 115 work.
+
 **Goal:** establish a clean analysis-consumer boundary and make Orbs first-class visualizers before camera work begins.
 
 **Scope**
 - The reorganized menus and editing for two existing Orb instances are substantially present.
 - Per-Orb channel, spectral targeting, chirality, start angle, hue offset, color source, and center fields exist.
 - The AnalysisFrame boundary and shared runtime lifecycle for the current Band Overlay and Orbs are complete; dynamic Orb creation/removal/duplication remains a future Build 115 stage.
-- Motion, radius response, particle, and trace ownership is still partly global and must be assigned conservatively.
+- Motion, radius response, particle, and trace settings are schema-10 Orb-owned; current shared controls temporarily apply edits to all Orbs and show mixed values truthfully.
 - The Band Overlay remains in place while its eventual Spectral Ring role and ownership are designed.
 
 **DoD**
@@ -175,14 +177,13 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 118 — v0.1.18: Richer Spectral Selection
 
-**Goal:** extend the existing per-Orb chooser with richer frequency-oriented selection and feedback.
+**Goal:** expand the spectral/band system beyond the existing chooser with richer frequency-oriented selection, inspection, feedback, and practical configurable band-table sizes.
 
 **Scope**
-- Band picker per orb:
-  - search by band name
-  - range select (start/end)
-  - optional named sets (“Air Shelf”, etc.)
-- Visual confirmation in HUD
+- Richer frequency-aware selection and inspection with visual confirmation
+- Configurable practical band-table sizes, with curated presets envisioned around 5, 64, 256, 1024, and 2048
+- Deterministic thematic naming across planetary/core, Earth/ocean/life/atmosphere, orbital/solar/stellar, and cosmic/quantum progressions
+- Sensible generated fallback names where curated names do not apply
 
 **DoD**
 - Usable orb targeting via UX

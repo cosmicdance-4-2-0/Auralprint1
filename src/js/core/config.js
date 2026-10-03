@@ -1,6 +1,17 @@
 import { TAU } from "./constants.js";
 import { deepFreeze } from "./utils.js";
 
+const DEFAULT_ORB_BEHAVIOR = {
+  motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
+  response: { minRadiusFrac: 0.01, maxRadiusFrac: 0.80, waveformRadialDisplaceFrac: 0.10 },
+  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0, overlapRadiusPx: 1.0 },
+  trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand" },
+};
+
+function defaultOrb(identity) {
+  return { ...identity, motion: { ...DEFAULT_ORB_BEHAVIOR.motion }, response: { ...DEFAULT_ORB_BEHAVIOR.response }, particles: { ...DEFAULT_ORB_BEHAVIOR.particles }, trace: { ...DEFAULT_ORB_BEHAVIOR.trace } };
+}
+
 /* =============================================================================
    CONFIG — Canonical truth (never mutated)
    ========================================================================== */
@@ -373,34 +384,10 @@ const CONFIG = deepFreeze({
       particleColor: "#ffffff",
     },
 
-    trace: {
-      lines: true,
-      numLines: 10,
-      lineAlpha: 0.35,
-      lineWidthPx: 2,
-      lineColorMode: "dominantBand", // "fixed" | "lastParticle" | "dominantBand"
-    },
-
-    particles: {
-      emitPerSecond: 240,
-      sizeMaxPx: 8,
-      sizeMinPx: 1,
-      sizeToMinSec: 3.0,
-      ttlSec: 6.0,
-      overlapRadiusPx: 1.0,
-    },
-
-    motion: {
-      angularSpeedRadPerSec: Math.PI * 0.50,
-      waveformRadialDisplaceFrac: 0.10,
-    },
-
     audio: {
       fftSize: 8192,
       smoothingTimeConstant: 0.10,
       rmsGain: 1.0,
-      minRadiusFrac: 0.01,
-      maxRadiusFrac: 0.80,
 
       // Playback knobs (do NOT affect analysis)
       repeatMode: "none",
@@ -412,7 +399,7 @@ const CONFIG = deepFreeze({
     // target specific spectral bands with `bandIds`.
     // Empty `bandIds` means full-band energy.
     orbs: [
-      {
+      defaultOrb({
         id: "ORB0",
         chanId: "R",
         bandIds: [],
@@ -422,8 +409,8 @@ const CONFIG = deepFreeze({
         colorSource: "inherit",
         centerXFrac: 0,
         centerYFrac: 0,
-      },
-      {
+      }),
+      defaultOrb({
         id: "ORB1",
         chanId: "L",
         bandIds: [],
@@ -433,7 +420,7 @@ const CONFIG = deepFreeze({
         colorSource: "inherit",
         centerXFrac: 0,
         centerYFrac: 0,
-      },
+      }),
     ],
 
 bands: {
@@ -499,8 +486,6 @@ bands: {
 
     audio: {
       rmsGain: { min: 0.05, max: 10, step: 0.01 },
-      minRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
-      maxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
       smoothingTimeConstant: { min: 0.01, max: 0.99, step: 0.01 },
       fftSizes: [256, 512, 1024, 2048, 4096, 8192, 16384],
     },
@@ -526,6 +511,10 @@ bands: {
     },
 
     orbs: {
+      response: {
+        minRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
+        maxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
+      },
       hueOffsetDeg: { min: 0, max: 360, step: 1 },
       centerXFrac: { min: -0.95, max: 0.95, step: 0.01 },
       centerYFrac: { min: -0.95, max: 0.95, step: 0.01 },

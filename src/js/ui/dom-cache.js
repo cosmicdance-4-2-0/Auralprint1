@@ -224,8 +224,8 @@ function primeDomCache() {
     bindRange(ui.rngOrb1CenterY, CONFIG.limits.orbs.centerYFrac);
 
     bindRange(ui.rngRmsGain, CONFIG.limits.audio.rmsGain);
-    bindRange(ui.rngMinRad, CONFIG.limits.audio.minRadiusFrac);
-    bindRange(ui.rngMaxRad, CONFIG.limits.audio.maxRadiusFrac);
+    bindRange(ui.rngMinRad, CONFIG.limits.orbs.response.minRadiusFrac);
+    bindRange(ui.rngMaxRad, CONFIG.limits.orbs.response.maxRadiusFrac);
     bindRange(ui.rngSmooth, CONFIG.limits.audio.smoothingTimeConstant);
 
     bindRange(ui.rngBandAlpha, CONFIG.limits.bands.overlayAlpha);
