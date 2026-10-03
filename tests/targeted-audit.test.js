@@ -794,8 +794,8 @@ test("normalizeOrbDef clamps hue and sanitizes Build 115 orb fields", () => {
 
   assert.equal(normalized.hueOffsetDeg, 360);
   assert.equal(normalized.colorSource, "inherit");
-  assert.equal(normalized.centerXFrac, 0.45);
-  assert.equal(normalized.centerYFrac, -0.45);
+  assert.equal(normalized.centerXFrac, CONFIG.limits.orbs.centerXFrac.max);
+  assert.equal(normalized.centerYFrac, CONFIG.limits.orbs.centerYFrac.min);
 });
 
 test("normalizeOrbDef defaults missing v8 orb fields to Build 115 values", () => {
