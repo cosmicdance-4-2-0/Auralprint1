@@ -6,7 +6,7 @@ import { normalizeOrbDef, preferences, replacePreferences, resolveSettings, runt
 import { state } from "../src/js/core/state.js";
 import { UrlPreset } from "../src/js/presets/url-preset.js";
 import { Orb } from "../src/js/render/orb.js";
-import { readBulkOrbValue, applyBulkOrbValue } from "../src/js/ui/ui.js";
+import { readBulkOrbValue, applyBulkOrbValue } from "../src/js/ui/orb-compat-ui.js";
 
 function hash(schema, prefs) {
   return "#p=" + Buffer.from(JSON.stringify({ schema, prefs })).toString("base64url");

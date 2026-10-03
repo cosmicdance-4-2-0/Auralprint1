@@ -1,5 +1,4 @@
 import { clamp, fmt, deepClone, rgb01ToCss } from "../core/utils.js";
-import { RAD_TO_DEG } from "../core/constants.js";
 import { CONFIG } from "../core/config.js";
 import { preferences, runtime, resolveSettings, BAND_NAMES, replacePreferences, normalizeOrbDef } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
@@ -15,7 +14,8 @@ import { ColorPolicy } from "../render/color-policy.js";
 import { RecorderEngine } from "../recording/recorder-engine.js";
 import { initOrbs, resetVisualizers, syncOrbsFromSettings } from "../render/orb-runtime.js";
 import { primeDomCache } from "./dom-cache.js";
-import { createOrbBandPicker, parseBandSelection } from "./orb-band-picker.js";
+import { createWorkspaceUi } from "./workspace.js";
+import { createOrbCompatUi } from "./orb-compat-ui.js";
 
 /* =============================================================================
    UI
@@ -217,17 +217,6 @@ function readSourceUiModel({
   };
 }
 
-function readBulkOrbValue(orbs, group, field) {
-  if (!Array.isArray(orbs) || !orbs.length) return { available: false, mixed: false, value: undefined };
-  const value = orbs[0][group][field];
-  return { available: true, mixed: orbs.some((orb) => orb[group][field] !== value), value };
-}
-
-function applyBulkOrbValue(orbs, group, field, value) {
-  if (!Array.isArray(orbs) || !orbs.length) return false;
-  for (const orb of orbs) orb[group][field] = value;
-  return true;
-}
 
 const UI = (() => {
   const ui = state.ui;
@@ -325,200 +314,6 @@ const UI = (() => {
     ui.loadHint.setAttribute("aria-hidden", "true");
   }
 
-  function isPanelVisible(panel) {
-    return !!(panel && !panel.hidden && panel.style.display !== "none");
-  }
-
-  function syncLauncherControl(launcher, button, { visible = true, active = false, label = "" } = {}) {
-    if (!launcher) return;
-    launcher.hidden = !visible;
-    launcher.setAttribute("aria-hidden", visible ? "false" : "true");
-    launcher.style.display = visible ? "grid" : "none";
-    launcher.classList.toggle("is-active", !!active);
-
-    if (!button) return;
-    button.setAttribute("aria-pressed", active ? "true" : "false");
-    if (label) {
-      if (button.title !== label) button.title = label;
-      if (button.getAttribute("aria-label") !== label) button.setAttribute("aria-label", label);
-    }
-  }
-
-  function syncWorkspaceLauncherState() {
-    syncLauncherControl(ui.openAudio, ui.btnOpenAudio, {
-      active: isPanelVisible(ui.audioPanel),
-      label: isPanelVisible(ui.audioPanel) ? "Hide audio source panel" : "Show audio source panel",
-    });
-    syncLauncherControl(ui.openSim, ui.btnOpenSim, {
-      active: isPanelVisible(ui.simPanel),
-      label: isPanelVisible(ui.simPanel) ? "Hide orbs panel" : "Show orbs panel",
-    });
-    syncLauncherControl(ui.openBands, ui.btnOpenBands, {
-      active: isPanelVisible(ui.bandsPanel),
-      label: isPanelVisible(ui.bandsPanel) ? "Hide bands panel" : "Show bands panel",
-    });
-    syncLauncherControl(ui.openQueue, ui.btnOpenQueue, {
-      active: isPanelVisible(ui.queuePanel),
-      label: isPanelVisible(ui.queuePanel) ? "Hide queue panel" : "Show queue panel",
-    });
-    syncLauncherControl(ui.openRecord, ui.btnOpenRecord, {
-      visible: !!(state.recording && state.recording.hooksEnabled),
-      active: !!ui.recordingPanelVisible,
-      label: readRecordingLauncherLabel(state.recording, !!ui.recordingPanelVisible),
-    });
-  }
-
-  function setWorkspaceLauncherCollapsed(collapsed) {
-    ui.workspaceLauncherCollapsed = !!collapsed;
-    if (ui.workspaceLauncher) {
-      ui.workspaceLauncher.dataset.collapsed = ui.workspaceLauncherCollapsed ? "true" : "false";
-    }
-    if (ui.btnToggleWorkspaceLauncher) {
-      const label = ui.workspaceLauncherCollapsed ? "Expand launcher bar" : "Collapse launcher bar";
-      ui.btnToggleWorkspaceLauncher.title = label;
-      ui.btnToggleWorkspaceLauncher.setAttribute("aria-label", label);
-      ui.btnToggleWorkspaceLauncher.setAttribute("aria-expanded", ui.workspaceLauncherCollapsed ? "false" : "true");
-      ui.btnToggleWorkspaceLauncher.textContent = ui.workspaceLauncherCollapsed ? "⌃" : "⌄";
-    }
-  }
-
-  function toggleWorkspaceLauncherCollapsed() {
-    setWorkspaceLauncherCollapsed(!ui.workspaceLauncherCollapsed);
-  }
-
-  function bringPanelForward(panel) {
-    for (const candidate of [ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) {
-      if (candidate) candidate.classList.toggle("panel-front", candidate === panel);
-    }
-  }
-
-  function restoreLauncherFocus(button) {
-    setWorkspaceLauncherCollapsed(false);
-    if (button) button.focus();
-  }
-
-  function syncAudioDockHeight() {
-    if (!ui.audioPanel || typeof ui.audioPanel.getBoundingClientRect !== "function") return;
-    const height = isPanelVisible(ui.audioPanel) ? Math.ceil(ui.audioPanel.getBoundingClientRect().height) : 0;
-    if (height === ui.audioDockHeight) return;
-    ui.audioDockHeight = height;
-    document.documentElement.style.setProperty("--ui-audio-h", `${height}px`);
-  }
-
-  function hideQueuePanel() {
-    if (!ui.queuePanel) return;
-    ui.queuePanel.style.display = "none";
-    syncWorkspaceLauncherState();
-    if (document.activeElement && ui.queuePanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenQueue);
-  }
-
-  function showQueuePanel() {
-    if (!ui.queuePanel) return;
-    ui.queuePanel.style.display = "block";
-    queuePanelRefresher();
-    bringPanelForward(ui.queuePanel);
-    syncWorkspaceLauncherState();
-    if (document.activeElement === ui.btnOpenQueue && ui.btnHideQueue) ui.btnHideQueue.focus();
-  }
-
-  function hideAudioPanel() {
-    ui.audioPanel.style.display = "none";
-    syncAudioDockHeight();
-    syncWorkspaceLauncherState();
-    if (document.activeElement && ui.audioPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenAudio);
-  }
-  function showAudioPanel() {
-    ui.audioPanel.style.display = "grid";
-    syncAudioDockHeight();
-    syncWorkspaceLauncherState();
-    if (document.activeElement === ui.btnOpenAudio) ui.btnHideAudio.focus();
-  }
-
-  function hideSimPanel() {
-    ui.simPanel.style.display = "none";
-    syncWorkspaceLauncherState();
-    if (document.activeElement && ui.simPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenSim);
-  }
-  function showSimPanel() {
-    ui.simPanel.style.display = "block";
-    bringPanelForward(ui.simPanel);
-    syncWorkspaceLauncherState();
-    if (document.activeElement === ui.btnOpenSim) ui.btnHideSim.focus();
-  }
-
-  function hideBandsPanel() {
-    ui.bandsPanel.style.display = "none";
-    syncWorkspaceLauncherState();
-    if (document.activeElement && ui.bandsPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenBands);
-  }
-  function showBandsPanel() {
-    ui.bandsPanel.style.display = "block";
-    bringPanelForward(ui.bandsPanel);
-    syncWorkspaceLauncherState();
-    if (document.activeElement === ui.btnOpenBands) ui.btnHideBands.focus();
-  }
-
-  // Build 115 keeps recording in the unified launcher bar while preserving the
-  // dedicated panel/launcher IDs from Build 113.
-  function setRecordPanelVisibility(visible) {
-    if (!ui.recordPanel || !ui.openRecord) return;
-
-    const nextVisible = !!visible && !!state.recording.hooksEnabled;
-    ui.recordingPanelVisible = nextVisible;
-    ui.recordPanel.hidden = !nextVisible;
-    ui.recordPanel.setAttribute("aria-hidden", nextVisible ? "false" : "true");
-    ui.recordPanel.style.display = nextVisible ? "block" : "none";
-    syncWorkspaceLauncherState();
-  }
-
-  function hideRecordPanel(options = {}) {
-    if (!ui.recordPanel || !ui.openRecord) return;
-    const preserveRestoreFlag = !!options.preserveRestoreFlag;
-    if (!preserveRestoreFlag) ui.recordingPanelRestoreAfterGlobalHide = false;
-    setRecordPanelVisibility(false);
-    if (document.activeElement && ui.recordPanel.contains(document.activeElement) && ui.btnOpenRecord) {
-      restoreLauncherFocus(ui.btnOpenRecord);
-    }
-  }
-
-  function showRecordPanel() {
-    if (!ui.recordPanel || !ui.openRecord || !state.recording.hooksEnabled) return;
-    ui.recordingPanelRestoreAfterGlobalHide = false;
-    setRecordPanelVisibility(true);
-    bringPanelForward(ui.recordPanel);
-    if (document.activeElement === ui.btnOpenRecord && ui.btnHideRecord) ui.btnHideRecord.focus();
-  }
-
-  function primeRecordUi() {
-    if (!ui.recordPanel || !ui.openRecord) return;
-    if (!state.recording.hooksEnabled) ui.recordingPanelRestoreAfterGlobalHide = false;
-    const shouldShowPanel = !!state.recording.hooksEnabled && !!ui.recordingPanelVisible;
-    setRecordPanelVisibility(shouldShowPanel);
-  }
-
-  function togglePanels() {
-    const aVisible = ui.audioPanel.style.display !== "none";
-    const sVisible = ui.simPanel.style.display !== "none";
-    const bVisible = ui.bandsPanel.style.display !== "none";
-    const qVisible = ui.queuePanel && ui.queuePanel.style.display !== "none";
-    const rVisible = ui.recordPanel && ui.recordPanel.style.display !== "none";
-
-    if (aVisible || sVisible || bVisible || qVisible || rVisible) {
-      ui.panelRestoreSnapshot = { audio: aVisible, sim: sVisible, bands: bVisible, queue: qVisible, record: rVisible };
-      ui.recordingPanelRestoreAfterGlobalHide = !!rVisible;
-      hideAudioPanel(); hideSimPanel(); hideBandsPanel(); hideQueuePanel();
-      if (rVisible) hideRecordPanel({ preserveRestoreFlag: true });
-    } else {
-      const restore = ui.panelRestoreSnapshot || { audio: true };
-      if (restore.audio) showAudioPanel();
-      if (restore.sim) showSimPanel();
-      if (restore.bands) showBandsPanel();
-      if (restore.queue) showQueuePanel();
-      const shouldRestoreRecordingPanel = !!ui.recordingPanelRestoreAfterGlobalHide;
-      ui.recordingPanelRestoreAfterGlobalHide = false;
-      if (shouldRestoreRecordingPanel) showRecordPanel();
-    }
-  }
 
   // 112 status-lane routing:
   // - sim lane carries sim/config toasts.
@@ -529,6 +324,13 @@ const UI = (() => {
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
+  const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
+  const orbCompatUi = createOrbCompatUi({
+    ui,
+    commitOrbChange: applyOrbPrefChange,
+    commitPreferences: applyPrefs,
+    showStatus: simStatusToast,
+  });
 
   function simStatusToast(msg, holdMs = 2500) {
     ui.simStatus.textContent = msg;
@@ -549,114 +351,15 @@ const UI = (() => {
     _audioStatusToastUntilMs = 0;
   }
 
-  function formatOrbBandIdsText(bandIds) {
-    if (!Array.isArray(bandIds) || !bandIds.length) return "";
-    return bandIds.join(", ");
-  }
-
-  function describeOrbBandSelection(bandIds) {
-    if (!Array.isArray(bandIds) || !bandIds.length) return "full spectrum";
-    return `${bandIds.length} band${bandIds.length === 1 ? "" : "s"}`;
-  }
 
   function applyOrbPrefChange(orbIndex, reason, { structural = false } = {}) {
     if (!Array.isArray(preferences.orbs) || !preferences.orbs[orbIndex]) return false;
     const defaults = CONFIG.defaults.orbs;
-    const fallback = defaults[orbIndex % defaults.length];
-    preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], fallback);
+    preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], defaults[orbIndex % defaults.length]);
     applyPrefs(reason);
-    if (structural) {
-      initOrbs();
-      resetVisualizers("visuals");
-    } else {
-      syncOrbsFromSettings();
-    }
+    if (structural) { initOrbs(); resetVisualizers("visuals"); }
+    else syncOrbsFromSettings();
     return true;
-  }
-
-  function refreshOrbPanelUi(p) {
-    const count = Array.isArray(p.orbs) ? p.orbs.length : 0;
-    ui.simStatus.textContent = count === 0 ? "No Orbs in scene" : (count > 2 ? `Showing 2 of ${count} Orbs` : `Showing ${count} Orb${count === 1 ? "" : "s"}`);
-    ui.orbCards.forEach((card, index) => { card.hidden = index >= count; });
-    const orb0 = p.orbs && p.orbs[0];
-    const orb1 = p.orbs && p.orbs[1];
-
-    if (orb0) {
-
-    ui.selOrb0Chan.value = orb0.chanId;
-    ui.valOrb0Chan.textContent = orb0.chanId;
-    ui.selOrb0Chir.value = String(orb0.chirality);
-    ui.valOrb0Chir.textContent = orb0.chirality >= 0 ? "+1" : "-1";
-    ui.rngOrb0Hue.value = String(orb0.hueOffsetDeg);
-    ui.valOrb0Hue.textContent = `${orb0.hueOffsetDeg}°`;
-    ui.selOrb0ColorSrc.value = orb0.colorSource;
-    ui.valOrb0ColorSrc.textContent = orb0.colorSource;
-    ui.rngOrb0CenterX.value = String(orb0.centerXFrac);
-    ui.valOrb0CenterX.textContent = fmt(orb0.centerXFrac, 2);
-    ui.rngOrb0CenterY.value = String(orb0.centerYFrac);
-    ui.valOrb0CenterY.textContent = fmt(orb0.centerYFrac, 2);
-    if (document.activeElement !== ui.txtOrb0Bands && ui.txtOrb0Bands.getAttribute("aria-invalid") !== "true") ui.txtOrb0Bands.value = formatOrbBandIdsText(orb0.bandIds);
-    ui.valOrb0Bands.textContent = describeOrbBandSelection(orb0.bandIds);
-    }
-
-    if (orb1) {
-    ui.selOrb1Chan.value = orb1.chanId;
-    ui.valOrb1Chan.textContent = orb1.chanId;
-    ui.selOrb1Chir.value = String(orb1.chirality);
-    ui.valOrb1Chir.textContent = orb1.chirality >= 0 ? "+1" : "-1";
-    ui.rngOrb1Hue.value = String(orb1.hueOffsetDeg);
-    ui.valOrb1Hue.textContent = `${orb1.hueOffsetDeg}°`;
-    ui.selOrb1ColorSrc.value = orb1.colorSource;
-    ui.valOrb1ColorSrc.textContent = orb1.colorSource;
-    ui.rngOrb1CenterX.value = String(orb1.centerXFrac);
-    ui.valOrb1CenterX.textContent = fmt(orb1.centerXFrac, 2);
-    ui.rngOrb1CenterY.value = String(orb1.centerYFrac);
-    ui.valOrb1CenterY.textContent = fmt(orb1.centerYFrac, 2);
-    if (document.activeElement !== ui.txtOrb1Bands && ui.txtOrb1Bands.getAttribute("aria-invalid") !== "true") ui.txtOrb1Bands.value = formatOrbBandIdsText(orb1.bandIds);
-    ui.valOrb1Bands.textContent = describeOrbBandSelection(orb1.bandIds);
-    }
-  }
-
-  function commitOrbBandIdsFromUi(orbIndex, reason) {
-    if (!Array.isArray(preferences.orbs) || !preferences.orbs[orbIndex]) return false;
-    const input = orbIndex === 0 ? ui.txtOrb0Bands : ui.txtOrb1Bands;
-    const valEl = orbIndex === 0 ? ui.valOrb0Bands : ui.valOrb1Bands;
-    const parsed = parseBandSelection(input.value);
-    input.setAttribute("aria-invalid", parsed.error ? "true" : "false");
-    const errorEl = document.getElementById(`orb${orbIndex}BandError`);
-    if (errorEl) errorEl.textContent = parsed.error;
-    if (parsed.error) {
-      valEl.textContent = "Invalid indices";
-      simStatusToast(parsed.error);
-      return;
-    }
-    preferences.orbs[orbIndex].bandIds = parsed.ids;
-    applyOrbPrefChange(orbIndex, reason, { structural: false });
-    const normalized = preferences.orbs[orbIndex].bandIds;
-    input.value = formatOrbBandIdsText(normalized);
-    valEl.textContent = describeOrbBandSelection(normalized);
-    return true;
-  }
-
-  function syncOrbBandPickers() {
-    if (!ui.orbBandPickers) return;
-    // BandBank replaces its edges when distribution/sample rate changes.
-    // Reference checks avoid allocating or touching picker DOM on ordinary frames.
-    if (ui.orbPickerSettings === runtime.settings && ui.orbPickerEdges === state.bands.lowHz) return;
-    ui.orbPickerSettings = runtime.settings;
-    ui.orbPickerEdges = state.bands.lowHz;
-    ui.orbBandPickers.forEach((picker, index) => {
-      const orb = preferences.orbs[index];
-      if (!orb) return;
-      if (picker) picker.sync(orb.bandIds);
-      const input = index === 0 ? ui.txtOrb0Bands : ui.txtOrb1Bands;
-      if (input) {
-        input.setAttribute("aria-invalid", "false");
-        input.value = formatOrbBandIdsText(orb.bandIds);
-      }
-      const errorEl = document.getElementById(`orb${index}BandError`);
-      if (errorEl) errorEl.textContent = "";
-    });
   }
 
   function applyPrefs(reason, options = {}) {
@@ -676,7 +379,7 @@ const UI = (() => {
 
     AudioEngine.applyAnalyserSettingsLive();
     AudioEngine.applyPlaybackSettingsLive();
-    syncOrbBandPickers();
+    orbCompatUi.syncBandPickers();
 
     if (reason) simStatusToast(`Updated: ${reason}`);
     ui.bandsStatus.textContent = STATUS_DEFAULT_BANDS;
@@ -1360,7 +1063,7 @@ const UI = (() => {
         ui.btnOpenRecord.setAttribute("aria-label", model.launcherLabel);
       }
     }
-    syncWorkspaceLauncherState();
+    workspace.syncLauncherState();
 
     syncRecordingMimeOptions(model);
     syncRecordingTargetFpsOptions(model);
@@ -1458,7 +1161,7 @@ const UI = (() => {
   function refreshAllUiText(analysisFrame) {
     const p = preferences;
     maybeRefreshRecordingUi();
-    syncOrbBandPickers();
+    orbCompatUi.syncBandPickers();
 
     const bandText = analysisFrame && analysisFrame.ready
       ? (analysisFrame.monoLike ? "mono-ish (L≈R)" : "stereo (L≠R)")
@@ -1504,41 +1207,10 @@ const UI = (() => {
     ui.rngVol.value = String(p.audio.volume);
     ui.valVol.textContent = fmt(p.audio.volume, 2);
 
-    const bulk = (group, field, control, output, format) => {
-      const model = readBulkOrbValue(p.orbs, group, field);
-      control.disabled = !model.available;
-      if (!model.available) {
-        output.textContent = "—";
-        if (control.type === "checkbox") control.indeterminate = false;
-        return model;
-      }
-      if (!model.mixed) control.value = String(model.value);
-      output.textContent = model.mixed ? "mixed" : format(model.value);
-      if (control.type === "checkbox") {
-        control.indeterminate = model.mixed;
-        if (!model.mixed) control.checked = !!model.value;
-      }
-      return model;
-    };
-    bulk("trace", "lines", ui.chkLines, ui.valLines, (v) => v ? "on" : "off");
-    bulk("trace", "numLines", ui.rngNumLines, ui.valNumLines, String);
-    bulk("trace", "lineColorMode", ui.selLineColorMode, ui.valLineColorMode, String);
-    bulk("particles", "emitPerSecond", ui.rngEmit, ui.valEmit, (v) => `${v}/s`);
-    bulk("particles", "sizeMaxPx", ui.rngSizeMax, ui.valSizeMax, (v) => `${v}px`);
-    bulk("particles", "sizeMinPx", ui.rngSizeMin, ui.valSizeMin, (v) => `${v}px`);
-    bulk("particles", "sizeToMinSec", ui.rngSizeToMin, ui.valSizeToMin, (v) => `${fmt(v, 1)}s`);
-    bulk("particles", "ttlSec", ui.rngTTL, ui.valTTL, (v) => `${fmt(v, 1)}s`);
-    bulk("particles", "overlapRadiusPx", ui.rngOverlap, ui.valOverlap, (v) => `${fmt(v, 1)}px`);
-    bulk("motion", "angularSpeedRadPerSec", ui.rngOmega, ui.valOmega, (v) => `${fmt(v, 3)} rad/s (${fmt(v * RAD_TO_DEG, 1)}°/s)`);
-    bulk("response", "waveformRadialDisplaceFrac", ui.rngWfDisp, ui.valWfDisp, (v) => fmt(v, 3));
-
-    refreshOrbPanelUi(p);
+    orbCompatUi.refresh(p);
 
     ui.rngRmsGain.value = String(p.audio.rmsGain);
     ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
-
-    bulk("response", "minRadiusFrac", ui.rngMinRad, ui.valMinRad, (v) => fmt(v, 3));
-    bulk("response", "maxRadiusFrac", ui.rngMaxRad, ui.valMaxRad, (v) => fmt(v, 3));
 
     ui.rngSmooth.value = String(p.audio.smoothingTimeConstant);
     ui.valSmooth.textContent = fmt(p.audio.smoothingTimeConstant, 2);
@@ -1623,26 +1295,7 @@ const UI = (() => {
   function wireControls() {
     primeDomCache();
 
-    ui.orbPickerSettings = null;
-    ui.orbPickerEdges = null;
-    ui.orbBandPickers = CONFIG.defaults.orbs.map((_, index) => createOrbBandPicker(
-      document.getElementById(`orb${index}BandPicker`), {
-        orbLabel: `Orb ${index + 1}`,
-        onChange(ids) {
-          if (!preferences.orbs[index]) return;
-          preferences.orbs[index].bandIds = ids;
-          applyOrbPrefChange(index, `orb ${index + 1} bands`);
-        },
-        formatRange: BandBank.formatBandRangeText,
-        describeBank: () => `${preferences.bands.distributionMode.toUpperCase()} distribution · ${BAND_NAMES.length} bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}`,
-      }
-    ));
-    if (ui.audioDockObserver) ui.audioDockObserver.disconnect();
-    if (typeof ResizeObserver === "function") {
-      ui.audioDockObserver = new ResizeObserver(syncAudioDockHeight);
-      ui.audioDockObserver.observe(ui.audioPanel);
-    }
-    syncAudioDockHeight();
+    orbCompatUi.init();
 
     initConfigTooltips();
 
@@ -1725,7 +1378,7 @@ const UI = (() => {
       invalidatePendingTrackLoads();
       clearAudioStatusToast();
       clearAudioState();
-      hideQueuePanel();
+      workspace.hideQueuePanel();
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "switch-to-mic",
       });
@@ -1744,7 +1397,7 @@ const UI = (() => {
       invalidatePendingTrackLoads();
       clearAudioStatusToast();
       clearAudioState();
-      hideQueuePanel();
+      workspace.hideQueuePanel();
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "switch-to-stream",
       });
@@ -1770,7 +1423,7 @@ const UI = (() => {
       clearAudioStatusToast();
       await InputSourceManager.teardownActiveSource({ reason: "switch-to-file-mode" });
       clearAudioState();
-      hideQueuePanel();
+      workspace.hideQueuePanel();
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "switch-to-file-mode",
       });
@@ -1973,17 +1626,9 @@ const UI = (() => {
     queuePanelRefresher = refreshQueuePanel;
 
     wireConfigTooltipFeedbackEvents();
-    setWorkspaceLauncherCollapsed(!!ui.workspaceLauncherCollapsed);
-    primeRecordUi();
+    workspace.init({ onRefreshQueuePanel: refreshQueuePanel });
     refreshRecordingUi();
 
-    if (ui.btnHideRecord) ui.btnHideRecord.addEventListener("click", () => {
-      hideRecordPanel();
-    });
-    if (ui.btnOpenRecord) ui.btnOpenRecord.addEventListener("click", () => {
-      if (ui.recordingPanelVisible) hideRecordPanel();
-      else showRecordPanel();
-    });
     if (ui.btnRecordStart) ui.btnRecordStart.addEventListener("click", () => {
       dispatchRecordingAction("start");
     });
@@ -2102,16 +1747,9 @@ const UI = (() => {
 
     ui.btnToggleQueue.addEventListener("click", () => {
       if (!isFileWorkflowMode(state.source)) return;
-      if (isPanelVisible(ui.queuePanel)) hideQueuePanel(); else showQueuePanel();
+      if (workspace.isPanelVisible(ui.queuePanel)) workspace.hideQueuePanel(); else workspace.showQueuePanel();
     });
-    if (ui.btnOpenQueue) ui.btnOpenQueue.addEventListener("click", () => {
-      if (isPanelVisible(ui.queuePanel)) hideQueuePanel(); else showQueuePanel();
-    });
-    if (ui.btnHideQueue) ui.btnHideQueue.addEventListener("click", hideQueuePanel);
-    if (ui.btnTogglePanels) ui.btnTogglePanels.addEventListener("click", togglePanels);
-    for (const panel of [ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) {
-      if (panel) panel.addEventListener("pointerdown", () => bringPanelForward(panel));
-    }
+
 
     ui.btnClearQueue.addEventListener("click", () => {
       if (!isFileWorkflowMode(state.source)) return;
@@ -2149,113 +1787,13 @@ const UI = (() => {
       applyPrefs("volume (playback only)");
     });
 
-    if (ui.btnToggleWorkspaceLauncher) ui.btnToggleWorkspaceLauncher.addEventListener("click", toggleWorkspaceLauncherCollapsed);
-
-    ui.btnHideAudio.addEventListener("click", hideAudioPanel);
-    ui.btnOpenAudio.addEventListener("click", () => {
-      if (isPanelVisible(ui.audioPanel)) hideAudioPanel();
-      else showAudioPanel();
-    });
-
-    ui.btnHideSim.addEventListener("click", hideSimPanel);
-    ui.btnOpenSim.addEventListener("click", () => {
-      if (isPanelVisible(ui.simPanel)) hideSimPanel();
-      else showSimPanel();
-    });
-
-    ui.btnHideBands.addEventListener("click", hideBandsPanel);
-    ui.btnOpenBands.addEventListener("click", () => {
-      if (isPanelVisible(ui.bandsPanel)) hideBandsPanel();
-      else showBandsPanel();
-    });
 
     ui.btnShare.addEventListener("click", shareLink);
     ui.btnApplyUrl.addEventListener("click", applyUrlNow);
     ui.btnResetPrefs.addEventListener("click", resetPrefs);
     ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); simStatusToast("Visuals reset."); });
 
-    ui.chkLines.addEventListener("change", () => { applyBulkOrbValue(preferences.orbs, "trace", "lines", !!ui.chkLines.checked); applyPrefs("lines"); });
-    ui.rngNumLines.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, "trace", "numLines", Number(ui.rngNumLines.value)); applyPrefs("num lines"); });
-
-    ui.selLineColorMode.addEventListener("change", () => {
-      applyBulkOrbValue(preferences.orbs, "trace", "lineColorMode", ui.selLineColorMode.value);
-      applyPrefs("line color mode");
-    });
-
-    for (const [control, group, field, reason] of [[ui.rngEmit,"particles","emitPerSecond","emit rate"],[ui.rngSizeMax,"particles","sizeMaxPx","size max"],[ui.rngSizeMin,"particles","sizeMinPx","size min"],[ui.rngSizeToMin,"particles","sizeToMinSec","time to min"],[ui.rngTTL,"particles","ttlSec","ttl"],[ui.rngOverlap,"particles","overlapRadiusPx","overlap radius"],[ui.rngOmega,"motion","angularSpeedRadPerSec","angular speed"],[ui.rngWfDisp,"response","waveformRadialDisplaceFrac","orb waveform disp"]]) {
-      control.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, group, field, Number(control.value)); applyPrefs(reason); });
-    }
-
-    ui.selOrb0Chan.addEventListener("change", () => {
-      if (!preferences.orbs[0]) return;
-      preferences.orbs[0].chanId = ui.selOrb0Chan.value;
-      applyOrbPrefChange(0, "ORB0 channel", { structural: true });
-    });
-    ui.selOrb0Chir.addEventListener("change", () => {
-      if (!preferences.orbs[0]) return;
-      preferences.orbs[0].chirality = Number(ui.selOrb0Chir.value);
-      applyOrbPrefChange(0, "ORB0 chirality", { structural: true });
-    });
-    ui.rngOrb0Hue.addEventListener("input", () => {
-      if (!preferences.orbs[0]) return;
-      preferences.orbs[0].hueOffsetDeg = Number(ui.rngOrb0Hue.value);
-      applyOrbPrefChange(0, "ORB0 hue offset", { structural: false });
-    });
-    ui.selOrb0ColorSrc.addEventListener("change", () => {
-      if (!preferences.orbs[0]) return;
-      preferences.orbs[0].colorSource = ui.selOrb0ColorSrc.value;
-      applyOrbPrefChange(0, "ORB0 color source", { structural: false });
-    });
-    ui.rngOrb0CenterX.addEventListener("input", () => {
-      if (!preferences.orbs[0]) return;
-      preferences.orbs[0].centerXFrac = Number(ui.rngOrb0CenterX.value);
-      applyOrbPrefChange(0, "ORB0 center X", { structural: false });
-    });
-    ui.rngOrb0CenterY.addEventListener("input", () => {
-      if (!preferences.orbs[0]) return;
-      preferences.orbs[0].centerYFrac = Number(ui.rngOrb0CenterY.value);
-      applyOrbPrefChange(0, "ORB0 center Y", { structural: false });
-    });
-    ui.txtOrb0Bands.addEventListener("change", () => {
-      commitOrbBandIdsFromUi(0, "ORB0 band indices");
-    });
-    ui.selOrb1Chan.addEventListener("change", () => {
-      if (!preferences.orbs[1]) return;
-      preferences.orbs[1].chanId = ui.selOrb1Chan.value;
-      applyOrbPrefChange(1, "ORB1 channel", { structural: true });
-    });
-    ui.selOrb1Chir.addEventListener("change", () => {
-      if (!preferences.orbs[1]) return;
-      preferences.orbs[1].chirality = Number(ui.selOrb1Chir.value);
-      applyOrbPrefChange(1, "ORB1 chirality", { structural: true });
-    });
-    ui.rngOrb1Hue.addEventListener("input", () => {
-      if (!preferences.orbs[1]) return;
-      preferences.orbs[1].hueOffsetDeg = Number(ui.rngOrb1Hue.value);
-      applyOrbPrefChange(1, "ORB1 hue offset", { structural: false });
-    });
-    ui.selOrb1ColorSrc.addEventListener("change", () => {
-      if (!preferences.orbs[1]) return;
-      preferences.orbs[1].colorSource = ui.selOrb1ColorSrc.value;
-      applyOrbPrefChange(1, "ORB1 color source", { structural: false });
-    });
-    ui.rngOrb1CenterX.addEventListener("input", () => {
-      if (!preferences.orbs[1]) return;
-      preferences.orbs[1].centerXFrac = Number(ui.rngOrb1CenterX.value);
-      applyOrbPrefChange(1, "ORB1 center X", { structural: false });
-    });
-    ui.rngOrb1CenterY.addEventListener("input", () => {
-      if (!preferences.orbs[1]) return;
-      preferences.orbs[1].centerYFrac = Number(ui.rngOrb1CenterY.value);
-      applyOrbPrefChange(1, "ORB1 center Y", { structural: false });
-    });
-    ui.txtOrb1Bands.addEventListener("change", () => {
-      commitOrbBandIdsFromUi(1, "ORB1 band indices");
-    });
-
     ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)"); });
-    ui.rngMinRad.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, "response", "minRadiusFrac", Number(ui.rngMinRad.value)); applyPrefs("min radius"); });
-    ui.rngMaxRad.addEventListener("input", () => { applyBulkOrbValue(preferences.orbs, "response", "maxRadiusFrac", Number(ui.rngMaxRad.value)); applyPrefs("max radius"); });
     ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing"); });
     ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size"); });
 
@@ -2349,7 +1887,7 @@ const UI = (() => {
       if (hasFocusedInteractiveTarget(e)) return;
 
       if (e.code === "KeyH") {
-        togglePanels();
+        workspace.togglePanels();
         return;
       }
       if (e.code === "Space") {
@@ -2416,12 +1954,12 @@ const UI = (() => {
     refreshRecordingUi,
     getRecordingUiModel,
     dispatchSourceSwitchAction,
-    showRecordPanel,
-    hideRecordPanel,
+    showRecordPanel: workspace.showRecordPanel,
+    hideRecordPanel: workspace.hideRecordPanel,
     dispatchRecordingAction,
     applyPrefs,
     resetTrackVisualState,
   };
 })();
 
-export { UI, isFileWorkflowMode, shouldShowActiveQueueItem, readSourceUiModel, readBulkOrbValue, applyBulkOrbValue };
+export { UI, isFileWorkflowMode, shouldShowActiveQueueItem, readSourceUiModel };

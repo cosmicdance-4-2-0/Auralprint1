@@ -222,6 +222,15 @@ Avoid:
 - Per-frame allocations
 - Excessive DOM writes
 
+### 5.4 UI Module Ownership
+
+- `ui.js` is the application-level UI coordinator. Feature-specific UI behavior belongs behind focused modules once a stable ownership boundary exists.
+- Workspace panel visibility, focus, stacking, launcher state, and hide/restore behavior have one owner.
+- Orb UI must not own Orb identity, collection normalization, or runtime reconciliation.
+- UI feature modules must not import `ui.js`; dependencies flow toward the coordinator.
+- UI refresh functions must not mutate persistent settings merely to render state or fabricate missing visualizer instances.
+- Listener initialization must be idempotent for the same DOM controls and must not accumulate duplicate handlers.
+
 ---
 
 ## 6. Queue System (Runtime Only)

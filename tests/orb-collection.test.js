@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 
 import { CONFIG } from "../src/js/core/config.js";
 import { allocateOrbId, createOrb, duplicateOrb, findOrbById, normalizeOrbCollection, removeOrb } from "../src/js/core/orb-collection.js";
-import { runtime } from "../src/js/core/preferences.js";
+import { preferences, replacePreferences, resolveSettings, runtime } from "../src/js/core/preferences.js";
 import { state } from "../src/js/core/state.js";
-import { initOrbs, reconcileOrbs } from "../src/js/render/orb-runtime.js";
+import { createRuntimeOrb, duplicateRuntimeOrb, initOrbs, reconcileOrbs, removeRuntimeOrb } from "../src/js/render/orb-runtime.js";
 import { VisualizerRuntime } from "../src/js/render/visualizer-runtime.js";
 
 function defs(ids) {
@@ -72,6 +72,57 @@ test("ID-aware Orb reconciliation preserves survivors and freshens additions acr
   } finally {
     VisualizerRuntime.dispose();
     runtime.settings = oldSettings;
+    state.orbs.length = 0;
+    state.orbs.push(...oldOrbs);
+  }
+});
+
+test("runtime collection APIs mutate preferences and reconcile Orbs and adapters by stable ID", () => {
+  const oldPreferences = structuredClone(preferences);
+  const oldOrbs = [...state.orbs];
+  try {
+    replacePreferences({ ...structuredClone(CONFIG.defaults), orbs: defs(["A", "B"]) });
+    resolveSettings();
+    initOrbs();
+    const [a, b] = state.orbs;
+    a.angleRad = 1.25;
+    a.trail.particles.push({ history: "source" });
+    b.trail.emitAccumulator = 9;
+    const [, aAdapter, bAdapter] = VisualizerRuntime.getVisualizers();
+
+    const created = createRuntimeOrb();
+    assert.equal(preferences.orbs.at(-1), created);
+    assert.equal(runtime.settings.orbs.at(-1).id, created.id);
+    assert.equal(state.orbs.length, 3);
+    assert.equal(VisualizerRuntime.getVisualizers().length, 4);
+    assert.equal(state.orbs[0], a);
+    assert.equal(a.angleRad, 1.25);
+    assert.equal(VisualizerRuntime.getVisualizers()[1], aAdapter);
+
+    const duplicate = duplicateRuntimeOrb("A");
+    assert.ok(duplicate);
+    assert.notEqual(duplicate.id, "A");
+    assert.deepEqual({ ...duplicate, id: "A" }, { ...preferences.orbs[0], id: "A" });
+    assert.equal(state.orbs.find((orb) => orb.id === "A"), a);
+    assert.deepEqual(a.trail.particles, [{ history: "source" }]);
+    assert.deepEqual(state.orbs.find((orb) => orb.id === duplicate.id).trail.particles, []);
+    assert.equal(state.orbs.find((orb) => orb.id === "B"), b);
+    assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "B"), bAdapter);
+
+    assert.equal(removeRuntimeOrb(created.id), true);
+    assert.equal(preferences.orbs.some((orb) => orb.id === created.id), false);
+    assert.equal(state.orbs.find((orb) => orb.id === "A"), a);
+    assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "A"), aAdapter);
+    assert.equal(removeRuntimeOrb("unknown"), false);
+    assert.equal(state.orbs.find((orb) => orb.id === "B"), b);
+    for (const id of [...preferences.orbs.map((orb) => orb.id)]) assert.equal(removeRuntimeOrb(id), true);
+    assert.deepEqual(preferences.orbs, []);
+    assert.deepEqual(state.orbs, []);
+    assert.deepEqual(VisualizerRuntime.getVisualizers().map((v) => v.type), ["band-overlay"]);
+  } finally {
+    VisualizerRuntime.dispose();
+    replacePreferences(oldPreferences);
+    resolveSettings();
     state.orbs.length = 0;
     state.orbs.push(...oldOrbs);
   }

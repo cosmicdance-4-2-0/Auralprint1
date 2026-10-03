@@ -1,0 +1,130 @@
+import { state } from "../core/state.js";
+
+function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Recording" } = {}) {
+  let initializedOn = null;
+  let refreshQueuePanel = () => {};
+
+  function isPanelVisible(panel) {
+    return !!(panel && !panel.hidden && panel.style.display !== "none");
+  }
+
+  function syncLauncherControl(launcher, button, { visible = true, active = false, label = "" } = {}) {
+    if (!launcher) return;
+    launcher.hidden = !visible;
+    launcher.setAttribute("aria-hidden", visible ? "false" : "true");
+    launcher.style.display = visible ? "grid" : "none";
+    launcher.classList.toggle("is-active", !!active);
+    if (!button) return;
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    if (label) {
+      if (button.title !== label) button.title = label;
+      if (button.getAttribute("aria-label") !== label) button.setAttribute("aria-label", label);
+    }
+  }
+
+  function syncLauncherState() {
+    syncLauncherControl(ui.openAudio, ui.btnOpenAudio, { active: isPanelVisible(ui.audioPanel), label: isPanelVisible(ui.audioPanel) ? "Hide audio source panel" : "Show audio source panel" });
+    syncLauncherControl(ui.openSim, ui.btnOpenSim, { active: isPanelVisible(ui.simPanel), label: isPanelVisible(ui.simPanel) ? "Hide orbs panel" : "Show orbs panel" });
+    syncLauncherControl(ui.openBands, ui.btnOpenBands, { active: isPanelVisible(ui.bandsPanel), label: isPanelVisible(ui.bandsPanel) ? "Hide bands panel" : "Show bands panel" });
+    syncLauncherControl(ui.openQueue, ui.btnOpenQueue, { active: isPanelVisible(ui.queuePanel), label: isPanelVisible(ui.queuePanel) ? "Hide queue panel" : "Show queue panel" });
+    syncLauncherControl(ui.openRecord, ui.btnOpenRecord, {
+      visible: !!state.recording?.hooksEnabled,
+      active: !!ui.recordingPanelVisible,
+      label: readRecordLauncherLabel(state.recording, !!ui.recordingPanelVisible),
+    });
+  }
+
+  function setLauncherCollapsed(collapsed) {
+    ui.workspaceLauncherCollapsed = !!collapsed;
+    if (ui.workspaceLauncher) ui.workspaceLauncher.dataset.collapsed = ui.workspaceLauncherCollapsed ? "true" : "false";
+    if (!ui.btnToggleWorkspaceLauncher) return;
+    const label = ui.workspaceLauncherCollapsed ? "Expand launcher bar" : "Collapse launcher bar";
+    ui.btnToggleWorkspaceLauncher.title = label;
+    ui.btnToggleWorkspaceLauncher.setAttribute("aria-label", label);
+    ui.btnToggleWorkspaceLauncher.setAttribute("aria-expanded", ui.workspaceLauncherCollapsed ? "false" : "true");
+    ui.btnToggleWorkspaceLauncher.textContent = ui.workspaceLauncherCollapsed ? "⌃" : "⌄";
+  }
+
+  function toggleLauncherCollapsed() { setLauncherCollapsed(!ui.workspaceLauncherCollapsed); }
+  function bringPanelForward(panel) {
+    for (const candidate of [ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) {
+      if (candidate) candidate.classList.toggle("panel-front", candidate === panel);
+    }
+  }
+  function restoreLauncherFocus(button) { setLauncherCollapsed(false); if (button) button.focus(); }
+
+  // Audio dock height is panel-shell geometry, so it lives with workspace visibility.
+  function syncAudioDockHeight() {
+    if (!ui.audioPanel || typeof ui.audioPanel.getBoundingClientRect !== "function") return;
+    const height = isPanelVisible(ui.audioPanel) ? Math.ceil(ui.audioPanel.getBoundingClientRect().height) : 0;
+    if (height === ui.audioDockHeight) return;
+    ui.audioDockHeight = height;
+    document.documentElement.style.setProperty("--ui-audio-h", `${height}px`);
+  }
+
+  function hideQueuePanel() { if (!ui.queuePanel) return; ui.queuePanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.queuePanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenQueue); }
+  function showQueuePanel() { if (!ui.queuePanel) return; ui.queuePanel.style.display = "block"; refreshQueuePanel(); bringPanelForward(ui.queuePanel); syncLauncherState(); if (document.activeElement === ui.btnOpenQueue && ui.btnHideQueue) ui.btnHideQueue.focus(); }
+  function hideAudioPanel() { ui.audioPanel.style.display = "none"; syncAudioDockHeight(); syncLauncherState(); if (document.activeElement && ui.audioPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenAudio); }
+  function showAudioPanel() { ui.audioPanel.style.display = "grid"; syncAudioDockHeight(); syncLauncherState(); if (document.activeElement === ui.btnOpenAudio) ui.btnHideAudio.focus(); }
+  function hideSimPanel() { ui.simPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.simPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenSim); }
+  function showSimPanel() { ui.simPanel.style.display = "block"; bringPanelForward(ui.simPanel); syncLauncherState(); if (document.activeElement === ui.btnOpenSim) ui.btnHideSim.focus(); }
+  function hideBandsPanel() { ui.bandsPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.bandsPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenBands); }
+  function showBandsPanel() { ui.bandsPanel.style.display = "block"; bringPanelForward(ui.bandsPanel); syncLauncherState(); if (document.activeElement === ui.btnOpenBands) ui.btnHideBands.focus(); }
+
+  function setRecordPanelVisibility(visible) {
+    if (!ui.recordPanel || !ui.openRecord) return;
+    const nextVisible = !!visible && !!state.recording.hooksEnabled;
+    ui.recordingPanelVisible = nextVisible;
+    ui.recordPanel.hidden = !nextVisible;
+    ui.recordPanel.setAttribute("aria-hidden", nextVisible ? "false" : "true");
+    ui.recordPanel.style.display = nextVisible ? "block" : "none";
+    syncLauncherState();
+  }
+  function hideRecordPanel(options = {}) { if (!ui.recordPanel || !ui.openRecord) return; if (!options.preserveRestoreFlag) ui.recordingPanelRestoreAfterGlobalHide = false; setRecordPanelVisibility(false); if (document.activeElement && ui.recordPanel.contains(document.activeElement) && ui.btnOpenRecord) restoreLauncherFocus(ui.btnOpenRecord); }
+  function showRecordPanel() { if (!ui.recordPanel || !ui.openRecord || !state.recording.hooksEnabled) return; ui.recordingPanelRestoreAfterGlobalHide = false; setRecordPanelVisibility(true); bringPanelForward(ui.recordPanel); if (document.activeElement === ui.btnOpenRecord && ui.btnHideRecord) ui.btnHideRecord.focus(); }
+  function primeRecordUi() { if (!ui.recordPanel || !ui.openRecord) return; if (!state.recording.hooksEnabled) ui.recordingPanelRestoreAfterGlobalHide = false; setRecordPanelVisibility(!!state.recording.hooksEnabled && !!ui.recordingPanelVisible); }
+
+  function togglePanels() {
+    const visible = { audio: isPanelVisible(ui.audioPanel), sim: isPanelVisible(ui.simPanel), bands: isPanelVisible(ui.bandsPanel), queue: isPanelVisible(ui.queuePanel), record: isPanelVisible(ui.recordPanel) };
+    if (Object.values(visible).some(Boolean)) {
+      ui.panelRestoreSnapshot = visible;
+      ui.recordingPanelRestoreAfterGlobalHide = visible.record;
+      hideAudioPanel(); hideSimPanel(); hideBandsPanel(); hideQueuePanel();
+      if (visible.record) hideRecordPanel({ preserveRestoreFlag: true });
+      return;
+    }
+    const restore = ui.panelRestoreSnapshot || { audio: true };
+    if (restore.audio) showAudioPanel(); if (restore.sim) showSimPanel(); if (restore.bands) showBandsPanel(); if (restore.queue) showQueuePanel();
+    const restoreRecord = !!ui.recordingPanelRestoreAfterGlobalHide;
+    ui.recordingPanelRestoreAfterGlobalHide = false;
+    if (restoreRecord) showRecordPanel();
+  }
+
+  function init({ onRefreshQueuePanel } = {}) {
+    if (typeof onRefreshQueuePanel === "function") refreshQueuePanel = onRefreshQueuePanel;
+    if (initializedOn === ui.btnToggleWorkspaceLauncher) return false;
+    initializedOn = ui.btnToggleWorkspaceLauncher;
+    setLauncherCollapsed(!!ui.workspaceLauncherCollapsed);
+    primeRecordUi();
+    if (ui.btnToggleWorkspaceLauncher) ui.btnToggleWorkspaceLauncher.addEventListener("click", toggleLauncherCollapsed);
+    for (const [button, panel, hide, show] of [[ui.btnOpenAudio, ui.audioPanel, hideAudioPanel, showAudioPanel], [ui.btnOpenSim, ui.simPanel, hideSimPanel, showSimPanel], [ui.btnOpenBands, ui.bandsPanel, hideBandsPanel, showBandsPanel], [ui.btnOpenQueue, ui.queuePanel, hideQueuePanel, showQueuePanel]]) {
+      if (button) button.addEventListener("click", () => isPanelVisible(panel) ? hide() : show());
+    }
+    if (ui.btnHideAudio) ui.btnHideAudio.addEventListener("click", hideAudioPanel);
+    if (ui.btnHideSim) ui.btnHideSim.addEventListener("click", hideSimPanel);
+    if (ui.btnHideBands) ui.btnHideBands.addEventListener("click", hideBandsPanel);
+    if (ui.btnHideQueue) ui.btnHideQueue.addEventListener("click", hideQueuePanel);
+    if (ui.btnTogglePanels) ui.btnTogglePanels.addEventListener("click", togglePanels);
+    if (ui.btnHideRecord) ui.btnHideRecord.addEventListener("click", hideRecordPanel);
+    if (ui.btnOpenRecord) ui.btnOpenRecord.addEventListener("click", () => ui.recordingPanelVisible ? hideRecordPanel() : showRecordPanel());
+    for (const panel of [ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) if (panel) panel.addEventListener("pointerdown", () => bringPanelForward(panel));
+    if (ui.audioDockObserver) ui.audioDockObserver.disconnect();
+    if (typeof ResizeObserver === "function") { ui.audioDockObserver = new ResizeObserver(syncAudioDockHeight); ui.audioDockObserver.observe(ui.audioPanel); }
+    syncAudioDockHeight(); syncLauncherState();
+    return true;
+  }
+
+  return { init, isPanelVisible, syncLauncherState, setLauncherCollapsed, bringPanelForward, hideQueuePanel, showQueuePanel, hideAudioPanel, showAudioPanel, hideSimPanel, showSimPanel, hideBandsPanel, showBandsPanel, setRecordPanelVisibility, hideRecordPanel, showRecordPanel, primeRecordUi, togglePanels };
+}
+
+export { createWorkspaceUi };
