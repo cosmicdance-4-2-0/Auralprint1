@@ -1,9 +1,9 @@
 /* =============================================================================
    Auralprint
-   0.1.15b
+   0.1.15c
 
    Build 115 — Visualizer Architecture + Orb Overhaul v1
-   AnalysisFrame consumer boundary; preset schema remains v9.
+   Visualizer lifecycle for Orbs and Band Overlay; preset schema remains v9.
    ========================================================================== */
 
 const TAU = Math.PI * 2;

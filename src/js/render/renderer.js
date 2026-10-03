@@ -168,15 +168,10 @@ const Renderer = (() => {
     ctx.restore();
   }
 
-  function renderFrame(nowSec, analysisFrame) {
-    clearFrame();
-    drawBandOverlay(analysisFrame);
-    const dominantBandIndex = analysisFrame ? analysisFrame.spectrum.dominantIndex : 0;
-    for (const orb of state.orbs) {
-      const particles = orb.trail.particles;
-      drawTrailLines(particles, dominantBandIndex);
-      drawParticles(particles, nowSec);
-    }
+  function drawOrb(orb, nowSec, dominantBandIndex) {
+    const particles = orb.trail.particles;
+    drawTrailLines(particles, dominantBandIndex);
+    drawParticles(particles, nowSec);
   }
 
   // RecorderEngine owns captureStream() and any MediaStream lifecycle.
@@ -190,7 +185,7 @@ const Renderer = (() => {
     };
   }
 
-  return { renderFrame, getRecorderTap };
+  return { clearFrame, drawBandOverlay, drawOrb, getRecorderTap };
 })();
 
 export { Renderer };

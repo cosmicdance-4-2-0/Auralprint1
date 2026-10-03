@@ -142,7 +142,7 @@ Violation results in:
 ### 4.1 Band System
 
 - Band count: 256 (canonical)
-- Log spacing by default
+- Band distribution default is defined by `CONFIG.defaults.bands.distributionMode`
 - Ceiling must respect Nyquist
 
 **Critical invariant:**
@@ -167,6 +167,15 @@ Rules:
 - Adding a field requires full preset pipeline update (Section 2)
 
 ---
+
+### 4.2 Visualizer Lifecycle
+
+- Visualizers consume `AnalysisFrame`; they MUST NOT read Web Audio internals.
+- Visualizer-specific runtime behavior belongs behind the lifecycle contract: `id`, `type`, `isEnabled()`, `update()`, `render()`, `reset(reason)`, and `dispose()`.
+- `VisualizerRuntime` owns active composition order and lifecycle dispatch. Renderer owns canonical canvas and drawing mechanics; each visualizer owns its behavior and participation in composition.
+- Adding a future visualizer must not add type-specific simulation or phase behavior to the main animation loop.
+- Lifecycle runtime state is not automatically preset state. Schema 9 remains `preferences.orbs[]` and `preferences.bands.overlay`.
+- Camera remains a downstream render/projection concern for Build 116.
 
 ## 5. UI System Constraints
 
