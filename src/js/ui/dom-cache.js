@@ -57,6 +57,24 @@ function primeDomCache() {
     ui.bankingStatus = document.getElementById("bankingStatus");
     ui.sceneStatus = document.getElementById("sceneStatus");
     ui.workspaceStatus = document.getElementById("workspaceStatus");
+    ui.sceneSummaryPrimary = document.getElementById("sceneSummaryPrimary");
+    ui.sceneSummaryActive = document.getElementById("sceneSummaryActive");
+    ui.sceneSummarySelected = document.getElementById("sceneSummarySelected");
+    ui.sceneCameraCard = document.getElementById("sceneCameraCard");
+    ui.sceneCameraPrimary = document.getElementById("sceneCameraPrimary");
+    ui.sceneCameraMode = document.getElementById("sceneCameraMode");
+    ui.sceneCameraScope = document.getElementById("sceneCameraScope");
+    ui.sceneCameraNote = document.getElementById("sceneCameraNote");
+    ui.sceneNodeEmpty = document.getElementById("sceneNodeEmpty");
+    ui.sceneNodeList = document.getElementById("sceneNodeList");
+    ui.sceneInspectorEmpty = document.getElementById("sceneInspectorEmpty");
+    ui.sceneInspectorPanel = document.getElementById("sceneInspectorPanel");
+    ui.sceneInspectorTitle = document.getElementById("sceneInspectorTitle");
+    ui.sceneInspectorType = document.getElementById("sceneInspectorType");
+    ui.sceneInspectorNodeId = document.getElementById("sceneInspectorNodeId");
+    ui.sceneInspectorOrder = document.getElementById("sceneInspectorOrder");
+    ui.sceneInspectorEnabled = document.getElementById("sceneInspectorEnabled");
+    ui.sceneInspectorFields = document.getElementById("sceneInspectorFields");
 
     ui.chkLines = document.getElementById("chkLines");
     ui.valLines = document.getElementById("valLines");

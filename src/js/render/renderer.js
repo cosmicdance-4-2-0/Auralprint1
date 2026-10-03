@@ -1,183 +1,20 @@
-import { clamp, lerp, hexToRgb01, rgb01ToCss, lerpRgb01 } from "../core/utils.js";
-import { TAU } from "../core/constants.js";
+import { clamp } from "../core/utils.js";
 import { BAND_NAMES, runtime } from "../core/preferences.js";
 import { state } from "../core/state.js";
-import { Spaces } from "../core/spaces.js";
-import { ColorPolicy } from "./color-policy.js";
+import { BandBank } from "../audio/band-bank.js";
 import { createCompositor } from "./compositor.js";
+import { readSceneRuntime } from "./scene-runtime.js";
+import { createVisualizerRegistry, registerBuiltInVisualizers } from "./visualizer.js";
 
 /* =============================================================================
    Renderer
    ========================================================================== */
 const Renderer = (() => {
-  const LEGACY_COMPAT_SCENE = Object.freeze({
-    nodes: Object.freeze([
-      Object.freeze({
-        id: "legacyRenderRoot",
-        type: "legacyRender",
-        enabled: true,
-        zIndex: 0,
-        bounds: Object.freeze({ x: 0.5, y: 0.5, w: 1, h: 1 }),
-        anchor: Object.freeze({ x: 0.5, y: 0.5 }),
-        settings: Object.freeze({}),
-      }),
-    ]),
-  });
-
   function clearFrame() {
     const ctx = state.ctx;
     const s = runtime.settings;
     ctx.fillStyle = s.visuals.backgroundColor;
     ctx.fillRect(0, 0, state.widthPx, state.heightPx);
-  }
-
-  function drawTrailLines(particles) {
-    const s = runtime.settings;
-    if (!s.trace.lines) return;
-
-    const segments = s.trace.numLines;
-    const neededPts = segments + 1;
-    if (!particles || particles.length < 2) return;
-
-    const startIdx = Math.max(0, particles.length - neededPts);
-    const slice = particles.slice(startIdx);
-    if (slice.length < 2) return;
-
-    const ctx = state.ctx;
-    const rgb = ColorPolicy.pickLineColorRgb01(particles);
-    const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
-
-    ctx.save();
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = s.trace.lineWidthPx * state.dpr;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-
-    const p0 = Spaces.simToScreen(slice[0].xSim, slice[0].ySim);
-    ctx.beginPath();
-    ctx.moveTo(p0.x, p0.y);
-
-    for (let i = 1; i < slice.length; i++) {
-      const pi = Spaces.simToScreen(slice[i].xSim, slice[i].ySim);
-      ctx.lineTo(pi.x, pi.y);
-    }
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawParticles(particles, nowSec) {
-    const s = runtime.settings;
-    const ctx = state.ctx;
-
-    const bg = hexToRgb01(s.visuals.backgroundColor);
-
-    const sizeMax = s.particles.sizeMaxPx * state.dpr;
-    const sizeMin = Math.min(s.particles.sizeMinPx, s.particles.sizeMaxPx) * state.dpr;
-
-    const toMin = Math.max(0.0001, s.particles.sizeToMinSec);
-    const ttl = Math.max(0.0001, s.particles.ttlSec);
-    const fadeSec = Math.max(0.0001, ttl - toMin);
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      const age = nowSec - p.bornSec;
-
-      let size = sizeMin;
-      if (age < toMin) {
-        const t = clamp(age / toMin, 0, 1);
-        size = lerp(sizeMax, sizeMin, t);
-      }
-
-      const fg = p.rgbStart || hexToRgb01(s.visuals.particleColor);
-
-      let color = fg;
-      if (age >= toMin) {
-        const t = clamp((age - toMin) / fadeSec, 0, 1);
-        color = lerpRgb01(fg, bg, t);
-      }
-
-      const ps = Spaces.simToScreen(p.xSim, p.ySim);
-      ctx.fillStyle = rgb01ToCss(color, 1);
-      ctx.beginPath();
-      ctx.arc(ps.x, ps.y, size, 0, TAU);
-      ctx.fill();
-    }
-  }
-
-  function overlayWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
-    if (!waveform || waveform.length === 0) return 0;
-    const phase01 = ((angleRad % TAU) + TAU) % TAU / TAU;
-    const idx = Math.floor(phase01 * (waveform.length - 1));
-    const sample = waveform[idx];
-    // Overlay displacement ownership stays within bands.overlay.
-    return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
-  }
-
-  function drawBandOverlay(centerWaveform) {
-    const bands = runtime.settings.bands;
-    const overlay = bands.overlay;
-    if (!overlay.enabled || !centerWaveform) return;
-
-    const ctx = state.ctx;
-    const n = bands.count;
-    const phase = state.bands.ringPhaseRad;
-
-    const minDim = Math.min(state.widthPx, state.heightPx);
-    // Overlay radius contract is independent from orb/audio radius controls.
-    const minR = minDim * overlay.minRadiusFrac;
-    const maxR = minDim * overlay.maxRadiusFrac;
-    const safeMin = Math.min(minR, maxR);
-    const safeMax = Math.max(minR, maxR);
-
-    const pts = new Array(n);
-
-    for (let i = 0; i < n; i++) {
-      const angle = phase + (i * TAU / n);
-      const e = clamp(state.bands.energies01[i] || 0, 0, 1);
-      const baseR = safeMin + (safeMax - safeMin) * e;
-      const disp = overlayWaveformDisplacementPx(baseR, angle, centerWaveform, overlay);
-
-      const r = baseR + disp;
-      const xSim = r * Math.cos(angle);
-      const ySim = r * Math.sin(angle);
-
-      pts[i] = { xSim, ySim };
-    }
-
-    if (overlay.connectAdjacent) {
-      ctx.save();
-      ctx.lineWidth = overlay.lineWidthPx * state.dpr;
-      ctx.lineJoin = "round";
-      ctx.lineCap = "round";
-
-      for (let i = 0; i < n; i++) {
-        const j = (i + 1) % n;
-        const c = ColorPolicy.bandRgb01(i);
-        ctx.strokeStyle = rgb01ToCss(c, overlay.lineAlpha);
-
-        const a = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
-        const b = Spaces.simToScreen(pts[j].xSim, pts[j].ySim);
-
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
-
-    ctx.save();
-    const rPx = overlay.pointSizePx * state.dpr;
-    for (let i = 0; i < n; i++) {
-      const c = ColorPolicy.bandRgb01(i);
-      ctx.fillStyle = rgb01ToCss(c, overlay.alpha);
-      const p = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, rPx, 0, TAU);
-      ctx.fill();
-    }
-    ctx.restore();
   }
 
   function readWaveformPeak(timeDomain) {
@@ -214,9 +51,39 @@ const Renderer = (() => {
     };
 
     const channelEntries = {
-      L: { id: "L", label: "Left", magnitudes: null, phase: null },
-      R: { id: "R", label: "Right", magnitudes: null, phase: null },
-      C: { id: "C", label: "Center", magnitudes: null, phase: null },
+      L: {
+        id: "L",
+        label: "Left",
+        rms: 0,
+        energy: 0,
+        energy01: 0,
+        timeDomain: null,
+        magnitudes: null,
+        bandEnergies01: null,
+        phase: null,
+      },
+      R: {
+        id: "R",
+        label: "Right",
+        rms: 0,
+        energy: 0,
+        energy01: 0,
+        timeDomain: null,
+        magnitudes: null,
+        bandEnergies01: null,
+        phase: null,
+      },
+      C: {
+        id: "C",
+        label: "Center",
+        rms: 0,
+        energy: 0,
+        energy01: 0,
+        timeDomain: null,
+        magnitudes: null,
+        bandEnergies01: null,
+        phase: null,
+      },
     };
 
     function ensureBandEntries(count) {
@@ -250,8 +117,11 @@ const Renderer = (() => {
             id: liveBand.id,
             label: liveBand.label || liveBand.id,
             rms: Number.isFinite(liveBand.rms) ? liveBand.rms : 0,
+            energy: Number.isFinite(liveBand.energy01) ? clamp(liveBand.energy01, 0, 1) : 0,
             timeDomain: liveBand.timeDomain || null,
             freqDb: liveBand.freqDb || null,
+            minDb: Number.isFinite(liveBand.minDb) ? liveBand.minDb : null,
+            maxDb: Number.isFinite(liveBand.maxDb) ? liveBand.maxDb : null,
           }))
         : [];
       const centerChannel = orderedBands.find((channel) => channel.id === "C") || null;
@@ -298,14 +168,32 @@ const Renderer = (() => {
 
       let globalMax = 0;
       for (const liveBand of orderedBands) {
+        const channelSpectrum = liveBand.freqDb && Number.isFinite(nyquistHz) && nyquistHz > 0
+          ? BandBank.computeBandEnergiesFromFreqDb({
+            freqDb: liveBand.freqDb,
+            minDb: Number.isFinite(liveBand.minDb) ? liveBand.minDb : undefined,
+            maxDb: Number.isFinite(liveBand.maxDb) ? liveBand.maxDb : undefined,
+            nyquistHz,
+          })
+          : null;
         const channelEntry = channelEntries[liveBand.id] || {
           id: liveBand.id,
           label: liveBand.label || liveBand.id,
+          rms: 0,
+          energy: 0,
+          energy01: 0,
+          timeDomain: null,
           magnitudes: null,
+          bandEnergies01: null,
           phase: null,
         };
         channelEntry.label = liveBand.label || channelEntry.label;
+        channelEntry.rms = liveBand.rms;
+        channelEntry.energy = liveBand.energy;
+        channelEntry.energy01 = liveBand.energy;
+        channelEntry.timeDomain = liveBand.timeDomain;
         channelEntry.magnitudes = liveBand.id === "C" && liveBand.freqDb ? liveBand.freqDb : null;
+        channelEntry.bandEnergies01 = channelSpectrum ? channelSpectrum.energies01 : null;
         channelEntry.phase = null;
         bandFrame.analysis.channels.push(channelEntry);
 
@@ -339,67 +227,14 @@ const Renderer = (() => {
     };
   }
 
-  class LegacyRenderCompatUnit {
-    constructor() {
-      this.context = null;
-      this.boundsPx = null;
-      this.frame = null;
-      this.dtSec = 0;
-    }
-
-    init(context) {
-      this.context = context;
-    }
-
-    resize(boundsPx) {
-      this.boundsPx = boundsPx ? { ...boundsPx } : null;
-    }
-
-    update(frame, dtSec) {
-      this.frame = frame;
-      this.dtSec = dtSec;
-    }
-
-    render(_target, _viewTransform) {
-      const analysis = this.frame && this.frame.analysis ? this.frame.analysis : null;
-      const centerWaveform = analysis && analysis.compat ? analysis.compat.centerWaveform : null;
-      const nowSec = analysis && Number.isFinite(analysis.timestamp) ? (analysis.timestamp / 1000) : 0;
-      const boundsPx = this.boundsPx;
-      const ctx = state.ctx;
-
-      ctx.save();
-      if (boundsPx) {
-        ctx.beginPath();
-        ctx.rect(boundsPx.x, boundsPx.y, boundsPx.width, boundsPx.height);
-        ctx.clip();
-      }
-
-      try {
-        drawBandOverlay(centerWaveform);
-        for (const orb of state.orbs) {
-          const particles = orb.trail.particles;
-          drawTrailLines(particles);
-          drawParticles(particles, nowSec);
-        }
-      } finally {
-        ctx.restore();
-      }
-    }
-
-    dispose() {
-      this.context = null;
-      this.boundsPx = null;
-      this.frame = null;
-      this.dtSec = 0;
-    }
-  }
-
   const buildBandFrame = createBandFrameBridge();
+  const visualizerRegistry = createVisualizerRegistry();
+  registerBuiltInVisualizers(visualizerRegistry);
   const compositor = createCompositor({
-    factories: {
-      legacyRender() {
-        return new LegacyRenderCompatUnit();
-      },
+    registry: visualizerRegistry,
+    onWarning({ message }) {
+      if (!message) return;
+      console.warn(`[Compositor] ${message}`);
     },
   });
 
@@ -417,9 +252,10 @@ const Renderer = (() => {
     clearFrame();
 
     const target = getRenderTarget();
-    compositor.syncScene(LEGACY_COMPAT_SCENE, target);
+    const sceneRuntime = readSceneRuntime();
+    compositor.syncScene(sceneRuntime, target);
     compositor.update(buildBandFrame(bandSnapshot, nowSec), dtSec);
-    compositor.render(target);
+    compositor.render(target, sceneRuntime.viewTransform);
   }
 
   // RecorderEngine owns captureStream() and any MediaStream lifecycle.

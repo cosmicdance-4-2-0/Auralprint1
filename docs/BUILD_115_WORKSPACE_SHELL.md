@@ -1,9 +1,9 @@
 # Build 115 Workspace Shell
 
 This document specifies the Build 115 `WorkspaceShell`: the panel and launcher
-system that surrounds the render surface. In Phase 1, `WorkspaceShell` is a
-canonical architecture term, not a forced rename of current Build 114 panel IDs
-or DOM structure.
+system that surrounds the render surface. The current runtime implements this
+shell through the existing DOM structure and panel IDs, without requiring a
+wholesale rename of legacy element IDs.
 
 ## Panel Taxonomy
 
@@ -57,23 +57,21 @@ The Status / Log panel is a runtime event surface for:
 
 This log is runtime-only and is never persisted to presets.
 
-## Phase 1 Boundary
+## Implementation Status
 
-Build 115 Phase 1 ratifies the `WorkspaceShell` vocabulary only. Current
-implementation labels such as `audioPanel`, `simPanel`, `bandsPanel`,
-`queuePanel`, and `recordPanel` remain valid runtime labels until later phases
-move responsibilities into the final shell layout.
+The current runtime implements the Build 115 shell model through:
 
-## Current Runtime Reality
+- `src/js/ui/panel-state.js` for runtime-only launcher and panel visibility
+  state;
+- `src/js/ui/ui.js` for panel wiring, launcher behavior, and shell
+  coordination; and
+- the current DOM bindings in `src/js/ui/dom-cache.js`.
 
-The current runtime still uses the legacy shell owned by `src/js/ui/ui.js` and
-the current DOM/panel bindings in `src/js/ui/dom-cache.js`. Later Build 115
-shell phases narrow those owners; this document only ratifies the target shell
-taxonomy and launcher responsibilities.
+Implementation labels such as `audioPanel`, `simPanel`, `bandsPanel`,
+`queuePanel`, and `recordPanel` remain valid runtime labels even though the
+user-facing shell behavior now follows the Build 115 taxonomy.
 
 ## Future Expansion
 
-Later Build 115 phases move current controls into this shell model and Build
-116 adds meaningful camera behavior on top of the scene system. Phase 1 does
-not implement those UI migrations; it only freezes the shell vocabulary and
-responsibility boundaries.
+Build 116 adds meaningful camera behavior on top of the Scene panel's current
+identity `ViewTransform` hook. Runtime-only shell state remains non-persisted.

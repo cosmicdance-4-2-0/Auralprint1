@@ -19,16 +19,19 @@ The scene model creates a foundation for:
 - Preparing for Build 116 camera work through a runtime `ViewTransform`
   abstraction.
 
-## Contract Status
+## Implementation Status
 
-This is the Build 115 target model, not a claim that the current runtime
-already persists or renders a `Scene`. Today:
+The Build 115 scene model is implemented in the current runtime:
 
-- the runtime still draws orbs and the band overlay through the legacy renderer
-  path;
-- the orb path still lives in `orb.js` and `orb-runtime.js`; and
-- the preset runtime still uses Schema 8 until later Build 115 implementation
-  phases.
+- presets persist `scene.nodes` in Schema 9;
+- the compositor instantiates and renders active scene nodes through the
+  visualizer registry;
+- the Scene panel edits node ordering, enabled state, and settings through the
+  persisted scene model; and
+- `ViewTransform` remains a runtime-only identity hook for Build 116.
+
+`orb.js` and `orb-runtime.js` still exist as compatibility and simulation
+helpers, but they are not alternate scene ownership paths.
 
 ## Scene And Scene Nodes
 

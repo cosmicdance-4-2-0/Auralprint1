@@ -96,7 +96,7 @@
       <button id="btnResetPrefs">Reset Prefs</button>
     </div>
 
-    <div class="muted panelCopy">Transitional home for preset sharing and reset workflows until later Build 115 workspace phases land.</div>
+    <div class="muted panelCopy">Home for preset sharing, import/export, and reset workflows.</div>
   </div>
 
   <div
@@ -137,13 +137,87 @@
     <div class="panelHeader">
       <div class="panelHeaderText">
         <div class="sectionTitle">Scene</div>
-        <div class="muted panelCopy" id="sceneStatus">Scene panel: trace, particles, motion, and render-facing controls.</div>
+        <div class="muted panelCopy" id="sceneStatus">Scene panel: enable, order, and inspect active visualizers plus the runtime-only camera hook without leaving the live render.</div>
       </div>
       <div class="panelActionRow">
         <button id="btnResetVisuals" title="Reset orb phases and clear trails (keyboard: R)">Reset Visuals</button>
         <button id="btnHideScene" title="Hide scene panel (launcher remains available)">&#9666;</button>
       </div>
     </div>
+
+    <div class="sectionTitle">Scene Manager</div>
+    <div class="sceneSummaryCard">
+      <div class="sceneSummaryEyebrow">Runtime compositor surface</div>
+      <div id="sceneSummaryPrimary" class="sceneSummaryPrimary">Loading scene visualizers...</div>
+
+      <div class="sceneSummaryStats">
+        <div class="sceneSummaryStat">
+          <div class="sceneSummaryStatLabel">Active</div>
+          <div id="sceneSummaryActive" class="sceneSummaryStatValue">0 active</div>
+        </div>
+
+        <div class="sceneSummaryStat">
+          <div class="sceneSummaryStatLabel">Selected</div>
+          <div id="sceneSummarySelected" class="sceneSummaryStatValue">None</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sectionTitle">Camera Hook</div>
+    <div id="sceneCameraCard" class="sceneSummaryCard">
+      <div class="sceneSummaryEyebrow">Build 115 runtime seam</div>
+      <div id="sceneCameraPrimary" class="sceneSummaryPrimary">Identity ViewTransform active</div>
+
+      <div class="sceneSummaryStats">
+        <div class="sceneSummaryStat">
+          <div class="sceneSummaryStatLabel">Mode</div>
+          <div id="sceneCameraMode" class="sceneSummaryStatValue">Identity</div>
+        </div>
+
+        <div class="sceneSummaryStat">
+          <div class="sceneSummaryStatLabel">Scope</div>
+          <div id="sceneCameraScope" class="sceneSummaryStatValue">Runtime only</div>
+        </div>
+      </div>
+
+      <div id="sceneCameraNote" class="sceneInspectorHint sceneCameraNote">Camera controls are deferred to Build 116. Build 115 only exposes the ViewTransform seam through the runtime compositor path.</div>
+    </div>
+
+    <div id="sceneNodeEmpty" class="muted sceneEmptyCopy">No visualizers are active in the runtime scene.</div>
+    <div id="sceneNodeList" class="sceneNodeList" aria-label="Scene visualizers"></div>
+
+    <div class="sectionTitle">Selected Visualizer</div>
+    <div id="sceneInspectorEmpty" class="muted inspectorCopy">Select a visualizer to inspect and edit its current settings.</div>
+    <div id="sceneInspectorPanel" class="sceneInspector" hidden aria-hidden="true">
+      <div id="sceneInspectorTitle" class="sceneInspectorTitle">No visualizer selected</div>
+
+      <div class="sceneInspectorMetaGrid">
+        <div class="sceneInspectorMetaItem">
+          <div class="sceneInspectorMetaLabel">Type</div>
+          <div id="sceneInspectorType" class="sceneInspectorMetaValue">n/a</div>
+        </div>
+
+        <div class="sceneInspectorMetaItem">
+          <div class="sceneInspectorMetaLabel">Node ID</div>
+          <div id="sceneInspectorNodeId" class="sceneInspectorMetaValue">n/a</div>
+        </div>
+
+        <div class="sceneInspectorMetaItem">
+          <div class="sceneInspectorMetaLabel">Order</div>
+          <div id="sceneInspectorOrder" class="sceneInspectorMetaValue">n/a</div>
+        </div>
+
+        <div class="sceneInspectorMetaItem">
+          <div class="sceneInspectorMetaLabel">Enabled</div>
+          <div id="sceneInspectorEnabled" class="sceneInspectorMetaValue">n/a</div>
+        </div>
+      </div>
+
+      <div id="sceneInspectorFields" class="sceneInspectorFields"></div>
+    </div>
+
+    <div class="sectionTitle">Legacy Visual Controls</div>
+    <div class="muted sceneLegacyCopy">Global trace, particle, and motion controls stay here in v1 while scene composition moves into the manager above.</div>
 
     <div class="sectionTitle">Color & Geometry</div>
 

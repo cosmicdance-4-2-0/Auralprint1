@@ -6,15 +6,16 @@ resized, and disposed without coupling it to analyzer internals.
 
 ## Contract Status
 
-This is the Build 115 target interface, not the current runtime implementation.
-Today:
+This contract is active in the current runtime:
 
-- `src/js/render/renderer.js` still directly owns band-overlay drawing plus orb
-  trail/particle drawing.
-- `src/js/render/orb.js` and `src/js/render/orb-runtime.js` still implement the
-  orb path as special-case logic rather than as a first-class `Visualizer`.
-
-Later Build 115 phases migrate those paths onto this contract.
+- `src/js/render/compositor.js` drives visualizer lifecycle through this
+  interface.
+- `src/js/render/visualizers/band-overlay.js` and
+  `src/js/render/visualizers/orb-visualizer.js` are built-in implementations.
+- `src/js/render/renderer.js` owns the outer render loop but no longer directly
+  draws overlay/orb scene content.
+- `src/js/render/orb.js` and `src/js/render/orb-runtime.js` remain
+  compatibility and simulation helpers behind the built-in orb visualizer.
 
 ## Interface
 

@@ -12,7 +12,7 @@ import { Scrubber } from "./audio/scrubber.js";
 import { Renderer } from "./render/renderer.js";
 import { RecorderEngine } from "./recording/recorder-engine.js";
 import { UI } from "./ui/ui.js";
-import { initOrbs, getBandForOrb } from "./render/orb-runtime.js";
+import { getActiveOrbPrimaryAngleRad, initOrbs } from "./render/orb-runtime.js";
 
 /* =============================================================================
    Boot / loop
@@ -45,20 +45,10 @@ function onAnimationFrame(tsMs) {
   // - free: integrate a ring angular velocity independent of the orb
   const o = runtime.settings.bands.overlay;
   if (o.phaseMode === "orb") {
-    state.bands.ringPhaseRad = (state.orbs.length ? state.orbs[0].angleRad : state.bands.ringPhaseRad);
+    const primaryOrbAngleRad = getActiveOrbPrimaryAngleRad();
+    state.bands.ringPhaseRad = Number.isFinite(primaryOrbAngleRad) ? primaryOrbAngleRad : state.bands.ringPhaseRad;
   } else {
     state.bands.ringPhaseRad = ((state.bands.ringPhaseRad + o.ringSpeedRadPerSec * dtSec) % TAU + TAU) % TAU;
-  }
-
-  if (!state.time.simPaused) {
-    for (const orb of state.orbs) {
-      const selection = (lastBandSnapshot && lastBandSnapshot.ready)
-        ? getBandForOrb(orb, lastBandSnapshot)
-        : null;
-      const orbBand = selection ? selection.band : null;
-      const energyOverride01 = selection ? selection.energyOverride01 : null;
-      orb.step(dtSec, nowSec, orbBand, energyOverride01);
-    }
   }
 
   Renderer.renderFrame({

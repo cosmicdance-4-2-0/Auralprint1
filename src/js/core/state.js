@@ -1,5 +1,6 @@
 import { CONFIG } from "./config.js";
 import { createPanelShellState } from "../ui/panel-state.js";
+import { IDENTITY_VIEW_TRANSFORM } from "../render/view-transform.js";
 
 /* =============================================================================
    App State
@@ -74,6 +75,14 @@ function createRuntimeLogObserverState() {
   };
 }
 
+function createSceneState() {
+  return {
+    nodes: [],
+    selectedNodeId: "",
+    viewTransform: IDENTITY_VIEW_TRANSFORM,
+  };
+}
+
 const state = {
   canvas: null,
   ctx: null,
@@ -90,6 +99,8 @@ const state = {
   source: createSourceState(),
 
   recording: createRecordingState(),
+
+  scene: createSceneState(),
 
   bands: {
     lowHz: [],
@@ -123,6 +134,7 @@ export {
   createRecordingState,
   createRuntimeLogObserverState,
   createRuntimeLogState,
+  createSceneState,
   createSourceState,
   state,
 };

@@ -15,6 +15,9 @@ class Orb {
     this.bandIds = sanitizeOrbBandIds(def.bandIds, def.bandNames);
     this.chirality = def.chirality;
     this.startAngleRad = def.startAngleRad;
+    this.hueOffsetDeg = Number.isFinite(def.hueOffsetDeg) ? def.hueOffsetDeg : 0;
+    this.centerX = Number.isFinite(def.centerX) ? def.centerX : 0;
+    this.centerY = Number.isFinite(def.centerY) ? def.centerY : 0;
     this.angleRad = this.startAngleRad;
 
     this.trail = new TrailSystem();
@@ -23,18 +26,33 @@ class Orb {
     this.ySim = 0;
     this.baseRadiusPx = 0;
     this.radialDispPx = 0;
+    this.lastColorBandIndex = null;
   }
 
   resetPhase() { this.angleRad = this.startAngleRad; }
   resetTrail() { this.trail.reset(); }
 
-  step(dtSec, nowSec, band, energyOverride01) {
+  step(dtSec, nowSec, band, options = {}) {
     const s = runtime.settings;
+    const energyOverride01 = Number.isFinite(options.energyOverride01) ? options.energyOverride01 : null;
+    const colorBandIndex = Number.isInteger(options.colorBandIndex) ? options.colorBandIndex : null;
+    const boundsPx = options.boundsPx && typeof options.boundsPx === "object"
+      && Number.isFinite(options.boundsPx.x)
+      && Number.isFinite(options.boundsPx.y)
+      && Number.isFinite(options.boundsPx.width)
+      && Number.isFinite(options.boundsPx.height)
+      ? {
+        x: options.boundsPx.x,
+        y: options.boundsPx.y,
+        width: Math.max(0, options.boundsPx.width),
+        height: Math.max(0, options.boundsPx.height),
+      }
+      : { x: 0, y: 0, width: state.widthPx, height: state.heightPx };
 
     this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
     this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
 
-    const minDim = Math.min(state.widthPx, state.heightPx);
+    const minDim = Math.min(boundsPx.width, boundsPx.height);
     const minR = minDim * s.audio.minRadiusFrac;
     const maxR = minDim * s.audio.maxRadiusFrac;
     const safeMin = Math.min(minR, maxR);
@@ -56,11 +74,19 @@ class Orb {
     }
 
     const radius = this.baseRadiusPx + this.radialDispPx;
+    const originScreenX = boundsPx.x + boundsPx.width * 0.5 + this.centerX * boundsPx.width * 0.5;
+    const originScreenY = boundsPx.y + boundsPx.height * 0.5 - this.centerY * boundsPx.height * 0.5;
+    const originXSim = originScreenX - state.widthPx * 0.5;
+    const originYSim = state.heightPx * 0.5 - originScreenY;
 
-    this.xSim = radius * Math.cos(this.angleRad);
-    this.ySim = radius * Math.sin(this.angleRad);
+    this.xSim = originXSim + radius * Math.cos(this.angleRad);
+    this.ySim = originYSim + radius * Math.sin(this.angleRad);
 
-    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad);
+    this.lastColorBandIndex = colorBandIndex;
+    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad, {
+      bandIndex: this.lastColorBandIndex,
+      hueOffsetDeg: this.hueOffsetDeg,
+    });
     this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
   }
 }

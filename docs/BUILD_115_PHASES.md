@@ -5,6 +5,11 @@ intentionally small and focused so agents can implement and validate work
 incrementally. Phases are grouped into blocks for convenience, but each phase
 should still be handled as an independent unit with its own prompt pack.
 
+Historical note: Build 115 has reached Phase 22 release-gate review. See
+`BUILD_115_RELEASE_GATE.md` for the current evidence and verdict. The table
+below is retained as implementation history, not as a claim that promotion to
+canon is already complete.
+
 ## Summary Of Phases
 
 ### Block A - Architecture And Vocabulary Freeze
@@ -57,7 +62,7 @@ should still be handled as an independent unit with its own prompt pack.
 | Phase | Name | Description |
 |------:|------|-------------|
 | **21** | Schema migration implementation | Add runtime migration code that converts presets from Schema 8 and earlier to Schema 9. Validate with a library of legacy presets. |
-| **22** | Hardening and release gate | Run targeted automated tests, manual browser tests, and hostile audits across all panels, visualizer behaviors, and migration logic. Ensure the 115 build meets quality standards before promotion to canon. |
+| **22** | Hardening and release gate | Run targeted automated tests, manual browser tests, and hostile audits across all panels, visualizer behaviors, and migration logic. Record the evidence in `BUILD_115_RELEASE_GATE.md` before promotion to canon. |
 
 ## Notes
 
@@ -72,9 +77,9 @@ should still be handled as an independent unit with its own prompt pack.
   follow the orb visualizer migration.
 * Camera control is purposefully constrained in 115. Build 116 fully exploits
   the `ViewTransform` hooks introduced here.
-* Block A ratifies vocabulary, seams, contracts, scene/schema shape, and
-  implementation readiness. It does not imply that the legacy renderer, shell,
-  orb path, or Schema 8 runtime have already been migrated.
+* Historical planning note: Block A was authored before the runtime migration
+  landed. The current Build 115 runtime has since moved onto the compositor,
+  visualizer, shell, and Schema 9 architecture described in these docs.
 
 This phased plan keeps Build 115 incremental, reviewable, and safe while
 preserving a clear path toward the final visual architecture.

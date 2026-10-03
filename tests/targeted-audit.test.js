@@ -14,6 +14,12 @@ import { Queue } from "../src/js/audio/queue.js";
 import { Scrubber, buildWaveformPeaks } from "../src/js/audio/scrubber.js";
 import { UrlPreset } from "../src/js/presets/url-preset.js";
 import { RecorderEngine } from "../src/js/recording/recorder-engine.js";
+import { createCompositor } from "../src/js/render/compositor.js";
+import { Orb } from "../src/js/render/orb.js";
+import { readSceneSettingsSchema } from "../src/js/render/scene-runtime.js";
+import { IDENTITY_VIEW_TRANSFORM, normalizeViewTransform } from "../src/js/render/view-transform.js";
+import { createVisualizerRegistry, registerBuiltInVisualizers } from "../src/js/render/visualizer.js";
+import { BandOverlayVisualizer } from "../src/js/render/visualizers/band-overlay.js";
 import { createPanelShellState, getPanelShellStateSnapshot } from "../src/js/ui/panel-state.js";
 import { UI, readSourceUiModel, shouldShowActiveQueueItem } from "../src/js/ui/ui.js";
 import { paths } from "../scripts/build.mjs";
@@ -25,6 +31,30 @@ function createAudioBuffer(channels) {
     getChannelData(index) {
       return Float32Array.from(channels[index]);
     },
+  };
+}
+
+function createArcCaptureContext() {
+  const arcs = [];
+  return {
+    arcs,
+    save() {},
+    restore() {},
+    beginPath() {},
+    moveTo() {},
+    lineTo() {},
+    stroke() {},
+    rect() {},
+    clip() {},
+    fill() {},
+    arc(x, y, r) {
+      arcs.push({ x, y, r });
+    },
+    set fillStyle(_value) {},
+    set strokeStyle(_value) {},
+    set lineWidth(_value) {},
+    set lineJoin(_value) {},
+    set lineCap(_value) {},
   };
 }
 
@@ -126,6 +156,17 @@ function restoreBandState(snapshot) {
   state.bands.dominantIndex = snapshot.dominantIndex;
   state.bands.dominantName = snapshot.dominantName;
   state.bands.ringPhaseRad = snapshot.ringPhaseRad;
+}
+
+function snapshotSceneState() {
+  return structuredClone(state.scene);
+}
+
+function restoreSceneState(snapshot) {
+  if (!snapshot) return;
+  state.scene.nodes = structuredClone(Array.isArray(snapshot.nodes) ? snapshot.nodes : []);
+  state.scene.selectedNodeId = typeof snapshot.selectedNodeId === "string" ? snapshot.selectedNodeId : "";
+  state.scene.viewTransform = structuredClone(snapshot.viewTransform);
 }
 
 function primeDominantBandState({ dominantIndex = 42, dominantName = "Test Band", energy = 0.67 } = {}) {
@@ -322,6 +363,7 @@ async function withUiWireHarnessState({
     source: JSON.parse(JSON.stringify(state.source)),
     audio: { ...state.audio },
     bands: snapshotBandState(),
+    scene: snapshotSceneState(),
     recording: JSON.parse(JSON.stringify(state.recording)),
     ui: snapshotUiState(),
     repeatMode: preferences.audio.repeatMode,
@@ -398,6 +440,7 @@ async function withUiWireHarnessState({
     Queue.clear();
     applySourceAndAudioState(previous);
     restoreBandState(previous.bands);
+    restoreSceneState(previous.scene);
     Object.assign(state.recording, previous.recording);
     restoreUiState(previous.ui);
     preferences.audio.repeatMode = previous.repeatMode;
@@ -795,6 +838,8 @@ function createUiWireHarness() {
   const previousElement = globalThis.Element;
   const previousUi = snapshotUiState();
   const previousCanvas = state.canvas;
+  const previousPreferences = structuredClone(preferences);
+  const previousScene = snapshotSceneState();
   const elements = new Map();
   const windowListeners = new Map();
 
@@ -831,6 +876,8 @@ function createUiWireHarness() {
     },
   };
   state.canvas = createStubUiElement("canvas");
+  state.scene.nodes = [];
+  state.scene.selectedNodeId = "";
 
   return {
     getElement,
@@ -850,6 +897,9 @@ function createUiWireHarness() {
       }
     },
     restore() {
+      replacePreferences(structuredClone(previousPreferences));
+      resolveSettings();
+      restoreSceneState(previousScene);
       restoreUiState(previousUi);
       state.canvas = previousCanvas;
       globalThis.window = previousWindow;
@@ -857,6 +907,46 @@ function createUiWireHarness() {
       globalThis.Element = previousElement;
     },
   };
+}
+
+function readSceneRowAt(index) {
+  return state.ui.sceneNodeList.children[index] || null;
+}
+
+function readSceneRowActions(row) {
+  if (!row || !row.children[1]) return null;
+  const actions = row.children[1];
+  return {
+    selectButton: actions.children[0] || null,
+    enabledLabel: actions.children[1] || null,
+    enabledInput: actions.children[1] ? actions.children[1].children[0] || null : null,
+    moveBackwardButton: actions.children[2] || null,
+    moveForwardButton: actions.children[3] || null,
+  };
+}
+
+function findSceneInspectorRow(labelText) {
+  const container = state.ui.sceneInspectorFields;
+  const rows = container && Array.isArray(container.children) ? container.children : [];
+  return rows.find((row) => row && row.children && row.children[0] && row.children[0].textContent === labelText) || null;
+}
+
+function readSceneOrbCardAt(index) {
+  const orbList = state.ui.sceneInspectorFields && state.ui.sceneInspectorFields.children
+    ? state.ui.sceneInspectorFields.children[2] || null
+    : null;
+  return orbList && orbList.children ? orbList.children[index] || null : null;
+}
+
+function findSceneOrbCardRow(card, labelText) {
+  const rows = card && Array.isArray(card.children) ? card.children : [];
+  return rows.find((row, index) => (
+    index > 0
+    && row
+    && row.children
+    && row.children[0]
+    && row.children[0].textContent === labelText
+  )) || null;
 }
 
 test("normalizeOrbDef preserves fallback routing when chanId and bandIds are omitted", () => {
@@ -891,6 +981,277 @@ test("normalizeOrbDef still honors explicit incoming routing and band selections
 
   assert.equal(normalized.chanId, "C");
   assert.deepEqual(normalized.bandIds, []);
+});
+
+test("Orb uses scene node bounds for radius and origin instead of full-canvas metrics", () => {
+  const previousPrefs = structuredClone(preferences);
+  const previousWidthPx = state.widthPx;
+  const previousHeightPx = state.heightPx;
+
+  try {
+    replacePreferences(structuredClone(CONFIG.defaults));
+    resolveSettings();
+    state.widthPx = 1000;
+    state.heightPx = 1000;
+
+    const orb = new Orb({
+      id: "BOUNDED",
+      chanId: "C",
+      bandIds: [],
+      chirality: 1,
+      startAngleRad: 0,
+      hueOffsetDeg: 0,
+      centerX: 0.5,
+      centerY: -0.5,
+    });
+    const boundsPx = { x: 100, y: 200, width: 200, height: 100 };
+
+    orb.step(0, 0, {
+      energy01: 1,
+      timeDomain: null,
+    }, {
+      boundsPx,
+    });
+
+    const screenX = state.widthPx * 0.5 + orb.xSim;
+    const screenY = state.heightPx * 0.5 - orb.ySim;
+
+    assert.equal(orb.baseRadiusPx, 80);
+    assert.equal(screenX, 330);
+    assert.equal(screenY, 275);
+  } finally {
+    replacePreferences(previousPrefs);
+    resolveSettings();
+    state.widthPx = previousWidthPx;
+    state.heightPx = previousHeightPx;
+  }
+});
+
+test("Band overlay uses node-local metrics instead of full-canvas ring geometry", () => {
+  const previousPrefs = structuredClone(preferences);
+  const previousWidthPx = state.widthPx;
+  const previousHeightPx = state.heightPx;
+  const previousDpr = state.dpr;
+  const previousRingPhaseRad = state.bands.ringPhaseRad;
+
+  try {
+    replacePreferences(structuredClone(CONFIG.defaults));
+    resolveSettings();
+    state.widthPx = 1000;
+    state.heightPx = 1000;
+    state.dpr = 1;
+    state.bands.ringPhaseRad = 0;
+
+    const ctx = createArcCaptureContext();
+    const node = {
+      id: "overlay-1",
+      type: "bandOverlay",
+      settings: structuredClone(CONFIG.defaults.bands.overlay),
+    };
+    const boundsPx = { x: 100, y: 150, width: 200, height: 100 };
+    const visualizer = new BandOverlayVisualizer({ node });
+
+    visualizer.init({
+      ctx,
+      widthPx: state.widthPx,
+      heightPx: state.heightPx,
+      dpr: state.dpr,
+      node,
+    });
+    visualizer.resize(boundsPx);
+    visualizer.update({
+      analysis: {
+        compat: {
+          centerWaveform: new Float32Array([0]),
+        },
+      },
+      bands: [
+        { energy: 1 },
+      ],
+    }, 0);
+    visualizer.render({
+      ctx,
+      widthPx: state.widthPx,
+      heightPx: state.heightPx,
+      dpr: state.dpr,
+    }, IDENTITY_VIEW_TRANSFORM);
+
+    assert.equal(ctx.arcs.length, 1);
+    assert.deepEqual(ctx.arcs[0], { x: 280, y: 200, r: 3 });
+  } finally {
+    replacePreferences(previousPrefs);
+    resolveSettings();
+    state.widthPx = previousWidthPx;
+    state.heightPx = previousHeightPx;
+    state.dpr = previousDpr;
+    state.bands.ringPhaseRad = previousRingPhaseRad;
+  }
+});
+
+test("built-in visualizer registry exposes only real Build 115 runtime types", () => {
+  const registry = createVisualizerRegistry();
+  registerBuiltInVisualizers(registry);
+
+  const orbDescriptor = registry.get("orbs");
+  const overlayDescriptor = registry.get("bandOverlay");
+
+  assert.equal(registry.has("orbs"), true);
+  assert.equal(registry.has("bandOverlay"), true);
+  assert.equal(registry.has("legacyRender"), false);
+  assert.equal(registry.get("legacyRender"), null);
+  assert.equal(orbDescriptor.type, "orbs");
+  assert.equal(orbDescriptor.defaultNode.type, "orbs");
+  assert.equal(overlayDescriptor.type, "bandOverlay");
+  assert.equal(overlayDescriptor.defaultNode.type, "bandOverlay");
+});
+
+test("compositor syncScene owns visualizer lifecycle and render ordering honestly", () => {
+  const events = [];
+  const warnings = [];
+  let nextInstanceToken = 1;
+
+  class ProbeVisualizer {
+    constructor({ node }) {
+      this.node = node;
+      this.token = nextInstanceToken++;
+      events.push({ type: "construct", id: node.id, token: this.token });
+    }
+
+    init({ node }) {
+      events.push({ type: "init", id: node.id, token: this.token });
+    }
+
+    configure(node) {
+      this.node = node;
+      events.push({ type: "configure", id: node.id, zIndex: node.zIndex, token: this.token });
+    }
+
+    resize(boundsPx) {
+      events.push({ type: "resize", id: this.node.id, boundsPx: { ...boundsPx }, token: this.token });
+    }
+
+    update(_frame, dtSec) {
+      events.push({ type: "update", id: this.node.id, dtSec, token: this.token });
+    }
+
+    render(_target, viewTransform) {
+      events.push({ type: "render", id: this.node.id, mode: viewTransform.mode, token: this.token });
+    }
+
+    dispose() {
+      events.push({ type: "dispose", id: this.node.id, token: this.token });
+    }
+  }
+
+  const registry = createVisualizerRegistry();
+  registry.register("probe", ProbeVisualizer);
+
+  const compositor = createCompositor({
+    registry,
+    onWarning(warning) {
+      warnings.push(warning);
+    },
+  });
+
+  const createNode = ({ id, enabled = true, zIndex = 0, bounds, anchor }) => ({
+    id,
+    type: "probe",
+    enabled,
+    zIndex,
+    bounds,
+    anchor,
+  });
+
+  const targetA = { canvas: null, ctx: null, widthPx: 100, heightPx: 80, dpr: 1 };
+  compositor.syncScene({
+    nodes: [
+      createNode({
+        id: "a",
+        zIndex: 2,
+        bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+        anchor: { x: 0.5, y: 0.5 },
+      }),
+      createNode({
+        id: "b",
+        zIndex: 1,
+        bounds: { x: 0.25, y: 0.25, w: 0.5, h: 0.5 },
+        anchor: { x: 0, y: 0 },
+      }),
+      createNode({
+        id: "c",
+        zIndex: 1,
+        bounds: { x: 0.75, y: 0.75, w: 0.25, h: 0.25 },
+        anchor: { x: 1, y: 1 },
+      }),
+      createNode({
+        id: "skip",
+        enabled: false,
+        zIndex: 0,
+        bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+        anchor: { x: 0.5, y: 0.5 },
+      }),
+    ],
+  }, targetA);
+  compositor.update({ ok: true }, 0.25);
+  compositor.render(targetA, IDENTITY_VIEW_TRANSFORM);
+
+  assert.deepEqual(events.filter((event) => event.type === "construct").map((event) => event.id), ["a", "b", "c"]);
+  assert.deepEqual(events.filter((event) => event.type === "update").map((event) => event.id), ["b", "c", "a"]);
+  assert.deepEqual(events.filter((event) => event.type === "render").map((event) => event.id), ["b", "c", "a"]);
+  assert.deepEqual(
+    events.filter((event) => event.type === "resize").map((event) => ({ id: event.id, boundsPx: event.boundsPx })),
+    [
+      { id: "a", boundsPx: { x: 0, y: 0, width: 100, height: 80 } },
+      { id: "b", boundsPx: { x: 25, y: 20, width: 50, height: 40 } },
+      { id: "c", boundsPx: { x: 50, y: 40, width: 25, height: 20 } },
+    ]
+  );
+
+  events.length = 0;
+
+  const targetB = { canvas: null, ctx: null, widthPx: 200, heightPx: 100, dpr: 2 };
+  compositor.syncScene({
+    nodes: [
+      createNode({
+        id: "c",
+        zIndex: 3,
+        bounds: { x: 0.5, y: 0.5, w: 0.5, h: 1 },
+        anchor: { x: 0.5, y: 0.5 },
+      }),
+      createNode({
+        id: "a",
+        enabled: false,
+        zIndex: 2,
+        bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+        anchor: { x: 0.5, y: 0.5 },
+      }),
+      createNode({
+        id: "d",
+        zIndex: 1,
+        bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+        anchor: { x: 0.5, y: 0.5 },
+      }),
+    ],
+  }, targetB);
+  compositor.update({ ok: true }, 0.5);
+  compositor.render(targetB, IDENTITY_VIEW_TRANSFORM);
+
+  assert.deepEqual(events.filter((event) => event.type === "construct").map((event) => event.id), ["d"]);
+  assert.deepEqual(events.filter((event) => event.type === "dispose").map((event) => event.id).sort(), ["a", "b"]);
+  assert.deepEqual(events.filter((event) => event.type === "render").map((event) => event.id), ["d", "c"]);
+  assert.deepEqual(
+    events.filter((event) => event.type === "resize").map((event) => ({ id: event.id, boundsPx: event.boundsPx })),
+    [
+      { id: "c", boundsPx: { x: 50, y: 0, width: 100, height: 100 } },
+      { id: "d", boundsPx: { x: 0, y: 0, width: 200, height: 100 } },
+    ]
+  );
+  assert.deepEqual(warnings, []);
+
+  events.length = 0;
+  compositor.dispose();
+
+  assert.deepEqual(events.filter((event) => event.type === "dispose").map((event) => event.id).sort(), ["c", "d"]);
 });
 
 test("buildWaveformPeaks keeps mono peak behavior unchanged", () => {
@@ -1495,6 +1856,9 @@ test("URL preset serialization excludes runtime source and recording state", () 
     assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs, "recording"), false);
     assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs, "runtimeLog"), false);
     assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs, "ui"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs, "scene"), true);
+    assert.ok(Array.isArray(payload.prefs.scene.nodes));
+    assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs.scene, "viewTransform"), false);
   } finally {
     applySourceAndAudioState({ source: previousSource, audio: previousAudio });
     Object.assign(state.recording, previousRecording);
@@ -1671,6 +2035,298 @@ test("hash-driven preset migration appends a workspace migration notice", async 
   }
 });
 
+test("legacy preset fixtures migrate forward into Schema 9 scene nodes", () => {
+  const previousLocation = globalThis.location;
+  const previousHistory = globalThis.history;
+  const previousBtoa = globalThis.btoa;
+  const previousAtob = globalThis.atob;
+  const previousPrefs = structuredClone(preferences);
+  const locationStub = {
+    pathname: "/",
+    search: "",
+    hash: "",
+  };
+  const cases = [
+    {
+      name: "schema 8 root orbs and overlay",
+      schema: 8,
+      prefs: {
+        bands: {
+          count: 96,
+          floorHz: 30,
+          ceilingHz: 16000,
+          distributionMode: "mel",
+        },
+        orbs: [
+          { id: "LEGACY_A", chanId: "L", bandIds: [1, 5], chirality: 1, startAngleRad: 0.75 },
+        ],
+        overlay: {
+          enabled: true,
+          alpha: 0.42,
+          pointSizePx: 6,
+        },
+      },
+      expectedNodeIds: ["orbs-1", "overlay-1"],
+      expectedNodeTypes: ["orbs", "bandOverlay"],
+      expectedNodeEnabled: [true, true],
+    },
+    {
+      name: "schema 7 legacy flow",
+      schema: 7,
+      prefs: {
+        bands: {
+          count: 128,
+          floorHz: 48,
+          ceilingHz: 18000,
+          logSpacing: true,
+          overlay: {
+            enabled: false,
+            lineAlpha: 0.22,
+          },
+        },
+        orbs: [
+          { id: "LEGACY_B", chanId: "R", bandIds: [2], chirality: -1, startAngleRad: 1.25 },
+        ],
+      },
+      expectedNodeIds: ["orbs-1", "overlay-1"],
+      expectedNodeTypes: ["orbs", "bandOverlay"],
+      expectedNodeEnabled: [true, false],
+    },
+    {
+      name: "schema 8 with no visual roots synthesizes the canonical scene",
+      schema: 8,
+      prefs: {
+        trace: {
+          lineAlpha: 0.17,
+        },
+      },
+      expectedNodeIds: ["orbs-1", "overlay-1"],
+      expectedNodeTypes: ["orbs", "bandOverlay"],
+      expectedNodeEnabled: [true, true],
+    },
+    {
+      name: "schema 8 orbs only preserves overlay absence",
+      schema: 8,
+      prefs: {
+        orbs: [
+          { id: "LEGACY_ONLY_ORBS", chanId: "C", bandIds: [], chirality: -1, startAngleRad: 0.5 },
+        ],
+      },
+      expectedNodeIds: ["orbs-1"],
+      expectedNodeTypes: ["orbs"],
+      expectedNodeEnabled: [true],
+    },
+    {
+      name: "schema 8 overlay only preserves orb absence",
+      schema: 8,
+      prefs: {
+        bands: {
+          overlay: {
+            enabled: true,
+            ringSpeedRadPerSec: 0.75,
+          },
+        },
+      },
+      expectedNodeIds: ["overlay-1"],
+      expectedNodeTypes: ["bandOverlay"],
+      expectedNodeEnabled: [true],
+    },
+    {
+      name: "schema 8 overlay without enabled defaults the migrated node on",
+      schema: 8,
+      prefs: {
+        overlay: {
+          alpha: 0.25,
+          pointSizePx: 4,
+        },
+      },
+      expectedNodeIds: ["overlay-1"],
+      expectedNodeTypes: ["bandOverlay"],
+      expectedNodeEnabled: [true],
+    },
+    {
+      name: "missing schema follows the legacy schema 1 migration path",
+      schema: undefined,
+      expectedMigratedFromSchema: 1,
+      prefs: {
+        trace: {
+          lineAlpha: 0.2,
+        },
+      },
+      expectedNodeIds: ["orbs-1", "overlay-1"],
+      expectedNodeTypes: ["orbs", "bandOverlay"],
+      expectedNodeEnabled: [true, true],
+    },
+    {
+      name: "explicit schema 1 follows the legacy migration path",
+      schema: 1,
+      prefs: {
+        overlay: {
+          enabled: false,
+          alpha: 0.33,
+        },
+      },
+      expectedNodeIds: ["overlay-1"],
+      expectedNodeTypes: ["bandOverlay"],
+      expectedNodeEnabled: [false],
+    },
+  ];
+
+  globalThis.location = locationStub;
+  globalThis.history = {
+    replaceState(_state, _title, url) {
+      locationStub.hash = url.includes("#") ? url.slice(url.indexOf("#")) : "";
+    },
+  };
+  globalThis.btoa = (value) => Buffer.from(value, "utf8").toString("base64");
+  globalThis.atob = (value) => Buffer.from(value, "base64").toString("utf8");
+
+  try {
+    for (const fixture of cases) {
+      replacePreferences(structuredClone(CONFIG.defaults));
+      resolveSettings();
+
+      const result = UrlPreset.applyFromLocationHash(encodePresetHashPayload({
+        schema: fixture.schema,
+        prefs: fixture.prefs,
+      }));
+      assert.equal(result.ok, true, fixture.name);
+      assert.equal(result.schema, PRESET_SCHEMA_VERSION, fixture.name);
+      assert.equal(
+        result.migratedFromSchema,
+        Object.prototype.hasOwnProperty.call(fixture, "expectedMigratedFromSchema")
+          ? fixture.expectedMigratedFromSchema
+          : fixture.schema,
+        fixture.name
+      );
+
+      UrlPreset.writeHashFromPrefs();
+      const saved = decodePresetHash(locationStub.hash);
+      assert.equal(saved.schema, PRESET_SCHEMA_VERSION, fixture.name);
+      assert.deepEqual(saved.prefs.scene.nodes.map((node) => node.id), fixture.expectedNodeIds, fixture.name);
+      assert.deepEqual(saved.prefs.scene.nodes.map((node) => node.type), fixture.expectedNodeTypes, fixture.name);
+      assert.deepEqual(saved.prefs.scene.nodes.map((node) => node.enabled), fixture.expectedNodeEnabled, fixture.name);
+      assert.deepEqual(
+        saved.prefs.scene.nodes.map((node) => node.zIndex),
+        saved.prefs.scene.nodes.map((_node, index) => index),
+        fixture.name
+      );
+      assert.ok(saved.prefs.scene.nodes.every((node) => typeof node.id === "string" && !!node.id), fixture.name);
+      assert.ok(saved.prefs.scene.nodes.every((node) => typeof node.type === "string" && !!node.type), fixture.name);
+      assert.ok(saved.prefs.scene.nodes.every((node) => typeof node.enabled === "boolean"), fixture.name);
+      assert.ok(
+        saved.prefs.scene.nodes.every((node) => (
+          Object.prototype.hasOwnProperty.call(node, "bounds")
+          && JSON.stringify(node.bounds) === JSON.stringify({ x: 0.5, y: 0.5, w: 1, h: 1 })
+        )),
+        fixture.name
+      );
+      assert.ok(
+        saved.prefs.scene.nodes.every((node) => (
+          Object.prototype.hasOwnProperty.call(node, "anchor")
+          && JSON.stringify(node.anchor) === JSON.stringify({ x: 0.5, y: 0.5 })
+        )),
+        fixture.name
+      );
+      assert.ok(
+        saved.prefs.scene.nodes.every((node) => Object.prototype.hasOwnProperty.call(node, "settings")),
+        fixture.name
+      );
+      assert.ok(
+        saved.prefs.scene.nodes.every((node) => (
+          node.type === "orbs"
+            ? Array.isArray(node.settings)
+            : !!(node.settings && typeof node.settings === "object")
+        )),
+        fixture.name
+      );
+      assert.equal(Object.prototype.hasOwnProperty.call(saved.prefs, "orbs"), false, fixture.name);
+      assert.equal(Object.prototype.hasOwnProperty.call(saved.prefs, "overlay"), false, fixture.name);
+      assert.equal(Object.prototype.hasOwnProperty.call(saved.prefs.bands, "overlay"), false, fixture.name);
+      assert.equal(Object.prototype.hasOwnProperty.call(saved.prefs, "viewTransform"), false, fixture.name);
+      assert.equal(Object.prototype.hasOwnProperty.call(saved.prefs.scene, "viewTransform"), false, fixture.name);
+      if (fixture.prefs.bands && Number.isInteger(fixture.prefs.bands.count)) {
+        assert.equal(saved.prefs.bands.count, fixture.prefs.bands.count, fixture.name);
+      }
+      if (fixture.prefs.bands && Number.isFinite(fixture.prefs.bands.floorHz)) {
+        assert.equal(saved.prefs.bands.floorHz, fixture.prefs.bands.floorHz, fixture.name);
+      }
+      if (fixture.prefs.bands && Number.isFinite(fixture.prefs.bands.ceilingHz)) {
+        assert.equal(saved.prefs.bands.ceilingHz, fixture.prefs.bands.ceilingHz, fixture.name);
+      }
+      if (fixture.prefs.bands && typeof fixture.prefs.bands.distributionMode === "string") {
+        assert.equal(saved.prefs.bands.distributionMode, fixture.prefs.bands.distributionMode, fixture.name);
+      }
+      if (fixture.schema === 7) {
+        assert.equal(saved.prefs.bands.distributionMode, "log", fixture.name);
+      }
+      if (fixture.name === "schema 8 overlay without enabled defaults the migrated node on") {
+        assert.equal(saved.prefs.scene.nodes[0].enabled, true, fixture.name);
+        assert.equal(saved.prefs.scene.nodes[0].settings.enabled, true, fixture.name);
+      }
+      if (fixture.name === "schema 7 legacy flow" || fixture.name === "explicit schema 1 follows the legacy migration path") {
+        assert.equal(saved.prefs.scene.nodes.at(-1).enabled, false, fixture.name);
+        assert.equal(saved.prefs.scene.nodes.at(-1).settings.enabled, false, fixture.name);
+      }
+    }
+
+    locationStub.hash = "";
+    replacePreferences(structuredClone(CONFIG.defaults));
+    resolveSettings();
+
+    const pluginResult = UrlPreset.applyFromLocationHash(encodePresetHashPayload({
+      schema: PRESET_SCHEMA_VERSION,
+      prefs: {
+        scene: {
+          nodes: [
+            {
+              id: "plugin-1",
+              type: "spectralPlugin",
+              enabled: true,
+              zIndex: 0,
+              bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+              anchor: { x: 0.5, y: 0.5 },
+              settings: { arbitrary: true },
+            },
+            {
+              id: "overlay-1",
+              type: "bandOverlay",
+              enabled: true,
+              zIndex: 1,
+              bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+              anchor: { x: 0.5, y: 0.5 },
+              settings: { enabled: true, alpha: 0.61 },
+            },
+          ],
+          viewTransform: {
+            mode: "placeholder",
+          },
+        },
+        bands: {
+          count: 64,
+          floorHz: 42,
+          ceilingHz: 12000,
+        },
+      },
+    }));
+    assert.equal(pluginResult.ok, true);
+    UrlPreset.writeHashFromPrefs();
+    const pluginSaved = decodePresetHash(locationStub.hash);
+    assert.deepEqual(pluginSaved.prefs.scene.nodes.map((node) => node.type), ["bandOverlay"]);
+    assert.equal(pluginSaved.prefs.bands.count, 64);
+    assert.equal(pluginSaved.prefs.bands.floorHz, 42);
+    assert.equal(pluginSaved.prefs.bands.ceilingHz, 12000);
+    assert.equal(Object.prototype.hasOwnProperty.call(pluginSaved.prefs.scene, "viewTransform"), false);
+  } finally {
+    replacePreferences(previousPrefs);
+    resolveSettings();
+    globalThis.location = previousLocation;
+    globalThis.history = previousHistory;
+    globalThis.btoa = previousBtoa;
+    globalThis.atob = previousAtob;
+  }
+});
+
 test("invalid hash changes append a workspace warning without mutating prefs", async () => {
   const previousLocation = globalThis.location;
   const previousHistory = globalThis.history;
@@ -1832,6 +2488,337 @@ test("launchers independently toggle the new Build 115 panel targets", async () 
     assert.equal(UI.getPanelShellModel().openTargets.banking, false);
     assert.equal(state.ui.bankingPanel.style.display, "none");
   });
+});
+
+test("Scene panel renders the runtime node list and selected visualizer inspector", async () => {
+  await withUiWireHarnessState({}, () => {
+    const model = UI.getSceneUiModel();
+
+    assert.equal(model.nodeCount, 2);
+    assert.deepEqual(model.nodes.map((node) => node.id), ["orbs-1", "overlay-1"]);
+    assert.equal(model.selectedNode.id, "orbs-1");
+    assert.equal(state.ui.sceneNodeList.children.length, 2);
+    assert.equal(state.ui.sceneInspectorPanel.hidden, false);
+    assert.equal(state.ui.sceneInspectorEmpty.hidden, true);
+    assert.match(state.ui.sceneSummaryPrimary.textContent, /2 visualizers/);
+    assert.equal(state.ui.sceneInspectorTitle.textContent, "Orbs");
+    assert.equal(state.ui.sceneInspectorType.textContent, "orbs");
+  });
+});
+
+test("Scene panel exposes the runtime-only identity ViewTransform camera hook honestly", async () => {
+  await withUiWireHarnessState({}, () => {
+    const model = UI.getSceneUiModel();
+
+    assert.deepEqual(model.viewTransform, IDENTITY_VIEW_TRANSFORM);
+    assert.equal(model.camera.mode, "identity");
+    assert.equal(model.camera.scope, "runtime-only");
+    assert.equal(model.camera.controlsDeferred, true);
+    assert.equal(state.scene.viewTransform.mode, "identity");
+    assert.deepEqual(state.scene.viewTransform.matrix, [1, 0, 0, 1, 0, 0]);
+    assert.equal(state.ui.sceneCameraPrimary.textContent, "Identity ViewTransform active");
+    assert.equal(state.ui.sceneCameraMode.textContent, "Identity");
+    assert.equal(state.ui.sceneCameraScope.textContent, "Runtime only");
+    assert.match(state.ui.sceneCameraNote.textContent, /Build 116/);
+  });
+});
+
+test("Scene panel persists node enabled state and ordering through explicit controls", async () => {
+  await withUiWireHarnessState({}, () => {
+    const orbsBefore = structuredClone(preferences.orbs);
+    const overlayRow = readSceneRowAt(1);
+    const overlayActions = readSceneRowActions(overlayRow);
+    overlayActions.enabledInput.checked = false;
+    overlayActions.enabledInput.dispatch("change");
+
+    assert.equal(UI.getSceneUiModel().nodes[1].enabled, false);
+    assert.equal(preferences.bands.overlay.enabled, false);
+    assert.equal(preferences.scene.nodes[1].enabled, false);
+
+    const orbsRow = readSceneRowAt(0);
+    const orbsActions = readSceneRowActions(orbsRow);
+    orbsActions.enabledInput.checked = false;
+    orbsActions.enabledInput.dispatch("change");
+
+    assert.equal(UI.getSceneUiModel().nodes.find((node) => node.id === "orbs-1").enabled, false);
+    assert.deepEqual(preferences.orbs, orbsBefore);
+    assert.equal(preferences.scene.nodes.find((node) => node.id === "orbs-1").enabled, false);
+
+    const refreshedOverlayRow = readSceneRowAt(1);
+    readSceneRowActions(refreshedOverlayRow).moveBackwardButton.dispatch("click");
+
+    assert.deepEqual(UI.getSceneUiModel().nodes.map((node) => node.id), ["overlay-1", "orbs-1"]);
+    assert.equal(UI.getSceneUiModel().nodes[0].zIndex, 0);
+    assert.equal(UI.getSceneUiModel().nodes[1].zIndex, 1);
+    assert.deepEqual(preferences.scene.nodes.map((node) => node.id), ["overlay-1", "orbs-1"]);
+  });
+});
+
+test("Scene panel bandOverlay node toggle round-trips through Schema 9 scene nodes", async () => {
+  const previousLocation = globalThis.location;
+  const previousHistory = globalThis.history;
+  const previousBtoa = globalThis.btoa;
+  const previousAtob = globalThis.atob;
+  const locationStub = {
+    pathname: "/",
+    search: "",
+    hash: "",
+  };
+
+  globalThis.location = locationStub;
+  globalThis.history = { replaceState(_state, _title, url) { locationStub.hash = new URL(url, "https://example.test").hash; } };
+  globalThis.btoa = (value) => Buffer.from(value, "utf8").toString("base64");
+  globalThis.atob = (value) => Buffer.from(value, "base64").toString("utf8");
+
+  try {
+    await withUiWireHarnessState({}, () => {
+      UrlPreset.writeHashFromPrefs();
+
+      const overlayActions = readSceneRowActions(readSceneRowAt(1));
+      overlayActions.enabledInput.checked = false;
+      overlayActions.enabledInput.dispatch("change");
+
+      UrlPreset.writeHashFromPrefs();
+      const payload = decodePresetHash(locationStub.hash);
+      const overlayNode = payload.prefs.scene.nodes.find((node) => node.id === "overlay-1");
+
+      assert.equal(UI.getSceneUiModel().nodes[1].enabled, false);
+      assert.equal(preferences.bands.overlay.enabled, false);
+      assert.equal(overlayNode.enabled, false);
+      assert.equal(overlayNode.settings.enabled, false);
+      assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs.bands, "overlay"), false);
+    });
+  } finally {
+    globalThis.location = previousLocation;
+    globalThis.history = previousHistory;
+    globalThis.btoa = previousBtoa;
+    globalThis.atob = previousAtob;
+  }
+});
+
+test("Scene panel band overlay inspector updates live overlay settings", async () => {
+  await withUiWireHarnessState({}, () => {
+    readSceneRowActions(readSceneRowAt(1)).selectButton.dispatch("click");
+
+    assert.equal(UI.getSceneUiModel().selectedNode.id, "overlay-1");
+
+    const pointSizeRow = findSceneInspectorRow("Point Size Px");
+    assert.ok(pointSizeRow);
+    pointSizeRow.children[1].value = "7";
+    pointSizeRow.children[1].dispatch("change");
+
+    assert.equal(preferences.bands.overlay.pointSizePx, 7);
+    assert.equal(UI.getSceneUiModel().selectedNode.settings.pointSizePx, 7);
+    assert.equal(state.ui.sceneInspectorTitle.textContent, "Band Overlay");
+  });
+});
+
+test("Scene panel orb inspector adds, edits, and removes current orb routing entries", async () => {
+  await withUiWireHarnessState({}, () => {
+    readSceneRowActions(readSceneRowAt(0)).selectButton.dispatch("click");
+
+    const initialOrbCount = preferences.orbs.length;
+    const orbActionRow = state.ui.sceneInspectorFields.children[1];
+    const addOrbButton = orbActionRow.children[0];
+    addOrbButton.dispatch("click");
+
+    assert.equal(preferences.orbs.length, initialOrbCount + 1);
+
+    const newCard = readSceneOrbCardAt(initialOrbCount);
+    const idRow = findSceneOrbCardRow(newCard, "ID");
+    const channelRow = findSceneOrbCardRow(newCard, "Channel");
+    const bandIdsRow = findSceneOrbCardRow(newCard, "Band IDs");
+    const chiralityRow = findSceneOrbCardRow(newCard, "Chirality");
+    const angleRow = findSceneOrbCardRow(newCard, "Start Angle");
+    const hueRow = findSceneOrbCardRow(newCard, "Hue Offset");
+    const centerXRow = findSceneOrbCardRow(newCard, "Center X");
+    const centerYRow = findSceneOrbCardRow(newCard, "Center Y");
+
+    idRow.children[1].value = "ORB_SCENE";
+    idRow.children[1].dispatch("change");
+    channelRow.children[1].value = "L";
+    channelRow.children[1].dispatch("change");
+    bandIdsRow.children[1].value = "1, 3, 7";
+    bandIdsRow.children[1].dispatch("change");
+    chiralityRow.children[1].value = "1";
+    chiralityRow.children[1].dispatch("change");
+    angleRow.children[1].value = "1.5";
+    angleRow.children[1].dispatch("change");
+    hueRow.children[1].value = "120";
+    hueRow.children[1].dispatch("change");
+    centerXRow.children[1].value = "0.25";
+    centerXRow.children[1].dispatch("change");
+    centerYRow.children[1].value = "-0.5";
+    centerYRow.children[1].dispatch("change");
+
+    const latestOrb = preferences.orbs[preferences.orbs.length - 1];
+    const latestSceneOrb = UI.getSceneUiModel().selectedNode.settings[preferences.orbs.length - 1];
+    assert.equal(latestOrb.id, "ORB_SCENE");
+    assert.equal(latestOrb.chanId, "L");
+    assert.deepEqual(latestOrb.bandIds, [1, 3, 7]);
+    assert.equal(latestOrb.chirality, 1);
+    assert.equal(latestOrb.startAngleRad, 1.5);
+    assert.equal(Object.prototype.hasOwnProperty.call(latestOrb, "hueOffsetDeg"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(latestOrb, "centerX"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(latestOrb, "centerY"), false);
+    assert.equal(latestSceneOrb.hueOffsetDeg, 120);
+    assert.equal(latestSceneOrb.centerX, 0.25);
+    assert.equal(latestSceneOrb.centerY, -0.5);
+    assert.equal(findSceneOrbCardRow(readSceneOrbCardAt(initialOrbCount), "Hue Offset").children[2].textContent, "120 deg");
+
+    newCard.children[0].children[1].dispatch("click");
+    assert.equal(preferences.orbs.length, initialOrbCount);
+  });
+});
+
+test("Scene panel keeps scene-only orb fields across applyPrefs sync while legacy prefs stay clean", async () => {
+  await withUiWireHarnessState({}, () => {
+    readSceneRowActions(readSceneRowAt(0)).selectButton.dispatch("click");
+
+    const firstCard = readSceneOrbCardAt(0);
+    const hueRow = findSceneOrbCardRow(firstCard, "Hue Offset");
+    const centerXRow = findSceneOrbCardRow(firstCard, "Center X");
+    const centerYRow = findSceneOrbCardRow(firstCard, "Center Y");
+
+    hueRow.children[1].value = "45";
+    hueRow.children[1].dispatch("change");
+    centerXRow.children[1].value = "0.2";
+    centerXRow.children[1].dispatch("change");
+    centerYRow.children[1].value = "-0.3";
+    centerYRow.children[1].dispatch("change");
+
+    UI.applyPrefs(null);
+
+    const selectedOrb = UI.getSceneUiModel().selectedNode.settings[0];
+    assert.equal(selectedOrb.hueOffsetDeg, 45);
+    assert.equal(selectedOrb.centerX, 0.2);
+    assert.equal(selectedOrb.centerY, -0.3);
+    assert.equal(Object.prototype.hasOwnProperty.call(preferences.orbs[0], "hueOffsetDeg"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(preferences.orbs[0], "centerX"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(preferences.orbs[0], "centerY"), false);
+  });
+});
+
+test("Schema 9 presets persist scene nodes while runtime-only scene state stays excluded", async () => {
+  const previousLocation = globalThis.location;
+  const previousHistory = globalThis.history;
+  const previousBtoa = globalThis.btoa;
+  const previousAtob = globalThis.atob;
+  const locationStub = {
+    pathname: "/",
+    search: "",
+    hash: "",
+  };
+
+  globalThis.location = locationStub;
+  globalThis.history = { replaceState(_state, _title, url) { locationStub.hash = new URL(url, "https://example.test").hash; } };
+  globalThis.btoa = (value) => Buffer.from(value, "utf8").toString("base64");
+  globalThis.atob = (value) => Buffer.from(value, "base64").toString("utf8");
+
+  try {
+    await withUiWireHarnessState({}, () => {
+      assert.equal(PRESET_SCHEMA_VERSION, 9);
+
+      UrlPreset.writeHashFromPrefs();
+      const beforeHash = locationStub.hash;
+      const beforePayload = decodePresetHash(beforeHash);
+
+      const firstCard = readSceneOrbCardAt(0);
+      const hueRow = findSceneOrbCardRow(firstCard, "Hue Offset");
+      const centerXRow = findSceneOrbCardRow(firstCard, "Center X");
+      const centerYRow = findSceneOrbCardRow(firstCard, "Center Y");
+
+      hueRow.children[1].value = "90";
+      hueRow.children[1].dispatch("change");
+      centerXRow.children[1].value = "0.4";
+      centerXRow.children[1].dispatch("change");
+      centerYRow.children[1].value = "-0.4";
+      centerYRow.children[1].dispatch("change");
+
+      const orbsActions = readSceneRowActions(readSceneRowAt(0));
+      orbsActions.enabledInput.checked = false;
+      orbsActions.enabledInput.dispatch("change");
+      readSceneRowActions(readSceneRowAt(1)).moveBackwardButton.dispatch("click");
+      readSceneRowActions(readSceneRowAt(0)).selectButton.dispatch("click");
+
+      UrlPreset.writeHashFromPrefs();
+      const afterHash = locationStub.hash;
+      const afterPayload = decodePresetHash(afterHash);
+      const orbSchema = readSceneSettingsSchema("orbs");
+      const savedSceneOrbNode = afterPayload.prefs.scene.nodes.find((node) => node.id === "orbs-1");
+
+      assert.notEqual(afterHash, beforeHash);
+      assert.equal(Object.prototype.hasOwnProperty.call(beforePayload.prefs, "scene"), true);
+      assert.equal(Object.prototype.hasOwnProperty.call(afterPayload.prefs, "scene"), true);
+      assert.deepEqual(
+        Object.keys(orbSchema.item.fields).sort(),
+        ["bandIds", "centerX", "centerY", "chanId", "chirality", "hueOffsetDeg", "id", "startAngleRad"]
+      );
+      assert.deepEqual(afterPayload.prefs.scene.nodes.map((node) => node.id), ["overlay-1", "orbs-1"]);
+      assert.equal(savedSceneOrbNode.enabled, false);
+      assert.equal(savedSceneOrbNode.settings[0].hueOffsetDeg, 90);
+      assert.equal(savedSceneOrbNode.settings[0].centerX, 0.4);
+      assert.equal(savedSceneOrbNode.settings[0].centerY, -0.4);
+      assert.equal(Object.prototype.hasOwnProperty.call(afterPayload.prefs, "orbs"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(afterPayload.prefs.bands, "overlay"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(preferences.orbs[0], "hueOffsetDeg"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(preferences.orbs[0], "centerX"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(preferences.orbs[0], "centerY"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(orbSchema.item.fields, "camera"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(orbSchema.item.fields, "viewTransform"), false);
+    });
+  } finally {
+    globalThis.location = previousLocation;
+    globalThis.history = previousHistory;
+    globalThis.btoa = previousBtoa;
+    globalThis.atob = previousAtob;
+  }
+});
+
+test("Scene ViewTransform stays runtime-only and never alters preset hash", async () => {
+  const previousLocation = globalThis.location;
+  const previousHistory = globalThis.history;
+  const previousBtoa = globalThis.btoa;
+  const previousAtob = globalThis.atob;
+  const locationStub = {
+    pathname: "/",
+    search: "",
+    hash: "",
+  };
+
+  globalThis.location = locationStub;
+  globalThis.history = { replaceState(_state, _title, url) { locationStub.hash = new URL(url, "https://example.test").hash; } };
+  globalThis.btoa = (value) => Buffer.from(value, "utf8").toString("base64");
+  globalThis.atob = (value) => Buffer.from(value, "base64").toString("utf8");
+
+  try {
+    await withUiWireHarnessState({}, () => {
+      UrlPreset.writeHashFromPrefs();
+      const beforeHash = locationStub.hash;
+      const beforePayload = decodePresetHash(beforeHash);
+
+      state.scene.viewTransform = normalizeViewTransform({
+        mode: "placeholder",
+        matrix: [1, 0, 0, 1, 32, -18],
+      });
+
+      UrlPreset.writeHashFromPrefs();
+      const afterHash = locationStub.hash;
+      const afterPayload = decodePresetHash(afterHash);
+
+      assert.equal(afterHash, beforeHash);
+      assert.equal(Object.prototype.hasOwnProperty.call(beforePayload.prefs, "scene"), true);
+      assert.equal(Object.prototype.hasOwnProperty.call(afterPayload.prefs, "scene"), true);
+      assert.equal(Object.prototype.hasOwnProperty.call(beforePayload.prefs.scene, "viewTransform"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(afterPayload.prefs.scene, "viewTransform"), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(afterPayload.prefs, "viewTransform"), false);
+    });
+  } finally {
+    globalThis.location = previousLocation;
+    globalThis.history = previousHistory;
+    globalThis.btoa = previousBtoa;
+    globalThis.atob = previousAtob;
+  }
 });
 
 test("status launcher opens the runtime log drawer and clears unread state", async () => {

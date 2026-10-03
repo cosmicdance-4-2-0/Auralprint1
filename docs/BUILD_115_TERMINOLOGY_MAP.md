@@ -19,12 +19,12 @@ the repo easier to think with without implying premature renames.
 |------------------------|-----------------------------|-------|
 | `AudioEngine` / `audio-engine.js` | `AnalyzerCore` | Current module also participates in transport and source plumbing, but the canonical analysis-producing role is `AnalyzerCore`. |
 | `band-bank.js` / band bank controller | `BandBank` | Already close to the canonical term. |
-| Orb / orb runtime / orb render path | `"orbs"` `Visualizer` type | Today this is a special-case render object/path. Under Build 115 it becomes a first-class visualizer instantiated through a `SceneNode`. |
-| Band overlay | `Visualizer` | Today it is a special-case overlay drawn by the renderer. Under Build 115 it is scene content, not UI instrumentation. |
+| Orb / orb runtime / orb render path | `"orbs"` `Visualizer` type | Build 115 routes orb rendering through `SceneNode`-backed visualizers. `orb-runtime.js` remains a compatibility seam for orb simulation and shared state helpers, not a second render owner. |
+| Band overlay | `Visualizer` | Build 115 routes the overlay through scene content rather than renderer-owned UI instrumentation. |
 | Band table / live band HUD | `Inspector` | These are instrumentation surfaces, not scene visualizers and not scene nodes. |
 | `renderer.js` | Legacy render orchestration path | Build 115 canon separates `Compositor`, `Scene`, and `Visualizer` responsibilities instead of treating the renderer as the architecture name. |
 | `audioPanel` plus queue controls | `Audio Source` within `WorkspaceShell` | This is a broad responsibility mapping, not a promise of a direct DOM rename in Phase 1. |
-| `recordPanel` | `Recording` within `WorkspaceShell` | The current panel remains a valid implementation label until later shell phases. |
+| `recordPanel` | `Recording` within `WorkspaceShell` | The current panel label remains a valid implementation detail within the shipped shell model; it does not imply deferred shell ownership work. |
 | `simPanel` | Mixed legacy container | Its current responsibilities split across `Analysis`, `Scene`, `Workspace / Presets`, and some visualizer settings. Do not treat it as a one-to-one future panel rename. |
 | `bandsPanel` | Mixed legacy container | Its current responsibilities split across `Banking`, `Inspector` surfaces, and some visualizer-adjacent settings. Do not treat it as a one-to-one future panel rename. |
 | Hidden-panel launchers | `WorkspaceShell` launcher system | The current launchers are legacy implementation labels on the path toward a unified shell launcher bar. |

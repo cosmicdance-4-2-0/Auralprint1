@@ -7,15 +7,14 @@ and a unified `Visualizer` framework. To preserve backward compatibility, Build
 115 defines Schema 9 as the target preset shape and documents the migration path
 from Schema 8 and earlier presets.
 
-Schema 9 is a Build 115 target format. The current runtime still declares
-`PRESET_SCHEMA_VERSION = 8` and does not yet ship runtime migration code for the
-scene model.
+Schema 9 is the active runtime preset format. The current runtime declares
+`PRESET_SCHEMA_VERSION = 9` and ships migration code that carries Schema 8 and
+earlier presets forward into the scene model.
 
 ## Schema Versioning
 
-The user-facing app version is separate from the preset schema version. As of
-the current runtime baseline, the active schema version is 8. Build 115 targets
-schema version 9 for the scene migration phases that come later.
+The user-facing app version is separate from the preset schema version. In the
+current Build 115 runtime, the active schema version is 9.
 
 All presets should include a `schema` field. If a preset omits it, the loader
 assumes schema 1 and migrates forward step by step until the active schema.
@@ -38,6 +37,10 @@ is:
 Runtime-only state, including live visualizer instances, selected node/UI state,
 `ViewTransform`, panel visibility, permissions, queue state, playback session
 state, and recording state, is excluded from persistence.
+
+On import, persisted `scene.nodes[].zIndex` is authoritative for ordering. On
+save, export, and share, scene nodes are written back in canonical array order
+with sequential `zIndex` values.
 
 ## Key Changes In Schema 9
 
@@ -127,8 +130,8 @@ path into Schema 8, then apply the Schema 9 steps above.
 
 ## Non-Goals And Future Work
 
-- **Schema rollout timing** - This document defines the target Schema 9 shape.
-  Later implementation phases update runtime code to adopt it.
+- **Schema rollout timing** - Schema 9 is now live. Future schema work should
+  extend it only when a new persisted capability is required.
 - **Camera settings** - Schema 9 does not persist `ViewTransform`. Camera data
   is deferred to a future schema once Build 116 defines it.
 - **Scene manipulation UX** - Schema 9 persists scene layout data, but the UI

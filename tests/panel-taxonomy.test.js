@@ -133,10 +133,24 @@ test("template keeps the Banking inspector reachable above secondary overlay and
   assert.ok(inspectorIndex < rainbowIndex, "Expected inspector toggle before rainbow controls.");
 });
 
-test("template assigns Scene ownership to current render-facing controls", () => {
+test("template assigns Scene ownership to runtime scene management and legacy visual controls", () => {
   const sceneBlock = extractDivBlock(templateHtml, "scenePanel");
 
   assertIncludesAll(sceneBlock, [
+    "sceneSummaryPrimary",
+    "sceneSummaryActive",
+    "sceneSummarySelected",
+    "sceneCameraCard",
+    "sceneCameraPrimary",
+    "sceneCameraMode",
+    "sceneCameraScope",
+    "sceneCameraNote",
+    "sceneNodeEmpty",
+    "sceneNodeList",
+    "sceneInspectorEmpty",
+    "sceneInspectorPanel",
+    "sceneInspectorTitle",
+    "sceneInspectorFields",
     "btnResetVisuals",
     "clrBg",
     "clrParticle",

@@ -6,10 +6,10 @@ band table, dominant-band readouts, warning banners, and runtime status feeds.
 
 ## Contract Status
 
-This is the Build 115 target interface, not a claim that the current runtime
-already uses dedicated inspector modules. Today the band table and related HUD
-readouts still live inside the existing UI path. Later Build 115 phases can
-narrow those surfaces onto explicit inspector modules.
+This contract is active in the current runtime. Inspectors still live inside
+the existing UI path rather than standalone modules, but they already follow
+the Build 115 boundary: non-scene consumers of analysis data that do not draw
+onto the main render canvas.
 
 ## Interface
 

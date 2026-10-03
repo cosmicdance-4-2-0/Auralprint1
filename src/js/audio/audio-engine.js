@@ -175,7 +175,17 @@ const AudioEngine = (() => {
     const timeDomain = new Float32Array(a.fftSize);
     const freqDb = new Float32Array(a.frequencyBinCount);
 
-    return { id, label, analyser: a, timeDomain, freqDb, rms: 0, energy01: 0 };
+    return {
+      id,
+      label,
+      analyser: a,
+      timeDomain,
+      freqDb,
+      rms: 0,
+      energy01: 0,
+      minDb: a.minDecibels,
+      maxDb: a.maxDecibels,
+    };
   }
 
   function applyPlaybackSettingsLive() {
@@ -503,6 +513,8 @@ const AudioEngine = (() => {
     bandR.energy01 = computeEnergy01(bandR.rms);
     bandC.energy01 = computeEnergy01(bandC.rms);
 
+    bandL.analyser.getFloatFrequencyData(bandL.freqDb);
+    bandR.analyser.getFloatFrequencyData(bandR.freqDb);
     bandC.analyser.getFloatFrequencyData(bandC.freqDb);
     BandBank.computeEnergiesFromCAnalyser(bandC, ensureContext().sampleRate);
 

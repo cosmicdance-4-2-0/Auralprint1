@@ -25,9 +25,10 @@ Source Input -> AnalyzerCore -> AnalysisFrame -> BandBank -> BandFrame
                                                             Render Surface
 ```
 
-Build 115 is still in the docs-first stage. This document defines the target
-contract surface for later phases; it does not imply that the current runtime
-already exposes dedicated `frame.js`, `scene.js`, or `compositor.js` modules.
+Build 115 is now implemented in the runtime. These docs remain the architecture
+source of truth, while `docs/Canon/` captures older release baselines. The
+module layout differs slightly from the earliest phase plan, but the runtime
+does ship the scene/compositor/visualizer shell described here.
 
 ## Key Components
 
@@ -94,22 +95,24 @@ already exposes dedicated `frame.js`, `scene.js`, or `compositor.js` modules.
 
 ## Current Runtime Reality
 
-The current runtime still reflects the pre-Build 115 ownership model:
+The current runtime aligns with the Build 115 ownership model:
 
-- `src/js/render/renderer.js` still directly owns band-overlay drawing and orb
-  trail/particle drawing.
-- `src/js/render/orb.js` and `src/js/render/orb-runtime.js` still implement the
-  orb path as special-case render and simulation logic rather than as a
-  first-class `Visualizer`.
-- `src/js/ui/ui.js` and the current DOM/panel IDs still own the legacy shell.
-- `src/js/presets/url-preset.js`, together with
+- `src/js/render/renderer.js` owns canvas lifecycle and the top-level render
+  loop, then delegates scene content to `src/js/render/compositor.js`.
+- `src/js/render/visualizer.js` and `src/js/render/visualizers/` own the
+  `Visualizer` registry and the built-in orb/overlay implementations.
+- `src/js/render/orb.js` and `src/js/render/orb-runtime.js` remain
+  compatibility and simulation helpers for orb behavior, not alternate render
+  owners.
+- `src/js/ui/panel-state.js` owns the runtime-only launcher/panel shell state,
+  while `src/js/ui/ui.js` and `src/js/ui/dom-cache.js` wire the current shell
+  and Scene panel UI.
+- `src/js/presets/url-preset.js`, `src/js/render/scene-persistence.js`,
   `src/js/core/constants.js`, `src/js/core/preferences.js`, and
-  `src/js/core/config.js`, still owns the current preset/runtime schema path.
-  The current runtime schema remains 8 until later Build 115 implementation
-  phases.
+  `src/js/core/config.js` own Schema 9 persistence and migration.
 
-These legacy owners are expected and should remain in place until later phases
-intentionally narrow them.
+The remaining legacy modules are compatibility seams and wiring layers, not
+parallel architecture paths.
 
 ## Terms And Invariants
 
@@ -130,7 +133,7 @@ intentionally narrow them.
 - **WorkspaceShell boundary** - `WorkspaceShell` names the Build 115 shell
   concept. Current implementation labels such as `audioPanel`, `simPanel`,
   `bandsPanel`, `queuePanel`, and `recordPanel` remain legacy runtime labels
-  until later phases intentionally change them.
+  unless a future build intentionally changes them.
 
 Build 115 establishes this architecture vocabulary and contract surface.
 Build 116 extends it with camera behavior built on the `ViewTransform`

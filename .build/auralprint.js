@@ -84,7 +84,8 @@
   // src/js/core/constants.js
   var TAU = Math.PI * 2;
   var RAD_TO_DEG = 180 / Math.PI;
-  var PRESET_SCHEMA_VERSION = 8;
+  var PRESET_SCHEMA_VERSION = 9;
+  var LEGACY_SCHEMA_V1 = 1;
   var LEGACY_SCHEMA_V2 = 2;
   var LEGACY_SCHEMA_V3 = 3;
   var LEGACY_SCHEMA_V4 = 4;
@@ -432,6 +433,20 @@
         opacityMax: 1
       }
     },
+    visualizers: {
+      orbs: {
+        defaults: {
+          hueOffsetDeg: 0,
+          centerX: 0,
+          centerY: 0
+        },
+        limits: {
+          hueOffsetDeg: { min: 0, max: 360, step: 1 },
+          centerX: { min: -1, max: 1, step: 0.01 },
+          centerY: { min: -1, max: 1, step: 0.01 }
+        }
+      }
+    },
     defaults: {
       visuals: {
         backgroundColor: "#000000",
@@ -478,13 +493,69 @@
       //   chirality     — +1 or -1 rotation direction (engine done; UI deferred)
       //   startAngleRad — initial phase offset in radians (engine done; UI deferred)
       //
-      // TODO/FUTURE fields (not yet in engine — add here + sanitizeAndApply + schema bump):
+      // Scene-only orb-overhaul fields live under CONFIG.visualizers.orbs and the
+      // canonical Scene runtime/preset path:
       //   hueOffsetDeg  — per-orb color phase offset
       //   centerX/Y     — orb origin offset in sim space
       orbs: [
         { id: "ORB0", chanId: "R", bandIds: [], chirality: -1, startAngleRad: 0 },
         { id: "ORB1", chanId: "L", bandIds: [], chirality: -1, startAngleRad: Math.PI }
       ],
+      scene: {
+        nodes: [
+          {
+            id: "orbs-1",
+            type: "orbs",
+            enabled: true,
+            zIndex: 0,
+            bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+            anchor: { x: 0.5, y: 0.5 },
+            settings: [
+              {
+                id: "ORB0",
+                chanId: "R",
+                bandIds: [],
+                chirality: -1,
+                startAngleRad: 0,
+                hueOffsetDeg: 0,
+                centerX: 0,
+                centerY: 0
+              },
+              {
+                id: "ORB1",
+                chanId: "L",
+                bandIds: [],
+                chirality: -1,
+                startAngleRad: Math.PI,
+                hueOffsetDeg: 0,
+                centerX: 0,
+                centerY: 0
+              }
+            ]
+          },
+          {
+            id: "overlay-1",
+            type: "bandOverlay",
+            enabled: true,
+            zIndex: 1,
+            bounds: { x: 0.5, y: 0.5, w: 1, h: 1 },
+            anchor: { x: 0.5, y: 0.5 },
+            settings: {
+              enabled: true,
+              connectAdjacent: true,
+              alpha: 0.65,
+              pointSizePx: 3,
+              minRadiusFrac: 0.01,
+              maxRadiusFrac: 0.8,
+              waveformRadialDisplaceFrac: 0.18,
+              lineAlpha: 0.35,
+              lineWidthPx: 1,
+              phaseMode: "free",
+              ringSpeedRadPerSec: 0
+            }
+          }
+        ]
+      },
       bands: {
         // Ceiling adjusted (Now 22.5K) to restore band 255 functionality. Should now be 22.5K to 24K (Effectively, depending on nyquist)
         // To others: Ceiling should be under assumed Nyquist cap: To prevent band 255 death. 
@@ -496,7 +567,7 @@
         distributionMode: "erb",
         // "linear" | "log" | "mel" | "bark" | "erb"
         overlay: {
-          enabled: false,
+          enabled: true,
           connectAdjacent: true,
           alpha: 0.65,
           pointSizePx: 3,
@@ -614,18 +685,6 @@
       return out;
     }
     return [];
-  }
-  function normalizeOrbDef(incomingOrb, fallbackOrb) {
-    const fallback = fallbackOrb || {};
-    const orb = incomingOrb && typeof incomingOrb === "object" ? incomingOrb : {};
-    const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
-    const id = typeof orb.id === "string" && orb.id.trim() ? orb.id : typeof fallback.id === "string" ? fallback.id : "ORB";
-    const chiralityRaw = Number.isFinite(orb.chirality) ? orb.chirality : fallback.chirality;
-    const chirality = chiralityRaw >= 0 ? 1 : -1;
-    const startAngleRad = Number.isFinite(orb.startAngleRad) ? orb.startAngleRad : Number.isFinite(fallback.startAngleRad) ? fallback.startAngleRad : 0;
-    const chanId = hasOwn(orb, "chanId") || hasOwn(orb, "bandId") ? normalizeOrbChannelId(orb.chanId, orb.bandId) : normalizeOrbChannelId(fallback.chanId, fallback.bandId);
-    const bandIds = hasOwn(orb, "bandIds") || hasOwn(orb, "bandNames") ? sanitizeOrbBandIds(orb.bandIds, orb.bandNames) : sanitizeOrbBandIds(fallback.bandIds, fallback.bandNames);
-    return { id, chanId, bandIds, chirality, startAngleRad };
   }
 
   // src/js/ui/panel-state.js
@@ -798,6 +857,63 @@
     };
   }
 
+  // src/js/render/view-transform.js
+  var IDENTITY_VIEW_TRANSFORM_MATRIX = Object.freeze([1, 0, 0, 1, 0, 0]);
+  var IDENTITY_VIEW_TRANSFORM = Object.freeze({
+    kind: "2d-affine",
+    mode: "identity",
+    runtimeOnly: true,
+    matrix: IDENTITY_VIEW_TRANSFORM_MATRIX
+  });
+  function readFiniteNumber(value, fallback) {
+    return Number.isFinite(value) ? value : fallback;
+  }
+  function readMatrix(rawMatrix) {
+    const source = Array.isArray(rawMatrix) ? rawMatrix : IDENTITY_VIEW_TRANSFORM_MATRIX;
+    return [
+      readFiniteNumber(source[0], 1),
+      readFiniteNumber(source[1], 0),
+      readFiniteNumber(source[2], 0),
+      readFiniteNumber(source[3], 1),
+      readFiniteNumber(source[4], 0),
+      readFiniteNumber(source[5], 0)
+    ];
+  }
+  function isIdentityMatrix(matrix) {
+    return Array.isArray(matrix) && matrix.length >= 6 && matrix[0] === 1 && matrix[1] === 0 && matrix[2] === 0 && matrix[3] === 1 && matrix[4] === 0 && matrix[5] === 0;
+  }
+  function hasCanonicalViewTransformKeys(viewTransform) {
+    const keys = Object.keys(viewTransform);
+    return keys.length === 4 && keys.includes("kind") && keys.includes("mode") && keys.includes("runtimeOnly") && keys.includes("matrix");
+  }
+  function isCanonicalMatrix(matrix) {
+    return Array.isArray(matrix) && matrix.length === 6 && Object.isFrozen(matrix) && matrix.every((value) => Number.isFinite(value));
+  }
+  function isCanonicalViewTransform(viewTransform) {
+    return !!viewTransform && typeof viewTransform === "object" && Object.isFrozen(viewTransform) && hasCanonicalViewTransformKeys(viewTransform) && viewTransform.kind === "2d-affine" && typeof viewTransform.mode === "string" && viewTransform.mode.trim().length > 0 && viewTransform.runtimeOnly === true && isCanonicalMatrix(viewTransform.matrix);
+  }
+  function normalizeViewTransform(rawViewTransform = null) {
+    if (!rawViewTransform || typeof rawViewTransform !== "object") return IDENTITY_VIEW_TRANSFORM;
+    if (rawViewTransform === IDENTITY_VIEW_TRANSFORM) return IDENTITY_VIEW_TRANSFORM;
+    if (isCanonicalViewTransform(rawViewTransform)) {
+      const identity2 = isIdentityMatrix(rawViewTransform.matrix);
+      return identity2 && rawViewTransform.mode === "identity" ? IDENTITY_VIEW_TRANSFORM : rawViewTransform;
+    }
+    const matrix = readMatrix(rawViewTransform.matrix);
+    const identity = isIdentityMatrix(matrix);
+    const mode = typeof rawViewTransform.mode === "string" && rawViewTransform.mode.trim() ? rawViewTransform.mode : identity ? "identity" : "placeholder";
+    if (identity && mode === "identity") return IDENTITY_VIEW_TRANSFORM;
+    return Object.freeze({
+      kind: "2d-affine",
+      mode,
+      runtimeOnly: true,
+      matrix: Object.freeze(matrix)
+    });
+  }
+  function isIdentityViewTransform(viewTransform) {
+    return normalizeViewTransform(viewTransform) === IDENTITY_VIEW_TRANSFORM;
+  }
+
   // src/js/core/state.js
   function createSourceState() {
     return {
@@ -861,6 +977,13 @@
       recordingSnapshot: null
     };
   }
+  function createSceneState() {
+    return {
+      nodes: [],
+      selectedNodeId: "",
+      viewTransform: IDENTITY_VIEW_TRANSFORM
+    };
+  }
   var state = {
     canvas: null,
     ctx: null,
@@ -872,6 +995,7 @@
     orbs: [],
     source: createSourceState(),
     recording: createRecordingState(),
+    scene: createSceneState(),
     bands: {
       lowHz: [],
       highHz: [],
@@ -925,16 +1049,307 @@
     }
   }
 
+  // src/js/render/orb-settings.js
+  var DEFAULT_LEGACY_ORB = Object.freeze({
+    id: "ORB0",
+    chanId: "C",
+    bandIds: [],
+    chirality: -1,
+    startAngleRad: 0
+  });
+  var SCENE_ORB_RUNTIME_FIELDS = Object.freeze(["hueOffsetDeg", "centerX", "centerY"]);
+  function hasOwn(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+  }
+  function readSceneOrbDefaults() {
+    return CONFIG.visualizers && CONFIG.visualizers.orbs && CONFIG.visualizers.orbs.defaults || {
+      hueOffsetDeg: 0,
+      centerX: 0,
+      centerY: 0
+    };
+  }
+  function readSceneOrbLimits() {
+    return CONFIG.visualizers && CONFIG.visualizers.orbs && CONFIG.visualizers.orbs.limits || {};
+  }
+  function sanitizeSceneOrbScalar(fieldName, rawValue, fallbackValue) {
+    const defaults = readSceneOrbDefaults();
+    const limits = readSceneOrbLimits();
+    const fieldLimits = limits[fieldName] || {};
+    const fallback = Number.isFinite(fallbackValue) ? fallbackValue : Number.isFinite(defaults[fieldName]) ? defaults[fieldName] : 0;
+    const numeric = Number.isFinite(rawValue) ? rawValue : fallback;
+    const min = Number.isFinite(fieldLimits.min) ? fieldLimits.min : -Infinity;
+    const max = Number.isFinite(fieldLimits.max) ? fieldLimits.max : Infinity;
+    return clamp(numeric, min, max);
+  }
+  function readDefaultSceneOrbFallback(index = 0) {
+    const defaults = Array.isArray(CONFIG.defaults.orbs) ? CONFIG.defaults.orbs : [];
+    const legacyFallback = defaults[index % Math.max(1, defaults.length)] || DEFAULT_LEGACY_ORB;
+    return {
+      id: typeof legacyFallback.id === "string" ? legacyFallback.id : DEFAULT_LEGACY_ORB.id,
+      chanId: normalizeOrbChannelId(legacyFallback.chanId, legacyFallback.bandId),
+      bandIds: sanitizeOrbBandIds(legacyFallback.bandIds, legacyFallback.bandNames),
+      chirality: Number.isFinite(legacyFallback.chirality) && legacyFallback.chirality >= 0 ? 1 : -1,
+      startAngleRad: Number.isFinite(legacyFallback.startAngleRad) ? legacyFallback.startAngleRad : DEFAULT_LEGACY_ORB.startAngleRad,
+      ...readSceneOrbDefaults()
+    };
+  }
+  function normalizeSceneOrbDef(incomingOrb, fallbackOrb = null) {
+    const fallback = fallbackOrb && typeof fallbackOrb === "object" ? fallbackOrb : readDefaultSceneOrbFallback(0);
+    const orb = incomingOrb && typeof incomingOrb === "object" ? incomingOrb : {};
+    const id = typeof orb.id === "string" && orb.id.trim() ? orb.id : typeof fallback.id === "string" ? fallback.id : DEFAULT_LEGACY_ORB.id;
+    const chiralityRaw = Number.isFinite(orb.chirality) ? orb.chirality : fallback.chirality;
+    const chirality = chiralityRaw >= 0 ? 1 : -1;
+    const startAngleRad = Number.isFinite(orb.startAngleRad) ? orb.startAngleRad : Number.isFinite(fallback.startAngleRad) ? fallback.startAngleRad : DEFAULT_LEGACY_ORB.startAngleRad;
+    const chanId = hasOwn(orb, "chanId") || hasOwn(orb, "bandId") ? normalizeOrbChannelId(orb.chanId, orb.bandId) : normalizeOrbChannelId(fallback.chanId, fallback.bandId);
+    const bandIds = hasOwn(orb, "bandIds") || hasOwn(orb, "bandNames") ? sanitizeOrbBandIds(orb.bandIds, orb.bandNames) : sanitizeOrbBandIds(fallback.bandIds, fallback.bandNames);
+    return {
+      id,
+      chanId,
+      bandIds,
+      chirality,
+      startAngleRad,
+      hueOffsetDeg: sanitizeSceneOrbScalar("hueOffsetDeg", orb.hueOffsetDeg, fallback.hueOffsetDeg),
+      centerX: sanitizeSceneOrbScalar("centerX", orb.centerX, fallback.centerX),
+      centerY: sanitizeSceneOrbScalar("centerY", orb.centerY, fallback.centerY)
+    };
+  }
+  function normalizeSceneOrbSettings(rawSettings) {
+    const input = Array.isArray(rawSettings) ? rawSettings : CONFIG.defaults.orbs;
+    return input.map((orb, index) => normalizeSceneOrbDef(orb, readDefaultSceneOrbFallback(index)));
+  }
+  function toLegacyOrbDef(orb, fallbackOrb = null) {
+    const normalized = normalizeSceneOrbDef(orb, fallbackOrb || void 0);
+    return {
+      id: normalized.id,
+      chanId: normalized.chanId,
+      bandIds: normalized.bandIds.slice(),
+      chirality: normalized.chirality,
+      startAngleRad: normalized.startAngleRad
+    };
+  }
+
+  // src/js/render/scene-persistence.js
+  var SUPPORTED_SCENE_NODE_TYPES = Object.freeze(["orbs", "bandOverlay"]);
+  var DEFAULT_BOUNDS = Object.freeze({ x: 0.5, y: 0.5, w: 1, h: 1 });
+  var DEFAULT_ANCHOR = Object.freeze({ x: 0.5, y: 0.5 });
+  function hasOwn2(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+  }
+  function readDefaultSceneNodes() {
+    const nodes = CONFIG && CONFIG.defaults && CONFIG.defaults.scene && Array.isArray(CONFIG.defaults.scene.nodes) ? CONFIG.defaults.scene.nodes : [];
+    return deepClone(nodes);
+  }
+  function readDefaultSceneNode(type) {
+    return readDefaultSceneNodes().find((node) => node && node.type === type) || null;
+  }
+  function sanitizeSceneScalar(value, fallback, min, max) {
+    const numeric = Number.isFinite(value) ? value : fallback;
+    return clamp(numeric, min, max);
+  }
+  function sanitizeBounds(rawBounds, fallbackBounds = DEFAULT_BOUNDS) {
+    const source = rawBounds && typeof rawBounds === "object" ? rawBounds : {};
+    const fallback = fallbackBounds && typeof fallbackBounds === "object" ? fallbackBounds : DEFAULT_BOUNDS;
+    return {
+      x: sanitizeSceneScalar(source.x, Number.isFinite(fallback.x) ? fallback.x : DEFAULT_BOUNDS.x, 0, 1),
+      y: sanitizeSceneScalar(source.y, Number.isFinite(fallback.y) ? fallback.y : DEFAULT_BOUNDS.y, 0, 1),
+      w: sanitizeSceneScalar(source.w, Number.isFinite(fallback.w) ? fallback.w : DEFAULT_BOUNDS.w, 0, 1),
+      h: sanitizeSceneScalar(source.h, Number.isFinite(fallback.h) ? fallback.h : DEFAULT_BOUNDS.h, 0, 1)
+    };
+  }
+  function sanitizeAnchor(rawAnchor, fallbackAnchor = DEFAULT_ANCHOR) {
+    const source = rawAnchor && typeof rawAnchor === "object" ? rawAnchor : {};
+    const fallback = fallbackAnchor && typeof fallbackAnchor === "object" ? fallbackAnchor : DEFAULT_ANCHOR;
+    return {
+      x: sanitizeSceneScalar(source.x, Number.isFinite(fallback.x) ? fallback.x : DEFAULT_ANCHOR.x, 0, 1),
+      y: sanitizeSceneScalar(source.y, Number.isFinite(fallback.y) ? fallback.y : DEFAULT_ANCHOR.y, 0, 1)
+    };
+  }
+  function sanitizeOverlaySettings(rawSettings, { enabled = null } = {}) {
+    const source = rawSettings && typeof rawSettings === "object" ? rawSettings : {};
+    const defaults = CONFIG.defaults.bands.overlay;
+    const next = deepClone(defaults);
+    next.enabled = typeof enabled === "boolean" ? enabled : typeof source.enabled === "boolean" ? source.enabled : !!defaults.enabled;
+    if (typeof source.connectAdjacent === "boolean") next.connectAdjacent = source.connectAdjacent;
+    if (Number.isFinite(source.alpha)) {
+      const lim = CONFIG.limits.bands.overlayAlpha;
+      next.alpha = clamp(source.alpha, lim.min, lim.max);
+    }
+    if (Number.isFinite(source.pointSizePx)) {
+      const lim = CONFIG.limits.bands.pointSizePx;
+      next.pointSizePx = clamp(source.pointSizePx, lim.min, lim.max);
+    }
+    if (Number.isFinite(source.minRadiusFrac)) {
+      const lim = CONFIG.limits.bands.overlayMinRadiusFrac;
+      next.minRadiusFrac = clamp(source.minRadiusFrac, lim.min, lim.max);
+    }
+    if (Number.isFinite(source.maxRadiusFrac)) {
+      const lim = CONFIG.limits.bands.overlayMaxRadiusFrac;
+      next.maxRadiusFrac = clamp(source.maxRadiusFrac, lim.min, lim.max);
+    }
+    if (Number.isFinite(source.waveformRadialDisplaceFrac)) {
+      const lim = CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac;
+      next.waveformRadialDisplaceFrac = clamp(source.waveformRadialDisplaceFrac, lim.min, lim.max);
+    }
+    if (Number.isFinite(source.lineAlpha)) {
+      const lim = CONFIG.limits.trace.lineAlpha;
+      next.lineAlpha = clamp(source.lineAlpha, lim.min, lim.max);
+    }
+    if (Number.isFinite(source.lineWidthPx)) {
+      const lim = CONFIG.limits.trace.lineWidthPx;
+      next.lineWidthPx = clamp(source.lineWidthPx, lim.min, lim.max);
+    }
+    if (typeof source.phaseMode === "string" && ["orb", "free"].includes(source.phaseMode)) {
+      next.phaseMode = source.phaseMode;
+    }
+    if (Number.isFinite(source.ringSpeedRadPerSec)) {
+      const lim = CONFIG.limits.bands.ringSpeedRadPerSec;
+      next.ringSpeedRadPerSec = clamp(source.ringSpeedRadPerSec, lim.min, lim.max);
+    }
+    return next;
+  }
+  function sanitizeSettingsForSceneType(type, rawSettings, { enabled = null } = {}) {
+    switch (type) {
+      case "orbs":
+        return normalizeSceneOrbSettings(rawSettings);
+      case "bandOverlay":
+        return sanitizeOverlaySettings(rawSettings, { enabled });
+      default:
+        return deepClone(rawSettings);
+    }
+  }
+  function nextUniqueNodeId(candidateId, type, seenIds) {
+    const fallbackId = (readDefaultSceneNode(type) || {}).id || `${type}-1`;
+    const baseId = typeof candidateId === "string" && candidateId.trim() ? candidateId : fallbackId;
+    if (!seenIds.has(baseId)) {
+      seenIds.add(baseId);
+      return baseId;
+    }
+    const prefix = `${type}-`;
+    let suffix = 1;
+    while (seenIds.has(`${prefix}${suffix}`)) suffix += 1;
+    const uniqueId = `${prefix}${suffix}`;
+    seenIds.add(uniqueId);
+    return uniqueId;
+  }
+  function sanitizeSceneNode(rawNode, { seenIds = null } = {}) {
+    if (!rawNode || typeof rawNode !== "object") return null;
+    const type = typeof rawNode.type === "string" ? rawNode.type.trim() : "";
+    if (!SUPPORTED_SCENE_NODE_TYPES.includes(type)) return null;
+    const fallbackNode = readDefaultSceneNode(type) || {
+      id: `${type}-1`,
+      enabled: true,
+      zIndex: 0,
+      bounds: DEFAULT_BOUNDS,
+      anchor: DEFAULT_ANCHOR,
+      settings: type === "orbs" ? [] : {}
+    };
+    const enabled = typeof rawNode.enabled === "boolean" ? rawNode.enabled : !!fallbackNode.enabled;
+    const node = {
+      id: typeof rawNode.id === "string" && rawNode.id.trim() ? rawNode.id : typeof fallbackNode.id === "string" ? fallbackNode.id : `${type}-1`,
+      type,
+      enabled,
+      zIndex: Number.isFinite(rawNode.zIndex) ? rawNode.zIndex : Number.isFinite(fallbackNode.zIndex) ? fallbackNode.zIndex : 0,
+      bounds: sanitizeBounds(rawNode.bounds, fallbackNode.bounds),
+      anchor: sanitizeAnchor(rawNode.anchor, fallbackNode.anchor),
+      settings: sanitizeSettingsForSceneType(type, rawNode.settings, { enabled })
+    };
+    if (seenIds) node.id = nextUniqueNodeId(node.id, type, seenIds);
+    return node;
+  }
+  function reindexSceneNodes(nodes) {
+    return nodes.map((node, index) => ({
+      ...node,
+      zIndex: index
+    }));
+  }
+  function sortSceneNodesByPersistedZIndex(nodes) {
+    return nodes.map((node, index) => ({ node, index })).sort((left, right) => {
+      const zIndexDelta = left.node.zIndex - right.node.zIndex;
+      return zIndexDelta || left.index - right.index;
+    }).map(({ node }) => node);
+  }
+  function sanitizePersistedSceneNodes(rawNodes, { synthesizeDefaultWhenEmpty = false } = {}) {
+    const source = Array.isArray(rawNodes) ? rawNodes : [];
+    const seenIds = /* @__PURE__ */ new Set();
+    const nodes = source.map((node) => sanitizeSceneNode(node, { seenIds })).filter(Boolean);
+    if (nodes.length) return reindexSceneNodes(sortSceneNodesByPersistedZIndex(nodes));
+    if (!synthesizeDefaultWhenEmpty) return [];
+    const defaultSeenIds = /* @__PURE__ */ new Set();
+    return reindexSceneNodes(
+      readDefaultSceneNodes().map((node) => sanitizeSceneNode(node, { seenIds: defaultSeenIds })).filter(Boolean)
+    );
+  }
+  function buildSceneNodeFromLegacy(type, rawSettings) {
+    const defaultNode = readDefaultSceneNode(type);
+    if (!defaultNode) return null;
+    const hasLegacyEnabled = type === "bandOverlay" && rawSettings && typeof rawSettings === "object" && Object.prototype.hasOwnProperty.call(rawSettings, "enabled") && typeof rawSettings.enabled === "boolean";
+    return sanitizeSceneNode({
+      ...defaultNode,
+      enabled: type === "bandOverlay" ? hasLegacyEnabled ? rawSettings.enabled : !!defaultNode.enabled : !!defaultNode.enabled,
+      settings: rawSettings
+    });
+  }
+  function readLegacyOverlaySource(rawPrefs) {
+    if (!rawPrefs || typeof rawPrefs !== "object") return null;
+    if (hasOwn2(rawPrefs, "overlay") && rawPrefs.overlay && typeof rawPrefs.overlay === "object") {
+      return rawPrefs.overlay;
+    }
+    if (rawPrefs.bands && typeof rawPrefs.bands === "object" && hasOwn2(rawPrefs.bands, "overlay") && rawPrefs.bands.overlay && typeof rawPrefs.bands.overlay === "object") {
+      return rawPrefs.bands.overlay;
+    }
+    return null;
+  }
+  function migrateLegacyVisualRootsToSceneNodes(rawPrefs) {
+    const nodes = [];
+    if (rawPrefs && hasOwn2(rawPrefs, "orbs") && Array.isArray(rawPrefs.orbs)) {
+      const orbsNode = buildSceneNodeFromLegacy("orbs", rawPrefs.orbs);
+      if (orbsNode) nodes.push(orbsNode);
+    }
+    const overlaySource = readLegacyOverlaySource(rawPrefs);
+    if (overlaySource) {
+      const overlayNode = buildSceneNodeFromLegacy("bandOverlay", overlaySource);
+      if (overlayNode) nodes.push(overlayNode);
+    }
+    return reindexSceneNodes(nodes);
+  }
+  function deriveSceneNodesFromPreset(rawPrefs) {
+    if (rawPrefs && rawPrefs.scene && Array.isArray(rawPrefs.scene.nodes)) {
+      return sanitizePersistedSceneNodes(rawPrefs.scene.nodes);
+    }
+    const legacyNodes = migrateLegacyVisualRootsToSceneNodes(rawPrefs);
+    if (legacyNodes.length) return legacyNodes;
+    return sanitizePersistedSceneNodes([], { synthesizeDefaultWhenEmpty: true });
+  }
+  function readDisabledCompatOverlayDefaults() {
+    return {
+      ...deepClone(CONFIG.defaults.bands.overlay),
+      enabled: false
+    };
+  }
+  function applySceneNodesToCompatPrefs(targetPrefs, rawSceneNodes) {
+    const sceneNodes = sanitizePersistedSceneNodes(rawSceneNodes);
+    if (!targetPrefs.scene || typeof targetPrefs.scene !== "object") targetPrefs.scene = {};
+    targetPrefs.scene.nodes = sceneNodes;
+    const orbsNode = sceneNodes.find((node) => node.type === "orbs") || null;
+    const overlayNode = sceneNodes.find((node) => node.type === "bandOverlay") || null;
+    targetPrefs.orbs = orbsNode ? orbsNode.settings.map((orb, index) => toLegacyOrbDef(orb, readDefaultSceneOrbFallback(index))) : [];
+    if (!targetPrefs.bands || typeof targetPrefs.bands !== "object") targetPrefs.bands = {};
+    targetPrefs.bands.overlay = overlayNode ? sanitizeOverlaySettings(overlayNode.settings, { enabled: overlayNode.enabled }) : readDisabledCompatOverlayDefaults();
+    return targetPrefs;
+  }
+
   // src/js/presets/url-preset.js
   var UrlPreset = (() => {
     const SUPPORTED_SCHEMAS = Object.freeze([
       PRESET_SCHEMA_VERSION,
+      8,
       LEGACY_SCHEMA_V7,
       LEGACY_SCHEMA_V6,
       LEGACY_SCHEMA_V5,
       LEGACY_SCHEMA_V4,
       LEGACY_SCHEMA_V3,
-      LEGACY_SCHEMA_V2
+      LEGACY_SCHEMA_V2,
+      LEGACY_SCHEMA_V1
     ]);
     function base64UrlEncode(bytes) {
       let s = "";
@@ -979,7 +1394,7 @@
             prefs: null
           };
         }
-        const schema = Number.isInteger(obj.schema) ? obj.schema : null;
+        const schema = Object.prototype.hasOwnProperty.call(obj, "schema") ? Number.isInteger(obj.schema) ? obj.schema : null : LEGACY_SCHEMA_V1;
         if (!SUPPORTED_SCHEMAS.includes(schema)) {
           return {
             ok: false,
@@ -1007,176 +1422,126 @@
       }
     }
     function sanitizeAndApply(incoming) {
+      const source = incoming && typeof incoming === "object" ? incoming : {};
       const next = deepClone(CONFIG.defaults);
-      if (incoming.visuals) {
-        if (isValidHexColor(incoming.visuals.backgroundColor)) next.visuals.backgroundColor = incoming.visuals.backgroundColor;
-        if (isValidHexColor(incoming.visuals.particleColor)) next.visuals.particleColor = incoming.visuals.particleColor;
+      if (source.visuals) {
+        if (isValidHexColor(source.visuals.backgroundColor)) next.visuals.backgroundColor = source.visuals.backgroundColor;
+        if (isValidHexColor(source.visuals.particleColor)) next.visuals.particleColor = source.visuals.particleColor;
       }
-      if (incoming.trace) {
-        if (typeof incoming.trace.lines === "boolean") next.trace.lines = incoming.trace.lines;
-        if (Number.isFinite(incoming.trace.numLines)) {
+      if (source.trace) {
+        if (typeof source.trace.lines === "boolean") next.trace.lines = source.trace.lines;
+        if (Number.isFinite(source.trace.numLines)) {
           const lim = CONFIG.limits.trace.numLines;
-          next.trace.numLines = clamp(incoming.trace.numLines, lim.min, lim.max);
+          next.trace.numLines = clamp(source.trace.numLines, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.trace.lineAlpha)) {
+        if (Number.isFinite(source.trace.lineAlpha)) {
           const lim = CONFIG.limits.trace.lineAlpha;
-          next.trace.lineAlpha = clamp(incoming.trace.lineAlpha, lim.min, lim.max);
+          next.trace.lineAlpha = clamp(source.trace.lineAlpha, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.trace.lineWidthPx)) {
+        if (Number.isFinite(source.trace.lineWidthPx)) {
           const lim = CONFIG.limits.trace.lineWidthPx;
-          next.trace.lineWidthPx = clamp(incoming.trace.lineWidthPx, lim.min, lim.max);
+          next.trace.lineWidthPx = clamp(source.trace.lineWidthPx, lim.min, lim.max);
         }
-        if (typeof incoming.trace.lineColorMode === "string") {
-          if (["fixed", "lastParticle", "dominantBand"].includes(incoming.trace.lineColorMode)) {
-            next.trace.lineColorMode = incoming.trace.lineColorMode;
+        if (typeof source.trace.lineColorMode === "string") {
+          if (["fixed", "lastParticle", "dominantBand"].includes(source.trace.lineColorMode)) {
+            next.trace.lineColorMode = source.trace.lineColorMode;
           }
         }
       }
-      if (incoming.particles) {
+      if (source.particles) {
         for (const k of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "overlapRadiusPx"]) {
-          if (Number.isFinite(incoming.particles[k])) {
+          if (Number.isFinite(source.particles[k])) {
             const lim = CONFIG.limits.particles[k];
-            next.particles[k] = clamp(incoming.particles[k], lim.min, lim.max);
+            next.particles[k] = clamp(source.particles[k], lim.min, lim.max);
           }
         }
       }
-      if (incoming.motion) {
-        if (Number.isFinite(incoming.motion.angularSpeedRadPerSec)) {
+      if (source.motion) {
+        if (Number.isFinite(source.motion.angularSpeedRadPerSec)) {
           const lim = CONFIG.limits.motion.angularSpeedRadPerSec;
-          next.motion.angularSpeedRadPerSec = clamp(incoming.motion.angularSpeedRadPerSec, lim.min, lim.max);
+          next.motion.angularSpeedRadPerSec = clamp(source.motion.angularSpeedRadPerSec, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.motion.waveformRadialDisplaceFrac)) {
+        if (Number.isFinite(source.motion.waveformRadialDisplaceFrac)) {
           const lim = CONFIG.limits.motion.waveformRadialDisplaceFrac;
-          next.motion.waveformRadialDisplaceFrac = clamp(incoming.motion.waveformRadialDisplaceFrac, lim.min, lim.max);
+          next.motion.waveformRadialDisplaceFrac = clamp(source.motion.waveformRadialDisplaceFrac, lim.min, lim.max);
         }
       }
-      if (incoming.audio) {
-        if (Number.isFinite(incoming.audio.rmsGain)) {
+      if (source.audio) {
+        if (Number.isFinite(source.audio.rmsGain)) {
           const lim = CONFIG.limits.audio.rmsGain;
-          next.audio.rmsGain = clamp(incoming.audio.rmsGain, lim.min, lim.max);
+          next.audio.rmsGain = clamp(source.audio.rmsGain, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.audio.minRadiusFrac)) {
+        if (Number.isFinite(source.audio.minRadiusFrac)) {
           const lim = CONFIG.limits.audio.minRadiusFrac;
-          next.audio.minRadiusFrac = clamp(incoming.audio.minRadiusFrac, lim.min, lim.max);
+          next.audio.minRadiusFrac = clamp(source.audio.minRadiusFrac, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.audio.maxRadiusFrac)) {
+        if (Number.isFinite(source.audio.maxRadiusFrac)) {
           const lim = CONFIG.limits.audio.maxRadiusFrac;
-          next.audio.maxRadiusFrac = clamp(incoming.audio.maxRadiusFrac, lim.min, lim.max);
+          next.audio.maxRadiusFrac = clamp(source.audio.maxRadiusFrac, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.audio.smoothingTimeConstant)) {
+        if (Number.isFinite(source.audio.smoothingTimeConstant)) {
           const lim = CONFIG.limits.audio.smoothingTimeConstant;
-          next.audio.smoothingTimeConstant = clamp(incoming.audio.smoothingTimeConstant, lim.min, lim.max);
+          next.audio.smoothingTimeConstant = clamp(source.audio.smoothingTimeConstant, lim.min, lim.max);
         }
-        if (Number.isFinite(incoming.audio.fftSize) && CONFIG.limits.audio.fftSizes.includes(incoming.audio.fftSize)) {
-          next.audio.fftSize = incoming.audio.fftSize;
+        if (Number.isFinite(source.audio.fftSize) && CONFIG.limits.audio.fftSizes.includes(source.audio.fftSize)) {
+          next.audio.fftSize = source.audio.fftSize;
         }
-        if (["none", "one", "all"].includes(incoming.audio.repeatMode)) next.audio.repeatMode = incoming.audio.repeatMode;
-        else if (typeof incoming.audio.loop === "boolean") next.audio.repeatMode = incoming.audio.loop ? "one" : "none";
-        if (typeof incoming.audio.muted === "boolean") next.audio.muted = incoming.audio.muted;
-        if (Number.isFinite(incoming.audio.volume)) {
-          next.audio.volume = clamp(incoming.audio.volume, CONFIG.ui.volume.min, CONFIG.ui.volume.max);
+        if (["none", "one", "all"].includes(source.audio.repeatMode)) next.audio.repeatMode = source.audio.repeatMode;
+        else if (typeof source.audio.loop === "boolean") next.audio.repeatMode = source.audio.loop ? "one" : "none";
+        if (typeof source.audio.muted === "boolean") next.audio.muted = source.audio.muted;
+        if (Number.isFinite(source.audio.volume)) {
+          next.audio.volume = clamp(source.audio.volume, CONFIG.ui.volume.min, CONFIG.ui.volume.max);
         }
       }
-      if (incoming.bands) {
+      if (source.bands) {
         const maxBandCount = Array.isArray(CONFIG.bandNames) && CONFIG.bandNames.length ? CONFIG.bandNames.length : CONFIG.defaults.bands.count;
-        if (Number.isInteger(incoming.bands.count) && incoming.bands.count >= 2 && incoming.bands.count <= maxBandCount) {
-          next.bands.count = incoming.bands.count;
+        if (Number.isInteger(source.bands.count) && source.bands.count >= 2 && source.bands.count <= maxBandCount) {
+          next.bands.count = source.bands.count;
         }
-        if (Number.isFinite(incoming.bands.floorHz) && incoming.bands.floorHz > 0) {
-          next.bands.floorHz = incoming.bands.floorHz;
+        if (Number.isFinite(source.bands.floorHz) && source.bands.floorHz > 0) {
+          next.bands.floorHz = source.bands.floorHz;
         }
-        if (Number.isFinite(incoming.bands.ceilingHz) && incoming.bands.ceilingHz > 0) {
-          next.bands.ceilingHz = incoming.bands.ceilingHz;
+        if (Number.isFinite(source.bands.ceilingHz) && source.bands.ceilingHz > 0) {
+          next.bands.ceilingHz = source.bands.ceilingHz;
         }
-        if (incoming.bands.overlay) {
-          if (typeof incoming.bands.overlay.enabled === "boolean") next.bands.overlay.enabled = incoming.bands.overlay.enabled;
-          if (typeof incoming.bands.overlay.connectAdjacent === "boolean") next.bands.overlay.connectAdjacent = incoming.bands.overlay.connectAdjacent;
-          if (Number.isFinite(incoming.bands.overlay.alpha)) {
-            const lim = CONFIG.limits.bands.overlayAlpha;
-            next.bands.overlay.alpha = clamp(incoming.bands.overlay.alpha, lim.min, lim.max);
-          }
-          if (Number.isFinite(incoming.bands.overlay.pointSizePx)) {
-            const lim = CONFIG.limits.bands.pointSizePx;
-            next.bands.overlay.pointSizePx = clamp(incoming.bands.overlay.pointSizePx, lim.min, lim.max);
-          }
-          if (Number.isFinite(incoming.bands.overlay.minRadiusFrac)) {
-            const lim = CONFIG.limits.bands.overlayMinRadiusFrac;
-            next.bands.overlay.minRadiusFrac = clamp(incoming.bands.overlay.minRadiusFrac, lim.min, lim.max);
-          }
-          if (Number.isFinite(incoming.bands.overlay.maxRadiusFrac)) {
-            const lim = CONFIG.limits.bands.overlayMaxRadiusFrac;
-            next.bands.overlay.maxRadiusFrac = clamp(incoming.bands.overlay.maxRadiusFrac, lim.min, lim.max);
-          }
-          if (Number.isFinite(incoming.bands.overlay.waveformRadialDisplaceFrac)) {
-            const lim = CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac;
-            next.bands.overlay.waveformRadialDisplaceFrac = clamp(incoming.bands.overlay.waveformRadialDisplaceFrac, lim.min, lim.max);
-          }
-          if (Number.isFinite(incoming.bands.overlay.lineAlpha)) {
-            const lim = CONFIG.limits.trace.lineAlpha;
-            next.bands.overlay.lineAlpha = clamp(incoming.bands.overlay.lineAlpha, lim.min, lim.max);
-          }
-          if (Number.isFinite(incoming.bands.overlay.lineWidthPx)) {
-            const lim = CONFIG.limits.trace.lineWidthPx;
-            next.bands.overlay.lineWidthPx = clamp(incoming.bands.overlay.lineWidthPx, lim.min, lim.max);
-          }
-          if (typeof incoming.bands.overlay.phaseMode === "string") {
-            if (["orb", "free"].includes(incoming.bands.overlay.phaseMode)) {
-              next.bands.overlay.phaseMode = incoming.bands.overlay.phaseMode;
-            }
-          }
-          if (Number.isFinite(incoming.bands.overlay.ringSpeedRadPerSec)) {
-            const lim = CONFIG.limits.bands.ringSpeedRadPerSec;
-            next.bands.overlay.ringSpeedRadPerSec = clamp(incoming.bands.overlay.ringSpeedRadPerSec, lim.min, lim.max);
-          }
-        }
-        if (incoming.bands.rainbow) {
-          if (Number.isFinite(incoming.bands.rainbow.hueOffsetDeg)) {
+        if (source.bands.rainbow) {
+          if (Number.isFinite(source.bands.rainbow.hueOffsetDeg)) {
             const lim = CONFIG.limits.bands.hueOffsetDeg;
-            next.bands.rainbow.hueOffsetDeg = clamp(incoming.bands.rainbow.hueOffsetDeg, lim.min, lim.max);
+            next.bands.rainbow.hueOffsetDeg = clamp(source.bands.rainbow.hueOffsetDeg, lim.min, lim.max);
           }
-          if (Number.isFinite(incoming.bands.rainbow.saturation)) {
+          if (Number.isFinite(source.bands.rainbow.saturation)) {
             const lim = CONFIG.limits.bands.saturation;
-            next.bands.rainbow.saturation = clamp(incoming.bands.rainbow.saturation, lim.min, lim.max);
+            next.bands.rainbow.saturation = clamp(source.bands.rainbow.saturation, lim.min, lim.max);
           }
-          if (Number.isFinite(incoming.bands.rainbow.value)) {
+          if (Number.isFinite(source.bands.rainbow.value)) {
             const lim = CONFIG.limits.bands.value;
-            next.bands.rainbow.value = clamp(incoming.bands.rainbow.value, lim.min, lim.max);
+            next.bands.rainbow.value = clamp(source.bands.rainbow.value, lim.min, lim.max);
           }
         }
-        if (typeof incoming.bands.particleColorSource === "string") {
-          if (["fixed", "dominant", "angle"].includes(incoming.bands.particleColorSource)) {
-            next.bands.particleColorSource = incoming.bands.particleColorSource;
+        if (typeof source.bands.particleColorSource === "string") {
+          if (["fixed", "dominant", "angle"].includes(source.bands.particleColorSource)) {
+            next.bands.particleColorSource = source.bands.particleColorSource;
           }
         }
-        if (typeof incoming.bands.distributionMode === "string") {
-          if (CONFIG.limits.bands.distributionModes.includes(incoming.bands.distributionMode)) {
-            next.bands.distributionMode = incoming.bands.distributionMode;
+        if (typeof source.bands.distributionMode === "string") {
+          if (CONFIG.limits.bands.distributionModes.includes(source.bands.distributionMode)) {
+            next.bands.distributionMode = source.bands.distributionMode;
           }
         }
-        if (typeof incoming.bands.logSpacing === "boolean" && incoming.bands.distributionMode == null) {
-          next.bands.distributionMode = incoming.bands.logSpacing ? "log" : "linear";
+        if (typeof source.bands.logSpacing === "boolean" && source.bands.distributionMode == null) {
+          next.bands.distributionMode = source.bands.logSpacing ? "log" : "linear";
         }
       }
-      if (incoming.timing) {
-        if (Number.isFinite(incoming.timing.maxDeltaTimeSec) && incoming.timing.maxDeltaTimeSec > 0) {
-          next.timing.maxDeltaTimeSec = incoming.timing.maxDeltaTimeSec;
+      if (source.timing) {
+        if (Number.isFinite(source.timing.maxDeltaTimeSec) && source.timing.maxDeltaTimeSec > 0) {
+          next.timing.maxDeltaTimeSec = source.timing.maxDeltaTimeSec;
         }
       }
       next.bands.ceilingHz = Math.max(next.bands.floorHz, next.bands.ceilingHz);
-      if (Array.isArray(incoming.orbs)) {
-        const defaults = CONFIG.defaults.orbs;
-        next.orbs = incoming.orbs.map((orb, i) => {
-          const mappedOrb = orb && typeof orb === "object" ? deepClone(orb) : orb;
-          if (mappedOrb && !Array.isArray(mappedOrb.bandIds) && Array.isArray(mappedOrb.bandNames)) {
-            mappedOrb.bandIds = sanitizeOrbBandIds(void 0, mappedOrb.bandNames);
-          }
-          if (mappedOrb && typeof mappedOrb === "object") delete mappedOrb.bandNames;
-          return normalizeOrbDef(mappedOrb, defaults[i % defaults.length]);
-        });
-      }
       if (next.bands && typeof next.bands === "object") delete next.bands.names;
       next.particles.sizeMinPx = Math.min(next.particles.sizeMinPx, next.particles.sizeMaxPx);
       next.particles.ttlSec = Math.max(next.particles.ttlSec, next.particles.sizeToMinSec);
+      applySceneNodesToCompatPrefs(next, deriveSceneNodesFromPreset(source));
       replacePreferences(next);
       resolveSettings();
       return true;
@@ -1196,7 +1561,7 @@
         return {
           ok: true,
           code: decoded.code,
-          schema: decoded.schema,
+          schema: PRESET_SCHEMA_VERSION,
           migratedFromSchema: decoded.migratedFromSchema
         };
       } catch {
@@ -1208,14 +1573,61 @@
         };
       }
     }
+    function mergeCompatVisualStateIntoSceneNodes(prefsLike) {
+      const sceneNodes = prefsLike && prefsLike.scene && Array.isArray(prefsLike.scene.nodes) ? deepClone(prefsLike.scene.nodes) : deriveSceneNodesFromPreset(prefsLike);
+      const orbsIndex = sceneNodes.findIndex((node) => node && node.type === "orbs");
+      if (orbsIndex >= 0) {
+        const existingOrbSettings = Array.isArray(sceneNodes[orbsIndex].settings) ? sceneNodes[orbsIndex].settings : [];
+        const compatOrbSettings = Array.isArray(prefsLike && prefsLike.orbs) ? prefsLike.orbs : [];
+        sceneNodes[orbsIndex] = {
+          ...sceneNodes[orbsIndex],
+          settings: compatOrbSettings.map((orb, index) => ({
+            ...existingOrbSettings[index] || {},
+            ...deepClone(orb)
+          }))
+        };
+      }
+      const overlayIndex = sceneNodes.findIndex((node) => node && node.type === "bandOverlay");
+      if (overlayIndex >= 0) {
+        const overlaySettings = prefsLike && prefsLike.bands && prefsLike.bands.overlay && typeof prefsLike.bands.overlay === "object" ? deepClone(prefsLike.bands.overlay) : deepClone(CONFIG.defaults.bands.overlay);
+        sceneNodes[overlayIndex] = {
+          ...sceneNodes[overlayIndex],
+          enabled: !!overlaySettings.enabled,
+          settings: overlaySettings
+        };
+      }
+      return sceneNodes;
+    }
     function writeHashFromPrefs() {
       const encodedPrefs = deepClone(preferences);
       if (encodedPrefs.bands && typeof encodedPrefs.bands === "object") delete encodedPrefs.bands.names;
-      if (Array.isArray(encodedPrefs.orbs)) {
-        encodedPrefs.orbs = encodedPrefs.orbs.map((orb, i) => {
-          const fallback = CONFIG.defaults.orbs[i % CONFIG.defaults.orbs.length];
-          return normalizeOrbDef(orb, fallback);
-        });
+      applySceneNodesToCompatPrefs(
+        encodedPrefs,
+        mergeCompatVisualStateIntoSceneNodes(encodedPrefs)
+      );
+      encodedPrefs.scene = {
+        nodes: deepClone(encodedPrefs.scene && encodedPrefs.scene.nodes || [])
+      };
+      delete encodedPrefs.orbs;
+      delete encodedPrefs.overlay;
+      delete encodedPrefs.viewTransform;
+      delete encodedPrefs.camera;
+      delete encodedPrefs.source;
+      delete encodedPrefs.queue;
+      delete encodedPrefs.playback;
+      delete encodedPrefs.recording;
+      delete encodedPrefs.runtimeLog;
+      delete encodedPrefs.permissions;
+      delete encodedPrefs.ui;
+      if (encodedPrefs.scene && typeof encodedPrefs.scene === "object") {
+        delete encodedPrefs.scene.selectedNodeId;
+        delete encodedPrefs.scene.viewTransform;
+        delete encodedPrefs.scene.editor;
+        delete encodedPrefs.scene.ui;
+        delete encodedPrefs.scene.camera;
+      }
+      if (encodedPrefs.bands && typeof encodedPrefs.bands === "object") {
+        delete encodedPrefs.bands.overlay;
       }
       const hash = encodePrefsToHash(encodedPrefs);
       history.replaceState(null, "", location.pathname + location.search + hash);
@@ -1262,6 +1674,8 @@
     return edges;
   }
   var BandBank = /* @__PURE__ */ (() => {
+    const DEFAULT_ANALYSER_MIN_DB = -100;
+    const DEFAULT_ANALYSER_MAX_DB = -30;
     function getBandRangeData(index) {
       const n = runtime.settings.bands.count;
       if (!Number.isInteger(index) || index < 0 || index >= n) return null;
@@ -1326,48 +1740,74 @@
       idx = clamp(idx, 0, n - 1);
       return idx;
     }
-    function computeEnergiesFromCAnalyser(cBand, audioContextSampleRate) {
+    function computeBandEnergiesFromFreqDb({
+      freqDb = null,
+      minDb = DEFAULT_ANALYSER_MIN_DB,
+      maxDb = DEFAULT_ANALYSER_MAX_DB,
+      nyquistHz = null
+    } = {}) {
       const s = runtime.settings;
       const n = s.bands.count;
-      if (!cBand || !cBand.freqDb) return;
-      const nyquist = audioContextSampleRate * 0.5;
-      const bins = cBand.freqDb.length;
-      const minDb = cBand.analyser.minDecibels;
-      const maxDb = cBand.analyser.maxDecibels;
+      const energies01 = new Array(n).fill(0);
+      if (!freqDb || !Number.isFinite(nyquistHz) || nyquistHz <= 0) {
+        return { energies01, dominantIndex: n > 0 ? 0 : -1 };
+      }
+      const bins = freqDb.length;
       const dbSpan = Math.max(1e-6, maxDb - minDb);
-      let dominant = 0;
+      let dominant = n > 0 ? 0 : -1;
       let dominantVal = -1;
       for (let i = 0; i < n; i++) {
         const loHz = state.bands.lowHz[i];
         const hiHzRaw = state.bands.highHz[i];
-        const hiHz = Math.min(nyquist, hiHzRaw === Infinity ? nyquist : hiHzRaw);
-        const loBin = Math.floor(loHz / nyquist * (bins - 1));
-        const hiBin = Math.ceil(hiHz / nyquist * (bins - 1));
+        const hiHz = Math.min(nyquistHz, hiHzRaw === Infinity ? nyquistHz : hiHzRaw);
+        const loBin = Math.floor(loHz / nyquistHz * (bins - 1));
+        const hiBin = Math.ceil(hiHz / nyquistHz * (bins - 1));
         const a = clamp(loBin, 0, bins - 1);
         const b = clamp(hiBin, 0, bins - 1);
         if (b < a) {
-          state.bands.energies01[i] = 0;
           continue;
         }
         let sum = 0;
         let count = 0;
         for (let k = a; k <= b; k++) {
-          const t = clamp((cBand.freqDb[k] - minDb) / dbSpan, 0, 1);
+          const t = clamp((freqDb[k] - minDb) / dbSpan, 0, 1);
           sum += t;
           count += 1;
         }
         const avg = count > 0 ? sum / count : 0;
-        state.bands.energies01[i] = avg;
+        energies01[i] = avg;
         if (avg > dominantVal) {
           dominantVal = avg;
           dominant = i;
         }
       }
-      state.bands.dominantIndex = dominant;
+      return { energies01, dominantIndex: dominant };
+    }
+    function computeEnergiesFromCAnalyser(cBand, audioContextSampleRate) {
+      if (!cBand || !cBand.freqDb) return;
+      const minDb = Number.isFinite(cBand.minDb) ? cBand.minDb : cBand.analyser ? cBand.analyser.minDecibels : DEFAULT_ANALYSER_MIN_DB;
+      const maxDb = Number.isFinite(cBand.maxDb) ? cBand.maxDb : cBand.analyser ? cBand.analyser.maxDecibels : DEFAULT_ANALYSER_MAX_DB;
+      const spectrum = computeBandEnergiesFromFreqDb({
+        freqDb: cBand.freqDb,
+        minDb,
+        maxDb,
+        nyquistHz: audioContextSampleRate * 0.5
+      });
+      state.bands.energies01.length = 0;
+      state.bands.energies01.push(...spectrum.energies01);
+      state.bands.dominantIndex = spectrum.dominantIndex;
+      const dominant = spectrum.dominantIndex;
       const name = BAND_NAMES[dominant] || `Band ${dominant}`;
       state.bands.dominantName = name;
     }
-    return { rebuild, bandIndexFromAngleRad, computeEnergiesFromCAnalyser, getBandRangeData, formatBandRangeText };
+    return {
+      rebuild,
+      bandIndexFromAngleRad,
+      computeBandEnergiesFromFreqDb,
+      computeEnergiesFromCAnalyser,
+      getBandRangeData,
+      formatBandRangeText
+    };
   })();
 
   // src/js/audio/band-bank-controller.js
@@ -1593,7 +2033,17 @@
       a.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
       const timeDomain = new Float32Array(a.fftSize);
       const freqDb = new Float32Array(a.frequencyBinCount);
-      return { id, label, analyser: a, timeDomain, freqDb, rms: 0, energy01: 0 };
+      return {
+        id,
+        label,
+        analyser: a,
+        timeDomain,
+        freqDb,
+        rms: 0,
+        energy01: 0,
+        minDb: a.minDecibels,
+        maxDb: a.maxDecibels
+      };
     }
     function applyPlaybackSettingsLive() {
       if (!outputGain) return;
@@ -1862,6 +2312,8 @@
       bandL.energy01 = computeEnergy01(bandL.rms);
       bandR.energy01 = computeEnergy01(bandR.rms);
       bandC.energy01 = computeEnergy01(bandC.rms);
+      bandL.analyser.getFloatFrequencyData(bandL.freqDb);
+      bandR.analyser.getFloatFrequencyData(bandR.freqDb);
       bandC.analyser.getFloatFrequencyData(bandC.freqDb);
       BandBank.computeEnergiesFromCAnalyser(bandC, ensureContext().sampleRate);
       return { ready: true, monoLike: status.monoLike, bands: { L: bandL, R: bandR, C: bandC }, debug: { corrLR: status.corrLR } };
@@ -2776,22 +3228,32 @@
 
   // src/js/render/color-policy.js
   var ColorPolicy = /* @__PURE__ */ (() => {
-    function bandRgb01(index) {
+    function resolveBandIndex(index, fallbackIndex = 0) {
+      const safeCount = Math.max(1, runtime.settings.bands.count);
+      const candidate = Number.isInteger(index) ? index : fallbackIndex;
+      return clamp(Number.isInteger(candidate) ? candidate : 0, 0, safeCount - 1);
+    }
+    function bandRgb01(index, hueOffsetDeg = 0) {
       const s = runtime.settings;
       const n = s.bands.count;
       const hueStep = 360 / n;
-      const hue = s.bands.rainbow.hueOffsetDeg + index * hueStep;
+      const safeIndex = resolveBandIndex(index, state.bands.dominantIndex);
+      const hue = s.bands.rainbow.hueOffsetDeg + hueOffsetDeg + safeIndex * hueStep;
       return hsvToRgb01(hue, s.bands.rainbow.saturation, s.bands.rainbow.value);
     }
-    function pickParticleColorRgb01(angleRad) {
+    function pickParticleColorRgb01(angleRad, { bandIndex = null, hueOffsetDeg = 0 } = {}) {
       const s = runtime.settings;
       if (s.bands.particleColorSource === "fixed") return hexToRgb01(s.visuals.particleColor);
-      if (s.bands.particleColorSource === "angle") return bandRgb01(BandBank.bandIndexFromAngleRad(angleRad));
-      return bandRgb01(state.bands.dominantIndex);
+      if (s.bands.particleColorSource === "angle") {
+        return bandRgb01(BandBank.bandIndexFromAngleRad(angleRad), hueOffsetDeg);
+      }
+      return bandRgb01(resolveBandIndex(bandIndex, state.bands.dominantIndex), hueOffsetDeg);
     }
-    function pickLineColorRgb01(particles) {
+    function pickLineColorRgb01(particles, { bandIndex = null, hueOffsetDeg = 0 } = {}) {
       const s = runtime.settings;
-      if (s.trace.lineColorMode === "dominantBand") return bandRgb01(state.bands.dominantIndex);
+      if (s.trace.lineColorMode === "dominantBand") {
+        return bandRgb01(resolveBandIndex(bandIndex, state.bands.dominantIndex), hueOffsetDeg);
+      }
       if (s.trace.lineColorMode === "lastParticle") {
         const last = particles && particles.length ? particles[particles.length - 1] : null;
         if (last && last.rgbStart) return last.rgbStart;
@@ -2802,8 +3264,873 @@
     return { bandRgb01, pickParticleColorRgb01, pickLineColorRgb01 };
   })();
 
+  // src/js/render/visualizers/band-overlay.js
+  function overlayWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
+    if (!waveform || waveform.length === 0) return 0;
+    const phase01 = (angleRad % TAU + TAU) % TAU / TAU;
+    const idx = Math.floor(phase01 * (waveform.length - 1));
+    const sample = waveform[idx];
+    return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
+  }
+  function simToTargetScreen(xSim, ySim, targetMetrics) {
+    return {
+      x: targetMetrics.xPx + targetMetrics.widthPx * 0.5 + xSim,
+      y: targetMetrics.yPx + targetMetrics.heightPx * 0.5 - ySim
+    };
+  }
+  function readFrameEnergy01(band) {
+    return Number.isFinite(band && band.energy) ? clamp(band.energy, 0, 1) : 0;
+  }
+  function readFrameBands(frame) {
+    return Array.isArray(frame && frame.bands) ? frame.bands : [];
+  }
+  function readPositiveNumber(value, fallback) {
+    return Number.isFinite(value) && value > 0 ? value : fallback;
+  }
+  function readRenderMetrics(targetMetrics, boundsPx = null) {
+    const fallbackWidthPx = readPositiveNumber(targetMetrics && targetMetrics.widthPx, 0);
+    const fallbackHeightPx = readPositiveNumber(targetMetrics && targetMetrics.heightPx, 0);
+    const fallbackDpr = readPositiveNumber(targetMetrics && targetMetrics.dpr, 1);
+    if (boundsPx && typeof boundsPx === "object" && Number.isFinite(boundsPx.x) && Number.isFinite(boundsPx.y) && Number.isFinite(boundsPx.width) && Number.isFinite(boundsPx.height)) {
+      return {
+        xPx: boundsPx.x,
+        yPx: boundsPx.y,
+        widthPx: Math.max(0, boundsPx.width),
+        heightPx: Math.max(0, boundsPx.height),
+        dpr: fallbackDpr
+      };
+    }
+    return {
+      xPx: 0,
+      yPx: 0,
+      widthPx: fallbackWidthPx,
+      heightPx: fallbackHeightPx,
+      dpr: fallbackDpr
+    };
+  }
+  function readOverlaySettingsFromNode(node) {
+    return node && node.settings && typeof node.settings === "object" ? node.settings : runtime.settings.bands.overlay;
+  }
+  function readFallbackBandCount() {
+    const count = runtime.settings && runtime.settings.bands ? runtime.settings.bands.count : 0;
+    return Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
+  }
+  function drawBandOverlay(ctx, centerWaveform, overlay, energies01, bandCount, targetMetrics) {
+    const n = bandCount;
+    if (!n) return;
+    const phase = state.bands.ringPhaseRad;
+    const minDim = Math.min(targetMetrics.widthPx, targetMetrics.heightPx);
+    const minR = minDim * overlay.minRadiusFrac;
+    const maxR = minDim * overlay.maxRadiusFrac;
+    const safeMin = Math.min(minR, maxR);
+    const safeMax = Math.max(minR, maxR);
+    const pts = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const angle = phase + i * TAU / n;
+      const e = energies01[i] || 0;
+      const baseR = safeMin + (safeMax - safeMin) * e;
+      const disp = overlayWaveformDisplacementPx(baseR, angle, centerWaveform, overlay);
+      const r = baseR + disp;
+      pts[i] = {
+        xSim: r * Math.cos(angle),
+        ySim: r * Math.sin(angle)
+      };
+    }
+    if (overlay.connectAdjacent) {
+      ctx.save();
+      ctx.lineWidth = overlay.lineWidthPx * targetMetrics.dpr;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n;
+        const c = ColorPolicy.bandRgb01(i);
+        const a = simToTargetScreen(pts[i].xSim, pts[i].ySim, targetMetrics);
+        const b = simToTargetScreen(pts[j].xSim, pts[j].ySim, targetMetrics);
+        ctx.strokeStyle = rgb01ToCss(c, overlay.lineAlpha);
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.save();
+    const rPx = overlay.pointSizePx * targetMetrics.dpr;
+    for (let i = 0; i < n; i++) {
+      const c = ColorPolicy.bandRgb01(i);
+      const p = simToTargetScreen(pts[i].xSim, pts[i].ySim, targetMetrics);
+      ctx.fillStyle = rgb01ToCss(c, overlay.alpha);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, rPx, 0, TAU);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+  var BandOverlayVisualizer = class {
+    constructor({ node = null } = {}) {
+      this.node = node;
+      this.context = null;
+      this.boundsPx = null;
+      this.frame = null;
+      this.centerWaveform = null;
+      this.energies01 = [];
+      this.bandCount = 0;
+      this.dtSec = 0;
+    }
+    init(context) {
+      this.context = context || null;
+      if (context && context.node) this.node = context.node;
+    }
+    configure(node) {
+      this.node = node || null;
+    }
+    update(frame, dtSec) {
+      this.frame = frame || null;
+      const frameBands = readFrameBands(this.frame);
+      const fallbackCount = readFallbackBandCount();
+      const nextBandCount = frameBands.length ? frameBands.length : fallbackCount;
+      this.centerWaveform = this.frame && this.frame.analysis && this.frame.analysis.compat ? this.frame.analysis.compat.centerWaveform : null;
+      this.bandCount = nextBandCount;
+      this.energies01.length = nextBandCount;
+      for (let i = 0; i < nextBandCount; i++) {
+        this.energies01[i] = frameBands.length ? readFrameEnergy01(frameBands[i]) : 0;
+      }
+      this.dtSec = Number.isFinite(dtSec) ? dtSec : 0;
+    }
+    render(target, viewTransform) {
+      void viewTransform;
+      const overlay = readOverlaySettingsFromNode(this.node);
+      const ctx = target && target.ctx || this.context && this.context.ctx || state.ctx;
+      const targetMetrics = readRenderMetrics({
+        widthPx: readPositiveNumber(target && target.widthPx, readPositiveNumber(this.context && this.context.widthPx, 0)),
+        heightPx: readPositiveNumber(target && target.heightPx, readPositiveNumber(this.context && this.context.heightPx, 0)),
+        dpr: readPositiveNumber(target && target.dpr, readPositiveNumber(this.context && this.context.dpr, 1))
+      }, this.boundsPx);
+      if (!ctx || !this.centerWaveform || !targetMetrics.widthPx || !targetMetrics.heightPx) return;
+      ctx.save();
+      if (this.boundsPx) {
+        ctx.beginPath();
+        ctx.rect(this.boundsPx.x, this.boundsPx.y, this.boundsPx.width, this.boundsPx.height);
+        ctx.clip();
+      }
+      try {
+        drawBandOverlay(ctx, this.centerWaveform, overlay, this.energies01, this.bandCount, targetMetrics);
+      } finally {
+        ctx.restore();
+      }
+    }
+    resize(boundsPx) {
+      this.boundsPx = boundsPx ? { ...boundsPx } : null;
+    }
+    dispose() {
+      this.node = null;
+      this.context = null;
+      this.boundsPx = null;
+      this.frame = null;
+      this.centerWaveform = null;
+      this.energies01.length = 0;
+      this.bandCount = 0;
+      this.dtSec = 0;
+    }
+  };
+
+  // src/js/render/trail-system.js
+  var TrailSystem = class {
+    constructor() {
+      this.particles = [];
+      this.emitAccumulator = 0;
+    }
+    reset() {
+      this.particles.length = 0;
+      this.emitAccumulator = 0;
+    }
+    removeOverlaps(xSim, ySim, rPx) {
+      if (rPx <= 0) return;
+      const r2 = rPx * rPx;
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        const dx = p.xSim - xSim;
+        const dy = p.ySim - ySim;
+        if (dx * dx + dy * dy <= r2) this.particles.splice(i, 1);
+      }
+    }
+    emitAt(xSim, ySim, nowSec, rgbStart) {
+      const s = runtime.settings;
+      this.removeOverlaps(xSim, ySim, s.particles.overlapRadiusPx * state.dpr);
+      this.particles.push({ xSim, ySim, bornSec: nowSec, rgbStart });
+    }
+    updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart) {
+      const s = runtime.settings;
+      const ttl = Math.max(1e-4, s.particles.ttlSec);
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        if (nowSec - this.particles[i].bornSec >= ttl) this.particles.splice(i, 1);
+      }
+      this.emitAccumulator += s.particles.emitPerSecond * dtSec;
+      const maxEmitThisFrame = Math.ceil(s.particles.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
+      let emits = 0;
+      while (this.emitAccumulator >= 1 && emits < maxEmitThisFrame) {
+        this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart);
+        this.emitAccumulator -= 1;
+        emits += 1;
+      }
+    }
+  };
+
+  // src/js/render/orb.js
+  var Orb = class {
+    constructor(def) {
+      this.id = def.id;
+      this.chanId = normalizeOrbChannelId(def.chanId, def.bandId);
+      this.bandIds = sanitizeOrbBandIds(def.bandIds, def.bandNames);
+      this.chirality = def.chirality;
+      this.startAngleRad = def.startAngleRad;
+      this.hueOffsetDeg = Number.isFinite(def.hueOffsetDeg) ? def.hueOffsetDeg : 0;
+      this.centerX = Number.isFinite(def.centerX) ? def.centerX : 0;
+      this.centerY = Number.isFinite(def.centerY) ? def.centerY : 0;
+      this.angleRad = this.startAngleRad;
+      this.trail = new TrailSystem();
+      this.xSim = 0;
+      this.ySim = 0;
+      this.baseRadiusPx = 0;
+      this.radialDispPx = 0;
+      this.lastColorBandIndex = null;
+    }
+    resetPhase() {
+      this.angleRad = this.startAngleRad;
+    }
+    resetTrail() {
+      this.trail.reset();
+    }
+    step(dtSec, nowSec, band, options = {}) {
+      const s = runtime.settings;
+      const energyOverride01 = Number.isFinite(options.energyOverride01) ? options.energyOverride01 : null;
+      const colorBandIndex = Number.isInteger(options.colorBandIndex) ? options.colorBandIndex : null;
+      const boundsPx = options.boundsPx && typeof options.boundsPx === "object" && Number.isFinite(options.boundsPx.x) && Number.isFinite(options.boundsPx.y) && Number.isFinite(options.boundsPx.width) && Number.isFinite(options.boundsPx.height) ? {
+        x: options.boundsPx.x,
+        y: options.boundsPx.y,
+        width: Math.max(0, options.boundsPx.width),
+        height: Math.max(0, options.boundsPx.height)
+      } : { x: 0, y: 0, width: state.widthPx, height: state.heightPx };
+      this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
+      this.angleRad = (this.angleRad % TAU + TAU) % TAU;
+      const minDim = Math.min(boundsPx.width, boundsPx.height);
+      const minR = minDim * s.audio.minRadiusFrac;
+      const maxR = minDim * s.audio.maxRadiusFrac;
+      const safeMin = Math.min(minR, maxR);
+      const safeMax = Math.max(minR, maxR);
+      const energy01 = Number.isFinite(energyOverride01) ? clamp(energyOverride01, 0, 1) : band ? band.energy01 : 0;
+      this.baseRadiusPx = safeMin + (safeMax - safeMin) * energy01;
+      const wf = band ? band.timeDomain : null;
+      if (wf && wf.length > 0) {
+        const phase01 = this.angleRad / TAU;
+        const idx = Math.floor(phase01 * (wf.length - 1));
+        const sample = wf[idx];
+        this.radialDispPx = this.baseRadiusPx * s.motion.waveformRadialDisplaceFrac * sample;
+      } else {
+        this.radialDispPx = 0;
+      }
+      const radius = this.baseRadiusPx + this.radialDispPx;
+      const originScreenX = boundsPx.x + boundsPx.width * 0.5 + this.centerX * boundsPx.width * 0.5;
+      const originScreenY = boundsPx.y + boundsPx.height * 0.5 - this.centerY * boundsPx.height * 0.5;
+      const originXSim = originScreenX - state.widthPx * 0.5;
+      const originYSim = state.heightPx * 0.5 - originScreenY;
+      this.xSim = originXSim + radius * Math.cos(this.angleRad);
+      this.ySim = originYSim + radius * Math.sin(this.angleRad);
+      this.lastColorBandIndex = colorBandIndex;
+      const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad, {
+        bandIndex: this.lastColorBandIndex,
+        hueOffsetDeg: this.hueOffsetDeg
+      });
+      this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
+    }
+  };
+
+  // src/js/render/orb-runtime.js
+  var activeOrbVisualizers = [];
+  function createOrbsFromSettings(settings = runtime.settings) {
+    const defs = Array.isArray(settings && settings.orbs) ? settings.orbs : [];
+    return normalizeSceneOrbSettings(defs).map((def) => new Orb(def));
+  }
+  function readVisualizerOrbs(instance) {
+    if (!instance || typeof instance.getOrbs !== "function") return [];
+    const orbs = instance.getOrbs();
+    return Array.isArray(orbs) ? orbs : [];
+  }
+  function syncCompatStateOrbs(orbs) {
+    state.orbs.length = 0;
+    if (Array.isArray(orbs)) state.orbs.push(...orbs);
+  }
+  function readActiveVisualizerOrbs() {
+    const orbs = [];
+    for (const visualizer of activeOrbVisualizers) {
+      orbs.push(...readVisualizerOrbs(visualizer));
+    }
+    return orbs;
+  }
+  function syncCompatStateFromActiveVisualizers() {
+    syncCompatStateOrbs(readActiveVisualizerOrbs());
+  }
+  function setActiveOrbVisualizer(instance) {
+    if (!instance) return;
+    if (!activeOrbVisualizers.includes(instance)) activeOrbVisualizers.push(instance);
+    syncCompatStateFromActiveVisualizers();
+  }
+  function clearActiveOrbVisualizer(instance) {
+    if (!instance) {
+      activeOrbVisualizers.length = 0;
+      syncCompatStateOrbs([]);
+      return;
+    }
+    const index = activeOrbVisualizers.indexOf(instance);
+    if (index >= 0) activeOrbVisualizers.splice(index, 1);
+    syncCompatStateFromActiveVisualizers();
+  }
+  function readActiveOrbs() {
+    return activeOrbVisualizers.length ? readActiveVisualizerOrbs() : state.orbs;
+  }
+  function initOrbs() {
+    if (activeOrbVisualizers.length) {
+      const visualizers = activeOrbVisualizers.slice();
+      for (const visualizer of visualizers) {
+        if (typeof visualizer.rebuildFromSettings === "function") visualizer.rebuildFromSettings();
+      }
+      syncCompatStateFromActiveVisualizers();
+      return;
+    }
+    syncCompatStateOrbs(createOrbsFromSettings());
+  }
+  function readFrameChannel(frame, channelId) {
+    const channels = frame && frame.analysis && Array.isArray(frame.analysis.channels) ? frame.analysis.channels : [];
+    return channels.find((channel) => channel && channel.id === channelId) || null;
+  }
+  function readChannelEnergy01(channel) {
+    if (Number.isFinite(channel && channel.energy)) return clamp(channel.energy, 0, 1);
+    if (Number.isFinite(channel && channel.energy01)) return clamp(channel.energy01, 0, 1);
+    if (Number.isFinite(channel && channel.rms)) return clamp(channel.rms * runtime.settings.audio.rmsGain, 0, 1);
+    return 0;
+  }
+  function readBandEnergy01(frame, bandIndex) {
+    const bands = Array.isArray(frame && frame.bands) ? frame.bands : [];
+    const band = Number.isInteger(bandIndex) ? bands[bandIndex] : null;
+    if (Number.isFinite(band && band.energy)) return clamp(band.energy, 0, 1);
+    return 0;
+  }
+  function readChannelBandEnergy01(channel, bandIndex) {
+    const bandEnergies01 = Array.isArray(channel && channel.bandEnergies01) ? channel.bandEnergies01 : null;
+    if (!bandEnergies01 || !Number.isInteger(bandIndex)) return null;
+    const energy = bandEnergies01[bandIndex];
+    return Number.isFinite(energy) ? clamp(energy, 0, 1) : 0;
+  }
+  function readDominantBandIndex(frame) {
+    if (Number.isInteger(frame && frame.dominantBandIndex) && frame.dominantBandIndex >= 0) {
+      return frame.dominantBandIndex;
+    }
+    if (Number.isInteger(frame && frame.dominantBand && frame.dominantBand.index) && frame.dominantBand.index >= 0) {
+      return frame.dominantBand.index;
+    }
+    const bands = Array.isArray(frame && frame.bands) ? frame.bands : [];
+    let strongestBandIndex = null;
+    let strongestEnergy = -1;
+    for (const band of bands) {
+      const bandIndex = Number.isInteger(band && band.index) ? band.index : null;
+      const energy = Number.isFinite(band && band.energy) ? clamp(band.energy, 0, 1) : 0;
+      if (!Number.isInteger(bandIndex) || energy <= strongestEnergy) continue;
+      strongestBandIndex = bandIndex;
+      strongestEnergy = energy;
+    }
+    return strongestBandIndex;
+  }
+  function getBandForOrb(orb, frame) {
+    const channel = normalizeOrbChannelId(orb && orb.chanId, orb && orb.bandId);
+    const sourceChannel = readFrameChannel(frame, channel);
+    const sourceBand = sourceChannel ? {
+      id: sourceChannel.id,
+      label: sourceChannel.label || sourceChannel.id,
+      timeDomain: sourceChannel.timeDomain || null,
+      energy01: readChannelEnergy01(sourceChannel)
+    } : null;
+    const bandIds = Array.isArray(orb && orb.bandIds) ? orb.bandIds : [];
+    if (!bandIds.length) {
+      return {
+        band: sourceBand,
+        energyOverride01: null,
+        colorBandIndex: readDominantBandIndex(frame)
+      };
+    }
+    let sum = 0;
+    let strongestBandIndex = bandIds[0];
+    let strongestEnergy = -1;
+    const hasChannelBandSpectrum = Array.isArray(sourceChannel && sourceChannel.bandEnergies01);
+    for (const idx of bandIds) {
+      const energy = hasChannelBandSpectrum ? readChannelBandEnergy01(sourceChannel, idx) : readBandEnergy01(frame, idx);
+      sum += energy;
+      if (energy <= strongestEnergy) continue;
+      strongestEnergy = energy;
+      strongestBandIndex = idx;
+    }
+    const avg = sum / bandIds.length;
+    return {
+      band: sourceBand,
+      energyOverride01: clamp(avg, 0, 1),
+      colorBandIndex: strongestBandIndex
+    };
+  }
+  function resetOrbTrails() {
+    for (const orb of readActiveOrbs()) orb.resetTrail();
+  }
+  function resetOrbsToDesignedPhases() {
+    let angleRad = null;
+    if (activeOrbVisualizers.length) {
+      for (const visualizer of activeOrbVisualizers) {
+        if (typeof visualizer.resetToDesignedPhases !== "function") continue;
+        const nextAngleRad = visualizer.resetToDesignedPhases();
+        if (angleRad === null && Number.isFinite(nextAngleRad)) angleRad = nextAngleRad;
+      }
+    } else {
+      for (const orb of readActiveOrbs()) {
+        orb.resetPhase();
+        orb.resetTrail();
+      }
+      const primaryOrb = readActiveOrbs()[0] || null;
+      angleRad = Number.isFinite(primaryOrb && primaryOrb.angleRad) ? primaryOrb.angleRad : null;
+    }
+    state.bands.ringPhaseRad = Number.isFinite(angleRad) ? angleRad : 0;
+  }
+  function getActiveOrbPrimaryAngleRad() {
+    for (const visualizer of activeOrbVisualizers) {
+      if (typeof visualizer.getPrimaryAngleRad !== "function") continue;
+      const angleRad = visualizer.getPrimaryAngleRad();
+      if (Number.isFinite(angleRad)) return angleRad;
+    }
+    const primaryOrb = state.orbs[0] || null;
+    return Number.isFinite(primaryOrb && primaryOrb.angleRad) ? primaryOrb.angleRad : null;
+  }
+
+  // src/js/render/visualizers/orb-visualizer.js
+  function readOrbSettingsFromNode(node) {
+    return node && Array.isArray(node.settings) ? node.settings : runtime.settings.orbs;
+  }
+  function canonicalOrbSettingsKey(orbSettings) {
+    const defs = Array.isArray(orbSettings) ? orbSettings : [];
+    return JSON.stringify(defs.map((orb) => ({
+      id: typeof (orb && orb.id) === "string" ? orb.id : "",
+      chanId: typeof (orb && orb.chanId) === "string" ? orb.chanId : "",
+      bandIds: Array.isArray(orb && orb.bandIds) ? orb.bandIds.slice() : [],
+      chirality: Number.isFinite(orb && orb.chirality) ? orb.chirality : null,
+      startAngleRad: Number.isFinite(orb && orb.startAngleRad) ? orb.startAngleRad : null,
+      hueOffsetDeg: Number.isFinite(orb && orb.hueOffsetDeg) ? orb.hueOffsetDeg : null,
+      centerX: Number.isFinite(orb && orb.centerX) ? orb.centerX : null,
+      centerY: Number.isFinite(orb && orb.centerY) ? orb.centerY : null
+    })));
+  }
+  function drawTrailLines(ctx, orb) {
+    const s = runtime.settings;
+    if (!s.trace.lines) return;
+    const particles = orb && orb.trail ? orb.trail.particles : null;
+    const segments = s.trace.numLines;
+    const neededPts = segments + 1;
+    if (!particles || particles.length < 2) return;
+    const startIdx = Math.max(0, particles.length - neededPts);
+    const slice = particles.slice(startIdx);
+    if (slice.length < 2) return;
+    const rgb = ColorPolicy.pickLineColorRgb01(particles, {
+      bandIndex: orb ? orb.lastColorBandIndex : null,
+      hueOffsetDeg: orb ? orb.hueOffsetDeg : 0
+    });
+    const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = s.trace.lineWidthPx * state.dpr;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    const p0 = Spaces.simToScreen(slice[0].xSim, slice[0].ySim);
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+    for (let i = 1; i < slice.length; i++) {
+      const pi = Spaces.simToScreen(slice[i].xSim, slice[i].ySim);
+      ctx.lineTo(pi.x, pi.y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+  function drawParticles(ctx, particles, nowSec) {
+    const s = runtime.settings;
+    const bg = hexToRgb01(s.visuals.backgroundColor);
+    const sizeMax = s.particles.sizeMaxPx * state.dpr;
+    const sizeMin = Math.min(s.particles.sizeMinPx, s.particles.sizeMaxPx) * state.dpr;
+    const toMin = Math.max(1e-4, s.particles.sizeToMinSec);
+    const ttl = Math.max(1e-4, s.particles.ttlSec);
+    const fadeSec = Math.max(1e-4, ttl - toMin);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      const age = nowSec - p.bornSec;
+      let size = sizeMin;
+      if (age < toMin) {
+        const t = clamp(age / toMin, 0, 1);
+        size = lerp(sizeMax, sizeMin, t);
+      }
+      const fg = p.rgbStart || hexToRgb01(s.visuals.particleColor);
+      let color = fg;
+      if (age >= toMin) {
+        const t = clamp((age - toMin) / fadeSec, 0, 1);
+        color = lerpRgb01(fg, bg, t);
+      }
+      const ps = Spaces.simToScreen(p.xSim, p.ySim);
+      ctx.fillStyle = rgb01ToCss(color, 1);
+      ctx.beginPath();
+      ctx.arc(ps.x, ps.y, size, 0, TAU);
+      ctx.fill();
+    }
+  }
+  var OrbVisualizer = class {
+    constructor({ node = null } = {}) {
+      this.node = node;
+      this.context = null;
+      this.boundsPx = null;
+      this.frame = null;
+      this.dtSec = 0;
+      this.nowSec = 0;
+      this.orbs = [];
+      this.settingsKey = "";
+    }
+    init(context) {
+      this.context = context || null;
+      if (context && context.node) this.node = context.node;
+      this.rebuildFromSettings();
+    }
+    configure(node) {
+      this.node = node || null;
+      const nextSettingsKey = canonicalOrbSettingsKey(readOrbSettingsFromNode(this.node));
+      if (nextSettingsKey !== this.settingsKey) this.rebuildFromSettings();
+    }
+    rebuildFromSettings() {
+      const orbSettings = readOrbSettingsFromNode(this.node);
+      this.settingsKey = canonicalOrbSettingsKey(orbSettings);
+      this.orbs = createOrbsFromSettings({ orbs: orbSettings });
+      setActiveOrbVisualizer(this);
+      return this.orbs;
+    }
+    getOrbs() {
+      return this.orbs;
+    }
+    getPrimaryAngleRad() {
+      const primaryOrb = this.orbs[0] || null;
+      return Number.isFinite(primaryOrb && primaryOrb.angleRad) ? primaryOrb.angleRad : null;
+    }
+    resetTrails() {
+      for (const orb of this.orbs) orb.resetTrail();
+    }
+    resetToDesignedPhases() {
+      for (const orb of this.orbs) {
+        orb.resetPhase();
+        orb.resetTrail();
+      }
+      return this.getPrimaryAngleRad();
+    }
+    update(frame, dtSec) {
+      this.frame = frame || null;
+      this.dtSec = Number.isFinite(dtSec) ? dtSec : 0;
+      const analysis = this.frame && this.frame.analysis ? this.frame.analysis : null;
+      this.nowSec = analysis && Number.isFinite(analysis.timestamp) ? analysis.timestamp / 1e3 : 0;
+      if (state.time.simPaused) return;
+      for (const orb of this.orbs) {
+        const selection = getBandForOrb(orb, this.frame);
+        const orbBand = selection ? selection.band : null;
+        orb.step(this.dtSec, this.nowSec, orbBand, {
+          energyOverride01: selection ? selection.energyOverride01 : null,
+          colorBandIndex: selection ? selection.colorBandIndex : null,
+          boundsPx: this.boundsPx
+        });
+      }
+    }
+    render(target, viewTransform) {
+      void viewTransform;
+      if (!this.orbs.length) return;
+      const ctx = target && target.ctx || this.context && this.context.ctx || state.ctx;
+      if (!ctx) return;
+      ctx.save();
+      if (this.boundsPx) {
+        ctx.beginPath();
+        ctx.rect(this.boundsPx.x, this.boundsPx.y, this.boundsPx.width, this.boundsPx.height);
+        ctx.clip();
+      }
+      try {
+        for (const orb of this.orbs) {
+          const particles = orb.trail.particles;
+          drawTrailLines(ctx, orb);
+          drawParticles(ctx, particles, this.nowSec);
+        }
+      } finally {
+        ctx.restore();
+      }
+    }
+    resize(boundsPx) {
+      this.boundsPx = boundsPx ? { ...boundsPx } : null;
+    }
+    dispose() {
+      clearActiveOrbVisualizer(this);
+      this.node = null;
+      this.context = null;
+      this.boundsPx = null;
+      this.frame = null;
+      this.dtSec = 0;
+      this.nowSec = 0;
+      this.settingsKey = "";
+      this.orbs.length = 0;
+    }
+  };
+
+  // src/js/render/visualizer.js
+  var REQUIRED_VISUALIZER_METHODS = Object.freeze(["init", "update", "render", "resize", "dispose"]);
+  var FULL_SURFACE_BOUNDS = deepFreeze({ x: 0.5, y: 0.5, w: 1, h: 1 });
+  var CENTER_ANCHOR = deepFreeze({ x: 0.5, y: 0.5 });
+  var ORB_BAND_INDEX_LIMIT = Math.max(0, CONFIG.bandNames.length - 1);
+  var ORBS_SETTINGS_SCHEMA = deepFreeze({
+    kind: "array",
+    item: {
+      kind: "object",
+      fields: {
+        id: { type: "string", default: "ORB" },
+        chanId: { type: "string", default: "C", enum: ["L", "R", "C"] },
+        bandIds: {
+          type: "array",
+          default: [],
+          item: { type: "number", min: 0, max: ORB_BAND_INDEX_LIMIT, step: 1 }
+        },
+        chirality: { type: "number", default: -1, enum: [-1, 1] },
+        startAngleRad: { type: "number", default: 0 },
+        hueOffsetDeg: {
+          type: "number",
+          default: CONFIG.visualizers.orbs.defaults.hueOffsetDeg,
+          min: CONFIG.visualizers.orbs.limits.hueOffsetDeg.min,
+          max: CONFIG.visualizers.orbs.limits.hueOffsetDeg.max,
+          step: CONFIG.visualizers.orbs.limits.hueOffsetDeg.step
+        },
+        centerX: {
+          type: "number",
+          default: CONFIG.visualizers.orbs.defaults.centerX,
+          min: CONFIG.visualizers.orbs.limits.centerX.min,
+          max: CONFIG.visualizers.orbs.limits.centerX.max,
+          step: CONFIG.visualizers.orbs.limits.centerX.step
+        },
+        centerY: {
+          type: "number",
+          default: CONFIG.visualizers.orbs.defaults.centerY,
+          min: CONFIG.visualizers.orbs.limits.centerY.min,
+          max: CONFIG.visualizers.orbs.limits.centerY.max,
+          step: CONFIG.visualizers.orbs.limits.centerY.step
+        }
+      }
+    }
+  });
+  var BAND_OVERLAY_SETTINGS_SCHEMA = deepFreeze({
+    kind: "object",
+    fields: {
+      enabled: { type: "boolean", default: !!CONFIG.defaults.bands.overlay.enabled },
+      connectAdjacent: { type: "boolean", default: !!CONFIG.defaults.bands.overlay.connectAdjacent },
+      alpha: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.alpha,
+        min: CONFIG.limits.bands.overlayAlpha.min,
+        max: CONFIG.limits.bands.overlayAlpha.max,
+        step: CONFIG.limits.bands.overlayAlpha.step
+      },
+      pointSizePx: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.pointSizePx,
+        min: CONFIG.limits.bands.pointSizePx.min,
+        max: CONFIG.limits.bands.pointSizePx.max,
+        step: CONFIG.limits.bands.pointSizePx.step
+      },
+      minRadiusFrac: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.minRadiusFrac,
+        min: CONFIG.limits.bands.overlayMinRadiusFrac.min,
+        max: CONFIG.limits.bands.overlayMinRadiusFrac.max,
+        step: CONFIG.limits.bands.overlayMinRadiusFrac.step
+      },
+      maxRadiusFrac: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.maxRadiusFrac,
+        min: CONFIG.limits.bands.overlayMaxRadiusFrac.min,
+        max: CONFIG.limits.bands.overlayMaxRadiusFrac.max,
+        step: CONFIG.limits.bands.overlayMaxRadiusFrac.step
+      },
+      waveformRadialDisplaceFrac: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.waveformRadialDisplaceFrac,
+        min: CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac.min,
+        max: CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac.max,
+        step: CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac.step
+      },
+      lineAlpha: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.lineAlpha,
+        min: CONFIG.limits.bands.overlayAlpha.min,
+        max: CONFIG.limits.bands.overlayAlpha.max,
+        step: CONFIG.limits.bands.overlayAlpha.step
+      },
+      lineWidthPx: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.lineWidthPx,
+        min: CONFIG.limits.trace.lineWidthPx.min,
+        max: CONFIG.limits.trace.lineWidthPx.max,
+        step: CONFIG.limits.trace.lineWidthPx.step
+      },
+      phaseMode: { type: "string", default: CONFIG.defaults.bands.overlay.phaseMode, enum: ["orb", "free"] },
+      ringSpeedRadPerSec: {
+        type: "number",
+        default: CONFIG.defaults.bands.overlay.ringSpeedRadPerSec,
+        min: CONFIG.limits.bands.ringSpeedRadPerSec.min,
+        max: CONFIG.limits.bands.ringSpeedRadPerSec.max,
+        step: CONFIG.limits.bands.ringSpeedRadPerSec.step
+      }
+    }
+  });
+  function readConfiguredDefaultNode(type, fallbackNode) {
+    const configuredNodes = CONFIG && CONFIG.defaults && CONFIG.defaults.scene && Array.isArray(CONFIG.defaults.scene.nodes) ? CONFIG.defaults.scene.nodes : [];
+    const configuredNode = configuredNodes.find((node) => node && node.type === type) || null;
+    return deepFreeze(deepClone(configuredNode || fallbackNode));
+  }
+  var BAND_OVERLAY_FALLBACK_NODE = deepFreeze({
+    id: "overlay-1",
+    type: "bandOverlay",
+    enabled: true,
+    zIndex: 1,
+    bounds: deepClone(FULL_SURFACE_BOUNDS),
+    anchor: deepClone(CENTER_ANCHOR),
+    settings: deepClone(CONFIG.defaults.bands.overlay)
+  });
+  var ORBS_DEFAULT_NODE = readConfiguredDefaultNode("orbs", {
+    id: "orbs-1",
+    type: "orbs",
+    enabled: true,
+    zIndex: 0,
+    bounds: deepClone(FULL_SURFACE_BOUNDS),
+    anchor: deepClone(CENTER_ANCHOR),
+    settings: normalizeSceneOrbSettings(CONFIG.defaults.orbs)
+  });
+  var BAND_OVERLAY_DEFAULT_NODE = readConfiguredDefaultNode("bandOverlay", BAND_OVERLAY_FALLBACK_NODE);
+  function cloneMaybe(value) {
+    return value == null ? null : deepClone(value);
+  }
+  function isVisualizableType(type) {
+    return typeof type === "string" && !!type.trim();
+  }
+  function isClassConstructor(fn) {
+    if (typeof fn !== "function") return false;
+    return /^\s*class\b/.test(Function.prototype.toString.call(fn));
+  }
+  function createDescriptor(type, implementation, metadata) {
+    const safeMetadata = metadata && typeof metadata === "object" ? metadata : {};
+    return {
+      type,
+      implementation: typeof implementation === "function" ? implementation : null,
+      capabilities: cloneMaybe(safeMetadata.capabilities),
+      settingsSchema: cloneMaybe(safeMetadata.settingsSchema),
+      defaultNode: cloneMaybe(safeMetadata.defaultNode)
+    };
+  }
+  function readDescriptor(descriptor) {
+    if (!descriptor) return null;
+    return {
+      type: descriptor.type,
+      implementation: descriptor.implementation,
+      capabilities: cloneMaybe(descriptor.capabilities),
+      settingsSchema: cloneMaybe(descriptor.settingsSchema),
+      defaultNode: cloneMaybe(descriptor.defaultNode)
+    };
+  }
+  function createInstance(type, implementation, options) {
+    try {
+      return isClassConstructor(implementation) ? new implementation(options) : implementation(options);
+    } catch (error) {
+      const message = error instanceof Error && error.message ? error.message : String(error);
+      const wrapped = new Error(`Failed to create visualizer "${type}": ${message}`);
+      wrapped.cause = error;
+      throw wrapped;
+    }
+  }
+  function validateInstance(type, instance) {
+    if (!instance || typeof instance !== "object") {
+      throw new Error(`Visualizer "${type}" did not return an object instance.`);
+    }
+    const missingMethods = REQUIRED_VISUALIZER_METHODS.filter((method) => typeof instance[method] !== "function");
+    if (missingMethods.length) {
+      throw new Error(
+        `Visualizer "${type}" is missing required lifecycle methods: ${missingMethods.join(", ")}.`
+      );
+    }
+    return instance;
+  }
+  function createVisualizerRegistry() {
+    const descriptors = /* @__PURE__ */ new Map();
+    function register(type, implementation = null, metadata = {}) {
+      if (!isVisualizableType(type)) throw new Error("Visualizer type must be a non-empty string.");
+      if (descriptors.has(type)) throw new Error(`Visualizer type "${type}" is already registered.`);
+      const descriptor = createDescriptor(type, implementation, metadata);
+      descriptors.set(type, descriptor);
+      return readDescriptor(descriptor);
+    }
+    function has(type) {
+      return descriptors.has(type);
+    }
+    function get(type) {
+      return readDescriptor(descriptors.get(type) || null);
+    }
+    function create(type, options = {}) {
+      const descriptor = descriptors.get(type) || null;
+      if (!descriptor) throw new Error(`Unknown visualizer type "${type}".`);
+      if (typeof descriptor.implementation !== "function") {
+        throw new Error(`Visualizer type "${type}" is registered without a runtime implementation.`);
+      }
+      return validateInstance(type, createInstance(type, descriptor.implementation, options));
+    }
+    function getCapabilities(type) {
+      const descriptor = descriptors.get(type) || null;
+      return descriptor ? cloneMaybe(descriptor.capabilities) : null;
+    }
+    function getSettingsSchema(type) {
+      const descriptor = descriptors.get(type) || null;
+      return descriptor ? cloneMaybe(descriptor.settingsSchema) : null;
+    }
+    function getDefaultNode(type) {
+      const descriptor = descriptors.get(type) || null;
+      return descriptor ? cloneMaybe(descriptor.defaultNode) : null;
+    }
+    return { register, has, get, create, getCapabilities, getSettingsSchema, getDefaultNode };
+  }
+  function registerBuiltInVisualizers(registry) {
+    if (!registry || typeof registry.register !== "function") {
+      throw new Error("A visualizer registry with a register() method is required.");
+    }
+    registry.register("orbs", OrbVisualizer, {
+      capabilities: {
+        runtimeImplemented: true,
+        transitional: true
+      },
+      settingsSchema: ORBS_SETTINGS_SCHEMA,
+      defaultNode: ORBS_DEFAULT_NODE
+    });
+    registry.register("bandOverlay", BandOverlayVisualizer, {
+      capabilities: {
+        runtimeImplemented: true,
+        transitional: true
+      },
+      settingsSchema: BAND_OVERLAY_SETTINGS_SCHEMA,
+      defaultNode: BAND_OVERLAY_DEFAULT_NODE
+    });
+    return registry;
+  }
+
   // src/js/render/compositor.js
-  var IDENTITY_VIEW_TRANSFORM = Object.freeze({ kind: "identity" });
+  function defaultWarningSink({ message, type = "", nodeId = "" }) {
+    if (typeof console !== "object" || typeof console.warn !== "function" || !message) return;
+    const nodePart = nodeId ? ` node "${nodeId}"` : "";
+    const typePart = type ? ` (${type})` : "";
+    console.warn(`[Compositor] Skipping${nodePart}${typePart}: ${message}`);
+  }
   function readSceneNodes(scene) {
     return Array.isArray(scene && scene.nodes) ? scene.nodes : [];
   }
@@ -2836,12 +4163,20 @@
     if (a.zIndex !== b.zIndex) return a.zIndex - b.zIndex;
     return a.sceneIndex - b.sceneIndex;
   }
-  function createCompositor({ factories = {} } = {}) {
+  function createCompositor({ registry = createVisualizerRegistry(), onWarning = null } = {}) {
     const liveEntries = /* @__PURE__ */ new Map();
     let activeEntries = [];
     function disposeEntry(entry) {
       if (!entry || !entry.instance || typeof entry.instance.dispose !== "function") return;
       entry.instance.dispose();
+    }
+    function emitWarning({ message, type = "", nodeId = "", cause = null }) {
+      const warning = { message, type, nodeId, cause };
+      if (typeof onWarning === "function") {
+        onWarning(warning);
+        return;
+      }
+      defaultWarningSink(warning);
     }
     function syncScene(scene, target) {
       const nodes = readSceneNodes(scene);
@@ -2866,15 +4201,9 @@
           entry = null;
         }
         if (!entry) {
-          const factory = factories[node.type];
-          if (typeof factory !== "function") {
-            throw new Error(`No compositor factory registered for scene node type "${node.type}".`);
-          }
-          const instance = factory(node);
-          if (!instance || typeof instance !== "object") {
-            throw new Error(`Compositor factory for "${node.type}" did not return an instance.`);
-          }
-          if (typeof instance.init === "function") {
+          let instance = null;
+          try {
+            instance = registry.create(node.type, { node });
             instance.init({
               canvas: target ? target.canvas : null,
               ctx: target ? target.ctx : null,
@@ -2883,6 +4212,20 @@
               dpr: Number.isFinite(target && target.dpr) ? target.dpr : 1,
               node
             });
+          } catch (error) {
+            if (instance && typeof instance.dispose === "function") {
+              try {
+                instance.dispose();
+              } catch {
+              }
+            }
+            emitWarning({
+              message: error instanceof Error && error.message ? error.message : `Failed to create visualizer "${node.type}".`,
+              type: node.type,
+              nodeId: node.id,
+              cause: error
+            });
+            continue;
           }
           entry = {
             id: node.id,
@@ -2897,6 +4240,21 @@
         }
         entry.sceneIndex = i;
         entry.zIndex = Number.isFinite(node.zIndex) ? node.zIndex : 0;
+        if (typeof entry.instance.configure === "function") {
+          try {
+            entry.instance.configure(node);
+          } catch (error) {
+            disposeEntry(entry);
+            liveEntries.delete(node.id);
+            emitWarning({
+              message: error instanceof Error && error.message ? error.message : `Failed to configure visualizer "${node.type}".`,
+              type: node.type,
+              nodeId: node.id,
+              cause: error
+            });
+            continue;
+          }
+        }
         const nextBoundsPx = sceneNodeToPixelBounds(node, target);
         if (!boundsEqual(entry.boundsPx, nextBoundsPx) || entry.targetSizeKey !== targetSizeKey) {
           if (typeof entry.instance.resize === "function") entry.instance.resize(nextBoundsPx);
@@ -2916,9 +4274,10 @@
         if (typeof entry.instance.update === "function") entry.instance.update(frame, dtSec);
       }
     }
-    function render(target) {
+    function render(target, viewTransform = IDENTITY_VIEW_TRANSFORM) {
+      const activeViewTransform = normalizeViewTransform(viewTransform);
       for (const entry of activeEntries) {
-        if (typeof entry.instance.render === "function") entry.instance.render(target, IDENTITY_VIEW_TRANSFORM);
+        if (typeof entry.instance.render === "function") entry.instance.render(target, activeViewTransform);
       }
     }
     function dispose() {
@@ -2929,144 +4288,218 @@
     return { syncScene, update, render, dispose };
   }
 
+  // src/js/render/scene-runtime.js
+  var SCENE_TYPE_LABELS = Object.freeze({
+    orbs: "Orbs",
+    bandOverlay: "Band Overlay"
+  });
+  var sceneRegistry = createVisualizerRegistry();
+  registerBuiltInVisualizers(sceneRegistry);
+  function reindexSceneNodesInCurrentOrder(nodes) {
+    return nodes.map((node, index) => ({
+      ...node,
+      zIndex: index
+    }));
+  }
+  function ensureSceneState() {
+    if (!state.scene || typeof state.scene !== "object") {
+      state.scene = {
+        nodes: [],
+        selectedNodeId: "",
+        viewTransform: IDENTITY_VIEW_TRANSFORM
+      };
+    }
+    if (!Array.isArray(state.scene.nodes)) state.scene.nodes = [];
+    if (typeof state.scene.selectedNodeId !== "string") state.scene.selectedNodeId = "";
+    state.scene.viewTransform = normalizeViewTransform(state.scene.viewTransform);
+    return state.scene;
+  }
+  function sanitizeOrbSettings(rawSettings) {
+    return normalizeSceneOrbSettings(rawSettings);
+  }
+  function persistScenePreferences(nodes) {
+    const nextPrefs = applySceneNodesToCompatPrefs(preferences, nodes);
+    resolveSettings();
+    return deepClone(nextPrefs.scene && nextPrefs.scene.nodes || []);
+  }
+  function buildSceneNodesFromPreferences() {
+    const rawSceneNodes = preferences.scene && Array.isArray(preferences.scene.nodes) ? preferences.scene.nodes : [];
+    return sanitizePersistedSceneNodes(rawSceneNodes, { synthesizeDefaultWhenEmpty: true });
+  }
+  function setSceneNodes(nodes, { preserveSelection = false } = {}) {
+    const sceneState = ensureSceneState();
+    const previousSelection = preserveSelection ? sceneState.selectedNodeId : "";
+    sceneState.nodes = sanitizePersistedSceneNodes(nodes);
+    sceneState.selectedNodeId = sceneState.nodes.some((node) => node.id === previousSelection) ? previousSelection : sceneState.nodes[0] ? sceneState.nodes[0].id : "";
+    return readSceneSnapshot();
+  }
+  function readSceneRuntime() {
+    const sceneState = ensureSceneState();
+    if (!sceneState.nodes.length) setSceneNodes(buildSceneNodesFromPreferences(), { preserveSelection: false });
+    return sceneState;
+  }
+  function readSceneSnapshot() {
+    const sceneState = readSceneRuntime();
+    return deepClone({
+      nodes: sceneState.nodes,
+      selectedNodeId: sceneState.selectedNodeId,
+      viewTransform: sceneState.viewTransform
+    });
+  }
+  function readSceneNodeDisplayName(type) {
+    return Object.prototype.hasOwnProperty.call(SCENE_TYPE_LABELS, type) ? SCENE_TYPE_LABELS[type] : type;
+  }
+  function readSceneSettingsSchema(type) {
+    return sceneRegistry.getSettingsSchema(type);
+  }
+  function readSelectedSceneNode() {
+    const sceneState = readSceneRuntime();
+    const node = sceneState.nodes.find((candidate) => candidate.id === sceneState.selectedNodeId) || null;
+    return node ? deepClone(node) : null;
+  }
+  function findMutableSceneNode(nodeId) {
+    const sceneState = readSceneRuntime();
+    return sceneState.nodes.find((node) => node && node.id === nodeId) || null;
+  }
+  function selectSceneNode(nodeId) {
+    const sceneState = readSceneRuntime();
+    if (sceneState.nodes.some((node) => node.id === nodeId)) sceneState.selectedNodeId = nodeId;
+    return readSceneSnapshot();
+  }
+  function persistSceneNodeSettings(node) {
+    if (!node || typeof node !== "object") return null;
+    if (node.type === "orbs" || node.type === "bandOverlay") {
+      node.settings = sanitizeSettingsForSceneType(node.type, node.settings, { enabled: node.enabled });
+    }
+    const sceneState = readSceneRuntime();
+    sceneState.nodes = persistScenePreferences(sceneState.nodes);
+    return node;
+  }
+  function replaceSceneNodeSettings(nodeId, nextSettings, { persist = false } = {}) {
+    const node = findMutableSceneNode(nodeId);
+    if (!node) return null;
+    node.settings = sanitizeSettingsForSceneType(node.type, nextSettings, { enabled: node.enabled });
+    if (persist) persistSceneNodeSettings(node);
+    return deepClone(node);
+  }
+  function updateSceneNodeSettings(nodeId, updater, options = {}) {
+    const node = findMutableSceneNode(nodeId);
+    if (!node) return null;
+    const currentSettings = deepClone(node.settings);
+    const nextSettings = typeof updater === "function" ? updater(currentSettings) : updater;
+    return replaceSceneNodeSettings(nodeId, nextSettings, options);
+  }
+  function moveSceneNode(nodeId, delta) {
+    const sceneState = readSceneRuntime();
+    const currentIndex = sceneState.nodes.findIndex((node2) => node2.id === nodeId);
+    if (currentIndex < 0) return readSceneSnapshot();
+    const nextIndex = clamp(currentIndex + delta, 0, sceneState.nodes.length - 1);
+    if (nextIndex === currentIndex) return readSceneSnapshot();
+    const [node] = sceneState.nodes.splice(currentIndex, 1);
+    sceneState.nodes.splice(nextIndex, 0, node);
+    sceneState.nodes = persistScenePreferences(reindexSceneNodesInCurrentOrder(sceneState.nodes));
+    return readSceneSnapshot();
+  }
+  function toggleSceneNodeEnabled(nodeId, nextEnabled = null) {
+    const node = findMutableSceneNode(nodeId);
+    if (!node) return readSceneSnapshot();
+    const enabled = typeof nextEnabled === "boolean" ? nextEnabled : !node.enabled;
+    node.enabled = enabled;
+    if (node.type === "bandOverlay" && node.settings && typeof node.settings === "object") {
+      node.settings = {
+        ...node.settings,
+        enabled
+      };
+    }
+    const sceneState = readSceneRuntime();
+    sceneState.nodes = persistScenePreferences(sceneState.nodes);
+    return readSceneSnapshot();
+  }
+  function buildNextOrbId(orbs) {
+    let maxIndex = -1;
+    for (const orb of orbs) {
+      const match = typeof (orb && orb.id) === "string" ? orb.id.match(/(\d+)$/) : null;
+      if (!match) continue;
+      const nextIndex = Number.parseInt(match[1], 10);
+      if (Number.isInteger(nextIndex) && nextIndex > maxIndex) maxIndex = nextIndex;
+    }
+    return `ORB${maxIndex + 1}`;
+  }
+  function createNewOrbSetting(orbs) {
+    const fallback = readDefaultSceneOrbFallback(Array.isArray(orbs) ? orbs.length : 0);
+    return normalizeSceneOrbDef({
+      id: buildNextOrbId(Array.isArray(orbs) ? orbs : [])
+    }, fallback);
+  }
+  function addSceneOrb(nodeId) {
+    return updateSceneNodeSettings(nodeId, (currentSettings) => {
+      const next = sanitizeOrbSettings(currentSettings);
+      next.push(createNewOrbSetting(next));
+      return next;
+    }, { persist: true });
+  }
+  function removeSceneOrb(nodeId, orbIndex) {
+    return updateSceneNodeSettings(nodeId, (currentSettings) => {
+      const next = sanitizeOrbSettings(currentSettings);
+      if (next.length <= 1) return next;
+      if (!Number.isInteger(orbIndex) || orbIndex < 0 || orbIndex >= next.length) return next;
+      next.splice(orbIndex, 1);
+      return next;
+    }, { persist: true });
+  }
+  function updateSceneOrb(nodeId, orbIndex, patch = {}) {
+    return updateSceneNodeSettings(nodeId, (currentSettings) => {
+      const next = sanitizeOrbSettings(currentSettings);
+      if (!Number.isInteger(orbIndex) || orbIndex < 0 || orbIndex >= next.length) return next;
+      const currentOrb = next[orbIndex];
+      const rawPatch = patch && typeof patch === "object" ? patch : {};
+      const nextOrb = normalizeSceneOrbDef({
+        ...currentOrb,
+        ...rawPatch
+      }, currentOrb || readDefaultSceneOrbFallback(orbIndex));
+      next[orbIndex] = nextOrb;
+      return next;
+    }, { persist: true });
+  }
+  function resetSceneRuntimeFromPreferences() {
+    return setSceneNodes(buildSceneNodesFromPreferences(), { preserveSelection: false });
+  }
+  function syncSceneRuntimeFromPreferences() {
+    return setSceneNodes(buildSceneNodesFromPreferences(), { preserveSelection: true });
+  }
+  function syncSceneNodeFromCompatPreferences(type, { createIfMissing = false } = {}) {
+    const sceneNodes = sanitizePersistedSceneNodes(
+      preferences.scene && Array.isArray(preferences.scene.nodes) ? preferences.scene.nodes : []
+    );
+    const nodeIndex = sceneNodes.findIndex((node) => node.type === type);
+    if (nodeIndex < 0 && !createIfMissing) return sceneNodes;
+    let compatNode = null;
+    if (type === "orbs") {
+      compatNode = buildSceneNodeFromLegacy("orbs", preferences.orbs);
+    } else if (type === "bandOverlay") {
+      compatNode = buildSceneNodeFromLegacy("bandOverlay", preferences.bands && preferences.bands.overlay);
+    }
+    if (!compatNode) return sceneNodes;
+    if (nodeIndex >= 0) {
+      const existingNode = sceneNodes[nodeIndex];
+      sceneNodes[nodeIndex] = {
+        ...existingNode,
+        enabled: type === "bandOverlay" ? !!(preferences.bands && preferences.bands.overlay && preferences.bands.overlay.enabled) : existingNode.enabled,
+        settings: compatNode.settings
+      };
+    } else {
+      sceneNodes.push(compatNode);
+    }
+    return persistScenePreferences(sceneNodes);
+  }
+
   // src/js/render/renderer.js
   var Renderer = (() => {
-    const LEGACY_COMPAT_SCENE = Object.freeze({
-      nodes: Object.freeze([
-        Object.freeze({
-          id: "legacyRenderRoot",
-          type: "legacyRender",
-          enabled: true,
-          zIndex: 0,
-          bounds: Object.freeze({ x: 0.5, y: 0.5, w: 1, h: 1 }),
-          anchor: Object.freeze({ x: 0.5, y: 0.5 }),
-          settings: Object.freeze({})
-        })
-      ])
-    });
     function clearFrame() {
       const ctx = state.ctx;
       const s = runtime.settings;
       ctx.fillStyle = s.visuals.backgroundColor;
       ctx.fillRect(0, 0, state.widthPx, state.heightPx);
-    }
-    function drawTrailLines(particles) {
-      const s = runtime.settings;
-      if (!s.trace.lines) return;
-      const segments = s.trace.numLines;
-      const neededPts = segments + 1;
-      if (!particles || particles.length < 2) return;
-      const startIdx = Math.max(0, particles.length - neededPts);
-      const slice = particles.slice(startIdx);
-      if (slice.length < 2) return;
-      const ctx = state.ctx;
-      const rgb = ColorPolicy.pickLineColorRgb01(particles);
-      const stroke = rgb01ToCss(rgb, s.trace.lineAlpha);
-      ctx.save();
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = s.trace.lineWidthPx * state.dpr;
-      ctx.lineJoin = "round";
-      ctx.lineCap = "round";
-      const p0 = Spaces.simToScreen(slice[0].xSim, slice[0].ySim);
-      ctx.beginPath();
-      ctx.moveTo(p0.x, p0.y);
-      for (let i = 1; i < slice.length; i++) {
-        const pi = Spaces.simToScreen(slice[i].xSim, slice[i].ySim);
-        ctx.lineTo(pi.x, pi.y);
-      }
-      ctx.stroke();
-      ctx.restore();
-    }
-    function drawParticles(particles, nowSec) {
-      const s = runtime.settings;
-      const ctx = state.ctx;
-      const bg = hexToRgb01(s.visuals.backgroundColor);
-      const sizeMax = s.particles.sizeMaxPx * state.dpr;
-      const sizeMin = Math.min(s.particles.sizeMinPx, s.particles.sizeMaxPx) * state.dpr;
-      const toMin = Math.max(1e-4, s.particles.sizeToMinSec);
-      const ttl = Math.max(1e-4, s.particles.ttlSec);
-      const fadeSec = Math.max(1e-4, ttl - toMin);
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        const age = nowSec - p.bornSec;
-        let size = sizeMin;
-        if (age < toMin) {
-          const t = clamp(age / toMin, 0, 1);
-          size = lerp(sizeMax, sizeMin, t);
-        }
-        const fg = p.rgbStart || hexToRgb01(s.visuals.particleColor);
-        let color = fg;
-        if (age >= toMin) {
-          const t = clamp((age - toMin) / fadeSec, 0, 1);
-          color = lerpRgb01(fg, bg, t);
-        }
-        const ps = Spaces.simToScreen(p.xSim, p.ySim);
-        ctx.fillStyle = rgb01ToCss(color, 1);
-        ctx.beginPath();
-        ctx.arc(ps.x, ps.y, size, 0, TAU);
-        ctx.fill();
-      }
-    }
-    function overlayWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
-      if (!waveform || waveform.length === 0) return 0;
-      const phase01 = (angleRad % TAU + TAU) % TAU / TAU;
-      const idx = Math.floor(phase01 * (waveform.length - 1));
-      const sample = waveform[idx];
-      return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
-    }
-    function drawBandOverlay(centerWaveform) {
-      const bands = runtime.settings.bands;
-      const overlay = bands.overlay;
-      if (!overlay.enabled || !centerWaveform) return;
-      const ctx = state.ctx;
-      const n = bands.count;
-      const phase = state.bands.ringPhaseRad;
-      const minDim = Math.min(state.widthPx, state.heightPx);
-      const minR = minDim * overlay.minRadiusFrac;
-      const maxR = minDim * overlay.maxRadiusFrac;
-      const safeMin = Math.min(minR, maxR);
-      const safeMax = Math.max(minR, maxR);
-      const pts = new Array(n);
-      for (let i = 0; i < n; i++) {
-        const angle = phase + i * TAU / n;
-        const e = clamp(state.bands.energies01[i] || 0, 0, 1);
-        const baseR = safeMin + (safeMax - safeMin) * e;
-        const disp = overlayWaveformDisplacementPx(baseR, angle, centerWaveform, overlay);
-        const r = baseR + disp;
-        const xSim = r * Math.cos(angle);
-        const ySim = r * Math.sin(angle);
-        pts[i] = { xSim, ySim };
-      }
-      if (overlay.connectAdjacent) {
-        ctx.save();
-        ctx.lineWidth = overlay.lineWidthPx * state.dpr;
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
-        for (let i = 0; i < n; i++) {
-          const j = (i + 1) % n;
-          const c = ColorPolicy.bandRgb01(i);
-          ctx.strokeStyle = rgb01ToCss(c, overlay.lineAlpha);
-          const a = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
-          const b = Spaces.simToScreen(pts[j].xSim, pts[j].ySim);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-      ctx.save();
-      const rPx = overlay.pointSizePx * state.dpr;
-      for (let i = 0; i < n; i++) {
-        const c = ColorPolicy.bandRgb01(i);
-        ctx.fillStyle = rgb01ToCss(c, overlay.alpha);
-        const p = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, rPx, 0, TAU);
-        ctx.fill();
-      }
-      ctx.restore();
     }
     function readWaveformPeak(timeDomain) {
       if (!timeDomain || !timeDomain.length) return 0;
@@ -3100,9 +4533,39 @@
         minEnergy: 0
       };
       const channelEntries = {
-        L: { id: "L", label: "Left", magnitudes: null, phase: null },
-        R: { id: "R", label: "Right", magnitudes: null, phase: null },
-        C: { id: "C", label: "Center", magnitudes: null, phase: null }
+        L: {
+          id: "L",
+          label: "Left",
+          rms: 0,
+          energy: 0,
+          energy01: 0,
+          timeDomain: null,
+          magnitudes: null,
+          bandEnergies01: null,
+          phase: null
+        },
+        R: {
+          id: "R",
+          label: "Right",
+          rms: 0,
+          energy: 0,
+          energy01: 0,
+          timeDomain: null,
+          magnitudes: null,
+          bandEnergies01: null,
+          phase: null
+        },
+        C: {
+          id: "C",
+          label: "Center",
+          rms: 0,
+          energy: 0,
+          energy01: 0,
+          timeDomain: null,
+          magnitudes: null,
+          bandEnergies01: null,
+          phase: null
+        }
       };
       function ensureBandEntries(count) {
         while (bandFrame.bands.length < count) {
@@ -3131,8 +4594,11 @@
           id: liveBand.id,
           label: liveBand.label || liveBand.id,
           rms: Number.isFinite(liveBand.rms) ? liveBand.rms : 0,
+          energy: Number.isFinite(liveBand.energy01) ? clamp(liveBand.energy01, 0, 1) : 0,
           timeDomain: liveBand.timeDomain || null,
-          freqDb: liveBand.freqDb || null
+          freqDb: liveBand.freqDb || null,
+          minDb: Number.isFinite(liveBand.minDb) ? liveBand.minDb : null,
+          maxDb: Number.isFinite(liveBand.maxDb) ? liveBand.maxDb : null
         })) : [];
         const centerChannel = orderedBands.find((channel) => channel.id === "C") || null;
         const fftBins = centerChannel && centerChannel.freqDb ? centerChannel.freqDb.length : 0;
@@ -3168,14 +4634,30 @@
         bandFrame.analysis.compat.centerWaveform = centerChannel ? centerChannel.timeDomain : null;
         let globalMax = 0;
         for (const liveBand of orderedBands) {
+          const channelSpectrum = liveBand.freqDb && Number.isFinite(nyquistHz) && nyquistHz > 0 ? BandBank.computeBandEnergiesFromFreqDb({
+            freqDb: liveBand.freqDb,
+            minDb: Number.isFinite(liveBand.minDb) ? liveBand.minDb : void 0,
+            maxDb: Number.isFinite(liveBand.maxDb) ? liveBand.maxDb : void 0,
+            nyquistHz
+          }) : null;
           const channelEntry = channelEntries[liveBand.id] || {
             id: liveBand.id,
             label: liveBand.label || liveBand.id,
+            rms: 0,
+            energy: 0,
+            energy01: 0,
+            timeDomain: null,
             magnitudes: null,
+            bandEnergies01: null,
             phase: null
           };
           channelEntry.label = liveBand.label || channelEntry.label;
+          channelEntry.rms = liveBand.rms;
+          channelEntry.energy = liveBand.energy;
+          channelEntry.energy01 = liveBand.energy;
+          channelEntry.timeDomain = liveBand.timeDomain;
           channelEntry.magnitudes = liveBand.id === "C" && liveBand.freqDb ? liveBand.freqDb : null;
+          channelEntry.bandEnergies01 = channelSpectrum ? channelSpectrum.energies01 : null;
           channelEntry.phase = null;
           bandFrame.analysis.channels.push(channelEntry);
           const rms = liveBand.rms;
@@ -3198,59 +4680,14 @@
         return bandFrame;
       };
     }
-    class LegacyRenderCompatUnit {
-      constructor() {
-        this.context = null;
-        this.boundsPx = null;
-        this.frame = null;
-        this.dtSec = 0;
-      }
-      init(context) {
-        this.context = context;
-      }
-      resize(boundsPx) {
-        this.boundsPx = boundsPx ? { ...boundsPx } : null;
-      }
-      update(frame, dtSec) {
-        this.frame = frame;
-        this.dtSec = dtSec;
-      }
-      render(_target, _viewTransform) {
-        const analysis = this.frame && this.frame.analysis ? this.frame.analysis : null;
-        const centerWaveform = analysis && analysis.compat ? analysis.compat.centerWaveform : null;
-        const nowSec = analysis && Number.isFinite(analysis.timestamp) ? analysis.timestamp / 1e3 : 0;
-        const boundsPx = this.boundsPx;
-        const ctx = state.ctx;
-        ctx.save();
-        if (boundsPx) {
-          ctx.beginPath();
-          ctx.rect(boundsPx.x, boundsPx.y, boundsPx.width, boundsPx.height);
-          ctx.clip();
-        }
-        try {
-          drawBandOverlay(centerWaveform);
-          for (const orb of state.orbs) {
-            const particles = orb.trail.particles;
-            drawTrailLines(particles);
-            drawParticles(particles, nowSec);
-          }
-        } finally {
-          ctx.restore();
-        }
-      }
-      dispose() {
-        this.context = null;
-        this.boundsPx = null;
-        this.frame = null;
-        this.dtSec = 0;
-      }
-    }
     const buildBandFrame = createBandFrameBridge();
+    const visualizerRegistry = createVisualizerRegistry();
+    registerBuiltInVisualizers(visualizerRegistry);
     const compositor = createCompositor({
-      factories: {
-        legacyRender() {
-          return new LegacyRenderCompatUnit();
-        }
+      registry: visualizerRegistry,
+      onWarning({ message }) {
+        if (!message) return;
+        console.warn(`[Compositor] ${message}`);
       }
     });
     function getRenderTarget() {
@@ -3265,9 +4702,10 @@
     function renderFrame({ bandSnapshot = null, dtSec = 0, nowSec = 0 } = {}) {
       clearFrame();
       const target = getRenderTarget();
-      compositor.syncScene(LEGACY_COMPAT_SCENE, target);
+      const sceneRuntime = readSceneRuntime();
+      compositor.syncScene(sceneRuntime, target);
       compositor.update(buildBandFrame(bandSnapshot, nowSec), dtSec);
-      compositor.render(target);
+      compositor.render(target, sceneRuntime.viewTransform);
     }
     function getRecorderTap() {
       return {
@@ -3312,7 +4750,7 @@
       activeMimeType: null,
       isStopRequested: false
     };
-    function hasOwn(obj, key) {
+    function hasOwn3(obj, key) {
       return Object.prototype.hasOwnProperty.call(obj, key);
     }
     function readConfig() {
@@ -3583,33 +5021,33 @@
     function buildStatus(ok, code, message, extra = {}) {
       const support = extra.support || readSupportDetails();
       const recording = readStateRef() || {};
-      const phase = hasOwn(extra, "phase") ? extra.phase : runtime2.lifecycle.phase;
-      const startedAtMs = hasOwn(extra, "startedAtMs") ? extra.startedAtMs : Number.isFinite(runtime2.startedAtMs) ? runtime2.startedAtMs : recording.startedAtMs;
-      const stoppedAtMs = hasOwn(extra, "stoppedAtMs") ? extra.stoppedAtMs : Number.isFinite(runtime2.stoppedAtMs) ? runtime2.stoppedAtMs : recording.stoppedAtMs;
-      const elapsedMs = hasOwn(extra, "elapsedMs") ? extra.elapsedMs : Number.isFinite(recording.elapsedMs) ? recording.elapsedMs : 0;
-      const chunkCount = hasOwn(extra, "chunkCount") ? extra.chunkCount : runtime2.chunkCount > 0 || phase === "recording" || phase === "finalizing" ? runtime2.chunkCount : recording.chunkCount || 0;
+      const phase = hasOwn3(extra, "phase") ? extra.phase : runtime2.lifecycle.phase;
+      const startedAtMs = hasOwn3(extra, "startedAtMs") ? extra.startedAtMs : Number.isFinite(runtime2.startedAtMs) ? runtime2.startedAtMs : recording.startedAtMs;
+      const stoppedAtMs = hasOwn3(extra, "stoppedAtMs") ? extra.stoppedAtMs : Number.isFinite(runtime2.stoppedAtMs) ? runtime2.stoppedAtMs : recording.stoppedAtMs;
+      const elapsedMs = hasOwn3(extra, "elapsedMs") ? extra.elapsedMs : Number.isFinite(recording.elapsedMs) ? recording.elapsedMs : 0;
+      const chunkCount = hasOwn3(extra, "chunkCount") ? extra.chunkCount : runtime2.chunkCount > 0 || phase === "recording" || phase === "finalizing" ? runtime2.chunkCount : recording.chunkCount || 0;
       return {
         ok,
         code,
         message,
         hooksEnabled: readHooksEnabled(),
-        includePlaybackAudio: hasOwn(extra, "includePlaybackAudio") ? !!extra.includePlaybackAudio : readIncludePlaybackAudio(),
-        targetFps: hasOwn(extra, "targetFps") ? normalizeTargetFps(extra.targetFps) : readCaptureFps(),
+        includePlaybackAudio: hasOwn3(extra, "includePlaybackAudio") ? !!extra.includePlaybackAudio : readIncludePlaybackAudio(),
+        targetFps: hasOwn3(extra, "targetFps") ? normalizeTargetFps(extra.targetFps) : readCaptureFps(),
         phase,
-        supportProbeStatus: hasOwn(extra, "supportProbeStatus") ? extra.supportProbeStatus : support.supportProbeStatus,
-        isSupported: hasOwn(extra, "isSupported") ? extra.isSupported : support.isSupported,
-        availableMimeTypes: hasOwn(extra, "availableMimeTypes") ? extra.availableMimeTypes.slice() : support.availableMimeTypes.slice(),
-        selectedMimeType: hasOwn(extra, "selectedMimeType") ? extra.selectedMimeType : support.selectedMimeType,
-        resolvedMimeType: hasOwn(extra, "resolvedMimeType") ? extra.resolvedMimeType : runtime2.activeMimeType || support.resolvedMimeType || recording.resolvedMimeType || null,
+        supportProbeStatus: hasOwn3(extra, "supportProbeStatus") ? extra.supportProbeStatus : support.supportProbeStatus,
+        isSupported: hasOwn3(extra, "isSupported") ? extra.isSupported : support.isSupported,
+        availableMimeTypes: hasOwn3(extra, "availableMimeTypes") ? extra.availableMimeTypes.slice() : support.availableMimeTypes.slice(),
+        selectedMimeType: hasOwn3(extra, "selectedMimeType") ? extra.selectedMimeType : support.selectedMimeType,
+        resolvedMimeType: hasOwn3(extra, "resolvedMimeType") ? extra.resolvedMimeType : runtime2.activeMimeType || support.resolvedMimeType || recording.resolvedMimeType || null,
         startedAtMs,
         stoppedAtMs,
         elapsedMs: Math.max(0, Math.round(elapsedMs)),
         chunkCount,
-        lastExportUrl: hasOwn(extra, "lastExportUrl") ? extra.lastExportUrl : recording.lastExportUrl || null,
-        lastExportFileName: hasOwn(extra, "lastExportFileName") ? extra.lastExportFileName : recording.lastExportFileName || "",
-        lastExportByteSize: hasOwn(extra, "lastExportByteSize") ? extra.lastExportByteSize : recording.lastExportByteSize || 0,
+        lastExportUrl: hasOwn3(extra, "lastExportUrl") ? extra.lastExportUrl : recording.lastExportUrl || null,
+        lastExportFileName: hasOwn3(extra, "lastExportFileName") ? extra.lastExportFileName : recording.lastExportFileName || "",
+        lastExportByteSize: hasOwn3(extra, "lastExportByteSize") ? extra.lastExportByteSize : recording.lastExportByteSize || 0,
         configuredMimeTypes: support.configuredMimeTypes.slice(),
-        requestedMimeType: hasOwn(extra, "requestedMimeType") ? extra.requestedMimeType : null
+        requestedMimeType: hasOwn3(extra, "requestedMimeType") ? extra.requestedMimeType : null
       };
     }
     function commitStatus(status, action = null) {
@@ -4506,122 +5944,6 @@
     };
   })();
 
-  // src/js/render/trail-system.js
-  var TrailSystem = class {
-    constructor() {
-      this.particles = [];
-      this.emitAccumulator = 0;
-    }
-    reset() {
-      this.particles.length = 0;
-      this.emitAccumulator = 0;
-    }
-    removeOverlaps(xSim, ySim, rPx) {
-      if (rPx <= 0) return;
-      const r2 = rPx * rPx;
-      for (let i = this.particles.length - 1; i >= 0; i--) {
-        const p = this.particles[i];
-        const dx = p.xSim - xSim;
-        const dy = p.ySim - ySim;
-        if (dx * dx + dy * dy <= r2) this.particles.splice(i, 1);
-      }
-    }
-    emitAt(xSim, ySim, nowSec, rgbStart) {
-      const s = runtime.settings;
-      this.removeOverlaps(xSim, ySim, s.particles.overlapRadiusPx * state.dpr);
-      this.particles.push({ xSim, ySim, bornSec: nowSec, rgbStart });
-    }
-    updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart) {
-      const s = runtime.settings;
-      const ttl = Math.max(1e-4, s.particles.ttlSec);
-      for (let i = this.particles.length - 1; i >= 0; i--) {
-        if (nowSec - this.particles[i].bornSec >= ttl) this.particles.splice(i, 1);
-      }
-      this.emitAccumulator += s.particles.emitPerSecond * dtSec;
-      const maxEmitThisFrame = Math.ceil(s.particles.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
-      let emits = 0;
-      while (this.emitAccumulator >= 1 && emits < maxEmitThisFrame) {
-        this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart);
-        this.emitAccumulator -= 1;
-        emits += 1;
-      }
-    }
-  };
-
-  // src/js/render/orb.js
-  var Orb = class {
-    constructor(def) {
-      this.id = def.id;
-      this.chanId = normalizeOrbChannelId(def.chanId, def.bandId);
-      this.bandIds = sanitizeOrbBandIds(def.bandIds, def.bandNames);
-      this.chirality = def.chirality;
-      this.startAngleRad = def.startAngleRad;
-      this.angleRad = this.startAngleRad;
-      this.trail = new TrailSystem();
-      this.xSim = 0;
-      this.ySim = 0;
-      this.baseRadiusPx = 0;
-      this.radialDispPx = 0;
-    }
-    resetPhase() {
-      this.angleRad = this.startAngleRad;
-    }
-    resetTrail() {
-      this.trail.reset();
-    }
-    step(dtSec, nowSec, band, energyOverride01) {
-      const s = runtime.settings;
-      this.angleRad += this.chirality * s.motion.angularSpeedRadPerSec * dtSec;
-      this.angleRad = (this.angleRad % TAU + TAU) % TAU;
-      const minDim = Math.min(state.widthPx, state.heightPx);
-      const minR = minDim * s.audio.minRadiusFrac;
-      const maxR = minDim * s.audio.maxRadiusFrac;
-      const safeMin = Math.min(minR, maxR);
-      const safeMax = Math.max(minR, maxR);
-      const energy01 = Number.isFinite(energyOverride01) ? clamp(energyOverride01, 0, 1) : band ? band.energy01 : 0;
-      this.baseRadiusPx = safeMin + (safeMax - safeMin) * energy01;
-      const wf = band ? band.timeDomain : null;
-      if (wf && wf.length > 0) {
-        const phase01 = this.angleRad / TAU;
-        const idx = Math.floor(phase01 * (wf.length - 1));
-        const sample = wf[idx];
-        this.radialDispPx = this.baseRadiusPx * s.motion.waveformRadialDisplaceFrac * sample;
-      } else {
-        this.radialDispPx = 0;
-      }
-      const radius = this.baseRadiusPx + this.radialDispPx;
-      this.xSim = radius * Math.cos(this.angleRad);
-      this.ySim = radius * Math.sin(this.angleRad);
-      const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad);
-      this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart);
-    }
-  };
-
-  // src/js/render/orb-runtime.js
-  function initOrbs() {
-    state.orbs.length = 0;
-    for (const def of runtime.settings.orbs) state.orbs.push(new Orb(def));
-  }
-  function getBandForOrb(orb, snapshot) {
-    const channel = normalizeOrbChannelId(orb && orb.chanId, orb && orb.bandId);
-    const sourceBand = channel === "L" ? snapshot.bands.L : channel === "R" ? snapshot.bands.R : snapshot.bands.C;
-    const bandIds = Array.isArray(orb && orb.bandIds) ? orb.bandIds : [];
-    if (!bandIds.length) return { band: sourceBand, energyOverride01: null };
-    const energies = state.bands.energies01;
-    if (!Array.isArray(energies) || !energies.length) return { band: sourceBand, energyOverride01: null };
-    let sum = 0;
-    for (const idx of bandIds) sum += energies[idx] || 0;
-    const avg = sum / bandIds.length;
-    return { band: sourceBand, energyOverride01: clamp(avg, 0, 1) };
-  }
-  function resetOrbsToDesignedPhases() {
-    for (const orb of state.orbs) {
-      orb.resetPhase();
-      orb.resetTrail();
-    }
-    state.bands.ringPhaseRad = state.orbs.length ? state.orbs[0].angleRad : 0;
-  }
-
   // src/js/ui/dom-cache.js
   function bindRange(el, lim) {
     el.min = String(lim.min);
@@ -4669,6 +5991,24 @@
     ui.bankingStatus = document.getElementById("bankingStatus");
     ui.sceneStatus = document.getElementById("sceneStatus");
     ui.workspaceStatus = document.getElementById("workspaceStatus");
+    ui.sceneSummaryPrimary = document.getElementById("sceneSummaryPrimary");
+    ui.sceneSummaryActive = document.getElementById("sceneSummaryActive");
+    ui.sceneSummarySelected = document.getElementById("sceneSummarySelected");
+    ui.sceneCameraCard = document.getElementById("sceneCameraCard");
+    ui.sceneCameraPrimary = document.getElementById("sceneCameraPrimary");
+    ui.sceneCameraMode = document.getElementById("sceneCameraMode");
+    ui.sceneCameraScope = document.getElementById("sceneCameraScope");
+    ui.sceneCameraNote = document.getElementById("sceneCameraNote");
+    ui.sceneNodeEmpty = document.getElementById("sceneNodeEmpty");
+    ui.sceneNodeList = document.getElementById("sceneNodeList");
+    ui.sceneInspectorEmpty = document.getElementById("sceneInspectorEmpty");
+    ui.sceneInspectorPanel = document.getElementById("sceneInspectorPanel");
+    ui.sceneInspectorTitle = document.getElementById("sceneInspectorTitle");
+    ui.sceneInspectorType = document.getElementById("sceneInspectorType");
+    ui.sceneInspectorNodeId = document.getElementById("sceneInspectorNodeId");
+    ui.sceneInspectorOrder = document.getElementById("sceneInspectorOrder");
+    ui.sceneInspectorEnabled = document.getElementById("sceneInspectorEnabled");
+    ui.sceneInspectorFields = document.getElementById("sceneInspectorFields");
     ui.chkLines = document.getElementById("chkLines");
     ui.valLines = document.getElementById("valLines");
     ui.rngNumLines = document.getElementById("rngNumLines");
@@ -5377,7 +6717,7 @@
     const STATUS_DEFAULTS = Object.freeze({
       analysis: "Analysis panel: FFT, smoothing, RMS gain.",
       banking: "Banking panel: dominant band, distribution, color policy, and optional detailed inspection.",
-      scene: "Scene panel: trace, particles, motion, and render-facing controls.",
+      scene: "Scene panel: manage active visualizers and the runtime-only camera hook while keeping legacy visual controls available below.",
       workspace: "Workspace / Presets panel: share, apply URL presets, and reset preferences."
     });
     const panelStatusToastTimers = /* @__PURE__ */ Object.create(null);
@@ -5695,12 +7035,15 @@
     function applyPrefs(reason, options = {}) {
       const {
         rebuildBandsOnDefinitionChange = false,
-        statusTarget = "scene"
+        statusTarget = "scene",
+        resetSceneFromPreferences = false
       } = options;
       const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
       preferences.particles.sizeMinPx = Math.min(preferences.particles.sizeMinPx, preferences.particles.sizeMaxPx);
       preferences.particles.ttlSec = Math.max(preferences.particles.ttlSec, preferences.particles.sizeToMinSec);
       resolveSettings();
+      if (resetSceneFromPreferences) resetSceneRuntimeFromPreferences();
+      else syncSceneRuntimeFromPreferences();
       BandBankController.syncFromSettings();
       const bandDefinitionChanged = BandBankController.readBandDefKey(runtime.settings) !== prevBandDefKey;
       if (rebuildBandsOnDefinitionChange && bandDefinitionChanged) {
@@ -5709,12 +7052,14 @@
       AudioEngine.applyAnalyserSettingsLive();
       AudioEngine.applyPlaybackSettingsLive();
       if (reason) panelStatusToast(statusTarget, `Updated: ${reason}`);
+      refreshScenePanel();
     }
     function resetPrefs() {
       replacePreferences(deepClone(CONFIG.defaults));
       applyPrefs("prefs reset", {
         rebuildBandsOnDefinitionChange: true,
-        statusTarget: "workspace"
+        statusTarget: "workspace",
+        resetSceneFromPreferences: true
       });
       initOrbs();
       resetOrbsToDesignedPhases();
@@ -5734,7 +7079,8 @@
       if (result.ok) {
         applyPrefs("applied URL preset", {
           rebuildBandsOnDefinitionChange: true,
-          statusTarget: "workspace"
+          statusTarget: "workspace",
+          resetSceneFromPreferences: true
         });
         initOrbs();
         resetOrbsToDesignedPhases();
@@ -5848,6 +7194,514 @@
         ui.bandRowEls[i].range.style.opacity = isDom ? "0.96" : "0.72";
         ui.bandRowEls[i].range.textContent = BandBank.formatBandRangeText(i);
       }
+    }
+    function readSceneUiModel() {
+      const snapshot = readSceneSnapshot();
+      const viewTransform = normalizeViewTransform(snapshot.viewTransform);
+      const identityViewTransform = isIdentityViewTransform(viewTransform);
+      const nodes = snapshot.nodes.map((node, index) => ({
+        ...node,
+        displayName: readSceneNodeDisplayName(node.type),
+        order: index + 1,
+        selected: snapshot.selectedNodeId === node.id
+      }));
+      const selectedSceneNode = readSelectedSceneNode();
+      const selectedNode = selectedSceneNode ? {
+        ...selectedSceneNode,
+        displayName: readSceneNodeDisplayName(selectedSceneNode.type),
+        order: Math.max(1, nodes.findIndex((node) => node.id === selectedSceneNode.id) + 1),
+        selected: true
+      } : null;
+      return {
+        nodeCount: nodes.length,
+        activeCount: nodes.filter((node) => node.enabled).length,
+        nodes,
+        selectedNode,
+        viewTransform,
+        camera: {
+          mode: identityViewTransform ? "identity" : viewTransform.mode || "placeholder",
+          modeText: identityViewTransform ? "Identity" : "Placeholder",
+          scope: viewTransform.runtimeOnly ? "runtime-only" : "persisted",
+          scopeText: viewTransform.runtimeOnly ? "Runtime only" : "Persisted",
+          primaryText: identityViewTransform ? "Identity ViewTransform active" : "Placeholder ViewTransform active",
+          noteText: "Camera controls are deferred to Build 116. Build 115 keeps ViewTransform as a runtime-only seam through the compositor.",
+          controlsDeferred: true
+        }
+      };
+    }
+    function buildSceneUiSyncKey() {
+      return JSON.stringify(readSceneSnapshot());
+    }
+    function sceneControlId(...parts) {
+      return parts.map((part) => String(part).replace(/[^a-zA-Z0-9_-]+/g, "-")).join("-");
+    }
+    function formatSceneFieldValue(value, fieldSchema = null) {
+      if (fieldSchema && fieldSchema.type === "boolean") return value ? "on" : "off";
+      if (typeof value === "boolean") return value ? "on" : "off";
+      if (Number.isFinite(value)) return Number.isInteger(value) ? `${value}` : fmt(value, 3);
+      if (value == null || value === "") return "n/a";
+      return String(value);
+    }
+    function formatSceneBandIdsText(bandIds) {
+      return Array.isArray(bandIds) && bandIds.length ? bandIds.join(", ") : "";
+    }
+    function readSceneBandIdsSummaryText(bandIds) {
+      const text = formatSceneBandIdsText(bandIds);
+      return text || "No explicit band IDs";
+    }
+    function parseSceneBandIdsInput(value) {
+      if (typeof value !== "string" || !value.trim()) return [];
+      return value.split(",").map((token) => Number(token.trim())).filter((token) => Number.isInteger(token));
+    }
+    function createSceneInspectorRow({ labelText, controlId, control, valueText }) {
+      const row = document.createElement("div");
+      row.className = "row";
+      const label = document.createElement("label");
+      label.textContent = labelText;
+      if (controlId) label.setAttribute("for", controlId);
+      const value = document.createElement("div");
+      value.className = "val";
+      value.textContent = valueText;
+      row.appendChild(label);
+      row.appendChild(control);
+      row.appendChild(value);
+      return { row, value };
+    }
+    function commitSceneOverlaySetting(nodeId, fieldName, nextValue, reason) {
+      updateSceneNodeSettings(nodeId, (currentSettings) => ({
+        ...currentSettings && typeof currentSettings === "object" ? currentSettings : {},
+        [fieldName]: nextValue
+      }), { persist: true });
+      applyPrefs(reason, { statusTarget: "scene" });
+      refreshScenePanel(true);
+    }
+    function commitSceneOrbPatch(nodeId, orbIndex, patch, reason) {
+      updateSceneOrb(nodeId, orbIndex, patch);
+      applyPrefs(reason, { statusTarget: "scene" });
+      refreshScenePanel(true);
+    }
+    function commitSceneOrbAdd(nodeId) {
+      addSceneOrb(nodeId);
+      applyPrefs("scene orb added", { statusTarget: "scene" });
+      refreshScenePanel(true);
+    }
+    function commitSceneOrbRemove(nodeId, orbIndex) {
+      removeSceneOrb(nodeId, orbIndex);
+      applyPrefs("scene orb removed", { statusTarget: "scene" });
+      refreshScenePanel(true);
+    }
+    function appendSceneSchemaField(container, nodeId, fieldName, fieldSchema, fieldValue) {
+      if (!container || !fieldSchema || fieldName === "enabled") return;
+      const controlId = sceneControlId("scene", nodeId, fieldName);
+      const labelText = fieldName.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
+      if (fieldSchema.type === "boolean") {
+        const input2 = document.createElement("input");
+        input2.id = controlId;
+        input2.type = "checkbox";
+        input2.checked = !!fieldValue;
+        const { row: row2, value } = createSceneInspectorRow({
+          labelText,
+          controlId,
+          control: input2,
+          valueText: formatSceneFieldValue(input2.checked, fieldSchema)
+        });
+        input2.addEventListener("change", () => {
+          value.textContent = formatSceneFieldValue(input2.checked, fieldSchema);
+          commitSceneOverlaySetting(nodeId, fieldName, input2.checked, `scene ${labelText.toLowerCase()}`);
+        });
+        container.appendChild(row2);
+        return;
+      }
+      if ((fieldSchema.type === "string" || fieldSchema.type === "number") && Array.isArray(fieldSchema.enum)) {
+        const select = document.createElement("select");
+        select.id = controlId;
+        for (const optionValue of fieldSchema.enum) {
+          const option = document.createElement("option");
+          option.value = String(optionValue);
+          option.textContent = String(optionValue);
+          select.appendChild(option);
+        }
+        select.value = String(fieldValue);
+        const { row: row2, value } = createSceneInspectorRow({
+          labelText,
+          controlId,
+          control: select,
+          valueText: formatSceneFieldValue(fieldValue, fieldSchema)
+        });
+        select.addEventListener("change", () => {
+          const nextValue = fieldSchema.type === "number" ? Number(select.value) : select.value;
+          value.textContent = formatSceneFieldValue(nextValue, fieldSchema);
+          commitSceneOverlaySetting(nodeId, fieldName, nextValue, `scene ${labelText.toLowerCase()}`);
+        });
+        container.appendChild(row2);
+        return;
+      }
+      if (fieldSchema.type === "number") {
+        const input2 = document.createElement("input");
+        input2.id = controlId;
+        input2.type = "range";
+        if (Number.isFinite(fieldSchema.min)) input2.min = String(fieldSchema.min);
+        if (Number.isFinite(fieldSchema.max)) input2.max = String(fieldSchema.max);
+        if (Number.isFinite(fieldSchema.step)) input2.step = String(fieldSchema.step);
+        input2.value = String(fieldValue);
+        const { row: row2, value } = createSceneInspectorRow({
+          labelText,
+          controlId,
+          control: input2,
+          valueText: formatSceneFieldValue(Number(input2.value), fieldSchema)
+        });
+        input2.addEventListener("input", () => {
+          value.textContent = formatSceneFieldValue(Number(input2.value), fieldSchema);
+        });
+        input2.addEventListener("change", () => {
+          commitSceneOverlaySetting(nodeId, fieldName, Number(input2.value), `scene ${labelText.toLowerCase()}`);
+        });
+        container.appendChild(row2);
+        return;
+      }
+      const input = document.createElement("input");
+      input.id = controlId;
+      input.type = "text";
+      input.value = fieldValue == null ? "" : String(fieldValue);
+      const { row } = createSceneInspectorRow({
+        labelText,
+        controlId,
+        control: input,
+        valueText: formatSceneFieldValue(fieldValue, fieldSchema)
+      });
+      input.addEventListener("change", () => {
+        commitSceneOverlaySetting(nodeId, fieldName, input.value, `scene ${labelText.toLowerCase()}`);
+      });
+      container.appendChild(row);
+    }
+    function appendSceneOrbRow(container, { controlId, labelText, valueText, input }) {
+      const safeValueText = typeof valueText === "string" ? valueText.replace(/\u00C2\u00B0/g, " deg").replace(/\u00B0/g, " deg") : valueText;
+      const { row } = createSceneInspectorRow({
+        labelText,
+        controlId,
+        control: input,
+        valueText: safeValueText
+      });
+      container.appendChild(row);
+    }
+    function renderBandOverlayInspector(node) {
+      const fieldsContainer = ui.sceneInspectorFields;
+      if (!fieldsContainer) return;
+      const hint = document.createElement("div");
+      hint.className = "sceneInspectorHint";
+      hint.textContent = "This inspector edits the current band overlay node through the visualizer schema. Node enable stays in the list above.";
+      fieldsContainer.appendChild(hint);
+      const schema = readSceneSettingsSchema(node.type);
+      const fieldEntries = Object.entries(schema && schema.fields || {});
+      for (const [fieldName, fieldSchema] of fieldEntries) {
+        appendSceneSchemaField(fieldsContainer, node.id, fieldName, fieldSchema, node.settings[fieldName]);
+      }
+    }
+    function renderOrbInspector(node) {
+      const fieldsContainer = ui.sceneInspectorFields;
+      if (!fieldsContainer) return;
+      const hint = document.createElement("div");
+      hint.className = "sceneInspectorHint";
+      hint.textContent = "Scene panel v1 now exposes per-orb routing, hue phase, and center offsets. In Schema 9 these orb-specific fields persist under scene.nodes settings rather than the legacy root orb list.";
+      fieldsContainer.appendChild(hint);
+      const orbActions = document.createElement("div");
+      orbActions.className = "sceneInspectorActionRow";
+      const addOrbButton = document.createElement("button");
+      addOrbButton.type = "button";
+      addOrbButton.textContent = "Add Orb";
+      addOrbButton.addEventListener("click", () => {
+        commitSceneOrbAdd(node.id);
+      });
+      orbActions.appendChild(addOrbButton);
+      fieldsContainer.appendChild(orbActions);
+      const orbList = document.createElement("div");
+      orbList.className = "sceneOrbList";
+      fieldsContainer.appendChild(orbList);
+      const itemFields = ((readSceneSettingsSchema(node.type) || {}).item || {}).fields || {};
+      const channelOptions = Array.isArray(itemFields.chanId && itemFields.chanId.enum) ? itemFields.chanId.enum : ["L", "R", "C"];
+      const chiralityOptions = Array.isArray(itemFields.chirality && itemFields.chirality.enum) ? itemFields.chirality.enum : [-1, 1];
+      node.settings.forEach((orb, orbIndex) => {
+        const card = document.createElement("div");
+        card.className = "sceneOrbCard";
+        const cardHeader = document.createElement("div");
+        cardHeader.className = "sceneOrbCardHeader";
+        const title = document.createElement("div");
+        title.className = "sceneOrbTitle";
+        title.textContent = orb.id || `Orb ${orbIndex + 1}`;
+        cardHeader.appendChild(title);
+        const removeOrbButton = document.createElement("button");
+        removeOrbButton.type = "button";
+        removeOrbButton.textContent = "Remove";
+        removeOrbButton.disabled = node.settings.length <= 1;
+        removeOrbButton.addEventListener("click", () => {
+          commitSceneOrbRemove(node.id, orbIndex);
+        });
+        cardHeader.appendChild(removeOrbButton);
+        card.appendChild(cardHeader);
+        const idInput = document.createElement("input");
+        idInput.id = sceneControlId(node.id, "orb", orbIndex, "id");
+        idInput.type = "text";
+        idInput.value = orb.id || "";
+        idInput.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { id: idInput.value }, "scene orb id");
+        });
+        appendSceneOrbRow(card, {
+          controlId: idInput.id,
+          labelText: "ID",
+          valueText: orb.id || "n/a",
+          input: idInput
+        });
+        const channelSelect = document.createElement("select");
+        channelSelect.id = sceneControlId(node.id, "orb", orbIndex, "chanId");
+        for (const channel of channelOptions) {
+          const option = document.createElement("option");
+          option.value = channel;
+          option.textContent = channel;
+          channelSelect.appendChild(option);
+        }
+        channelSelect.value = orb.chanId;
+        channelSelect.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { chanId: channelSelect.value }, "scene orb channel");
+        });
+        appendSceneOrbRow(card, {
+          controlId: channelSelect.id,
+          labelText: "Channel",
+          valueText: orb.chanId,
+          input: channelSelect
+        });
+        const bandsInput = document.createElement("input");
+        bandsInput.id = sceneControlId(node.id, "orb", orbIndex, "bandIds");
+        bandsInput.type = "text";
+        bandsInput.value = formatSceneBandIdsText(orb.bandIds);
+        bandsInput.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { bandIds: parseSceneBandIdsInput(bandsInput.value) }, "scene orb bands");
+        });
+        appendSceneOrbRow(card, {
+          controlId: bandsInput.id,
+          labelText: "Band IDs",
+          valueText: readSceneBandIdsSummaryText(orb.bandIds),
+          input: bandsInput
+        });
+        const chiralitySelect = document.createElement("select");
+        chiralitySelect.id = sceneControlId(node.id, "orb", orbIndex, "chirality");
+        for (const chirality of chiralityOptions) {
+          const option = document.createElement("option");
+          option.value = String(chirality);
+          option.textContent = Number(chirality) < 0 ? "-1 (CCW)" : "1 (CW)";
+          chiralitySelect.appendChild(option);
+        }
+        chiralitySelect.value = String(orb.chirality);
+        chiralitySelect.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { chirality: Number(chiralitySelect.value) }, "scene orb chirality");
+        });
+        appendSceneOrbRow(card, {
+          controlId: chiralitySelect.id,
+          labelText: "Chirality",
+          valueText: Number(orb.chirality) < 0 ? "-1 (CCW)" : "1 (CW)",
+          input: chiralitySelect
+        });
+        const angleInput = document.createElement("input");
+        angleInput.id = sceneControlId(node.id, "orb", orbIndex, "startAngleRad");
+        angleInput.type = "number";
+        angleInput.step = String(itemFields.startAngleRad && itemFields.startAngleRad.step ? itemFields.startAngleRad.step : 1e-3);
+        angleInput.value = String(orb.startAngleRad);
+        angleInput.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { startAngleRad: Number(angleInput.value) }, "scene orb start angle");
+        });
+        appendSceneOrbRow(card, {
+          controlId: angleInput.id,
+          labelText: "Start Angle",
+          valueText: `${formatSceneFieldValue(orb.startAngleRad)} rad`,
+          input: angleInput
+        });
+        const hueInput = document.createElement("input");
+        hueInput.id = sceneControlId(node.id, "orb", orbIndex, "hueOffsetDeg");
+        hueInput.type = "number";
+        if (Number.isFinite(itemFields.hueOffsetDeg && itemFields.hueOffsetDeg.min)) {
+          hueInput.min = String(itemFields.hueOffsetDeg.min);
+        }
+        if (Number.isFinite(itemFields.hueOffsetDeg && itemFields.hueOffsetDeg.max)) {
+          hueInput.max = String(itemFields.hueOffsetDeg.max);
+        }
+        hueInput.step = String(itemFields.hueOffsetDeg && itemFields.hueOffsetDeg.step ? itemFields.hueOffsetDeg.step : 1);
+        hueInput.value = String(orb.hueOffsetDeg);
+        hueInput.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { hueOffsetDeg: Number(hueInput.value) }, "scene orb hue offset");
+        });
+        appendSceneOrbRow(card, {
+          controlId: hueInput.id,
+          labelText: "Hue Offset",
+          valueText: `${formatSceneFieldValue(orb.hueOffsetDeg)}\xB0`,
+          input: hueInput
+        });
+        const centerXInput = document.createElement("input");
+        centerXInput.id = sceneControlId(node.id, "orb", orbIndex, "centerX");
+        centerXInput.type = "number";
+        if (Number.isFinite(itemFields.centerX && itemFields.centerX.min)) centerXInput.min = String(itemFields.centerX.min);
+        if (Number.isFinite(itemFields.centerX && itemFields.centerX.max)) centerXInput.max = String(itemFields.centerX.max);
+        centerXInput.step = String(itemFields.centerX && itemFields.centerX.step ? itemFields.centerX.step : 0.01);
+        centerXInput.value = String(orb.centerX);
+        centerXInput.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { centerX: Number(centerXInput.value) }, "scene orb center x");
+        });
+        appendSceneOrbRow(card, {
+          controlId: centerXInput.id,
+          labelText: "Center X",
+          valueText: formatSceneFieldValue(orb.centerX),
+          input: centerXInput
+        });
+        const centerYInput = document.createElement("input");
+        centerYInput.id = sceneControlId(node.id, "orb", orbIndex, "centerY");
+        centerYInput.type = "number";
+        if (Number.isFinite(itemFields.centerY && itemFields.centerY.min)) centerYInput.min = String(itemFields.centerY.min);
+        if (Number.isFinite(itemFields.centerY && itemFields.centerY.max)) centerYInput.max = String(itemFields.centerY.max);
+        centerYInput.step = String(itemFields.centerY && itemFields.centerY.step ? itemFields.centerY.step : 0.01);
+        centerYInput.value = String(orb.centerY);
+        centerYInput.addEventListener("change", () => {
+          commitSceneOrbPatch(node.id, orbIndex, { centerY: Number(centerYInput.value) }, "scene orb center y");
+        });
+        appendSceneOrbRow(card, {
+          controlId: centerYInput.id,
+          labelText: "Center Y",
+          valueText: formatSceneFieldValue(orb.centerY),
+          input: centerYInput
+        });
+        orbList.appendChild(card);
+      });
+    }
+    function renderSelectedSceneInspector(model) {
+      const selectedNode = model.selectedNode;
+      if (!selectedNode) {
+        if (ui.sceneInspectorEmpty) {
+          ui.sceneInspectorEmpty.hidden = false;
+          ui.sceneInspectorEmpty.setAttribute("aria-hidden", "false");
+        }
+        if (ui.sceneInspectorPanel) {
+          ui.sceneInspectorPanel.hidden = true;
+          ui.sceneInspectorPanel.setAttribute("aria-hidden", "true");
+        }
+        return;
+      }
+      if (ui.sceneInspectorEmpty) {
+        ui.sceneInspectorEmpty.hidden = true;
+        ui.sceneInspectorEmpty.setAttribute("aria-hidden", "true");
+      }
+      if (ui.sceneInspectorPanel) {
+        ui.sceneInspectorPanel.hidden = false;
+        ui.sceneInspectorPanel.setAttribute("aria-hidden", "false");
+      }
+      setTextIfChanged(ui.sceneInspectorTitle, selectedNode.displayName);
+      setTextIfChanged(ui.sceneInspectorType, selectedNode.type);
+      setTextIfChanged(ui.sceneInspectorNodeId, selectedNode.id);
+      setTextIfChanged(ui.sceneInspectorOrder, `${selectedNode.order} of ${model.nodeCount} (z ${selectedNode.zIndex})`);
+      setTextIfChanged(ui.sceneInspectorEnabled, selectedNode.enabled ? "Enabled" : "Disabled");
+      if (!ui.sceneInspectorFields) return;
+      ui.sceneInspectorFields.innerHTML = "";
+      if (selectedNode.type === "bandOverlay") {
+        renderBandOverlayInspector(selectedNode);
+        return;
+      }
+      if (selectedNode.type === "orbs") renderOrbInspector(selectedNode);
+    }
+    function refreshScenePanel(force = false) {
+      if (!ui.sceneNodeList) return;
+      const syncKey = buildSceneUiSyncKey();
+      if (!force && ui.sceneUiSyncKey === syncKey) return;
+      const model = readSceneUiModel();
+      const selectedLabel = model.selectedNode ? model.selectedNode.displayName : "None";
+      setTextIfChanged(
+        ui.sceneSummaryPrimary,
+        model.nodeCount === 1 ? "1 visualizer in the runtime scene" : `${model.nodeCount} visualizers in the runtime scene`
+      );
+      setTextIfChanged(
+        ui.sceneSummaryActive,
+        model.activeCount === 1 ? "1 active" : `${model.activeCount} active`
+      );
+      setTextIfChanged(ui.sceneSummarySelected, selectedLabel);
+      setTextIfChanged(ui.sceneCameraPrimary, model.camera.primaryText);
+      setTextIfChanged(ui.sceneCameraMode, model.camera.modeText);
+      setTextIfChanged(ui.sceneCameraScope, model.camera.scopeText);
+      setTextIfChanged(ui.sceneCameraNote, model.camera.noteText);
+      if (ui.sceneNodeEmpty) {
+        const hasNodes = model.nodeCount > 0;
+        ui.sceneNodeEmpty.hidden = hasNodes;
+        ui.sceneNodeEmpty.setAttribute("aria-hidden", hasNodes ? "true" : "false");
+      }
+      ui.sceneNodeList.innerHTML = "";
+      for (const node of model.nodes) {
+        const row = document.createElement("div");
+        row.className = "sceneNodeRow";
+        row.dataset.selected = node.selected ? "true" : "false";
+        row.dataset.nodeId = node.id;
+        const top = document.createElement("div");
+        top.className = "sceneNodeRowTop";
+        const text = document.createElement("div");
+        text.className = "sceneNodeText";
+        const title = document.createElement("div");
+        title.className = "sceneNodeTitle";
+        title.textContent = node.displayName;
+        text.appendChild(title);
+        const meta = document.createElement("div");
+        meta.className = "sceneNodeMeta";
+        meta.textContent = `${node.type} \xB7 ${node.id} \xB7 order ${node.order}/${model.nodeCount} \xB7 z ${node.zIndex}`;
+        text.appendChild(meta);
+        top.appendChild(text);
+        const badge = document.createElement("div");
+        badge.className = "sceneNodeBadge";
+        badge.textContent = node.enabled ? "Enabled" : "Disabled";
+        top.appendChild(badge);
+        row.appendChild(top);
+        const actions = document.createElement("div");
+        actions.className = "sceneNodeActions";
+        const selectButton = document.createElement("button");
+        selectButton.type = "button";
+        selectButton.textContent = node.selected ? "Selected" : "Inspect";
+        selectButton.disabled = node.selected;
+        selectButton.addEventListener("click", () => {
+          selectSceneNode(node.id);
+          refreshScenePanel(true);
+        });
+        actions.appendChild(selectButton);
+        const enabledLabel = document.createElement("label");
+        enabledLabel.className = "sceneNodeToggleLabel";
+        const enabledInput = document.createElement("input");
+        enabledInput.type = "checkbox";
+        enabledInput.checked = !!node.enabled;
+        enabledInput.addEventListener("change", () => {
+          toggleSceneNodeEnabled(node.id, enabledInput.checked);
+          panelStatusToast("scene", enabledInput.checked ? `${node.displayName} enabled.` : `${node.displayName} disabled.`);
+          refreshScenePanel(true);
+        });
+        enabledLabel.appendChild(enabledInput);
+        const enabledText = document.createElement("span");
+        enabledText.textContent = "Enabled";
+        enabledLabel.appendChild(enabledText);
+        actions.appendChild(enabledLabel);
+        const moveBackwardButton = document.createElement("button");
+        moveBackwardButton.type = "button";
+        moveBackwardButton.textContent = "Move Backward";
+        moveBackwardButton.disabled = node.order === 1;
+        moveBackwardButton.addEventListener("click", () => {
+          moveSceneNode(node.id, -1);
+          panelStatusToast("scene", `${node.displayName} moved backward.`);
+          refreshScenePanel(true);
+        });
+        actions.appendChild(moveBackwardButton);
+        const moveForwardButton = document.createElement("button");
+        moveForwardButton.type = "button";
+        moveForwardButton.textContent = "Move Forward";
+        moveForwardButton.disabled = node.order === model.nodeCount;
+        moveForwardButton.addEventListener("click", () => {
+          moveSceneNode(node.id, 1);
+          panelStatusToast("scene", `${node.displayName} moved forward.`);
+          refreshScenePanel(true);
+        });
+        actions.appendChild(moveForwardButton);
+        row.appendChild(actions);
+        ui.sceneNodeList.appendChild(row);
+      }
+      renderSelectedSceneInspector(model);
+      ui.sceneUiSyncKey = syncKey;
     }
     function formatBandMetaHz(hz) {
       if (!Number.isFinite(hz)) return "n/a";
@@ -6429,6 +8283,7 @@ ${liveTitle}` : liveTitle;
       ui.btnToggleQueue.disabled = fileControlsDisabled;
       ui.btnClearQueue.disabled = fileControlsDisabled || fileTransportMutationLocked || Queue.length === 0;
       syncFileControlAffordances(sourceUi);
+      refreshScenePanel();
       ui.chkMute.checked = !!p.audio.muted;
       ui.rngVol.value = String(p.audio.volume);
       ui.valVol.textContent = fmt(p.audio.volume, 2);
@@ -6515,7 +8370,7 @@ ${liveTitle}` : liveTitle;
     }
     function resetTrackVisualState() {
       Scrubber.reset();
-      for (const orb of state.orbs) orb.resetTrail();
+      resetOrbTrails();
       state.bands.energies01.fill(0);
       state.bands.dominantIndex = 0;
       state.bands.dominantName = "(none)";
@@ -6523,6 +8378,8 @@ ${liveTitle}` : liveTitle;
     }
     function wireControls() {
       primeDomCache();
+      ui.sceneUiSyncKey = "";
+      syncSceneRuntimeFromPreferences();
       setBandInspectorOpen(false);
       initConfigTooltips();
       clearAudioStatusToast();
@@ -6535,6 +8392,7 @@ ${liveTitle}` : liveTitle;
       readRuntimeLogObserver().recordingSnapshot = snapshotRecordingRuntimeState();
       refreshRuntimeLogUi(true);
       syncLauncherBarUi();
+      refreshScenePanel(true);
       function clearAudioState() {
         state.audio.isLoaded = false;
         state.audio.isPlaying = false;
@@ -7047,35 +8905,44 @@ ${liveTitle}` : liveTitle;
         applyPrefs("particle color source", { statusTarget: "banking" });
       });
       ui.chkBandOverlay.addEventListener("change", () => {
-        preferences.bands.overlay.enabled = !!ui.chkBandOverlay.checked;
+        const enabled = !!ui.chkBandOverlay.checked;
+        preferences.bands.overlay.enabled = enabled;
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: enabled });
         applyPrefs("band overlay", { statusTarget: "banking" });
       });
       ui.chkBandConnect.addEventListener("change", () => {
         preferences.bands.overlay.connectAdjacent = !!ui.chkBandConnect.checked;
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("band connect", { statusTarget: "banking" });
       });
       ui.rngBandAlpha.addEventListener("input", () => {
         preferences.bands.overlay.alpha = Number(ui.rngBandAlpha.value);
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("overlay alpha", { statusTarget: "banking" });
       });
       ui.rngBandPoint.addEventListener("input", () => {
         preferences.bands.overlay.pointSizePx = Number(ui.rngBandPoint.value);
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("overlay point size", { statusTarget: "banking" });
       });
       ui.rngBandOverlayMinRad.addEventListener("input", () => {
         preferences.bands.overlay.minRadiusFrac = Number(ui.rngBandOverlayMinRad.value);
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("overlay min radius", { statusTarget: "banking" });
       });
       ui.rngBandOverlayMaxRad.addEventListener("input", () => {
         preferences.bands.overlay.maxRadiusFrac = Number(ui.rngBandOverlayMaxRad.value);
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("overlay max radius", { statusTarget: "banking" });
       });
       ui.rngBandOverlayWfDisp.addEventListener("input", () => {
         preferences.bands.overlay.waveformRadialDisplaceFrac = Number(ui.rngBandOverlayWfDisp.value);
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("overlay waveform disp", { statusTarget: "banking" });
       });
       ui.selRingPhaseMode.addEventListener("change", () => {
         preferences.bands.overlay.phaseMode = ui.selRingPhaseMode.value;
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("ring phase mode", { statusTarget: "banking" });
       });
       ui.selDistMode.addEventListener("change", () => {
@@ -7087,6 +8954,7 @@ ${liveTitle}` : liveTitle;
       });
       ui.rngRingSpeed.addEventListener("input", () => {
         preferences.bands.overlay.ringSpeedRadPerSec = Number(ui.rngRingSpeed.value);
+        syncSceneNodeFromCompatPreferences("bandOverlay", { createIfMissing: true });
         applyPrefs("ring speed", { statusTarget: "banking" });
       });
       ui.rngHueOff.addEventListener("input", () => {
@@ -7191,7 +9059,8 @@ ${liveTitle}` : liveTitle;
         if (result.ok) {
           applyPrefs("hash preset loaded", {
             rebuildBandsOnDefinitionChange: true,
-            statusTarget: "workspace"
+            statusTarget: "workspace",
+            resetSceneFromPreferences: true
           });
           initOrbs();
           resetOrbsToDesignedPhases();
@@ -7215,6 +9084,9 @@ ${liveTitle}` : liveTitle;
         }))
       };
     }
+    function getSceneUiModel() {
+      return readSceneUiModel();
+    }
     return {
       setCssVarsFromConfig,
       wireControls,
@@ -7222,6 +9094,7 @@ ${liveTitle}` : liveTitle;
       refreshRecordingUi,
       getRecordingUiModel,
       getPanelShellModel,
+      getSceneUiModel,
       dispatchSourceSwitchAction,
       showRecordPanel,
       hideRecordPanel,
@@ -7248,17 +9121,10 @@ ${liveTitle}` : liveTitle;
     lastBandSnapshot = AudioEngine.sample();
     const o = runtime.settings.bands.overlay;
     if (o.phaseMode === "orb") {
-      state.bands.ringPhaseRad = state.orbs.length ? state.orbs[0].angleRad : state.bands.ringPhaseRad;
+      const primaryOrbAngleRad = getActiveOrbPrimaryAngleRad();
+      state.bands.ringPhaseRad = Number.isFinite(primaryOrbAngleRad) ? primaryOrbAngleRad : state.bands.ringPhaseRad;
     } else {
       state.bands.ringPhaseRad = ((state.bands.ringPhaseRad + o.ringSpeedRadPerSec * dtSec) % TAU + TAU) % TAU;
-    }
-    if (!state.time.simPaused) {
-      for (const orb of state.orbs) {
-        const selection = lastBandSnapshot && lastBandSnapshot.ready ? getBandForOrb(orb, lastBandSnapshot) : null;
-        const orbBand = selection ? selection.band : null;
-        const energyOverride01 = selection ? selection.energyOverride01 : null;
-        orb.step(dtSec, nowSec, orbBand, energyOverride01);
-      }
     }
     Renderer.renderFrame({
       bandSnapshot: lastBandSnapshot,

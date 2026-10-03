@@ -14,7 +14,8 @@
 const TAU = Math.PI * 2;
 const RAD_TO_DEG = 180 / Math.PI;
 
-const PRESET_SCHEMA_VERSION = 8; // v8 = distributionMode replaces logSpacing boolean
+const PRESET_SCHEMA_VERSION = 9; // v9 = persisted scene.nodes replaces legacy visual roots
+const LEGACY_SCHEMA_V1 = 1;
 const LEGACY_SCHEMA_V2 = 2;
 const LEGACY_SCHEMA_V3 = 3;
 const LEGACY_SCHEMA_V4 = 4;
@@ -22,4 +23,4 @@ const LEGACY_SCHEMA_V5 = 5; // v5 existed in transitional builds — accept for 
 const LEGACY_SCHEMA_V6 = 6;
 const LEGACY_SCHEMA_V7 = 7;
 
-export { TAU, RAD_TO_DEG, PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7 };
+export { TAU, RAD_TO_DEG, PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V1, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7 };

@@ -9,3 +9,238 @@
       overflow: auto;
       z-index: 30;
     }
+
+    .sceneSummaryCard,
+    .sceneInspector,
+    .sceneNodeRow,
+    .sceneOrbCard {
+      border-radius: calc(var(--ui-radius) - 2px);
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+        rgba(0,0,0,0.16);
+    }
+
+    .sceneSummaryCard,
+    .sceneInspector {
+      padding: 12px;
+    }
+
+    .sceneSummaryEyebrow,
+    .sceneSummaryStatLabel,
+    .sceneInspectorMetaLabel,
+    .sceneNodeMeta,
+    .sceneInspectorHint {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      opacity: 0.64;
+      text-transform: uppercase;
+    }
+
+    .sceneSummaryPrimary,
+    .sceneInspectorTitle {
+      margin-top: 6px;
+      min-width: 0;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sceneSummaryStats,
+    .sceneInspectorMetaGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .sceneSummaryStats {
+      margin-top: 12px;
+    }
+
+    .sceneSummaryStat,
+    .sceneInspectorMetaItem {
+      min-width: 0;
+      padding: 10px;
+      border-radius: calc(var(--ui-radius) - 4px);
+      background: rgba(255,255,255,0.045);
+    }
+
+    .sceneSummaryStatValue,
+    .sceneInspectorMetaValue {
+      margin-top: 4px;
+      min-width: 0;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sceneEmptyCopy {
+      margin: 8px 0 12px;
+      line-height: 1.45;
+    }
+
+    .sceneNodeList {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .sceneNodeList:empty {
+      display: none;
+    }
+
+    .sceneNodeRow {
+      padding: 12px;
+    }
+
+    .sceneNodeRow[data-selected="true"] {
+      border-color: rgba(125, 213, 255, 0.42);
+      background:
+        linear-gradient(180deg, rgba(125, 213, 255, 0.12), rgba(255,255,255,0.03)),
+        rgba(0,0,0,0.18);
+      box-shadow: 0 0 0 1px rgba(125, 213, 255, 0.16);
+    }
+
+    .sceneNodeRowTop {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .sceneNodeText {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .sceneNodeTitle {
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sceneNodeMeta {
+      margin-top: 4px;
+      line-height: 1.4;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .sceneNodeBadge {
+      align-self: flex-start;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .sceneNodeActions,
+    .sceneInspectorActionRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sceneNodeActions {
+      margin-top: 12px;
+    }
+
+    .sceneNodeToggleLabel {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .sceneNodeToggleLabel input {
+      margin: 0;
+    }
+
+    #sceneInspectorPanel[hidden] {
+      display: none;
+    }
+
+    .sceneInspectorFields {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .sceneInspectorHint {
+      line-height: 1.45;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .sceneCameraNote {
+      margin-top: 12px;
+    }
+
+    .sceneOrbList {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sceneOrbCard {
+      padding: 10px;
+    }
+
+    .sceneOrbCardHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sceneOrbTitle {
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sceneOrbCard .row {
+      grid-template-columns: 124px 1fr 88px;
+      margin: 4px 0;
+    }
+
+    .sceneLegacyCopy {
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 920px) {
+      .sceneSummaryStats,
+      .sceneInspectorMetaGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .sceneNodeRowTop {
+        flex-direction: column;
+      }
+
+      .sceneOrbCard .row {
+        grid-template-columns: 1fr;
+      }
+
+      .sceneOrbCard .val {
+        justify-self: start;
+      }
+    }

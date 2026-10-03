@@ -30,7 +30,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 | — | Planned | Orbs overhaul v1 (per-orb spectral + color phase) |
+| 115 | v0.1.15 | — | RC-1 (release gate) | Orbs overhaul v1 (per-orb spectral + color phase) |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Per-orb band picker UI |
@@ -123,7 +123,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 115 — v0.1.15: Orbs Overhaul (v1)
 
-**Goal:** orbs become first-class Visualizers inside the scene/compositor architecture.
+**Goal:** Build 115 makes orbs first-class Visualizers inside the scene/compositor architecture.
 
 **Scope**
 - Per-orb spectral targeting (band IDs / ranges)
@@ -134,6 +134,10 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 **DoD**
 - Orbs can lock to different bands cleanly
 - Presets round-trip without corruption
+
+**Release-gate status**
+- Current candidate: `v0.1.15.RC-1`
+- Build 113 remains the canonical shipped baseline until the Build 115 release-gate audit in `docs/BUILD_115_RELEASE_GATE.md` is completed and accepted.
 
 ---
 
