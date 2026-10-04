@@ -386,7 +386,6 @@ const UI = (() => {
     const defaults = CONFIG.defaults.orbs;
     preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], defaults[orbIndex % defaults.length]);
     applyPrefs(reason);
-    syncOrbsFromSettings();
     return true;
   }
 
@@ -1234,7 +1233,7 @@ const UI = (() => {
     ui.rngVol.value = String(p.audio.volume);
     ui.valVol.textContent = fmt(p.audio.volume, 2);
 
-    orbEditorUi.refresh(p);
+    orbEditorUi.refresh(runtime.settings);
     visualizersPanelUi.refresh();
 
     ui.rngRmsGain.value = String(p.audio.rmsGain);
