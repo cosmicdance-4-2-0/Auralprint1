@@ -24,54 +24,98 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
 
   const make = (tag, className, text) => { const el = document.createElement(tag); if (className) el.className = className; if (text) el.textContent = text; return el; };
   const addOption = (select, value, text) => { const option = make("option"); option.value = value; option.textContent = text; select.appendChild(option); };
-  function row(token, key, labelText, control, output) {
+  function row(token, key, labelText, control, output, title = "") {
     const wrapper = make("div", "row"); const label = make("label", "", labelText);
-    control.id = `orb-editor-${token}-${key}`; label.htmlFor = control.id; wrapper.append(label, control, output); return wrapper;
+    control.id = `orb-editor-${token}-${key}`; label.htmlFor = control.id; if (title) { label.title = title; control.title = title; }
+    wrapper.append(label, control, output); return wrapper;
   }
+  function section(body, title, open = false) { const root = make("details", "settings-section orb-editor-group"); root.open = open; root.append(make("summary", "", title), body); return root; }
+  function range(limit) { const control = make("input"); control.type = "range"; bindRange(control, limit); return control; }
+  function rangeField(body, token, key, label, limit, title = "") { const control = range(limit), output = make("div", "val"); body.append(row(token, key, label, control, output, title)); return { control, output }; }
+  function selectField(body, token, key, label, options) { const control = make("select"), output = make("div", "val"); for (const item of options) addOption(control, ...item); body.append(row(token, key, label, control, output)); return { control, output }; }
+  function checkboxField(body, token, key, label) { const control = make("input"), output = make("div", "val"); control.type = "checkbox"; body.append(row(token, key, label, control, output)); return { control, output }; }
+
   function createController(id) {
     const token = ++nextEditorToken;
     const root = make("details", "orb-card orb-editor-card"); root.dataset.orbId = id;
-    const summary = make("summary"); const title = make("span", "orb-editor-title"); const identity = make("span", "section-description"); summary.append(title, identity);
-    const body = make("div", "section-body");
-    const chan = make("select"), chanValue = make("div", "val"); for (const value of CONFIG.limits.orbs.channels) addOption(chan, value, value);
-    body.appendChild(row(token, "channel", "Channel", chan, chanValue));
-    const pickerRoot = make("div", "orb-band-picker"); body.appendChild(pickerRoot);
+    const summary = make("summary"), title = make("span", "orb-editor-title"), identity = make("span", "section-description"); summary.append(title, identity);
+    const body = make("div", "orb-editor-body");
+
+    const sourceBody = make("div", "section-body");
+    const chanField = selectField(sourceBody, token, "channel", "Channel", CONFIG.limits.orbs.channels.map((value) => [value, value]));
+    const pickerRoot = make("div", "orb-band-picker"); sourceBody.appendChild(pickerRoot);
     const exact = make("details", "advanced-control"), exactSummary = make("summary", "", "Exact band indices"), bands = make("input"), bandValue = make("div", "val"), error = make("p", "picker-error");
     bands.type = "text"; bands.spellcheck = false; bands.autocomplete = "off"; bands.placeholder = "e.g. 12, 48";
     error.id = `orb-editor-${token}-band-error`; error.setAttribute("role", "alert"); bands.setAttribute("aria-describedby", error.id);
-    const exactRow = row(token, "bands", "Band indices", bands, bandValue); exactRow.querySelector?.("label")?.setAttribute("title", `Comma-separated band indices (0–${BAND_NAMES.length - 1}). Empty = full spectrum energy.`);
-    exact.append(exactSummary, exactRow, error); body.appendChild(exact);
-    const chir = make("select"), chirValue = make("div", "val"); addOption(chir, "1", "+1 (CCW)"); addOption(chir, "-1", "-1 (CW)"); body.appendChild(row(token, "direction", "Direction", chir, chirValue));
-    const hue = make("input"), hueValue = make("div", "val"); hue.type = "range"; bindRange(hue, CONFIG.limits.orbs.hueOffsetDeg); body.appendChild(row(token, "hue", "Hue offset", hue, hueValue));
-    const color = make("select"), colorValue = make("div", "val"); for (const item of [["inherit","inherit global"],["dominant","dominant band"],["angle","phase locked (Glitch Mode)"],["fixed","fixed particle color"]]) addOption(color, ...item); body.appendChild(row(token, "color", "Color source", color, colorValue));
-    const x = make("input"), xValue = make("div", "val"); x.type = "range"; bindRange(x, CONFIG.limits.orbs.centerXFrac); body.appendChild(row(token, "center-x", "Center X", x, xValue));
-    const y = make("input"), yValue = make("div", "val"); y.type = "range"; bindRange(y, CONFIG.limits.orbs.centerYFrac); body.appendChild(row(token, "center-y", "Center Y", y, yValue)); root.append(summary, body);
+    exact.append(exactSummary, row(token, "bands", "Band indices", bands, bandValue, `Comma-separated band indices (0–${BAND_NAMES.length - 1}). Empty = full spectrum energy.`), error); sourceBody.appendChild(exact);
+    body.append(section(sourceBody, "Source", true));
+
+    const motionBody = make("div", "section-body");
+    const xField = rangeField(motionBody, token, "center-x", "Center X", CONFIG.limits.orbs.centerXFrac);
+    const yField = rangeField(motionBody, token, "center-y", "Center Y", CONFIG.limits.orbs.centerYFrac);
+    const chirField = selectField(motionBody, token, "direction", "Direction", [["1", "+1 (CCW)"], ["-1", "-1 (CW)"]]);
+    const phaseField = rangeField(motionBody, token, "phase-offset", "Phase Offset", CONFIG.limits.orbs.startAngleRad, "Starting orbital phase; applied on Reset Visuals.");
+    const speedField = rangeField(motionBody, token, "angular-speed", "Angular Speed", CONFIG.limits.motion.angularSpeedRadPerSec);
+    body.append(section(motionBody, "Position & Motion"));
+
+    const responseBody = make("div", "section-body");
+    const minRadiusField = rangeField(responseBody, token, "min-radius", "Min Radius", CONFIG.limits.orbs.response.minRadiusFrac);
+    const maxRadiusField = rangeField(responseBody, token, "max-radius", "Max Radius", CONFIG.limits.orbs.response.maxRadiusFrac);
+    const waveformField = rangeField(responseBody, token, "waveform-displacement", "Waveform Displacement", CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);
+    body.append(section(responseBody, "Response"));
+
+    const particlesBody = make("div", "section-body");
+    const emitField = rangeField(particlesBody, token, "emit-rate", "Emit Rate", CONFIG.limits.particles.emitPerSecond);
+    const sizeMinField = rangeField(particlesBody, token, "size-min", "Minimum Size", CONFIG.limits.particles.sizeMinPx);
+    const sizeMaxField = rangeField(particlesBody, token, "size-max", "Maximum Size", CONFIG.limits.particles.sizeMaxPx);
+    const decayField = rangeField(particlesBody, token, "size-decay", "Size Decay Time", CONFIG.limits.particles.sizeToMinSec);
+    const ttlField = rangeField(particlesBody, token, "lifetime", "Lifetime", CONFIG.limits.particles.ttlSec);
+    const overlapField = rangeField(particlesBody, token, "overlap", "Overlap Radius", CONFIG.limits.particles.overlapRadiusPx);
+    body.append(section(particlesBody, "Particles"));
+
+    const traceBody = make("div", "section-body");
+    const linesField = checkboxField(traceBody, token, "lines", "Lines Enabled");
+    const numLinesField = rangeField(traceBody, token, "line-count", "Line Count", CONFIG.limits.trace.numLines);
+    const alphaField = rangeField(traceBody, token, "line-alpha", "Line Alpha", CONFIG.limits.trace.lineAlpha);
+    const widthField = rangeField(traceBody, token, "line-width", "Line Width", CONFIG.limits.trace.lineWidthPx);
+    const lineColorField = selectField(traceBody, token, "line-color", "Line Color Mode", [["fixed", "Fixed"], ["lastParticle", "Last Particle"], ["dominantBand", "Global Dominant Band"]]);
+    body.append(section(traceBody, "Trace"));
+
+    const colorBody = make("div", "section-body");
+    const colorField = selectField(colorBody, token, "color", "Color Source", [["inherit", "Inherit Global"], ["dominant", "Dominant Band"], ["angle", "Phase Locked (Glitch Mode)"], ["fixed", "Fixed Particle Color"]]);
+    const hueField = rangeField(colorBody, token, "hue", "Hue Offset", CONFIG.limits.orbs.hueOffsetDeg);
+    body.append(section(colorBody, "Color")); root.append(summary, body);
+
     const findOrb = () => preferences.orbs.find((orb) => orb.id === id);
     const commit = (field, value, reason) => { const orb = findOrb(); if (!orb) return; orb[field] = value; commitOrbChangeById(id, reason); };
-    for (const [control, event, field, read, reason] of [[chan,"change","chanId",c=>c.value,"channel"],[chir,"change","chirality",c=>Number(c.value),"direction"],[hue,"input","hueOffsetDeg",c=>Number(c.value),"hue offset"],[color,"change","colorSource",c=>c.value,"color source"],[x,"input","centerXFrac",c=>Number(c.value),"center X"],[y,"input","centerYFrac",c=>Number(c.value),"center Y"]]) control.addEventListener(event, () => commit(field, read(control), `${id} ${reason}`));
+    const commitNested = (group, field, value, reason) => { const orb = findOrb(); if (!orb) return; orb[group][field] = value; commitOrbChangeById(id, reason); };
+    for (const [control, event, field, read, reason] of [[chanField.control,"change","chanId",c=>c.value,"channel"],[chirField.control,"change","chirality",c=>Number(c.value),"direction"],[phaseField.control,"input","startAngleRad",c=>Number(c.value),"phase offset"],[hueField.control,"input","hueOffsetDeg",c=>Number(c.value),"hue offset"],[colorField.control,"change","colorSource",c=>c.value,"color source"],[xField.control,"input","centerXFrac",c=>Number(c.value),"center X"],[yField.control,"input","centerYFrac",c=>Number(c.value),"center Y"]]) control.addEventListener(event, () => commit(field, read(control), `${id} ${reason}`));
+    for (const [field, group, key, reason] of [[speedField,"motion","angularSpeedRadPerSec","angular speed"],[minRadiusField,"response","minRadiusFrac","min radius"],[maxRadiusField,"response","maxRadiusFrac","max radius"],[waveformField,"response","waveformRadialDisplaceFrac","waveform displacement"],[emitField,"particles","emitPerSecond","emit rate"],[sizeMinField,"particles","sizeMinPx","minimum size"],[sizeMaxField,"particles","sizeMaxPx","maximum size"],[decayField,"particles","sizeToMinSec","size decay"],[ttlField,"particles","ttlSec","lifetime"],[overlapField,"particles","overlapRadiusPx","overlap radius"],[numLinesField,"trace","numLines","line count"],[alphaField,"trace","lineAlpha","line alpha"],[widthField,"trace","lineWidthPx","line width"]]) field.control.addEventListener("input", () => commitNested(group, key, Number(field.control.value), `${id} ${reason}`));
+    linesField.control.addEventListener("change", () => commitNested("trace", "lines", !!linesField.control.checked, `${id} lines`));
+    lineColorField.control.addEventListener("change", () => commitNested("trace", "lineColorMode", lineColorField.control.value, `${id} line color mode`));
     bands.addEventListener("change", () => { const parsed = parseBandSelection(bands.value); bands.setAttribute("aria-invalid", parsed.error ? "true" : "false"); error.textContent = parsed.error; if (parsed.error) { bandValue.textContent = "Invalid indices"; showStatus(parsed.error); return; } commit("bandIds", parsed.ids, `${id} band indices`); });
     const picker = createBandPicker(pickerRoot, { orbLabel: `Orb ${id}`, onChange(ids) { commit("bandIds", ids, `${id} bands`); }, formatRange: BandBank.formatBandRangeText, describeBank: () => `${preferences.bands.distributionMode.toUpperCase()} distribution · ${BAND_NAMES.length} bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}` });
-    return { id, root, summary, title, identity, chan, chanValue, bands, bandValue, error, chir, chirValue, hue, hueValue, color, colorValue, x, xValue, y, yValue, picker };
+    return { id, root, summary, title, identity, chan: chanField.control, chanValue: chanField.output, bands, bandValue, error, chir: chirField.control, chirValue: chirField.output, phase: phaseField.control, phaseValue: phaseField.output, hue: hueField.control, hueValue: hueField.output, color: colorField.control, colorValue: colorField.output, x: xField.control, xValue: xField.output, y: yField.control, yValue: yField.output, speed: speedField.control, speedValue: speedField.output, minRadius: minRadiusField.control, minRadiusValue: minRadiusField.output, maxRadius: maxRadiusField.control, maxRadiusValue: maxRadiusField.output, waveform: waveformField.control, waveformValue: waveformField.output, emit: emitField.control, emitValue: emitField.output, sizeMin: sizeMinField.control, sizeMinValue: sizeMinField.output, sizeMax: sizeMaxField.control, sizeMaxValue: sizeMaxField.output, decay: decayField.control, decayValue: decayField.output, ttl: ttlField.control, ttlValue: ttlField.output, overlap: overlapField.control, overlapValue: overlapField.output, lines: linesField.control, linesValue: linesField.output, numLines: numLinesField.control, numLinesValue: numLinesField.output, lineAlpha: alphaField.control, lineAlphaValue: alphaField.output, lineWidth: widthField.control, lineWidthValue: widthField.output, lineColor: lineColorField.control, lineColorValue: lineColorField.output, picker };
   }
   function bindRange(control, limit) { control.min = String(limit.min); control.max = String(limit.max); control.step = String(limit.step); }
   function syncController(c, orb, position) {
+    const set = (control, output, value, formatted) => { control.value = String(value); output.textContent = formatted; };
     c.title.textContent = `Orb ${position + 1}`; c.identity.textContent = orb.id; c.summary.setAttribute("aria-label", `Edit Orb ${position + 1}, ${orb.id}`);
-    c.chan.value = orb.chanId; c.chanValue.textContent = orb.chanId; c.chir.value = String(orb.chirality); c.chirValue.textContent = orb.chirality >= 0 ? "+1" : "-1";
-    c.hue.value = String(orb.hueOffsetDeg); c.hueValue.textContent = `${orb.hueOffsetDeg}°`; c.color.value = orb.colorSource; c.colorValue.textContent = orb.colorSource;
-    c.x.value = String(orb.centerXFrac); c.xValue.textContent = fmt(orb.centerXFrac, 2); c.y.value = String(orb.centerYFrac); c.yValue.textContent = fmt(orb.centerYFrac, 2);
+    set(c.chan,c.chanValue,orb.chanId,orb.chanId); set(c.chir,c.chirValue,orb.chirality,orb.chirality >= 0 ? "+1 (CCW)" : "-1 (CW)");
+    set(c.phase,c.phaseValue,orb.startAngleRad,`${fmt(orb.startAngleRad * RAD_TO_DEG, 0)}°`); set(c.hue,c.hueValue,orb.hueOffsetDeg,`${orb.hueOffsetDeg}°`); set(c.color,c.colorValue,orb.colorSource,c.color.options?.[c.color.selectedIndex]?.textContent || orb.colorSource);
+    set(c.x,c.xValue,orb.centerXFrac,fmt(orb.centerXFrac,2)); set(c.y,c.yValue,orb.centerYFrac,fmt(orb.centerYFrac,2)); set(c.speed,c.speedValue,orb.motion.angularSpeedRadPerSec,`${fmt(orb.motion.angularSpeedRadPerSec,3)} rad/s (${fmt(orb.motion.angularSpeedRadPerSec*RAD_TO_DEG,1)}°/s)`);
+    set(c.minRadius,c.minRadiusValue,orb.response.minRadiusFrac,fmt(orb.response.minRadiusFrac,3)); set(c.maxRadius,c.maxRadiusValue,orb.response.maxRadiusFrac,fmt(orb.response.maxRadiusFrac,3)); set(c.waveform,c.waveformValue,orb.response.waveformRadialDisplaceFrac,fmt(orb.response.waveformRadialDisplaceFrac,3));
+    set(c.emit,c.emitValue,orb.particles.emitPerSecond,`${orb.particles.emitPerSecond}/s`); set(c.sizeMin,c.sizeMinValue,orb.particles.sizeMinPx,`${orb.particles.sizeMinPx}px`); set(c.sizeMax,c.sizeMaxValue,orb.particles.sizeMaxPx,`${orb.particles.sizeMaxPx}px`); set(c.decay,c.decayValue,orb.particles.sizeToMinSec,`${fmt(orb.particles.sizeToMinSec,1)}s`); set(c.ttl,c.ttlValue,orb.particles.ttlSec,`${fmt(orb.particles.ttlSec,1)}s`); set(c.overlap,c.overlapValue,orb.particles.overlapRadiusPx,`${fmt(orb.particles.overlapRadiusPx,1)}px`);
+    c.lines.checked = orb.trace.lines; c.lines.indeterminate = false; c.linesValue.textContent = orb.trace.lines ? "on" : "off"; set(c.numLines,c.numLinesValue,orb.trace.numLines,String(orb.trace.numLines)); set(c.lineAlpha,c.lineAlphaValue,orb.trace.lineAlpha,fmt(orb.trace.lineAlpha,2)); set(c.lineWidth,c.lineWidthValue,orb.trace.lineWidthPx,`${orb.trace.lineWidthPx}px`); set(c.lineColor,c.lineColorValue,orb.trace.lineColorMode,c.lineColor.options?.[c.lineColor.selectedIndex]?.textContent || orb.trace.lineColorMode);
     if (document.activeElement !== c.bands && c.bands.getAttribute("aria-invalid") !== "true") { c.bands.value = formatOrbBandIdsText(orb.bandIds); c.error.textContent = ""; }
     c.bandValue.textContent = c.bands.getAttribute("aria-invalid") === "true" ? "Invalid indices" : describeOrbBandSelection(orb.bandIds); c.picker?.sync(orb.bandIds);
   }
   function refresh(settings = runtime.settings) {
-    const bandEdgesRef = state.bands.lowHz;
-    if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
-    lastSettingsRef = settings;
-    lastBandEdgesRef = bandEdgesRef;
-    const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
+    const bandEdgesRef = state.bands.lowHz; if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
+    lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
     for (const [id, controller] of controllers) if (!orbs.some((orb) => orb.id === id)) { controller.root.remove(); controllers.delete(id); }
     orbs.forEach((orb, position) => { let controller = controllers.get(orb.id); if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); } syncController(controller, orb, position); ui.orbEditorList.appendChild(controller.root); });
-    ui.simStatus.textContent = orbs.length ? `${orbs.length} Orb${orbs.length === 1 ? "" : "s"} in scene` : "No Orbs in scene";
-    refreshBulk(orbs); return controllers;
+    ui.simStatus.textContent = orbs.length ? `${orbs.length} Orb${orbs.length === 1 ? "" : "s"} in scene` : "No Orbs in scene"; refreshBulk(orbs); return controllers;
   }
   function refreshBulk(orbs) {
     const bulk = (group, field, control, output, format) => { const model = readBulkOrbValue(orbs, group, field); control.disabled = !model.available; if (!model.available) { output.textContent = "—"; if (control.type === "checkbox") control.indeterminate = false; return; } if (!model.mixed) control.value = String(model.value); output.textContent = model.mixed ? "mixed" : format(model.value); if (control.type === "checkbox") { control.indeterminate = model.mixed; if (!model.mixed) control.checked = !!model.value; } };

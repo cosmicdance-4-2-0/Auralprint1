@@ -128,7 +128,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   const response = {
     minRadiusFrac: nestedNumber("response", "minRadiusFrac", orbLim.response.minRadiusFrac),
     maxRadiusFrac: nestedNumber("response", "maxRadiusFrac", orbLim.response.maxRadiusFrac),
-    waveformRadialDisplaceFrac: nestedNumber("response", "waveformRadialDisplaceFrac", CONFIG.limits.motion.waveformRadialDisplaceFrac),
+    waveformRadialDisplaceFrac: nestedNumber("response", "waveformRadialDisplaceFrac", orbLim.response.waveformRadialDisplaceFrac),
   };
   const particles = {};
   for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "overlapRadiusPx"]) {

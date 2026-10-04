@@ -5,7 +5,7 @@ import { CONFIG } from "../src/js/core/config.js";
 import { allocateOrbId, createOrb, duplicateOrb, findOrbById, normalizeOrbCollection, removeOrb } from "../src/js/core/orb-collection.js";
 import { preferences, replacePreferences, resolveSettings, runtime } from "../src/js/core/preferences.js";
 import { state } from "../src/js/core/state.js";
-import { createRuntimeOrb, duplicateRuntimeOrb, initOrbs, reconcileOrbs, removeRuntimeOrb } from "../src/js/render/orb-runtime.js";
+import { createRuntimeOrb, duplicateRuntimeOrb, initOrbs, reconcileOrbs, removeRuntimeOrb, resetVisualizers, syncOrbsFromSettings } from "../src/js/render/orb-runtime.js";
 import { VisualizerRuntime } from "../src/js/render/visualizer-runtime.js";
 
 function defs(ids) {
@@ -126,4 +126,32 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     state.orbs.length = 0;
     state.orbs.push(...oldOrbs);
   }
+});
+
+test("designed phase sync does not teleport live phase until Reset Visuals", () => {
+  const old = structuredClone(preferences);
+  try {
+    replacePreferences({ ...structuredClone(CONFIG.defaults), orbs: defs(["A"]) });
+    resolveSettings(); initOrbs();
+    state.orbs[0].angleRad = 1.234;
+    preferences.orbs[0].startAngleRad = Math.PI;
+    resolveSettings(); syncOrbsFromSettings();
+    assert.equal(state.orbs[0].startAngleRad, Math.PI);
+    assert.equal(state.orbs[0].angleRad, 1.234);
+    resetVisualizers("visuals");
+    assert.equal(state.orbs[0].angleRad, Math.PI);
+  } finally { replacePreferences(old); resolveSettings(); initOrbs(); }
+});
+
+test("ten differently targeted Orbs reset and advance in same-phase groups", () => {
+  const old = structuredClone(preferences);
+  try {
+    const scene = defs(Array.from({ length: 10 }, (_, i) => `group-${i}`));
+    scene.forEach((orb, i) => { orb.bandIds = [i * 3]; orb.startAngleRad = i < 5 ? Math.PI / 4 : Math.PI; orb.chirality = i < 5 ? 1 : -1; orb.motion.angularSpeedRadPerSec = i < 5 ? .5 : .75; });
+    replacePreferences({ ...structuredClone(CONFIG.defaults), orbs: scene }); resolveSettings(); initOrbs();
+    state.orbs.forEach((orb, i) => { orb.angleRad = i / 10; }); resetVisualizers("visuals");
+    assert.ok(state.orbs.slice(0,5).every(orb=>orb.angleRad===Math.PI/4)); assert.ok(state.orbs.slice(5).every(orb=>orb.angleRad===Math.PI));
+    state.orbs.forEach(orb=>orb.step(.1,1,null,0,0));
+    assert.ok(state.orbs.slice(0,5).every(orb=>orb.angleRad===state.orbs[0].angleRad)); assert.ok(state.orbs.slice(5).every(orb=>orb.angleRad===state.orbs[5].angleRad));
+  } finally { replacePreferences(old); resolveSettings(); initOrbs(); }
 });
