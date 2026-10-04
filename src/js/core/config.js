@@ -1,4 +1,4 @@
-import { TAU } from "./constants.js";
+import { TAU, RAD_TO_DEG } from "./constants.js";
 import { deepFreeze } from "./utils.js";
 
 const DEFAULT_ORB_BEHAVIOR = {
@@ -481,7 +481,6 @@ bands: {
 
     motion: {
       angularSpeedRadPerSec: { min: 0.01, max: 3, step: 0.01 },
-      waveformRadialDisplaceFrac: { min: 0.01, max: 1.00, step: 0.01 },
     },
 
     audio: {
@@ -514,7 +513,9 @@ bands: {
       response: {
         minRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
         maxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
+        waveformRadialDisplaceFrac: { min: 0.01, max: 1.00, step: 0.01 },
       },
+      startAngleRad: { min: 0, max: TAU, step: 1 / RAD_TO_DEG },
       hueOffsetDeg: { min: 0, max: 360, step: 1 },
       centerXFrac: { min: -0.95, max: 0.95, step: 0.01 },
       centerYFrac: { min: -0.95, max: 0.95, step: 0.01 },

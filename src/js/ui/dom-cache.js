@@ -197,7 +197,7 @@ function primeDomCache() {
     bindRange(ui.rngOverlap, CONFIG.limits.particles.overlapRadiusPx);
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
-    bindRange(ui.rngWfDisp, CONFIG.limits.motion.waveformRadialDisplaceFrac);
+    bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);
 
     bindRange(ui.rngRmsGain, CONFIG.limits.audio.rmsGain);
     bindRange(ui.rngMinRad, CONFIG.limits.orbs.response.minRadiusFrac);

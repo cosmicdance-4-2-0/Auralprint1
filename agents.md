@@ -178,7 +178,7 @@ Rules:
 - Visualizer-specific runtime behavior belongs behind the lifecycle contract: `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`.
 - `VisualizerRuntime` owns active composition order and lifecycle dispatch. Renderer owns canonical canvas and drawing mechanics; each visualizer owns its behavior and participation in composition.
 - Adding a future visualizer must not add type-specific simulation or phase behavior to the main animation loop.
-- Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Shared Motion/Radius/Particles/Trace controls are temporary bulk controls and must report mixed values without changing them.
+- Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Every canonical Orb-owned simulation/presentation field has a per-Orb UI owner; Bulk Edit is an apply-to-all convenience and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
 
 ### 4.4 Dynamic Orb Collection
@@ -233,6 +233,7 @@ Avoid:
 - Listener initialization must be idempotent for the same DOM controls and must not accumulate duplicate handlers.
 - The Visualizers panel owns user-facing Orb collection management through canonical runtime operations; it does not own Orb values, Band Overlay configuration, or generic visualizer persistence.
 - Orb editor commits and controller reconciliation use persistent Orb IDs, never assumed array slots. Surviving editor nodes, listeners, picker instances, and ephemeral UI state must be retained across unrelated collection changes.
+- Orb editor nested controls commit by persistent Orb ID and per-Orb edits preserve unrelated runtime history. `startAngleRad` is designed phase configuration, distinct from ephemeral `angleRad`: the UI presents degrees while persistence/runtime use radians, edits do not live-teleport, and visual reset applies the designed phase.
 - Removing the last Orb is valid; UI must not implicitly fabricate an Orb. Generated DOM identifiers must be independent of untrusted persistent Orb IDs.
 - Visualizer inventory order follows `VisualizerRuntime`; display numbering communicates composition position and never replaces persistent identity.
 - Visualizer UI must not fabricate runtime instances. During staged migration, writable configuration retains one UI owner and navigation points to that owner rather than duplicating controls.

@@ -109,21 +109,19 @@
     <div class="panel-actions"><button id="btnResetVisuals" title="Reset orb phases and clear trails (keyboard: R)">Reset Visuals</button></div>
     <div class="muted panel-status" id="simStatus" role="status">Choose an orb to shape its response.</div>
     <div id="orbEditorList" class="orb-editor-list" aria-label="Orb editors"></div>
-    <details class="settings-section"><summary>Motion<span class="section-description">Applies to all Orbs</span></summary><div class="section-body">
+    <details class="settings-section bulk-edit"><summary>Bulk Edit: Motion<span class="section-description">Apply settings to all current Orbs</span></summary><div class="section-body">
     <div class="row">
       <label for="rngOmega">Angular speed</label>
       <input id="rngOmega" type="range" />
       <div id="valOmega" class="val"></div>
     </div>
-
-    <div class="row">
-      <label for="rngWfDisp">Waveform Displacement</label>
-      <input id="rngWfDisp" type="range" />
-      <div id="valWfDisp" class="val"></div>
-    </div>
-
 </div></details>
-    <details class="settings-section"><summary>Trace<span class="section-description">Applies to all Orbs</span></summary><div class="section-body">
+    <details class="settings-section bulk-edit"><summary>Bulk Edit: Response<span class="section-description">Apply settings to all current Orbs</span></summary><div class="section-body">
+    <div class="row"><label for="rngMinRad">Min radius</label><input id="rngMinRad" type="range" /><div id="valMinRad" class="val"></div></div>
+    <div class="row"><label for="rngMaxRad">Max radius</label><input id="rngMaxRad" type="range" /><div id="valMaxRad" class="val"></div></div>
+    <div class="row"><label for="rngWfDisp">Waveform displacement</label><input id="rngWfDisp" type="range" /><div id="valWfDisp" class="val"></div></div>
+    </div></details>
+    <details class="settings-section bulk-edit"><summary>Bulk Edit: Trace<span class="section-description">Apply settings to all current Orbs</span></summary><div class="section-body">
     <div class="row">
       <label for="chkLines">Lines</label>
       <input id="chkLines" type="checkbox" />
@@ -143,7 +141,7 @@
     </div>
 
 </div></details>
-    <details class="settings-section"><summary>Particles<span class="section-description">Applies to all Orbs</span></summary><div class="section-body">
+    <details class="settings-section bulk-edit"><summary>Bulk Edit: Particles<span class="section-description">Apply settings to all current Orbs</span></summary><div class="section-body">
     <div class="row">
       <label for="rngEmit">Emit rate</label>
       <input id="rngEmit" type="range" />
@@ -174,18 +172,6 @@
       <div id="valTTL" class="val"></div>
     </div>
 	
-	<div class="row">
-      <label for="rngMinRad">Min radius</label>
-      <input id="rngMinRad" type="range" />
-      <div id="valMinRad" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngMaxRad">Max radius</label>
-      <input id="rngMaxRad" type="range" />
-      <div id="valMaxRad" class="val"></div>
-    </div>
-
     <div class="row">
       <label for="rngOverlap">Overlap radius</label>
       <input id="rngOverlap" type="range" />
