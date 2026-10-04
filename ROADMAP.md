@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 4, 2026. Development revision: `v0.1.15i` / Build 115. Preset schema: 10.
+Updated: October 4, 2026. Development revision: `v0.1.15i.a` / Build 115. Preset schema: 10.
 
-The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115I plus 115F.A and 115H.A tactical hardening are complete. The runtime-backed Visualizers inventory is now the conceptual UI home, while Analysis, Band Overlay, color-ownership, and final-acceptance stages remain open. Build 116 Camera work is blocked until this sequence is complete.
+The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115I plus 115F.A, 115H.A, and 115I.A tactical hardening are complete. 115I.A makes generated select readouts truthful, standardizes Orb-editor invalidation on `runtime.settings`, removes redundant per-Orb runtime synchronization, exposes Phase Offset accessibly in degrees, and corrects current version metadata; preset schema remains 10. The runtime-backed Visualizers inventory is now the conceptual UI home, while Analysis, Band Overlay, color-ownership, and final-acceptance stages remain open. Build 116 Camera work is blocked until this sequence is complete.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -47,13 +47,15 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: actively under development; revisions 115A–115I and 115F.A hardening are complete, with schema 10 retained. Visualizers owns Orb collection management and Orbs uses generated ID-aware editors; Analysis separation, Band Overlay promotion, and final acceptance remain pending.**
+**Status: actively under development; revisions 115A–115I and 115F.A, 115H.A, and 115I.A hardening are complete, with schema 10 retained. Visualizers owns Orb collection management and Orbs uses generated ID-aware editors; Analysis separation, Band Overlay promotion, and final acceptance remain pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the current Band Overlay participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and the user-facing Band Overlay has not been promoted or renamed. Build 116 remains blocked.
 
 The Visualizers panel now offers Add/Edit/Duplicate/Remove through canonical runtime operations, and the Orbs panel generates one stable-ID editor card for every current Orb. Zero Orbs is valid and Band Overlay remains a singleton. Every schema-10 Orb-owned simulation and presentation setting is individually editable in stable-ID cards; retained Bulk Edit controls are explicit apply-to-all conveniences with mixed-value display. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
 
 Revision 115I completes per-Orb control exposure. Phase Offset presents `startAngleRad` in degrees as designed phase, does not live-teleport a running Orb, and is applied by Reset Visuals. Nested controls commit by stable ID, schema remains 10, and 115J Analysis is next; Band Overlay naming waits for 115K, broader color ownership for 115L, and Camera for Build 116.
+
+Revision 115I.A tactically hardens that accepted editor: generated select readouts follow their synchronized values, Orb-editor invalidation reads only `runtime.settings`, per-Orb commits perform one runtime Orb synchronization, and Phase Offset exposes degree-based accessible value text. Current version metadata is aligned and schema remains 10.
 
 Revision 115H.A guards the generated Orb editor by settings and BandBank edge references so unchanged animation frames do no controller, reorder, or open-picker row synchronization. Targeted Orbs inheriting the global dominant policy now use the strongest band in their selected target; explicit Orb Dominant Band remains tied to the global full-spectrum dominant band. Schema remains 10.
 

@@ -239,6 +239,8 @@ Avoid:
 - Visualizer UI must not fabricate runtime instances. During staged migration, writable configuration retains one UI owner and navigation points to that owner rather than duplicating controls.
 - Visualizers inventory refresh must not rebuild dynamic DOM when both the settings and runtime collection references are unchanged.
 - Dynamic Orb editor refresh must not perform DOM or picker synchronization when both settings and BandBank definitions are unchanged.
+- Dynamic Orb editor rendering and synchronization reads canonical `runtime.settings`, not mutable `preferences`, so reference-based refresh invalidation has one authority.
+- Human-facing angular controls may persist radians internally, but must expose their displayed units to assistive technology.
 - Orb selected-band targeting supplies both averaged selected-energy response and selected-target dominant context. Inherited global dominant color is scoped by a nonempty Orb target, while explicit Orb dominant color remains global full-spectrum unless a future revision deliberately changes that contract.
 
 ---

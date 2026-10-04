@@ -100,13 +100,18 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
   function bindRange(control, limit) { control.min = String(limit.min); control.max = String(limit.max); control.step = String(limit.step); }
   function syncController(c, orb, position) {
     const set = (control, output, value, formatted) => { control.value = String(value); output.textContent = formatted; };
+    const setSelect = (control, output, value) => {
+      control.value = String(value);
+      output.textContent = control.options?.[control.selectedIndex]?.textContent || String(value);
+    };
     c.title.textContent = `Orb ${position + 1}`; c.identity.textContent = orb.id; c.summary.setAttribute("aria-label", `Edit Orb ${position + 1}, ${orb.id}`);
-    set(c.chan,c.chanValue,orb.chanId,orb.chanId); set(c.chir,c.chirValue,orb.chirality,orb.chirality >= 0 ? "+1 (CCW)" : "-1 (CW)");
-    set(c.phase,c.phaseValue,orb.startAngleRad,`${fmt(orb.startAngleRad * RAD_TO_DEG, 0)}°`); set(c.hue,c.hueValue,orb.hueOffsetDeg,`${orb.hueOffsetDeg}°`); set(c.color,c.colorValue,orb.colorSource,c.color.options?.[c.color.selectedIndex]?.textContent || orb.colorSource);
+    setSelect(c.chan,c.chanValue,orb.chanId); setSelect(c.chir,c.chirValue,orb.chirality);
+    const phaseDegrees = fmt(orb.startAngleRad * RAD_TO_DEG, 0);
+    set(c.phase,c.phaseValue,orb.startAngleRad,`${phaseDegrees}°`); c.phase.setAttribute("aria-valuetext", `${phaseDegrees} degrees`); set(c.hue,c.hueValue,orb.hueOffsetDeg,`${orb.hueOffsetDeg}°`); setSelect(c.color,c.colorValue,orb.colorSource);
     set(c.x,c.xValue,orb.centerXFrac,fmt(orb.centerXFrac,2)); set(c.y,c.yValue,orb.centerYFrac,fmt(orb.centerYFrac,2)); set(c.speed,c.speedValue,orb.motion.angularSpeedRadPerSec,`${fmt(orb.motion.angularSpeedRadPerSec,3)} rad/s (${fmt(orb.motion.angularSpeedRadPerSec*RAD_TO_DEG,1)}°/s)`);
     set(c.minRadius,c.minRadiusValue,orb.response.minRadiusFrac,fmt(orb.response.minRadiusFrac,3)); set(c.maxRadius,c.maxRadiusValue,orb.response.maxRadiusFrac,fmt(orb.response.maxRadiusFrac,3)); set(c.waveform,c.waveformValue,orb.response.waveformRadialDisplaceFrac,fmt(orb.response.waveformRadialDisplaceFrac,3));
     set(c.emit,c.emitValue,orb.particles.emitPerSecond,`${orb.particles.emitPerSecond}/s`); set(c.sizeMin,c.sizeMinValue,orb.particles.sizeMinPx,`${orb.particles.sizeMinPx}px`); set(c.sizeMax,c.sizeMaxValue,orb.particles.sizeMaxPx,`${orb.particles.sizeMaxPx}px`); set(c.decay,c.decayValue,orb.particles.sizeToMinSec,`${fmt(orb.particles.sizeToMinSec,1)}s`); set(c.ttl,c.ttlValue,orb.particles.ttlSec,`${fmt(orb.particles.ttlSec,1)}s`); set(c.overlap,c.overlapValue,orb.particles.overlapRadiusPx,`${fmt(orb.particles.overlapRadiusPx,1)}px`);
-    c.lines.checked = orb.trace.lines; c.lines.indeterminate = false; c.linesValue.textContent = orb.trace.lines ? "on" : "off"; set(c.numLines,c.numLinesValue,orb.trace.numLines,String(orb.trace.numLines)); set(c.lineAlpha,c.lineAlphaValue,orb.trace.lineAlpha,fmt(orb.trace.lineAlpha,2)); set(c.lineWidth,c.lineWidthValue,orb.trace.lineWidthPx,`${orb.trace.lineWidthPx}px`); set(c.lineColor,c.lineColorValue,orb.trace.lineColorMode,c.lineColor.options?.[c.lineColor.selectedIndex]?.textContent || orb.trace.lineColorMode);
+    c.lines.checked = orb.trace.lines; c.lines.indeterminate = false; c.linesValue.textContent = orb.trace.lines ? "on" : "off"; set(c.numLines,c.numLinesValue,orb.trace.numLines,String(orb.trace.numLines)); set(c.lineAlpha,c.lineAlphaValue,orb.trace.lineAlpha,fmt(orb.trace.lineAlpha,2)); set(c.lineWidth,c.lineWidthValue,orb.trace.lineWidthPx,`${orb.trace.lineWidthPx}px`); setSelect(c.lineColor,c.lineColorValue,orb.trace.lineColorMode);
     if (document.activeElement !== c.bands && c.bands.getAttribute("aria-invalid") !== "true") { c.bands.value = formatOrbBandIdsText(orb.bandIds); c.error.textContent = ""; }
     c.bandValue.textContent = c.bands.getAttribute("aria-invalid") === "true" ? "Invalid indices" : describeOrbBandSelection(orb.bandIds); c.picker?.sync(orb.bandIds);
   }

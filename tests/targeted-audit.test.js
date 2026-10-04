@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { rename, rm } from "node:fs/promises";
 
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V8 } from "../src/js/core/constants.js";
@@ -18,6 +18,23 @@ import { initOrbs } from "../src/js/render/orb-runtime.js";
 import { UI, readSourceUiModel, shouldShowActiveQueueItem } from "../src/js/ui/ui.js";
 import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
+
+test("development version metadata and schema remain aligned", () => {
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15i.a");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15i\.a/);
+  assert.equal(PRESET_SCHEMA_VERSION, 10);
+});
+
+test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
+  const source = readFileSync(new URL("../src/js/ui/ui.js", import.meta.url), "utf8");
+  const perOrbCommit = source.match(/function applyOrbPrefChangeById[\s\S]*?\n  \}/u)?.[0] || "";
+  const applyPrefs = source.match(/function applyPrefs[\s\S]*?\n  \}/u)?.[0] || "";
+  const refreshAll = source.match(/function refreshAllUiText[\s\S]*?\n  \}/u)?.[0] || "";
+  assert.equal((perOrbCommit.match(/syncOrbsFromSettings\(\)/g) || []).length, 0);
+  assert.equal((applyPrefs.match(/syncOrbsFromSettings\(\)/g) || []).length, 1);
+  assert.match(refreshAll, /orbEditorUi\.refresh\(runtime\.settings\)/);
+  assert.doesNotMatch(refreshAll, /orbEditorUi\.refresh\(p\)/);
+});
 
 function createAudioBuffer(channels) {
   return {
@@ -272,6 +289,7 @@ async function withUiWireHarnessState({
     Object.assign(state.recording, previous.recording);
     if (recordingState) Object.assign(state.recording, recordingState);
     if (repeatMode !== null) preferences.audio.repeatMode = repeatMode;
+    resolveSettings();
 
     for (const name of queueNames) Queue.add(createNamedAudioFile(name));
     if (currentIndex >= 0) Queue.setCursor(currentIndex);
@@ -290,6 +308,7 @@ async function withUiWireHarnessState({
     applySourceAndAudioState(previous);
     Object.assign(state.recording, previous.recording);
     preferences.audio.repeatMode = previous.repeatMode;
+    resolveSettings();
     harness.restore();
   }
 }
