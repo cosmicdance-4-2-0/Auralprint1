@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 3, 2026. Development revision: `v0.1.15g` / Build 115. Preset schema: 10.
+Updated: October 3, 2026. Development revision: `v0.1.15h` / Build 115. Preset schema: 10.
 
-The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115G plus 115F.A tactical hardening are complete. The runtime-backed Visualizers inventory is now the conceptual UI home, while dynamic Orb management, generated editors, later ownership migrations, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
+The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115H plus 115F.A tactical hardening are complete. The runtime-backed Visualizers inventory is now the conceptual UI home, while remaining per-Orb controls, later ownership migrations, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -34,7 +34,7 @@ Build 115 proceeds in this order. The first seven stages are complete through re
 5. **Dynamic Orb runtime** — support zero/one/N definitions, stable IDs, model operations, and incremental reconciliation. *(115E complete)*
 6. **UI decomposition** — split only the UI seams needed for dynamic visualizers. *(115F complete)*
 7. **Visualizers panel** — establish a runtime-backed inventory and navigation home for visualizer instances. *(115G complete)*
-8. **Dynamic Orb management UI** — add, remove, and duplicate Orb instances.
+8. **Dynamic Orb management UI** — add, edit, remove, and duplicate Orb instances with generated ID-aware cards. *(115H complete)*
 9. **Complete per-Orb controls** — expose the remaining properly owned Orb settings.
 10. **Dedicated Analysis panel** — separate analysis configuration from visualization configuration.
 11. **Band Overlay → Spectral Ring promotion** — promote the existing rendering feature after lifecycle support exists.
@@ -47,13 +47,15 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: actively under development; revisions 115A–115G and 115F.A hardening are complete, with schema 10 retained. Workspace, compatibility-Orb UI, and the read-only Visualizers inventory have dedicated ownership; dynamic Orb management, generated editors, Analysis separation, Band Overlay promotion, and final acceptance remain pending.**
+**Status: actively under development; revisions 115A–115H and 115F.A hardening are complete, with schema 10 retained. Visualizers owns Orb collection management and Orbs uses generated ID-aware editors; complete per-Orb controls, Analysis separation, Band Overlay promotion, and final acceptance remain pending.**
 
-AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the current Band Overlay participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is present, while its final UI is absent and the user-facing Band Overlay has not been promoted or renamed. Build 116 remains blocked.
+AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the current Band Overlay participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and the user-facing Band Overlay has not been promoted or renamed. Build 116 remains blocked.
 
-The current source substantially contains the reorganized menu and per-instance editing for the two pre-existing Orbs. Users cannot yet add, remove, or duplicate Orbs through the temporary fixed editor; those model/runtime operations are available for the later UI. Motion, radius-response, particle, and trace settings are Orb-owned; their existing shared controls are temporary bulk controls with mixed-value display. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
+The Visualizers panel now offers Add/Edit/Duplicate/Remove through canonical runtime operations, and the Orbs panel generates one stable-ID editor card for every current Orb. Zero Orbs is valid and Band Overlay remains a singleton. Motion, radius-response, particle, and trace settings are Orb-owned; their existing shared controls are temporary bulk controls with mixed-value display. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
 
-Revision 115F.A tactically hardens the accepted UI decomposition with focused Orb compatibility tests; it does not change the architecture or preset schema. Revision 115G adds a dedicated Visualizers workspace panel that reads `VisualizerRuntime` order directly, represents Band Overlay under its current name, and shows every zero/one/N Orb composition with stable IDs distinct from display numbering. It is deliberately inventory/navigation only: Orbs controls remain in Orbs, Band Overlay controls remain in Bands, and Add/Duplicate/Remove arrives in 115H.
+Revision 115H adds collection management with confirmed removal, deterministic focus recovery, and arbitrary-count generated Orb editors. Motion, response, particles, and trace remain transitional bulk controls for 115I. Schema remains 10 and Camera remains blocked.
+
+Revision 115F.A tactically hardened the accepted UI decomposition without changing architecture or schema. Revision 115G established the runtime-backed inventory; 115H grants that panel Orb collection management while configuration remains in the generated Orbs editor. Band Overlay controls remain in Bands.
 
 The intended data direction is `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Scene / Renderer → Camera → Canvas`. Visualizers consume analysis; they do not own or perform it. The Camera stage belongs to Build 116 and is not ready to begin.
 
@@ -62,7 +64,7 @@ The intended data direction is `Audio Sources → Audio / Spectral Analysis → 
 - Selected Orb band IDs average the existing combined/center-channel band energies; the Orb channel independently chooses its waveform and full-spectrum energy. Empty `bandIds` means full spectrum.
 - Preset schema remains 10; 115E changes collection lifecycle behavior without adding persisted fields.
 - `state.bands` may remain producer state while the consumer boundary is extracted; visual state such as ring phase does not become analysis data.
-- Revision 115E adds dynamic Orb model/runtime management without final UI. Revision 115F gives workspace orchestration and the temporary two-card compatibility surface dedicated modules without adding management controls. Revision 115G makes the runtime collection visible without moving writable controls. Band Overlay keeps its current name and control location. Camera behavior remains blocked; schema 10 is unchanged.
+- Revision 115H exposes the dynamic Orb collection through canonical runtime operations and generated stable-ID editor cards. Band Overlay keeps its current name, singleton lifecycle, and control location. Camera behavior remains blocked; schema 10 is unchanged.
 - Track/source/recording ownership, immutable configuration, Nyquist-aware ceilings, and single-file output remain protected.
 
 ### Current regression evidence

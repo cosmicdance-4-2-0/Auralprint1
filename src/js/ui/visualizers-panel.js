@@ -51,6 +51,11 @@ function createVisualizersPanelUi({
   getSettings = () => null,
   openOrbControls = () => {},
   openBandOverlayControls = () => {},
+  addOrb = () => null,
+  editOrb = () => {},
+  duplicateOrb = () => null,
+  removeOrb = () => false,
+  confirmRemoveOrb = () => false,
 } = {}) {
   let initializedOn = null;
   let lastSettingsRef = null;
@@ -77,10 +82,47 @@ function createVisualizersPanelUi({
       summary.className = "visualizer-item-summary";
       summary.textContent = item.summary;
       row.append(heading, summary);
+      if (item.type === "orb") {
+        const actions = document.createElement("div");
+        actions.className = "visualizer-item-actions";
+        for (const [action, label] of [["edit", "Edit"], ["duplicate", "Duplicate"], ["remove", "Remove"]]) {
+          const button = document.createElement("button");
+          button.type = "button"; button.dataset.action = action; button.dataset.orbId = item.id;
+          button.textContent = label; button.setAttribute("aria-label", `${label} ${item.displayName}, ${item.id}`);
+          if (action === "remove") button.className = "is-destructive";
+          actions.appendChild(button);
+        }
+        row.appendChild(actions);
+      }
       fragment.append(row);
     }
     ui.visualizerList.replaceChildren(fragment);
   }
+
+  function focusEdit(id) {
+    const buttons = ui?.visualizerList?.querySelectorAll?.('[data-action="edit"]') || [];
+    const target = Array.from(buttons).find((button) => button.dataset.orbId === id);
+    target?.focus(); return !!target;
+  }
+
+  function forceRefresh() { lastSettingsRef = null; lastVisualizerCollectionRef = null; refresh(); }
+
+  function onListClick(event) {
+    const button = event.target?.closest?.("button[data-action][data-orb-id]");
+    if (!button || !ui.visualizerList.contains(button)) return;
+    const id = button.dataset.orbId;
+    if (button.dataset.action === "edit") { editOrb(id); return; }
+    if (button.dataset.action === "duplicate") { const created = duplicateOrb(id); if (created?.id) { forceRefresh(); focusEdit(created.id); } return; }
+    if (button.dataset.action === "remove") {
+      const items = createVisualizerInventory(getVisualizers() || []); const index = items.filter((item) => item.type === "orb").findIndex((item) => item.id === id);
+      const item = items.find((entry) => entry.id === id); if (!item || !confirmRemoveOrb({ id, displayName: item.displayName })) return;
+      if (!removeOrb(id)) return; forceRefresh();
+      const survivors = createVisualizerInventory(getVisualizers() || []).filter((entry) => entry.type === "orb");
+      const focus = survivors[index] || survivors[index - 1]; if (focus) focusEdit(focus.id); else ui.btnVisualizersAddOrb?.focus();
+    }
+  }
+
+  function onAdd() { const created = addOrb(); if (!created?.id) return; forceRefresh(); focusEdit(created.id); }
 
   function refresh() {
     const settingsRef = getSettings();
@@ -107,13 +149,15 @@ function createVisualizersPanelUi({
   function init() {
     if (initializedOn === ui?.visualizerList) return false;
     initializedOn = ui?.visualizerList || null;
+    ui?.visualizerList?.addEventListener("click", onListClick);
+    ui?.btnVisualizersAddOrb?.addEventListener("click", onAdd);
     if (ui?.btnVisualizersOpenOrbs) ui.btnVisualizersOpenOrbs.addEventListener("click", openOrbControls);
     if (ui?.btnVisualizersOpenBandOverlay) ui.btnVisualizersOpenBandOverlay.addEventListener("click", openBandOverlayControls);
     refresh();
     return true;
   }
 
-  return { init, refresh };
+  return { init, refresh, focusEdit };
 }
 
 export { createVisualizerInventory, createVisualizersPanelUi, describeOrbTarget };

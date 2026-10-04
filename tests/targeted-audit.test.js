@@ -616,12 +616,16 @@ function createStubUiElement(tagName = "div") {
       this.dispatch("click");
     },
     appendChild(child) {
+      this.children = this.children.filter((entry) => entry !== child);
       this.children.push(child);
       if (child && child.tagName === "OPTION") this.options.push(child);
       return child;
     },
     append(...children) {
-      this.children.push(...children);
+      for (const child of children) {
+        this.children = this.children.filter((entry) => entry !== child);
+        this.children.push(child);
+      }
     },
     replaceChildren(...children) {
       this.children = children.flatMap((child) => child && child.isFragment ? child.children : [child]);
@@ -887,31 +891,11 @@ test("URL preset schema 9 round-trips per-orb Build 115 fields", () => {
   }
 });
 
-test("UI refreshAllUiText reflects Build 115 per-orb sim panel fields", async () => {
+test("UI refreshAllUiText renders generated per-Orb editor cards", async () => {
   await withUiWireHarnessState({}, () => {
-    preferences.orbs[0] = normalizeOrbDef({
-      ...CONFIG.defaults.orbs[0],
-      colorSource: "angle",
-      centerXFrac: 0.12,
-      centerYFrac: -0.08,
-      bandIds: [3, 7, 7, 999, -1],
-    }, CONFIG.defaults.orbs[0]);
-    preferences.orbs[1] = normalizeOrbDef({
-      ...CONFIG.defaults.orbs[1],
-      colorSource: "fixed",
-      centerXFrac: -0.2,
-      centerYFrac: 0.05,
-      bandIds: [],
-    }, CONFIG.defaults.orbs[1]);
-
     UI.refreshAllUiText();
-
-    assert.equal(state.ui.selOrb0ColorSrc.value, "angle");
-    assert.equal(state.ui.rngOrb0CenterX.value, "0.12");
-    assert.equal(state.ui.txtOrb0Bands.value, "3, 7");
-    assert.equal(state.ui.valOrb0Bands.textContent, "2 bands");
-    assert.equal(state.ui.selOrb1ColorSrc.value, "fixed");
-    assert.equal(state.ui.valOrb1Bands.textContent, "full spectrum");
+    assert.equal(state.ui.orbEditorList.children.length, preferences.orbs.length);
+    assert.deepEqual(state.ui.orbEditorList.children.map((card) => card.dataset.orbId), preferences.orbs.map((orb) => orb.id));
   });
 });
 
@@ -2557,71 +2541,19 @@ function pickerElements(container) {
   return all;
 }
 
-test("orb chooser commits independent targets, preserves invalid drafts, and reuses its rows", async () => {
-  const previousPrefs = structuredClone(preferences);
-  try {
-    await withUiWireHarnessState({}, ({ getElement }) => {
-      const find = (index, predicate) => pickerElements(getElement(`orb${index}BandPicker`)).find(predicate);
-      const chooser = find(0, el => el.tagName === "DETAILS");
-      chooser.open = true;
-      chooser.dispatch("toggle");
-      const from = find(0, el => el.getAttribute("aria-label") === "Orb 1: from band index");
-      const to = find(0, el => el.getAttribute("aria-label") === "Orb 1: to band index");
-      const useRange = find(0, el => el.textContent === "Use range");
-      const otherTargets = [...preferences.orbs[1].bandIds];
-      from.value = "12"; to.value = "15"; useRange.click();
-      assert.deepEqual(preferences.orbs[0].bandIds, [12, 13, 14, 15]);
-      assert.deepEqual(runtime.settings.orbs[0].bandIds, [12, 13, 14, 15]);
-      assert.deepEqual(preferences.orbs[1].bandIds, otherTargets);
-      const check = find(0, el => el.getAttribute("aria-label") === "Orb 1: band 12, Planetary Forge");
-      assert.equal(check.checked, true);
-      const rowCount = pickerElements(chooser).length;
-      chooser.open = false; chooser.dispatch("toggle");
-      chooser.open = true; chooser.dispatch("toggle");
-      assert.equal(pickerElements(chooser).length, rowCount);
-      from.value = "15"; to.value = "12"; useRange.click();
-      assert.deepEqual(preferences.orbs[0].bandIds, [12, 13, 14, 15]);
-      assert.equal(from.getAttribute("aria-invalid"), "true");
-      const search = find(0, el => el.type === "search");
-      search.value = "no such band"; search.dispatch("input");
-      assert.deepEqual(preferences.orbs[0].bandIds, [12, 13, 14, 15]);
-      find(0, el => el.getAttribute("aria-label") === "Orb 1: use full spectrum").click();
-      assert.deepEqual(preferences.orbs[0].bandIds, []);
-      assert.equal(check.checked, false);
-      assert.equal(from.getAttribute("aria-invalid"), "false");
-    });
-  } finally { replacePreferences(previousPrefs); resolveSettings(); }
+test("dynamic Orb editor keeps stable card identity across UI refresh", async () => {
+  await withUiWireHarnessState({}, () => {
+    const roots = [...state.ui.orbEditorList.children];
+    UI.refreshAllUiText();
+    assert.deepEqual(state.ui.orbEditorList.children, roots);
+  });
 });
 
-test("exact band editor survives UI refresh and never partially applies invalid targets", async () => {
-  const previousPrefs = structuredClone(preferences);
-  try {
-    await withUiWireHarnessState({}, ({ getElement }) => {
-      const input = getElement("txtOrb0Bands");
-      input.value = "3, 7"; input.dispatch("change");
-      assert.deepEqual(preferences.orbs[0].bandIds, [3, 7]);
-      document.activeElement = input;
-      input.value = "12, ";
-      UI.refreshAllUiText();
-      assert.equal(input.value, "12, ");
-      input.value = "3, invalid, 8"; input.dispatch("change");
-      document.activeElement = null;
-      UI.refreshAllUiText();
-      assert.deepEqual(preferences.orbs[0].bandIds, [3, 7]);
-      assert.equal(input.value, "3, invalid, 8");
-      assert.equal(input.getAttribute("aria-invalid"), "true");
-      assert.ok(getElement("orb0BandError").textContent);
-      // Applying normalized configuration (as Reset/URL application does) wins over a stale draft.
-      preferences.orbs[0].bandIds = [2, 4];
-      UI.applyPrefs(null);
-      assert.equal(input.value, "2, 4");
-      assert.equal(input.getAttribute("aria-invalid"), "false");
-      assert.equal(getElement("orb0BandError").textContent, "");
-      const summary = pickerElements(getElement("orb0BandPicker")).find(el => el.className === "band-selection-summary");
-      assert.match(summary.textContent, /2 targets/);
-      assert.match(summary.textContent, /Iron Heartbeat/);
-    });
-  } finally { replacePreferences(previousPrefs); resolveSettings(); }
+test("dynamic Orb editor does not retain fixed-slot controls", async () => {
+  await withUiWireHarnessState({}, ({ getElement }) => {
+    assert.equal(state.ui.selOrb0Chan, undefined);
+    assert.equal(state.ui.orbEditorList.children.length, preferences.orbs.length);
+  });
 });
 
 test("global view toggle restores the prior panel selection and disclosure keys do not pause simulation", async () => {

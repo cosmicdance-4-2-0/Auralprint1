@@ -2,9 +2,9 @@
 
 This repo tracks **Auralprint** an offline-capable audio analysis suite.(“analyzer cosplaying as a visualizer”).
 
-The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). Build 115 is actively under development as **Visualizer Architecture + Orb Overhaul v1**. Revisions 115A–115G and the 115F.A tactical hardening are complete: AnalysisFrame, the Visualizer lifecycle, schema-10 per-Orb ownership, dynamic Orb runtime lifecycle, focused UI ownership, and a runtime-backed Visualizers inventory have landed. Dynamic management and the final generated editors remain unfinished. Build 116 Camera work is explicitly blocked until that decomposition and its UX are complete.
+The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). Build 115 is actively under development as **Visualizer Architecture + Orb Overhaul v1**. Revisions 115A–115H and the 115F.A tactical hardening are complete: AnalysisFrame, the Visualizer lifecycle, schema-10 per-Orb ownership, dynamic Orb runtime lifecycle, focused UI ownership, and a runtime-backed Visualizers inventory have landed. Dynamic Orb management and generated ID-aware editor cards are complete; remaining per-Orb controls begin in 115I. Build 116 Camera work is explicitly blocked until that decomposition and its UX are complete.
 
-To try a development revision, read the canonical root `version`, run `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15g.html`). Start with **Load audio**. **Visualizers** shows the actual runtime scene and links to its current control homes; **Orbs** still owns temporary per-orb targeting controls, and **Bands** still owns Band Overlay, spectral, and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused. Passing Node tests and producing the single-file build are regression evidence, not evidence that Build 115 is nearly ready for canonization.
+To try a development revision, read the canonical root `version`, run `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15h.html`). Start with **Load audio**. **Visualizers** shows the actual runtime scene and owns Add/Edit/Duplicate/Remove for Orbs; **Orbs** owns generated stable-ID configuration cards for every current Orb, and **Bands** still owns Band Overlay, spectral, and color controls. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused. Passing Node tests and producing the single-file build are regression evidence, not evidence that Build 115 is nearly ready for canonization.
 
 ## Versioning and what the numbers mean
 
@@ -34,7 +34,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 (`v0.1.15g` development revision) | — | In Progress | Visualizer Architecture + Orb Overhaul v1 |
+| 115 | v0.1.15 (`v0.1.15h` development revision) | — | In Progress | Visualizer Architecture + Orb Overhaul v1 |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Richer spectral selection |
@@ -127,7 +127,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 115 — v0.1.15: Visualizer Architecture + Orb Overhaul v1
 
-**Staged status:** 115A complete; 115B complete; 115C complete; 115D complete; 115E complete; 115F complete; 115F.A hardening complete; 115G complete. The dedicated Visualizers panel reflects the ordered `VisualizerRuntime` collection, including Band Overlay and zero/one/N Orbs, and provides navigation rather than duplicate editors. Orbs and Bands temporarily retain writable controls. Add/Duplicate/Remove begins in 115H; generated Orb controls, Analysis separation, Band Overlay promotion, and acceptance remain future work. Preset schema remains 10, and Camera remains blocked behind Build 115.
+**Staged status:** 115A complete; 115B complete; 115C complete; 115D complete; 115E complete; 115F complete; 115F.A hardening complete; 115G complete; 115H complete. The dedicated Visualizers panel reflects the ordered `VisualizerRuntime` collection, including Band Overlay and zero/one/N Orbs, and provides Orb collection management and navigation. Orbs dynamically exposes source, target, direction, hue, color, and center controls; Motion/Response/Particles/Trace remain transitional bulk controls until 115I. Analysis separation, Band Overlay promotion, and acceptance remain future work. Preset schema remains 10, and Camera remains blocked behind Build 115.
 
 **Goal:** establish a clean analysis-consumer boundary and make Orbs first-class visualizers before camera work begins.
 

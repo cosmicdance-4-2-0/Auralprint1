@@ -13,10 +13,10 @@ import { InputSourceManager } from "../audio/input-source-manager.js";
 import { ColorPolicy } from "../render/color-policy.js";
 import { VisualizerRuntime } from "../render/visualizer-runtime.js";
 import { RecorderEngine } from "../recording/recorder-engine.js";
-import { initOrbs, resetVisualizers, syncOrbsFromSettings } from "../render/orb-runtime.js";
+import { createRuntimeOrb, duplicateRuntimeOrb, initOrbs, removeRuntimeOrb, resetVisualizers, syncOrbsFromSettings } from "../render/orb-runtime.js";
 import { primeDomCache } from "./dom-cache.js";
 import { createWorkspaceUi } from "./workspace.js";
-import { createOrbCompatUi } from "./orb-compat-ui.js";
+import { createOrbEditorUi } from "./orb-editor.js";
 import { createVisualizersPanelUi } from "./visualizers-panel.js";
 
 /* =============================================================================
@@ -327,9 +327,9 @@ const UI = (() => {
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
-  const orbCompatUi = createOrbCompatUi({
+  const orbEditorUi = createOrbEditorUi({
     ui,
-    commitOrbChange: applyOrbPrefChange,
+    commitOrbChangeById: applyOrbPrefChangeById,
     commitPreferences: applyPrefs,
     showStatus: simStatusToast,
   });
@@ -338,6 +338,19 @@ const UI = (() => {
     getVisualizers: () => VisualizerRuntime.getVisualizers(),
     getSettings: () => runtime.settings,
     openOrbControls: () => workspace.showSimPanel(),
+    addOrb: () => {
+      const created = createRuntimeOrb();
+      if (created) { orbEditorUi.refresh(); simStatusToast(`Added ${created.id}`); }
+      return created;
+    },
+    editOrb: (id) => { workspace.showSimPanel(); orbEditorUi.refresh(); orbEditorUi.focusOrb(id); },
+    duplicateOrb: (id) => {
+      const created = duplicateRuntimeOrb(id);
+      if (created) { orbEditorUi.refresh(); simStatusToast(`Duplicated ${id}`); }
+      return created;
+    },
+    confirmRemoveOrb: ({ displayName, id }) => window.confirm(`Remove ${displayName} (${id})? This cannot be undone.`),
+    removeOrb: (id) => { const removed = removeRuntimeOrb(id); if (removed) { orbEditorUi.refresh(); simStatusToast(`Removed ${id}`); } return removed; },
     openBandOverlayControls: () => {
       workspace.showBandsPanel();
       if (!ui.bandOverlaySection) return;
@@ -367,13 +380,13 @@ const UI = (() => {
   }
 
 
-  function applyOrbPrefChange(orbIndex, reason, { structural = false } = {}) {
-    if (!Array.isArray(preferences.orbs) || !preferences.orbs[orbIndex]) return false;
+  function applyOrbPrefChangeById(id, reason) {
+    const orbIndex = preferences.orbs.findIndex((orb) => orb.id === id);
+    if (orbIndex < 0) return false;
     const defaults = CONFIG.defaults.orbs;
     preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], defaults[orbIndex % defaults.length]);
     applyPrefs(reason);
-    if (structural) { initOrbs(); resetVisualizers("visuals"); }
-    else syncOrbsFromSettings();
+    syncOrbsFromSettings();
     return true;
   }
 
@@ -394,7 +407,7 @@ const UI = (() => {
 
     AudioEngine.applyAnalyserSettingsLive();
     AudioEngine.applyPlaybackSettingsLive();
-    orbCompatUi.syncBandPickers();
+    orbEditorUi.refresh();
 
     if (reason) simStatusToast(`Updated: ${reason}`);
     ui.bandsStatus.textContent = STATUS_DEFAULT_BANDS;
@@ -1221,7 +1234,7 @@ const UI = (() => {
     ui.rngVol.value = String(p.audio.volume);
     ui.valVol.textContent = fmt(p.audio.volume, 2);
 
-    orbCompatUi.refresh(p);
+    orbEditorUi.refresh(p);
     visualizersPanelUi.refresh();
 
     ui.rngRmsGain.value = String(p.audio.rmsGain);
@@ -1310,7 +1323,7 @@ const UI = (() => {
   function wireControls() {
     primeDomCache();
 
-    orbCompatUi.init();
+    orbEditorUi.init();
     visualizersPanelUi.init();
 
     initConfigTooltips();

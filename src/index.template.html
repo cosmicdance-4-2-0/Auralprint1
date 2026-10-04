@@ -97,7 +97,8 @@
     <div class="panel-header"><div><h2 class="panel-title">Visualizers</h2><p class="panel-description">See what is drawing the current scene.</p></div><button id="btnHideVisualizers" aria-label="Hide Visualizers panel">Hide</button></div>
     <div class="muted panel-status" id="visualizersStatus" role="status" aria-live="polite">0 visualizers · 0 Orbs</div>
     <div id="visualizerList" class="visualizer-list" role="list" aria-label="Visualizers in scene"></div>
-    <div class="panel-actions visualizers-actions" aria-label="Visualizer control navigation">
+    <div class="panel-actions visualizers-actions" aria-label="Visualizer management">
+      <button id="btnVisualizersAddOrb" type="button">+ Add Orb</button>
       <button id="btnVisualizersOpenOrbs" type="button">Open Orb Controls</button>
       <button id="btnVisualizersOpenBandOverlay" type="button">Open Band Overlay Controls</button>
     </div>
@@ -107,90 +108,7 @@
     <div class="panel-header"><div><h2 class="panel-title">Orbs &amp; motion</h2><p class="panel-description">Give each orb its own spectral target.</p></div><button id="btnHideSim" aria-label="Hide orbs panel">Hide</button></div>
     <div class="panel-actions"><button id="btnResetVisuals" title="Reset orb phases and clear trails (keyboard: R)">Reset Visuals</button></div>
     <div class="muted panel-status" id="simStatus" role="status">Choose an orb to shape its response.</div>
-    <details id="orbCard0" class="orb-card" open>
-      <summary>Orb 1<span class="section-description">Channel, frequency target &amp; color</span></summary>
-      <div class="section-body">
-      <div class="row">
-      <label for="selOrb0Chan">Channel</label>
-      <select id="selOrb0Chan"></select>
-      <div id="valOrb0Chan" class="val"></div>
-    </div>
-      <div id="orb0BandPicker" class="orb-band-picker"></div>
-      <details class="advanced-control"><summary>Exact band indices</summary><div class="row">
-      <label for="txtOrb0Bands" title="Comma-separated band indices (0–255). Empty = full spectrum energy.">Band indices</label>
-      <input id="txtOrb0Bands" type="text" aria-describedby="orb0BandError" spellcheck="false" autocomplete="off" placeholder="e.g. 12, 48" />
-      <div id="valOrb0Bands" class="val"></div>
-    </div><p id="orb0BandError" class="picker-error" role="alert"></p></details>
-
-    <div class="row">
-      <label for="selOrb0Chir">Direction</label>
-      <select id="selOrb0Chir"></select>
-      <div id="valOrb0Chir" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="rngOrb0Hue">Hue offset</label>
-      <input id="rngOrb0Hue" type="range" />
-      <div id="valOrb0Hue" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="selOrb0ColorSrc">Color source</label>
-      <select id="selOrb0ColorSrc"></select>
-      <div id="valOrb0ColorSrc" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="rngOrb0CenterX">Center X</label>
-      <input id="rngOrb0CenterX" type="range" />
-      <div id="valOrb0CenterX" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="rngOrb0CenterY">Center Y</label>
-      <input id="rngOrb0CenterY" type="range" />
-      <div id="valOrb0CenterY" class="val"></div>
-    </div>
-      </div>
-    </details>
-    <details id="orbCard1" class="orb-card">
-      <summary>Orb 2<span class="section-description">Channel, frequency target &amp; color</span></summary>
-      <div class="section-body">
-      <div class="row">
-      <label for="selOrb1Chan">Channel</label>
-      <select id="selOrb1Chan"></select>
-      <div id="valOrb1Chan" class="val"></div>
-    </div>
-      <div id="orb1BandPicker" class="orb-band-picker"></div>
-      <details class="advanced-control"><summary>Exact band indices</summary><div class="row">
-      <label for="txtOrb1Bands" title="Comma-separated band indices (0–255). Empty = full spectrum energy.">Band indices</label>
-      <input id="txtOrb1Bands" type="text" aria-describedby="orb1BandError" spellcheck="false" autocomplete="off" placeholder="e.g. 12, 48" />
-      <div id="valOrb1Bands" class="val"></div>
-    </div><p id="orb1BandError" class="picker-error" role="alert"></p></details>
-
-    <div class="row">
-      <label for="selOrb1Chir">Direction</label>
-      <select id="selOrb1Chir"></select>
-      <div id="valOrb1Chir" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="rngOrb1Hue">Hue offset</label>
-      <input id="rngOrb1Hue" type="range" />
-      <div id="valOrb1Hue" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="selOrb1ColorSrc">Color source</label>
-      <select id="selOrb1ColorSrc"></select>
-      <div id="valOrb1ColorSrc" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="rngOrb1CenterX">Center X</label>
-      <input id="rngOrb1CenterX" type="range" />
-      <div id="valOrb1CenterX" class="val"></div>
-    </div>
-    <div class="row">
-      <label for="rngOrb1CenterY">Center Y</label>
-      <input id="rngOrb1CenterY" type="range" />
-      <div id="valOrb1CenterY" class="val"></div>
-    </div>
-      </div>
-    </details>
+    <div id="orbEditorList" class="orb-editor-list" aria-label="Orb editors"></div>
     <details class="settings-section"><summary>Motion<span class="section-description">Applies to all Orbs</span></summary><div class="section-body">
     <div class="row">
       <label for="rngOmega">Angular speed</label>
