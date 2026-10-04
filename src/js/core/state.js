@@ -57,6 +57,8 @@ function createRecordingState() {
   };
 }
 
+const initialBandEnergies = { L: [], R: [], C: [] };
+
 const state = {
   canvas: null,
   ctx: null,
@@ -77,7 +79,13 @@ const state = {
   bands: {
     lowHz: [],
     highHz: [],
-    energies01: [],
+    channels: {
+      L: { energies01: initialBandEnergies.L },
+      R: { energies01: initialBandEnergies.R },
+      C: { energies01: initialBandEnergies.C },
+    },
+    // Canonical global spectrum is the real combined Center analysis.
+    energies01: initialBandEnergies.C,
     meta: {
       sampleRateHz: null,
       nyquistHz: null,

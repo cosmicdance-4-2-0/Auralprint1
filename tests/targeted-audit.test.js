@@ -20,8 +20,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15j");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15j/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15j.a");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15j\.a/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -321,6 +321,7 @@ function createAudioEngineHarness() {
   const previousOnFilePlaybackError = AudioEngine._onFilePlaybackError;
   const revokedUrls = [];
   const connectionLog = [];
+  const analysers = [];
   let destinationNode = null;
 
   function createNode(extra = {}) {
@@ -409,13 +410,18 @@ function createAudioEngineHarness() {
       return createNode();
     }
     createAnalyser() {
-      return createNode({
+      const analyser = createNode({
         fftSize: 2048,
         smoothingTimeConstant: 0,
         frequencyBinCount: 1024,
+        minDecibels: -100,
+        maxDecibels: 0,
+        frequencyReadCount: 0,
         getFloatTimeDomainData(buffer) { buffer.fill(0); },
-        getFloatFrequencyData(buffer) { buffer.fill(-100); },
+        getFloatFrequencyData(buffer) { this.frequencyReadCount += 1; buffer.fill(-100); },
       });
+      analysers.push(analyser);
+      return analyser;
     }
     createMediaStreamDestination() {
       return createNode({
@@ -445,6 +451,7 @@ function createAudioEngineHarness() {
   return {
     audioEl,
     connectionLog,
+    analysers,
     get destinationNode() {
       return destinationNode;
     },
@@ -1236,6 +1243,13 @@ test("AudioEngine.loadFile does not tear down the freshly created media element 
     assert.equal(AudioEngine.getMediaEl(), harness.audioEl);
     assert.equal(state.audio.isLoaded, true);
     assert.equal(state.audio.filename, "demo.wav");
+    const arraysBefore = Object.fromEntries(Object.entries(state.bands.channels).map(([id, value]) => [id, value.energies01]));
+    assert.equal(AudioEngine.sample().ready, true);
+    assert.deepEqual(harness.analysers.map((analyser) => analyser.frequencyReadCount), [1, 1, 1]);
+    AudioEngine.sample();
+    assert.deepEqual(harness.analysers.map((analyser) => analyser.frequencyReadCount), [2, 2, 2]);
+    for (const id of ["L", "R", "C"]) assert.equal(state.bands.channels[id].energies01, arraysBefore[id]);
+    assert.equal(state.bands.energies01, state.bands.channels.C.energies01);
   } finally {
     harness.restore();
   }

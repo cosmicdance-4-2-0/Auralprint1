@@ -100,7 +100,12 @@ const BandBank = (() => {
     state.bands.lowHz[n - 1] = f1;
     state.bands.highHz[n - 1] = Infinity;
 
-    state.bands.energies01 = new Array(n).fill(0);
+    state.bands.channels = {
+      L: { energies01: new Array(n).fill(0) },
+      R: { energies01: new Array(n).fill(0) },
+      C: { energies01: new Array(n).fill(0) },
+    };
+    state.bands.energies01 = state.bands.channels.C.energies01;
     state.bands.meta.sampleRateHz = Number.isFinite(sampleRateHz) ? sampleRateHz : null;
     state.bands.meta.nyquistHz = Number.isFinite(sampleRateHz) ? sampleRateHz * 0.5 : null;
     state.bands.meta.configCeilingHz = configCeilingHz;
@@ -115,16 +120,16 @@ const BandBank = (() => {
     return idx;
   }
 
-  function computeEnergiesFromCAnalyser(cBand, audioContextSampleRate) {
+  function computeEnergiesFromAnalyser(analyserBand, audioContextSampleRate, targetEnergies) {
     const s = runtime.settings;
     const n = s.bands.count;
-    if (!cBand || !cBand.freqDb) return;
+    if (!analyserBand || !analyserBand.freqDb || !targetEnergies) return null;
 
     const nyquist = audioContextSampleRate * 0.5;
-    const bins = cBand.freqDb.length;
+    const bins = analyserBand.freqDb.length;
 
-    const minDb = cBand.analyser.minDecibels;
-    const maxDb = cBand.analyser.maxDecibels;
+    const minDb = analyserBand.analyser.minDecibels;
+    const maxDb = analyserBand.analyser.maxDecibels;
     const dbSpan = Math.max(1e-6, (maxDb - minDb));
 
     let dominant = 0;
@@ -142,20 +147,20 @@ const BandBank = (() => {
       const b = clamp(hiBin, 0, bins - 1);
 
       if (b < a) {
-        state.bands.energies01[i] = 0;
+        targetEnergies[i] = 0;
         continue;
       }
 
       let sum = 0;
       let count = 0;
       for (let k = a; k <= b; k++) {
-        const t = clamp((cBand.freqDb[k] - minDb) / dbSpan, 0, 1);
+        const t = clamp((analyserBand.freqDb[k] - minDb) / dbSpan, 0, 1);
         sum += t;
         count += 1;
       }
 
       const avg = count > 0 ? (sum / count) : 0;
-      state.bands.energies01[i] = avg;
+      targetEnergies[i] = avg;
 
       if (avg > dominantVal) {
         dominantVal = avg;
@@ -163,12 +168,15 @@ const BandBank = (() => {
       }
     }
 
-    state.bands.dominantIndex = dominant;
-    const name = BAND_NAMES[dominant] || `Band ${dominant}`;
-    state.bands.dominantName = name;
+    return dominant;
   }
 
-  return { rebuild, bandIndexFromAngleRad, computeEnergiesFromCAnalyser, getBandRangeData, formatBandRangeText };
+  function updateGlobalDominant(dominantIndex) {
+    state.bands.dominantIndex = dominantIndex;
+    state.bands.dominantName = BAND_NAMES[dominantIndex] || `Band ${dominantIndex}`;
+  }
+
+  return { rebuild, bandIndexFromAngleRad, computeEnergiesFromAnalyser, updateGlobalDominant, getBandRangeData, formatBandRangeText };
 })();
 
 export { hzToMel, melToHz, hzToBark, barkToHz, hzToErb, erbToHz, computeInteriorEdges, BandBank };

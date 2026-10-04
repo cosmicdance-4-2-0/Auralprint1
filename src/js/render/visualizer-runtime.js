@@ -13,8 +13,8 @@ function selectOrbAnalysis(orb, analysisFrame) {
   const bandIds = Array.isArray(orb && orb.bandIds) ? orb.bandIds : [];
   if (!bandIds.length) return { band: sourceBand, energyOverride01: null, selectedDominantBandIndex: null };
 
-  const energies = analysisFrame.spectrum.energies01;
-  if (!Array.isArray(energies) || !energies.length) {
+  const energies = sourceBand && sourceBand.bandEnergies01;
+  if (!energies || !energies.length) {
     return { band: sourceBand, energyOverride01: null, selectedDominantBandIndex: null };
   }
   let sum = 0;

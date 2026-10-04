@@ -1192,7 +1192,7 @@ const UI = (() => {
   function resetTrackVisualState() {
     Scrubber.reset();
     resetVisualizers("track");
-    state.bands.energies01.fill(0);
+    for (const channel of Object.values(state.bands.channels)) channel.energies01.fill(0);
     state.bands.dominantIndex = 0;
     state.bands.dominantName = "(none)";
     analysisPanelUi.refresh();

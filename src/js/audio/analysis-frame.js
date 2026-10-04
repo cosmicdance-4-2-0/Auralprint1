@@ -6,7 +6,7 @@
    analyser buffer or BandBank array is replaced; it does not copy live data.
    ========================================================================== */
 function createChannelView() {
-  return { waveform: null, rms: 0, energy01: 0 };
+  return { waveform: null, rms: 0, energy01: 0, bandEnergies01: null };
 }
 
 function createAnalysisFrame() {
@@ -34,10 +34,11 @@ function createAnalysisFrame() {
   };
 }
 
-function updateChannelView(target, source) {
+function updateChannelView(target, source, bandChannel) {
   target.waveform = source && source.timeDomain ? source.timeDomain : null;
   target.rms = source && Number.isFinite(source.rms) ? source.rms : 0;
   target.energy01 = source && Number.isFinite(source.energy01) ? source.energy01 : 0;
+  target.bandEnergies01 = bandChannel && bandChannel.energies01 ? bandChannel.energies01 : null;
 }
 
 function updateAnalysisFrame(frame, audioSample, bandState) {
@@ -46,14 +47,14 @@ function updateAnalysisFrame(frame, audioSample, bandState) {
   frame.monoLike = ready ? !!audioSample.monoLike : true;
 
   const sampledChannels = ready && audioSample.bands ? audioSample.bands : null;
-  updateChannelView(frame.channels.L, sampledChannels && sampledChannels.L);
-  updateChannelView(frame.channels.R, sampledChannels && sampledChannels.R);
-  updateChannelView(frame.channels.C, sampledChannels && sampledChannels.C);
-
   const spectrum = frame.spectrum;
   const source = bandState || {};
+  const bandChannels = source.channels || {};
+  updateChannelView(frame.channels.L, sampledChannels && sampledChannels.L, bandChannels.L);
+  updateChannelView(frame.channels.R, sampledChannels && sampledChannels.R, bandChannels.R);
+  updateChannelView(frame.channels.C, sampledChannels && sampledChannels.C, bandChannels.C);
   const metadata = source.meta || {};
-  spectrum.energies01 = source.energies01 || null;
+  spectrum.energies01 = frame.channels.C.bandEnergies01 || source.energies01 || null;
   spectrum.lowHz = source.lowHz || null;
   spectrum.highHz = source.highHz || null;
   spectrum.dominantIndex = Number.isInteger(source.dominantIndex) ? source.dominantIndex : 0;

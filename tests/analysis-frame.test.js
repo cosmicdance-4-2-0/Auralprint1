@@ -14,7 +14,11 @@ function createReadySources() {
   const L = Float32Array.from([0.1, 0.2]);
   const R = Float32Array.from([0.3, 0.4]);
   const C = Float32Array.from([0.5, 0.6]);
-  const energies01 = [0.1, 0.4, 0.7];
+  const channelEnergies = {
+    L: [0.9, 0.2, 0.1],
+    R: [0.1, 0.8, 0.2],
+    C: [0.4, 0.4, 0.9],
+  };
   return {
     waveforms: { L, R, C },
     audioSample: {
@@ -27,13 +31,19 @@ function createReadySources() {
       },
     },
     bandState: {
-      energies01,
+      channels: {
+        L: { energies01: channelEnergies.L },
+        R: { energies01: channelEnergies.R },
+        C: { energies01: channelEnergies.C },
+      },
+      energies01: channelEnergies.C,
       lowHz: [0, 20, 200],
       highHz: [20, 200, Infinity],
       dominantIndex: 2,
       dominantName: "Band Two",
       meta: { sampleRateHz: 48000, nyquistHz: 24000, configCeilingHz: 30000, effectiveCeilingHz: 24000 },
     },
+    channelEnergies,
   };
 }
 
@@ -44,7 +54,7 @@ test("AnalysisFrame represents not-ready analysis without exposing Web Audio obj
   assert.equal(frame.ready, false);
   assert.equal(frame.monoLike, true);
   for (const channel of Object.values(frame.channels)) {
-    assert.deepEqual(channel, { waveform: null, rms: 0, energy01: 0 });
+    assert.deepEqual(channel, { waveform: null, rms: 0, energy01: 0, bandEnergies01: null });
     assert.equal("analyser" in channel, false);
   }
 });
@@ -59,7 +69,11 @@ test("AnalysisFrame exposes ready channel and spectrum data as producer-owned re
   assert.equal(frame.channels.C.waveform, sources.waveforms.C);
   assert.deepEqual([frame.channels.L.rms, frame.channels.R.rms, frame.channels.C.rms], [0.11, 0.12, 0.13]);
   assert.deepEqual([frame.channels.L.energy01, frame.channels.R.energy01, frame.channels.C.energy01], [0.21, 0.22, 0.23]);
+  assert.equal(frame.channels.L.bandEnergies01, sources.channelEnergies.L);
+  assert.equal(frame.channels.R.bandEnergies01, sources.channelEnergies.R);
+  assert.equal(frame.channels.C.bandEnergies01, sources.channelEnergies.C);
   assert.equal(frame.spectrum.energies01, sources.bandState.energies01);
+  assert.equal(frame.spectrum.energies01, frame.channels.C.bandEnergies01);
   assert.equal(frame.spectrum.lowHz, sources.bandState.lowHz);
   assert.equal(frame.spectrum.highHz, sources.bandState.highHz);
   assert.equal(frame.spectrum.dominantIndex, 2);
@@ -69,9 +83,13 @@ test("AnalysisFrame exposes ready channel and spectrum data as producer-owned re
   });
   assert.equal("analyser" in frame.channels.L, false);
   assert.equal("audioContext" in frame, false);
+  for (const channel of Object.values(frame.channels)) {
+    assert.equal("lowHz" in channel, false);
+    assert.equal("metadata" in channel, false);
+  }
 });
 
-test("orb routing preserves channel waveforms, full-spectrum energy, and combined selected-band averaging", () => {
+test("orb routing uses one channel for waveform, full energy, and targeted spectrum", () => {
   const sources = createReadySources();
   const frame = updateAnalysisFrame(createAnalysisFrame(), sources.audioSample, sources.bandState);
   for (const channel of ["L", "R", "C"]) {
@@ -80,9 +98,15 @@ test("orb routing preserves channel waveforms, full-spectrum energy, and combine
     assert.equal(selection.band.waveform, sources.waveforms[channel]);
     assert.equal(selection.energyOverride01, null);
   }
-  const selected = getBandForOrb({ chanId: "L", bandIds: [0, 2] }, frame);
-  assert.equal(selected.band, frame.channels.L);
-  assert.ok(Math.abs(selected.energyOverride01 - 0.4) < Number.EPSILON);
+  const selectedL = getBandForOrb({ chanId: "L", bandIds: [0, 1] }, frame);
+  assert.equal(selectedL.energyOverride01, 0.55);
+  assert.equal(selectedL.selectedDominantBandIndex, 0);
+  const selectedR = getBandForOrb({ chanId: "R", bandIds: [0, 1] }, frame);
+  assert.equal(selectedR.energyOverride01, 0.45);
+  assert.equal(selectedR.selectedDominantBandIndex, 1);
+  const selectedC = getBandForOrb({ chanId: "C", bandIds: [0, 1] }, frame);
+  assert.equal(selectedC.energyOverride01, 0.4);
+  assert.equal(selectedC.selectedDominantBandIndex, 0);
   const safeInvalid = getBandForOrb({ chanId: "invalid", bandIds: [1, 999] }, frame);
   assert.equal(safeInvalid.band, frame.channels.C);
   assert.equal(safeInvalid.energyOverride01, 0.2);
@@ -98,6 +122,7 @@ test("a later AnalysisFrame update follows BandBank replacement arrays", () => {
   assert.notEqual(frame.spectrum.energies01, firstEnergies);
   assert.notEqual(frame.spectrum.lowHz, firstEdges);
   assert.equal(frame.spectrum.energies01, state.bands.energies01);
+  assert.equal(frame.channels.C.bandEnergies01, state.bands.channels.C.energies01);
   assert.equal(frame.spectrum.lowHz, state.bands.lowHz);
   assert.equal(frame.spectrum.metadata.sampleRateHz, 44100);
   assert.equal(frame.spectrum.metadata.nyquistHz, 22050);

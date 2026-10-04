@@ -6,7 +6,7 @@ import { BandBankController } from "./band-bank-controller.js";
 import { BandBank } from "./band-bank.js";
 
 /* =============================================================================
-   Audio Engine (L/R/C) + freq data for C
+   Audio Engine — complete time-domain and frequency-domain L/R/C analysis
    ========================================================================== */
 const AudioEngine = (() => {
   let audioContext = null;
@@ -503,8 +503,17 @@ const AudioEngine = (() => {
     bandR.energy01 = computeEnergy01(bandR.rms);
     bandC.energy01 = computeEnergy01(bandC.rms);
 
+    bandL.analyser.getFloatFrequencyData(bandL.freqDb);
+    bandR.analyser.getFloatFrequencyData(bandR.freqDb);
     bandC.analyser.getFloatFrequencyData(bandC.freqDb);
-    BandBank.computeEnergiesFromCAnalyser(bandC, ensureContext().sampleRate);
+
+    const sampleRate = audioContext.sampleRate;
+    BandBank.computeEnergiesFromAnalyser(bandL, sampleRate, state.bands.channels.L.energies01);
+    BandBank.computeEnergiesFromAnalyser(bandR, sampleRate, state.bands.channels.R.energies01);
+    const dominantIndex = BandBank.computeEnergiesFromAnalyser(
+      bandC, sampleRate, state.bands.channels.C.energies01,
+    );
+    if (Number.isInteger(dominantIndex)) BandBank.updateGlobalDominant(dominantIndex);
 
     return { ready: true, monoLike: status.monoLike, bands: { L: bandL, R: bandR, C: bandC }, debug: { corrLR: status.corrLR } };
   }
