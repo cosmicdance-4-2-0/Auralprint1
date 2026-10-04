@@ -18,6 +18,10 @@
 .visualizer-visibility.is-visible { color: var(--ui-accent); }
 .visualizer-visibility.is-hidden { color: #bdc5c5; }
 .visualizers-actions { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.spectral-ring-editor { max-width: 100%; overflow: hidden; }
+.spectral-ring-editor h3 { margin: 12px 0 5px; color: #b9d6d6; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.spectral-ring-editor .row { min-width: 0; }
+.spectral-ring-editor input[type="range"], .spectral-ring-editor select { min-width: 0; max-width: 100%; }
 
 @media (max-width: 600px) {
   #visualizersPanel { right: calc(var(--ui-pad) + var(--ui-safe-r)); width: auto; }

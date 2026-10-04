@@ -3,7 +3,7 @@ import { runtime, normalizeOrbChannelId } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { clamp } from "../core/utils.js";
 
-const BAND_OVERLAY_VISUALIZER_ID = "band-overlay";
+const SPECTRAL_RING_VISUALIZER_ID = "spectral-ring";
 
 function selectOrbAnalysis(orb, analysisFrame) {
   const channel = normalizeOrbChannelId(orb && orb.chanId, orb && orb.bandId);
@@ -35,10 +35,10 @@ function selectOrbAnalysis(orb, analysisFrame) {
   };
 }
 
-function createBandOverlayVisualizer({ settingsRef = runtime, stateRef = state } = {}) {
+function createSpectralRingVisualizer({ settingsRef = runtime, stateRef = state } = {}) {
   return {
-    id: BAND_OVERLAY_VISUALIZER_ID,
-    type: "band-overlay",
+    id: SPECTRAL_RING_VISUALIZER_ID,
+    type: "spectral-ring",
     isVisible() {
       return !!settingsRef.settings.bands.overlay.enabled;
     },
@@ -55,11 +55,12 @@ function createBandOverlayVisualizer({ settingsRef = runtime, stateRef = state }
       }
     },
     render(renderer, frameContext) {
-      renderer.drawBandOverlay(frameContext.analysisFrame);
+      renderer.drawSpectralRing(frameContext.analysisFrame);
     },
     reset(reason) {
       if (reason === "visuals") {
-        stateRef.bands.ringPhaseRad = stateRef.orbs.length
+        const overlay = settingsRef.settings.bands.overlay;
+        stateRef.bands.ringPhaseRad = overlay.phaseMode === "orb" && stateRef.orbs.length
           ? stateRef.orbs[0].startAngleRad
           : 0;
       }
@@ -98,21 +99,21 @@ function createOrbVisualizer(orb) {
 }
 
 function createVisualizerRuntime({
-  createBandOverlay = createBandOverlayVisualizer,
+  createSpectralRing = createSpectralRingVisualizer,
   createOrb = createOrbVisualizer,
 } = {}) {
   let visualizers = [];
 
   function rebuild(orbs = state.orbs) {
     dispose();
-    visualizers = [createBandOverlay()];
+    visualizers = [createSpectralRing()];
     for (const orb of orbs) visualizers.push(createOrb(orb));
     return visualizers;
   }
 
   function reconcile(orbs = state.orbs) {
-    let overlay = visualizers.find((visualizer) => visualizer.type === "band-overlay");
-    if (!overlay) overlay = createBandOverlay();
+    let overlay = visualizers.find((visualizer) => visualizer.type === "spectral-ring");
+    if (!overlay) overlay = createSpectralRing();
     const existing = new Map(
       visualizers.filter((visualizer) => visualizer.type === "orb").map((visualizer) => [visualizer.id, visualizer]),
     );
@@ -163,9 +164,9 @@ function createVisualizerRuntime({
 const VisualizerRuntime = createVisualizerRuntime();
 
 export {
-  BAND_OVERLAY_VISUALIZER_ID,
+  SPECTRAL_RING_VISUALIZER_ID,
   VisualizerRuntime,
-  createBandOverlayVisualizer,
+  createSpectralRingVisualizer,
   createOrbVisualizer,
   createVisualizerRuntime,
   selectOrbAnalysis,

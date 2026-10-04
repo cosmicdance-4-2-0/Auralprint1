@@ -31,12 +31,12 @@ function installDocument() {
   return () => { globalThis.document = previous; };
 }
 
-test("inventory follows runtime order across Band Overlay and zero/one/two/N Orbs", () => {
-  const overlay = visualizer("band-overlay", "band-overlay");
+test("inventory follows runtime order across Spectral Ring and zero/one/two/N Orbs", () => {
+  const overlay = visualizer("spectral-ring", "spectral-ring");
   for (const ids of [[], ["ORB0"], ["ORB0", "ORB7"], ["ORB0", "ORB7", "ORB3", "custom-id"]]) {
     const source = [overlay, ...ids.map((id) => visualizer("orb", id))];
     const model = createVisualizerInventory(source);
-    assert.equal(model[0].displayName, "Band Overlay");
+    assert.equal(model[0].displayName, "Spectral Ring");
     assert.deepEqual(model.slice(1).map((item) => item.displayName), ids.map((_, index) => `Orb ${index + 1}`));
     assert.deepEqual(model.slice(1).map((item) => item.id), ids);
     assert.deepEqual(source.slice(1).map((item) => item.id), ids);
@@ -45,14 +45,14 @@ test("inventory follows runtime order across Band Overlay and zero/one/two/N Orb
 
 test("inventory reports lifecycle visibility, Orb targets, and unknown types truthfully", () => {
   const model = createVisualizerInventory([
-    visualizer("band-overlay", "band-overlay", { visible: false }),
+    visualizer("spectral-ring", "spectral-ring", { visible: false }),
     visualizer("orb", "L0", { chanId: "L", bandIds: [] }),
     visualizer("orb", "R0", { chanId: "R", bandIds: [3] }),
     visualizer("orb", "C0", { chanId: "C", bandIds: [1, 9] }),
     visualizer("future-glow", "future", { visible: false }),
   ]);
   assert.equal(model[0].visible, false);
-  assert.equal(model[0].summary, "Spectral band visualization");
+  assert.equal(model[0].summary, "Combined C spectrum");
   assert.equal(model[1].summary, "L0 · L · full spectrum");
   assert.equal(model[2].summary, "R0 · R · 1 band");
   assert.equal(model[3].summary, "C0 · C · 2 bands");
@@ -62,7 +62,7 @@ test("inventory reports lifecycle visibility, Orb targets, and unknown types tru
 test("panel refresh is reference-guarded, responds to replacement, and disables zero-Orb navigation", () => {
   const restore = installDocument();
   let settings = { revision: 1 };
-  let collection = [visualizer("band-overlay", "band-overlay")];
+  let collection = [visualizer("spectral-ring", "spectral-ring")];
   const ui = { visualizerList: element(), visualizersStatus: element(), btnVisualizersOpenOrbs: element() };
   let replacements = 0;
   const replace = ui.visualizerList.replaceChildren.bind(ui.visualizerList);
@@ -83,34 +83,30 @@ test("panel refresh is reference-guarded, responds to replacement, and disables 
   } finally { restore(); }
 });
 
-test("panel initialization is idempotent and navigation uses injected callbacks once", () => {
+test("panel initialization is idempotent and Orb navigation wires once", () => {
   const restore = installDocument();
   let orbsOpened = 0;
-  let bandsOpened = 0;
   const ui = {
     visualizerList: element(), visualizersStatus: element(),
-    btnVisualizersOpenOrbs: element(), btnVisualizersOpenBandOverlay: element(),
+    btnVisualizersOpenOrbs: element(),
   };
   try {
     const panel = createVisualizersPanelUi({
       ui,
       getSettings: () => ({}),
-      getVisualizers: () => [visualizer("band-overlay", "band-overlay"), visualizer("orb", "ORB0")],
+      getVisualizers: () => [visualizer("spectral-ring", "spectral-ring"), visualizer("orb", "ORB0")],
       openOrbControls: () => { orbsOpened += 1; },
-      openBandOverlayControls: () => { bandsOpened += 1; },
     });
     assert.equal(panel.init(), true);
     assert.equal(panel.init(), false);
     ui.btnVisualizersOpenOrbs.dispatch("click");
-    ui.btnVisualizersOpenBandOverlay.dispatch("click");
     assert.equal(orbsOpened, 1);
-    assert.equal(bandsOpened, 1);
   } finally { restore(); }
 });
 
 test("Orb management uses stable IDs, confirmation, and excludes non-Orb rows", () => {
   const restore = installDocument();
-  let collection = [visualizer("band-overlay", "band-overlay"), visualizer("orb", "ORB0"), visualizer("orb", "custom-id")];
+  let collection = [visualizer("spectral-ring", "spectral-ring"), visualizer("orb", "ORB0"), visualizer("orb", "custom-id")];
   const addButton = element(); addButton.focus = () => { addButton.focused = true; };
   const list = element(); list.contains = () => true;
   const ui = { visualizerList: list, visualizersStatus: element(), btnVisualizersAddOrb: addButton, btnVisualizersOpenOrbs: element() };
@@ -122,7 +118,8 @@ test("Orb management uses stable IDs, confirmation, and excludes non-Orb rows", 
       confirmRemoveOrb: data => { calls.push(["confirm",data.id]); return false; }, removeOrb: id => { calls.push(["remove",id]); return true; },
     });
     panel.init(); addButton.dispatch("click"); assert.deepEqual(calls[0],["add"]);
-    const rows=list.children; assert.equal(rows[0].children.length,2); // Band Overlay has no lifecycle actions.
+    const rows=list.children; assert.equal(rows[0].children.length,3); // Spectral Ring has Edit only.
+    assert.equal(rows[0].children[2].children.length,1);
     assert.equal(rows.slice(1).every(row => row.children[2].children.length===3),true);
     const remove=rows.find(row=>row.children[1].textContent.includes("custom-id"))?.children[2].children[2];
     remove.closest=()=>remove; list.dispatch("click",{target:remove});

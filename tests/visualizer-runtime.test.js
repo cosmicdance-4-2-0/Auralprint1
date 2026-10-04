@@ -8,8 +8,8 @@ import { state } from "../src/js/core/state.js";
 import { ColorPolicy } from "../src/js/render/color-policy.js";
 import { Orb } from "../src/js/render/orb.js";
 import {
-  BAND_OVERLAY_VISUALIZER_ID,
-  createBandOverlayVisualizer,
+  SPECTRAL_RING_VISUALIZER_ID,
+  createSpectralRingVisualizer,
   createOrbVisualizer,
   createVisualizerRuntime,
   selectOrbAnalysis,
@@ -60,8 +60,8 @@ function overlayHarness({ enabled = true, phaseMode = "free", speed = 2, orbs = 
 test("current visualizers have stable identities and deterministic overlay-before-orb composition", () => {
   const order = [];
   const runtime = createVisualizerRuntime({
-    createBandOverlay: () => ({
-      id: BAND_OVERLAY_VISUALIZER_ID, type: "band-overlay", isVisible: () => true,
+    createSpectralRing: () => ({
+      id: SPECTRAL_RING_VISUALIZER_ID, type: "spectral-ring", isVisible: () => true,
       update: () => order.push("update:overlay"), render: () => order.push("render:overlay"),
       reset() {}, dispose() {},
     }),
@@ -74,7 +74,7 @@ test("current visualizers have stable identities and deterministic overlay-befor
   const orbs = [fakeOrb("ORB0"), fakeOrb("ORB1")];
   runtime.rebuild(orbs);
   assert.deepEqual(runtime.getVisualizers().map(({ id, type }) => ({ id, type })), [
-    { id: BAND_OVERLAY_VISUALIZER_ID, type: "band-overlay" },
+    { id: SPECTRAL_RING_VISUALIZER_ID, type: "spectral-ring" },
     { id: "ORB0", type: "orb" },
     { id: "ORB1", type: "orb" },
   ]);
@@ -174,37 +174,37 @@ test("Orb visualizer passes selected dominant context through Orb.step into inhe
   }
 });
 
-test("Band Overlay updates while simulation is paused and preserves free and orb phase modes", () => {
+test("Spectral Ring updates while simulation is paused and preserves free and orb phase modes", () => {
   const free = overlayHarness();
-  const freeVisualizer = createBandOverlayVisualizer(free);
+  const freeVisualizer = createSpectralRingVisualizer(free);
   freeVisualizer.update(frame({ simPaused: true }));
   assert.equal(free.stateRef.bands.ringPhaseRad, 1.5);
 
   const carrier = fakeOrb("ORB0", { angleRad: 2.25 });
   const locked = overlayHarness({ phaseMode: "orb", orbs: [carrier] });
-  createBandOverlayVisualizer(locked).update(frame({ simPaused: true }));
+  createSpectralRingVisualizer(locked).update(frame({ simPaused: true }));
   assert.equal(locked.stateRef.bands.ringPhaseRad, 2.25);
 
   const wrapped = overlayHarness({ speed: -20 });
-  createBandOverlayVisualizer(wrapped).update(frame());
+  createSpectralRingVisualizer(wrapped).update(frame());
   assert.ok(wrapped.stateRef.bands.ringPhaseRad >= 0);
   assert.ok(wrapped.stateRef.bands.ringPhaseRad < TAU);
 });
 
-test("Band Overlay enablement controls render without introducing separate state", () => {
+test("Spectral Ring enablement controls render without introducing separate state", () => {
   let draws = 0;
   let renderedFrame = null;
   const disabledHarness = overlayHarness({ enabled: false });
   const runtime = createVisualizerRuntime({
-    createBandOverlay: () => createBandOverlayVisualizer(disabledHarness),
+    createSpectralRing: () => createSpectralRingVisualizer(disabledHarness),
     createOrb: createOrbVisualizer,
   });
   runtime.rebuild([]);
-  runtime.render({ clearFrame() {}, drawBandOverlay() { draws++; } }, frame());
+  runtime.render({ clearFrame() {}, drawSpectralRing() { draws++; } }, frame());
   assert.equal(draws, 0);
   disabledHarness.settingsRef.settings.bands.overlay.enabled = true;
   const context = frame();
-  runtime.render({ clearFrame() {}, drawBandOverlay(value) { draws++; renderedFrame = value; } }, context);
+  runtime.render({ clearFrame() {}, drawSpectralRing(value) { draws++; renderedFrame = value; } }, context);
   assert.equal(draws, 1);
   assert.equal(renderedFrame, context.analysisFrame);
   assert.equal(renderedFrame.channels.C.waveform, context.analysisFrame.channels.C.waveform);
@@ -220,7 +220,7 @@ test("visuals and track resets retain their distinct phase and trail contracts",
   });
   const harness = overlayHarness({ orbs: [orb] });
   const runtime = createVisualizerRuntime({
-    createBandOverlay: () => createBandOverlayVisualizer(harness),
+    createSpectralRing: () => createSpectralRingVisualizer(harness),
     createOrb: createOrbVisualizer,
   });
   runtime.rebuild([orb]);
@@ -231,14 +231,18 @@ test("visuals and track resets retain their distinct phase and trail contracts",
   runtime.reset("visuals");
   assert.equal(trailResets, 2);
   assert.equal(orb.angleRad, 0.75);
+  assert.equal(harness.stateRef.bands.ringPhaseRad, 0);
+  harness.settingsRef.settings.bands.overlay.phaseMode = "orb";
+  harness.stateRef.bands.ringPhaseRad = 2;
+  runtime.reset("visuals");
   assert.equal(harness.stateRef.bands.ringPhaseRad, 0.75);
 });
 
 test("rebuild disposes old participants exactly once and wraps only current Orb objects", () => {
   const disposed = [];
   const runtime = createVisualizerRuntime({
-    createBandOverlay: () => ({
-      id: "band-overlay", type: "band-overlay", isVisible: () => true,
+    createSpectralRing: () => ({
+      id: "spectral-ring", type: "spectral-ring", isVisible: () => true,
       update() {}, render() {}, reset() {}, dispose() { disposed.push("overlay"); },
     }),
     createOrb: (orb) => ({
@@ -259,7 +263,7 @@ test("reconcile retains surviving adapters, disposes removals once, and reorders
   const disposed = [];
   const created = [];
   const runtime = createVisualizerRuntime({
-    createBandOverlay: () => ({ id: BAND_OVERLAY_VISUALIZER_ID, type: "band-overlay", isVisible: () => true, update() {}, render() {}, reset() {}, dispose() { disposed.push("overlay"); } }),
+    createSpectralRing: () => ({ id: SPECTRAL_RING_VISUALIZER_ID, type: "spectral-ring", isVisible: () => true, update() {}, render() {}, reset() {}, dispose() { disposed.push("overlay"); } }),
     createOrb: (orb) => {
       const adapter = { id: orb.id, type: "orb", orb, isVisible: () => true, update() {}, render() {}, reset() {}, dispose() { disposed.push(orb.id); } };
       created.push(adapter);
@@ -282,9 +286,9 @@ test("reconcile retains surviving adapters, disposes removals once, and reorders
   assert.equal(created.includes(ba), true);
 });
 
-test("zero-Orb orb-locked Band Overlay remains stable and resets safely", () => {
+test("zero-Orb orb-locked Spectral Ring remains stable and resets safely", () => {
   const harness = overlayHarness({ phaseMode: "orb", orbs: [] });
-  const visualizer = createBandOverlayVisualizer(harness);
+  const visualizer = createSpectralRingVisualizer(harness);
   visualizer.update(frame());
   assert.equal(harness.stateRef.bands.ringPhaseRad, 1);
   visualizer.reset("visuals");
