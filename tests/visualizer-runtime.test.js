@@ -2,11 +2,17 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { TAU } from "../src/js/core/constants.js";
+import { CONFIG } from "../src/js/core/config.js";
+import { runtime } from "../src/js/core/preferences.js";
+import { state } from "../src/js/core/state.js";
+import { ColorPolicy } from "../src/js/render/color-policy.js";
+import { Orb } from "../src/js/render/orb.js";
 import {
   BAND_OVERLAY_VISUALIZER_ID,
   createBandOverlayVisualizer,
   createOrbVisualizer,
   createVisualizerRuntime,
+  selectOrbAnalysis,
 } from "../src/js/render/visualizer-runtime.js";
 
 function frame(overrides = {}) {
@@ -98,6 +104,64 @@ test("Orb adapter consumes AnalysisFrame routing and preserves pause and selecte
   assert.equal(calls[0][2], context.analysisFrame.channels.R);
   assert.equal(calls[0][3], 0.4);
   assert.equal(calls[0][4], 1);
+  assert.equal(calls[0][5], 1);
+});
+
+test("selected Orb analysis averages energy and finds the first strongest selected band in one selection", () => {
+  const context = frame();
+  context.analysisFrame.spectrum.energies01 = [0, 0.25, 0, 0.75, 0, 0, 0, 0];
+  assert.deepEqual(selectOrbAnalysis(fakeOrb("targeted", { bandIds: [1, 3] }), context.analysisFrame), {
+    band: context.analysisFrame.channels.L,
+    energyOverride01: 0.5,
+    selectedDominantBandIndex: 3,
+  });
+  assert.equal(selectOrbAnalysis(fakeOrb("silent", { bandIds: [5, 6, 7] }), context.analysisFrame).selectedDominantBandIndex, 5);
+  assert.deepEqual(selectOrbAnalysis(fakeOrb("full", { bandIds: [] }), context.analysisFrame), {
+    band: context.analysisFrame.channels.L,
+    energyOverride01: null,
+    selectedDominantBandIndex: null,
+  });
+});
+
+test("ColorPolicy scopes only inherited dominant color to a selected target", () => {
+  const oldSettings = runtime.settings;
+  try {
+    runtime.settings = structuredClone(CONFIG.defaults);
+    runtime.settings.bands.particleColorSource = "dominant";
+    const inherited = { colorSource: "inherit", hueOffsetDeg: 17 };
+    const explicit = { colorSource: "dominant", hueOffsetDeg: 17 };
+    assert.deepEqual(ColorPolicy.pickParticleColorRgb01(0, inherited, 200, 7), ColorPolicy.bandRgb01(7, 17));
+    assert.deepEqual(ColorPolicy.pickParticleColorRgb01(0, explicit, 200, 7), ColorPolicy.bandRgb01(200, 17));
+    assert.deepEqual(ColorPolicy.pickParticleColorRgb01(0, inherited, 200, null), ColorPolicy.bandRgb01(200, 17));
+
+    runtime.settings.bands.particleColorSource = "fixed";
+    assert.deepEqual(ColorPolicy.pickParticleColorRgb01(0, inherited, 200, 7), ColorPolicy.pickParticleColorRgb01(0, { colorSource: "fixed", hueOffsetDeg: 17 }, 200, 7));
+    runtime.settings.bands.particleColorSource = "angle";
+    assert.deepEqual(ColorPolicy.pickParticleColorRgb01(1, inherited, 200, 7), ColorPolicy.pickParticleColorRgb01(1, { colorSource: "angle", hueOffsetDeg: 17 }, 200, 7));
+  } finally {
+    runtime.settings = oldSettings;
+  }
+});
+
+test("Orb visualizer passes selected dominant context through Orb.step into inherited particle color", () => {
+  const oldSettings = runtime.settings;
+  const oldSize = [state.widthPx, state.heightPx];
+  try {
+    runtime.settings = structuredClone(CONFIG.defaults);
+    runtime.settings.bands.particleColorSource = "dominant";
+    state.widthPx = state.heightPx = 1000;
+    const def = structuredClone(CONFIG.defaults.orbs[0]);
+    def.bandIds = [0, 1]; def.colorSource = "inherit"; def.hueOffsetDeg = 23;
+    def.particles.emitPerSecond = 10; def.particles.overlapRadiusPx = 0;
+    const orb = new Orb(def);
+    const visualizer = createOrbVisualizer(orb);
+    visualizer.update(frame());
+    assert.equal(orb.trail.particles.length > 0, true);
+    assert.deepEqual(orb.trail.particles.at(-1).rgbStart, ColorPolicy.bandRgb01(1, 23));
+  } finally {
+    runtime.settings = oldSettings;
+    [state.widthPx, state.heightPx] = oldSize;
+  }
 });
 
 test("Band Overlay updates while simulation is paused and preserves free and orb phase modes", () => {

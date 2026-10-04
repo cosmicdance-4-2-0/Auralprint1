@@ -11,17 +11,27 @@ function selectOrbAnalysis(orb, analysisFrame) {
     ? analysisFrame.channels.L
     : (channel === "R" ? analysisFrame.channels.R : analysisFrame.channels.C);
   const bandIds = Array.isArray(orb && orb.bandIds) ? orb.bandIds : [];
-  if (!bandIds.length) return { band: sourceBand, energyOverride01: null };
+  if (!bandIds.length) return { band: sourceBand, energyOverride01: null, selectedDominantBandIndex: null };
 
   const energies = analysisFrame.spectrum.energies01;
   if (!Array.isArray(energies) || !energies.length) {
-    return { band: sourceBand, energyOverride01: null };
+    return { band: sourceBand, energyOverride01: null, selectedDominantBandIndex: null };
   }
   let sum = 0;
-  for (const idx of bandIds) sum += energies[idx] || 0;
+  let selectedDominantBandIndex = null;
+  let strongestEnergy = -Infinity;
+  for (const idx of bandIds) {
+    const energy = energies[idx] || 0;
+    sum += energy;
+    if (energy > strongestEnergy) {
+      strongestEnergy = energy;
+      selectedDominantBandIndex = idx;
+    }
+  }
   return {
     band: sourceBand,
     energyOverride01: clamp(sum / bandIds.length, 0, 1),
+    selectedDominantBandIndex,
   };
 }
 
@@ -73,6 +83,7 @@ function createOrbVisualizer(orb) {
         selection ? selection.band : null,
         selection ? selection.energyOverride01 : null,
         analysisFrame.spectrum.dominantIndex,
+        selection ? selection.selectedDominantBandIndex : null,
       );
     },
     render(renderer, frameContext) {

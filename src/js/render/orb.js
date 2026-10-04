@@ -51,7 +51,7 @@ class Orb {
     this.trace = def.trace;
   }
 
-  step(dtSec, nowSec, band, energyOverride01, dominantBandIndex) {
+  step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null) {
     this.angleRad += this.chirality * this.motion.angularSpeedRadPerSec * dtSec;
     this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
 
@@ -81,7 +81,12 @@ class Orb {
     this.xSim = radius * Math.cos(this.angleRad) + this.centerXFrac * minDim;
     this.ySim = radius * Math.sin(this.angleRad) + this.centerYFrac * minDim;
 
-    const rgbStart = ColorPolicy.pickParticleColorRgb01(this.angleRad, this, dominantBandIndex);
+    const rgbStart = ColorPolicy.pickParticleColorRgb01(
+      this.angleRad,
+      this,
+      globalDominantBandIndex,
+      selectedDominantBandIndex,
+    );
     this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles);
   }
 }

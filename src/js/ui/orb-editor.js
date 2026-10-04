@@ -16,9 +16,11 @@ function readBulkOrbValue(orbs, group, field) {
 function applyBulkOrbValue(orbs, group, field, value) { if (!Array.isArray(orbs) || !orbs.length) return false; for (const orb of orbs) orb[group][field] = value; return true; }
 
 let nextEditorToken = 0;
-function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus } = {}) {
+function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus, createBandPicker = createOrbBandPicker } = {}) {
   const controllers = new Map();
   let initializedOn = null;
+  let lastSettingsRef = null;
+  let lastBandEdgesRef = null;
 
   const make = (tag, className, text) => { const el = document.createElement(tag); if (className) el.className = className; if (text) el.textContent = text; return el; };
   const addOption = (select, value, text) => { const option = make("option"); option.value = value; option.textContent = text; select.appendChild(option); };
@@ -48,7 +50,7 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     const commit = (field, value, reason) => { const orb = findOrb(); if (!orb) return; orb[field] = value; commitOrbChangeById(id, reason); };
     for (const [control, event, field, read, reason] of [[chan,"change","chanId",c=>c.value,"channel"],[chir,"change","chirality",c=>Number(c.value),"direction"],[hue,"input","hueOffsetDeg",c=>Number(c.value),"hue offset"],[color,"change","colorSource",c=>c.value,"color source"],[x,"input","centerXFrac",c=>Number(c.value),"center X"],[y,"input","centerYFrac",c=>Number(c.value),"center Y"]]) control.addEventListener(event, () => commit(field, read(control), `${id} ${reason}`));
     bands.addEventListener("change", () => { const parsed = parseBandSelection(bands.value); bands.setAttribute("aria-invalid", parsed.error ? "true" : "false"); error.textContent = parsed.error; if (parsed.error) { bandValue.textContent = "Invalid indices"; showStatus(parsed.error); return; } commit("bandIds", parsed.ids, `${id} band indices`); });
-    const picker = createOrbBandPicker(pickerRoot, { orbLabel: `Orb ${id}`, onChange(ids) { commit("bandIds", ids, `${id} bands`); }, formatRange: BandBank.formatBandRangeText, describeBank: () => `${preferences.bands.distributionMode.toUpperCase()} distribution · ${BAND_NAMES.length} bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}` });
+    const picker = createBandPicker(pickerRoot, { orbLabel: `Orb ${id}`, onChange(ids) { commit("bandIds", ids, `${id} bands`); }, formatRange: BandBank.formatBandRangeText, describeBank: () => `${preferences.bands.distributionMode.toUpperCase()} distribution · ${BAND_NAMES.length} bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}` });
     return { id, root, summary, title, identity, chan, chanValue, bands, bandValue, error, chir, chirValue, hue, hueValue, color, colorValue, x, xValue, y, yValue, picker };
   }
   function bindRange(control, limit) { control.min = String(limit.min); control.max = String(limit.max); control.step = String(limit.step); }
@@ -61,6 +63,10 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     c.bandValue.textContent = c.bands.getAttribute("aria-invalid") === "true" ? "Invalid indices" : describeOrbBandSelection(orb.bandIds); c.picker?.sync(orb.bandIds);
   }
   function refresh(settings = runtime.settings) {
+    const bandEdgesRef = state.bands.lowHz;
+    if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
+    lastSettingsRef = settings;
+    lastBandEdgesRef = bandEdgesRef;
     const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
     for (const [id, controller] of controllers) if (!orbs.some((orb) => orb.id === id)) { controller.root.remove(); controllers.delete(id); }
     orbs.forEach((orb, position) => { let controller = controllers.get(orb.id); if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); } syncController(controller, orb, position); ui.orbEditorList.appendChild(controller.root); });

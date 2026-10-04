@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { CONFIG } from "../src/js/core/config.js";
-import { preferences, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
+import { preferences, runtime, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
+import { state } from "../src/js/core/state.js";
 import { createOrbEditorUi, readBulkOrbValue } from "../src/js/ui/orb-editor.js";
 
 function element(tag="div") { const listeners=new Map(); return { tagName:tag.toUpperCase(), type:"", dataset:{}, children:[], value:"", textContent:"", disabled:false, checked:false, indeterminate:false, attributes:{}, open:false,
@@ -17,3 +18,5 @@ test("editor reconciliation retains roots by ID, reorders nodes, and replaces on
 test("generated controls commit by persistent ID after reorder and focusOrb is ID based",()=>{const h=harness(["A","B","C"]);try{h.editor.init();preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();const a=h.editor.getController("A");a.chan.value="R";a.chan.dispatch("change");assert.deepEqual(h.calls[0].slice(0,1),["A"]);assert.equal(h.editor.focusOrb("A"),true);assert.equal(document.activeElement,a.summary);assert.equal(h.editor.focusOrb("missing"),false);}finally{h.restore()}});
 
 test("bulk helper keeps mixed and zero semantics",()=>{assert.deepEqual(readBulkOrbValue([],"particles","emitPerSecond"),{available:false,mixed:false,value:undefined});assert.equal(readBulkOrbValue([orb("A"),orb("B")],"particles","emitPerSecond").mixed,false);});
+
+test("refresh skips unchanged controller and picker work but invalidates on settings and band-edge replacement",()=>{const h=harness(["A"]);const oldEdges=state.bands.lowHz;let appends=0,syncs=0;const append=h.view.orbEditorList.appendChild.bind(h.view.orbEditorList);h.view.orbEditorList.appendChild=node=>{appends++;return append(node)};h.editor=createOrbEditorUi({ui:h.view,commitOrbChangeById:()=>{},commitPreferences:()=>{},showStatus:()=>{},createBandPicker:()=>({sync(){syncs++}})});try{h.editor.init();assert.deepEqual({appends,syncs},{appends:1,syncs:1});h.editor.refresh(runtime.settings);h.editor.refresh(runtime.settings);assert.deepEqual({appends,syncs},{appends:1,syncs:1});resolveSettings();h.editor.refresh(runtime.settings);assert.deepEqual({appends,syncs},{appends:2,syncs:2});h.editor.refresh(runtime.settings);assert.deepEqual({appends,syncs},{appends:2,syncs:2});state.bands.lowHz=[...oldEdges];h.editor.refresh(runtime.settings);assert.deepEqual({appends,syncs},{appends:3,syncs:3});h.editor.refresh(runtime.settings);assert.deepEqual({appends,syncs},{appends:3,syncs:3});}finally{state.bands.lowHz=oldEdges;h.restore()}});
