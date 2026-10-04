@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 3, 2026. Development revision: `v0.1.15h` / Build 115. Preset schema: 10.
+Updated: October 4, 2026. Development revision: `v0.1.15h.a` / Build 115. Preset schema: 10.
 
-The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115H plus 115F.A tactical hardening are complete. The runtime-backed Visualizers inventory is now the conceptual UI home, while remaining per-Orb controls, later ownership migrations, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
+The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115H plus 115F.A and 115H.A tactical hardening are complete. The runtime-backed Visualizers inventory is now the conceptual UI home, while remaining per-Orb controls, later ownership migrations, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -54,6 +54,8 @@ AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRunt
 The Visualizers panel now offers Add/Edit/Duplicate/Remove through canonical runtime operations, and the Orbs panel generates one stable-ID editor card for every current Orb. Zero Orbs is valid and Band Overlay remains a singleton. Motion, radius-response, particle, and trace settings are Orb-owned; their existing shared controls are temporary bulk controls with mixed-value display. The Bands and Orbs/Sim surfaces still mix analysis configuration with visualization configuration, and the Band Overlay remains its current user-facing feature rather than a lifecycle-managed Spectral Ring.
 
 Revision 115H adds collection management with confirmed removal, deterministic focus recovery, and arbitrary-count generated Orb editors. Motion, response, particles, and trace remain transitional bulk controls for 115I. Schema remains 10 and Camera remains blocked.
+
+Revision 115H.A guards the generated Orb editor by settings and BandBank edge references so unchanged animation frames do no controller, reorder, or open-picker row synchronization. Targeted Orbs inheriting the global dominant policy now use the strongest band in their selected target; explicit Orb Dominant Band remains tied to the global full-spectrum dominant band. Schema remains 10, and 115I remains next.
 
 Revision 115F.A tactically hardened the accepted UI decomposition without changing architecture or schema. Revision 115G established the runtime-backed inventory; 115H grants that panel Orb collection management while configuration remains in the generated Orbs editor. Band Overlay controls remain in Bands.
 

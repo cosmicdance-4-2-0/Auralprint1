@@ -14,20 +14,18 @@ const ColorPolicy = (() => {
     return hsvToRgb01(hue, s.bands.rainbow.saturation, s.bands.rainbow.value);
   }
 
-  function resolveParticleColorSource(orb) {
-    const s = runtime.settings;
-    if (!orb || orb.colorSource === "inherit") return s.bands.particleColorSource;
-    return orb.colorSource;
-  }
-
-  function pickParticleColorRgb01(angleRad, orb = null, dominantBandIndex = 0) {
+  function pickParticleColorRgb01(angleRad, orb = null, globalDominantBandIndex = 0, selectedDominantBandIndex = null) {
     const s = runtime.settings;
     const extraHue = orb && Number.isFinite(orb.hueOffsetDeg) ? orb.hueOffsetDeg : 0;
-    const source = resolveParticleColorSource(orb);
+    const requestedSource = orb?.colorSource || "inherit";
+    const source = requestedSource === "inherit" ? s.bands.particleColorSource : requestedSource;
 
     if (source === "fixed") return hexToRgb01(s.visuals.particleColor);
     if (source === "angle") return bandRgb01(BandBank.bandIndexFromAngleRad(angleRad), extraHue);
 
+    const dominantBandIndex = requestedSource === "inherit" && Number.isInteger(selectedDominantBandIndex)
+      ? selectedDominantBandIndex
+      : globalDominantBandIndex;
     return bandRgb01(dominantBandIndex, extraHue); // dominant
   }
 
