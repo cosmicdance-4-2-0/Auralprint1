@@ -1,11 +1,10 @@
-import { clamp, fmt, deepClone, rgb01ToCss } from "../core/utils.js";
+import { clamp, fmt, deepClone } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
-import { preferences, runtime, resolveSettings, BAND_NAMES, replacePreferences, normalizeOrbDef } from "../core/preferences.js";
+import { preferences, runtime, resolveSettings, replacePreferences, normalizeOrbDef } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { state } from "../core/state.js";
 import { UrlPreset } from "../presets/url-preset.js";
 import { BandBankController } from "../audio/band-bank-controller.js";
-import { BandBank } from "../audio/band-bank.js";
 import { Queue } from "../audio/queue.js";
 import { AudioEngine } from "../audio/audio-engine.js";
 import { Scrubber } from "../audio/scrubber.js";
@@ -18,6 +17,7 @@ import { primeDomCache } from "./dom-cache.js";
 import { createWorkspaceUi } from "./workspace.js";
 import { createOrbEditorUi } from "./orb-editor.js";
 import { createVisualizersPanelUi } from "./visualizers-panel.js";
+import { createAnalysisPanelUi } from "./analysis-panel.js";
 
 /* =============================================================================
    UI
@@ -321,12 +321,13 @@ const UI = (() => {
   // - sim lane carries sim/config toasts.
   // - audio lane carries transport/audio toasts plus a short recording-state summary.
   const STATUS_DEFAULT_SIM = "Choose an orb to shape its response.";
-  const STATUS_DEFAULT_BANDS = "Colors and spectral analysis.";
+  const STATUS_DEFAULT_BANDS = "Colors and Band Overlay presentation.";
   let _simStatusToastTimer = null;
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
+  const analysisPanelUi = createAnalysisPanelUi({ ui, commitPreferences: applyPrefs, bandColor: (index) => ColorPolicy.bandRgb01(index) });
   const orbEditorUi = createOrbEditorUi({
     ui,
     commitOrbChangeById: applyOrbPrefChangeById,
@@ -442,115 +443,14 @@ const UI = (() => {
     }
   }
 
-  function buildBandHudRows() {
-    // Builds (or rebuilds) the band HUD rows from scratch.
-    // Called by ensureBandHudBuilt() on first use, and by rebuildBandHud()
-    // whenever band count changes (future builds that expose band config).
-    ui.bandRowEls = [];
-    ui.bandTable.innerHTML = "";
-
-    const n = runtime.settings.bands.count;
-
-    for (let i = 0; i < n; i++) {
-      const idx = document.createElement("div");
-      idx.className = "bandIdx";
-      idx.textContent = String(i);
-
-      const name = document.createElement("div");
-      name.className = "bandName";
-      name.textContent = BAND_NAMES[i] || `Band ${i}`;
-
-      const range = document.createElement("div");
-      range.className = "bandRange";
-      range.textContent = BandBank.formatBandRangeText(i);
-
-      const bar = document.createElement("div");
-      bar.className = "bandBar";
-
-      const fill = document.createElement("div");
-      fill.className = "bandFill";
-      bar.appendChild(fill);
-
-      ui.bandTable.appendChild(idx);
-      ui.bandTable.appendChild(name);
-      ui.bandTable.appendChild(range);
-      ui.bandTable.appendChild(bar);
-
-      ui.bandRowEls.push({ idx, name, range, fill });
-    }
-
-    ui.bandRowsBuilt = true;
-    ui.bandHudBandCount = n; // remember what count these rows were built for
-  }
-
-  function ensureBandHudBuilt() {
-    // Rebuild if never built, or if band count has since changed.
-    const n = runtime.settings.bands.count;
-    if (!ui.bandRowsBuilt || ui.bandHudBandCount !== n) buildBandHudRows();
-  }
-
-  function rebuildBandHud() {
-    // Forced rebuild — call this whenever band definition changes.
-    // Currently band count is fixed at 256; this is the hook for 115+ when it becomes configurable.
-    ui.bandRowsBuilt = false;
-    ensureBandHudBuilt();
-  }
-
-  function refreshBandHud(analysisFrame = null) {
-    ensureBandHudBuilt();
-
-    const s = runtime.settings;
-    const n = s.bands.count;
-    const spectrum = analysisFrame ? analysisFrame.spectrum : state.bands;
-
-    for (let i = 0; i < n; i++) {
-      const e = clamp((spectrum.energies01 && spectrum.energies01[i]) || 0, 0, 1);
-      const pct = Math.round(e * 100);
-
-      const c = ColorPolicy.bandRgb01(i);
-      const alpha = 0.80;
-
-      ui.bandRowEls[i].fill.style.width = pct + "%";
-      ui.bandRowEls[i].fill.style.background = rgb01ToCss(c, alpha);
-
-      const isDom = i === spectrum.dominantIndex;
-      ui.bandRowEls[i].name.style.opacity = isDom ? "1.0" : "0.75";
-      ui.bandRowEls[i].idx.style.opacity = isDom ? "1.0" : "0.65";
-      ui.bandRowEls[i].range.style.opacity = isDom ? "0.96" : "0.72";
-      ui.bandRowEls[i].range.textContent = BandBank.formatBandRangeText(i);
-    }
-
-    const domIdx = clamp(spectrum.dominantIndex, 0, n - 1);
-    const domName = spectrum.dominantName || BAND_NAMES[domIdx] || `Band ${domIdx}`;
-    const domRange = BandBank.formatBandRangeText(domIdx);
-    ui.bandDebug.textContent = "";
-    const span = document.createElement("span");
-    span.className = "dominantBadge";
-    span.textContent = `Dominant [${domIdx}] ${domName} — ${domRange}`;
-    ui.bandDebug.appendChild(span);
-  }
-
-  function formatBandMetaHz(hz) {
-    if (!Number.isFinite(hz)) return "n/a";
-    if (hz >= 1000) return `${fmt(hz / 1000, 2)} kHz`;
-    return `${fmt(hz, 1)} Hz`;
-  }
-
-  function refreshBandMetaText(analysisFrame = null) {
-    const m = analysisFrame ? analysisFrame.spectrum.metadata : state.bands.meta;
-    const bandCount = runtime.settings.bands.count;
-    const sampleRateText = Number.isFinite(m.sampleRateHz)
-      ? formatBandMetaHz(m.sampleRateHz)
-      : "pending audio context";
-    ui.bandMeta.textContent = `${bandCount} bands • Nyquist ${formatBandMetaHz(m.nyquistHz)} • ceiling configured ${formatBandMetaHz(m.configCeilingHz)}`;
-  }
-
   function collectOperatorFacingControls() {
     // 112 
     // This intentionally excludes buttons and transport-only affordances.
     const selectors = [
       "#audioPanel input",
       "#audioPanel select",
+      "#analysisPanel input",
+      "#analysisPanel select",
       "#simPanel input",
       "#simPanel select",
       "#bandsPanel input",
@@ -1236,14 +1136,7 @@ const UI = (() => {
     orbEditorUi.refresh(runtime.settings);
     visualizersPanelUi.refresh();
 
-    ui.rngRmsGain.value = String(p.audio.rmsGain);
-    ui.valRmsGain.textContent = fmt(p.audio.rmsGain, 2);
-
-    ui.rngSmooth.value = String(p.audio.smoothingTimeConstant);
-    ui.valSmooth.textContent = fmt(p.audio.smoothingTimeConstant, 2);
-
-    ui.selFFT.value = String(p.audio.fftSize);
-    ui.valFFT.textContent = `${p.audio.fftSize}`;
+    analysisPanelUi.refresh(analysisFrame);
 
     ui.clrBg.value = p.visuals.backgroundColor;
     ui.valBg.textContent = p.visuals.backgroundColor;
@@ -1253,9 +1146,6 @@ const UI = (() => {
 
     ui.selParticleColorSrc.value = p.bands.particleColorSource;
     ui.valParticleSrc.textContent = p.bands.particleColorSource;
-
-    ui.selDistMode.value = p.bands.distributionMode;
-    ui.valDistMode.textContent = p.bands.distributionMode;
 
     ui.chkBandOverlay.checked = !!p.bands.overlay.enabled;
     ui.valBandOverlay.textContent = p.bands.overlay.enabled ? "on" : "off";
@@ -1296,18 +1186,7 @@ const UI = (() => {
     refreshConfigTooltips();
     refreshRecordingUi();
 
-    refreshBandMetaText(analysisFrame);
 
-    if (analysisFrame && analysisFrame.ready) {
-      const nowMs = performance.now();
-      const hudIntervalMs = ui.bandHudIntervalMs || 100;
-      const bandsPanelVisible = ui.bandsPanel && ui.bandsPanel.style.display !== "none";
-      const canRefreshHud = bandsPanelVisible && (nowMs - ui.lastBandHudUpdateMs >= hudIntervalMs);
-      if (canRefreshHud) {
-        refreshBandHud(analysisFrame);
-        ui.lastBandHudUpdateMs = nowMs;
-      }
-    }
   }
 
   function resetTrackVisualState() {
@@ -1316,7 +1195,7 @@ const UI = (() => {
     state.bands.energies01.fill(0);
     state.bands.dominantIndex = 0;
     state.bands.dominantName = "(none)";
-    refreshBandHud();
+    analysisPanelUi.refresh();
   }
 
   function wireControls() {
@@ -1655,6 +1534,7 @@ const UI = (() => {
 
     wireConfigTooltipFeedbackEvents();
     workspace.init({ onRefreshQueuePanel: refreshQueuePanel });
+    analysisPanelUi.init();
     refreshRecordingUi();
 
     if (ui.btnRecordStart) ui.btnRecordStart.addEventListener("click", () => {
@@ -1821,9 +1701,6 @@ const UI = (() => {
     ui.btnResetPrefs.addEventListener("click", resetPrefs);
     ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); simStatusToast("Visuals reset."); });
 
-    ui.rngRmsGain.addEventListener("input", () => { preferences.audio.rmsGain = Number(ui.rngRmsGain.value); applyPrefs("rms gain (analysis)"); });
-    ui.rngSmooth.addEventListener("input", () => { preferences.audio.smoothingTimeConstant = Number(ui.rngSmooth.value); applyPrefs("smoothing"); });
-    ui.selFFT.addEventListener("change", () => { preferences.audio.fftSize = Number(ui.selFFT.value); applyPrefs("fft size"); });
 
     ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; applyPrefs("background"); });
     ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; applyPrefs("particle color"); });
@@ -1847,10 +1724,7 @@ const UI = (() => {
       applyPrefs("ring phase mode");
     });
 
-    ui.selDistMode.addEventListener("change", () => {
-      preferences.bands.distributionMode = ui.selDistMode.value;
-      applyPrefs("band distribution mode", { rebuildBandsOnDefinitionChange: true });
-    });
+
 
     ui.rngRingSpeed.addEventListener("input", () => {
       preferences.bands.overlay.ringSpeedRadPerSec = Number(ui.rngRingSpeed.value);

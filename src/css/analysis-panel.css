@@ -1,0 +1,24 @@
+/* Analysis configuration and diagnostics workspace. */
+#analysisPanel {
+  position: fixed;
+  top: calc(var(--ui-pad) + var(--ui-safe-t));
+  right: calc(var(--ui-pad) + var(--ui-safe-r));
+  bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
+  width: min(560px, calc(100vw - 2 * var(--ui-pad)));
+  padding: var(--ui-pad);
+  overflow: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 30;
+}
+#analysisPanel input[type="number"] { width: 100%; min-width: 0; box-sizing: border-box; }
+#bandTable { display:grid; grid-template-columns:36px minmax(90px,1fr) minmax(100px,auto) minmax(72px,140px); gap:8px 10px; align-items:center; margin-top:8px; min-width:0; }
+.bandIdx { font-size:12px; opacity:.75; text-align:right; }
+.bandName { font-size:12px; opacity:.9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bandRange { font-size:11px; opacity:.72; font-variant-numeric:tabular-nums; white-space:nowrap; text-align:right; min-width:0; }
+.bandBar { height:10px; min-width:48px; border-radius:999px; background:rgba(255,255,255,.1); overflow:hidden; position:relative; }
+.bandFill { height:100%; width:0; border-radius:999px; }
+.bandMeta { font-size:11px; opacity:.75; margin:6px 0 2px; line-height:1.5; overflow-wrap:anywhere; }
+.dominantBadge { display:inline-block; max-width:100%; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.12); font-size:12px; opacity:.9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#bandDebug { min-width:0; max-width:100%; }
+@media (max-width: 520px) { #bandTable { grid-template-columns:28px minmax(70px,1fr) minmax(82px,1fr) minmax(44px,.7fr); gap:6px; } .bandName,.bandRange{white-space:normal;overflow-wrap:anywhere;} }

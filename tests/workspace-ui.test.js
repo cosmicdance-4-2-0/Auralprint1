@@ -34,10 +34,10 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
   globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
   state.recording.hooksEnabled = true;
   const ui = {
-    audioPanel: element("grid"), visualizersPanel: element("none"), simPanel: element(), bandsPanel: element(), queuePanel: element(), recordPanel: element(),
-    openAudio: element("grid"), openVisualizers: element("grid"), openSim: element("grid"), openBands: element("grid"), openQueue: element("grid"), openRecord: element("grid"),
-    btnOpenAudio: element(), btnOpenVisualizers: element(), btnOpenSim: element(), btnOpenBands: element(), btnOpenQueue: element(), btnOpenRecord: element(),
-    btnHideAudio: element(), btnHideVisualizers: element(), btnHideSim: element(), btnHideBands: element(), btnHideQueue: element(), btnHideRecord: element(),
+    audioPanel: element("grid"), analysisPanel: element("none"), visualizersPanel: element("none"), simPanel: element(), bandsPanel: element(), queuePanel: element(), recordPanel: element(),
+    openAudio: element("grid"), openAnalysis: element("grid"), openVisualizers: element("grid"), openSim: element("grid"), openBands: element("grid"), openQueue: element("grid"), openRecord: element("grid"),
+    btnOpenAudio: element(), btnOpenAnalysis: element(), btnOpenVisualizers: element(), btnOpenSim: element(), btnOpenBands: element(), btnOpenQueue: element(), btnOpenRecord: element(),
+    btnHideAudio: element(), btnHideAnalysis: element(), btnHideVisualizers: element(), btnHideSim: element(), btnHideBands: element(), btnHideQueue: element(), btnHideRecord: element(),
     btnTogglePanels: element(), btnToggleWorkspaceLauncher: element(), workspaceLauncher: element(),
     workspaceLauncherCollapsed: true, recordingPanelVisible: true, recordingPanelRestoreAfterGlobalHide: false,
   };
@@ -47,8 +47,19 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
     assert.equal(workspace.init(), false);
     assert.equal(ui.btnOpenAudio.listenerCount("click"), 1);
     assert.equal(ui.workspaceLauncher.dataset.collapsed, "true");
+    globalThis.document.activeElement = ui.btnOpenAnalysis;
+    workspace.showAnalysisPanel();
+    assert.equal(ui.analysisPanel.style.display, "block");
+    assert.equal(ui.btnOpenAnalysis.getAttribute("aria-pressed"), "true");
+    assert.equal(ui.analysisPanel.classList.contains("panel-front"), true);
+    assert.equal(globalThis.document.activeElement, ui.btnHideAnalysis);
+    globalThis.document.activeElement = ui.analysisPanel;
+    workspace.hideAnalysisPanel();
+    assert.equal(globalThis.document.activeElement, ui.btnOpenAnalysis);
+    workspace.showAnalysisPanel();
     globalThis.document.activeElement = ui.btnOpenVisualizers;
     workspace.showVisualizersPanel();
+    assert.equal(ui.analysisPanel.style.display, "block");
     assert.equal(ui.visualizersPanel.style.display, "block");
     assert.equal(ui.btnOpenVisualizers.getAttribute("aria-pressed"), "true");
     assert.equal(ui.visualizersPanel.classList.contains("panel-front"), true);
@@ -65,6 +76,7 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
     assert.equal(globalThis.document.activeElement, ui.btnOpenSim);
     assert.equal(ui.workspaceLauncher.dataset.collapsed, "false");
     workspace.togglePanels();
+    assert.equal(ui.analysisPanel.style.display, "none");
     assert.equal(ui.visualizersPanel.style.display, "none");
     assert.equal(ui.recordPanel.style.display, "none");
     workspace.togglePanels();

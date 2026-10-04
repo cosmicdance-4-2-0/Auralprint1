@@ -14,6 +14,9 @@ function primeDomCache() {
   const ui = state.ui;
     ui.audioPanel = document.getElementById("audioPanel");
     ui.simPanel = document.getElementById("simPanel");
+    ui.analysisPanel = document.getElementById("analysisPanel");
+    ui.analysisStatus = document.getElementById("analysisStatus");
+    ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
     ui.bandsPanel = document.getElementById("bandsPanel");
     ui.visualizersPanel = document.getElementById("visualizersPanel");
     ui.visualizersStatus = document.getElementById("visualizersStatus");
@@ -27,6 +30,8 @@ function primeDomCache() {
     ui.workspaceLauncher = document.getElementById("workspaceLauncher");
     ui.btnToggleWorkspaceLauncher = document.getElementById("btnToggleWorkspaceLauncher");
     ui.openAudio = document.getElementById("openAudio");
+    ui.openAnalysis = document.getElementById("openAnalysis");
+    ui.btnOpenAnalysis = document.getElementById("btnOpenAnalysis");
     ui.openVisualizers = document.getElementById("openVisualizers");
     ui.openSim = document.getElementById("openSim");
     ui.openBands = document.getElementById("openBands");
@@ -118,6 +123,11 @@ function primeDomCache() {
 
     ui.selDistMode = document.getElementById("selDistMode");
     ui.valDistMode = document.getElementById("valDistMode");
+    ui.inpBandFloorHz = document.getElementById("inpBandFloorHz");
+    ui.valBandFloorHz = document.getElementById("valBandFloorHz");
+    ui.inpBandCeilingHz = document.getElementById("inpBandCeilingHz");
+    ui.valBandCeilingHz = document.getElementById("valBandCeilingHz");
+    ui.valBandCount = document.getElementById("valBandCount");
 
     ui.chkBandOverlay = document.getElementById("chkBandOverlay");
     ui.valBandOverlay = document.getElementById("valBandOverlay");
@@ -153,8 +163,6 @@ function primeDomCache() {
     ui.bandDebug = document.getElementById("bandDebug");
     ui.bandMeta = document.getElementById("bandMeta");
     ui.bandTable = document.getElementById("bandTable");
-    ui.lastBandHudUpdateMs = 0;
-    ui.bandHudIntervalMs = 100;
 
     ui.btnOpenAudio = document.getElementById("btnOpenAudio");
     ui.btnOpenVisualizers = document.getElementById("btnOpenVisualizers");
@@ -199,10 +207,8 @@ function primeDomCache() {
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);
 
-    bindRange(ui.rngRmsGain, CONFIG.limits.audio.rmsGain);
     bindRange(ui.rngMinRad, CONFIG.limits.orbs.response.minRadiusFrac);
     bindRange(ui.rngMaxRad, CONFIG.limits.orbs.response.maxRadiusFrac);
-    bindRange(ui.rngSmooth, CONFIG.limits.audio.smoothingTimeConstant);
 
     bindRange(ui.rngBandAlpha, CONFIG.limits.bands.overlayAlpha);
     bindRange(ui.rngBandPoint, CONFIG.limits.bands.pointSizePx);
@@ -214,13 +220,6 @@ function primeDomCache() {
     bindRange(ui.rngVal, CONFIG.limits.bands.value);
 
     bindRange(ui.rngRingSpeed, CONFIG.limits.bands.ringSpeedRadPerSec);
-
-    for (const size of CONFIG.limits.audio.fftSizes) {
-      const opt = document.createElement("option");
-      opt.value = String(size);
-      opt.textContent = String(size);
-      ui.selFFT.appendChild(opt);
-    }
 
     const srcs = [
       { v: "dominant", t: "dominant band" },
@@ -255,13 +254,6 @@ function primeDomCache() {
       opt.value = m.v;
       opt.textContent = m.t;
       ui.selRingPhaseMode.appendChild(opt);
-    }
-
-    for (const mode of CONFIG.limits.bands.distributionModes) {
-      const opt = document.createElement("option");
-      opt.value = mode;
-      opt.textContent = mode;
-      ui.selDistMode.appendChild(opt);
     }
 
 

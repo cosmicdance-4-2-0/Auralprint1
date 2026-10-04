@@ -189,6 +189,13 @@ Rules:
 
 ## 5. UI System Constraints
 
+### 5.0 Analysis UI Ownership
+
+- Analysis UI owns writable analysis configuration and analysis diagnostics, consuming `AnalysisFrame` rather than sampling `AudioEngine` or analyser nodes.
+- Analysis must function with zero visualizers and must not depend on Orb identities or visualizer lifecycle.
+- Band definition owns count, floor, configured ceiling, and distribution. Configured ceiling remains distinct from the effective Nyquist-limited ceiling.
+- Band count is visible but non-editable until a deliberate later band-table feature. Writable analysis configuration has exactly one UI owner.
+
 ### 5.1 Panel System
 
 Panels:
@@ -197,6 +204,7 @@ Panels:
 - Visualizers
 - Sim / Orbs
 - Bands
+- Analysis
 
 Rules:
 - Panels must be independently hideable

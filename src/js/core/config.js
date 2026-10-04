@@ -296,6 +296,7 @@ const CONFIG = deepFreeze({
     panelPaddingPx: 10,
     panelGapPx: 10,
     panelRadiusPx: 10,
+    analysisHudIntervalMs: 100,
     audioPanelHeightPx: 106, // pad(10) + scrubber(36) + gap(10) + transport(var(--ui-icon)=40) + pad(10) = 106px
     iconButtonSizePx: 40,
     volume: { min: 0, max: 1, step: 0.01 },

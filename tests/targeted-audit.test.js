@@ -20,8 +20,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15i.a");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15i\.a/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15j");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15j/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
