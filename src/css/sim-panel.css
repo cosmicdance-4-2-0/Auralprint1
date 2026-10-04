@@ -9,3 +9,7 @@
       overflow: auto;
       z-index: 30;
     }
+.orb-editor-list { display: grid; gap: var(--ui-gap); min-width: 0; }
+.orb-editor-card { min-width: 0; }
+.orb-editor-title { display: block; }
+.orb-editor-card .section-description { overflow-wrap: anywhere; }

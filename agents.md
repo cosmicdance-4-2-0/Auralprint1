@@ -231,7 +231,9 @@ Avoid:
 - UI feature modules must not import `ui.js`; dependencies flow toward the coordinator.
 - UI refresh functions must not mutate persistent settings merely to render state or fabricate missing visualizer instances.
 - Listener initialization must be idempotent for the same DOM controls and must not accumulate duplicate handlers.
-- The Visualizers panel is a read-only representation and navigation surface over canonical runtime/configuration state unless a later stage explicitly grants mutation ownership.
+- The Visualizers panel owns user-facing Orb collection management through canonical runtime operations; it does not own Orb values, Band Overlay configuration, or generic visualizer persistence.
+- Orb editor commits and controller reconciliation use persistent Orb IDs, never assumed array slots. Surviving editor nodes, listeners, picker instances, and ephemeral UI state must be retained across unrelated collection changes.
+- Removing the last Orb is valid; UI must not implicitly fabricate an Orb. Generated DOM identifiers must be independent of untrusted persistent Orb IDs.
 - Visualizer inventory order follows `VisualizerRuntime`; display numbering communicates composition position and never replaces persistent identity.
 - Visualizer UI must not fabricate runtime instances. During staged migration, writable configuration retains one UI owner and navigation points to that owner rather than duplicating controls.
 - Visualizers inventory refresh must not rebuild dynamic DOM when both the settings and runtime collection references are unchanged.

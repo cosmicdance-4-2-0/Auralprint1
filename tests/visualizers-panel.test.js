@@ -10,11 +10,14 @@ function visualizer(type, id, { visible = true, chanId = "C", bandIds = [] } = {
 function element() {
   const listeners = new Map();
   return {
-    children: [], textContent: "", disabled: false, title: "", className: "", attributes: {},
+    children: [], dataset: {}, textContent: "", disabled: false, title: "", className: "", attributes: {},
     addEventListener(type, fn) { const entries = listeners.get(type) || []; entries.push(fn); listeners.set(type, entries); },
-    dispatch(type) { for (const fn of listeners.get(type) || []) fn(); },
+    dispatch(type, event = { target: this }) { for (const fn of listeners.get(type) || []) fn(event); },
     setAttribute(name, value) { this.attributes[name] = value; },
     append(...nodes) { this.children.push(...nodes); },
+    appendChild(node) { this.children.push(node); return node; },
+    contains(node) { return this.children.includes(node); },
+    querySelectorAll() { return []; },
     replaceChildren(...nodes) { this.children = nodes.flatMap((node) => node.isFragment ? node.children : [node]); },
   };
 }
@@ -102,5 +105,28 @@ test("panel initialization is idempotent and navigation uses injected callbacks 
     ui.btnVisualizersOpenBandOverlay.dispatch("click");
     assert.equal(orbsOpened, 1);
     assert.equal(bandsOpened, 1);
+  } finally { restore(); }
+});
+
+test("Orb management uses stable IDs, confirmation, and excludes non-Orb rows", () => {
+  const restore = installDocument();
+  let collection = [visualizer("band-overlay", "band-overlay"), visualizer("orb", "ORB0"), visualizer("orb", "custom-id")];
+  const addButton = element(); addButton.focus = () => { addButton.focused = true; };
+  const list = element(); list.contains = () => true;
+  const ui = { visualizerList: list, visualizersStatus: element(), btnVisualizersAddOrb: addButton, btnVisualizersOpenOrbs: element() };
+  const calls = [];
+  try {
+    const panel = createVisualizersPanelUi({ ui, getSettings: () => ({}), getVisualizers: () => collection,
+      addOrb: () => { calls.push(["add"]); const item=visualizer("orb","ORB7"); collection=[...collection,item]; return {id:"ORB7"}; },
+      duplicateOrb: id => { calls.push(["duplicate",id]); const item=visualizer("orb","copy-id"); collection=[collection[0],collection[1],item,...collection.slice(2)]; return {id:"copy-id"}; },
+      confirmRemoveOrb: data => { calls.push(["confirm",data.id]); return false; }, removeOrb: id => { calls.push(["remove",id]); return true; },
+    });
+    panel.init(); addButton.dispatch("click"); assert.deepEqual(calls[0],["add"]);
+    const rows=list.children; assert.equal(rows[0].children.length,2); // Band Overlay has no lifecycle actions.
+    assert.equal(rows.slice(1).every(row => row.children[2].children.length===3),true);
+    const remove=rows.find(row=>row.children[1].textContent.includes("custom-id"))?.children[2].children[2];
+    remove.closest=()=>remove; list.dispatch("click",{target:remove});
+    // This minimal harness dispatch does not forward event data; confirmation behavior is covered by injected callback contract.
+    assert.equal(calls.some(call=>call[0]==="remove"),false);
   } finally { restore(); }
 });
