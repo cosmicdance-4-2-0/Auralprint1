@@ -104,8 +104,8 @@
     </div>
   </div>
 
-  <div id="simPanel" class="panel" style="display:none" role="region" aria-label="Orbs and motion">
-    <div class="panel-header"><div><h2 class="panel-title">Orbs &amp; motion</h2><p class="panel-description">Give each orb its own spectral target.</p></div><button id="btnHideSim" aria-label="Hide orbs panel">Hide</button></div>
+  <div id="simPanel" class="panel" style="display:none" role="region" aria-label="Orbs">
+    <div class="panel-header"><div><h2 class="panel-title">Orbs</h2><p class="panel-description">Configure each Orb and its spectral target.</p></div><button id="btnHideSim" aria-label="Hide orbs panel">Hide</button></div>
     <div class="panel-actions"><button id="btnResetVisuals" title="Reset orb phases and clear trails (keyboard: R)">Reset Visuals</button></div>
     <div class="muted panel-status" id="simStatus" role="status">Choose an orb to shape its response.</div>
     <div id="orbEditorList" class="orb-editor-list" aria-label="Orb editors"></div>
@@ -179,7 +179,16 @@
     </div>
 
 </div></details>
-    <details class="settings-section"><summary>Audio analysis<span class="section-description">FFT size, gain, smoothing</span></summary><div class="section-body">
+    <details class="settings-section"><summary>Presets<span class="section-description">Share or restore configuration</span></summary><div class="section-body">
+      <p class="panel-description">Links include settings. Your files, queue and recordings stay in this session.</p>
+      <div class="panel-actions"><button id="btnShare">Share Link</button><button id="btnApplyUrl">Apply URL</button><button id="btnResetPrefs">Reset Prefs</button></div>
+    </div></details>
+  </div>
+
+  <div id="analysisPanel" class="panel" style="display:none" role="region" aria-label="Analysis">
+    <div class="panel-header"><div><h2 class="panel-title">Analysis</h2><p class="panel-description">Configure and inspect audio and spectral analysis.</p></div><button id="btnHideAnalysis" aria-label="Hide Analysis panel">Hide</button></div>
+    <div id="analysisStatus" class="muted panel-status" role="status" aria-live="polite">Analysis controls ready.</div>
+    <details class="settings-section"><summary>Audio Analysis<span class="section-description">FFT size, gain, smoothing</span></summary><div class="section-body">
     <div class="row">
       <label for="rngRmsGain">RMS gain</label>
       <input id="rngRmsGain" type="range" />
@@ -198,15 +207,25 @@
       <div id="valFFT" class="val"></div>
     </div>
 </div></details>
-    <details class="settings-section"><summary>Presets<span class="section-description">Share or restore configuration</span></summary><div class="section-body">
-      <p class="panel-description">Links include settings. Your files, queue and recordings stay in this session.</p>
-      <div class="panel-actions"><button id="btnShare">Share Link</button><button id="btnApplyUrl">Apply URL</button><button id="btnResetPrefs">Reset Prefs</button></div>
+    <details class="settings-section"><summary>Band Distribution</summary><div class="section-body">    <div class="row">
+      <label for="selDistMode">Distribution mode</label>
+      <select id="selDistMode"></select>
+      <div id="valDistMode" class="val"></div>
+    </div>
+
+</div></details>
+    <details class="settings-section" open><summary>Band Definition</summary><div class="section-body">
+    <div class="row"><label for="inpBandFloorHz">Band floor</label><input id="inpBandFloorHz" type="number" inputmode="decimal" step="any" /><div id="valBandFloorHz" class="val"></div></div>
+    <div class="row"><label for="inpBandCeilingHz">Configured ceiling</label><input id="inpBandCeilingHz" type="number" inputmode="decimal" step="any" /><div id="valBandCeilingHz" class="val"></div></div>
+    <div class="row"><span>Band count</span><span aria-hidden="true"></span><div id="valBandCount" class="val"></div></div>
     </div></details>
+    <details class="settings-section" open><summary>Metadata</summary><div class="section-body"><div class="bandMeta" id="bandMeta">Bands metadata pending…</div></div></details>
+    <details class="settings-section" open><summary>Band Inspector</summary><div class="section-body"><div class="muted" id="bandDebug"><span class="dominantBadge">Dominant: (none)</span></div><div id="bandTable"></div></div></details>
   </div>
 
   <div id="bandsPanel" class="panel" style="display:none" role="region" aria-label="Bands and color">
-    <div class="panel-header"><div><h2 class="panel-title">Bands &amp; color</h2><p class="panel-description">Inspect the spectrum. Shape the palette.</p></div><button id="btnHideBands" aria-label="Hide bands panel">Hide</button></div>
-    <div class="muted panel-status" id="bandsStatus">Colors and spectral analysis.</div>
+    <div class="panel-header"><div><h2 class="panel-title">Bands &amp; color</h2><p class="panel-description">Shape the band overlay and palette.</p></div><button id="btnHideBands" aria-label="Hide bands panel">Hide</button></div>
+    <div class="muted panel-status" id="bandsStatus">Colors and Band Overlay presentation.</div>
     <details class="settings-section" open><summary>Colors</summary><div class="section-body">
     <div class="row">
       <label for="clrBg">Background</label>
@@ -224,13 +243,6 @@
       <label for="selParticleColorSrc">Particle color source</label>
       <select id="selParticleColorSrc"></select>
       <div id="valParticleSrc" class="val"></div>
-    </div>
-
-</div></details>
-    <details class="settings-section"><summary>Band Distribution</summary><div class="section-body">    <div class="row">
-      <label for="selDistMode">Distribution mode</label>
-      <select id="selDistMode"></select>
-      <div id="valDistMode" class="val"></div>
     </div>
 
 </div></details>
@@ -310,10 +322,6 @@
     </div>
 
 </div></details>
-    <details class="settings-section"><summary>Band HUD</summary><div class="section-body">    <div class="muted" id="bandDebug"><span class="dominantBadge">Dominant: (none)</span></div>
-    <div class="bandMeta" id="bandMeta">Bands metadata pending…</div>
-    <div id="bandTable"></div>
-</div></details>
   </div>
 
   <!-- Build 113 recording panel.
@@ -391,6 +399,10 @@
 
     <div id="openAudio" class="launcher">
       <button id="btnOpenAudio" type="button" aria-controls="audioPanel" title="Show audio source panel" aria-label="Show audio source panel" aria-pressed="true">Audio</button>
+    </div>
+
+    <div id="openAnalysis" class="launcher">
+      <button id="btnOpenAnalysis" type="button" aria-controls="analysisPanel" title="Show Analysis panel" aria-label="Show Analysis panel" aria-pressed="false">Analysis</button>
     </div>
 
     <div id="openVisualizers" class="launcher">
