@@ -34,10 +34,10 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
   globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
   state.recording.hooksEnabled = true;
   const ui = {
-    audioPanel: element("grid"), analysisPanel: element("none"), visualizersPanel: element("none"), simPanel: element(), bandsPanel: element(), queuePanel: element(), recordPanel: element(),
-    openAudio: element("grid"), openAnalysis: element("grid"), openVisualizers: element("grid"), openSim: element("grid"), openBands: element("grid"), openQueue: element("grid"), openRecord: element("grid"),
-    btnOpenAudio: element(), btnOpenAnalysis: element(), btnOpenVisualizers: element(), btnOpenSim: element(), btnOpenBands: element(), btnOpenQueue: element(), btnOpenRecord: element(),
-    btnHideAudio: element(), btnHideAnalysis: element(), btnHideVisualizers: element(), btnHideSim: element(), btnHideBands: element(), btnHideQueue: element(), btnHideRecord: element(),
+    audioPanel: element("grid"), analysisPanel: element("none"), visualizersPanel: element("none"), simPanel: element(), scenePanel: element(), queuePanel: element(), recordPanel: element(),
+    openAudio: element("grid"), openAnalysis: element("grid"), openVisualizers: element("grid"), openSim: element("grid"), openScene: element("grid"), openQueue: element("grid"), openRecord: element("grid"),
+    btnOpenAudio: element(), btnOpenAnalysis: element(), btnOpenVisualizers: element(), btnOpenSim: element(), btnOpenScene: element(), btnOpenQueue: element(), btnOpenRecord: element(),
+    btnHideAudio: element(), btnHideAnalysis: element(), btnHideVisualizers: element(), btnHideSim: element(), btnHideScene: element(), btnHideQueue: element(), btnHideRecord: element(),
     btnTogglePanels: element(), btnToggleWorkspaceLauncher: element(), workspaceLauncher: element(),
     workspaceLauncherCollapsed: true, recordingPanelVisible: true, recordingPanelRestoreAfterGlobalHide: false,
   };
@@ -82,7 +82,7 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
     workspace.togglePanels();
     assert.equal(ui.visualizersPanel.style.display, "block");
     assert.equal(ui.recordPanel.style.display, "block");
-    workspace.bringPanelForward(ui.bandsPanel);
+    workspace.bringPanelForward(ui.scenePanel);
   } finally {
     state.recording.hooksEnabled = previousHooks;
     globalThis.document = previousDocument;

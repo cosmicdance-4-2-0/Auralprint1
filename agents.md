@@ -203,7 +203,7 @@ Panels:
 - Queue
 - Visualizers
 - Sim / Orbs
-- Bands
+- Scene
 - Analysis
 
 Rules:
@@ -389,4 +389,15 @@ When in doubt:
 - Schema-10 persistence intentionally remains under `bands.overlay` until a deliberate future schema revision.
 - Free-run phase resets independently to zero. Explicit Orb-lock may synchronize/reset to the first Orb and remains safe when no Orb exists.
 - Visualizer-specific configuration has exactly one writable UI owner.
-- Shared color/palette ownership is separate from visualizer geometry and remains subject to the 115L audit; temporary placement must not become a durable ownership claim.
+- Shared color/palette ownership is Scene-level and separate from Spectral Ring geometry.
+
+## 5.6 Scene Appearance Ownership (Build 115L)
+
+- Scene Appearance is the sole writable UI owner of shared visual color policy; this does not create a persisted `scene` object.
+- Persistence remains in schema-10 `visuals.*`, `bands.*`, and `orbs.*` paths.
+- Scene owns canvas background, Scene fixed particle color, default Orb color policy, and the shared band palette.
+- The palette is consumed by multiple visualizers and Analysis diagnostics; no individual visualizer owns it, and Spectral Ring has no independent color state.
+- Orb `colorSource=inherit` resolves through Scene default policy. Inherited dominant is target-aware for targeted Orbs; explicit dominant remains global combined-C.
+- Orb hue offset affects only that Orb's palette-derived colors. Trace color mode remains Orb-local.
+- Scene fixed particle color supplies current Orb/trace fixed modes and the last-particle fallback.
+- Every color setting has exactly one writable UI owner.

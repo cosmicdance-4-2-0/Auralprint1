@@ -27,7 +27,7 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     syncLauncherControl(ui.openAnalysis, ui.btnOpenAnalysis, { active: isPanelVisible(ui.analysisPanel), label: isPanelVisible(ui.analysisPanel) ? "Hide Analysis panel" : "Show Analysis panel" });
     syncLauncherControl(ui.openVisualizers, ui.btnOpenVisualizers, { active: isPanelVisible(ui.visualizersPanel), label: isPanelVisible(ui.visualizersPanel) ? "Hide Visualizers panel" : "Show Visualizers panel" });
     syncLauncherControl(ui.openSim, ui.btnOpenSim, { active: isPanelVisible(ui.simPanel), label: isPanelVisible(ui.simPanel) ? "Hide orbs panel" : "Show orbs panel" });
-    syncLauncherControl(ui.openBands, ui.btnOpenBands, { active: isPanelVisible(ui.bandsPanel), label: isPanelVisible(ui.bandsPanel) ? "Hide bands panel" : "Show bands panel" });
+    syncLauncherControl(ui.openScene, ui.btnOpenScene, { active: isPanelVisible(ui.scenePanel), label: isPanelVisible(ui.scenePanel) ? "Hide Scene panel" : "Show Scene panel" });
     syncLauncherControl(ui.openQueue, ui.btnOpenQueue, { active: isPanelVisible(ui.queuePanel), label: isPanelVisible(ui.queuePanel) ? "Hide queue panel" : "Show queue panel" });
     syncLauncherControl(ui.openRecord, ui.btnOpenRecord, {
       visible: !!state.recording?.hooksEnabled,
@@ -49,7 +49,7 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
 
   function toggleLauncherCollapsed() { setLauncherCollapsed(!ui.workspaceLauncherCollapsed); }
   function bringPanelForward(panel) {
-    for (const candidate of [ui.visualizersPanel, ui.analysisPanel, ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) {
+    for (const candidate of [ui.visualizersPanel, ui.analysisPanel, ui.simPanel, ui.scenePanel, ui.queuePanel, ui.recordPanel]) {
       if (candidate) candidate.classList.toggle("panel-front", candidate === panel);
     }
   }
@@ -72,8 +72,8 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
   function showAnalysisPanel() { if (!ui.analysisPanel) return; ui.analysisPanel.style.display = "block"; bringPanelForward(ui.analysisPanel); syncLauncherState(); if (document.activeElement === ui.btnOpenAnalysis) ui.btnHideAnalysis.focus(); }
   function hideSimPanel() { ui.simPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.simPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenSim); }
   function showSimPanel() { ui.simPanel.style.display = "block"; bringPanelForward(ui.simPanel); syncLauncherState(); if (document.activeElement === ui.btnOpenSim) ui.btnHideSim.focus(); }
-  function hideBandsPanel() { ui.bandsPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.bandsPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenBands); }
-  function showBandsPanel() { ui.bandsPanel.style.display = "block"; bringPanelForward(ui.bandsPanel); syncLauncherState(); if (document.activeElement === ui.btnOpenBands) ui.btnHideBands.focus(); }
+  function hideScenePanel() { ui.scenePanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.scenePanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenScene); }
+  function showScenePanel() { ui.scenePanel.style.display = "block"; bringPanelForward(ui.scenePanel); syncLauncherState(); if (document.activeElement === ui.btnOpenScene) ui.btnHideScene.focus(); }
   function hideVisualizersPanel() { if (!ui.visualizersPanel) return; ui.visualizersPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.visualizersPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenVisualizers); }
   function showVisualizersPanel() { if (!ui.visualizersPanel) return; ui.visualizersPanel.style.display = "block"; bringPanelForward(ui.visualizersPanel); syncLauncherState(); if (document.activeElement === ui.btnOpenVisualizers && ui.btnHideVisualizers) ui.btnHideVisualizers.focus(); }
 
@@ -91,16 +91,16 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
   function primeRecordUi() { if (!ui.recordPanel || !ui.openRecord) return; if (!state.recording.hooksEnabled) ui.recordingPanelRestoreAfterGlobalHide = false; setRecordPanelVisibility(!!state.recording.hooksEnabled && !!ui.recordingPanelVisible); }
 
   function togglePanels() {
-    const visible = { audio: isPanelVisible(ui.audioPanel), visualizers: isPanelVisible(ui.visualizersPanel), analysis: isPanelVisible(ui.analysisPanel), sim: isPanelVisible(ui.simPanel), bands: isPanelVisible(ui.bandsPanel), queue: isPanelVisible(ui.queuePanel), record: isPanelVisible(ui.recordPanel) };
+    const visible = { audio: isPanelVisible(ui.audioPanel), visualizers: isPanelVisible(ui.visualizersPanel), analysis: isPanelVisible(ui.analysisPanel), sim: isPanelVisible(ui.simPanel), scene: isPanelVisible(ui.scenePanel), queue: isPanelVisible(ui.queuePanel), record: isPanelVisible(ui.recordPanel) };
     if (Object.values(visible).some(Boolean)) {
       ui.panelRestoreSnapshot = visible;
       ui.recordingPanelRestoreAfterGlobalHide = visible.record;
-      hideAudioPanel(); hideAnalysisPanel(); hideVisualizersPanel(); hideSimPanel(); hideBandsPanel(); hideQueuePanel();
+      hideAudioPanel(); hideAnalysisPanel(); hideVisualizersPanel(); hideSimPanel(); hideScenePanel(); hideQueuePanel();
       if (visible.record) hideRecordPanel({ preserveRestoreFlag: true });
       return;
     }
     const restore = ui.panelRestoreSnapshot || { audio: true };
-    if (restore.audio) showAudioPanel(); if (restore.analysis) showAnalysisPanel(); if (restore.visualizers) showVisualizersPanel(); if (restore.sim) showSimPanel(); if (restore.bands) showBandsPanel(); if (restore.queue) showQueuePanel();
+    if (restore.audio) showAudioPanel(); if (restore.analysis) showAnalysisPanel(); if (restore.visualizers) showVisualizersPanel(); if (restore.sim) showSimPanel(); if (restore.scene) showScenePanel(); if (restore.queue) showQueuePanel();
     const restoreRecord = !!ui.recordingPanelRestoreAfterGlobalHide;
     ui.recordingPanelRestoreAfterGlobalHide = false;
     if (restoreRecord) showRecordPanel();
@@ -113,26 +113,26 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     setLauncherCollapsed(!!ui.workspaceLauncherCollapsed);
     primeRecordUi();
     if (ui.btnToggleWorkspaceLauncher) ui.btnToggleWorkspaceLauncher.addEventListener("click", toggleLauncherCollapsed);
-    for (const [button, panel, hide, show] of [[ui.btnOpenAudio, ui.audioPanel, hideAudioPanel, showAudioPanel], [ui.btnOpenAnalysis, ui.analysisPanel, hideAnalysisPanel, showAnalysisPanel], [ui.btnOpenVisualizers, ui.visualizersPanel, hideVisualizersPanel, showVisualizersPanel], [ui.btnOpenSim, ui.simPanel, hideSimPanel, showSimPanel], [ui.btnOpenBands, ui.bandsPanel, hideBandsPanel, showBandsPanel], [ui.btnOpenQueue, ui.queuePanel, hideQueuePanel, showQueuePanel]]) {
+    for (const [button, panel, hide, show] of [[ui.btnOpenAudio, ui.audioPanel, hideAudioPanel, showAudioPanel], [ui.btnOpenAnalysis, ui.analysisPanel, hideAnalysisPanel, showAnalysisPanel], [ui.btnOpenVisualizers, ui.visualizersPanel, hideVisualizersPanel, showVisualizersPanel], [ui.btnOpenSim, ui.simPanel, hideSimPanel, showSimPanel], [ui.btnOpenScene, ui.scenePanel, hideScenePanel, showScenePanel], [ui.btnOpenQueue, ui.queuePanel, hideQueuePanel, showQueuePanel]]) {
       if (button) button.addEventListener("click", () => isPanelVisible(panel) ? hide() : show());
     }
     if (ui.btnHideAudio) ui.btnHideAudio.addEventListener("click", hideAudioPanel);
     if (ui.btnHideAnalysis) ui.btnHideAnalysis.addEventListener("click", hideAnalysisPanel);
     if (ui.btnHideVisualizers) ui.btnHideVisualizers.addEventListener("click", hideVisualizersPanel);
     if (ui.btnHideSim) ui.btnHideSim.addEventListener("click", hideSimPanel);
-    if (ui.btnHideBands) ui.btnHideBands.addEventListener("click", hideBandsPanel);
+    if (ui.btnHideScene) ui.btnHideScene.addEventListener("click", hideScenePanel);
     if (ui.btnHideQueue) ui.btnHideQueue.addEventListener("click", hideQueuePanel);
     if (ui.btnTogglePanels) ui.btnTogglePanels.addEventListener("click", togglePanels);
     if (ui.btnHideRecord) ui.btnHideRecord.addEventListener("click", hideRecordPanel);
     if (ui.btnOpenRecord) ui.btnOpenRecord.addEventListener("click", () => ui.recordingPanelVisible ? hideRecordPanel() : showRecordPanel());
-    for (const panel of [ui.visualizersPanel, ui.analysisPanel, ui.simPanel, ui.bandsPanel, ui.queuePanel, ui.recordPanel]) if (panel) panel.addEventListener("pointerdown", () => bringPanelForward(panel));
+    for (const panel of [ui.visualizersPanel, ui.analysisPanel, ui.simPanel, ui.scenePanel, ui.queuePanel, ui.recordPanel]) if (panel) panel.addEventListener("pointerdown", () => bringPanelForward(panel));
     if (ui.audioDockObserver) ui.audioDockObserver.disconnect();
     if (typeof ResizeObserver === "function") { ui.audioDockObserver = new ResizeObserver(syncAudioDockHeight); ui.audioDockObserver.observe(ui.audioPanel); }
     syncAudioDockHeight(); syncLauncherState();
     return true;
   }
 
-  return { init, isPanelVisible, syncLauncherState, setLauncherCollapsed, bringPanelForward, hideQueuePanel, showQueuePanel, hideAudioPanel, showAudioPanel, hideAnalysisPanel, showAnalysisPanel, hideVisualizersPanel, showVisualizersPanel, hideSimPanel, showSimPanel, hideBandsPanel, showBandsPanel, setRecordPanelVisibility, hideRecordPanel, showRecordPanel, primeRecordUi, togglePanels };
+  return { init, isPanelVisible, syncLauncherState, setLauncherCollapsed, bringPanelForward, hideQueuePanel, showQueuePanel, hideAudioPanel, showAudioPanel, hideAnalysisPanel, showAnalysisPanel, hideVisualizersPanel, showVisualizersPanel, hideSimPanel, showSimPanel, hideScenePanel, showScenePanel, setRecordPanelVisibility, hideRecordPanel, showRecordPanel, primeRecordUi, togglePanels };
 }
 
 export { createWorkspaceUi };

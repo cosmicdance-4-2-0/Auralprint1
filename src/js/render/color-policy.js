@@ -7,6 +7,8 @@ import { BandBank } from "../audio/band-bank.js";
    ========================================================================== */
 const ColorPolicy = (() => {
   function bandRgb01(index, extraHueOffsetDeg = 0) {
+    // Scene's shared band palette is consumed by Orbs, Spectral Ring, and the
+    // Analysis HUD. extraHueOffsetDeg is an Orb-local addition when supplied.
     const s = runtime.settings;
     const n = s.bands.count;
     const hueStep = 360 / n;
@@ -15,6 +17,8 @@ const ColorPolicy = (() => {
   }
 
   function pickParticleColorRgb01(angleRad, orb = null, globalDominantBandIndex = 0, selectedDominantBandIndex = null) {
+    // Resolve the Scene default only for inherit; explicit dominant remains
+    // global combined-C while inherited targeted dominant may be channel-local.
     const s = runtime.settings;
     const extraHue = orb && Number.isFinite(orb.hueOffsetDeg) ? orb.hueOffsetDeg : 0;
     const requestedSource = orb?.colorSource || "inherit";
@@ -30,6 +34,7 @@ const ColorPolicy = (() => {
   }
 
   function pickLineColorRgb01(particles, dominantBandIndex = 0, lineColorMode = "fixed") {
+    // Trace mode is Orb-local; its fixed fallback and palette are Scene-owned.
     const s = runtime.settings;
     if (lineColorMode === "dominantBand") return bandRgb01(dominantBandIndex);
 
