@@ -23,11 +23,11 @@ function frame(overrides = {}) {
     analysisFrame: {
       ready: true,
       channels: {
-        L: { waveform: Float32Array.from([0.1]), energy01: 0.1 },
-        R: { waveform: Float32Array.from([0.2]), energy01: 0.2 },
-        C: { waveform: Float32Array.from([0.3]), energy01: 0.3 },
+        L: { waveform: Float32Array.from([0.1]), energy01: 0.1, bandEnergies01: [0.9, 0.2, 0.1] },
+        R: { waveform: Float32Array.from([0.2]), energy01: 0.2, bandEnergies01: [0.1, 0.8, 0.2] },
+        C: { waveform: Float32Array.from([0.3]), energy01: 0.3, bandEnergies01: [0.4, 0.4, 0.9] },
       },
-      spectrum: { energies01: [0.2, 0.6], dominantIndex: 1 },
+      spectrum: { energies01: [0.4, 0.4, 0.9], dominantIndex: 2 },
     },
     ...overrides,
   };
@@ -102,25 +102,35 @@ test("Orb adapter consumes AnalysisFrame routing and preserves pause and selecte
   visualizer.update(context);
   assert.equal(calls.length, 1);
   assert.equal(calls[0][2], context.analysisFrame.channels.R);
-  assert.equal(calls[0][3], 0.4);
-  assert.equal(calls[0][4], 1);
+  assert.equal(calls[0][3], 0.45);
+  assert.equal(calls[0][4], 2);
   assert.equal(calls[0][5], 1);
 });
 
-test("selected Orb analysis averages energy and finds the first strongest selected band in one selection", () => {
+test("selected Orb analysis routes L/R/C spectra and preserves first-band tie semantics", () => {
   const context = frame();
-  context.analysisFrame.spectrum.energies01 = [0, 0.25, 0, 0.75, 0, 0, 0, 0];
-  assert.deepEqual(selectOrbAnalysis(fakeOrb("targeted", { bandIds: [1, 3] }), context.analysisFrame), {
+  assert.deepEqual(selectOrbAnalysis(fakeOrb("left", { chanId: "L", bandIds: [0, 1] }), context.analysisFrame), {
     band: context.analysisFrame.channels.L,
-    energyOverride01: 0.5,
-    selectedDominantBandIndex: 3,
+    energyOverride01: 0.55,
+    selectedDominantBandIndex: 0,
   });
-  assert.equal(selectOrbAnalysis(fakeOrb("silent", { bandIds: [5, 6, 7] }), context.analysisFrame).selectedDominantBandIndex, 5);
+  assert.deepEqual(selectOrbAnalysis(fakeOrb("right", { chanId: "R", bandIds: [0, 1] }), context.analysisFrame), {
+    band: context.analysisFrame.channels.R,
+    energyOverride01: 0.45,
+    selectedDominantBandIndex: 1,
+  });
+  assert.deepEqual(selectOrbAnalysis(fakeOrb("center", { chanId: "C", bandIds: [0, 1] }), context.analysisFrame), {
+    band: context.analysisFrame.channels.C,
+    energyOverride01: 0.4,
+    selectedDominantBandIndex: 0,
+  });
   assert.deepEqual(selectOrbAnalysis(fakeOrb("full", { bandIds: [] }), context.analysisFrame), {
     band: context.analysisFrame.channels.L,
     energyOverride01: null,
     selectedDominantBandIndex: null,
   });
+  context.analysisFrame.channels.L.bandEnergies01 = null;
+  assert.equal(selectOrbAnalysis(fakeOrb("missing", { chanId: "L", bandIds: [0] }), context.analysisFrame).energyOverride01, null);
 });
 
 test("ColorPolicy scopes only inherited dominant color to a selected target", () => {
@@ -151,13 +161,13 @@ test("Orb visualizer passes selected dominant context through Orb.step into inhe
     runtime.settings.bands.particleColorSource = "dominant";
     state.widthPx = state.heightPx = 1000;
     const def = structuredClone(CONFIG.defaults.orbs[0]);
-    def.bandIds = [0, 1]; def.colorSource = "inherit"; def.hueOffsetDeg = 23;
+    def.chanId = "L"; def.bandIds = [0, 1]; def.colorSource = "inherit"; def.hueOffsetDeg = 23;
     def.particles.emitPerSecond = 10; def.particles.overlapRadiusPx = 0;
     const orb = new Orb(def);
     const visualizer = createOrbVisualizer(orb);
     visualizer.update(frame());
     assert.equal(orb.trail.particles.length > 0, true);
-    assert.deepEqual(orb.trail.particles.at(-1).rgbStart, ColorPolicy.bandRgb01(1, 23));
+    assert.deepEqual(orb.trail.particles.at(-1).rgbStart, ColorPolicy.bandRgb01(0, 23));
   } finally {
     runtime.settings = oldSettings;
     [state.widthPx, state.heightPx] = oldSize;

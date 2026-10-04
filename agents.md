@@ -250,6 +250,8 @@ Avoid:
 - Dynamic Orb editor rendering and synchronization reads canonical `runtime.settings`, not mutable `preferences`, so reference-based refresh invalidation has one authority.
 - Human-facing angular controls may persist radians internally, but must expose their displayed units to assistive technology.
 - Orb selected-band targeting supplies both averaged selected-energy response and selected-target dominant context. Inherited global dominant color is scoped by a nonempty Orb target, while explicit Orb dominant color remains global full-spectrum unless a future revision deliberately changes that contract.
+- L, R, and C are first-class analysis channels. An Orb's `chanId` selects its waveform, full-spectrum energy, and selected-band spectral-energy source; empty `bandIds` uses that channel's full-spectrum energy, while nonempty `bandIds` averages selected energies from that channel.
+- `AnalysisFrame` exposes producer-owned channel band-energy arrays as read-only-by-contract references. Band definitions and metadata remain shared, and the global spectrum/dominant remains the real combined C channel unless a future deliberate contract changes it.
 
 ---
 

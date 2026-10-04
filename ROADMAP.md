@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 4, 2026. Development revision: `v0.1.15j` / Build 115. Preset schema: 10.
+Updated: October 4, 2026. Development revision: `v0.1.15j.a` / Build 115. Preset schema: 10.
 
 The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115J plus tactical hardening revisions are complete. 115I.A makes generated select readouts truthful, standardizes Orb-editor invalidation on `runtime.settings`, removes redundant per-Orb runtime synchronization, exposes Phase Offset accessibly in degrees, and corrects current version metadata; preset schema remains 10. Analysis now has a dedicated Orb-independent workspace; Band Overlay promotion, color ownership, lifecycle/preset hardening, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
@@ -65,13 +65,15 @@ The intended data direction is `Audio Sources → Audio / Spectral Analysis → 
 
 ### Protected semantics and limits
 
-- Selected Orb band IDs average the existing combined/center-channel band energies; the Orb channel independently chooses its waveform and full-spectrum energy. Empty `bandIds` means full spectrum.
+- L/R/C are first-class analysis channels. Orb `chanId` selects waveform, full-spectrum energy, and selected-band spectral energy; empty `bandIds` retains selected-channel full-spectrum behavior. Global spectrum and dominant remain the real combined C analysis.
 - Preset schema remains 10; 115E changes collection lifecycle behavior without adding persisted fields.
 - `state.bands` may remain producer state while the consumer boundary is extracted; visual state such as ring phase does not become analysis data.
 - Revision 115H exposes the dynamic Orb collection through canonical runtime operations and generated stable-ID editor cards. Band Overlay keeps its current name, singleton lifecycle, and control location. Camera behavior remains blocked; schema 10 is unchanged.
 - Track/source/recording ownership, immutable configuration, Nyquist-aware ceilings, and single-file output remain protected.
 
 Revision 115J establishes the dedicated Analysis workspace. It owns FFT size, smoothing, RMS gain, band distribution/floor/configured ceiling, metadata, dominant-band diagnostics, and energy inspection. It consumes `AnalysisFrame`, has no Orb or visualizer dependency, exposes no band-count editor, and retains preset schema 10. Bands temporarily retains color and Band Overlay presentation. 115K is next; Camera remains blocked.
+
+Revision 115J.A establishes channel-complete spectral analysis. L/R/C reuse independent analyser FFT buffers and BandBank energy arrays while sharing one band definition. This intentionally changes existing schema-10 targeted L/R rendering without migrating presets. Three frequency reads and three channel BandBank calculations per ready sample are accepted for analyzer correctness; Build 117 must measure and harden that cost on constrained hardware without demand-driven channel pruning. Schema remains 10, with 115K Band Overlay promotion and 115L color ownership still deferred.
 
 ### Current regression evidence
 
