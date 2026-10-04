@@ -68,7 +68,7 @@ test("ID-aware Orb reconciliation preserves survivors and freshens additions acr
     runtime.settings = { ...structuredClone(CONFIG.defaults), orbs: [] };
     reconcileOrbs();
     assert.equal(state.orbs.length, 0);
-    assert.deepEqual(VisualizerRuntime.getVisualizers().map((v) => v.type), ["band-overlay"]);
+    assert.deepEqual(VisualizerRuntime.getVisualizers().map((v) => v.type), ["spectral-ring"]);
   } finally {
     VisualizerRuntime.dispose();
     runtime.settings = oldSettings;
@@ -118,7 +118,7 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     for (const id of [...preferences.orbs.map((orb) => orb.id)]) assert.equal(removeRuntimeOrb(id), true);
     assert.deepEqual(preferences.orbs, []);
     assert.deepEqual(state.orbs, []);
-    assert.deepEqual(VisualizerRuntime.getVisualizers().map((v) => v.type), ["band-overlay"]);
+    assert.deepEqual(VisualizerRuntime.getVisualizers().map((v) => v.type), ["spectral-ring"]);
   } finally {
     VisualizerRuntime.dispose();
     replacePreferences(oldPreferences);

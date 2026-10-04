@@ -14,13 +14,13 @@ function createVisualizerInventory(visualizers = []) {
     const type = typeof visualizer?.type === "string" ? visualizer.type : "unknown";
     const id = typeof visualizer?.id === "string" ? visualizer.id : "";
     const visible = readVisibility(visualizer);
-    if (type === "band-overlay") {
+    if (type === "spectral-ring") {
       return {
         id,
         type,
-        displayName: "Band Overlay",
+        displayName: "Spectral Ring",
         visible,
-        summary: "Spectral band visualization",
+        summary: "Combined C spectrum",
       };
     }
     if (type === "orb") {
@@ -50,7 +50,7 @@ function createVisualizersPanelUi({
   getVisualizers = () => [],
   getSettings = () => null,
   openOrbControls = () => {},
-  openBandOverlayControls = () => {},
+  editSpectralRing = () => {},
   addOrb = () => null,
   editOrb = () => {},
   duplicateOrb = () => null,
@@ -82,12 +82,14 @@ function createVisualizersPanelUi({
       summary.className = "visualizer-item-summary";
       summary.textContent = item.summary;
       row.append(heading, summary);
-      if (item.type === "orb") {
+      if (item.type === "orb" || item.type === "spectral-ring") {
         const actions = document.createElement("div");
         actions.className = "visualizer-item-actions";
-        for (const [action, label] of [["edit", "Edit"], ["duplicate", "Duplicate"], ["remove", "Remove"]]) {
+        const actionDefs = item.type === "spectral-ring" ? [["edit-ring", "Edit"]] : [["edit", "Edit"], ["duplicate", "Duplicate"], ["remove", "Remove"]];
+        for (const [action, label] of actionDefs) {
           const button = document.createElement("button");
-          button.type = "button"; button.dataset.action = action; button.dataset.orbId = item.id;
+          button.type = "button"; button.dataset.action = action;
+          if (item.type === "orb") button.dataset.orbId = item.id;
           button.textContent = label; button.setAttribute("aria-label", `${label} ${item.displayName}, ${item.id}`);
           if (action === "remove") button.className = "is-destructive";
           actions.appendChild(button);
@@ -108,8 +110,9 @@ function createVisualizersPanelUi({
   function forceRefresh() { lastSettingsRef = null; lastVisualizerCollectionRef = null; refresh(); }
 
   function onListClick(event) {
-    const button = event.target?.closest?.("button[data-action][data-orb-id]");
+    const button = event.target?.closest?.("button[data-action]");
     if (!button || !ui.visualizerList.contains(button)) return;
+    if (button.dataset.action === "edit-ring") { editSpectralRing(); return; }
     const id = button.dataset.orbId;
     if (button.dataset.action === "edit") { editOrb(id); return; }
     if (button.dataset.action === "duplicate") { const created = duplicateOrb(id); if (created?.id) { forceRefresh(); focusEdit(created.id); } return; }
@@ -152,7 +155,6 @@ function createVisualizersPanelUi({
     ui?.visualizerList?.addEventListener("click", onListClick);
     ui?.btnVisualizersAddOrb?.addEventListener("click", onAdd);
     if (ui?.btnVisualizersOpenOrbs) ui.btnVisualizersOpenOrbs.addEventListener("click", openOrbControls);
-    if (ui?.btnVisualizersOpenBandOverlay) ui.btnVisualizersOpenBandOverlay.addEventListener("click", openBandOverlayControls);
     refresh();
     return true;
   }

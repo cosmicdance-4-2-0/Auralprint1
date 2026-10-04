@@ -492,6 +492,8 @@ bands: {
 
     bands: {
       overlayAlpha: { min: 0, max: 1, step: 0.01 },
+      overlayLineAlpha: { min: 0, max: 1, step: 0.01 },
+      overlayLineWidthPx: { min: 1, max: 6, step: 1 },
       pointSizePx: { min: 1, max: 10, step: 1 },
       overlayMinRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
       overlayMaxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },

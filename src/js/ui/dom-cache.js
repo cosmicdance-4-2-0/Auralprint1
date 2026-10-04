@@ -24,8 +24,7 @@ function primeDomCache() {
     ui.btnHideVisualizers = document.getElementById("btnHideVisualizers");
     ui.btnVisualizersAddOrb = document.getElementById("btnVisualizersAddOrb");
     ui.btnVisualizersOpenOrbs = document.getElementById("btnVisualizersOpenOrbs");
-    ui.btnVisualizersOpenBandOverlay = document.getElementById("btnVisualizersOpenBandOverlay");
-    ui.bandOverlaySection = document.getElementById("bandOverlaySection");
+    ui.spectralRingEditor = document.getElementById("spectralRingEditor");
     ui.loadHint = document.getElementById("loadHint");
     ui.workspaceLauncher = document.getElementById("workspaceLauncher");
     ui.btnToggleWorkspaceLauncher = document.getElementById("btnToggleWorkspaceLauncher");
@@ -146,6 +145,10 @@ function primeDomCache() {
     ui.valBandOverlayMaxRad = document.getElementById("valBandOverlayMaxRad");
     ui.rngBandOverlayWfDisp = document.getElementById("rngBandOverlayWfDisp");
     ui.valBandOverlayWfDisp = document.getElementById("valBandOverlayWfDisp");
+    ui.rngBandLineAlpha = document.getElementById("rngBandLineAlpha");
+    ui.valBandLineAlpha = document.getElementById("valBandLineAlpha");
+    ui.rngBandLineWidth = document.getElementById("rngBandLineWidth");
+    ui.valBandLineWidth = document.getElementById("valBandLineWidth");
 
     ui.selRingPhaseMode = document.getElementById("selRingPhaseMode");
     ui.valRingPhaseMode = document.getElementById("valRingPhaseMode");
@@ -210,16 +213,10 @@ function primeDomCache() {
     bindRange(ui.rngMinRad, CONFIG.limits.orbs.response.minRadiusFrac);
     bindRange(ui.rngMaxRad, CONFIG.limits.orbs.response.maxRadiusFrac);
 
-    bindRange(ui.rngBandAlpha, CONFIG.limits.bands.overlayAlpha);
-    bindRange(ui.rngBandPoint, CONFIG.limits.bands.pointSizePx);
-    bindRange(ui.rngBandOverlayMinRad, CONFIG.limits.bands.overlayMinRadiusFrac);
-    bindRange(ui.rngBandOverlayMaxRad, CONFIG.limits.bands.overlayMaxRadiusFrac);
-    bindRange(ui.rngBandOverlayWfDisp, CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac);
     bindRange(ui.rngHueOff, CONFIG.limits.bands.hueOffsetDeg);
     bindRange(ui.rngSat, CONFIG.limits.bands.saturation);
     bindRange(ui.rngVal, CONFIG.limits.bands.value);
 
-    bindRange(ui.rngRingSpeed, CONFIG.limits.bands.ringSpeedRadPerSec);
 
     const srcs = [
       { v: "dominant", t: "dominant band" },
@@ -244,18 +241,6 @@ function primeDomCache() {
       opt.textContent = m.t;
       ui.selLineColorMode.appendChild(opt);
     }
-
-    const phaseModes = [
-      { v: "orb", t: "lock to orb phase" },
-      { v: "free", t: "free-run (ring speed)" },
-    ];
-    for (const m of phaseModes) {
-      const opt = document.createElement("option");
-      opt.value = m.v;
-      opt.textContent = m.t;
-      ui.selRingPhaseMode.appendChild(opt);
-    }
-
 
 }
 

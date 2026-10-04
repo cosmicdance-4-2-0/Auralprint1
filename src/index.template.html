@@ -97,10 +97,26 @@
     <div class="panel-header"><div><h2 class="panel-title">Visualizers</h2><p class="panel-description">See what is drawing the current scene.</p></div><button id="btnHideVisualizers" aria-label="Hide Visualizers panel">Hide</button></div>
     <div class="muted panel-status" id="visualizersStatus" role="status" aria-live="polite">0 visualizers · 0 Orbs</div>
     <div id="visualizerList" class="visualizer-list" role="list" aria-label="Visualizers in scene"></div>
+    <details id="spectralRingEditor" class="settings-section spectral-ring-editor"><summary>Spectral Ring<span class="section-description">Combined C spectrum</span></summary><div class="section-body">
+      <h3>Visibility</h3>
+      <div class="row"><label for="chkBandOverlay">Visible</label><input id="chkBandOverlay" type="checkbox" /><div id="valBandOverlay" class="val"></div></div>
+      <h3>Geometry</h3>
+      <div class="row"><label for="rngBandOverlayMinRad">Min radius</label><input id="rngBandOverlayMinRad" type="range" /><div id="valBandOverlayMinRad" class="val"></div></div>
+      <div class="row"><label for="rngBandOverlayMaxRad">Max radius</label><input id="rngBandOverlayMaxRad" type="range" /><div id="valBandOverlayMaxRad" class="val"></div></div>
+      <div class="row"><label for="rngBandOverlayWfDisp">Waveform displacement</label><input id="rngBandOverlayWfDisp" type="range" /><div id="valBandOverlayWfDisp" class="val"></div></div>
+      <h3>Drawing</h3>
+      <div class="row"><label for="rngBandAlpha">Point alpha</label><input id="rngBandAlpha" type="range" /><div id="valBandAlpha" class="val"></div></div>
+      <div class="row"><label for="rngBandPoint">Point size</label><input id="rngBandPoint" type="range" /><div id="valBandPoint" class="val"></div></div>
+      <div class="row"><label for="chkBandConnect">Connect adjacent</label><input id="chkBandConnect" type="checkbox" /><div id="valBandConnect" class="val"></div></div>
+      <div class="row"><label for="rngBandLineAlpha">Line alpha</label><input id="rngBandLineAlpha" type="range" /><div id="valBandLineAlpha" class="val"></div></div>
+      <div class="row"><label for="rngBandLineWidth">Line width</label><input id="rngBandLineWidth" type="range" /><div id="valBandLineWidth" class="val"></div></div>
+      <h3>Motion</h3>
+      <div class="row"><label for="selRingPhaseMode">Phase mode</label><select id="selRingPhaseMode"></select><div id="valRingPhaseMode" class="val"></div></div>
+      <div class="row"><label for="rngRingSpeed">Ring speed (rad/s)</label><input id="rngRingSpeed" type="range" aria-label="Ring speed in radians per second" /><div id="valRingSpeed" class="val"></div></div>
+    </div></details>
     <div class="panel-actions visualizers-actions" aria-label="Visualizer management">
       <button id="btnVisualizersAddOrb" type="button">+ Add Orb</button>
       <button id="btnVisualizersOpenOrbs" type="button">Open Orb Controls</button>
-      <button id="btnVisualizersOpenBandOverlay" type="button">Open Band Overlay Controls</button>
     </div>
   </div>
 
@@ -224,8 +240,8 @@
   </div>
 
   <div id="bandsPanel" class="panel" style="display:none" role="region" aria-label="Bands and color">
-    <div class="panel-header"><div><h2 class="panel-title">Bands &amp; color</h2><p class="panel-description">Shape the band overlay and palette.</p></div><button id="btnHideBands" aria-label="Hide bands panel">Hide</button></div>
-    <div class="muted panel-status" id="bandsStatus">Colors and Band Overlay presentation.</div>
+    <div class="panel-header"><div><h2 class="panel-title">Bands &amp; color</h2><p class="panel-description">Shape shared color and band palette behavior.</p></div><button id="btnHideBands" aria-label="Hide bands panel">Hide</button></div>
+    <div class="muted panel-status" id="bandsStatus">Shared color and band palette behavior.</div>
     <details class="settings-section" open><summary>Colors</summary><div class="section-body">
     <div class="row">
       <label for="clrBg">Background</label>
@@ -243,62 +259,6 @@
       <label for="selParticleColorSrc">Particle color source</label>
       <select id="selParticleColorSrc"></select>
       <div id="valParticleSrc" class="val"></div>
-    </div>
-
-</div></details>
-    <details id="bandOverlaySection" class="settings-section"><summary>Band Overlay</summary><div class="section-body">
-    <div class="row">
-      <label for="chkBandOverlay">Enable overlay</label>
-      <input id="chkBandOverlay" type="checkbox" />
-      <div id="valBandOverlay" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="chkBandConnect">Connect adjacent</label>
-      <input id="chkBandConnect" type="checkbox" />
-      <div id="valBandConnect" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngBandAlpha">Overlay alpha</label>
-      <input id="rngBandAlpha" type="range" />
-      <div id="valBandAlpha" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngBandPoint">Point size</label>
-      <input id="rngBandPoint" type="range" />
-      <div id="valBandPoint" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngBandOverlayMinRad">Overlay Min Radius</label>
-      <input id="rngBandOverlayMinRad" type="range" />
-      <div id="valBandOverlayMinRad" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngBandOverlayMaxRad">Overlay Max Radius</label>
-      <input id="rngBandOverlayMaxRad" type="range" />
-      <div id="valBandOverlayMaxRad" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngBandOverlayWfDisp">Overlay waveform disp</label>
-      <input id="rngBandOverlayWfDisp" type="range" />
-      <div id="valBandOverlayWfDisp" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="selRingPhaseMode">Ring phase mode</label>
-      <select id="selRingPhaseMode"></select>
-      <div id="valRingPhaseMode" class="val"></div>
-    </div>
-
-    <div class="row">
-      <label for="rngRingSpeed">Ring speed</label>
-      <input id="rngRingSpeed" type="range" />
-      <div id="valRingSpeed" class="val"></div>
     </div>
 
 </div></details>

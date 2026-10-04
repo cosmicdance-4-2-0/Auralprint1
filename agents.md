@@ -239,7 +239,7 @@ Avoid:
 - UI feature modules must not import `ui.js`; dependencies flow toward the coordinator.
 - UI refresh functions must not mutate persistent settings merely to render state or fabricate missing visualizer instances.
 - Listener initialization must be idempotent for the same DOM controls and must not accumulate duplicate handlers.
-- The Visualizers panel owns user-facing Orb collection management through canonical runtime operations; it does not own Orb values, Band Overlay configuration, or generic visualizer persistence.
+- The Visualizers panel owns user-facing Orb collection management and the singleton Spectral Ring presentation editor through canonical operations; it does not own Orb values or generic visualizer persistence.
 - Orb editor commits and controller reconciliation use persistent Orb IDs, never assumed array slots. Surviving editor nodes, listeners, picker instances, and ephemeral UI state must be retained across unrelated collection changes.
 - Orb editor nested controls commit by persistent Orb ID and per-Orb edits preserve unrelated runtime history. `startAngleRad` is designed phase configuration, distinct from ephemeral `angleRad`: the UI presents degrees while persistence/runtime use radians, edits do not live-teleport, and visual reset applies the designed phase.
 - Removing the last Orb is valid; UI must not implicitly fabricate an Orb. Generated DOM identifiers must be independent of untrusted persistent Orb IDs.
@@ -380,3 +380,13 @@ When in doubt:
 ---
 
 **End of Contract**
+
+## 5.5 Spectral Ring Ownership (Build 115K)
+
+- Spectral Ring is a first-class singleton `VisualizerRuntime` participant; its runtime ID and type are `spectral-ring`.
+- Visualizers owns its sole writable presentation editor. Analysis does not own presentation, and the transitional color panel must not duplicate it.
+- Spectral Ring consumes the global combined C spectrum and C waveform.
+- Schema-10 persistence intentionally remains under `bands.overlay` until a deliberate future schema revision.
+- Free-run phase resets independently to zero. Explicit Orb-lock may synchronize/reset to the first Orb and remains safe when no Orb exists.
+- Visualizer-specific configuration has exactly one writable UI owner.
+- Shared color/palette ownership is separate from visualizer geometry and remains subject to the 115L audit; temporary placement must not become a durable ownership claim.

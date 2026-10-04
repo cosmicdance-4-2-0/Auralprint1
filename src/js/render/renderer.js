@@ -89,7 +89,7 @@ const Renderer = (() => {
     }
   }
 
-  function overlayWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
+  function spectralRingWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
     if (!waveform || waveform.length === 0) return 0;
     const phase01 = ((angleRad % TAU) + TAU) % TAU / TAU;
     const idx = Math.floor(phase01 * (waveform.length - 1));
@@ -98,7 +98,7 @@ const Renderer = (() => {
     return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
   }
 
-  function drawBandOverlay(analysisFrame) {
+  function drawSpectralRing(analysisFrame) {
     const bands = runtime.settings.bands;
     const overlay = bands.overlay;
     if (!overlay.enabled || !analysisFrame || !analysisFrame.ready) return;
@@ -123,7 +123,7 @@ const Renderer = (() => {
       const angle = phase + (i * TAU / n);
       const e = clamp((energies && energies[i]) || 0, 0, 1);
       const baseR = safeMin + (safeMax - safeMin) * e;
-      const disp = overlayWaveformDisplacementPx(baseR, angle, wf, overlay);
+      const disp = spectralRingWaveformDisplacementPx(baseR, angle, wf, overlay);
 
       const r = baseR + disp;
       const xSim = r * Math.cos(angle);
@@ -184,7 +184,7 @@ const Renderer = (() => {
     };
   }
 
-  return { clearFrame, drawBandOverlay, drawOrb, getRecorderTap };
+  return { clearFrame, drawSpectralRing, drawOrb, getRecorderTap };
 })();
 
 export { Renderer };

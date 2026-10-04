@@ -20,8 +20,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15j.a");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15j\.a/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15k");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15k/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -2972,4 +2972,17 @@ test("prepareWatchBuild creates clean build output directories", async () => {
       await rename(entry.backup, entry.target);
     }
   }
+});
+
+test("Spectral Ring presentation has one Visualizers owner while shared colors remain in Bands", () => {
+  const template = readFileSync(new URL("../src/index.template.html", import.meta.url), "utf8");
+  const visualizers = template.match(/<div id="visualizersPanel"[\s\S]*?<div id="simPanel"/)?.[0] || "";
+  const bands = template.slice(template.indexOf('<div id="bandsPanel"'), template.indexOf('id="workspaceLauncher"'));
+  for (const id of ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"]) {
+    assert.equal((template.match(new RegExp(`id="${id}"`, "g")) || []).length, 1);
+    assert.match(visualizers, new RegExp(`id="${id}"`));
+    assert.doesNotMatch(bands, new RegExp(`id="${id}"`));
+  }
+  assert.doesNotMatch(template, /btnVisualizersOpenBandOverlay|bandOverlaySection/);
+  for (const id of ["clrBg", "clrParticle", "selParticleColorSrc", "rngHueOff", "rngSat", "rngVal"]) assert.match(bands, new RegExp(`id="${id}"`));
 });

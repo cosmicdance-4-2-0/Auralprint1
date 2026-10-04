@@ -18,6 +18,7 @@ import { createWorkspaceUi } from "./workspace.js";
 import { createOrbEditorUi } from "./orb-editor.js";
 import { createVisualizersPanelUi } from "./visualizers-panel.js";
 import { createAnalysisPanelUi } from "./analysis-panel.js";
+import { createSpectralRingEditorUi } from "./spectral-ring-editor.js";
 
 /* =============================================================================
    UI
@@ -321,7 +322,7 @@ const UI = (() => {
   // - sim lane carries sim/config toasts.
   // - audio lane carries transport/audio toasts plus a short recording-state summary.
   const STATUS_DEFAULT_SIM = "Choose an orb to shape its response.";
-  const STATUS_DEFAULT_BANDS = "Colors and Band Overlay presentation.";
+  const STATUS_DEFAULT_BANDS = "Shared color and band palette behavior.";
   let _simStatusToastTimer = null;
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
@@ -334,11 +335,18 @@ const UI = (() => {
     commitPreferences: applyPrefs,
     showStatus: simStatusToast,
   });
+  const spectralRingEditorUi = createSpectralRingEditorUi({
+    ui,
+    preferences,
+    getSettings: () => runtime.settings,
+    commitPreferences: applyPrefs,
+  });
   const visualizersPanelUi = createVisualizersPanelUi({
     ui,
     getVisualizers: () => VisualizerRuntime.getVisualizers(),
     getSettings: () => runtime.settings,
     openOrbControls: () => workspace.showSimPanel(),
+    editSpectralRing: () => spectralRingEditorUi.focusEditor(),
     addOrb: () => {
       const created = createRuntimeOrb();
       if (created) { orbEditorUi.refresh(); simStatusToast(`Added ${created.id}`); }
@@ -352,13 +360,6 @@ const UI = (() => {
     },
     confirmRemoveOrb: ({ displayName, id }) => window.confirm(`Remove ${displayName} (${id})? This cannot be undone.`),
     removeOrb: (id) => { const removed = removeRuntimeOrb(id); if (removed) { orbEditorUi.refresh(); simStatusToast(`Removed ${id}`); } return removed; },
-    openBandOverlayControls: () => {
-      workspace.showBandsPanel();
-      if (!ui.bandOverlaySection) return;
-      ui.bandOverlaySection.open = true;
-      const summary = ui.bandOverlaySection.querySelector("summary");
-      if (summary) summary.focus();
-    },
   });
 
   function simStatusToast(msg, holdMs = 2500) {
@@ -1135,6 +1136,7 @@ const UI = (() => {
 
     orbEditorUi.refresh(runtime.settings);
     visualizersPanelUi.refresh();
+    spectralRingEditorUi.refresh(runtime.settings);
 
     analysisPanelUi.refresh(analysisFrame);
 
@@ -1146,33 +1148,6 @@ const UI = (() => {
 
     ui.selParticleColorSrc.value = p.bands.particleColorSource;
     ui.valParticleSrc.textContent = p.bands.particleColorSource;
-
-    ui.chkBandOverlay.checked = !!p.bands.overlay.enabled;
-    ui.valBandOverlay.textContent = p.bands.overlay.enabled ? "on" : "off";
-
-    ui.chkBandConnect.checked = !!p.bands.overlay.connectAdjacent;
-    ui.valBandConnect.textContent = p.bands.overlay.connectAdjacent ? "on" : "off";
-
-    ui.rngBandAlpha.value = String(p.bands.overlay.alpha);
-    ui.valBandAlpha.textContent = fmt(p.bands.overlay.alpha, 2);
-
-    ui.rngBandPoint.value = String(p.bands.overlay.pointSizePx);
-    ui.valBandPoint.textContent = `${p.bands.overlay.pointSizePx}px`;
-
-    ui.rngBandOverlayMinRad.value = String(p.bands.overlay.minRadiusFrac);
-    ui.valBandOverlayMinRad.textContent = fmt(p.bands.overlay.minRadiusFrac, 3);
-
-    ui.rngBandOverlayMaxRad.value = String(p.bands.overlay.maxRadiusFrac);
-    ui.valBandOverlayMaxRad.textContent = fmt(p.bands.overlay.maxRadiusFrac, 3);
-
-    ui.rngBandOverlayWfDisp.value = String(p.bands.overlay.waveformRadialDisplaceFrac);
-    ui.valBandOverlayWfDisp.textContent = fmt(p.bands.overlay.waveformRadialDisplaceFrac, 3);
-
-    ui.selRingPhaseMode.value = p.bands.overlay.phaseMode;
-    ui.valRingPhaseMode.textContent = p.bands.overlay.phaseMode;
-
-    ui.rngRingSpeed.value = String(p.bands.overlay.ringSpeedRadPerSec);
-    ui.valRingSpeed.textContent = `${fmt(p.bands.overlay.ringSpeedRadPerSec, 2)} rad/s`;
 
     ui.rngHueOff.value = String(p.bands.rainbow.hueOffsetDeg);
     ui.valHueOff.textContent = `${p.bands.rainbow.hueOffsetDeg}°`;
@@ -1202,6 +1177,7 @@ const UI = (() => {
     primeDomCache();
 
     orbEditorUi.init();
+    spectralRingEditorUi.init();
     visualizersPanelUi.init();
 
     initConfigTooltips();
@@ -1708,27 +1684,6 @@ const UI = (() => {
     ui.selParticleColorSrc.addEventListener("change", () => {
       preferences.bands.particleColorSource = ui.selParticleColorSrc.value;
       applyPrefs("particle color source");
-    });
-
-    ui.chkBandOverlay.addEventListener("change", () => { preferences.bands.overlay.enabled = !!ui.chkBandOverlay.checked; applyPrefs("band overlay"); });
-    ui.chkBandConnect.addEventListener("change", () => { preferences.bands.overlay.connectAdjacent = !!ui.chkBandConnect.checked; applyPrefs("band connect"); });
-
-    ui.rngBandAlpha.addEventListener("input", () => { preferences.bands.overlay.alpha = Number(ui.rngBandAlpha.value); applyPrefs("overlay alpha"); });
-    ui.rngBandPoint.addEventListener("input", () => { preferences.bands.overlay.pointSizePx = Number(ui.rngBandPoint.value); applyPrefs("overlay point size"); });
-    ui.rngBandOverlayMinRad.addEventListener("input", () => { preferences.bands.overlay.minRadiusFrac = Number(ui.rngBandOverlayMinRad.value); applyPrefs("overlay min radius"); });
-    ui.rngBandOverlayMaxRad.addEventListener("input", () => { preferences.bands.overlay.maxRadiusFrac = Number(ui.rngBandOverlayMaxRad.value); applyPrefs("overlay max radius"); });
-    ui.rngBandOverlayWfDisp.addEventListener("input", () => { preferences.bands.overlay.waveformRadialDisplaceFrac = Number(ui.rngBandOverlayWfDisp.value); applyPrefs("overlay waveform disp"); });
-
-    ui.selRingPhaseMode.addEventListener("change", () => {
-      preferences.bands.overlay.phaseMode = ui.selRingPhaseMode.value;
-      applyPrefs("ring phase mode");
-    });
-
-
-
-    ui.rngRingSpeed.addEventListener("input", () => {
-      preferences.bands.overlay.ringSpeedRadPerSec = Number(ui.rngRingSpeed.value);
-      applyPrefs("ring speed");
     });
 
     ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); applyPrefs("hue offset"); });
