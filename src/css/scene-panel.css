@@ -1,5 +1,5 @@
-    /* Bands + colors panel (right) */
-    #bandsPanel {
+    /* Scene appearance and colors panel (right) */
+    #scenePanel {
       position: fixed;
       top: calc(var(--ui-pad) + var(--ui-safe-t));
       right: calc(var(--ui-pad) + var(--ui-safe-r));

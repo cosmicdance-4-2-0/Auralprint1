@@ -19,6 +19,7 @@ import { createOrbEditorUi } from "./orb-editor.js";
 import { createVisualizersPanelUi } from "./visualizers-panel.js";
 import { createAnalysisPanelUi } from "./analysis-panel.js";
 import { createSpectralRingEditorUi } from "./spectral-ring-editor.js";
+import { createScenePanelUi } from "./scene-panel.js";
 
 /* =============================================================================
    UI
@@ -322,12 +323,13 @@ const UI = (() => {
   // - sim lane carries sim/config toasts.
   // - audio lane carries transport/audio toasts plus a short recording-state summary.
   const STATUS_DEFAULT_SIM = "Choose an orb to shape its response.";
-  const STATUS_DEFAULT_BANDS = "Shared color and band palette behavior.";
+  const STATUS_DEFAULT_SCENE = "Shared scene appearance and color policy.";
   let _simStatusToastTimer = null;
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
+  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, commitPreferences: applyPrefs });
   const analysisPanelUi = createAnalysisPanelUi({ ui, commitPreferences: applyPrefs, bandColor: (index) => ColorPolicy.bandRgb01(index) });
   const orbEditorUi = createOrbEditorUi({
     ui,
@@ -409,9 +411,10 @@ const UI = (() => {
     AudioEngine.applyAnalyserSettingsLive();
     AudioEngine.applyPlaybackSettingsLive();
     orbEditorUi.refresh();
+    scenePanelUi.refresh(runtime.settings);
 
     if (reason) simStatusToast(`Updated: ${reason}`);
-    ui.bandsStatus.textContent = STATUS_DEFAULT_BANDS;
+    ui.sceneStatus.textContent = STATUS_DEFAULT_SCENE;
   }
 
 
@@ -454,8 +457,8 @@ const UI = (() => {
       "#analysisPanel select",
       "#simPanel input",
       "#simPanel select",
-      "#bandsPanel input",
-      "#bandsPanel select",
+      "#scenePanel input",
+      "#scenePanel select",
       "#recordPanel input",
       "#recordPanel select",
     ];
@@ -1139,24 +1142,7 @@ const UI = (() => {
     spectralRingEditorUi.refresh(runtime.settings);
 
     analysisPanelUi.refresh(analysisFrame);
-
-    ui.clrBg.value = p.visuals.backgroundColor;
-    ui.valBg.textContent = p.visuals.backgroundColor;
-
-    ui.clrParticle.value = p.visuals.particleColor;
-    ui.valParticle.textContent = p.visuals.particleColor;
-
-    ui.selParticleColorSrc.value = p.bands.particleColorSource;
-    ui.valParticleSrc.textContent = p.bands.particleColorSource;
-
-    ui.rngHueOff.value = String(p.bands.rainbow.hueOffsetDeg);
-    ui.valHueOff.textContent = `${p.bands.rainbow.hueOffsetDeg}°`;
-
-    ui.rngSat.value = String(p.bands.rainbow.saturation);
-    ui.valSat.textContent = fmt(p.bands.rainbow.saturation, 2);
-
-    ui.rngVal.value = String(p.bands.rainbow.value);
-    ui.valVal.textContent = fmt(p.bands.rainbow.value, 2);
+    scenePanelUi.refresh(runtime.settings);
 
     refreshConfigTooltips();
     refreshRecordingUi();
@@ -1178,6 +1164,7 @@ const UI = (() => {
 
     orbEditorUi.init();
     spectralRingEditorUi.init();
+    scenePanelUi.init();
     visualizersPanelUi.init();
 
     initConfigTooltips();
@@ -1677,18 +1664,6 @@ const UI = (() => {
     ui.btnResetPrefs.addEventListener("click", resetPrefs);
     ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); simStatusToast("Visuals reset."); });
 
-
-    ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; applyPrefs("background"); });
-    ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; applyPrefs("particle color"); });
-
-    ui.selParticleColorSrc.addEventListener("change", () => {
-      preferences.bands.particleColorSource = ui.selParticleColorSrc.value;
-      applyPrefs("particle color source");
-    });
-
-    ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); applyPrefs("hue offset"); });
-    ui.rngSat.addEventListener("input", () => { preferences.bands.rainbow.saturation = Number(ui.rngSat.value); applyPrefs("saturation"); });
-    ui.rngVal.addEventListener("input", () => { preferences.bands.rainbow.value = Number(ui.rngVal.value); applyPrefs("value"); });
 
     /* Drag-drop onto canvas — multi-file entry point.
        All dropped audio files are enqueued. If the queue was empty before the

@@ -20,8 +20,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15k");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15k/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15l");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15l/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -2592,7 +2592,7 @@ test("dynamic Orb editor does not retain fixed-slot controls", async () => {
 test("global view toggle restores the prior panel selection and disclosure keys do not pause simulation", async () => {
   await withUiWireHarnessState({}, ({ getElement, harness }) => {
     getElement("btnHideSim").click();
-    getElement("btnHideBands").click();
+    getElement("btnHideScene").click();
     getElement("btnOpenQueue").click();
     getElement("btnTogglePanels").click();
     assert.equal(getElement("audioPanel").style.display, "none");
@@ -2601,7 +2601,7 @@ test("global view toggle restores the prior panel selection and disclosure keys 
     assert.equal(getElement("audioPanel").style.display, "grid");
     assert.equal(getElement("queuePanel").style.display, "block");
     assert.equal(getElement("simPanel").style.display, "none");
-    assert.equal(getElement("bandsPanel").style.display, "none");
+    assert.equal(getElement("scenePanel").style.display, "none");
     const summary = createStubUiElement("summary");
     summary.closest = selector => selector.split(", ").includes("summary") ? summary : null;
     const paused = state.time.simPaused;
@@ -2974,15 +2974,34 @@ test("prepareWatchBuild creates clean build output directories", async () => {
   }
 });
 
-test("Spectral Ring presentation has one Visualizers owner while shared colors remain in Bands", () => {
+test("Spectral Ring presentation has one Visualizers owner while shared colors live in Scene", () => {
   const template = readFileSync(new URL("../src/index.template.html", import.meta.url), "utf8");
   const visualizers = template.match(/<div id="visualizersPanel"[\s\S]*?<div id="simPanel"/)?.[0] || "";
-  const bands = template.slice(template.indexOf('<div id="bandsPanel"'), template.indexOf('id="workspaceLauncher"'));
+  const scene = template.slice(template.indexOf('<div id="scenePanel"'), template.indexOf('id="workspaceLauncher"'));
   for (const id of ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"]) {
     assert.equal((template.match(new RegExp(`id="${id}"`, "g")) || []).length, 1);
     assert.match(visualizers, new RegExp(`id="${id}"`));
-    assert.doesNotMatch(bands, new RegExp(`id="${id}"`));
+    assert.doesNotMatch(scene, new RegExp(`id="${id}"`));
   }
   assert.doesNotMatch(template, /btnVisualizersOpenBandOverlay|bandOverlaySection/);
-  for (const id of ["clrBg", "clrParticle", "selParticleColorSrc", "rngHueOff", "rngSat", "rngVal"]) assert.match(bands, new RegExp(`id="${id}"`));
+  for (const id of ["clrBg", "clrParticle", "selParticleColorSrc", "rngHueOff", "rngSat", "rngVal"]) assert.match(scene, new RegExp(`id="${id}"`));
+});
+
+test("115L exposes one Scene color owner and removes the active Bands shell", () => {
+  const template = readFileSync(new URL("../src/index.template.html", import.meta.url), "utf8");
+  assert.match(template, /id="scenePanel"/); assert.match(template, /id="btnOpenScene"/); assert.match(template, /id="btnHideScene"/);
+  assert.doesNotMatch(template, /id="(?:bandsPanel|btnOpenBands|btnHideBands|openBands|bandsStatus)"/);
+  const scene = template.slice(template.indexOf('<div id="scenePanel"'), template.indexOf('id="recordPanel"'));
+  for (const id of ["clrBg","clrParticle","selParticleColorSrc","rngHueOff","rngSat","rngVal"]) {
+    assert.equal((template.match(new RegExp(`id="${id}"`, "g")) || []).length, 1);
+    assert.match(scene, new RegExp(`id="${id}"`));
+  }
+});
+
+test("preset sanitation uses Scene color and Spectral Ring line limit owners", () => {
+  const source = readFileSync(new URL("../src/js/presets/url-preset.js", import.meta.url), "utf8");
+  assert.match(source, /CONFIG\.limits\.sceneColor\.particleColorSources/);
+  for (const field of ["hueOffsetDeg","saturation","value"]) assert.match(source, new RegExp(`CONFIG\\.limits\\.sceneColor\\.${field}`));
+  assert.match(source, /CONFIG\.limits\.bands\.overlayLineAlpha/);
+  assert.match(source, /CONFIG\.limits\.bands\.overlayLineWidthPx/);
 });

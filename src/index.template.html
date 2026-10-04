@@ -98,6 +98,7 @@
     <div class="muted panel-status" id="visualizersStatus" role="status" aria-live="polite">0 visualizers · 0 Orbs</div>
     <div id="visualizerList" class="visualizer-list" role="list" aria-label="Visualizers in scene"></div>
     <details id="spectralRingEditor" class="settings-section spectral-ring-editor"><summary>Spectral Ring<span class="section-description">Combined C spectrum</span></summary><div class="section-body">
+      <p class="section-description">Color: shared Scene band palette.</p>
       <h3>Visibility</h3>
       <div class="row"><label for="chkBandOverlay">Visible</label><input id="chkBandOverlay" type="checkbox" /><div id="valBandOverlay" class="val"></div></div>
       <h3>Geometry</h3>
@@ -239,30 +240,33 @@
     <details class="settings-section" open><summary>Band Inspector</summary><div class="section-body"><div class="muted" id="bandDebug"><span class="dominantBadge">Dominant: (none)</span></div><div id="bandTable"></div></div></details>
   </div>
 
-  <div id="bandsPanel" class="panel" style="display:none" role="region" aria-label="Bands and color">
-    <div class="panel-header"><div><h2 class="panel-title">Bands &amp; color</h2><p class="panel-description">Shape shared color and band palette behavior.</p></div><button id="btnHideBands" aria-label="Hide bands panel">Hide</button></div>
-    <div class="muted panel-status" id="bandsStatus">Shared color and band palette behavior.</div>
-    <details class="settings-section" open><summary>Colors</summary><div class="section-body">
+  <div id="scenePanel" class="panel" style="display:none" role="region" aria-label="Scene">
+    <div class="panel-header"><div><h2 class="panel-title">Scene</h2><p class="panel-description">Global appearance and color policy shared by visualizers.</p></div><button id="btnHideScene" aria-label="Hide Scene panel">Hide</button></div>
+    <div class="muted panel-status" id="sceneStatus">Shared scene appearance and color policy.</div>
+    <details class="settings-section" open><summary>Canvas</summary><div class="section-body">
     <div class="row">
       <label for="clrBg">Background</label>
       <input id="clrBg" type="color" />
       <div id="valBg" class="val"></div>
     </div>
 
+    </div></details>
+    <details class="settings-section" open><summary>Particle Defaults</summary><div class="section-body">
+
     <div class="row">
-      <label for="clrParticle">Particle color</label>
+      <label for="clrParticle">Fixed particle color</label>
       <input id="clrParticle" type="color" />
       <div id="valParticle" class="val"></div>
     </div>
 
     <div class="row">
-      <label for="selParticleColorSrc">Particle color source</label>
+      <label for="selParticleColorSrc">Default Orb particle source</label>
       <select id="selParticleColorSrc"></select>
       <div id="valParticleSrc" class="val"></div>
     </div>
 
 </div></details>
-    <details class="settings-section"><summary>Rainbow palette</summary><div class="section-body">
+    <details class="settings-section" open><summary>Band Palette</summary><div class="section-body">
     <div class="row">
       <label for="rngHueOff">Hue offset</label>
       <input id="rngHueOff" type="range" />
@@ -373,8 +377,8 @@
       <button id="btnOpenSim" type="button" aria-controls="simPanel" title="Show orbs panel" aria-label="Show orbs panel" aria-pressed="true">Orbs</button>
     </div>
 
-    <div id="openBands" class="launcher">
-      <button id="btnOpenBands" type="button" aria-controls="bandsPanel" title="Show bands panel" aria-label="Show bands panel" aria-pressed="true">Bands</button>
+    <div id="openScene" class="launcher">
+      <button id="btnOpenScene" type="button" aria-controls="scenePanel" title="Show Scene panel" aria-label="Show Scene panel" aria-pressed="false">Scene</button>
     </div>
 
     <div

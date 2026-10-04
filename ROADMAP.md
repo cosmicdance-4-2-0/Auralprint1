@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 4, 2026. Development revision: `v0.1.15k` / Build 115. Preset schema: 10.
+Updated: October 4, 2026. Development revision: `v0.1.15l` / Build 115. Preset schema: 10.
 
 The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115J plus tactical hardening revisions are complete. 115I.A makes generated select readouts truthful, standardizes Orb-editor invalidation on `runtime.settings`, removes redundant per-Orb runtime synchronization, exposes Phase Offset accessibly in degrees, and corrects current version metadata; preset schema remains 10. Analysis now has a dedicated Orb-independent workspace; Spectral Ring promotion is complete; color ownership, lifecycle/preset hardening, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
 
@@ -47,11 +47,11 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: actively under development; revisions 115A–115J and tactical hardening revisions are complete, with schema 10 retained. Visualizers owns Orb collection management and Orbs uses generated ID-aware editors; 115K Spectral Ring promotion is complete; color ownership (115L), hardening (115M), and final acceptance (115N) remain pending.**
+**Status: actively under development; revisions through 115L are complete with schema 10 retained. Scene owns shared appearance/color policy; hardening (115M) and final acceptance (115N) remain pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 
-The Visualizers panel now offers Add/Edit/Duplicate/Remove through canonical runtime operations, and the Orbs panel generates one stable-ID editor card for every current Orb. Zero Orbs is valid and Spectral Ring remains a singleton. Every schema-10 Orb-owned simulation and presentation setting is individually editable in stable-ID cards; retained Bulk Edit controls are explicit apply-to-all conveniences with mixed-value display. Spectral Ring presentation now has one owner in Visualizers; Bands retains only shared color/palette controls pending 115L.
+The Visualizers panel now offers Add/Edit/Duplicate/Remove through canonical runtime operations, and the Orbs panel generates one stable-ID editor card for every current Orb. Zero Orbs is valid and Spectral Ring remains a singleton. Every schema-10 Orb-owned simulation and presentation setting is individually editable in stable-ID cards; retained Bulk Edit controls are explicit apply-to-all conveniences with mixed-value display. Spectral Ring presentation has one owner in Visualizers; Scene now owns the shared color/palette controls as of 115L.
 
 Revision 115I completes per-Orb control exposure. Phase Offset presents `startAngleRad` in degrees as designed phase, does not live-teleport a running Orb, and is applied by Reset Visuals. Nested controls commit by stable ID, schema remains 10, and 115J Analysis is next; Band Overlay naming waits for 115K, broader color ownership for 115L, and Camera for Build 116.
 
@@ -155,3 +155,7 @@ Prioritize fixes that make an existing capability understandable or recoverable.
 ### Revision 115K — Spectral Ring promotion (complete)
 
 The historical Band Overlay is now the singleton `spectral-ring` VisualizerRuntime participant. Its complete presentation editor, including line alpha and line width, lives in Visualizers; persistence intentionally remains schema-10 `bands.overlay`. It consumes combined C spectrum and waveform data. Free-run reset is independent of Orbs; explicit Orb-lock follows the first Orb when present and safely holds with zero Orbs. Bands temporarily retains shared color/palette controls for the 115L ownership audit. Camera remains blocked.
+
+### Revision 115L — explicit Scene-level color ownership (complete)
+
+The transitional Bands workspace is replaced by Scene. Scene owns background, fixed particle color, the default Orb particle policy, and the shared band palette, while persistence intentionally stays at schema-10 `visuals.*` and `bands.*` paths. Orbs own their local `colorSource`, hue offset, and trace color mode. Spectral Ring consumes the shared palette, and Analysis uses it as its diagnostic legend. Inherited dominant is target/channel-aware for targeted Orbs; explicit Orb and trace dominant remain global combined-C. No persisted Scene object or per-visualizer palette was introduced. 115M hardening is next; Camera remains blocked, and Builds 117/118 retain their performance/band-expansion scopes.

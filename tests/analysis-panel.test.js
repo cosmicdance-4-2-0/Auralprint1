@@ -59,7 +59,7 @@ test("HUD uses AnalysisFrame metadata and active count without rebuilding ordina
 
 test("template gives migrated controls one Analysis owner",()=>{
   const html=readFileSync(new URL("../src/index.template.html",import.meta.url),"utf8");
-  const analysis=html.match(/<div id="analysisPanel"[\s\S]*?<div id="bandsPanel"/)?.[0]||"";
+  const analysis=html.match(/<div id="analysisPanel"[\s\S]*?<div id="scenePanel"/)?.[0]||"";
   for(const id of ["rngRmsGain","rngSmooth","selFFT","selDistMode","bandDebug","bandMeta","bandTable"]) {assert.match(analysis,new RegExp(`id="${id}"`));assert.equal((html.match(new RegExp(`id="${id}"`,"g"))||[]).length,1)}
   assert.doesNotMatch(analysis,/bandOverlaySection/);
 });

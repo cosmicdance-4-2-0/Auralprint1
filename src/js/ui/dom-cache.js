@@ -17,7 +17,7 @@ function primeDomCache() {
     ui.analysisPanel = document.getElementById("analysisPanel");
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
-    ui.bandsPanel = document.getElementById("bandsPanel");
+    ui.scenePanel = document.getElementById("scenePanel");
     ui.visualizersPanel = document.getElementById("visualizersPanel");
     ui.visualizersStatus = document.getElementById("visualizersStatus");
     ui.visualizerList = document.getElementById("visualizerList");
@@ -33,7 +33,7 @@ function primeDomCache() {
     ui.btnOpenAnalysis = document.getElementById("btnOpenAnalysis");
     ui.openVisualizers = document.getElementById("openVisualizers");
     ui.openSim = document.getElementById("openSim");
-    ui.openBands = document.getElementById("openBands");
+    ui.openScene = document.getElementById("openScene");
     ui.openQueue = document.getElementById("openQueue");
     ui.btnOpenQueue = document.getElementById("btnOpenQueue");
     ui.btnHideQueue = document.getElementById("btnHideQueue");
@@ -71,7 +71,7 @@ function primeDomCache() {
 
     ui.simStatus = document.getElementById("simStatus");
     ui.orbEditorList = document.getElementById("orbEditorList");
-    ui.bandsStatus = document.getElementById("bandsStatus");
+    ui.sceneStatus = document.getElementById("sceneStatus");
 
     ui.chkLines = document.getElementById("chkLines");
     ui.valLines = document.getElementById("valLines");
@@ -110,7 +110,7 @@ function primeDomCache() {
     ui.selFFT = document.getElementById("selFFT");
     ui.valFFT = document.getElementById("valFFT");
 
-    ui.btnHideBands = document.getElementById("btnHideBands");
+    ui.btnHideScene = document.getElementById("btnHideScene");
 
     ui.clrBg = document.getElementById("clrBg");
     ui.valBg = document.getElementById("valBg");
@@ -170,7 +170,7 @@ function primeDomCache() {
     ui.btnOpenAudio = document.getElementById("btnOpenAudio");
     ui.btnOpenVisualizers = document.getElementById("btnOpenVisualizers");
     ui.btnOpenSim = document.getElementById("btnOpenSim");
-    ui.btnOpenBands = document.getElementById("btnOpenBands");
+    ui.btnOpenScene = document.getElementById("btnOpenScene");
 
     // Build 113 recording UI.
     // Keep all record controls routed through this dedicated panel/launcher path;
@@ -213,27 +213,10 @@ function primeDomCache() {
     bindRange(ui.rngMinRad, CONFIG.limits.orbs.response.minRadiusFrac);
     bindRange(ui.rngMaxRad, CONFIG.limits.orbs.response.maxRadiusFrac);
 
-    bindRange(ui.rngHueOff, CONFIG.limits.bands.hueOffsetDeg);
-    bindRange(ui.rngSat, CONFIG.limits.bands.saturation);
-    bindRange(ui.rngVal, CONFIG.limits.bands.value);
-
-
-    const srcs = [
-      { v: "dominant", t: "dominant band" },
-      { v: "angle", t: "phase locked (Glitch Mode)" },
-      { v: "fixed", t: "fixed particle color" },
-    ];
-    for (const s of srcs) {
-      const opt = document.createElement("option");
-      opt.value = s.v;
-      opt.textContent = s.t;
-      ui.selParticleColorSrc.appendChild(opt);
-    }
-
     const lineModes = [
-      { v: "fixed", t: "fixed (particle color)" },
-      { v: "lastParticle", t: "last particle color" },
-      { v: "dominantBand", t: "dominant band color" },
+      { v: "fixed", t: "Scene Fixed Particle Color" },
+      { v: "lastParticle", t: "Last Particle" },
+      { v: "dominantBand", t: "Global Dominant Band" },
     ];
     for (const m of lineModes) {
       const opt = document.createElement("option");

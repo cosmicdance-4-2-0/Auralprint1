@@ -78,11 +78,13 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     const numLinesField = rangeField(traceBody, token, "line-count", "Line Count", CONFIG.limits.trace.numLines);
     const alphaField = rangeField(traceBody, token, "line-alpha", "Line Alpha", CONFIG.limits.trace.lineAlpha);
     const widthField = rangeField(traceBody, token, "line-width", "Line Width", CONFIG.limits.trace.lineWidthPx);
-    const lineColorField = selectField(traceBody, token, "line-color", "Line Color Mode", [["fixed", "Fixed"], ["lastParticle", "Last Particle"], ["dominantBand", "Global Dominant Band"]]);
+    const lineColorField = selectField(traceBody, token, "line-color", "Line Color Mode", [["fixed", "Scene Fixed Particle Color"], ["lastParticle", "Last Particle"], ["dominantBand", "Global Dominant Band"]]);
     body.append(section(traceBody, "Trace"));
 
     const colorBody = make("div", "section-body");
-    const colorField = selectField(colorBody, token, "color", "Color Source", [["inherit", "Inherit Global"], ["dominant", "Dominant Band"], ["angle", "Phase Locked (Glitch Mode)"], ["fixed", "Fixed Particle Color"]]);
+    const colorHelp = make("p", "section-description", "Inherit Scene uses the Scene default Orb color policy. Targeted inherited Dominant follows the strongest selected band in that Orb's channel.");
+    colorBody.appendChild(colorHelp);
+    const colorField = selectField(colorBody, token, "color", "Color Source", [["inherit", "Inherit Scene"], ["dominant", "Global Dominant Band"], ["angle", "Orb Phase Palette (Glitch Mode)"], ["fixed", "Scene Fixed Particle Color"]]);
     const hueField = rangeField(colorBody, token, "hue", "Hue Offset", CONFIG.limits.orbs.hueOffsetDeg);
     body.append(section(colorBody, "Color")); root.append(summary, body);
 

@@ -498,12 +498,17 @@ bands: {
       overlayMinRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
       overlayMaxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
       overlayWaveformRadialDisplaceFrac: { min: 0.01, max: 1.00, step: 0.01 },
+      ringSpeedRadPerSec: { min: 0, max: TAU, step: 0.01 },
+      distributionModes: ["linear", "log", "mel", "bark", "erb"],
+    },
+
+    // Scene Appearance owns the shared color policy. Persistence intentionally
+    // remains under the historical visuals.* and bands.* schema-10 paths.
+    sceneColor: {
       hueOffsetDeg: { min: 0, max: 360, step: 1 },
       saturation: { min: 0, max: 1, step: 0.01 },
       value: { min: 0, max: 1, step: 0.01 },
-
-      ringSpeedRadPerSec: { min: 0, max: TAU, step: 0.01 },
-      distributionModes: ["linear", "log", "mel", "bark", "erb"],
+      particleColorSources: ["fixed", "dominant", "angle"],
     },
 
     monoDetect: {

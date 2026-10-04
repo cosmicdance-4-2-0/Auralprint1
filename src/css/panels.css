@@ -97,9 +97,9 @@
       cursor: not-allowed;
     }
     /* Responsive panel layout on <=980px: clamp Visualizers/Bands/Orbs widths to viewport-safe bounds,
-       and anchor #bandsPanel to the left edge (clear right anchor) so both side panels share alignment. */
+       and anchor #scenePanel to the left edge (clear right anchor) so both side panels share alignment. */
     @media (max-width: 980px) {
-      #visualizersPanel, #bandsPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
+      #visualizersPanel, #scenePanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
       #simPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); }
     }
 
@@ -167,7 +167,7 @@
          recordPanel: 26 (dedicated recording panel; above queue, below side panels)
          visualizersPanel: 30 (left inventory/navigation panel)
          simPanel  : 30 (left config panel)
-         bandsPanel: 30 (right config panel)
+         scenePanel: 30 (right config panel)
          workspace launcher : 40 (always reachable; must clear all panels)
     */
 

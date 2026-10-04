@@ -114,11 +114,11 @@ const UrlPreset = (() => {
           next.bands.overlay.waveformRadialDisplaceFrac = clamp(incoming.bands.overlay.waveformRadialDisplaceFrac, lim.min, lim.max);
         }
         if (Number.isFinite(incoming.bands.overlay.lineAlpha)) {
-          const lim = CONFIG.limits.trace.lineAlpha;
+          const lim = CONFIG.limits.bands.overlayLineAlpha;
           next.bands.overlay.lineAlpha = clamp(incoming.bands.overlay.lineAlpha, lim.min, lim.max);
         }
         if (Number.isFinite(incoming.bands.overlay.lineWidthPx)) {
-          const lim = CONFIG.limits.trace.lineWidthPx;
+          const lim = CONFIG.limits.bands.overlayLineWidthPx;
           next.bands.overlay.lineWidthPx = clamp(incoming.bands.overlay.lineWidthPx, lim.min, lim.max);
         }
 
@@ -135,21 +135,21 @@ const UrlPreset = (() => {
 
       if (incoming.bands.rainbow) {
         if (Number.isFinite(incoming.bands.rainbow.hueOffsetDeg)) {
-          const lim = CONFIG.limits.bands.hueOffsetDeg;
+          const lim = CONFIG.limits.sceneColor.hueOffsetDeg;
           next.bands.rainbow.hueOffsetDeg = clamp(incoming.bands.rainbow.hueOffsetDeg, lim.min, lim.max);
         }
         if (Number.isFinite(incoming.bands.rainbow.saturation)) {
-          const lim = CONFIG.limits.bands.saturation;
+          const lim = CONFIG.limits.sceneColor.saturation;
           next.bands.rainbow.saturation = clamp(incoming.bands.rainbow.saturation, lim.min, lim.max);
         }
         if (Number.isFinite(incoming.bands.rainbow.value)) {
-          const lim = CONFIG.limits.bands.value;
+          const lim = CONFIG.limits.sceneColor.value;
           next.bands.rainbow.value = clamp(incoming.bands.rainbow.value, lim.min, lim.max);
         }
       }
 
       if (typeof incoming.bands.particleColorSource === "string") {
-        if (["fixed","dominant","angle"].includes(incoming.bands.particleColorSource)) {
+        if (CONFIG.limits.sceneColor.particleColorSources.includes(incoming.bands.particleColorSource)) {
           next.bands.particleColorSource = incoming.bands.particleColorSource;
         }
       }
