@@ -80,9 +80,10 @@ const BandBank = (() => {
   function rebuild(effectiveCeilingHz, sampleRateHz = null) {
     const s = runtime.settings;
     const n = s.bands.count;
-    const f0 = s.bands.floorHz;
+    const configuredFloorHz = s.bands.floorHz;
     const configCeilingHz = s.bands.ceilingHz;
-    const f1 = Math.max(f0, Number.isFinite(effectiveCeilingHz) ? effectiveCeilingHz : configCeilingHz);
+    const f1 = Number.isFinite(effectiveCeilingHz) ? effectiveCeilingHz : configCeilingHz;
+    const f0 = Math.min(configuredFloorHz, f1);
 
     state.bands.lowHz = new Array(n);
     state.bands.highHz = new Array(n);
@@ -92,6 +93,7 @@ const BandBank = (() => {
 
     const interiorBands = n - 2;
     const edges = computeInteriorEdges(s.bands.distributionMode, interiorBands, f0, f1);
+    for (let i = 0; i < edges.length; i++) edges[i] = clamp(edges[i], f0, f1);
     for (let i = 0; i < interiorBands; i++) {
       state.bands.lowHz[1 + i]  = edges[i];
       state.bands.highHz[1 + i] = edges[i + 1];
@@ -108,6 +110,7 @@ const BandBank = (() => {
     state.bands.energies01 = state.bands.channels.C.energies01;
     state.bands.meta.sampleRateHz = Number.isFinite(sampleRateHz) ? sampleRateHz : null;
     state.bands.meta.nyquistHz = Number.isFinite(sampleRateHz) ? sampleRateHz * 0.5 : null;
+    state.bands.meta.effectiveFloorHz = f0;
     state.bands.meta.configCeilingHz = configCeilingHz;
     state.bands.meta.effectiveCeilingHz = f1;
   }
@@ -136,9 +139,14 @@ const BandBank = (() => {
     let dominantVal = -1;
 
     for (let i = 0; i < n; i++) {
-      const loHz = state.bands.lowHz[i];
+      const loHz = Math.min(nyquist, state.bands.lowHz[i]);
       const hiHzRaw = state.bands.highHz[i];
       const hiHz = Math.min(nyquist, (hiHzRaw === Infinity ? nyquist : hiHzRaw));
+
+      if (hiHz <= loHz) {
+        targetEnergies[i] = 0;
+        continue;
+      }
 
       const loBin = Math.floor((loHz / nyquist) * (bins - 1));
       const hiBin = Math.ceil((hiHz / nyquist) * (bins - 1));

@@ -89,6 +89,7 @@ const state = {
     meta: {
       sampleRateHz: null,
       nyquistHz: null,
+      effectiveFloorHz: null,
       configCeilingHz: null,
       effectiveCeilingHz: null,
     },

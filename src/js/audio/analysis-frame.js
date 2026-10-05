@@ -27,6 +27,7 @@ function createAnalysisFrame() {
       metadata: {
         sampleRateHz: null,
         nyquistHz: null,
+        effectiveFloorHz: null,
         configCeilingHz: null,
         effectiveCeilingHz: null,
       },
@@ -61,6 +62,7 @@ function updateAnalysisFrame(frame, audioSample, bandState) {
   spectrum.dominantName = typeof source.dominantName === "string" ? source.dominantName : "";
   spectrum.metadata.sampleRateHz = Number.isFinite(metadata.sampleRateHz) ? metadata.sampleRateHz : null;
   spectrum.metadata.nyquistHz = Number.isFinite(metadata.nyquistHz) ? metadata.nyquistHz : null;
+  spectrum.metadata.effectiveFloorHz = Number.isFinite(metadata.effectiveFloorHz) ? metadata.effectiveFloorHz : null;
   spectrum.metadata.configCeilingHz = Number.isFinite(metadata.configCeilingHz) ? metadata.configCeilingHz : null;
   spectrum.metadata.effectiveCeilingHz = Number.isFinite(metadata.effectiveCeilingHz) ? metadata.effectiveCeilingHz : null;
   return frame;
