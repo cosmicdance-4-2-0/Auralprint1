@@ -20,8 +20,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.b");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.b/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.c");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.c/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -645,6 +645,13 @@ function createStubUiElement(tagName = "div") {
       this.children = this.children.filter((entry) => entry !== child);
       this.children.push(child);
       if (child && child.tagName === "OPTION") this.options.push(child);
+      return child;
+    },
+    insertBefore(child, before) {
+      this.children = this.children.filter((entry) => entry !== child);
+      const index = before ? this.children.indexOf(before) : -1;
+      if (index < 0) this.children.push(child);
+      else this.children.splice(index, 0, child);
       return child;
     },
     append(...children) {
