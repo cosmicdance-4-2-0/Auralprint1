@@ -23,15 +23,18 @@ function buildWaveformPeaks(audioBuffer, bucketCount = 512) {
   for (let i = 0; i < channelCount; i++) channels.push(audioBuffer.getChannelData(i));
 
   const sampleLength = channels[0] ? channels[0].length : 0;
-  const bucketSize = Math.max(1, Math.floor(sampleLength / buckets));
+  if (!sampleLength) return peaks;
 
   for (let b = 0; b < buckets; b++) {
     let max = 0;
-    const start = b * bucketSize;
-    for (let s = 0; s < bucketSize; s++) {
-      const sampleIndex = start + s;
+    const start = Math.floor((b * sampleLength) / buckets);
+    const proportionalEnd = Math.floor(((b + 1) * sampleLength) / buckets);
+    const endExclusive = proportionalEnd > start
+      ? proportionalEnd
+      : Math.min(sampleLength, start + 1);
+    for (let sampleIndex = start; sampleIndex < endExclusive; sampleIndex++) {
       for (const channel of channels) {
-        const abs = Math.abs(channel[sampleIndex] || 0);
+        const abs = Math.abs(channel[sampleIndex]);
         if (abs > max) max = abs;
       }
     }
