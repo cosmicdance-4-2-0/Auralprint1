@@ -121,7 +121,13 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     const bandEdgesRef = state.bands.lowHz; if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
     lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
     for (const [id, controller] of controllers) if (!orbs.some((orb) => orb.id === id)) { controller.root.remove(); controllers.delete(id); }
-    orbs.forEach((orb, position) => { let controller = controllers.get(orb.id); if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); } syncController(controller, orb, position); ui.orbEditorList.appendChild(controller.root); });
+    orbs.forEach((orb, position) => {
+      let controller = controllers.get(orb.id);
+      if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); }
+      syncController(controller, orb, position);
+      const currentNode = ui.orbEditorList.children[position];
+      if (currentNode !== controller.root) ui.orbEditorList.insertBefore(controller.root, currentNode || null);
+    });
     ui.simStatus.textContent = orbs.length ? `${orbs.length} Orb${orbs.length === 1 ? "" : "s"} in scene` : "No Orbs in scene"; refreshBulk(orbs); return controllers;
   }
   function refreshBulk(orbs) {
