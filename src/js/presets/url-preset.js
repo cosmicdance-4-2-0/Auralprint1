@@ -1,7 +1,7 @@
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
-import { preferences, replacePreferences, resolveSettings, sanitizeOrbBandIds, normalizeOrbDef } from "../core/preferences.js";
+import { preferences, replacePreferences, sanitizeOrbBandIds, normalizeOrbDef } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 
 /* =============================================================================
@@ -204,8 +204,8 @@ const UrlPreset = (() => {
 
     if (next.bands && typeof next.bands === "object") delete next.bands.names;
 
+    // URL presets replace canonical preferences only; callers own runtime derivation and subsystem synchronization.
     replacePreferences(next);
-    resolveSettings();
     return true;
   }
 
