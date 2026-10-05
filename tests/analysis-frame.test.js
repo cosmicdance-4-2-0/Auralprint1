@@ -41,7 +41,7 @@ function createReadySources() {
       highHz: [20, 200, Infinity],
       dominantIndex: 2,
       dominantName: "Band Two",
-      meta: { sampleRateHz: 48000, nyquistHz: 24000, configCeilingHz: 30000, effectiveCeilingHz: 24000 },
+      meta: { sampleRateHz: 48000, nyquistHz: 24000, effectiveFloorHz: 20, configCeilingHz: 30000, effectiveCeilingHz: 24000 },
     },
     channelEnergies,
   };
@@ -79,7 +79,7 @@ test("AnalysisFrame exposes ready channel and spectrum data as producer-owned re
   assert.equal(frame.spectrum.dominantIndex, 2);
   assert.equal(frame.spectrum.dominantName, "Band Two");
   assert.deepEqual(frame.spectrum.metadata, {
-    sampleRateHz: 48000, nyquistHz: 24000, configCeilingHz: 30000, effectiveCeilingHz: 24000,
+    sampleRateHz: 48000, nyquistHz: 24000, effectiveFloorHz: 20, configCeilingHz: 30000, effectiveCeilingHz: 24000,
   });
   assert.equal("analyser" in frame.channels.L, false);
   assert.equal("audioContext" in frame, false);
@@ -126,5 +126,6 @@ test("a later AnalysisFrame update follows BandBank replacement arrays", () => {
   assert.equal(frame.spectrum.lowHz, state.bands.lowHz);
   assert.equal(frame.spectrum.metadata.sampleRateHz, 44100);
   assert.equal(frame.spectrum.metadata.nyquistHz, 22050);
+  assert.equal(frame.spectrum.metadata.effectiveFloorHz, 20);
   assert.equal(frame.spectrum.metadata.effectiveCeilingHz, 22050);
 });

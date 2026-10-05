@@ -68,9 +68,14 @@ function createAnalysisPanelUi({
   function refreshMetadata(frame, settings) {
     const m=frame?.spectrum?.metadata || state.bands.meta || {};
     const sample=Number.isFinite(m.sampleRateHz) ? formatHz(m.sampleRateHz) : "pending audio context";
+    const configuredFloor=settings.bands.floorHz;
+    const effectiveFloor=Number.isFinite(m.effectiveFloorHz) ? m.effectiveFloorHz : configuredFloor;
     const configured=Number.isFinite(m.configCeilingHz) ? m.configCeilingHz : settings.bands.ceilingHz;
     const effective=Number.isFinite(m.effectiveCeilingHz) ? m.effectiveCeilingHz : configured;
-    ui.bandMeta.textContent=`${settings.bands.count} bands • Floor: ${formatHz(settings.bands.floorHz)} • Sample rate: ${sample} • Nyquist: ${formatHz(m.nyquistHz)} • Configured ceiling: ${formatHz(configured)} • Effective ceiling: ${formatHz(effective)}`;
+    const floorMetadata=effectiveFloor === configuredFloor
+      ? `Configured floor: ${formatHz(configuredFloor)}`
+      : `Configured floor: ${formatHz(configuredFloor)} • Effective floor: ${formatHz(effectiveFloor)}`;
+    ui.bandMeta.textContent=`${settings.bands.count} bands • ${floorMetadata} • Sample rate: ${sample} • Nyquist: ${formatHz(m.nyquistHz)} • Configured ceiling: ${formatHz(configured)} • Effective ceiling: ${formatHz(effective)}`;
   }
   function refresh(frame=null) {
     const settings=getSettings(); if(!settings) return;

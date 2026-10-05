@@ -50,10 +50,23 @@ test("HUD uses AnalysisFrame metadata and active count without rebuilding ordina
   const restore=installDocument(), {ui,settings,prefs}=fixture(2); let time=1000;
   try {
     const panel=createAnalysisPanelUi({ui,getSettings:()=>settings,mutablePreferences:prefs,now:()=>time,bandColor:()=>({r:1,g:0,b:0})});panel.init();
-    const frame={ready:true,spectrum:{energies01:[.25,.8],lowHz:[0,20],highHz:[20,Infinity],dominantIndex:1,dominantName:"Peak",metadata:{sampleRateHz:40000,nyquistHz:20000,configCeilingHz:22500,effectiveCeilingHz:20000}}};
-    panel.refresh(frame);assert.equal(ui.bandTable.children.length,8);const first=ui.bandTable.children[0];assert.equal(ui.bandTable.children[3].children[0].style.width,"25%");assert.match(ui.bandDebug.children[0].textContent,/Dominant \[1\] Peak/);assert.match(ui.bandMeta.textContent,/Sample rate: 40\.00 kHz/);assert.match(ui.bandMeta.textContent,/Configured ceiling: 22\.50 kHz/);assert.match(ui.bandMeta.textContent,/Effective ceiling: 20\.00 kHz/);
+    const frame={ready:true,spectrum:{energies01:[.25,.8],lowHz:[0,20],highHz:[20,Infinity],dominantIndex:1,dominantName:"Peak",metadata:{sampleRateHz:40000,nyquistHz:20000,effectiveFloorHz:20,configCeilingHz:22500,effectiveCeilingHz:20000}}};
+    panel.refresh(frame);assert.equal(ui.bandTable.children.length,8);const first=ui.bandTable.children[0];assert.equal(ui.bandTable.children[3].children[0].style.width,"25%");assert.match(ui.bandDebug.children[0].textContent,/Dominant \[1\] Peak/);assert.match(ui.bandMeta.textContent,/Configured floor: 20\.0 Hz/);assert.doesNotMatch(ui.bandMeta.textContent,/Effective floor/);assert.match(ui.bandMeta.textContent,/Sample rate: 40\.00 kHz/);assert.match(ui.bandMeta.textContent,/Configured ceiling: 22\.50 kHz/);assert.match(ui.bandMeta.textContent,/Effective ceiling: 20\.00 kHz/);
     time=1200;panel.refresh(frame);assert.equal(ui.bandTable.children[0],first);
     frame.spectrum.metadata.sampleRateHz=null;frame.spectrum.metadata.nyquistHz=null;panel.refresh(frame);assert.match(ui.bandMeta.textContent,/pending audio context/);assert.match(ui.bandMeta.textContent,/Nyquist: n\/a/);
+  } finally {restore()}
+});
+
+test("HUD distinguishes configured and effective floor when Nyquist constrains geometry",()=>{
+  const restore=installDocument(), {ui,settings,prefs}=fixture(2);
+  try {
+    settings.bands.floorHz=20000;
+    const panel=createAnalysisPanelUi({ui,getSettings:()=>settings,mutablePreferences:prefs,now:()=>1000});panel.init();
+    const frame={ready:true,spectrum:{energies01:[0,0],lowHz:[0,16000],highHz:[16000,Infinity],dominantIndex:0,dominantName:"Floor",metadata:{sampleRateHz:32000,nyquistHz:16000,effectiveFloorHz:16000,configCeilingHz:22500,effectiveCeilingHz:16000}}};
+    panel.refresh(frame);
+    assert.match(ui.bandMeta.textContent,/Configured floor: 20\.00 kHz/);
+    assert.match(ui.bandMeta.textContent,/Effective floor: 16\.00 kHz/);
+    assert.match(ui.bandMeta.textContent,/Nyquist: 16\.00 kHz/);
   } finally {restore()}
 });
 
