@@ -319,17 +319,19 @@ const UI = (() => {
   }
 
 
-  // 112 status-lane routing:
-  // - sim lane carries sim/config toasts.
+  // Status-lane routing:
+  // - sim lane carries Orb and existing non-Scene configuration toasts.
+  // - scene lane carries shared Scene settings and preset toasts.
   // - audio lane carries transport/audio toasts plus a short recording-state summary.
   const STATUS_DEFAULT_SIM = "Choose an orb to shape its response.";
-  const STATUS_DEFAULT_SCENE = "Shared scene appearance and color policy.";
+  const STATUS_DEFAULT_SCENE = "Shared scene settings and preset controls.";
   let _simStatusToastTimer = null;
+  let _sceneStatusToastTimer = null;
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
-  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, commitPreferences: applyPrefs });
+  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({ ui, commitPreferences: applyPrefs, bandColor: (index) => ColorPolicy.bandRgb01(index) });
   const orbEditorUi = createOrbEditorUi({
     ui,
@@ -373,6 +375,15 @@ const UI = (() => {
     }, holdMs);
   }
 
+  function sceneStatusToast(msg, holdMs = 2500) {
+    ui.sceneStatus.textContent = msg;
+    if (_sceneStatusToastTimer !== null) clearTimeout(_sceneStatusToastTimer);
+    _sceneStatusToastTimer = setTimeout(() => {
+      ui.sceneStatus.textContent = STATUS_DEFAULT_SCENE;
+      _sceneStatusToastTimer = null;
+    }, holdMs);
+  }
+
   function audioStatusToast(msg, holdMs = 2500) {
     _audioStatusToastText = msg;
     _audioStatusToastUntilMs = performance.now() + holdMs;
@@ -394,7 +405,7 @@ const UI = (() => {
   }
 
   function applyPrefs(reason, options = {}) {
-    const { rebuildBandsOnDefinitionChange = false } = options;
+    const { rebuildBandsOnDefinitionChange = false, showStatus = simStatusToast } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
@@ -413,16 +424,17 @@ const UI = (() => {
     orbEditorUi.refresh();
     scenePanelUi.refresh(runtime.settings);
 
-    if (reason) simStatusToast(`Updated: ${reason}`);
-    ui.sceneStatus.textContent = STATUS_DEFAULT_SCENE;
+    if (reason) showStatus(`Updated: ${reason}`);
+    if (_sceneStatusToastTimer === null) ui.sceneStatus.textContent = STATUS_DEFAULT_SCENE;
   }
 
 
   function resetPrefs() {
     replacePreferences(deepClone(CONFIG.defaults));
-    applyPrefs("prefs reset", { rebuildBandsOnDefinitionChange: true });
+    applyPrefs(null, { rebuildBandsOnDefinitionChange: true });
     initOrbs();
     resetVisualizers("visuals");
+    sceneStatusToast("All settings reset.", 4000);
   }
 
   async function shareLink() {
@@ -430,20 +442,21 @@ const UI = (() => {
     const url = location.href;
     try {
       await navigator.clipboard.writeText(url);
-      simStatusToast("Share link copied to clipboard.", 4000);
+      sceneStatusToast("Share link copied to clipboard.", 4000);
     } catch {
-      simStatusToast("Share link written to URL — copy from address bar.", 4000);
+      sceneStatusToast("Share link written to URL — copy from address bar.", 4000);
     }
   }
 
   function applyUrlNow() {
     const ok = UrlPreset.applyFromLocationHash();
     if (ok) {
-      applyPrefs("applied URL preset", { rebuildBandsOnDefinitionChange: true });
+      applyPrefs(null, { rebuildBandsOnDefinitionChange: true });
       initOrbs();
       resetVisualizers("visuals");
+      sceneStatusToast("Preset applied from URL.", 4000);
     } else {
-      simStatusToast("No valid preset in URL hash.", 4000);
+      sceneStatusToast("No valid preset in URL.", 4000);
     }
   }
 
@@ -1771,9 +1784,10 @@ const UI = (() => {
     window.addEventListener("hashchange", () => {
       const ok = UrlPreset.applyFromLocationHash();
       if (ok) {
-        applyPrefs("hash preset loaded", { rebuildBandsOnDefinitionChange: true });
+        applyPrefs(null, { rebuildBandsOnDefinitionChange: true });
         initOrbs();
         resetVisualizers("visuals");
+        sceneStatusToast("Preset applied from URL.", 4000);
       }
     });
 

@@ -34,7 +34,7 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
   globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
   state.recording.hooksEnabled = true;
   const ui = {
-    audioPanel: element("grid"), analysisPanel: element("none"), visualizersPanel: element("none"), simPanel: element(), scenePanel: element(), queuePanel: element(), recordPanel: element(),
+    audioPanel: element("grid"), analysisPanel: element("none"), visualizersPanel: element("none"), simPanel: element(), scenePanel: element("none"), queuePanel: element(), recordPanel: element(),
     openAudio: element("grid"), openAnalysis: element("grid"), openVisualizers: element("grid"), openSim: element("grid"), openScene: element("grid"), openQueue: element("grid"), openRecord: element("grid"),
     btnOpenAudio: element(), btnOpenAnalysis: element(), btnOpenVisualizers: element(), btnOpenSim: element(), btnOpenScene: element(), btnOpenQueue: element(), btnOpenRecord: element(),
     btnHideAudio: element(), btnHideAnalysis: element(), btnHideVisualizers: element(), btnHideSim: element(), btnHideScene: element(), btnHideQueue: element(), btnHideRecord: element(),
@@ -47,6 +47,23 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
     assert.equal(workspace.init(), false);
     assert.equal(ui.btnOpenAudio.listenerCount("click"), 1);
     assert.equal(ui.workspaceLauncher.dataset.collapsed, "true");
+    assert.equal(ui.btnOpenScene.title, "Show Settings panel");
+    assert.equal(ui.btnOpenScene.getAttribute("aria-label"), "Show Settings panel");
+    assert.equal(ui.btnOpenScene.getAttribute("aria-pressed"), "false");
+    globalThis.document.activeElement = ui.btnOpenScene;
+    ui.btnOpenScene.dispatch("click");
+    assert.equal(ui.scenePanel.style.display, "block");
+    assert.equal(ui.btnOpenScene.title, "Hide Settings panel");
+    assert.equal(ui.btnOpenScene.getAttribute("aria-label"), "Hide Settings panel");
+    assert.equal(ui.btnOpenScene.getAttribute("aria-pressed"), "true");
+    assert.equal(ui.scenePanel.classList.contains("panel-front"), true);
+    assert.equal(globalThis.document.activeElement, ui.btnHideScene);
+    globalThis.document.activeElement = ui.scenePanel;
+    ui.btnHideScene.dispatch("click");
+    assert.equal(globalThis.document.activeElement, ui.btnOpenScene);
+    assert.equal(ui.btnOpenScene.title, "Show Settings panel");
+    assert.equal(ui.btnOpenScene.getAttribute("aria-label"), "Show Settings panel");
+    ui.btnOpenScene.dispatch("click");
     globalThis.document.activeElement = ui.btnOpenAnalysis;
     workspace.showAnalysisPanel();
     assert.equal(ui.analysisPanel.style.display, "block");
@@ -79,9 +96,14 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
     assert.equal(ui.analysisPanel.style.display, "none");
     assert.equal(ui.visualizersPanel.style.display, "none");
     assert.equal(ui.recordPanel.style.display, "none");
+    assert.equal(ui.scenePanel.style.display, "none");
+    assert.equal(ui.panelRestoreSnapshot.scene, true);
+    assert.equal(ui.btnOpenScene.title, "Show Settings panel");
     workspace.togglePanels();
     assert.equal(ui.visualizersPanel.style.display, "block");
     assert.equal(ui.recordPanel.style.display, "block");
+    assert.equal(ui.scenePanel.style.display, "block");
+    assert.equal(ui.btnOpenScene.title, "Hide Settings panel");
     workspace.bringPanelForward(ui.scenePanel);
   } finally {
     state.recording.hooksEnabled = previousHooks;

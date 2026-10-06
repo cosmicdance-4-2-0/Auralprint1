@@ -27,7 +27,7 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     syncLauncherControl(ui.openAnalysis, ui.btnOpenAnalysis, { active: isPanelVisible(ui.analysisPanel), label: isPanelVisible(ui.analysisPanel) ? "Hide Analysis panel" : "Show Analysis panel" });
     syncLauncherControl(ui.openVisualizers, ui.btnOpenVisualizers, { active: isPanelVisible(ui.visualizersPanel), label: isPanelVisible(ui.visualizersPanel) ? "Hide Visualizers panel" : "Show Visualizers panel" });
     syncLauncherControl(ui.openSim, ui.btnOpenSim, { active: isPanelVisible(ui.simPanel), label: isPanelVisible(ui.simPanel) ? "Hide orbs panel" : "Show orbs panel" });
-    syncLauncherControl(ui.openScene, ui.btnOpenScene, { active: isPanelVisible(ui.scenePanel), label: isPanelVisible(ui.scenePanel) ? "Hide Scene panel" : "Show Scene panel" });
+    syncLauncherControl(ui.openScene, ui.btnOpenScene, { active: isPanelVisible(ui.scenePanel), label: isPanelVisible(ui.scenePanel) ? "Hide Settings panel" : "Show Settings panel" });
     syncLauncherControl(ui.openQueue, ui.btnOpenQueue, { active: isPanelVisible(ui.queuePanel), label: isPanelVisible(ui.queuePanel) ? "Hide queue panel" : "Show queue panel" });
     syncLauncherControl(ui.openRecord, ui.btnOpenRecord, {
       visible: !!state.recording?.hooksEnabled,
