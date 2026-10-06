@@ -1,5 +1,5 @@
 /* Build 115: expose the existing controls in a compact, keyboard-accessible workspace.
-   Layer order: canvas 0, hint 10, transport 20, queue/record 25–26, Visualizers/Orbs/Bands 30,
+   Layer order: canvas 0, hint 10, transport 20, queue/record 25–26, Visualizers/Analysis/Settings 30,
    most recently opened panel 35, workspace launcher 40. */
 :root { color-scheme: dark; --ui-accent: #9ee5cf; --ui-border: #ffffff24; }
 button, select, input { font: inherit; box-sizing: border-box; }
@@ -60,7 +60,7 @@ summary:focus-visible, input:focus-visible, #c:focus-visible {
 .picker-error { color: #ffb9a8; font-size: 12px; line-height: 1.4; }
 .picker-error:empty { display: none; }
 [aria-invalid="true"] { border-color: #ffb9a8 !important; }
-#visualizersPanel, #simPanel, #scenePanel { width: min(400px, calc(100vw - 2 * var(--ui-pad) - var(--ui-safe-l) - var(--ui-safe-r))); overflow-x: hidden; }
+#visualizersPanel, #scenePanel { width: min(400px, calc(100vw - 2 * var(--ui-pad) - var(--ui-safe-l) - var(--ui-safe-r))); overflow-x: hidden; }
 #recordPanel { max-height: calc(100dvh - var(--ui-queue-clearance) - 2 * var(--ui-pad) - var(--ui-safe-b) - var(--ui-safe-t)); width: min(440px, calc(100vw - 2 * var(--ui-pad))); }
 #queuePanel { max-height: min(240px, calc(100dvh - var(--ui-queue-clearance) - 2 * var(--ui-pad) - var(--ui-safe-b) - var(--ui-safe-t))); }
 #queuePanel .queue-title { font-size: 16px; opacity: 1; }
@@ -92,7 +92,7 @@ summary:focus-visible, input:focus-visible, #c:focus-visible {
   #audioPanel button { padding: 5px 7px; }
   .volume-control { max-width: none; }
   #scrubberTime { font-size: 10px; min-width: 0; }
-  #visualizersPanel, #simPanel, #scenePanel { left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
+  #visualizersPanel, #scenePanel { left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
   .picker-range { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .picker-range > button { grid-column: 1 / -1; }
 }

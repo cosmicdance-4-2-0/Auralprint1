@@ -100,7 +100,6 @@
        and anchor #scenePanel to the left edge (clear right anchor) so both side panels share alignment. */
     @media (max-width: 980px) {
       #visualizersPanel, #scenePanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
-      #simPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); }
     }
 
     @media (max-width: 920px) {
@@ -165,8 +164,7 @@
          audioPanel: 20 (bottom transport bar)
          queuePanel: 25 (floats above audio panel; below side config panels)
          recordPanel: 26 (dedicated recording panel; above queue, below side panels)
-         visualizersPanel: 30 (left inventory/navigation panel)
-         simPanel  : 30 (left config panel)
+         visualizersPanel: 30 (left visualizer configuration panel)
          scenePanel: 30 (right config panel)
          workspace launcher : 40 (always reachable; must clear all panels)
     */

@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.f");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.f/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.g");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.g/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -610,6 +610,7 @@ function createStubUiElement(tagName = "div") {
     style: { display: "block" },
     dataset: {},
     children: [],
+    parentNode: null,
     options: [],
     hidden: false,
     disabled: false,
@@ -644,38 +645,48 @@ function createStubUiElement(tagName = "div") {
       this.dispatch("click");
     },
     appendChild(child) {
-      this.children = this.children.filter((entry) => entry !== child);
+      if (child.parentNode) child.parentNode.children = child.parentNode.children.filter((entry) => entry !== child);
+      child.parentNode = this;
       this.children.push(child);
       if (child && child.tagName === "OPTION") this.options.push(child);
       return child;
     },
     insertBefore(child, before) {
-      this.children = this.children.filter((entry) => entry !== child);
+      if (child.parentNode) child.parentNode.children = child.parentNode.children.filter((entry) => entry !== child);
+      child.parentNode = this;
       const index = before ? this.children.indexOf(before) : -1;
       if (index < 0) this.children.push(child);
       else this.children.splice(index, 0, child);
       return child;
     },
     append(...children) {
-      for (const child of children) {
-        this.children = this.children.filter((entry) => entry !== child);
-        this.children.push(child);
-      }
+      for (const child of children) this.appendChild(child);
     },
     replaceChildren(...children) {
-      this.children = children.flatMap((child) => child && child.isFragment ? child.children : [child]);
+      for (const child of [...this.children]) child.remove();
+      for (const child of children.flatMap((child) => child && child.isFragment ? [...child.children] : [child])) this.appendChild(child);
     },
-    remove() {},
-    focus() {},
-    contains() {
-      return false;
+    remove() {
+      if (this.parentNode) this.parentNode.children = this.parentNode.children.filter((entry) => entry !== this);
+      this.parentNode = null;
     },
-    closest() {
-      return null;
+    focus() { document.activeElement = this; },
+    scrollIntoView() {},
+    contains(target) { return target === this || this.children.some((child) => child.contains(target)); },
+    closest(selector) {
+      if (selector.startsWith(".") && this.className?.split(" ").includes(selector.slice(1))) return this;
+      if (selector === "button[data-action]" && this.tagName === "BUTTON" && this.dataset.action) return this;
+      return this.parentNode?.closest(selector) || null;
     },
-    querySelector() {
-      return null;
+    querySelectorAll(selector) {
+      const matches = [];
+      for (const child of this.children) {
+        if (selector === child.tagName.toLowerCase() || (selector.startsWith(".") && child.className?.split(" ").includes(selector.slice(1))) || (selector === '[data-action="edit"]' && child.dataset.action === "edit")) matches.push(child);
+        matches.push(...child.querySelectorAll(selector));
+      }
+      return matches;
     },
+    querySelector(selector) { return this.querySelectorAll(selector)[0] || null; },
     setAttribute(name, value) {
       attributes.set(name, String(value));
     },
@@ -734,7 +745,11 @@ function createUiWireHarness() {
 
   function getElement(id) {
     if (!elements.has(id)) {
-      const el = createStubUiElement(id === "fileInput" ? "input" : "div");
+      const tag = id.startsWith("sel") ? "select" : (/^(rng|chk|clr)/.test(id) || id === "fileInput" ? "input" : "div");
+      const el = createStubUiElement(tag);
+      el.id = id;
+      if (id.startsWith("chk")) el.type = "checkbox";
+      if (id.startsWith("rng")) el.type = "range";
       if (id === "queuePanel") el.style.display = "none";
       elements.set(id, el);
     }
@@ -2634,7 +2649,7 @@ test("dynamic Orb editor does not retain fixed-slot controls", async () => {
 
 test("global view toggle restores the prior panel selection and disclosure keys do not pause simulation", async () => {
   await withUiWireHarnessState({}, ({ getElement, harness }) => {
-    getElement("btnHideSim").click();
+    getElement("btnHideVisualizers").click();
     getElement("btnHideScene").click();
     getElement("btnOpenQueue").click();
     getElement("btnTogglePanels").click();
@@ -2643,7 +2658,7 @@ test("global view toggle restores the prior panel selection and disclosure keys 
     getElement("btnTogglePanels").click();
     assert.equal(getElement("audioPanel").style.display, "grid");
     assert.equal(getElement("queuePanel").style.display, "block");
-    assert.equal(getElement("simPanel").style.display, "none");
+    assert.equal(getElement("visualizersPanel").style.display, "none");
     assert.equal(getElement("scenePanel").style.display, "none");
     const summary = createStubUiElement("summary");
     summary.closest = selector => selector.split(", ").includes("summary") ? summary : null;
@@ -3019,7 +3034,7 @@ test("prepareWatchBuild creates clean build output directories", async () => {
 
 test("Spectral Ring presentation has one Visualizers owner while shared colors live in Scene", () => {
   const template = readFileSync(new URL("../src/index.template.html", import.meta.url), "utf8");
-  const visualizers = template.match(/<div id="visualizersPanel"[\s\S]*?<div id="simPanel"/)?.[0] || "";
+  const visualizers = template.match(/<div id="visualizersPanel"[\s\S]*?<div id="analysisPanel"/)?.[0] || "";
   const scene = template.slice(template.indexOf('<div id="scenePanel"'), template.indexOf('id="workspaceLauncher"'));
   for (const id of ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"]) {
     assert.equal((template.match(new RegExp(`id="${id}"`, "g")) || []).length, 1);
@@ -3073,15 +3088,15 @@ async function withSettingsActionHarness(t, run) {
     initOrbs();
     UI.wireControls();
     UI.applyPrefs(null);
-    let orbStatus = "2 Orbs in scene";
-    const simWrites = [];
-    Object.defineProperty(state.ui.simStatus, "textContent", {
+    let orbStatus = "Choose a visualizer to shape its response.";
+    const editWrites = [];
+    Object.defineProperty(state.ui.visualizerEditStatus, "textContent", {
       configurable: true,
       get: () => orbStatus,
-      set: (message) => { simWrites.push(message); orbStatus = message; },
+      set: (message) => { editWrites.push(message); orbStatus = message; },
     });
     await run({ ...harness, location, clipboard });
-    assert.ok(simWrites.every((message) => !/share link|preset|settings reset|Updated: scene/i.test(message)), `Unexpected Settings message in Orbs: ${simWrites.join("; ")}`);
+    assert.ok(editWrites.every((message) => !/share link|preset|settings reset|Updated: scene/i.test(message)), `Unexpected Settings message in Visualizers: ${editWrites.join("; ")}`);
   } finally {
     // Drain the coordinator's pending toast handles before restoring its DOM.
     t.mock.timers.tick(10000);
@@ -3112,7 +3127,7 @@ test("Copy Share Link writes the canonical schema-10 hash and reports only in Se
     assert.equal(decodePresetHash(location.hash).schema, 10);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
-    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
 });
 
@@ -3123,7 +3138,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
     await Promise.resolve();
     assert.equal(decodePresetHash(location.hash).schema, 10);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
-    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
 });
 
@@ -3145,7 +3160,7 @@ test("Apply URL Preset uses canonical apply, conditional BandBank rebuild and Se
     assert.equal(rebuild.mock.calls.length, 1);
     assert.equal(state.orbs[0].angleRad, 1);
     assert.equal(state.ui.sceneStatus.textContent, "Preset applied from URL.");
-    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
     state.ui.btnApplyUrl.click();
     assert.equal(rebuild.mock.calls.length, 1, "unchanged band definition must not rebuild");
   });
@@ -3158,7 +3173,7 @@ test("missing and invalid URL presets report only in Settings and retain prefere
       location.hash = hash;
       state.ui.btnApplyUrl.click();
       assert.equal(state.ui.sceneStatus.textContent, "No valid preset in URL.");
-      assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+      assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
       assert.deepEqual(preferences, previous);
     }
   });
@@ -3178,18 +3193,18 @@ test("Reset All Settings restores complete CONFIG defaults and reports only in S
     assert.equal(rebuild.mock.calls.length, 1);
     assert.equal(state.orbs[0].angleRad, CONFIG.defaults.orbs[0].startAngleRad);
     assert.equal(state.ui.sceneStatus.textContent, "All settings reset.");
-    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
 });
 
-test("Scene control commits use Settings feedback while Bulk Orb commits retain Orbs feedback", async (t) => {
+test("Scene control commits use Settings feedback while Bulk Orb commits use Visualizers feedback", async (t) => {
   await withSettingsActionHarness(t, () => {
     const controls = [["clrBg", "input", "#123456"], ["clrParticle", "input", "#abcdef"], ["selParticleColorSrc", "change", "angle"], ["rngHueOff", "input", "120"], ["rngSat", "input", "0.5"], ["rngVal", "input", "0.75"]];
     for (const [id, event, value] of controls) {
       state.ui[id].value = value;
       state.ui[id].dispatch(event);
       assert.match(state.ui.sceneStatus.textContent, /^Updated: scene /);
-      assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+      assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
     }
     assert.equal(runtime.settings.visuals.backgroundColor, "#123456");
     assert.equal(runtime.settings.visuals.particleColor, "#abcdef");
@@ -3198,7 +3213,7 @@ test("Scene control commits use Settings feedback while Bulk Orb commits retain 
     const settingsMessage = state.ui.sceneStatus.textContent;
     state.ui.rngOmega.value = "2";
     state.ui.rngOmega.dispatch("input");
-    assert.match(state.ui.simStatus.textContent, /^Updated:/);
+    assert.match(state.ui.visualizerEditStatus.textContent, /^Updated:/);
     assert.equal(state.ui.sceneStatus.textContent, settingsMessage);
   });
 });
@@ -3214,7 +3229,7 @@ test("Settings toasts survive applyPrefs, replace prior timers, and restore the 
     assert.equal(state.ui.sceneStatus.textContent, "All settings reset.", "old Apply timer must be cancelled");
     t.mock.timers.tick(1000);
     assert.equal(state.ui.sceneStatus.textContent, "Shared scene settings and preset controls.");
-    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
 });
 
@@ -3226,6 +3241,216 @@ test("hashchange preset application also reports through Settings without an Orb
     dispatchWindow("hashchange");
     assert.equal(runtime.settings.visuals.backgroundColor, "#123456");
     assert.equal(state.ui.sceneStatus.textContent, "Preset applied from URL.");
-    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
+  });
+});
+
+const MG_BULK_FIELDS = [
+  ["rngOmega", "valOmega", "motion", "angularSpeedRadPerSec", "input", 1, 2],
+  ["rngMinRad", "valMinRad", "response", "minRadiusFrac", "input", .02, .04],
+  ["rngMaxRad", "valMaxRad", "response", "maxRadiusFrac", "input", .7, .9],
+  ["rngWfDisp", "valWfDisp", "response", "waveformRadialDisplaceFrac", "input", .1, .2],
+  ["chkLines", "valLines", "trace", "lines", "change", false, true],
+  ["rngNumLines", "valNumLines", "trace", "numLines", "input", 20, 40],
+  ["selLineColorMode", "valLineColorMode", "trace", "lineColorMode", "change", "fixed", "lastParticle"],
+  ["rngEmit", "valEmit", "particles", "emitPerSecond", "input", 100, 200],
+  ["rngSizeMax", "valSizeMax", "particles", "sizeMaxPx", "input", 7, 9],
+  ["rngSizeMin", "valSizeMin", "particles", "sizeMinPx", "input", 1, 2],
+  ["rngSizeToMin", "valSizeToMin", "particles", "sizeToMinSec", "input", 2, 4],
+  ["rngTTL", "valTTL", "particles", "ttlSec", "input", 10, 12],
+  ["rngOverlap", "valOverlap", "particles", "overlapRadiusPx", "input", 1, 3],
+];
+
+for (const [controlId, outputId, group, field, event, first, second] of MG_BULK_FIELDS) {
+  test(`Visualizers bulk ${group}.${field} reports mixed and applies canonically to every Orb`, async (t) => {
+    await withSettingsActionHarness(t, () => {
+      preferences.orbs.forEach((orb, i) => { orb[group][field] = i ? second : first; });
+      UI.applyPrefs(null);
+      assert.equal(state.ui[outputId].textContent, "mixed");
+      if (typeof first === "boolean") assert.equal(state.ui[controlId].indeterminate, true);
+      const settingsBefore = runtime.settings, runtimeOrbs = [...state.orbs];
+      const unrelatedBefore = preferences.orbs.map((orb) => orb.centerXFrac);
+      if (typeof first === "boolean") state.ui[controlId].checked = first;
+      else state.ui[controlId].value = String(first);
+      state.ui[controlId].dispatch(event);
+      assert.notEqual(runtime.settings, settingsBefore);
+      for (const source of [preferences.orbs, runtime.settings.orbs, state.orbs]) {
+        assert.equal(source.length, 2);
+        assert.ok(source.every((orb) => orb[group][field] === first), `${group}.${field}`);
+      }
+      assert.deepEqual(state.orbs, runtimeOrbs, "bulk editing retains live Orb objects");
+      assert.deepEqual(preferences.orbs.map((orb) => orb.centerXFrac), unrelatedBefore);
+      assert.notEqual(state.ui[outputId].textContent, "mixed");
+      assert.notEqual(state.ui[outputId].textContent, "—");
+      if (typeof first === "boolean") assert.equal(state.ui[controlId].indeterminate, false);
+      assert.match(state.ui.visualizerEditStatus.textContent, /^Updated:/);
+      UI.refreshAllUiText();
+      assert.match(state.ui.visualizerEditStatus.textContent, /^Updated:/, "refresh retains edit feedback");
+    });
+  });
+}
+
+function hostVisualizerEditors() {
+  const ui = state.ui;
+  ui.visualizersPanel.append(ui.visualizerList, ui.spectralRingEditor, ui.orbEditorList, ui.btnVisualizersAddOrb, ui.btnResetVisuals);
+  ui.spectralRingEditor.append(createStubUiElement("summary"), ui.chkBandOverlay);
+  ui.visualizersPanel.style.display = "block";
+}
+function visualizerAction(action, id) {
+  const row = state.ui.visualizerList.children.find((item) => action === "edit-ring"
+    ? item.children[0].children[0].textContent === "Spectral Ring"
+    : item.children[2]?.children.some((button) => button.dataset.orbId === id));
+  return row?.children[2]?.children.find((button) => button.dataset.action === action);
+}
+function clickVisualizerAction(action, id) {
+  const button = visualizerAction(action, id);
+  assert.ok(button, `${action} for ${id || "Spectral Ring"}`);
+  state.ui.visualizerList.dispatch("click", { target: button });
+}
+
+test("Ring and persistent-ID Orb Edit open existing editors inside Visualizers", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    clickVisualizerAction("edit-ring");
+    assert.equal(state.ui.spectralRingEditor.open, true);
+    assert.equal(document.activeElement, state.ui.spectralRingEditor.querySelector("summary"));
+    const root = state.ui.orbEditorList.children[1];
+    const nodes = [...state.ui.orbEditorList.children];
+    const settingsBefore = runtime.settings;
+    clickVisualizerAction("edit", root.dataset.orbId);
+    assert.equal(root.open, true);
+    assert.equal(document.activeElement, root.querySelector("summary"));
+    clickVisualizerAction("edit", root.dataset.orbId);
+    assert.deepEqual(state.ui.orbEditorList.children, nodes);
+    assert.equal(runtime.settings, settingsBefore, "Edit does not mutate settings");
+    assert.equal(state.ui.visualizersPanel.style.display, "block");
+    assert.ok(state.ui.visualizersPanel.contains(document.activeElement));
+    assert.equal(state.ui.simPanel, undefined);
+  });
+});
+
+test("collection actions create and remove local editors and recover focus through zero Orbs", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    const originalId = preferences.orbs[0].id;
+    const survivor = state.orbs[0]; survivor.angleRad = 3; survivor.emitAccum = .37;
+    state.ui.btnVisualizersAddOrb.click();
+    const added = preferences.orbs.at(-1);
+    assert.ok(state.ui.orbEditorList.children.some((node) => node.dataset.orbId === added.id));
+    assert.equal(document.activeElement, visualizerAction("edit", added.id));
+    clickVisualizerAction("edit", added.id);
+    assert.ok(state.ui.visualizersPanel.contains(document.activeElement));
+    clickVisualizerAction("duplicate", added.id);
+    const copy = preferences.orbs.find((orb) => orb.id !== added.id && orb.id !== originalId && !CONFIG.defaults.orbs.some((def) => def.id === orb.id));
+    assert.ok(copy); assert.notEqual(copy.id, added.id);
+    assert.ok(state.ui.orbEditorList.children.some((node) => node.dataset.orbId === copy.id));
+    assert.equal(document.activeElement, visualizerAction("edit", copy.id));
+    const order = preferences.orbs.map((orb) => orb.id);
+    window.confirm = () => false;
+    clickVisualizerAction("remove", order[1]);
+    assert.deepEqual(preferences.orbs.map((orb) => orb.id), order);
+    window.confirm = () => true;
+    clickVisualizerAction("remove", order[1]);
+    assert.equal(document.activeElement, visualizerAction("edit", order[2]));
+    assert.ok(!state.ui.orbEditorList.children.some((node) => node.dataset.orbId === order[1]));
+    assert.equal(state.orbs[0], survivor); assert.equal(survivor.angleRad, 3); assert.equal(survivor.emitAccum, .37);
+    while (preferences.orbs.length) clickVisualizerAction("remove", preferences.orbs.at(-1).id);
+    assert.equal(state.orbs.length, 0); assert.equal(state.ui.orbEditorList.children.length, 0);
+    assert.equal(document.activeElement, state.ui.btnVisualizersAddOrb);
+    assert.equal(state.ui.visualizerList.children.length, 1);
+    for (const [controlId, outputId] of MG_BULK_FIELDS) {
+      assert.equal(state.ui[controlId].disabled, true, controlId);
+      assert.equal(state.ui[outputId].textContent, "—", outputId);
+    }
+    state.ui.btnVisualizersAddOrb.click();
+    assert.equal(preferences.orbs.length, 1); assert.equal(state.ui.orbEditorList.children.length, 1);
+    assert.equal(document.activeElement, visualizerAction("edit", preferences.orbs[0].id));
+    for (const [controlId, outputId] of MG_BULK_FIELDS) {
+      assert.equal(state.ui[controlId].disabled, false, controlId);
+      assert.notEqual(state.ui[outputId].textContent, "mixed", outputId);
+      assert.notEqual(state.ui[outputId].textContent, "—", outputId);
+    }
+  });
+});
+
+test("M.C relocated Orb roots, disclosure, picker, focus and scroll survive normal commits", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    const host = state.ui.orbEditorList, root = host.children[0];
+    clickVisualizerAction("edit", root.dataset.orbId);
+    const motion = root.children[1].children[1]; motion.open = true;
+    const picker = root.children[1].children[0].children[1].children[1]; picker.open = true;
+    const control = root.querySelectorAll("input").find((node) => node.id?.endsWith("angular-speed"));
+    control.focus(); state.ui.visualizersPanel.scrollTop = 432;
+    const moves = t.mock.method(host, "insertBefore");
+    control.value = "2"; control.dispatch("input"); UI.refreshAllUiText();
+    assert.equal(moves.mock.callCount(), 0);
+    assert.equal(host.children[0], root); assert.equal(document.activeElement, control);
+    assert.equal(root.open, true); assert.equal(motion.open, true); assert.equal(picker.open, true);
+    assert.equal(state.ui.visualizersPanel.scrollTop, 432);
+  });
+});
+
+test("Visualizers tooltip discovery includes Ring, bulk and newly added Orb controls exactly once", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors();
+    state.ui.chkBandOverlay.id = "chkBandOverlay";
+    state.ui.rngOmega.id = "rngOmega";
+    state.ui.visualizersPanel.append(state.ui.rngOmega);
+    const selectors = [];
+    document.querySelectorAll = (selector) => {
+      selectors.push(selector);
+      if (selector === "#visualizersPanel input") return [...state.ui.orbEditorList.querySelectorAll("input"), state.ui.chkBandOverlay, state.ui.rngOmega];
+      if (selector === "#visualizersPanel select") return state.ui.orbEditorList.querySelectorAll("select");
+      return [];
+    };
+    state.ui.btnVisualizersAddOrb.click(); UI.refreshAllUiText();
+    const controls = state.ui.configTooltipSpecs.map((spec) => spec.control);
+    const newRoot = state.ui.orbEditorList.children.at(-1);
+    const newControl = newRoot.querySelectorAll("input").find((node) => node.id?.endsWith("angular-speed"));
+    for (const control of [state.ui.chkBandOverlay, state.ui.rngOmega, newControl]) assert.equal(controls.filter((node) => node === control).length, 1);
+    assert.ok(selectors.includes("#visualizersPanel input")); assert.ok(!selectors.some((selector) => selector.includes("simPanel")));
+    const listener = t.mock.method(newControl, "addEventListener");
+    state.ui.btnVisualizersAddOrb.click();
+    assert.equal(listener.mock.callCount(), 0, "existing tooltip listeners are retained without duplication");
+    UI.refreshAllUiText(); assert.match(newControl.title, /Angular Speed/);
+  });
+});
+
+test("Visualizers focus round-trip and H/View restore the same layout with local editors", async (t) => {
+  await withSettingsActionHarness(t, ({ dispatchWindow }) => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    const roots = [...state.ui.orbEditorList.children];
+    roots[0].open = true; roots[0].querySelector("summary").focus();
+    state.ui.btnHideVisualizers.click();
+    assert.equal(document.activeElement, state.ui.btnOpenVisualizers);
+    assert.equal(state.ui.visualizersPanel.style.display, "none");
+    state.ui.btnOpenVisualizers.click();
+    assert.equal(document.activeElement, state.ui.btnHideVisualizers);
+    const panels = [state.ui.audioPanel, state.ui.analysisPanel, state.ui.visualizersPanel, state.ui.scenePanel, state.ui.queuePanel];
+    state.ui.analysisPanel.style.display = "none"; state.ui.queuePanel.style.display = "none";
+    state.ui.audioPanel.style.display = "grid";
+    const before = panels.map((panel) => panel.style.display);
+    dispatchWindow("keydown", { code: "KeyH", target: state.canvas });
+    assert.ok(panels.every((panel) => panel.style.display === "none"));
+    assert.equal("sim" in state.ui.panelRestoreSnapshot, false);
+    state.ui.btnTogglePanels.click();
+    assert.deepEqual(panels.map((panel) => panel.style.display), before);
+    assert.deepEqual(state.ui.orbEditorList.children, roots); assert.equal(roots[0].open, true);
+    assert.equal(state.ui.openVisualizers.hidden, false);
+  });
+});
+
+test("Ring commits retain the singleton editor and truthful inventory visibility", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    const editor = state.ui.spectralRingEditor;
+    state.ui.chkBandOverlay.checked = false; state.ui.chkBandOverlay.dispatch("change"); UI.refreshAllUiText();
+    assert.equal(preferences.bands.overlay.enabled, false); assert.equal(runtime.settings.bands.overlay.enabled, false);
+    assert.equal(VisualizerRuntime.getVisualizers().filter((item) => item.type === "spectral-ring").length, 1);
+    assert.equal(state.ui.visualizerList.children[0].children[0].children[1].textContent, "Hidden");
+    assert.equal(state.ui.spectralRingEditor, editor);
+    clickVisualizerAction("edit-ring"); assert.equal(editor.open, true);
+    assert.equal(state.ui.visualizerList.children[0].children[2].children.length, 1);
   });
 });

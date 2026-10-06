@@ -217,9 +217,9 @@ Panels:
 - Audio
 - Queue
 - Visualizers
-- Sim / Orbs
-- Scene
+- Settings (Scene appearance and presets)
 - Analysis
+- Record (when enabled)
 
 Rules:
 - Panels must be independently hideable
@@ -250,16 +250,16 @@ Avoid:
 
 - `ui.js` is the application-level UI coordinator. Feature-specific UI behavior belongs behind focused modules once a stable ownership boundary exists.
 - Workspace panel visibility, focus, stacking, launcher state, and hide/restore behavior have one owner.
-- Orb UI must not own Orb identity, collection normalization, or runtime reconciliation.
+- OrbEditor remains a focused module for per-Orb controls and Bulk Edit; it must not own Orb identity, collection normalization, or runtime reconciliation. Bulk Edit is an apply-to-all Orb convenience inside Visualizers.
 - UI feature modules must not import `ui.js`; dependencies flow toward the coordinator.
 - UI refresh functions must not mutate persistent settings merely to render state or fabricate missing visualizer instances.
 - Listener initialization must be idempotent for the same DOM controls and must not accumulate duplicate handlers.
-- The Visualizers panel owns user-facing Orb collection management and the singleton Spectral Ring presentation editor through canonical operations; it does not own Orb values or generic visualizer persistence.
+- The Visualizers panel owns user-facing Orb collection management and editing of both Orbs and the singleton Spectral Ring through canonical operations; it does not own Orb values or generic visualizer persistence.
 - Orb editor commits and controller reconciliation use persistent Orb IDs, never assumed array slots. Surviving editor nodes, listeners, picker instances, and ephemeral UI state must be retained across unrelated collection changes.
 - Orb editor nested controls commit by persistent Orb ID and per-Orb edits preserve unrelated runtime history. `startAngleRad` is designed phase configuration, distinct from ephemeral `angleRad`: the UI presents degrees while persistence/runtime use radians, edits do not live-teleport, and visual reset applies the designed phase.
 - Removing the last Orb is valid; UI must not implicitly fabricate an Orb. Generated DOM identifiers must be independent of untrusted persistent Orb IDs.
 - Visualizer inventory order follows `VisualizerRuntime`; display numbering communicates composition position and never replaces persistent identity.
-- Visualizer UI must not fabricate runtime instances. During staged migration, writable configuration retains one UI owner and navigation points to that owner rather than duplicating controls.
+- Visualizer UI must not fabricate runtime instances. Writable configuration retains one UI owner inside Visualizers; Edit opens/focuses the existing Ring or persistent-ID Orb editor without navigating to another workspace.
 - Visualizers inventory refresh must not rebuild dynamic DOM when both the settings and runtime collection references are unchanged.
 - Dynamic Orb editor refresh must not perform DOM or picker synchronization when both settings and BandBank definitions are unchanged.
 - Dynamic Orb editor rendering and synchronization reads canonical `runtime.settings`, not mutable `preferences`, so reference-based refresh invalidation has one authority.

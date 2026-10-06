@@ -324,12 +324,12 @@ const UI = (() => {
 
 
   // Status-lane routing:
-  // - sim lane carries Orb and existing non-Scene configuration toasts.
+  // - visualizer edit lane carries Orb and Spectral Ring configuration toasts.
   // - scene lane carries shared Scene settings and preset toasts.
   // - audio lane carries transport/audio toasts plus a short recording-state summary.
-  const STATUS_DEFAULT_SIM = "Choose an orb to shape its response.";
+  const STATUS_DEFAULT_VISUALIZER_EDIT = "Choose a visualizer to shape its response.";
   const STATUS_DEFAULT_SCENE = "Shared scene settings and preset controls.";
-  let _simStatusToastTimer = null;
+  let _visualizerEditStatusToastTimer = null;
   let _sceneStatusToastTimer = null;
   let _audioStatusToastText = "";
   let _audioStatusToastUntilMs = 0;
@@ -341,7 +341,8 @@ const UI = (() => {
     ui,
     commitOrbChangeById: applyOrbPrefChangeById,
     commitPreferences: applyPrefs,
-    showStatus: simStatusToast,
+    showStatus: visualizerEditStatusToast,
+    onControlsChanged: () => { initConfigTooltips(); wireConfigTooltipFeedbackEvents(); },
   });
   const spectralRingEditorUi = createSpectralRingEditorUi({
     ui,
@@ -353,29 +354,28 @@ const UI = (() => {
     ui,
     getVisualizers: () => VisualizerRuntime.getVisualizers(),
     getSettings: () => runtime.settings,
-    openOrbControls: () => workspace.showSimPanel(),
     editSpectralRing: () => spectralRingEditorUi.focusEditor(),
     addOrb: () => {
       const created = createRuntimeOrb();
-      if (created) { orbEditorUi.refresh(); simStatusToast(`Added ${created.id}`); }
+      if (created) { orbEditorUi.refresh(); visualizerEditStatusToast(`Added ${created.id}`); }
       return created;
     },
-    editOrb: (id) => { workspace.showSimPanel(); orbEditorUi.refresh(); orbEditorUi.focusOrb(id); },
+    editOrb: (id) => orbEditorUi.focusOrb(id),
     duplicateOrb: (id) => {
       const created = duplicateRuntimeOrb(id);
-      if (created) { orbEditorUi.refresh(); simStatusToast(`Duplicated ${id}`); }
+      if (created) { orbEditorUi.refresh(); visualizerEditStatusToast(`Duplicated ${id}`); }
       return created;
     },
     confirmRemoveOrb: ({ displayName, id }) => window.confirm(`Remove ${displayName} (${id})? This cannot be undone.`),
-    removeOrb: (id) => { const removed = removeRuntimeOrb(id); if (removed) { orbEditorUi.refresh(); simStatusToast(`Removed ${id}`); } return removed; },
+    removeOrb: (id) => { const removed = removeRuntimeOrb(id); if (removed) { orbEditorUi.refresh(); visualizerEditStatusToast(`Removed ${id}`); } return removed; },
   });
 
-  function simStatusToast(msg, holdMs = 2500) {
-    ui.simStatus.textContent = msg;
-    if (_simStatusToastTimer) clearTimeout(_simStatusToastTimer);
-    _simStatusToastTimer = setTimeout(() => {
-      ui.simStatus.textContent = STATUS_DEFAULT_SIM;
-      _simStatusToastTimer = null;
+  function visualizerEditStatusToast(msg, holdMs = 2500) {
+    ui.visualizerEditStatus.textContent = msg;
+    if (_visualizerEditStatusToastTimer) clearTimeout(_visualizerEditStatusToastTimer);
+    _visualizerEditStatusToastTimer = setTimeout(() => {
+      ui.visualizerEditStatus.textContent = STATUS_DEFAULT_VISUALIZER_EDIT;
+      _visualizerEditStatusToastTimer = null;
     }, holdMs);
   }
 
@@ -409,7 +409,7 @@ const UI = (() => {
   }
 
   function applyPrefs(reason, options = {}) {
-    const { rebuildBandsOnDefinitionChange = false, showStatus = simStatusToast } = options;
+    const { rebuildBandsOnDefinitionChange = false, showStatus = visualizerEditStatusToast } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
@@ -472,8 +472,8 @@ const UI = (() => {
       "#audioPanel select",
       "#analysisPanel input",
       "#analysisPanel select",
-      "#simPanel input",
-      "#simPanel select",
+      "#visualizersPanel input",
+      "#visualizersPanel select",
       "#scenePanel input",
       "#scenePanel select",
       "#recordPanel input",
@@ -529,7 +529,8 @@ const UI = (() => {
 
   function initConfigTooltips() {
     const controls = collectOperatorFacingControls();
-    ui.configTooltipSpecs = controls.map((control) => ({
+    const existingSpecs = ui.configTooltipByControl;
+    ui.configTooltipSpecs = controls.map((control) => existingSpecs?.get(control) || ({
       control,
       label: findLabelForControl(control),
       valueEl: findValueElementForControl(control),
@@ -568,7 +569,8 @@ const UI = (() => {
     const specs = Array.isArray(ui.configTooltipSpecs) ? ui.configTooltipSpecs : [];
     for (const spec of specs) {
       const control = spec.control;
-      if (!control) continue;
+      if (!control || spec.feedbackEventsWired) continue;
+      spec.feedbackEventsWired = true;
       const eventName = (control.type === "checkbox" || control.tagName === "SELECT") ? "change" : "input";
       control.addEventListener(eventName, () => {
         // Apply handlers run in the same event turn. Queue after them so titles
@@ -1679,7 +1681,7 @@ const UI = (() => {
     ui.btnShare.addEventListener("click", shareLink);
     ui.btnApplyUrl.addEventListener("click", applyUrlNow);
     ui.btnResetPrefs.addEventListener("click", resetPrefs);
-    ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); simStatusToast("Visuals reset."); });
+    ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); visualizerEditStatusToast("Visuals reset."); });
 
 
     /* Drag-drop onto canvas — multi-file entry point.

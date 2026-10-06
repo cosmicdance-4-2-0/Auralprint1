@@ -49,7 +49,6 @@ function createVisualizersPanelUi({
   ui,
   getVisualizers = () => [],
   getSettings = () => null,
-  openOrbControls = () => {},
   editSpectralRing = () => {},
   addOrb = () => null,
   editOrb = () => {},
@@ -139,12 +138,6 @@ function createVisualizersPanelUi({
     const visualizerLabel = items.length === 1 ? "visualizer" : "visualizers";
     const orbLabel = orbCount === 1 ? "Orb" : "Orbs";
     if (ui?.visualizersStatus) ui.visualizersStatus.textContent = `${items.length} ${visualizerLabel} · ${orbCount} ${orbLabel}`;
-    if (ui?.btnVisualizersOpenOrbs) {
-      ui.btnVisualizersOpenOrbs.disabled = orbCount === 0;
-      ui.btnVisualizersOpenOrbs.title = orbCount
-        ? "Open the existing Orb controls"
-        : "Orb controls are unavailable because this scene has no Orbs";
-    }
     render(items);
     return true;
   }
@@ -154,7 +147,6 @@ function createVisualizersPanelUi({
     initializedOn = ui?.visualizerList || null;
     ui?.visualizerList?.addEventListener("click", onListClick);
     ui?.btnVisualizersAddOrb?.addEventListener("click", onAdd);
-    if (ui?.btnVisualizersOpenOrbs) ui.btnVisualizersOpenOrbs.addEventListener("click", openOrbControls);
     refresh();
     return true;
   }
