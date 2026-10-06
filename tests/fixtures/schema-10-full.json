@@ -1,0 +1,37 @@
+{
+  "visuals": { "backgroundColor": "#123456", "particleColor": "#fedcba" },
+  "audio": { "fftSize": 2048, "smoothingTimeConstant": 0.43, "rmsGain": 2.7, "repeatMode": "all", "muted": true, "volume": 0.37 },
+  "orbs": [
+    {
+      "id": "ORB-Z", "chanId": "L", "bandIds": [19, 7, 31], "chirality": 1,
+      "startAngleRad": 0.4, "hueOffsetDeg": 13, "colorSource": "fixed", "centerXFrac": 0.17, "centerYFrac": -0.23,
+      "motion": { "angularSpeedRadPerSec": 0.37 },
+      "response": { "minRadiusFrac": 0.12, "maxRadiusFrac": 0.66, "waveformRadialDisplaceFrac": 0.27 },
+      "particles": { "emitPerSecond": 170, "sizeMaxPx": 7.2, "sizeMinPx": 2.4, "sizeToMinSec": 1.25, "ttlSec": 8.75, "overlapRadiusPx": 3.6 },
+      "trace": { "lines": false, "numLines": 70, "lineAlpha": 0.23, "lineWidthPx": 4, "lineColorMode": "fixed" }
+    },
+    {
+      "id": "ORB-A", "chanId": "C", "bandIds": [8, 12], "chirality": -1,
+      "startAngleRad": 1.2, "hueOffsetDeg": 127, "colorSource": "angle", "centerXFrac": -0.21, "centerYFrac": 0.33,
+      "motion": { "angularSpeedRadPerSec": 1.23 },
+      "response": { "minRadiusFrac": 0.19, "maxRadiusFrac": 0.73, "waveformRadialDisplaceFrac": 0.36 },
+      "particles": { "emitPerSecond": 390, "sizeMaxPx": 8.6, "sizeMinPx": 3.1, "sizeToMinSec": 4.2, "ttlSec": 11.3, "overlapRadiusPx": 4.7 },
+      "trace": { "lines": true, "numLines": 130, "lineAlpha": 0.54, "lineWidthPx": 5, "lineColorMode": "lastParticle" }
+    },
+    {
+      "id": "CUSTOM-7", "chanId": "R", "bandIds": [3, 22, 25], "chirality": 1,
+      "startAngleRad": 2.3, "hueOffsetDeg": 251, "colorSource": "dominant", "centerXFrac": 0.35, "centerYFrac": -0.47,
+      "motion": { "angularSpeedRadPerSec": 2.34 },
+      "response": { "minRadiusFrac": 0.28, "maxRadiusFrac": 0.91, "waveformRadialDisplaceFrac": 0.49 },
+      "particles": { "emitPerSecond": 650, "sizeMaxPx": 10.8, "sizeMinPx": 4.3, "sizeToMinSec": 7.8, "ttlSec": 16.4, "overlapRadiusPx": 5.9 },
+      "trace": { "lines": false, "numLines": 240, "lineAlpha": 0.78, "lineWidthPx": 3, "lineColorMode": "dominantBand" }
+    }
+  ],
+  "bands": {
+    "count": 128, "floorHz": 45, "ceilingHz": 18000, "distributionMode": "bark",
+    "overlay": { "enabled": true, "connectAdjacent": false, "alpha": 0.41, "pointSizePx": 7, "minRadiusFrac": 0.14, "maxRadiusFrac": 0.71, "waveformRadialDisplaceFrac": 0.32, "lineAlpha": 0.62, "lineWidthPx": 4, "phaseMode": "orb", "ringSpeedRadPerSec": 1.37 },
+    "rainbow": { "hueOffsetDeg": 77, "saturation": 0.63, "value": 0.81 },
+    "particleColorSource": "angle"
+  },
+  "timing": { "maxDeltaTimeSec": 0.75 }
+}
