@@ -29,3 +29,19 @@
 .visualizer-item-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .visualizer-item-actions button { min-height: 36px; flex: 1 1 auto; }
 .visualizer-item-actions .is-destructive { border-color: #c96b6b; color: #ffd2d2; }
+
+.visualizer-section-title { margin: 18px 0 6px; font-size: 13px; color: #b9d6d6; }
+.orb-editor-list { display: grid; gap: var(--ui-gap); min-width: 0; }
+.orb-editor-card { min-width: 0; }
+.orb-editor-title { display: block; }
+.orb-editor-card .section-description { overflow-wrap: anywhere; }
+.orb-editor-body { display: grid; gap: var(--ui-gap); min-width: 0; }
+.orb-editor-group { min-width: 0; margin: 0; }
+.orb-editor-group > summary { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
+.orb-editor-group .row { grid-template-columns: minmax(7.5rem, 1fr) minmax(7rem, 1.35fr) minmax(4.5rem, auto); }
+.orb-editor-card input, .orb-editor-card select { min-width: 0; max-width: 100%; }
+.bulk-edit > summary { font-weight: 700; }
+@media (max-width: 520px) {
+  .orb-editor-group .row { grid-template-columns: minmax(0, 1fr); }
+  .orb-editor-group .val { overflow-wrap: anywhere; }
+}

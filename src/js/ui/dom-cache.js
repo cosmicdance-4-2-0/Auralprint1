@@ -13,7 +13,6 @@ function bindRange(el, lim) {
 function primeDomCache() {
   const ui = state.ui;
     ui.audioPanel = document.getElementById("audioPanel");
-    ui.simPanel = document.getElementById("simPanel");
     ui.analysisPanel = document.getElementById("analysisPanel");
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
@@ -23,7 +22,6 @@ function primeDomCache() {
     ui.visualizerList = document.getElementById("visualizerList");
     ui.btnHideVisualizers = document.getElementById("btnHideVisualizers");
     ui.btnVisualizersAddOrb = document.getElementById("btnVisualizersAddOrb");
-    ui.btnVisualizersOpenOrbs = document.getElementById("btnVisualizersOpenOrbs");
     ui.spectralRingEditor = document.getElementById("spectralRingEditor");
     ui.loadHint = document.getElementById("loadHint");
     ui.workspaceLauncher = document.getElementById("workspaceLauncher");
@@ -32,7 +30,6 @@ function primeDomCache() {
     ui.openAnalysis = document.getElementById("openAnalysis");
     ui.btnOpenAnalysis = document.getElementById("btnOpenAnalysis");
     ui.openVisualizers = document.getElementById("openVisualizers");
-    ui.openSim = document.getElementById("openSim");
     ui.openScene = document.getElementById("openScene");
     ui.openQueue = document.getElementById("openQueue");
     ui.btnOpenQueue = document.getElementById("btnOpenQueue");
@@ -67,9 +64,8 @@ function primeDomCache() {
     ui.btnApplyUrl = document.getElementById("btnApplyUrl");
     ui.btnResetPrefs = document.getElementById("btnResetPrefs");
     ui.btnResetVisuals = document.getElementById("btnResetVisuals");
-    ui.btnHideSim = document.getElementById("btnHideSim");
 
-    ui.simStatus = document.getElementById("simStatus");
+    ui.visualizerEditStatus = document.getElementById("visualizerEditStatus");
     ui.orbEditorList = document.getElementById("orbEditorList");
     ui.sceneStatus = document.getElementById("sceneStatus");
 
@@ -169,7 +165,6 @@ function primeDomCache() {
 
     ui.btnOpenAudio = document.getElementById("btnOpenAudio");
     ui.btnOpenVisualizers = document.getElementById("btnOpenVisualizers");
-    ui.btnOpenSim = document.getElementById("btnOpenSim");
     ui.btnOpenScene = document.getElementById("btnOpenScene");
 
     // Build 113 recording UI.

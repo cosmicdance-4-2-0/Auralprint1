@@ -59,11 +59,11 @@ test("inventory reports lifecycle visibility, Orb targets, and unknown types tru
   assert.deepEqual(model[4], { id: "future", type: "future-glow", displayName: "Visualizer", visible: false, summary: "future-glow" });
 });
 
-test("panel refresh is reference-guarded, responds to replacement, and disables zero-Orb navigation", () => {
+test("panel refresh is reference-guarded, responds to replacement, and keeps Add Orb available at zero", () => {
   const restore = installDocument();
   let settings = { revision: 1 };
   let collection = [visualizer("spectral-ring", "spectral-ring")];
-  const ui = { visualizerList: element(), visualizersStatus: element(), btnVisualizersOpenOrbs: element() };
+  const ui = { visualizerList: element(), visualizersStatus: element(), btnVisualizersAddOrb: element() };
   let replacements = 0;
   const replace = ui.visualizerList.replaceChildren.bind(ui.visualizerList);
   ui.visualizerList.replaceChildren = (...nodes) => { replacements += 1; replace(...nodes); };
@@ -72,35 +72,35 @@ test("panel refresh is reference-guarded, responds to replacement, and disables 
     panel.refresh(); panel.refresh(); panel.refresh();
     assert.equal(replacements, 1);
     assert.equal(ui.visualizersStatus.textContent, "1 visualizer · 0 Orbs");
-    assert.equal(ui.btnVisualizersOpenOrbs.disabled, true);
+    assert.equal(ui.btnVisualizersAddOrb.disabled, false);
 
     settings = { revision: 2 };
     collection = [collection[0], visualizer("orb", "ORB9", { chanId: "R", bandIds: [2, 4] })];
     panel.refresh();
     assert.equal(replacements, 2);
     assert.equal(ui.visualizersStatus.textContent, "2 visualizers · 1 Orb");
-    assert.equal(ui.btnVisualizersOpenOrbs.disabled, false);
+    assert.equal(ui.btnVisualizersAddOrb.disabled, false);
   } finally { restore(); }
 });
 
-test("panel initialization is idempotent and Orb navigation wires once", () => {
+test("panel initialization is idempotent and Add Orb wires once", () => {
   const restore = installDocument();
-  let orbsOpened = 0;
+  let orbsAdded = 0;
   const ui = {
     visualizerList: element(), visualizersStatus: element(),
-    btnVisualizersOpenOrbs: element(),
+    btnVisualizersAddOrb: element(),
   };
   try {
     const panel = createVisualizersPanelUi({
       ui,
       getSettings: () => ({}),
       getVisualizers: () => [visualizer("spectral-ring", "spectral-ring"), visualizer("orb", "ORB0")],
-      openOrbControls: () => { orbsOpened += 1; },
+      addOrb: () => { orbsAdded += 1; },
     });
     assert.equal(panel.init(), true);
     assert.equal(panel.init(), false);
-    ui.btnVisualizersOpenOrbs.dispatch("click");
-    assert.equal(orbsOpened, 1);
+    ui.btnVisualizersAddOrb.dispatch("click");
+    assert.equal(orbsAdded, 1);
   } finally { restore(); }
 });
 
@@ -109,7 +109,7 @@ test("Orb management uses stable IDs, confirmation, and excludes non-Orb rows", 
   let collection = [visualizer("spectral-ring", "spectral-ring"), visualizer("orb", "ORB0"), visualizer("orb", "custom-id")];
   const addButton = element(); addButton.focus = () => { addButton.focused = true; };
   const list = element(); list.contains = () => true;
-  const ui = { visualizerList: list, visualizersStatus: element(), btnVisualizersAddOrb: addButton, btnVisualizersOpenOrbs: element() };
+  const ui = { visualizerList: list, visualizersStatus: element(), btnVisualizersAddOrb: addButton };
   const calls = [];
   try {
     const panel = createVisualizersPanelUi({ ui, getSettings: () => ({}), getVisualizers: () => collection,

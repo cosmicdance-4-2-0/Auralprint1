@@ -16,7 +16,7 @@ function readBulkOrbValue(orbs, group, field) {
 function applyBulkOrbValue(orbs, group, field, value) { if (!Array.isArray(orbs) || !orbs.length) return false; for (const orb of orbs) orb[group][field] = value; return true; }
 
 let nextEditorToken = 0;
-function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus, createBandPicker = createOrbBandPicker } = {}) {
+function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus, onControlsChanged = () => {}, createBandPicker = createOrbBandPicker } = {}) {
   const controllers = new Map();
   let initializedOn = null;
   let lastSettingsRef = null;
@@ -119,16 +119,18 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
   }
   function refresh(settings = runtime.settings) {
     const bandEdgesRef = state.bands.lowHz; if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
-    lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
-    for (const [id, controller] of controllers) if (!orbs.some((orb) => orb.id === id)) { controller.root.remove(); controllers.delete(id); }
+    lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; let controlsChanged = false; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
+    for (const [id, controller] of controllers) if (!orbs.some((orb) => orb.id === id)) { controller.root.remove(); controllers.delete(id); controlsChanged = true; }
     orbs.forEach((orb, position) => {
       let controller = controllers.get(orb.id);
-      if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); }
+      if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); controlsChanged = true; }
       syncController(controller, orb, position);
       const currentNode = ui.orbEditorList.children[position];
       if (currentNode !== controller.root) ui.orbEditorList.insertBefore(controller.root, currentNode || null);
     });
-    ui.simStatus.textContent = orbs.length ? `${orbs.length} Orb${orbs.length === 1 ? "" : "s"} in scene` : "No Orbs in scene"; refreshBulk(orbs); return controllers;
+    refreshBulk(orbs);
+    if (controlsChanged) onControlsChanged();
+    return controllers;
   }
   function refreshBulk(orbs) {
     const bulk = (group, field, control, output, format) => { const model = readBulkOrbValue(orbs, group, field); control.disabled = !model.available; if (!model.available) { output.textContent = "—"; if (control.type === "checkbox") control.indeterminate = false; return; } if (!model.mixed) control.value = String(model.value); output.textContent = model.mixed ? "mixed" : format(model.value); if (control.type === "checkbox") { control.indeterminate = model.mixed; if (!model.mixed) control.checked = !!model.value; } };
