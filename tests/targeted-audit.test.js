@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.d");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.d/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.e");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.e/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -1473,6 +1473,40 @@ test("readSourceUiModel keeps stream mode honest about live-source affordances",
   assert.match(model.audioStatusText, /Stream live: Browser Tab - Bands: stereo \(L!=R\)/);
   assert.doesNotMatch(model.audioStatusText, /should-not-show\.wav/);
   assert.equal(shouldShowActiveQueueItem({ kind: "stream" }, { isLoaded: false }, { active: true }), false);
+});
+
+test("Stream status exposes 2ch, mono, and multichannel capture separately from analysed content", () => {
+  for (const [audioChannelCount, captureText] of [[2, "2ch"], [1, "mono (1ch)"], [6, "6ch"]]) {
+    for (const bandText of ["stereo (L≠R)", "mono-ish (L≈R)"]) {
+      const model = readSourceUiModel({
+        sourceState: { kind: "stream", status: "active", label: "Browser Tab", streamMeta: { audioChannelCount } },
+        bandText,
+      });
+      assert.equal(model.audioStatusText, `Stream live: Browser Tab - Capture: ${captureText} - Bands: ${bandText}`);
+    }
+  }
+});
+
+test("Stream status retains the existing format when capture channel count is unknown", () => {
+  for (const audioChannelCount of [null, undefined, 0, -1, 1.5, "2", NaN]) {
+    const model = readSourceUiModel({
+      sourceState: { kind: "stream", status: "active", label: "Browser Tab", streamMeta: { audioChannelCount } },
+      bandText: "stereo (L≠R)",
+    });
+    assert.equal(model.audioStatusText, "Stream live: Browser Tab - Bands: stereo (L≠R)");
+  }
+});
+
+test("inactive Stream and Mic status never expose stale Stream capture metadata", () => {
+  for (const sourceState of [
+    { kind: "stream", status: "requesting" },
+    { kind: "stream", status: "error", errorMessage: "Share failed." },
+    { kind: "mic", status: "active", label: "Podcast Mic" },
+  ]) {
+    assert.doesNotMatch(readSourceUiModel({
+      sourceState: { ...sourceState, streamMeta: { audioChannelCount: 2 } },
+    }).audioStatusText, /Capture:/);
+  }
 });
 
 test("readSourceUiModel treats File as the idle workflow side without implying an active file source", () => {

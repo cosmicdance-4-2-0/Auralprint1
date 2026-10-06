@@ -94,7 +94,11 @@ function readLiveSourceStatusText(kind, sourceState, bandText) {
 
   if (sourceState.status === "requesting") return "Waiting for stream share permission.";
   if (sourceState.status === "active") {
-    return `Stream live: ${readSourceLabel("stream", sourceState)} - Bands: ${bandText}`;
+    const channelCount = sourceState.streamMeta?.audioChannelCount;
+    const captureText = Number.isInteger(channelCount) && channelCount > 0
+      ? ` - Capture: ${channelCount === 1 ? "mono (1ch)" : `${channelCount}ch`}`
+      : "";
+    return `Stream live: ${readSourceLabel("stream", sourceState)}${captureText} - Bands: ${bandText}`;
   }
   if (sourceState.errorMessage) return sourceState.errorMessage;
   return "Stream input is unavailable.";
