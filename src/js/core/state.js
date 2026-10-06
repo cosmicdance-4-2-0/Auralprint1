@@ -22,6 +22,7 @@ function createSourceState() {
     streamMeta: {
       hasAudio: false,
       hasVideo: false,
+      audioChannelCount: null,
     },
   };
 }
