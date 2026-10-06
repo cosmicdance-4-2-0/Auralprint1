@@ -1,7 +1,74 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
 import { CONFIG } from "../src/js/core/config.js";
 import { createScenePanelUi, SOURCE_LABELS } from "../src/js/ui/scene-panel.js";
+
+// Use the build's Python dependency and its standard HTML parser to inspect
+// actual element ancestry, without introducing a DOM package for this move.
+const { stdout: templateJson } = await promisify(execFile)(process.env.PYTHON || "python3", ["-c", `
+import json, sys
+from html.parser import HTMLParser
+
+class TemplateParser(HTMLParser):
+    void_tags = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+    def __init__(self):
+        super().__init__()
+        self.nodes = []
+        self.stack = []
+    def handle_starttag(self, tag, attrs):
+        node = {"tag": tag, "attrs": dict(attrs), "ancestors": [self.nodes[i]["attrs"].get("id") for i in self.stack], "text": ""}
+        self.nodes.append(node)
+        if tag not in self.void_tags:
+            self.stack.append(len(self.nodes) - 1)
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if tag not in self.void_tags:
+            self.handle_endtag(tag)
+    def handle_endtag(self, tag):
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.nodes[self.stack[i]]["tag"] == tag:
+                del self.stack[i:]
+                break
+    def handle_data(self, data):
+        for i in self.stack:
+            self.nodes[i]["text"] += data
+
+parser = TemplateParser()
+with open(sys.argv[1]) as template:
+    parser.feed(template.read())
+print(json.dumps(parser.nodes))
+`, fileURLToPath(new URL("../src/index.template.html", import.meta.url))], { encoding: "utf8" });
+const templateNodes = JSON.parse(templateJson);
+
+test("preset buttons exist once under Scene Settings and never under Orbs", () => {
+  for (const [id, label] of [["btnShare", "Copy Share Link"], ["btnApplyUrl", "Apply URL Preset"], ["btnResetPrefs", "Reset All Settings"]]) {
+    const matches = templateNodes.filter((node) => node.attrs.id === id);
+    assert.equal(matches.length, 1, id);
+    assert.ok(matches[0].ancestors.includes("scenePanel"), id);
+    assert.ok(!matches[0].ancestors.includes("simPanel"), id);
+    assert.equal(matches[0].text, label);
+  }
+  assert.equal(templateNodes.filter((node) => node.tag === "summary" && node.text.startsWith("Presets")).length, 1);
+  assert.ok(!templateNodes.some((node) => node.tag === "summary" && node.text.startsWith("Presets") && node.ancestors.includes("simPanel")));
+});
+
+test("Settings copy retains canonical Scene IDs and Orbs title", () => {
+  const byId = (id) => templateNodes.find((node) => node.attrs.id === id);
+  const launcher = byId("btnOpenScene");
+  assert.equal(launcher.text, "Settings");
+  assert.equal(launcher.attrs["aria-controls"], "scenePanel");
+  assert.equal(launcher.attrs.title, "Show Settings panel");
+  assert.equal(launcher.attrs["aria-label"], "Show Settings panel");
+  assert.ok(launcher.ancestors.includes("openScene"));
+  assert.equal(byId("scenePanel").attrs["aria-label"], "Scene Settings");
+  assert.equal(byId("btnHideScene").attrs["aria-label"], "Hide Scene Settings panel");
+  assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("scenePanel")).text, "Scene Settings");
+  assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("simPanel")).text, "Orbs");
+  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Canvas", "Particle Defaults", "Band Palette", "PresetsShare or restore configuration"]);
+});
 
 function element(tag = "div") {
   const listeners = new Map();

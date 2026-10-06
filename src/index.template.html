@@ -196,10 +196,6 @@
     </div>
 
 </div></details>
-    <details class="settings-section"><summary>Presets<span class="section-description">Share or restore configuration</span></summary><div class="section-body">
-      <p class="panel-description">Links include settings. Your files, queue and recordings stay in this session.</p>
-      <div class="panel-actions"><button id="btnShare">Share Link</button><button id="btnApplyUrl">Apply URL</button><button id="btnResetPrefs">Reset Prefs</button></div>
-    </div></details>
   </div>
 
   <div id="analysisPanel" class="panel" style="display:none" role="region" aria-label="Analysis">
@@ -240,9 +236,9 @@
     <details class="settings-section" open><summary>Band Inspector</summary><div class="section-body"><div class="muted" id="bandDebug"><span class="dominantBadge">Dominant: (none)</span></div><div id="bandTable"></div></div></details>
   </div>
 
-  <div id="scenePanel" class="panel" style="display:none" role="region" aria-label="Scene">
-    <div class="panel-header"><div><h2 class="panel-title">Scene</h2><p class="panel-description">Global appearance and color policy shared by visualizers.</p></div><button id="btnHideScene" aria-label="Hide Scene panel">Hide</button></div>
-    <div class="muted panel-status" id="sceneStatus">Shared scene appearance and color policy.</div>
+  <div id="scenePanel" class="panel" style="display:none" role="region" aria-label="Scene Settings">
+    <div class="panel-header"><div><h2 class="panel-title">Scene Settings</h2><p class="panel-description">Configure shared appearance, scene-wide defaults, and presets.</p></div><button id="btnHideScene" aria-label="Hide Scene Settings panel">Hide</button></div>
+    <div class="muted panel-status" id="sceneStatus">Shared scene settings and preset controls.</div>
     <details class="settings-section" open><summary>Canvas</summary><div class="section-body">
     <div class="row">
       <label for="clrBg">Background</label>
@@ -286,6 +282,10 @@
     </div>
 
 </div></details>
+    <details class="settings-section"><summary>Presets<span class="section-description">Share or restore configuration</span></summary><div class="section-body">
+      <p class="panel-description">Links include settings. Your files, queue and recordings stay in this session.</p>
+      <div class="panel-actions"><button id="btnShare">Copy Share Link</button><button id="btnApplyUrl">Apply URL Preset</button><button id="btnResetPrefs">Reset All Settings</button></div>
+    </div></details>
   </div>
 
   <!-- Build 113 recording panel.
@@ -378,7 +378,7 @@
     </div>
 
     <div id="openScene" class="launcher">
-      <button id="btnOpenScene" type="button" aria-controls="scenePanel" title="Show Scene panel" aria-label="Show Scene panel" aria-pressed="false">Scene</button>
+      <button id="btnOpenScene" type="button" aria-controls="scenePanel" title="Show Settings panel" aria-label="Show Settings panel" aria-pressed="false">Settings</button>
     </div>
 
     <div

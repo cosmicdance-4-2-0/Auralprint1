@@ -8,6 +8,7 @@ import { CONFIG } from "../src/js/core/config.js";
 import { normalizeOrbDef, preferences, runtime, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
 import { state } from "../src/js/core/state.js";
 import { AudioEngine } from "../src/js/audio/audio-engine.js";
+import { BandBankController } from "../src/js/audio/band-bank-controller.js";
 import { createAnalysisFrame, updateAnalysisFrame } from "../src/js/audio/analysis-frame.js";
 import { InputSourceManager, createInputSourceManager } from "../src/js/audio/input-source-manager.js";
 import { Queue } from "../src/js/audio/queue.js";
@@ -15,13 +16,14 @@ import { Scrubber, buildWaveformPeaks } from "../src/js/audio/scrubber.js";
 import { UrlPreset } from "../src/js/presets/url-preset.js";
 import { RecorderEngine } from "../src/js/recording/recorder-engine.js";
 import { initOrbs } from "../src/js/render/orb-runtime.js";
+import { VisualizerRuntime } from "../src/js/render/visualizer-runtime.js";
 import { UI, readSourceUiModel, shouldShowActiveQueueItem } from "../src/js/ui/ui.js";
 import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.c");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.c/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.d");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.d/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3011,4 +3013,185 @@ test("preset sanitation uses Scene color and Spectral Ring line limit owners", (
   for (const field of ["hueOffsetDeg","saturation","value"]) assert.match(source, new RegExp(`CONFIG\\.limits\\.sceneColor\\.${field}`));
   assert.match(source, /CONFIG\.limits\.bands\.overlayLineAlpha/);
   assert.match(source, /CONFIG\.limits\.bands\.overlayLineWidthPx/);
+});
+
+async function withSettingsActionHarness(t, run) {
+  const harness = createUiWireHarness();
+  const previousPrefs = structuredClone(preferences);
+  const previousSettings = runtime.settings;
+  const previousBands = { ...state.bands };
+  const previousOrbs = state.orbs.slice();
+  const descriptors = Object.fromEntries(["location", "history", "navigator"].map((name) => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const location = { pathname: "/", search: "", hash: "", href: "https://example.test/" };
+  const clipboard = { copied: "", async writeText(url) { this.copied = url; } };
+  const globals = {
+    location,
+    history: { replaceState(_state, _title, url) { location.hash = url.slice(url.indexOf("#")); location.href = `https://example.test${url}`; } },
+    navigator: { clipboard },
+  };
+  try {
+    for (const [name, value] of Object.entries(globals)) Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
+    replacePreferences(structuredClone(CONFIG.defaults));
+    resolveSettings();
+    BandBankController.syncFromSettings();
+    BandBankController.rebuildNow();
+    initOrbs();
+    UI.wireControls();
+    UI.applyPrefs(null);
+    let orbStatus = "2 Orbs in scene";
+    const simWrites = [];
+    Object.defineProperty(state.ui.simStatus, "textContent", {
+      configurable: true,
+      get: () => orbStatus,
+      set: (message) => { simWrites.push(message); orbStatus = message; },
+    });
+    await run({ ...harness, location, clipboard });
+    assert.ok(simWrites.every((message) => !/share link|preset|settings reset|Updated: scene/i.test(message)), `Unexpected Settings message in Orbs: ${simWrites.join("; ")}`);
+  } finally {
+    // Drain the coordinator's pending toast handles before restoring its DOM.
+    t.mock.timers.tick(10000);
+    harness.restore();
+    for (const [name, descriptor] of Object.entries(descriptors)) {
+      if (descriptor) Object.defineProperty(globalThis, name, descriptor);
+      else delete globalThis[name];
+    }
+    replacePreferences(previousPrefs);
+    runtime.settings = previousSettings;
+    BandBankController.syncFromSettings();
+    Object.assign(state.bands, previousBands);
+    state.orbs.splice(0, state.orbs.length, ...previousOrbs);
+    VisualizerRuntime.rebuild(state.orbs);
+  }
+}
+
+function settingsPresetHash(prefs) {
+  return `#p=${Buffer.from(JSON.stringify({ schema: PRESET_SCHEMA_VERSION, prefs }), "utf8").toString("base64url")}`;
+}
+
+test("Copy Share Link writes the canonical schema-10 hash and reports only in Settings", async (t) => {
+  await withSettingsActionHarness(t, async ({ clipboard, location }) => {
+    const writeHash = t.mock.method(UrlPreset, "writeHashFromPrefs");
+    state.ui.btnShare.click();
+    await Promise.resolve();
+    assert.equal(writeHash.mock.calls.length, 1);
+    assert.equal(decodePresetHash(location.hash).schema, 10);
+    assert.equal(clipboard.copied, location.href);
+    assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
+    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+  });
+});
+
+test("Share clipboard fallback retains the URL and reports only in Settings", async (t) => {
+  await withSettingsActionHarness(t, async ({ location }) => {
+    delete globalThis.navigator.clipboard;
+    state.ui.btnShare.click();
+    await Promise.resolve();
+    assert.equal(decodePresetHash(location.hash).schema, 10);
+    assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
+    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+  });
+});
+
+test("Apply URL Preset uses canonical apply, conditional BandBank rebuild and Settings feedback", async (t) => {
+  await withSettingsActionHarness(t, ({ location }) => {
+    const next = structuredClone(CONFIG.defaults);
+    next.bands.floorHz = 55;
+    next.bands.distributionMode = "bark";
+    next.visuals.backgroundColor = "#123456";
+    next.orbs[0].startAngleRad = 1;
+    location.hash = settingsPresetHash(next);
+    const rebuild = t.mock.method(BandBankController, "rebuildNow");
+    const oldLowHz = state.bands.lowHz;
+    state.ui.btnApplyUrl.click();
+    assert.equal(preferences.visuals.backgroundColor, "#123456");
+    assert.equal(runtime.settings.bands.floorHz, 55);
+    assert.equal(runtime.settings.bands.distributionMode, "bark");
+    assert.notEqual(state.bands.lowHz, oldLowHz);
+    assert.equal(rebuild.mock.calls.length, 1);
+    assert.equal(state.orbs[0].angleRad, 1);
+    assert.equal(state.ui.sceneStatus.textContent, "Preset applied from URL.");
+    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    state.ui.btnApplyUrl.click();
+    assert.equal(rebuild.mock.calls.length, 1, "unchanged band definition must not rebuild");
+  });
+});
+
+test("missing and invalid URL presets report only in Settings and retain preferences", async (t) => {
+  await withSettingsActionHarness(t, ({ location }) => {
+    const previous = structuredClone(preferences);
+    for (const hash of ["", "#p=invalid"]) {
+      location.hash = hash;
+      state.ui.btnApplyUrl.click();
+      assert.equal(state.ui.sceneStatus.textContent, "No valid preset in URL.");
+      assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+      assert.deepEqual(preferences, previous);
+    }
+  });
+});
+
+test("Reset All Settings restores complete CONFIG defaults and reports only in Settings", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    preferences.audio.volume = 0.25;
+    preferences.visuals.backgroundColor = "#123456";
+    preferences.bands.floorHz = 55;
+    preferences.orbs[0].motion.angularSpeedRadPerSec = 2;
+    UI.applyPrefs(null);
+    const rebuild = t.mock.method(BandBankController, "rebuildNow");
+    state.ui.btnResetPrefs.click();
+    assert.deepEqual(preferences, CONFIG.defaults);
+    assert.deepEqual(runtime.settings, CONFIG.defaults);
+    assert.equal(rebuild.mock.calls.length, 1);
+    assert.equal(state.orbs[0].angleRad, CONFIG.defaults.orbs[0].startAngleRad);
+    assert.equal(state.ui.sceneStatus.textContent, "All settings reset.");
+    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+  });
+});
+
+test("Scene control commits use Settings feedback while Bulk Orb commits retain Orbs feedback", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    const controls = [["clrBg", "input", "#123456"], ["clrParticle", "input", "#abcdef"], ["selParticleColorSrc", "change", "angle"], ["rngHueOff", "input", "120"], ["rngSat", "input", "0.5"], ["rngVal", "input", "0.75"]];
+    for (const [id, event, value] of controls) {
+      state.ui[id].value = value;
+      state.ui[id].dispatch(event);
+      assert.match(state.ui.sceneStatus.textContent, /^Updated: scene /);
+      assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+    }
+    assert.equal(runtime.settings.visuals.backgroundColor, "#123456");
+    assert.equal(runtime.settings.visuals.particleColor, "#abcdef");
+    assert.equal(runtime.settings.bands.particleColorSource, "angle");
+    assert.deepEqual(runtime.settings.bands.rainbow, { hueOffsetDeg: 120, saturation: 0.5, value: 0.75 });
+    const settingsMessage = state.ui.sceneStatus.textContent;
+    state.ui.rngOmega.value = "2";
+    state.ui.rngOmega.dispatch("input");
+    assert.match(state.ui.simStatus.textContent, /^Updated:/);
+    assert.equal(state.ui.sceneStatus.textContent, settingsMessage);
+  });
+});
+
+test("Settings toasts survive applyPrefs, replace prior timers, and restore the default lane", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    state.ui.btnApplyUrl.click();
+    UI.applyPrefs(null);
+    assert.equal(state.ui.sceneStatus.textContent, "No valid preset in URL.");
+    t.mock.timers.tick(1000);
+    state.ui.btnResetPrefs.click();
+    t.mock.timers.tick(3000);
+    assert.equal(state.ui.sceneStatus.textContent, "All settings reset.", "old Apply timer must be cancelled");
+    t.mock.timers.tick(1000);
+    assert.equal(state.ui.sceneStatus.textContent, "Shared scene settings and preset controls.");
+    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+  });
+});
+
+test("hashchange preset application also reports through Settings without an Orb toast", async (t) => {
+  await withSettingsActionHarness(t, ({ location, dispatchWindow }) => {
+    const next = structuredClone(CONFIG.defaults);
+    next.visuals.backgroundColor = "#123456";
+    location.hash = settingsPresetHash(next);
+    dispatchWindow("hashchange");
+    assert.equal(runtime.settings.visuals.backgroundColor, "#123456");
+    assert.equal(state.ui.sceneStatus.textContent, "Preset applied from URL.");
+    assert.equal(state.ui.simStatus.textContent, "2 Orbs in scene");
+  });
 });
