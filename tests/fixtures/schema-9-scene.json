@@ -1,0 +1,127 @@
+{
+  "schema": 9,
+  "prefs": {
+    "visuals": {
+      "backgroundColor": "#000000",
+      "particleColor": "#ffffff"
+    },
+    "trace": {
+      "lines": true,
+      "numLines": 10,
+      "lineAlpha": 0.35,
+      "lineWidthPx": 2,
+      "lineColorMode": "dominantBand"
+    },
+    "particles": {
+      "emitPerSecond": 240,
+      "sizeMaxPx": 8,
+      "sizeMinPx": 1,
+      "sizeToMinSec": 3,
+      "ttlSec": 6,
+      "overlapRadiusPx": 1
+    },
+    "motion": {
+      "angularSpeedRadPerSec": 1.5707963267948966,
+      "waveformRadialDisplaceFrac": 0.1
+    },
+    "audio": {
+      "fftSize": 8192,
+      "smoothingTimeConstant": 0.1,
+      "rmsGain": 1,
+      "minRadiusFrac": 0.01,
+      "maxRadiusFrac": 0.8,
+      "repeatMode": "none",
+      "muted": false,
+      "volume": 1
+    },
+    "scene": {
+      "nodes": [
+        {
+          "id": "orbs-1",
+          "type": "orbs",
+          "enabled": true,
+          "zIndex": 0,
+          "bounds": {
+            "x": 0.5,
+            "y": 0.5,
+            "w": 1,
+            "h": 1
+          },
+          "anchor": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "settings": [
+            {
+              "id": "HISTORICAL-Z",
+              "chanId": "C",
+              "bandIds": [
+                7,
+                19
+              ],
+              "chirality": -1,
+              "startAngleRad": 0,
+              "hueOffsetDeg": 123,
+              "centerX": 0.25,
+              "centerY": -0.3
+            },
+            {
+              "id": "ORB1",
+              "chanId": "L",
+              "bandIds": [],
+              "chirality": -1,
+              "startAngleRad": 3.141592653589793,
+              "hueOffsetDeg": 0,
+              "centerX": 0,
+              "centerY": 0
+            }
+          ]
+        },
+        {
+          "id": "overlay-1",
+          "type": "bandOverlay",
+          "enabled": true,
+          "zIndex": 1,
+          "bounds": {
+            "x": 0.5,
+            "y": 0.5,
+            "w": 1,
+            "h": 1
+          },
+          "anchor": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "settings": {
+            "enabled": true,
+            "connectAdjacent": true,
+            "alpha": 0.42,
+            "pointSizePx": 3,
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.18,
+            "lineAlpha": 0.35,
+            "lineWidthPx": 4,
+            "phaseMode": "free",
+            "ringSpeedRadPerSec": 0
+          }
+        }
+      ]
+    },
+    "bands": {
+      "count": 256,
+      "floorHz": 20,
+      "ceilingHz": 22500,
+      "distributionMode": "erb",
+      "rainbow": {
+        "hueOffsetDeg": 0,
+        "saturation": 0.9,
+        "value": 1
+      },
+      "particleColorSource": "dominant"
+    },
+    "timing": {
+      "maxDeltaTimeSec": 0.03333333333333333
+    }
+  }
+}

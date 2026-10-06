@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.e");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.e/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.f");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.f/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3042,7 +3042,7 @@ test("115L exposes one Scene color owner and removes the active Bands shell", ()
 });
 
 test("preset sanitation uses Scene color and Spectral Ring line limit owners", () => {
-  const source = readFileSync(new URL("../src/js/presets/url-preset.js", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/js/presets/preset-codec.js", import.meta.url), "utf8");
   assert.match(source, /CONFIG\.limits\.sceneColor\.particleColorSources/);
   for (const field of ["hueOffsetDeg","saturation","value"]) assert.match(source, new RegExp(`CONFIG\\.limits\\.sceneColor\\.${field}`));
   assert.match(source, /CONFIG\.limits\.bands\.overlayLineAlpha/);

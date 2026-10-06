@@ -66,13 +66,25 @@ Agents MUST:
 
 Preset system is **versioned and backward-compatible**.
 
-If you add/change any field:
+Schema 10 is frozen when Build 115 ships. Any future persisted-field addition,
+removal, rename, ownership move, or semantic change requires schema 11 and
+migration from 10. Schema numbers must never be reused for incompatible formats.
+Schema 9 historically had both Scene-node and later top-level forms; input
+migration recognizes both, with top-level values taking precedence. Abandoned
+Scene layout/editor semantics have no schema-10 equivalent and are discarded.
+
+URL/hash is one transport, not the owner of preset semantics. The pure
+`preset-codec.js` owns payload encoding, supported-schema decoding, migration,
+and sanitation. `UrlPreset` replaces canonical preferences only; callers own
+`resolveSettings()` and subsystem synchronization.
+
+If you add/change any persisted field:
 
 **You MUST update ALL of the following:**
 1. `CONFIG.defaults`
-2. `sanitizeAndApply()`
+2. `sanitizePreset()`
 3. `normalize*()` helpers (e.g., `normalizeOrbDef`)
-4. `writeHashFromPrefs()`
+4. `encodePresetPayload()` and schema-contract tests
 5. `PRESET_SCHEMA_VERSION` (increment)
 6. Migration handling for older schemas
 
@@ -87,6 +99,9 @@ Never include runtime/session state:
 - Playback position
 - Recording sessions
 - Live input permissions
+- Source/stream/channel metadata and transport errors
+- Analysis frames, BandBank arrays and effective Nyquist limits
+- Visualizer/Orb simulation state, panel visibility/stacking and launchers
 
 Presets are **configuration only**, not session snapshots.
 

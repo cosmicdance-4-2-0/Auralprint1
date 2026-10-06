@@ -1,0 +1,742 @@
+[
+  {
+    "schema": 2,
+    "provenance": "Explicitly supported common-root input in docs/Canon/0.1.10/index.html decoder (schemas 2–5); no claim of a recovered schema-2 writer.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#213456",
+        "particleColor": "#abcdef"
+      },
+      "audio": {
+        "loop": true,
+        "rmsGain": 2.2
+      },
+      "bands": {
+        "logSpacing": false
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#213456",
+      "visuals.particleColor": "#abcdef",
+      "audio.repeatMode": "one",
+      "audio.rmsGain": 2.2,
+      "bands.distributionMode": "linear"
+    }
+  },
+  {
+    "schema": 3,
+    "provenance": "Explicitly supported common-root input in docs/Canon/0.1.10/index.html decoder (schemas 2–5); no claim of a recovered schema-3 writer.",
+    "prefs": {
+      "audio": {
+        "fftSize": 4096,
+        "smoothingTimeConstant": 0.35,
+        "loop": false,
+        "muted": true,
+        "volume": 0.4
+      },
+      "bands": {
+        "logSpacing": true,
+        "rainbow": {
+          "hueOffsetDeg": 53,
+          "saturation": 0.6,
+          "value": 0.7
+        }
+      }
+    },
+    "expected": {
+      "audio.fftSize": 4096,
+      "audio.smoothingTimeConstant": 0.35,
+      "audio.repeatMode": "none",
+      "audio.muted": true,
+      "audio.volume": 0.4,
+      "bands.distributionMode": "log",
+      "bands.rainbow.hueOffsetDeg": 53,
+      "bands.rainbow.saturation": 0.6,
+      "bands.rainbow.value": 0.7
+    }
+  },
+  {
+    "schema": 4,
+    "provenance": "Explicitly supported common-root input in docs/Canon/0.1.10/index.html decoder (schemas 2–5); no claim of a recovered schema-4 writer.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#445566"
+      },
+      "bands": {
+        "logSpacing": false,
+        "particleColorSource": "angle",
+        "overlay": {
+          "enabled": true,
+          "alpha": 0.28,
+          "connectAdjacent": false,
+          "pointSizePx": 5,
+          "phaseMode": "orb",
+          "ringSpeedRadPerSec": 1.1
+        }
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#445566",
+      "bands.distributionMode": "linear",
+      "bands.particleColorSource": "angle",
+      "bands.overlay.enabled": true,
+      "bands.overlay.alpha": 0.28,
+      "bands.overlay.connectAdjacent": false,
+      "bands.overlay.pointSizePx": 5,
+      "bands.overlay.phaseMode": "orb",
+      "bands.overlay.ringSpeedRadPerSec": 1.1
+    }
+  },
+  {
+    "schema": 5,
+    "provenance": "CONFIG.defaults and writer in docs/Canon/0.1.10/index.html; representative non-default values.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#234567",
+        "particleColor": "#abcdef"
+      },
+      "trace": {
+        "lines": false,
+        "numLines": 40,
+        "lineAlpha": 0.42,
+        "lineWidthPx": 3,
+        "lineColorMode": "lastParticle"
+      },
+      "particles": {
+        "emitPerSecond": 320,
+        "sizeMaxPx": 7,
+        "sizeMinPx": 2,
+        "sizeToMinSec": 2,
+        "ttlSec": 9,
+        "overlapRadiusPx": 3
+      },
+      "motion": {
+        "angularSpeedRadPerSec": 0.82,
+        "waveformRadialDisplaceFrac": 0.29
+      },
+      "audio": {
+        "fftSize": 4096,
+        "smoothingTimeConstant": 0.42,
+        "rmsGain": 2.3,
+        "minRadiusFrac": 0.13,
+        "maxRadiusFrac": 0.69,
+        "loop": false,
+        "muted": true,
+        "volume": 0.38
+      },
+      "orbs": [
+        {
+          "id": "LEGACY-Z",
+          "bandId": "C",
+          "chirality": 1,
+          "startAngleRad": 0.71
+        },
+        {
+          "id": "ORB1",
+          "bandId": "L",
+          "chirality": -1,
+          "startAngleRad": 3.141592653589793
+        }
+      ],
+      "bands": {
+        "count": 128,
+        "floorHz": 48,
+        "ceilingHz": 18000,
+        "logSpacing": false,
+        "names": [
+          "Eternal Core",
+          "Nickel Forge",
+          "Iron Heartbeat"
+        ],
+        "overlay": {
+          "enabled": true,
+          "connectAdjacent": false,
+          "alpha": 0.42,
+          "pointSizePx": 5,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 1,
+          "phaseMode": "orb",
+          "ringSpeedRadPerSec": 1.2
+        },
+        "rainbow": {
+          "hueOffsetDeg": 63,
+          "saturation": 0.61,
+          "value": 0.72
+        },
+        "particleColorSource": "angle"
+      },
+      "timing": {
+        "maxDeltaTimeSec": 0.12
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#234567",
+      "visuals.particleColor": "#abcdef",
+      "audio.fftSize": 4096,
+      "audio.rmsGain": 2.3,
+      "audio.smoothingTimeConstant": 0.42,
+      "audio.repeatMode": "none",
+      "audio.muted": true,
+      "audio.volume": 0.38,
+      "bands.count": 128,
+      "bands.floorHz": 48,
+      "bands.ceilingHz": 18000,
+      "bands.distributionMode": "linear",
+      "bands.overlay.enabled": true,
+      "bands.overlay.alpha": 0.42,
+      "bands.overlay.connectAdjacent": false,
+      "bands.overlay.pointSizePx": 5,
+      "bands.rainbow.hueOffsetDeg": 63,
+      "bands.particleColorSource": "angle",
+      "timing.maxDeltaTimeSec": 0.12,
+      "orbs.0.id": "LEGACY-Z",
+      "orbs.0.chanId": "C",
+      "orbs.0.bandIds": [],
+      "orbs.0.chirality": 1,
+      "orbs.0.startAngleRad": 0.71,
+      "orbs.0.motion.angularSpeedRadPerSec": 0.82,
+      "orbs.0.response.minRadiusFrac": 0.13,
+      "orbs.0.response.maxRadiusFrac": 0.69,
+      "orbs.0.response.waveformRadialDisplaceFrac": 0.29,
+      "orbs.0.particles.emitPerSecond": 320,
+      "orbs.0.particles.ttlSec": 9,
+      "orbs.0.trace.lines": false,
+      "orbs.0.trace.numLines": 40,
+      "orbs.0.trace.lineAlpha": 0.42,
+      "orbs.0.trace.lineWidthPx": 3
+    }
+  },
+  {
+    "schema": 6,
+    "provenance": "CONFIG.defaults and writer in docs/Canon/0.1.11/index.html; representative non-default values. bandNames is an explicitly supported input alias in its sanitizer.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#234567",
+        "particleColor": "#abcdef"
+      },
+      "trace": {
+        "lines": false,
+        "numLines": 40,
+        "lineAlpha": 0.42,
+        "lineWidthPx": 3,
+        "lineColorMode": "lastParticle"
+      },
+      "particles": {
+        "emitPerSecond": 320,
+        "sizeMaxPx": 7,
+        "sizeMinPx": 2,
+        "sizeToMinSec": 2,
+        "ttlSec": 9,
+        "overlapRadiusPx": 3
+      },
+      "motion": {
+        "angularSpeedRadPerSec": 0.82,
+        "waveformRadialDisplaceFrac": 0.29
+      },
+      "audio": {
+        "fftSize": 4096,
+        "smoothingTimeConstant": 0.42,
+        "rmsGain": 2.3,
+        "minRadiusFrac": 0.13,
+        "maxRadiusFrac": 0.69,
+        "loop": false,
+        "muted": true,
+        "volume": 0.38
+      },
+      "orbs": [
+        {
+          "id": "LEGACY-Z",
+          "chanId": "C",
+          "bandIds": [
+            7,
+            19
+          ],
+          "chirality": 1,
+          "startAngleRad": 0.71
+        },
+        {
+          "id": "ORB1",
+          "chanId": "L",
+          "chirality": -1,
+          "startAngleRad": 3.141592653589793,
+          "bandNames": [
+            "Eternal Core",
+            "Iron Heartbeat",
+            "Eternal Core",
+            "unknown"
+          ]
+        }
+      ],
+      "bands": {
+        "count": 128,
+        "floorHz": 48,
+        "ceilingHz": 18000,
+        "logSpacing": false,
+        "overlay": {
+          "enabled": true,
+          "connectAdjacent": false,
+          "alpha": 0.42,
+          "pointSizePx": 5,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 1,
+          "phaseMode": "orb",
+          "ringSpeedRadPerSec": 1.2
+        },
+        "rainbow": {
+          "hueOffsetDeg": 63,
+          "saturation": 0.61,
+          "value": 0.72
+        },
+        "particleColorSource": "angle"
+      },
+      "timing": {
+        "maxDeltaTimeSec": 0.12
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#234567",
+      "visuals.particleColor": "#abcdef",
+      "audio.fftSize": 4096,
+      "audio.rmsGain": 2.3,
+      "audio.smoothingTimeConstant": 0.42,
+      "audio.repeatMode": "none",
+      "audio.muted": true,
+      "audio.volume": 0.38,
+      "bands.count": 128,
+      "bands.floorHz": 48,
+      "bands.ceilingHz": 18000,
+      "bands.distributionMode": "linear",
+      "bands.overlay.enabled": true,
+      "bands.overlay.alpha": 0.42,
+      "bands.overlay.connectAdjacent": false,
+      "bands.overlay.pointSizePx": 5,
+      "bands.rainbow.hueOffsetDeg": 63,
+      "bands.particleColorSource": "angle",
+      "timing.maxDeltaTimeSec": 0.12,
+      "orbs.0.id": "LEGACY-Z",
+      "orbs.0.chanId": "C",
+      "orbs.0.bandIds": [
+        7,
+        19
+      ],
+      "orbs.0.chirality": 1,
+      "orbs.0.startAngleRad": 0.71,
+      "orbs.0.motion.angularSpeedRadPerSec": 0.82,
+      "orbs.0.response.minRadiusFrac": 0.13,
+      "orbs.0.response.maxRadiusFrac": 0.69,
+      "orbs.0.response.waveformRadialDisplaceFrac": 0.29,
+      "orbs.0.particles.emitPerSecond": 320,
+      "orbs.0.particles.ttlSec": 9,
+      "orbs.0.trace.lines": false,
+      "orbs.0.trace.numLines": 40,
+      "orbs.0.trace.lineAlpha": 0.42,
+      "orbs.0.trace.lineWidthPx": 3,
+      "orbs.1.bandIds": [
+        0,
+        2
+      ]
+    }
+  },
+  {
+    "schema": 7,
+    "provenance": "CONFIG.defaults and writer in docs/Canon/0.1.12/auralprint_0.1.12.html; representative non-default values.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#234567",
+        "particleColor": "#abcdef"
+      },
+      "trace": {
+        "lines": false,
+        "numLines": 40,
+        "lineAlpha": 0.42,
+        "lineWidthPx": 3,
+        "lineColorMode": "lastParticle"
+      },
+      "particles": {
+        "emitPerSecond": 320,
+        "sizeMaxPx": 7,
+        "sizeMinPx": 2,
+        "sizeToMinSec": 2,
+        "ttlSec": 9,
+        "overlapRadiusPx": 3
+      },
+      "motion": {
+        "angularSpeedRadPerSec": 0.82,
+        "waveformRadialDisplaceFrac": 0.29
+      },
+      "audio": {
+        "fftSize": 4096,
+        "smoothingTimeConstant": 0.42,
+        "rmsGain": 2.3,
+        "minRadiusFrac": 0.13,
+        "maxRadiusFrac": 0.69,
+        "repeatMode": "all",
+        "muted": true,
+        "volume": 0.38
+      },
+      "orbs": [
+        {
+          "id": "LEGACY-Z",
+          "chanId": "C",
+          "bandIds": [
+            7,
+            19
+          ],
+          "chirality": 1,
+          "startAngleRad": 0.71
+        },
+        {
+          "id": "ORB1",
+          "chanId": "L",
+          "bandIds": [],
+          "chirality": -1,
+          "startAngleRad": 3.141592653589793
+        }
+      ],
+      "bands": {
+        "count": 128,
+        "floorHz": 48,
+        "ceilingHz": 18000,
+        "logSpacing": false,
+        "overlay": {
+          "enabled": true,
+          "connectAdjacent": false,
+          "alpha": 0.42,
+          "pointSizePx": 5,
+          "minRadiusFrac": 0.14,
+          "maxRadiusFrac": 0.67,
+          "waveformRadialDisplaceFrac": 0.31,
+          "lineAlpha": 0.44,
+          "lineWidthPx": 4,
+          "phaseMode": "orb",
+          "ringSpeedRadPerSec": 1.2
+        },
+        "rainbow": {
+          "hueOffsetDeg": 63,
+          "saturation": 0.61,
+          "value": 0.72
+        },
+        "particleColorSource": "angle"
+      },
+      "timing": {
+        "maxDeltaTimeSec": 0.12
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#234567",
+      "visuals.particleColor": "#abcdef",
+      "audio.fftSize": 4096,
+      "audio.rmsGain": 2.3,
+      "audio.smoothingTimeConstant": 0.42,
+      "audio.repeatMode": "all",
+      "audio.muted": true,
+      "audio.volume": 0.38,
+      "bands.count": 128,
+      "bands.floorHz": 48,
+      "bands.ceilingHz": 18000,
+      "bands.distributionMode": "linear",
+      "bands.overlay.enabled": true,
+      "bands.overlay.alpha": 0.42,
+      "bands.overlay.connectAdjacent": false,
+      "bands.overlay.pointSizePx": 5,
+      "bands.rainbow.hueOffsetDeg": 63,
+      "bands.particleColorSource": "angle",
+      "timing.maxDeltaTimeSec": 0.12,
+      "orbs.0.id": "LEGACY-Z",
+      "orbs.0.chanId": "C",
+      "orbs.0.bandIds": [
+        7,
+        19
+      ],
+      "orbs.0.chirality": 1,
+      "orbs.0.startAngleRad": 0.71,
+      "orbs.0.motion.angularSpeedRadPerSec": 0.82,
+      "orbs.0.response.minRadiusFrac": 0.13,
+      "orbs.0.response.maxRadiusFrac": 0.69,
+      "orbs.0.response.waveformRadialDisplaceFrac": 0.29,
+      "orbs.0.particles.emitPerSecond": 320,
+      "orbs.0.particles.ttlSec": 9,
+      "orbs.0.trace.lines": false,
+      "orbs.0.trace.numLines": 40,
+      "orbs.0.trace.lineAlpha": 0.42,
+      "orbs.0.trace.lineWidthPx": 3,
+      "bands.overlay.minRadiusFrac": 0.14,
+      "bands.overlay.maxRadiusFrac": 0.67,
+      "bands.overlay.waveformRadialDisplaceFrac": 0.31,
+      "bands.overlay.lineAlpha": 0.44,
+      "bands.overlay.lineWidthPx": 4
+    }
+  },
+  {
+    "schema": 8,
+    "provenance": "CONFIG.defaults and writer in docs/Canon/0.1.13/auralprint_0.1.13.html; representative non-default values.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#234567",
+        "particleColor": "#abcdef"
+      },
+      "trace": {
+        "lines": false,
+        "numLines": 40,
+        "lineAlpha": 0.42,
+        "lineWidthPx": 3,
+        "lineColorMode": "lastParticle"
+      },
+      "particles": {
+        "emitPerSecond": 320,
+        "sizeMaxPx": 7,
+        "sizeMinPx": 2,
+        "sizeToMinSec": 2,
+        "ttlSec": 9,
+        "overlapRadiusPx": 3
+      },
+      "motion": {
+        "angularSpeedRadPerSec": 0.82,
+        "waveformRadialDisplaceFrac": 0.29
+      },
+      "audio": {
+        "fftSize": 4096,
+        "smoothingTimeConstant": 0.42,
+        "rmsGain": 2.3,
+        "minRadiusFrac": 0.13,
+        "maxRadiusFrac": 0.69,
+        "repeatMode": "all",
+        "muted": true,
+        "volume": 0.38
+      },
+      "orbs": [
+        {
+          "id": "LEGACY-Z",
+          "chanId": "C",
+          "bandIds": [
+            7,
+            19
+          ],
+          "chirality": 1,
+          "startAngleRad": 0.71
+        },
+        {
+          "id": "ORB1",
+          "chanId": "L",
+          "bandIds": [],
+          "chirality": -1,
+          "startAngleRad": 3.141592653589793
+        }
+      ],
+      "bands": {
+        "count": 128,
+        "floorHz": 48,
+        "ceilingHz": 18000,
+        "distributionMode": "mel",
+        "overlay": {
+          "enabled": true,
+          "connectAdjacent": false,
+          "alpha": 0.42,
+          "pointSizePx": 5,
+          "minRadiusFrac": 0.14,
+          "maxRadiusFrac": 0.67,
+          "waveformRadialDisplaceFrac": 0.31,
+          "lineAlpha": 0.44,
+          "lineWidthPx": 4,
+          "phaseMode": "orb",
+          "ringSpeedRadPerSec": 1.2
+        },
+        "rainbow": {
+          "hueOffsetDeg": 63,
+          "saturation": 0.61,
+          "value": 0.72
+        },
+        "particleColorSource": "angle"
+      },
+      "timing": {
+        "maxDeltaTimeSec": 0.12
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#234567",
+      "visuals.particleColor": "#abcdef",
+      "audio.fftSize": 4096,
+      "audio.rmsGain": 2.3,
+      "audio.smoothingTimeConstant": 0.42,
+      "audio.repeatMode": "all",
+      "audio.muted": true,
+      "audio.volume": 0.38,
+      "bands.count": 128,
+      "bands.floorHz": 48,
+      "bands.ceilingHz": 18000,
+      "bands.distributionMode": "mel",
+      "bands.overlay.enabled": true,
+      "bands.overlay.alpha": 0.42,
+      "bands.overlay.connectAdjacent": false,
+      "bands.overlay.pointSizePx": 5,
+      "bands.rainbow.hueOffsetDeg": 63,
+      "bands.particleColorSource": "angle",
+      "timing.maxDeltaTimeSec": 0.12,
+      "orbs.0.id": "LEGACY-Z",
+      "orbs.0.chanId": "C",
+      "orbs.0.bandIds": [
+        7,
+        19
+      ],
+      "orbs.0.chirality": 1,
+      "orbs.0.startAngleRad": 0.71,
+      "orbs.0.motion.angularSpeedRadPerSec": 0.82,
+      "orbs.0.response.minRadiusFrac": 0.13,
+      "orbs.0.response.maxRadiusFrac": 0.69,
+      "orbs.0.response.waveformRadialDisplaceFrac": 0.29,
+      "orbs.0.particles.emitPerSecond": 320,
+      "orbs.0.particles.ttlSec": 9,
+      "orbs.0.trace.lines": false,
+      "orbs.0.trace.numLines": 40,
+      "orbs.0.trace.lineAlpha": 0.42,
+      "orbs.0.trace.lineWidthPx": 3,
+      "bands.overlay.minRadiusFrac": 0.14,
+      "bands.overlay.maxRadiusFrac": 0.67,
+      "bands.overlay.waveformRadialDisplaceFrac": 0.31,
+      "bands.overlay.lineAlpha": 0.44,
+      "bands.overlay.lineWidthPx": 4
+    }
+  },
+  {
+    "schema": 9,
+    "provenance": "Top-level CONFIG.defaults and writer at 2ae4191505f1dcbef9dbb762a0935bd9f6e74e3e; representative non-default values.",
+    "prefs": {
+      "visuals": {
+        "backgroundColor": "#234567",
+        "particleColor": "#abcdef"
+      },
+      "trace": {
+        "lines": false,
+        "numLines": 40,
+        "lineAlpha": 0.42,
+        "lineWidthPx": 3,
+        "lineColorMode": "lastParticle"
+      },
+      "particles": {
+        "emitPerSecond": 320,
+        "sizeMaxPx": 7,
+        "sizeMinPx": 2,
+        "sizeToMinSec": 2,
+        "ttlSec": 9,
+        "overlapRadiusPx": 3
+      },
+      "motion": {
+        "angularSpeedRadPerSec": 0.82,
+        "waveformRadialDisplaceFrac": 0.29
+      },
+      "audio": {
+        "fftSize": 4096,
+        "smoothingTimeConstant": 0.42,
+        "rmsGain": 2.3,
+        "minRadiusFrac": 0.13,
+        "maxRadiusFrac": 0.69,
+        "repeatMode": "all",
+        "muted": true,
+        "volume": 0.38
+      },
+      "orbs": [
+        {
+          "id": "LEGACY-Z",
+          "chanId": "C",
+          "bandIds": [
+            7,
+            19
+          ],
+          "chirality": 1,
+          "startAngleRad": 0.71,
+          "hueOffsetDeg": 137,
+          "colorSource": "fixed",
+          "centerXFrac": 0.22,
+          "centerYFrac": -0.31
+        },
+        {
+          "id": "ORB1",
+          "chanId": "L",
+          "bandIds": [],
+          "chirality": -1,
+          "startAngleRad": 3.141592653589793,
+          "hueOffsetDeg": 0,
+          "colorSource": "inherit",
+          "centerXFrac": 0,
+          "centerYFrac": 0
+        }
+      ],
+      "bands": {
+        "count": 128,
+        "floorHz": 48,
+        "ceilingHz": 18000,
+        "distributionMode": "mel",
+        "overlay": {
+          "enabled": true,
+          "connectAdjacent": false,
+          "alpha": 0.42,
+          "pointSizePx": 5,
+          "minRadiusFrac": 0.14,
+          "maxRadiusFrac": 0.67,
+          "waveformRadialDisplaceFrac": 0.31,
+          "lineAlpha": 0.44,
+          "lineWidthPx": 4,
+          "phaseMode": "orb",
+          "ringSpeedRadPerSec": 1.2
+        },
+        "rainbow": {
+          "hueOffsetDeg": 63,
+          "saturation": 0.61,
+          "value": 0.72
+        },
+        "particleColorSource": "angle"
+      },
+      "timing": {
+        "maxDeltaTimeSec": 0.12
+      }
+    },
+    "expected": {
+      "visuals.backgroundColor": "#234567",
+      "visuals.particleColor": "#abcdef",
+      "audio.fftSize": 4096,
+      "audio.rmsGain": 2.3,
+      "audio.smoothingTimeConstant": 0.42,
+      "audio.repeatMode": "all",
+      "audio.muted": true,
+      "audio.volume": 0.38,
+      "bands.count": 128,
+      "bands.floorHz": 48,
+      "bands.ceilingHz": 18000,
+      "bands.distributionMode": "mel",
+      "bands.overlay.enabled": true,
+      "bands.overlay.alpha": 0.42,
+      "bands.overlay.connectAdjacent": false,
+      "bands.overlay.pointSizePx": 5,
+      "bands.rainbow.hueOffsetDeg": 63,
+      "bands.particleColorSource": "angle",
+      "timing.maxDeltaTimeSec": 0.12,
+      "orbs.0.id": "LEGACY-Z",
+      "orbs.0.chanId": "C",
+      "orbs.0.bandIds": [
+        7,
+        19
+      ],
+      "orbs.0.chirality": 1,
+      "orbs.0.startAngleRad": 0.71,
+      "orbs.0.motion.angularSpeedRadPerSec": 0.82,
+      "orbs.0.response.minRadiusFrac": 0.13,
+      "orbs.0.response.maxRadiusFrac": 0.69,
+      "orbs.0.response.waveformRadialDisplaceFrac": 0.29,
+      "orbs.0.particles.emitPerSecond": 320,
+      "orbs.0.particles.ttlSec": 9,
+      "orbs.0.trace.lines": false,
+      "orbs.0.trace.numLines": 40,
+      "orbs.0.trace.lineAlpha": 0.42,
+      "orbs.0.trace.lineWidthPx": 3,
+      "bands.overlay.minRadiusFrac": 0.14,
+      "bands.overlay.maxRadiusFrac": 0.67,
+      "bands.overlay.waveformRadialDisplaceFrac": 0.31,
+      "bands.overlay.lineAlpha": 0.44,
+      "bands.overlay.lineWidthPx": 4,
+      "orbs.0.hueOffsetDeg": 137,
+      "orbs.0.colorSource": "fixed",
+      "orbs.0.centerXFrac": 0.22,
+      "orbs.0.centerYFrac": -0.31
+    }
+  }
+]
