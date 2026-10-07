@@ -148,8 +148,8 @@ const BandBank = (() => {
         continue;
       }
 
-      const loBin = Math.floor((loHz / nyquist) * (bins - 1));
-      const hiBin = Math.ceil((hiHz / nyquist) * (bins - 1));
+      const loBin = Math.floor((loHz / nyquist) * bins);
+      const hiBin = Math.ceil((hiHz / nyquist) * bins);
 
       const a = clamp(loBin, 0, bins - 1);
       const b = clamp(hiBin, 0, bins - 1);

@@ -1,0 +1,11 @@
+✔ tests/band-bank.test.js (114.591393ms)
+✔ tests/band-count-coverage.test.js (229.467187ms)
+✔ tests/fft-coordinate.test.js (111.069485ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 469.366511
