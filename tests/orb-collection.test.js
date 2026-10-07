@@ -12,6 +12,31 @@ function defs(ids) {
   return ids.map((id, i) => ({ ...structuredClone(CONFIG.defaults.orbs[i % 2]), id }));
 }
 
+test("generated IDs retain ordinary and sparse max-suffix allocation", () => {
+  assert.equal(allocateOrbId([]), "ORB0");
+  assert.equal(allocateOrbId(defs(["ORB0", "ORB1"])), "ORB2");
+  assert.equal(allocateOrbId(defs(["ORB0", "ORB42"])), "ORB43");
+  assert.equal(allocateOrbId(defs(["ORB00042", "ORB43"])), "ORB44");
+});
+
+test("opaque string identities remain unchanged and allow Add and Duplicate", () => {
+  const ids = ["HISTORICAL-Z", "spectral-ring", "CUSTOM-7", "ORB", "ORB1e30", "ORB-1", "宇宙-🎵"];
+  const orbs = normalizeOrbCollection(defs(ids));
+  assert.deepEqual(orbs.map((orb) => orb.id), ids);
+  assert.equal(createOrb(orbs).id, "ORB0");
+  assert.equal(duplicateOrb(orbs, "spectral-ring").id, "ORB1");
+  assert.equal(orbs.find((orb) => orb.id === "spectral-ring").id, "spectral-ring");
+});
+
+test("collection identity repair reserves later explicit identities", () => {
+  const incoming = [{ chanId: "R" }, { id: "ORB0", chanId: "C" }, { id: "HISTORICAL-Z", chanId: "C" }];
+  const snapshot = structuredClone(incoming);
+  const orbs = normalizeOrbCollection(incoming);
+  assert.deepEqual(orbs.map((orb) => orb.id), ["ORB1", "ORB0", "HISTORICAL-Z"]);
+  assert.deepEqual(orbs.map((orb) => orb.chanId), ["R", "C", "C"]);
+  assert.deepEqual(incoming, snapshot);
+});
+
 test("Orb collection normalization allows zero/one/N, preserves order, and repairs IDs deterministically", () => {
   const configSnapshot = structuredClone(CONFIG.defaults.orbs);
   assert.deepEqual(normalizeOrbCollection([]), []);

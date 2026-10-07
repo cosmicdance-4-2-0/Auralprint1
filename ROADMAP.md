@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 6, 2026. Development revision: `v0.1.15m.h` / Build 115. Preset schema: 10 (frozen for Build 115).
+Updated: October 7, 2026. Development revision: `v0.1.15m.h.a` / Build 115. Preset schema: 10 (frozen for Build 115).
 
-The immediate priority is **115N — Release Candidate / final acceptance / canonization** for **Visualizer Architecture + Orb Overhaul v1**. Revisions through 115M.G are complete, and 115M.H is the final pre-RC closure pass: status ownership, developer/test portability, repository hygiene, and documentation reconciliation close 115M. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
+The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A corrects RC-01 only, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -25,7 +25,7 @@ Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are p
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H closes the small pre-RC hardening pass; stages 14–15 belong to 115N and remain acceptance work.
+Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A corrects RC-01; stages 14–15 belong to 115N and remain withheld.
 
 1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
 2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
@@ -40,14 +40,14 @@ Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are
 11. **Band Overlay → Spectral Ring promotion** — promote the existing rendering feature after lifecycle support exists. *(115K complete)*
 12. **Explicit color ownership** — clarify and implement visualizer/color-policy boundaries. *(115L complete)*
 13. **Preset/lifecycle hardening** — persist only deliberately designed configuration with migrations. *(115M.A–M.G complete; M.H final pre-RC closure complete)*
-14. **Final acceptance** — complete browser, real-media, accessibility, and constrained-hardware performance validation. *(115N next)*
+14. **Final acceptance** — complete browser, real-media, accessibility, and constrained-hardware performance validation. *(115N withheld pending audit remediation)*
 15. **Canonization** — mark Build 115 complete only after every applicable gate has evidence. *(115N after acceptance)*
 
 Existing Node tests and a successful offline single-file build are useful regression evidence. They are **not Build 115 completion evidence** and do not replace browser, media, accessibility, or performance validation.
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: v0.1.15m.h pre-RC closure complete; revisions through 115M.G accepted, 115M closed, and 115N next. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
+**Status: v0.1.15m.h.a corrects RC-01 unsafe numeric Orb ID allocation. Audit remediation remains active; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 

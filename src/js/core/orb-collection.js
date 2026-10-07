@@ -8,17 +8,18 @@ function isValidOrbId(value) {
 }
 
 function allocateOrbId(orbs = []) {
-  const used = new Set();
-  let maxSuffix = -1;
+  let maxSuffix = -1n;
   for (const orb of orbs) {
     if (!isValidOrbId(orb && orb.id)) continue;
-    used.add(orb.id);
     const match = ORB_ID_PATTERN.exec(orb.id);
-    if (match) maxSuffix = Math.max(maxSuffix, Number(match[1]));
+    if (match) {
+      const suffix = BigInt(match[1]);
+      if (suffix > maxSuffix) maxSuffix = suffix;
+    }
   }
-  let suffix = maxSuffix + 1;
-  while (used.has(`ORB${suffix}`)) suffix++;
-  return `ORB${suffix}`;
+  // The exact successor exceeds every used ORB suffix, so it cannot collide.
+  // BigInt stays local; persistent identities remain opaque strings.
+  return `ORB${maxSuffix + 1n}`;
 }
 
 function normalizeOrbCollection(incoming) {
