@@ -1,0 +1,20 @@
+✔ RC-02: clear during delayed context resume leaves an empty workflow (55.658009ms)
+✔ RC-02: final-remove during delayed context resume leaves an empty workflow (7.441999ms)
+✔ RC-02: Clear during delayed load-time play resolve ignores stale commits and callbacks (14.46831ms)
+✔ RC-02: Clear during delayed load-time play reject ignores stale commits and callbacks (5.72964ms)
+✔ RC-02: two-file picker batch cannot repopulate after Clear (10.919956ms)
+✔ RC-02: two-file drop batch cannot repopulate after Clear (4.924324ms)
+✔ RC-02: ordinary single file still loads, plays, and notifies recording (7.187594ms)
+✔ RC-02: ordinary A/B/C picker batch preserves order and first activation (20.74692ms)
+✔ RC-02: picker B/C appends once without replacing active A (2.658939ms)
+✔ RC-02: ordinary A/B/C drop batch preserves order and first activation (2.45447ms)
+✔ RC-02: drop B/C appends once without replacing active A (2.123129ms)
+✔ RC-02: a new user action can load normally after cancellation (3.13569ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 348.7169

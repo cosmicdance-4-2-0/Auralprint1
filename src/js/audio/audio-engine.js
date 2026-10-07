@@ -390,20 +390,24 @@ const AudioEngine = (() => {
   }
 
   async function playPause() {
-    if (!mediaEl) return;
+    const target = mediaEl;
+    if (!target) return;
     const ctx = ensureContext();
     if (ctx.state === "suspended") await ctx.resume();
+    // Clear/replacement owns teardown; superseded transport work stays silent.
+    if (mediaEl !== target) return;
 
-    if (mediaEl.paused) {
-      const err = await mediaEl.play().then(() => null).catch((e) => e);
+    if (target.paused) {
+      const err = await target.play().then(() => null).catch((e) => e);
+      if (mediaEl !== target) return;
       if (err) {
         state.audio.isPlaying = false;
         state.audio.transportError = describePlaybackError(err);
         return;
       }
-    } else mediaEl.pause();
+    } else target.pause();
 
-    state.audio.isPlaying = !mediaEl.paused;
+    state.audio.isPlaying = !target.paused;
   }
 
   function stop() {

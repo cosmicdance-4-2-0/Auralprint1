@@ -1,0 +1,176 @@
+✖ RC-04: Clear during delayed Play resolve leaves the workflow idle without commits (24.118065ms)
+✖ RC-04: Clear during delayed Play reject leaves the workflow idle without commits (7.092899ms)
+✔ RC-04: Clear during delayed resume never invokes old Play (7.031596ms)
+✔ RC-04: replacement (paused) during resume retains ownership (6.699413ms)
+✖ RC-04: replacement (paused) during Play resolve retains ownership (5.673664ms)
+✖ RC-04: replacement (paused) during Play reject retains ownership (9.46963ms)
+✔ RC-04: replacement (playing) during resume retains ownership (11.363497ms)
+✖ RC-04: replacement (playing) during Play resolve retains ownership (4.894892ms)
+✖ RC-04: replacement (playing) during Play reject retains ownership (4.238926ms)
+✔ RC-04: ordinary Play succeeds and clears the current playback error (4.401902ms)
+✔ RC-04: ordinary Pause is synchronous and reflects the current element (12.170967ms)
+✔ RC-04: current Play rejection retains truthful playback failure (3.795054ms)
+✔ RC-04: Play with no loaded element is a quiet no-op (3.890529ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 7
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 315.666086
+
+✖ failing tests:
+
+test at tests/transport-ownership.test.js:107:3
+✖ RC-04: Clear during delayed Play resolve leaves the workflow idle without commits (24.118065ms)
+  AssertionError [ERR_ASSERTION]: stale target is neither read nor acted on
+  + actual - expected
+  
+    {
+      pause: 1,
+  +   paused: 2,
+  -   paused: 1,
+      play: 1
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:119:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { play: 1, pause: 1, paused: 2 },
+    expected: { play: 1, pause: 1, paused: 1 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:107:3
+✖ RC-04: Clear during delayed Play reject leaves the workflow idle without commits (7.092899ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      filename: '',
+      isLoaded: false,
+      isPlaying: false,
+  +   transportError: 'Playback failed: obsolete playback failure'
+  -   transportError: ''
+    }
+  
+      at assertCleared (file:///workspace/Auralprint1/tests/transport-ownership.test.js:100:10)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:117:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:157:5
+✖ RC-04: replacement (paused) during Play resolve retains ownership (5.673664ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      pause: 1,
+  +   paused: 2,
+  -   paused: 1,
+      play: 1
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:171:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { play: 1, pause: 1, paused: 2 },
+    expected: { play: 1, pause: 1, paused: 1 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:157:5
+✖ RC-04: replacement (paused) during Play reject retains ownership (9.46963ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      audio: {
+        filename: 'B.wav',
+        isLoaded: true,
+        isPlaying: false,
+  +     transportError: 'Playback failed: obsolete playback failure'
+  -     transportError: 'replacement-owned diagnostic'
+      },
+      source: {
+        errorCode: '',
+        errorMessage: '',
+        kind: 'file',
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:170:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { audio: { isLoaded: true, isPlaying: false, filename: 'B.wav', transportError: 'Playback failed: obsolete playback failure' }, source: { kind: 'file', status: 'active', label: 'B.wav', permission: [Object], support: [Object], errorCode: '', errorMessage: '', sessionActive: true, streamMeta: [Object] } },
+    expected: { audio: { isLoaded: true, isPlaying: false, filename: 'B.wav', transportError: 'replacement-owned diagnostic' }, source: { kind: 'file', status: 'active', label: 'B.wav', permission: [Object], support: [Object], errorCode: '', errorMessage: '', sessionActive: true, streamMeta: [Object] } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:157:5
+✖ RC-04: replacement (playing) during Play resolve retains ownership (4.894892ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      pause: 1,
+  +   paused: 2,
+  -   paused: 1,
+      play: 1
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:171:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { play: 1, pause: 1, paused: 2 },
+    expected: { play: 1, pause: 1, paused: 1 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:157:5
+✖ RC-04: replacement (playing) during Play reject retains ownership (4.238926ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      audio: {
+        filename: 'B.wav',
+        isLoaded: true,
+  +     isPlaying: false,
+  +     transportError: 'Playback failed: obsolete playback failure'
+  -     isPlaying: true,
+  -     transportError: 'replacement-owned diagnostic'
+      },
+      source: {
+        errorCode: '',
+        errorMessage: '',
+        kind: 'file',
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:170:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { audio: { isLoaded: true, isPlaying: false, filename: 'B.wav', transportError: 'Playback failed: obsolete playback failure' }, source: { kind: 'file', status: 'active', label: 'B.wav', permission: [Object], support: [Object], errorCode: '', errorMessage: '', sessionActive: true, streamMeta: [Object] } },
+    expected: { audio: { isLoaded: true, isPlaying: true, filename: 'B.wav', transportError: 'replacement-owned diagnostic' }, source: { kind: 'file', status: 'active', label: 'B.wav', permission: [Object], support: [Object], errorCode: '', errorMessage: '', sessionActive: true, streamMeta: [Object] } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

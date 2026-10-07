@@ -1,0 +1,17 @@
+{
+  "results": [
+    {
+      "mutation": "A",
+      "removed": "post-resume guard",
+      "exitCode": 1,
+      "requiredRegressionFailed": true
+    },
+    {
+      "mutation": "B",
+      "removed": "post-play guard",
+      "exitCode": 1,
+      "requiredRegressionFailed": true
+    }
+  ],
+  "productionRestored": true
+}

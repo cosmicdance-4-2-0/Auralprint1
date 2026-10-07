@@ -1,0 +1,95 @@
+✔ RC-04: Clear during delayed Play resolve leaves the workflow idle without commits (15.60117ms)
+✔ RC-04: Clear during delayed Play reject leaves the workflow idle without commits (3.702846ms)
+✖ RC-04: Clear during delayed resume never invokes old Play (7.527685ms)
+✖ RC-04: replacement (paused) during resume retains ownership (7.18015ms)
+✔ RC-04: replacement (paused) during Play resolve retains ownership (8.533204ms)
+✔ RC-04: replacement (paused) during Play reject retains ownership (7.76908ms)
+✖ RC-04: replacement (playing) during resume retains ownership (6.39319ms)
+✔ RC-04: replacement (playing) during Play resolve retains ownership (6.358168ms)
+✔ RC-04: replacement (playing) during Play reject retains ownership (6.422064ms)
+✔ RC-04: ordinary Play succeeds and clears the current playback error (7.15353ms)
+✔ RC-04: ordinary Pause is synchronous and reflects the current element (9.781576ms)
+✔ RC-04: current Play rejection retains truthful playback failure (15.012536ms)
+✔ RC-04: Play with no loaded element is a quiet no-op (10.813124ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 10
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 313.952617
+
+✖ failing tests:
+
+test at tests/transport-ownership.test.js:124:1
+✖ RC-04: Clear during delayed resume never invokes old Play (7.527685ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      pause: 1,
+  +   paused: 1,
+  +   play: 1
+  -   paused: 0,
+  -   play: 0
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:134:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { play: 1, pause: 1, paused: 1 },
+    expected: { play: 0, pause: 1, paused: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:140:3
+✖ RC-04: replacement (paused) during resume retains ownership (7.18015ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      pause: 1,
+  +   paused: 1,
+  +   play: 1
+  -   paused: 0,
+  -   play: 0
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:152:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { play: 1, pause: 1, paused: 1 },
+    expected: { play: 0, pause: 1, paused: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/transport-ownership.test.js:140:3
+✖ RC-04: replacement (playing) during resume retains ownership (6.39319ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      pause: 1,
+  +   paused: 1,
+  +   play: 1
+  -   paused: 0,
+  -   play: 0
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/transport-ownership.test.js:152:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { play: 1, pause: 1, paused: 1 },
+    expected: { play: 0, pause: 1, paused: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

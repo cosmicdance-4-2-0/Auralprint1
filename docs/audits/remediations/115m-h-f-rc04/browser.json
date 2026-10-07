@@ -1,0 +1,1115 @@
+{
+  "version": "v0.1.15m.h.f",
+  "browser": "151.0.7922.173",
+  "scenarios": [
+    {
+      "case": "playPause-unload-null-dereference",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "stale-play-rejection-after-clear",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "clear-during-transport-resume",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "replacement-paused-during-resume-resolve",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/23381f00-c57c-4020-bca1-433e2eabcbca"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/23381f00-c57c-4020-bca1-433e2eabcbca"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "replacement-playing-during-resume-resolve",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/11c0be7b-046c-4315-a03f-5a0c5cdaa86c"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/11c0be7b-046c-4315-a03f-5a0c5cdaa86c"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "replacement-paused-during-play-resolve",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/3b63bd47-dfba-4ea8-95aa-f57619b0f64c"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/3b63bd47-dfba-4ea8-95aa-f57619b0f64c"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "replacement-paused-during-play-reject",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/415fb417-3abc-4f82-82de-1a85707a93b7"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/415fb417-3abc-4f82-82de-1a85707a93b7"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "replacement-playing-during-play-resolve",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/9d2f90a8-e1e3-49fb-ad5a-f0855bee7d96"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/9d2f90a8-e1e3-49fb-ad5a-f0855bee7d96"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "replacement-playing-during-play-reject",
+      "passed": true,
+      "before": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/bc6bc598-3bb2-4200-99cd-bcd1f25fff39"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "after": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "B.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": false
+            },
+            {
+              "index": 1,
+              "name": "B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 1,
+          "length": 2
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/bc6bc598-3bb2-4200-99cd-bcd1f25fff39"
+        },
+        "currentIsReplacement": true,
+        "status": "Loaded: B.wav",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": []
+    },
+    {
+      "case": "ordinary-play-pause-current-failure",
+      "passed": true,
+      "play": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "A.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "A.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "graphReady": true,
+        "media": {
+          "paused": false,
+          "src": "blob:http://localhost/2a1b2348-beb0-40d1-846b-a643ac5bc819"
+        },
+        "currentIsReplacement": false,
+        "status": "Loaded: A.wav",
+        "calls": [],
+        "writes": []
+      },
+      "pause": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "A.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "A.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/2a1b2348-beb0-40d1-846b-a643ac5bc819"
+        },
+        "currentIsReplacement": false,
+        "status": "Loaded: A.wav",
+        "calls": [],
+        "writes": []
+      },
+      "failure": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "A.wav",
+          "transportError": "Playback failed: current playback failure"
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "A.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "A.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "graphReady": true,
+        "media": {
+          "paused": true,
+          "src": "blob:http://localhost/2a1b2348-beb0-40d1-846b-a643ac5bc819"
+        },
+        "currentIsReplacement": false,
+        "status": "Playback failed: current playback failure",
+        "calls": [],
+        "writes": []
+      },
+      "pageErrors": []
+    }
+  ]
+}

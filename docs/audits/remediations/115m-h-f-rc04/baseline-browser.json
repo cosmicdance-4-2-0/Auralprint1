@@ -1,0 +1,56 @@
+{
+  "version": "v0.1.15m.h.f",
+  "browser": "151.0.7922.173",
+  "scenarios": [
+    {
+      "case": "playPause-unload-null-dereference",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   \"Cannot read properties of null (reading 'paused')\"\n+ ]\n- []\n",
+      "after": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "graphReady": false,
+        "media": null,
+        "currentIsReplacement": false,
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "calls": [
+          "A.play"
+        ],
+        "writes": []
+      },
+      "pageErrors": [
+        "Cannot read properties of null (reading 'paused')"
+      ]
+    }
+  ]
+}
