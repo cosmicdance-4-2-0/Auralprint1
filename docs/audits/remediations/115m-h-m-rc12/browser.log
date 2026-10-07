@@ -1,0 +1,141 @@
+{
+  "version": "v0.1.15m.h.m",
+  "browser": "151.0.7922.173",
+  "defect": false,
+  "results": [
+    {
+      "entry": "picker",
+      "name": "tone.ogg",
+      "actualMime": "application/ogg",
+      "accept": "",
+      "decoded": {
+        "duration": 0.2970975056689342,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: tone.ogg",
+      "errors": []
+    },
+    {
+      "entry": "picker",
+      "name": "unknown",
+      "actualMime": "",
+      "accept": "",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: unknown",
+      "errors": []
+    },
+    {
+      "entry": "picker",
+      "name": "arbitrary.bin",
+      "actualMime": "application/octet-stream",
+      "accept": "",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: arbitrary.bin",
+      "errors": []
+    },
+    {
+      "entry": "picker",
+      "name": "tone.wav",
+      "actualMime": "audio/wav",
+      "accept": "",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: tone.wav",
+      "errors": []
+    },
+    {
+      "entry": "picker",
+      "name": "invalid.txt",
+      "actualMime": "text/plain",
+      "accept": "",
+      "decoded": null,
+      "queueCount": 1,
+      "playDisabled": true,
+      "status": "Playback failed: unsupported or unreadable audio file.",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "tone.ogg",
+      "actualMime": "application/ogg",
+      "accept": "",
+      "decoded": {
+        "duration": 0.2970975056689342,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: tone.ogg",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "unknown",
+      "actualMime": "",
+      "accept": "",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: unknown",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "arbitrary.bin",
+      "actualMime": "application/octet-stream",
+      "accept": "",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: arbitrary.bin",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "tone.wav",
+      "actualMime": "audio/wav",
+      "accept": "",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: tone.wav",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "invalid.txt",
+      "actualMime": "text/plain",
+      "accept": "",
+      "decoded": null,
+      "queueCount": 1,
+      "playDisabled": true,
+      "status": "Playback failed: unsupported or unreadable audio file.",
+      "errors": []
+    }
+  ]
+}

@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.l");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.l\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.m");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.m\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3645,6 +3645,39 @@ function assertRc02Empty() {
   assert.equal(AudioEngine.getMediaEl(), null);
   assert.equal(AudioEngine.sample().ready, false);
   assert.equal(state.ui.audioStatus.textContent, "File mode ready. Load audio files to begin analysis.");
+}
+
+for (const entry of ["picker", "drop"]) {
+  for (const type of ["", "application/ogg", "application/octet-stream", "video/mp4", "audio/wav"]) {
+    test(`RC-12: ${entry} admits ${type || "empty MIME"} to canonical activation`, async t => {
+      await withRc02FileWorkflow(t, {}, async ({ getElement, scrubberLoads, activations }) => {
+        const file = { ...createNamedAudioFile("candidate"), type };
+        if (entry === "drop") await state.canvas.dispatch("drop", { dataTransfer: { files: [file] } });
+        else { getElement("fileInput").files = [file]; await getElement("fileInput").dispatch("change"); }
+        assert.equal(Queue.current(), file);
+        assert.equal(state.audio.isLoaded, true);
+        assert.equal(state.source.status, "active");
+        assert.deepEqual(scrubberLoads, ["candidate"]);
+        assert.equal(activations.length, 1);
+      });
+    });
+  }
+  test(`RC-12: ${entry} decoder failure remains truthful for admitted metadata`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ audio, getElement, activations }) => {
+      audio.audioEl.play = () => Promise.reject(Object.assign(new Error("Unsupported media"), { name: "NotSupportedError" }));
+      const file = { ...createNamedAudioFile("invalid.txt"), type: "text/plain" };
+      if (entry === "drop") await state.canvas.dispatch("drop", { dataTransfer: { files: [file] } });
+      else { getElement("fileInput").files = [file]; await getElement("fileInput").dispatch("change"); }
+      assert.equal(Queue.current(), file);
+      assert.equal(activations.length, 1);
+      assert.equal(activations[0].ok, false);
+      assert.equal(state.source.status, "error");
+      assert.equal(state.source.errorCode, "file-activation-failed");
+      assert.equal(state.audio.isLoaded, false);
+      UI.refreshAllUiText();
+      assert.match(state.ui.audioStatus.textContent, /unsupported|Playback/i);
+    });
+  });
 }
 
 for (const removal of ["clear", "final-remove"]) {

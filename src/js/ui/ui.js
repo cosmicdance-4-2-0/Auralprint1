@@ -1639,7 +1639,7 @@ const UI = (() => {
         toastFinalizingTransportLock();
         return;
       }
-      const files = Array.from(ui.fileInput.files || []).filter(f => f.type.startsWith("audio/"));
+      const files = Array.from(ui.fileInput.files || []);
       if (!files.length) return;
 
       await enqueueFileBatch(files);
@@ -1736,7 +1736,8 @@ const UI = (() => {
     /* Drag-drop onto canvas — multi-file entry point.
        All dropped audio files are enqueued. If the queue was empty before the
        drop, the first file starts playing immediately. Additional files append
-       silently. Non-audio files are silently ignored. */
+       silently. MIME metadata is only a hint; the media decoder owns support
+       decisions and reports unsupported/unreadable files through load errors. */
     state.canvas.addEventListener("dragover", (e) => {
       e.preventDefault(); // required to allow drop
       e.dataTransfer.dropEffect = "copy";
@@ -1751,7 +1752,7 @@ const UI = (() => {
         toastFinalizingTransportLock();
         return;
       }
-      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("audio/"));
+      const files = Array.from(e.dataTransfer.files);
       if (!files.length) return;
       await enqueueFileBatch(files);
     });

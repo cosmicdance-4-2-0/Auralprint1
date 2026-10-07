@@ -1,0 +1,32 @@
+✔ RC-12: picker admits empty MIME to canonical activation (41.685715ms)
+✔ RC-12: picker admits application/ogg to canonical activation (4.475667ms)
+✔ RC-12: picker admits application/octet-stream to canonical activation (2.879647ms)
+✔ RC-12: picker admits video/mp4 to canonical activation (2.693909ms)
+✔ RC-12: picker admits audio/wav to canonical activation (9.813045ms)
+✔ RC-12: picker decoder failure remains truthful for admitted metadata (4.070508ms)
+✔ RC-12: drop admits empty MIME to canonical activation (3.797268ms)
+✔ RC-12: drop admits application/ogg to canonical activation (9.170383ms)
+✔ RC-12: drop admits application/octet-stream to canonical activation (2.476802ms)
+✔ RC-12: drop admits video/mp4 to canonical activation (2.900399ms)
+✔ RC-12: drop admits audio/wav to canonical activation (3.269094ms)
+✔ RC-12: drop decoder failure remains truthful for admitted metadata (3.367832ms)
+✔ RC-02: clear during delayed context resume leaves an empty workflow (3.882796ms)
+✔ RC-02: final-remove during delayed context resume leaves an empty workflow (1.957813ms)
+✔ RC-02: Clear during delayed load-time play resolve ignores stale commits and callbacks (7.949188ms)
+✔ RC-02: Clear during delayed load-time play reject ignores stale commits and callbacks (5.344153ms)
+✔ RC-02: two-file picker batch cannot repopulate after Clear (8.188037ms)
+✔ RC-02: two-file drop batch cannot repopulate after Clear (1.694597ms)
+✔ RC-02: ordinary single file still loads, plays, and notifies recording (2.458886ms)
+✔ RC-02: ordinary A/B/C picker batch preserves order and first activation (1.641057ms)
+✔ RC-02: picker B/C appends once without replacing active A (1.529959ms)
+✔ RC-02: ordinary A/B/C drop batch preserves order and first activation (2.716764ms)
+✔ RC-02: drop B/C appends once without replacing active A (4.086683ms)
+✔ RC-02: a new user action can load normally after cancellation (2.704405ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.6355
