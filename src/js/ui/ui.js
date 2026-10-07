@@ -229,6 +229,7 @@ function readSourceUiModel({
 const UI = (() => {
   const ui = state.ui;
   let sourceSwitchDispatcher = async () => false;
+  let maybeConsumePendingTrackEnd = () => {};
 
   function readRecordPanelEdgeVars() {
     const placement = CONFIG.recording && CONFIG.recording.panelPlacement
@@ -1002,6 +1003,8 @@ const UI = (() => {
   }
 
   function refreshRecordingUi() {
+    // Canonical phase unlocks playback after either export completion or error.
+    maybeConsumePendingTrackEnd();
     const model = getRecordingUiModel();
     const recording = model.recording;
     syncSourceSelectorUi();
@@ -1068,6 +1071,8 @@ const UI = (() => {
   }
 
   function maybeRefreshRecordingUi() {
+    // EOF and finalization can both occur between frames with unchanged UI copy.
+    maybeConsumePendingTrackEnd();
     const syncKey = buildRecordingUiSyncKey();
     if (ui.recordingUiSyncKey === syncKey) return;
     refreshRecordingUi();
@@ -1265,8 +1270,10 @@ const UI = (() => {
        DoD: no trail bleed between tracks; scrubber never shows stale waveform.
        ------------------------------------------------------------------------- */
     let activeLoadRequestId = 0;
+    let pendingTrackEnd = null;
 
     function invalidatePendingTrackLoads() {
+      pendingTrackEnd = null;
       activeLoadRequestId += 1;
     }
 
@@ -1348,6 +1355,7 @@ const UI = (() => {
 
     async function loadAndPlay(file, opts = {}) {
       if (!file) return false;
+      pendingTrackEnd = null;
       const requestId = ++activeLoadRequestId;
       state.audio.transportError = "";
       RecorderEngine.onTransportMutation("track-change-start", {
@@ -1407,9 +1415,7 @@ const UI = (() => {
       return true;
     }
 
-    AudioEngine._onTrackEnded = () => {
-      if (isFinalizingFileTransportLocked()) return;
-      const mode = preferences.audio.repeatMode;
+    function applyTrackEndedPolicy({ repeatMode: mode }) {
 
       if (mode === "one") {
         const file = Queue.current();
@@ -1433,6 +1439,32 @@ const UI = (() => {
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "track-ended-no-next",
       });
+    }
+
+    maybeConsumePendingTrackEnd = () => {
+      if (!pendingTrackEnd || isFinalizingFileTransportLocked()) return;
+      const pending = pendingTrackEnd;
+      // Clear before any transition or nested UI refresh can revisit the event.
+      pendingTrackEnd = null;
+      if (!isFileWorkflowMode()
+        || !pending.file || Queue.current() !== pending.file
+        || !pending.mediaEl || AudioEngine.getMediaEl() !== pending.mediaEl
+        || activeLoadRequestId !== pending.requestId) return;
+      applyTrackEndedPolicy(pending);
+    };
+
+    AudioEngine._onTrackEnded = () => {
+      const context = {
+        file: Queue.current(),
+        mediaEl: AudioEngine.getMediaEl(),
+        repeatMode: preferences.audio.repeatMode,
+        requestId: activeLoadRequestId,
+      };
+      if (isFinalizingFileTransportLocked()) {
+        pendingTrackEnd = context;
+        return;
+      }
+      applyTrackEndedPolicy(context);
     };
 
     function activateQueueRow(trackIndex) {

@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.f");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.f\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.g");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.g\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3802,3 +3802,167 @@ test("Ring commits retain the singleton editor and truthful inventory visibility
     assert.equal(state.ui.visualizerList.children[0].children[2].children.length, 1);
   });
 });
+
+// RC-05 exercises the registered production EOF hook, canonical recording state,
+// recurrent UI synchronization, and the existing File activation ownership path.
+function rc05End(audio) {
+  audio.audioEl.ended = true;
+  audio.audioEl.paused = true;
+  audio.audioEl.dispatch("ended");
+}
+const rc05Settle = () => new Promise(resolve => setImmediate(resolve));
+
+for (const [label, names, cursor, repeat, expected, nextCursor] of [
+  ["next track", ["A.wav", "B.wav", "C.wav"], 0, "none", "B.wav", 1],
+  ["Repeat One", ["A.wav"], 0, "one", "A.wav", 0],
+  ["Repeat All", ["A.wav", "B.wav"], 1, "all", "A.wav", 0],
+]) {
+  test(`RC-05: ${label} defers during finalization and loads/plays exactly once after completion`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, mutations, scrubberLoads }) => {
+      await ingest(names);
+      if (cursor) {
+        Queue.goTo(cursor);
+        await InputSourceManager.activateFile(Queue.current());
+      }
+      preferences.audio.repeatMode = repeat;
+      const owner = Queue.current();
+      state.recording.phase = "finalizing";
+      rc05End(audio);
+      for (let i = 0; i < 3; i++) UI.refreshRecordingUi();
+      assert.equal(Queue.current(), owner);
+      assert.equal(state.audio.isPlaying, false);
+      assert.deepEqual(scrubberLoads, ["A.wav"], "pending EOF cannot load while locked");
+      assert.equal(mutations.filter(m => m.kind === "track-change-start").length, 1);
+      Object.assign(state.recording, { phase: "complete", lastExportUrl: "blob:valid-export", lastExportByteSize: 123 });
+      UI.refreshRecordingUi();
+      await rc05Settle();
+      assert.equal(Queue.currentIndex, nextCursor);
+      assert.equal(state.audio.filename, expected);
+      assert.equal(state.audio.isPlaying, true);
+      assert.deepEqual(scrubberLoads, ["A.wav", expected]);
+      for (let i = 0; i < 5; i++) { UI.refreshRecordingUi(); UI.refreshAllUiText(); }
+      await rc05Settle();
+      assert.equal(mutations.filter(m => m.kind === "track-change-start").length, 2);
+      assert.equal(Queue.currentIndex, nextCursor);
+      assert.equal(state.recording.lastExportUrl, "blob:valid-export");
+      assert.equal(state.recording.lastExportByteSize, 123);
+    });
+  });
+}
+
+test("RC-05: no-next/repeat-off clears pending ownership before reentrant and repeated refresh", async t => {
+  await withRc02FileWorkflow(t, {}, async ({ audio, ingest, mutations, scrubberLoads }) => {
+    await ingest(["A.wav"]);
+    preferences.audio.repeatMode = "none";
+    state.recording.phase = "finalizing";
+    rc05End(audio);
+    assert.equal(mutations.filter(m => m.kind === "audio-unloaded").length, 0);
+    state.recording.phase = "complete";
+    const current = Queue.current;
+    let nested = false;
+    t.mock.method(Queue, "current", () => {
+      if (!nested) { nested = true; UI.refreshRecordingUi(); }
+      return current();
+    });
+    for (let i = 0; i < 5; i++) { UI.refreshRecordingUi(); UI.refreshAllUiText(); }
+    assert.deepEqual(mutations.filter(m => m.kind === "audio-unloaded"), [
+      { kind: "audio-unloaded", details: { reason: "track-ended-no-next" } },
+    ]);
+    assert.deepEqual(scrubberLoads, ["A.wav"]);
+    assert.equal(Queue.currentIndex, 0);
+    assert.equal(state.audio.isPlaying, false);
+    assert.equal(audio.audioEl.ended, true);
+    // Changing repeat later cannot revive a consumed event.
+    preferences.audio.repeatMode = "one";
+    UI.refreshRecordingUi();
+    assert.deepEqual(scrubberLoads, ["A.wav"]);
+  });
+});
+
+test("RC-05: export failure still releases EOF without overwriting recording error", async t => {
+  await withRc02FileWorkflow(t, {}, async ({ audio, ingest, scrubberLoads }) => {
+    await ingest(["A.wav", "B.wav"]);
+    preferences.audio.repeatMode = "none";
+    state.recording.phase = "finalizing";
+    rc05End(audio);
+    Object.assign(state.recording, { phase: "error", lastCode: "finalize-failed", lastMessage: "export failure" });
+    const error = structuredClone(state.recording);
+    UI.refreshRecordingUi();
+    await rc05Settle();
+    assert.equal(state.audio.filename, "B.wav");
+    assert.equal(state.audio.isPlaying, true);
+    assert.deepEqual(scrubberLoads, ["A.wav", "B.wav"]);
+    assert.deepEqual(state.recording, error);
+  });
+});
+
+for (const change of ["queue-file", "media-element", "live-workflow", "teardown", "clear", "replacement"]) {
+  test(`RC-05: stale pending EOF is discarded after ${change}`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, getElement, scrubberLoads, mutations }) => {
+      await ingest(["A.wav", "B.wav", "C.wav"]);
+      preferences.audio.repeatMode = "none";
+      const file = Queue.current(), media = AudioEngine.getMediaEl();
+      state.recording.phase = "finalizing";
+      rc05End(audio);
+      if (change === "queue-file") Queue.goTo(1);
+      if (change === "media-element") t.mock.method(AudioEngine, "getMediaEl", () => ({}));
+      if (change === "live-workflow") state.source.kind = "stream";
+      if (change === "teardown") await InputSourceManager.teardownActiveSource({ reason: "test-owner-change" });
+      state.recording.phase = "complete";
+      if (change === "clear") await getElement("btnClearQueue").dispatch("click");
+      if (change === "replacement") await getElement("queueList").children[1].dispatch("click");
+      await rc05Settle();
+      const before = { cursor: Queue.currentIndex, audio: { ...state.audio }, loads: [...scrubberLoads], count: mutations.length };
+      UI.refreshRecordingUi();
+      await rc05Settle();
+      assert.deepEqual({ cursor: Queue.currentIndex, audio: { ...state.audio }, loads: [...scrubberLoads], count: mutations.length }, before);
+      // Restoring matching identities must not revive a discarded record.
+      if (["queue-file", "media-element", "live-workflow"].includes(change)) {
+        Queue.goTo(0); state.source.kind = "file";
+        if (change === "media-element") AudioEngine.getMediaEl.mock.restore();
+        assert.equal(Queue.current(), file);
+        UI.refreshRecordingUi();
+        await rc05Settle();
+        assert.deepEqual(scrubberLoads, before.loads);
+        assert.equal(mutations.length, before.count);
+      }
+    });
+  });
+}
+
+for (const [atEof, later, expected] of [["one", "none", "A.wav"], ["none", "one", "B.wav"], ["all", "none", "A.wav"]]) {
+  test(`RC-05: repeat ${atEof} is captured at EOF despite later preference ${later}`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, scrubberLoads }) => {
+      await ingest(["A.wav", "B.wav"]);
+      if (atEof === "all") { Queue.goTo(1); await InputSourceManager.activateFile(Queue.current()); }
+      preferences.audio.repeatMode = atEof;
+      state.recording.phase = "finalizing";
+      rc05End(audio);
+      preferences.audio.repeatMode = later;
+      state.recording.phase = "complete";
+      // Also covers EOF/finalization between frames without a finalizing UI refresh.
+      UI.refreshAllUiText();
+      await rc05Settle();
+      assert.deepEqual(scrubberLoads, ["A.wav", expected]);
+      assert.equal(preferences.audio.repeatMode, later);
+    });
+  });
+}
+
+for (const phase of ["idle", "recording", "complete", "error"]) {
+  test(`RC-05: ordinary EOF in ${phase} advances immediately through normal File ownership`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, scrubberLoads, mutations }) => {
+      await ingest(["A.wav", "B.wav"]);
+      preferences.audio.repeatMode = "none";
+      state.recording.phase = phase;
+      rc05End(audio);
+      assert.equal(Queue.currentIndex, 1, "queue advances synchronously without UI refresh");
+      assert.equal(mutations.filter(m => m.kind === "track-change-start").length, 2);
+      await rc05Settle();
+      assert.equal(state.audio.filename, "B.wav");
+      assert.equal(state.audio.isPlaying, true);
+      assert.deepEqual(scrubberLoads, ["A.wav", "B.wav"]);
+      assert.equal(state.recording.phase, phase);
+    });
+  });
+}

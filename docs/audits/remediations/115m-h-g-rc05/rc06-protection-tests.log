@@ -1,0 +1,143 @@
+✔ RC-06: successful A survives failed B acquisition (33.938525ms)
+[RecorderEngine] media-recorder-create-failed Error: MediaRecorder could not be created: injected constructor failure
+    at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+    at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1194:15)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+    ... 5 lines matching cause stack trace ...
+    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+  recordingCode: 'media-recorder-create-failed',
+  cause: Error: injected constructor failure
+      at new FakeRecorder (file:///workspace/Auralprint1/tests/recording-export.test.js:32:37)
+      at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1192:33)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+}
+✔ RC-06: successful A survives failed B constructor (2.534294ms)
+[RecorderEngine] media-recorder-start-failed Error: MediaRecorder could not start: injected start failure
+    at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+    at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1227:15)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+    ... 5 lines matching cause stack trace ...
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  recordingCode: 'media-recorder-start-failed',
+  cause: Error: injected start failure
+      at FakeRecorder.start (file:///workspace/Auralprint1/tests/recording-export.test.js:38:31)
+      at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1225:31)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+}
+✔ RC-06: successful A survives failed B start (1.76488ms)
+[RecorderEngine] recorder-error Error: injected recorder error
+    at FakeRecorder.error (file:///workspace/Auralprint1/tests/recording-export.test.js:47:39)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:150:5)
+    at async Test.run (node:internal/test_runner/test:1389:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+✔ RC-06: successful A survives B recorder error and stale callbacks (4.089315ms)
+[RecorderEngine] no-captured-chunks Error: Recording finished without any captured data.
+    at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+    at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:685:13)
+    at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1039:31)
+    at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:44)
+    at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+    at async Test.run (node:internal/test_runner/test:1389:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  recordingCode: 'no-captured-chunks'
+}
+✔ RC-06: successful A survives B finalization failure (noChunks) (2.034177ms)
+[RecorderEngine] empty-recording-export Error: Recording export is empty.
+    at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+    at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:692:13)
+    at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1039:31)
+    at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:44)
+    at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+    at async Test.run (node:internal/test_runner/test:1389:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  recordingCode: 'empty-recording-export'
+}
+✔ RC-06: successful A survives B finalization failure (emptyBlob) (3.825096ms)
+[RecorderEngine] export-filename-unresolved Error: Recording export filename could not be resolved.
+    at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+    at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:697:13)
+    at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1039:31)
+    at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:44)
+    at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+    at async Test.run (node:internal/test_runner/test:1389:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  recordingCode: 'export-filename-unresolved'
+}
+✔ RC-06: successful A survives B finalization failure (filename) (1.339273ms)
+[RecorderEngine] object-url-create-failed Error: Recording export URL could not be created: injected URL creation failure
+    at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+    at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:704:13)
+    at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1039:31)
+    ... 4 lines matching cause stack trace ...
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  recordingCode: 'object-url-create-failed',
+  cause: Error: injected URL creation failure
+      at URL.createObjectURL (file:///workspace/Auralprint1/tests/recording-export.test.js:64:33)
+      at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:702:23)
+      at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1039:31)
+      at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:44)
+      at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+}
+✔ RC-06: successful A survives B finalization failure (objectUrl) (1.809396ms)
+[RecorderEngine] finalize-failed Error: injected Blob failure
+    at new globalThis.Blob (file:///workspace/Auralprint1/tests/recording-export.test.js:184:81)
+    at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:688:18)
+    at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1039:31)
+    at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:44)
+    at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+    at async Test.run (node:internal/test_runner/test:1389:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+✔ RC-06: successful A survives B finalization failure (blobThrows) (1.55454ms)
+[RecorderEngine] finalize-failed Error: injected failure after URL assembly
+    at Object.getRenderTap (file:///workspace/Auralprint1/tests/recording-export.test.js:80:15)
+    at readSupportDetails (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:188:36)
+    at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1048:18)
+    at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:44)
+    at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+    at async Test.run (node:internal/test_runner/test:1389:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+✔ RC-06: successful A survives B finalization failure (afterUrl) (1.838088ms)
+[RecorderEngine] stop-failed Error: injected stop failure
+    at FakeRecorder.stop (file:///workspace/Auralprint1/tests/recording-export.test.js:42:30)
+    at Object.stop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1313:29)
+    at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:211:35)
+    at Test.runInAsyncScope (node:async_hooks:227:14)
+    at Test.run (node:internal/test_runner/test:1382:25)
+    at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    at Test.postRun (node:internal/test_runner/test:1522:19)
+    at Test.run (node:internal/test_runner/test:1447:12)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+✔ RC-06: successful A survives B stop exception (0.908158ms)
+✔ RC-06: successful A survives B inactive recorder (0.539976ms)
+✔ RC-06: successful B commits before revoking A exactly once; repeated replacement does not leak (2.289764ms)
+✔ RC-06: first recording works without a previous export (0.610719ms)
+✔ RC-06: reset retains the completed export (1.570514ms)
+✔ RC-06: completed-export disposal revokes and clears exactly once (0.598972ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.292405

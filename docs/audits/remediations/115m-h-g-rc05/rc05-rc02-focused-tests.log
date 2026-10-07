@@ -1,0 +1,38 @@
+✔ RC-02: clear during delayed context resume leaves an empty workflow (26.35945ms)
+✔ RC-02: final-remove during delayed context resume leaves an empty workflow (2.225659ms)
+✔ RC-02: Clear during delayed load-time play resolve ignores stale commits and callbacks (6.358928ms)
+✔ RC-02: Clear during delayed load-time play reject ignores stale commits and callbacks (5.903266ms)
+✔ RC-02: two-file picker batch cannot repopulate after Clear (2.018934ms)
+✔ RC-02: two-file drop batch cannot repopulate after Clear (2.40279ms)
+✔ RC-02: ordinary single file still loads, plays, and notifies recording (8.727576ms)
+✔ RC-02: ordinary A/B/C picker batch preserves order and first activation (2.697975ms)
+✔ RC-02: picker B/C appends once without replacing active A (1.849585ms)
+✔ RC-02: ordinary A/B/C drop batch preserves order and first activation (1.536273ms)
+✔ RC-02: drop B/C appends once without replacing active A (1.479059ms)
+✔ RC-02: a new user action can load normally after cancellation (1.903715ms)
+✔ RC-05: next track defers during finalization and loads/plays exactly once after completion (5.623053ms)
+✔ RC-05: Repeat One defers during finalization and loads/plays exactly once after completion (3.640283ms)
+✔ RC-05: Repeat All defers during finalization and loads/plays exactly once after completion (3.593974ms)
+✔ RC-05: no-next/repeat-off clears pending ownership before reentrant and repeated refresh (2.885371ms)
+✔ RC-05: export failure still releases EOF without overwriting recording error (6.162168ms)
+✔ RC-05: stale pending EOF is discarded after queue-file (2.393266ms)
+✔ RC-05: stale pending EOF is discarded after media-element (1.320295ms)
+✔ RC-05: stale pending EOF is discarded after live-workflow (1.450317ms)
+✔ RC-05: stale pending EOF is discarded after teardown (1.537805ms)
+✔ RC-05: stale pending EOF is discarded after clear (1.434473ms)
+✔ RC-05: stale pending EOF is discarded after replacement (1.831348ms)
+✔ RC-05: repeat one is captured at EOF despite later preference none (1.54739ms)
+✔ RC-05: repeat none is captured at EOF despite later preference one (1.5678ms)
+✔ RC-05: repeat all is captured at EOF despite later preference none (1.866018ms)
+✔ RC-05: ordinary EOF in idle advances immediately through normal File ownership (1.899639ms)
+✔ RC-05: ordinary EOF in recording advances immediately through normal File ownership (1.564294ms)
+✔ RC-05: ordinary EOF in complete advances immediately through normal File ownership (1.52737ms)
+✔ RC-05: ordinary EOF in error advances immediately through normal File ownership (6.50357ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160.361118

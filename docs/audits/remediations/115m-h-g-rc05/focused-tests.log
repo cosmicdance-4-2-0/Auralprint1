@@ -1,0 +1,26 @@
+✔ RC-05: next track defers during finalization and loads/plays exactly once after completion (28.881208ms)
+✔ RC-05: Repeat One defers during finalization and loads/plays exactly once after completion (6.140186ms)
+✔ RC-05: Repeat All defers during finalization and loads/plays exactly once after completion (5.381288ms)
+✔ RC-05: no-next/repeat-off clears pending ownership before reentrant and repeated refresh (3.357105ms)
+✔ RC-05: export failure still releases EOF without overwriting recording error (11.09822ms)
+✔ RC-05: stale pending EOF is discarded after queue-file (3.094079ms)
+✔ RC-05: stale pending EOF is discarded after media-element (1.952937ms)
+✔ RC-05: stale pending EOF is discarded after live-workflow (2.200231ms)
+✔ RC-05: stale pending EOF is discarded after teardown (2.216114ms)
+✔ RC-05: stale pending EOF is discarded after clear (1.745722ms)
+✔ RC-05: stale pending EOF is discarded after replacement (1.849475ms)
+✔ RC-05: repeat one is captured at EOF despite later preference none (1.828434ms)
+✔ RC-05: repeat none is captured at EOF despite later preference one (2.006276ms)
+✔ RC-05: repeat all is captured at EOF despite later preference none (1.838579ms)
+✔ RC-05: ordinary EOF in idle advances immediately through normal File ownership (1.864797ms)
+✔ RC-05: ordinary EOF in recording advances immediately through normal File ownership (2.020447ms)
+✔ RC-05: ordinary EOF in complete advances immediately through normal File ownership (1.757389ms)
+✔ RC-05: ordinary EOF in error advances immediately through normal File ownership (6.60436ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 142.163889

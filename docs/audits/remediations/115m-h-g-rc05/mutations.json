@@ -1,0 +1,14 @@
+[
+  {
+    "mutation": "A",
+    "test": "RC-05: next track",
+    "exitCode": 1,
+    "rejected": true
+  },
+  {
+    "mutation": "B",
+    "test": "RC-05: no-next/repeat-off",
+    "exitCode": 1,
+    "rejected": true
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "tests": 357,
+  "files": [
+    {
+      "file": "tests/analysis-frame.test.js",
+      "tests": 4,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/analysis-panel.test.js",
+      "tests": 5,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/band-bank.test.js",
+      "tests": 6,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/input-source-manager.test.js",
+      "tests": 32,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/live-source-ownership.test.js",
+      "tests": 13,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/orb-band-picker.test.js",
+      "tests": 3,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/orb-collection.test.js",
+      "tests": 9,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/orb-editor.test.js",
+      "tests": 10,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/orb-id-termination.test.js",
+      "tests": 12,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/per-orb-ownership.test.js",
+      "tests": 7,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/preset-schema-10.test.js",
+      "tests": 64,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/recording-export.test.js",
+      "tests": 16,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/scene-panel.test.js",
+      "tests": 8,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/scrubber-waveform.test.js",
+      "tests": 6,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/spectral-ring-editor.test.js",
+      "tests": 2,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/stream-graph.test.js",
+      "tests": 1,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/targeted-audit.test.js",
+      "tests": 126,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/transport-ownership.test.js",
+      "tests": 13,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/url-preset-band-rebuild.test.js",
+      "tests": 2,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/visualizer-runtime.test.js",
+      "tests": 11,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/visualizers-panel.test.js",
+      "tests": 5,
+      "exitCode": 0
+    },
+    {
+      "file": "tests/workspace-ui.test.js",
+      "tests": 2,
+      "exitCode": 0
+    }
+  ]
+}
