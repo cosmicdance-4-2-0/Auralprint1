@@ -1,6 +1,6 @@
 # 115M.H.G — RC-05 correction report
 
-RC-05 is locally validated; closure awaits hosted Linux/Windows CI. Historical release audit PR #26 and its evidence are unchanged. RC-07 and all other unresolved findings remain outside this correction. 115N remains WITHHELD.
+RC-05 is CLOSED after local validation and hosted Linux/Windows CI passed ([PR #33](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/33)). The source/transport lifecycle cluster is closed; broader Build-117 lifecycle/performance hardening remains separate future work. Historical release audit PR #26 and its evidence are unchanged. RC-07 and all other unresolved findings remain outside this correction. 115N remains WITHHELD.
 
 | Field | Result |
 | --- | --- |
@@ -26,7 +26,7 @@ RC-05 is locally validated; closure awaits hosted Linux/Windows CI. Historical r
 | Historical browser repro | Unchanged audit script rerun on baseline with outputs saved separately here as `baseline-browser.json`: both schedules reproduce lost advance; controls pass. |
 | Native EOF ordering | PASS on corrected built HTML: delayed native onstop (800 ms) and capture-phase Stop Recording before application EOF hook; both observe actual native ended during finalizing, complete export, one B transition, no page errors. Probe only exposes built objects for inspection as the audit did. |
 | Mutation A | Rejected: restoring event loss fails required next-track regression. See `mutation-A.log`, `mutations.json`. |
-| Mutation B | Rejected: omitting consume clear causes duplicate no-next notifications under nested/repeated refresh. See `mutation-B.log`. Correct implementation restored and focused tests rerun. |
+| Mutation B | Rejected: omitting consume clear causes duplicate Repeat One reload/play during reentrant refresh after ownership validation; no-next also detects repeated policy notifications. See `mutation-B.log`. Correct implementation restored and focused tests rerun. |
 | RC-02 regression | PASS: 12 Node tests and nine native browser scenarios, existing cancellation/load ownership untouched. |
 | RC-04 regression | PASS: 13 Node tests and ten native browser scenarios, existing Play/Clear/replacement ownership untouched. |
 | RC-06 regression | PASS: 16 Node tests and native retention/replacement probe, successful A survives failed acquisition and B capture, B replaces/revokes A once. |
@@ -40,13 +40,13 @@ RC-05 is locally validated; closure awaits hosted Linux/Windows CI. Historical r
 | Build | `npm run build` PASS |
 | Artifact | `dist/auralprint_0.1.15m.h.g.html`, generated and untracked |
 | git diff --check | PASS |
-| Linux CI | Pending |
-| Windows CI | Pending |
+| Linux CI | PASS — hosted `Test and build (ubuntu-latest)` on PR #33 |
+| Windows CI | PASS — hosted `Test and build (windows-latest)` on PR #33 |
 | RC-01 | CLOSED |
 | RC-02 | CLOSED |
 | RC-03 | CLOSED |
 | RC-04 | CLOSED |
-| RC-05 | Locally validated; awaiting hosted CI |
+| RC-05 | CLOSED |
 | RC-06 | CLOSED |
 | 115N status | WITHHELD |
 
