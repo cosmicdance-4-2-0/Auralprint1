@@ -1,0 +1,30 @@
+
+> test
+> node --test
+
+✔ tests/analysis-frame.test.js (81.385483ms)
+✔ tests/analysis-panel.test.js (64.642786ms)
+✔ tests/band-bank.test.js (66.921913ms)
+✔ tests/input-source-manager.test.js (105.619531ms)
+✔ tests/orb-band-picker.test.js (71.893225ms)
+✔ tests/orb-collection.test.js (69.284422ms)
+✔ tests/orb-editor.test.js (130.366211ms)
+✔ tests/per-orb-ownership.test.js (83.751012ms)
+✔ tests/preset-schema-10.test.js (152.536419ms)
+✔ tests/scene-panel.test.js (90.224574ms)
+✔ tests/scrubber-waveform.test.js (71.601419ms)
+✔ tests/spectral-ring-editor.test.js (72.988255ms)
+✔ tests/stream-graph.test.js (78.37216ms)
+✔ tests/targeted-audit.test.js (424.691348ms)
+✔ tests/url-preset-band-rebuild.test.js (68.157644ms)
+✔ tests/visualizer-runtime.test.js (77.967947ms)
+✔ tests/visualizers-panel.test.js (80.10821ms)
+✔ tests/workspace-ui.test.js (66.918995ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1901.438299

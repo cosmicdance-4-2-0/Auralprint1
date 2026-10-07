@@ -1,0 +1,93 @@
+{
+  "appUrl": "http://127.0.0.1:8000/auralprint_0.1.15m.h.html",
+  "browser": "151.0.7922.173",
+  "errors": [],
+  "bulkMixedSelect": {
+    "before": {
+      "control": "dominantBand",
+      "readout": "mixed",
+      "modes": [
+        "fixed",
+        "dominantBand"
+      ]
+    },
+    "after": {
+      "control": "dominantBand",
+      "readout": "mixed",
+      "modes": [
+        "fixed",
+        "dominantBand"
+      ]
+    },
+    "changedOptionModes": [
+      "fixed",
+      "fixed"
+    ]
+  },
+  "oggDecode": {
+    "duration": 0.2970975056689342,
+    "sampleRate": 44100,
+    "channels": 1
+  },
+  "oggMime": {
+    "rejected": {
+      "actualMime": "application/ogg",
+      "queueCount": 0,
+      "playDisabled": true,
+      "status": "File mode ready. Load audio files to begin analysis."
+    },
+    "accepted": {
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: tone.ogg"
+    }
+  },
+  "wavDecode": {
+    "duration": 0.9999773242630385,
+    "sampleRate": 44100,
+    "channels": 1
+  },
+  "emptyMime": {
+    "rejected": {
+      "actualMime": "",
+      "queueCount": 0,
+      "playDisabled": true,
+      "status": "File mode ready. Load audio files to begin analysis."
+    },
+    "accepted": {
+      "queueCount": 1,
+      "playDisabled": false,
+      "status": "Loaded: supported.wav"
+    }
+  },
+  "phase": {
+    "value": 6.26573201465964,
+    "max": 6.283185307179586,
+    "display": "720°",
+    "accessibleValue": "720 degrees",
+    "persisted": 12.566370614359172
+  },
+  "reservedIdConfirmation": {
+    "confirmation": "Remove Spectral Ring (spectral-ring)? This cannot be undone.",
+    "survivors": [
+      "ORB1"
+    ]
+  },
+  "bandPickerHelp": {
+    "displayed": "Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.",
+    "actualSelectedEnergy": [
+      {
+        "chanId": "L",
+        "energy": 0.9
+      },
+      {
+        "chanId": "R",
+        "energy": 0.1
+      },
+      {
+        "chanId": "C",
+        "energy": 0.5
+      }
+    ]
+  }
+}

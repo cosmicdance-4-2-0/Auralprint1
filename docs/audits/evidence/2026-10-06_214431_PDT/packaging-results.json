@@ -1,0 +1,33 @@
+{
+  "version": "v0.1.15m.h",
+  "browser": "151.0.7922.173",
+  "bytes": 369340,
+  "sha256": "5b314c1c23b9881c35f3aefeb9a07244788f5a7d469a1f34c9d5167ec976b10d",
+  "httpBoot": true,
+  "directFileBoot": "environment blocked file URL navigation (ERR_BLOCKED_BY_ADMINISTRATOR)",
+  "applicationExceptions": [],
+  "rootRelativeMissingResources": [
+    {
+      "rel": "shortcut icon",
+      "href": "/favicon.ico"
+    },
+    {
+      "rel": "icon",
+      "href": "/favicon-96x96.png"
+    },
+    {
+      "rel": "icon",
+      "href": "/favicon.svg"
+    },
+    {
+      "rel": "apple-touch-icon",
+      "href": "/apple-touch-icon.png"
+    },
+    {
+      "rel": "manifest",
+      "href": "/site.webmanifest"
+    }
+  ],
+  "externalScripts": false,
+  "externalStylesheets": false
+}

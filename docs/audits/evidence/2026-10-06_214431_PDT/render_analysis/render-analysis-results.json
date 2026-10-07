@@ -1,0 +1,73 @@
+{
+  "auditedCodeTimestampUtc": "2026-10-07T04:42:42.590Z",
+  "assertionsPassed": true,
+  "evidence": {
+    "ringLock": {
+      "dtSec": 0.03333333333333333,
+      "speedRadPerSec": 3,
+      "frames": [
+        {
+          "actualOrb": 0.09999999999999964,
+          "actualRing": 0,
+          "lagRadians": 0.09999999999999964
+        },
+        {
+          "actualOrb": 0.1999999999999993,
+          "actualRing": 0.09999999999999964,
+          "lagRadians": 0.09999999999999964
+        }
+      ],
+      "lagDegrees": 5.729577951308232
+    },
+    "pausedMotion": {
+      "simPaused": true,
+      "orbBefore": 0.1999999999999993,
+      "orbAfter": 0.1999999999999993,
+      "ringBefore": 1,
+      "ringAfter": 1.0666666666666664
+    },
+    "fftCoordinate": [
+      {
+        "fftSize": 256,
+        "sampleRate": 48000,
+        "spike": 119,
+        "actualBinCenterHz": 22312.5,
+        "configuredBandLowHz": 22500,
+        "currentLoBin": 119,
+        "correctedLoBin": 120,
+        "actualEnergy": 0.1111111111111111,
+        "referenceEnergy": 0
+      },
+      {
+        "fftSize": 8192,
+        "sampleRate": 48000,
+        "spike": 3839,
+        "actualBinCenterHz": 22494.140625,
+        "configuredBandLowHz": 22500,
+        "currentLoBin": 3839,
+        "correctedLoBin": 3840,
+        "actualEnergy": 0.0038910505836575876,
+        "referenceEnergy": 0
+      }
+    ],
+    "resources": {
+      "sanitizedRequestedOrbs": 4096,
+      "sanitizedAcceptedOrbs": 4096,
+      "simulatedOrbs": 256,
+      "simulatedSeconds": 6,
+      "totalParticles": 61440,
+      "particleArcsPerFrame": 61440,
+      "estimatedOverlapComparisonsPerFrame": 245760,
+      "updateElapsedMs": 2186.9249999999997,
+      "instrumentedRenderElapsedMs": 265.60267699999986,
+      "caveat": "Stub Canvas records work counts; these timings do not measure browser/GPU frame latency."
+    },
+    "longFrameBurst": {
+      "sanitizedMaxDeltaTimeSec": 120,
+      "elapsedInputSec": 120,
+      "emittedCallsOneOrb": 28800,
+      "overlapComparisonsOneOrb": 6912000,
+      "burstElapsedMs": 210.36874799999987
+    }
+  }
+}

@@ -1,0 +1,454 @@
+[
+  {
+    "mode": "baseline",
+    "evidence": {
+      "queue": {
+        "items": [
+          {
+            "index": 0,
+            "name": "first.wav",
+            "active": false
+          },
+          {
+            "index": 1,
+            "name": "second.wav",
+            "active": true
+          }
+        ],
+        "cursor": 1,
+        "length": 2
+      },
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "second.wav",
+        "transportError": ""
+      },
+      "recording": {
+        "hooksEnabled": true,
+        "phase": "idle",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": null,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "lastAction": "init",
+        "lastCode": "recording-supported-webm",
+        "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+        "lastUpdatedAtMs": 602.2000000000698
+      },
+      "mediaEl": {
+        "ended": false,
+        "currentTime": 1.848889,
+        "duration": 5
+      },
+      "events": [
+        {
+          "event": "native-ended",
+          "phase": "idle",
+          "cursor": 1,
+          "filename": "first.wav"
+        }
+      ]
+    },
+    "errors": []
+  },
+  {
+    "mode": "recording-across-eof",
+    "evidence": {
+      "queue": {
+        "items": [
+          {
+            "index": 0,
+            "name": "first.wav",
+            "active": false
+          },
+          {
+            "index": 1,
+            "name": "second.wav",
+            "active": true
+          }
+        ],
+        "cursor": 1,
+        "length": 2
+      },
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "second.wav",
+        "transportError": ""
+      },
+      "recording": {
+        "hooksEnabled": true,
+        "phase": "recording",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 1504.5,
+        "stoppedAtMs": null,
+        "elapsedMs": 3211,
+        "chunkCount": 3,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "lastAction": "transport-track-change-complete",
+        "lastCode": "track-change-complete",
+        "lastMessage": "Recording continues on the newly loaded track.",
+        "lastUpdatedAtMs": 4716.099999999977
+      },
+      "mediaEl": {
+        "ended": false,
+        "currentTime": 1.869206,
+        "duration": 5
+      },
+      "events": [
+        {
+          "event": "native-ended",
+          "phase": "recording",
+          "cursor": 1,
+          "filename": "first.wav"
+        }
+      ],
+      "startResult": {
+        "ok": true,
+        "code": "recorder-input-audio-video",
+        "message": "Recording audio + video.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "recording",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 1504.5,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      }
+    },
+    "afterClear": {
+      "phase": "recording",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "nativeState": "recording",
+      "trackStates": [
+        {
+          "kind": "audio",
+          "state": "live"
+        },
+        {
+          "kind": "video",
+          "state": "live"
+        }
+      ]
+    },
+    "afterStop": {
+      "phase": "complete",
+      "exportSize": 172943,
+      "nativeState": "inactive",
+      "trackStates": [
+        {
+          "kind": "audio",
+          "state": "ended"
+        },
+        {
+          "kind": "video",
+          "state": "ended"
+        }
+      ]
+    },
+    "errors": []
+  },
+  {
+    "mode": "finalizing-at-eof",
+    "evidence": {
+      "queue": {
+        "items": [
+          {
+            "index": 0,
+            "name": "first.wav",
+            "active": true
+          },
+          {
+            "index": 1,
+            "name": "second.wav",
+            "active": false
+          }
+        ],
+        "cursor": 0,
+        "length": 2
+      },
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": false,
+        "filename": "first.wav",
+        "transportError": ""
+      },
+      "recording": {
+        "hooksEnabled": true,
+        "phase": "complete",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 816.1999999999534,
+        "stoppedAtMs": 2040.6999999999534,
+        "elapsedMs": 1225,
+        "chunkCount": 2,
+        "lastExportUrl": "blob:http://recording.audit/c6208296-112d-4249-979d-ff0b8f643244",
+        "lastExportFileName": "auralprint-capture-20261007-044420.webm",
+        "lastExportByteSize": 53581,
+        "lastAction": "finalize",
+        "lastCode": "complete",
+        "lastMessage": "Recording export ready.",
+        "lastUpdatedAtMs": 2847.79999999993
+      },
+      "mediaEl": {
+        "ended": true,
+        "currentTime": 2,
+        "duration": 2
+      },
+      "events": [
+        {
+          "event": "native-ended",
+          "phase": "finalizing",
+          "cursor": 0,
+          "filename": "first.wav"
+        }
+      ],
+      "startResult": {
+        "ok": true,
+        "code": "recorder-input-audio-video",
+        "message": "Recording audio + video.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "recording",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 816.1999999999534,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      }
+    },
+    "errors": []
+  },
+  {
+    "mode": "native-eof-order",
+    "evidence": {
+      "queue": {
+        "items": [
+          {
+            "index": 0,
+            "name": "first.wav",
+            "active": true
+          },
+          {
+            "index": 1,
+            "name": "second.wav",
+            "active": false
+          }
+        ],
+        "cursor": 0,
+        "length": 2
+      },
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": false,
+        "filename": "first.wav",
+        "transportError": ""
+      },
+      "recording": {
+        "hooksEnabled": true,
+        "phase": "complete",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 1447.8000000000466,
+        "stoppedAtMs": 2906.8000000000466,
+        "elapsedMs": 1459,
+        "chunkCount": 2,
+        "lastExportUrl": "blob:http://recording.audit/ac6604ed-9960-4efb-a0f6-9f8f84c2fc67",
+        "lastExportFileName": "auralprint-capture-20261007-044425.webm",
+        "lastExportByteSize": 44361,
+        "lastAction": "finalize",
+        "lastCode": "complete",
+        "lastMessage": "Recording export ready.",
+        "lastUpdatedAtMs": 2941.8000000000466
+      },
+      "mediaEl": {
+        "ended": true,
+        "currentTime": 2,
+        "duration": 2
+      },
+      "events": [
+        {
+          "event": "capture-stop-at-eof",
+          "phase": "finalizing"
+        },
+        {
+          "event": "native-ended",
+          "phase": "finalizing",
+          "cursor": 0,
+          "filename": "first.wav"
+        }
+      ],
+      "startResult": {
+        "ok": true,
+        "code": "recorder-input-audio-video",
+        "message": "Recording audio + video.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "recording",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 1447.8000000000466,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      },
+      "stopAtEof": {
+        "ok": true,
+        "code": "finalizing",
+        "message": "Finalizing recording export...",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "finalizing",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 1447.8000000000466,
+        "stoppedAtMs": 2906.8000000000466,
+        "elapsedMs": 1459,
+        "chunkCount": 1,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      }
+    },
+    "errors": []
+  }
+]

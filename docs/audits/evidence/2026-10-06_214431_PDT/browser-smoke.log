@@ -1,0 +1,30 @@
+{
+  "http": 200,
+  "title": "Auralprint - Waveform Analysis Tool - v0.1.15m.h",
+  "verified": [
+    "boot",
+    "stereo WAV decode",
+    "automatic playback",
+    "advancing scrubber",
+    "pause",
+    "resume",
+    "stop"
+  ],
+  "playing": "Loaded: onboarding-stereo.wav",
+  "time": "0:01 / 0:12",
+  "pageErrors": [],
+  "missingAssets": [
+    {
+      "url": "http://127.0.0.1:8000/favicon.svg",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:8000/favicon-96x96.png",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:8000/apple-touch-icon.png",
+      "status": 404
+    }
+  ]
+}
