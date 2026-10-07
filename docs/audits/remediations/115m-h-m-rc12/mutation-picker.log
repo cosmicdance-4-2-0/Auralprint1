@@ -1,0 +1,152 @@
+✖ RC-12: picker admits empty MIME to canonical activation (96.615293ms)
+✖ RC-12: picker admits application/ogg to canonical activation (5.257171ms)
+✖ RC-12: picker admits application/octet-stream to canonical activation (4.153753ms)
+✖ RC-12: picker admits video/mp4 to canonical activation (2.457022ms)
+✔ RC-12: picker admits audio/wav to canonical activation (23.926381ms)
+✖ RC-12: picker decoder failure remains truthful for admitted metadata (4.393203ms)
+✔ RC-12: drop admits empty MIME to canonical activation (3.153029ms)
+✔ RC-12: drop admits application/ogg to canonical activation (19.956294ms)
+✔ RC-12: drop admits application/octet-stream to canonical activation (32.822521ms)
+✔ RC-12: drop admits video/mp4 to canonical activation (3.795605ms)
+✔ RC-12: drop admits audio/wav to canonical activation (3.029333ms)
+✔ RC-12: drop decoder failure remains truthful for admitted metadata (2.543402ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 7
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 294.997542
+
+✖ failing tests:
+
+test at tests/targeted-audit.test.js:3652:5
+✖ RC-12: picker admits empty MIME to canonical activation (96.615293ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + null
+  - {
+  -   name: 'candidate',
+  -   type: ''
+  - }
+
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3657:16
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3653:7)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/targeted-audit.test.js:3652:5
+✖ RC-12: picker admits application/ogg to canonical activation (5.257171ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + null
+  - {
+  -   name: 'candidate',
+  -   type: 'application/ogg'
+  - }
+
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3657:16
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3653:7)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/targeted-audit.test.js:3652:5
+✖ RC-12: picker admits application/octet-stream to canonical activation (4.153753ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + null
+  - {
+  -   name: 'candidate',
+  -   type: 'application/octet-stream'
+  - }
+
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3657:16
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3653:7)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/targeted-audit.test.js:3652:5
+✖ RC-12: picker admits video/mp4 to canonical activation (2.457022ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + null
+  - {
+  -   name: 'candidate',
+  -   type: 'video/mp4'
+  - }
+
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3657:16
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3653:7)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/targeted-audit.test.js:3665:3
+✖ RC-12: picker decoder failure remains truthful for admitted metadata (4.393203ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + null
+  - {
+  -   name: 'invalid.txt',
+  -   type: 'text/plain'
+  - }
+
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3671:14
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3666:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,63 @@
+{
+  "version": "v0.1.15m.h.l",
+  "browser": "151.0.7922.173",
+  "defect": true,
+  "results": [
+    {
+      "entry": "picker",
+      "name": "tone.ogg",
+      "actualMime": "application/ogg",
+      "accept": "audio/*",
+      "decoded": {
+        "duration": 0.2970975056689342,
+        "sampleRate": 44100
+      },
+      "queueCount": 0,
+      "playDisabled": true,
+      "status": "File mode ready. Load audio files to begin analysis.",
+      "errors": []
+    },
+    {
+      "entry": "picker",
+      "name": "unknown",
+      "actualMime": "",
+      "accept": "audio/*",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 0,
+      "playDisabled": true,
+      "status": "File mode ready. Load audio files to begin analysis.",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "tone.ogg",
+      "actualMime": "application/ogg",
+      "accept": "audio/*",
+      "decoded": {
+        "duration": 0.2970975056689342,
+        "sampleRate": 44100
+      },
+      "queueCount": 0,
+      "playDisabled": true,
+      "status": "File mode ready. Load audio files to begin analysis.",
+      "errors": []
+    },
+    {
+      "entry": "drop",
+      "name": "unknown",
+      "actualMime": "",
+      "accept": "audio/*",
+      "decoded": {
+        "duration": 0.9999773242630385,
+        "sampleRate": 44100
+      },
+      "queueCount": 0,
+      "playDisabled": true,
+      "status": "File mode ready. Load audio files to begin analysis.",
+      "errors": []
+    }
+  ]
+}

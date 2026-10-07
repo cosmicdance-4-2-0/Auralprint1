@@ -54,6 +54,7 @@ const Scrubber = (() => {
   let _waveformStatus = "empty"; // empty | decoding | ready | unavailable
 
   function init(canvasEl) {
+    _dragging = false;
     _canvas = canvasEl;
     _ctx2d = _canvas.getContext("2d");
     _canvas.addEventListener("mousedown", onMouseDown);
@@ -62,12 +63,14 @@ const Scrubber = (() => {
     _canvas.addEventListener("touchstart", onTouchStart, { passive: false });
     window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
   }
 
   // Called on every new file load. Decodes the file for the waveform overview,
   // completely independently of the media element used for playback. Does not
   // block — decode runs async; draw() will pick up _waveform once it is ready.
   async function loadFile(file) {
+    _dragging = false;
     const decodeToken = ++_decodeToken;
     _decodeInFlight = true;
     _waveformStatus = "decoding";
@@ -102,6 +105,7 @@ const Scrubber = (() => {
 
   // Reset: clear waveform and redraw blank canvas. Called on queue clear.
   function reset() {
+    _dragging = false;
     _decodeToken++;
     _decodeInFlight = false;
     _waveformStatus = "empty";

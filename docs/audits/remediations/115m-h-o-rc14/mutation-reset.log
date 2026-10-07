@@ -1,0 +1,36 @@
+✔ RC-14: touchcancel terminates touch drag ownership before unrelated moves (5.87617ms)
+✔ RC-14: touchend terminates touch drag ownership before unrelated moves (3.016187ms)
+✖ RC-14: reset terminates touch drag ownership before unrelated moves (1.636059ms)
+✔ RC-14: load terminates touch drag ownership before unrelated moves (0.70577ms)
+✔ RC-14: init terminates touch drag ownership before unrelated moves (0.298669ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21.257447
+
+✖ failing tests:
+
+test at tests/scrubber-drag-ownership.test.js:19:3
+✖ RC-14: reset terminates touch drag ownership before unrelated moves (1.636059ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/scrubber-drag-ownership.test.js:35:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

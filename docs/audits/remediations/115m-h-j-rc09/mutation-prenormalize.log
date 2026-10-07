@@ -1,0 +1,67 @@
+✖ RC-09: URL import reserves later explicit identity before missing-ID fallback and sharing (5.73372ms)
+✖ RC-09: collection owns missing/duplicate repair while valid opaque identities retain configuration (3.961132ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19.568823
+
+✖ failing tests:
+
+test at tests/preset-id-reservation.test.js:8:1
+✖ RC-09: URL import reserves later explicit identity before missing-ID fallback and sharing (5.73372ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      {
+        chanId: 'R',
+  +     id: 'ORB0'
+  -     id: 'ORB1'
+      },
+      {
+        chanId: 'C',
+  +     id: 'ORB1'
+  -     id: 'ORB0'
+      }
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/preset-id-reservation.test.js:15:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/preset-id-reservation.test.js:20:1
+✖ RC-09: collection owns missing/duplicate repair while valid opaque identities retain configuration (3.961132ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'ORB9007199254740993'
+  - 'ORB0'
+        ^
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/preset-id-reservation.test.js:30:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ORB9007199254740993',
+    expected: 'ORB0',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

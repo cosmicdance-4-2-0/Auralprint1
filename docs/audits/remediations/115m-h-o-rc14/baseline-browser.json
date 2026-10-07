@@ -1,0 +1,15 @@
+{
+  "version": "v0.1.15m.h.n",
+  "browser": "151.0.7922.173",
+  "defect": true,
+  "results": [
+    {
+      "mode": "cancel-canvas",
+      "startTime": 5,
+      "afterTime": 15,
+      "intercepted": true,
+      "freshDragTime": 11.999999,
+      "errors": []
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+✔ RC-13: queue removal retains neighboring action focus and empty queue restores Hide (50.816722ms)
+✔ RC-13: queue activation/refresh preserves row focus and never steals outside focus (10.040117ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.417425

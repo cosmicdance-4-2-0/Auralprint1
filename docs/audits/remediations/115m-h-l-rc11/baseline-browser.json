@@ -1,0 +1,27 @@
+{
+  "version": "v0.1.15m.h.k",
+  "browser": "151.0.7922.173",
+  "expectedDefect": true,
+  "results": [
+    {
+      "desired": "dominantBand",
+      "before": {
+        "value": "dominantBand",
+        "readout": "mixed",
+        "modes": [
+          "fixed",
+          "dominantBand"
+        ]
+      },
+      "after": {
+        "value": "dominantBand",
+        "modes": [
+          "fixed",
+          "dominantBand"
+        ],
+        "changes": 0
+      },
+      "errors": []
+    }
+  ]
+}

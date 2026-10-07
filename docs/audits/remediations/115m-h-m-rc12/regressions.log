@@ -1,0 +1,20 @@
+✔ RC-12: picker admits empty MIME to canonical activation (42.953953ms)
+✔ RC-12: picker admits application/ogg to canonical activation (5.965887ms)
+✔ RC-12: picker admits application/octet-stream to canonical activation (4.623525ms)
+✔ RC-12: picker admits video/mp4 to canonical activation (3.655915ms)
+✔ RC-12: picker admits audio/wav to canonical activation (8.85887ms)
+✔ RC-12: picker decoder failure remains truthful for admitted metadata (4.573024ms)
+✔ RC-12: drop admits empty MIME to canonical activation (7.964632ms)
+✔ RC-12: drop admits application/ogg to canonical activation (15.973635ms)
+✔ RC-12: drop admits application/octet-stream to canonical activation (2.309151ms)
+✔ RC-12: drop admits video/mp4 to canonical activation (2.398886ms)
+✔ RC-12: drop admits audio/wav to canonical activation (2.130903ms)
+✔ RC-12: drop decoder failure remains truthful for admitted metadata (2.203362ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160.63047

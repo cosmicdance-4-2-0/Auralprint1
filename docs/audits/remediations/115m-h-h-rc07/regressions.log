@@ -1,0 +1,11 @@
+✔ RC-07: count-2 URL input represents 1 kHz after canonical import/resolve/rebuild (11.71961ms)
+✔ RC-07: import and runtime share minimum/maximum validation without mutating preferences (7.684076ms)
+✔ RC-07: every supported count/distribution covers 0 through Nyquist, including clamped ceilings (177.041423ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 205.921278

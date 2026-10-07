@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 7, 2026. Development revision: `v0.1.15m.h.f` / Build 115. Preset schema: 10 (frozen for Build 115).
+Updated: October 7, 2026. Development revision: `v0.1.15m.h.o` / Build 115. Preset schema: 10 (frozen for Build 115).
 
 The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A closed RC-01; M.H.B adds infrastructure-only CI/build validation. M.H.C closes RC-06; M.H.D closes RC-02 cancellation with Linux/Windows CI green. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; all other unresolved findings remain open, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
 
@@ -47,7 +47,7 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: v0.1.15m.h.g closes RC-05 EOF loss with Linux/Windows CI green. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED. Audit remediation remains active; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
+**Status: v0.1.15m.h.o corrects RC-14: terminate cancelled touch seek ownership, with local acceptance checks passing. RC-01 through RC-06 remain CLOSED. RC-07 through RC-14 pass local acceptance. RC-15 remains open; autonomous remediation stopped after Node/native Chromium measurements because aggregate/frame budgets and degradation policy require a product decision. No release-readiness PR was created. 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 

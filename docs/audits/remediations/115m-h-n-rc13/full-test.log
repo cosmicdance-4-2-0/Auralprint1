@@ -1,0 +1,38 @@
+
+> test
+> node --test
+
+✔ tests/analysis-frame.test.js (126.123232ms)
+✔ tests/analysis-panel.test.js (93.44863ms)
+✔ tests/band-bank.test.js (88.706204ms)
+✔ tests/band-count-coverage.test.js (224.152362ms)
+✔ tests/fft-coordinate.test.js (98.787478ms)
+✔ tests/input-source-manager.test.js (111.212381ms)
+✔ tests/live-source-ownership.test.js (178.849688ms)
+✔ tests/orb-band-picker.test.js (72.102716ms)
+✔ tests/orb-collection.test.js (104.212773ms)
+✔ tests/orb-editor.test.js (204.116506ms)
+✔ tests/orb-id-termination.test.js (131.416845ms)
+✔ tests/per-orb-ownership.test.js (91.861759ms)
+✔ tests/preset-id-reservation.test.js (76.763812ms)
+✔ tests/preset-schema-10.test.js (141.302676ms)
+✔ tests/recording-export.test.js (132.327389ms)
+✔ tests/ring-phase-lock.test.js (66.024755ms)
+✔ tests/scene-panel.test.js (90.841246ms)
+✔ tests/scrubber-waveform.test.js (75.572302ms)
+✔ tests/spectral-ring-editor.test.js (67.357949ms)
+✔ tests/stream-graph.test.js (70.654326ms)
+✔ tests/targeted-audit.test.js (903.420192ms)
+✔ tests/transport-ownership.test.js (125.283805ms)
+✔ tests/url-preset-band-rebuild.test.js (102.282757ms)
+✔ tests/visualizer-runtime.test.js (90.269721ms)
+✔ tests/visualizers-panel.test.js (96.357845ms)
+✔ tests/workspace-ui.test.js (79.031556ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3708.420758

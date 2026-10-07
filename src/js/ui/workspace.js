@@ -63,8 +63,8 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     document.documentElement.style.setProperty("--ui-audio-h", `${height}px`);
   }
 
-  function hideQueuePanel() { if (!ui.queuePanel) return; ui.queuePanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.queuePanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenQueue); }
-  function showQueuePanel() { if (!ui.queuePanel) return; ui.queuePanel.style.display = "block"; refreshQueuePanel(); bringPanelForward(ui.queuePanel); syncLauncherState(); if (document.activeElement === ui.btnOpenQueue && ui.btnHideQueue) ui.btnHideQueue.focus(); }
+  function hideQueuePanel() { if (!ui.queuePanel) return; const restoreFocus = document.activeElement && ui.queuePanel.contains(document.activeElement); ui.queuePanel.style.display = "none"; syncLauncherState(); if (restoreFocus) restoreLauncherFocus(ui.btnOpenQueue || ui.btnToggleQueue); }
+  function showQueuePanel() { if (!ui.queuePanel) return; ui.queuePanel.style.display = "block"; refreshQueuePanel(); bringPanelForward(ui.queuePanel); syncLauncherState(); if (document.activeElement === (ui.btnOpenQueue || ui.btnToggleQueue) && ui.btnHideQueue) ui.btnHideQueue.focus(); }
   function hideAudioPanel() { ui.audioPanel.style.display = "none"; syncAudioDockHeight(); syncLauncherState(); if (document.activeElement && ui.audioPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenAudio); }
   function showAudioPanel() { ui.audioPanel.style.display = "grid"; syncAudioDockHeight(); syncLauncherState(); if (document.activeElement === ui.btnOpenAudio) ui.btnHideAudio.focus(); }
   function hideAnalysisPanel() { if (!ui.analysisPanel) return; ui.analysisPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.analysisPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenAnalysis); }
@@ -121,7 +121,10 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     if (ui.btnTogglePanels) ui.btnTogglePanels.addEventListener("click", togglePanels);
     if (ui.btnHideRecord) ui.btnHideRecord.addEventListener("click", hideRecordPanel);
     if (ui.btnOpenRecord) ui.btnOpenRecord.addEventListener("click", () => ui.recordingPanelVisible ? hideRecordPanel() : showRecordPanel());
-    for (const panel of [ui.visualizersPanel, ui.analysisPanel, ui.scenePanel, ui.queuePanel, ui.recordPanel]) if (panel) panel.addEventListener("pointerdown", () => bringPanelForward(panel));
+    for (const panel of [ui.visualizersPanel, ui.analysisPanel, ui.scenePanel, ui.queuePanel, ui.recordPanel]) if (panel) {
+      panel.addEventListener("pointerdown", () => bringPanelForward(panel));
+      panel.addEventListener("focusin", () => { if (isPanelVisible(panel)) bringPanelForward(panel); });
+    }
     if (ui.audioDockObserver) ui.audioDockObserver.disconnect();
     if (typeof ResizeObserver === "function") { ui.audioDockObserver = new ResizeObserver(syncAudioDockHeight); ui.audioDockObserver.observe(ui.audioPanel); }
     syncAudioDockHeight(); syncLauncherState();

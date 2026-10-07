@@ -17,7 +17,17 @@ function replacePreferences(next) {
 const BAND_NAMES = CONFIG.bandNames;
 const BAND_NAME_TO_INDEX = new Map(BAND_NAMES.map((name, index) => [name, index]));
 
-function resolveSettings() { runtime.settings = deepClone(preferences); }
+function normalizeBandCount(count) {
+  const limits = CONFIG.limits.bands.count;
+  return Number.isInteger(count) && count >= limits.min && count <= limits.max
+    ? count
+    : CONFIG.defaults.bands.count;
+}
+
+function resolveSettings() {
+  runtime.settings = deepClone(preferences);
+  runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
+}
 
 
 function normalizeOrbChannelId(rawChanId, rawLegacyBandId) {
@@ -164,4 +174,4 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   };
 }
 
-export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef };
+export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeBandCount, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef };

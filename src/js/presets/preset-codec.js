@@ -1,7 +1,7 @@
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
-import { sanitizeOrbBandIds, normalizeOrbDef } from "../core/preferences.js";
+import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 
 // Preset data contract, independent of URL/base64 or application state.
@@ -82,12 +82,7 @@ function sanitizePreset(decoded) {
   }
 
   if (incoming.bands) {
-    const maxBandCount = Array.isArray(CONFIG.bandNames) && CONFIG.bandNames.length
-      ? CONFIG.bandNames.length
-      : CONFIG.defaults.bands.count;
-    if (Number.isInteger(incoming.bands.count) && incoming.bands.count >= 2 && incoming.bands.count <= maxBandCount) {
-      next.bands.count = incoming.bands.count;
-    }
+    next.bands.count = normalizeBandCount(incoming.bands.count);
     if (Number.isFinite(incoming.bands.floorHz) && incoming.bands.floorHz > 0) {
       next.bands.floorHz = incoming.bands.floorHz;
     }
@@ -203,7 +198,7 @@ function sanitizePreset(decoded) {
         mappedOrb.particles = { ...base.particles, ...(incoming.particles || {}) };
         mappedOrb.trace = { ...base.trace, ...(incoming.trace || {}) };
       }
-      return normalizeOrbDef(mappedOrb, defaults[i % defaults.length]);
+      return mappedOrb;
     }));
   }
 

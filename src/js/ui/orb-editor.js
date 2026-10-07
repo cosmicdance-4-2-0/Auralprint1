@@ -133,13 +133,17 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     return controllers;
   }
   function refreshBulk(orbs) {
-    const bulk = (group, field, control, output, format) => { const model = readBulkOrbValue(orbs, group, field); control.disabled = !model.available; if (!model.available) { output.textContent = "—"; if (control.type === "checkbox") control.indeterminate = false; return; } if (!model.mixed) control.value = String(model.value); output.textContent = model.mixed ? "mixed" : format(model.value); if (control.type === "checkbox") { control.indeterminate = model.mixed; if (!model.mixed) control.checked = !!model.value; } };
+    const bulk = (group, field, control, output, format) => { const model = readBulkOrbValue(orbs, group, field); control.disabled = !model.available; if (!model.available) { output.textContent = "—"; if (control.type === "checkbox") control.indeterminate = false; return; } if (!model.mixed) control.value = String(model.value); else if (control === ui.selLineColorMode) control.value = ""; output.textContent = model.mixed ? "mixed" : format(model.value); if (control.type === "checkbox") { control.indeterminate = model.mixed; if (!model.mixed) control.checked = !!model.value; } };
     bulk("trace","lines",ui.chkLines,ui.valLines,v=>v?"on":"off"); bulk("trace","numLines",ui.rngNumLines,ui.valNumLines,String); bulk("trace","lineColorMode",ui.selLineColorMode,ui.valLineColorMode,String);
     for (const [g,f,c,o,format] of [["particles","emitPerSecond",ui.rngEmit,ui.valEmit,v=>`${v}/s`],["particles","sizeMaxPx",ui.rngSizeMax,ui.valSizeMax,v=>`${v}px`],["particles","sizeMinPx",ui.rngSizeMin,ui.valSizeMin,v=>`${v}px`],["particles","sizeToMinSec",ui.rngSizeToMin,ui.valSizeToMin,v=>`${fmt(v,1)}s`],["particles","ttlSec",ui.rngTTL,ui.valTTL,v=>`${fmt(v,1)}s`],["particles","overlapRadiusPx",ui.rngOverlap,ui.valOverlap,v=>`${fmt(v,1)}px`],["motion","angularSpeedRadPerSec",ui.rngOmega,ui.valOmega,v=>`${fmt(v,3)} rad/s (${fmt(v*RAD_TO_DEG,1)}°/s)`],["response","waveformRadialDisplaceFrac",ui.rngWfDisp,ui.valWfDisp,v=>fmt(v,3)],["response","minRadiusFrac",ui.rngMinRad,ui.valMinRad,v=>fmt(v,3)],["response","maxRadiusFrac",ui.rngMaxRad,ui.valMaxRad,v=>fmt(v,3)]]) bulk(g,f,c,o,format);
   }
   function init() {
     if (initializedOn === ui.orbEditorList) return false; initializedOn = ui.orbEditorList;
-    const bulk = (control,event,group,field,read,reason) => control.addEventListener(event,()=>{ if (applyBulkOrbValue(preferences.orbs,group,field,read(control))) commitPreferences(reason); });
+    const mixedOption = make("option", "", "mixed");
+    mixedOption.value = "";
+    mixedOption.disabled = true;
+    ui.selLineColorMode.appendChild(mixedOption);
+    const bulk = (control,event,group,field,read,reason) => control.addEventListener(event,()=>{ if (control === ui.selLineColorMode && control.value === "") return; if (applyBulkOrbValue(preferences.orbs,group,field,read(control))) commitPreferences(reason); });
     bulk(ui.chkLines,"change","trace","lines",c=>!!c.checked,"lines"); bulk(ui.rngNumLines,"input","trace","numLines",c=>Number(c.value),"num lines"); bulk(ui.selLineColorMode,"change","trace","lineColorMode",c=>c.value,"line color mode");
     for (const [control,group,field,reason] of [[ui.rngEmit,"particles","emitPerSecond","emit rate"],[ui.rngSizeMax,"particles","sizeMaxPx","size max"],[ui.rngSizeMin,"particles","sizeMinPx","size min"],[ui.rngSizeToMin,"particles","sizeToMinSec","time to min"],[ui.rngTTL,"particles","ttlSec","ttl"],[ui.rngOverlap,"particles","overlapRadiusPx","overlap radius"],[ui.rngOmega,"motion","angularSpeedRadPerSec","angular speed"],[ui.rngWfDisp,"response","waveformRadialDisplaceFrac","orb waveform disp"],[ui.rngMinRad,"response","minRadiusFrac","min radius"],[ui.rngMaxRad,"response","maxRadiusFrac","max radius"]]) bulk(control,"input",group,field,c=>Number(c.value),reason);
     refresh(); return true;

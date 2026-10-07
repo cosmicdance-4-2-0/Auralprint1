@@ -1,0 +1,10 @@
+✔ RC-08: bins below the aligned 22.5 kHz top boundary cannot energize a targeted Orb (15.713091ms)
+✔ RC-08: correct FFT geometry preserves inclusive adjacent overlap and final-bin clamping (2.375159ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28.216795

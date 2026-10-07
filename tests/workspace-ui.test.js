@@ -28,6 +28,37 @@ function element(display = "block") {
   };
 }
 
+test("RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle", () => {
+  const previousDocument = globalThis.document;
+  globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
+  const ui = {};
+  for (const key of ["audioPanel", "analysisPanel", "scenePanel", "visualizersPanel", "queuePanel", "recordPanel", "btnToggleWorkspaceLauncher", "btnToggleQueue", "btnHideQueue"]) ui[key] = element();
+  const workspace = createWorkspaceUi({ ui });
+  try {
+    workspace.init();
+    assert.equal(workspace.init(), false);
+    for (const key of ["analysisPanel", "scenePanel", "visualizersPanel", "queuePanel", "recordPanel"]) {
+      ui[key].dispatch("focusin");
+      assert.equal(ui[key].classList.contains("panel-front"), true);
+      assert.equal(ui[key].listenerCount("focusin"), 1);
+      for (const other of ["analysisPanel", "scenePanel", "visualizersPanel", "queuePanel", "recordPanel"]) {
+        assert.equal(ui[other].classList.contains("panel-front"), key === other);
+      }
+    }
+    ui.scenePanel.style.display = "none";
+    ui.scenePanel.dispatch("focusin");
+    assert.equal(ui.recordPanel.classList.contains("panel-front"), true);
+    document.activeElement = ui.queuePanel;
+    workspace.hideQueuePanel();
+    assert.equal(document.activeElement, ui.btnToggleQueue);
+    workspace.showQueuePanel();
+    assert.equal(document.activeElement, ui.btnHideQueue);
+    document.activeElement = ui.btnToggleWorkspaceLauncher;
+    workspace.hideQueuePanel();
+    assert.equal(document.activeElement, ui.btnToggleWorkspaceLauncher);
+  } finally { globalThis.document = previousDocument; }
+});
+
 test("workspace owns deterministic visibility, restore, focus, record, collapse, and idempotent wiring", () => {
   const previousDocument = globalThis.document;
   const previousHooks = state.recording.hooksEnabled;

@@ -1,0 +1,42 @@
+✔ dynamic editor supports zero, one, and N Orbs and disables bulk at zero (15.386397ms)
+✔ editor reconciliation retains roots by ID, reorders nodes, and replaces only structural changes (6.568817ms)
+✔ generated controls commit by persistent ID after reorder and focusOrb is ID based (6.874908ms)
+✔ bulk helper keeps mixed and zero semantics (0.35258ms)
+✖ RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once (2.588132ms)
+✔ refresh synchronizes invalidated content without moving stable roots or disturbing focus (3.874186ms)
+✔ programmatic select synchronization keeps generated readouts aligned with selected options (3.980295ms)
+✔ every schema-10 Orb setting has a generated writable control (2.510255ms)
+✔ phase is presented accessibly in degrees and commits radians by stable ID (5.008201ms)
+✔ nested controls remain independent and canonical normalization refreshes their values (8.14656ms)
+✔ ten arbitrary-ID Orb cards retain independent phase and nested values (11.280913ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.42126
+
+✖ failing tests:
+
+test at tests/orb-editor.test.js:23:1
+✖ RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once (2.588132ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'dominantBand' !== ''
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/orb-editor.test.js:31:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'dominantBand',
+    expected: '',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
