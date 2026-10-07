@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.g");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.g/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3070,6 +3070,7 @@ async function withSettingsActionHarness(t, run) {
   const previousSettings = runtime.settings;
   const previousBands = { ...state.bands };
   const previousOrbs = state.orbs.slice();
+  const previousSourceKind = state.source.kind;
   const descriptors = Object.fromEntries(["location", "history", "navigator"].map((name) => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
   t.mock.timers.enable({ apis: ["setTimeout"] });
   const location = { pathname: "/", search: "", hash: "", href: "https://example.test/" };
@@ -3088,14 +3089,23 @@ async function withSettingsActionHarness(t, run) {
     initOrbs();
     UI.wireControls();
     UI.applyPrefs(null);
-    let orbStatus = "Choose a visualizer to shape its response.";
-    const editWrites = [];
-    Object.defineProperty(state.ui.visualizerEditStatus, "textContent", {
-      configurable: true,
-      get: () => orbStatus,
-      set: (message) => { editWrites.push(message); orbStatus = message; },
-    });
-    await run({ ...harness, location, clipboard });
+    const statusWrites = {};
+    for (const [id, initial] of Object.entries({
+      visualizerEditStatus: "Choose a visualizer to shape its response.",
+      sceneStatus: "Shared scene settings and preset controls.",
+      analysisStatus: "Analysis controls ready.",
+      audioStatus: state.ui.audioStatus.textContent,
+    })) {
+      let status = initial;
+      statusWrites[id] = [];
+      Object.defineProperty(state.ui[id], "textContent", {
+        configurable: true,
+        get: () => status,
+        set: (message) => { statusWrites[id].push(message); status = message; },
+      });
+    }
+    await run({ ...harness, location, clipboard, statusWrites });
+    const editWrites = statusWrites.visualizerEditStatus;
     assert.ok(editWrites.every((message) => !/share link|preset|settings reset|Updated: scene/i.test(message)), `Unexpected Settings message in Visualizers: ${editWrites.join("; ")}`);
   } finally {
     // Drain the coordinator's pending toast handles before restoring its DOM.
@@ -3110,6 +3120,7 @@ async function withSettingsActionHarness(t, run) {
     BandBankController.syncFromSettings();
     Object.assign(state.bands, previousBands);
     state.orbs.splice(0, state.orbs.length, ...previousOrbs);
+    state.source.kind = previousSourceKind;
     VisualizerRuntime.rebuild(state.orbs);
   }
 }
@@ -3198,7 +3209,7 @@ test("Reset All Settings restores complete CONFIG defaults and reports only in S
 });
 
 test("Scene control commits use Settings feedback while Bulk Orb commits use Visualizers feedback", async (t) => {
-  await withSettingsActionHarness(t, () => {
+  await withSettingsActionHarness(t, ({ statusWrites }) => {
     const controls = [["clrBg", "input", "#123456"], ["clrParticle", "input", "#abcdef"], ["selParticleColorSrc", "change", "angle"], ["rngHueOff", "input", "120"], ["rngSat", "input", "0.5"], ["rngVal", "input", "0.75"]];
     for (const [id, event, value] of controls) {
       state.ui[id].value = value;
@@ -3210,11 +3221,119 @@ test("Scene control commits use Settings feedback while Bulk Orb commits use Vis
     assert.equal(runtime.settings.visuals.particleColor, "#abcdef");
     assert.equal(runtime.settings.bands.particleColorSource, "angle");
     assert.deepEqual(runtime.settings.bands.rainbow, { hueOffsetDeg: 120, saturation: 0.5, value: 0.75 });
+    assert.equal(statusWrites.sceneStatus.length, controls.length);
+    assert.deepEqual(statusWrites.visualizerEditStatus, []);
+    assert.deepEqual(statusWrites.analysisStatus, []);
+    assert.deepEqual(statusWrites.audioStatus, []);
     const settingsMessage = state.ui.sceneStatus.textContent;
     state.ui.rngOmega.value = "2";
     state.ui.rngOmega.dispatch("input");
     assert.match(state.ui.visualizerEditStatus.textContent, /^Updated:/);
     assert.equal(state.ui.sceneStatus.textContent, settingsMessage);
+    assert.equal(statusWrites.visualizerEditStatus.length, 1);
+    assert.equal(statusWrites.sceneStatus.length, controls.length, "bulk edit emits no Scene feedback");
+  });
+});
+
+test("M.H Analysis edits report only through Analysis, including validation and band rebuild options", async (t) => {
+  await withSettingsActionHarness(t, ({ statusWrites }) => {
+    const rebuild = t.mock.method(BandBankController, "rebuildNow");
+    const controls = [
+      ["rngRmsGain", "input", "2", "Updated: rms gain (analysis)"],
+      ["rngSmooth", "input", "0.5", "Updated: smoothing"],
+      ["selFFT", "change", "4096", "Updated: fft size"],
+      ["selDistMode", "change", "bark", "Updated: band distribution mode"],
+      ["inpBandFloorHz", "change", "30", "Band floor updated."],
+      ["inpBandCeilingHz", "change", "23000", "Configured ceiling updated."],
+    ];
+    for (const [id, event, value, message] of controls) {
+      state.ui[id].value = value;
+      const before = statusWrites.analysisStatus.length;
+      state.ui[id].dispatch(event);
+      assert.ok(statusWrites.analysisStatus.length > before, id);
+      assert.equal(state.ui.analysisStatus.textContent, message, id);
+      assert.deepEqual(statusWrites.visualizerEditStatus, [], `${id} must never write to Visualizers`);
+      assert.deepEqual(statusWrites.sceneStatus, [], `${id} must never write to Scene`);
+      assert.deepEqual(statusWrites.audioStatus, [], `${id} must never write to Audio`);
+    }
+    assert.equal(rebuild.mock.callCount(), 3, "distribution, floor and ceiling retain explicit rebuilds");
+    const beforeInvalid = runtime.settings;
+    state.ui.inpBandFloorHz.value = "0";
+    state.ui.inpBandFloorHz.dispatch("change");
+    assert.equal(state.ui.analysisStatus.textContent, "Band floor must be a positive finite number.");
+    state.ui.inpBandCeilingHz.value = "10";
+    state.ui.inpBandCeilingHz.dispatch("change");
+    assert.equal(state.ui.analysisStatus.textContent, "Configured ceiling cannot be below band floor.");
+    assert.equal(runtime.settings, beforeInvalid, "invalid input still does not commit");
+    assert.deepEqual(statusWrites.visualizerEditStatus, []);
+    assert.deepEqual(statusWrites.sceneStatus, []);
+    assert.deepEqual(statusWrites.audioStatus, []);
+  });
+});
+
+test("M.H repeat, mute and volume use the existing Audio toast and restore source status after expiry", async (t) => {
+  await withSettingsActionHarness(t, ({ statusWrites }) => {
+    let now = 100000;
+    t.mock.method(performance, "now", () => now);
+    state.source.kind = "file";
+    UI.refreshAllUiText();
+    const sourceStatus = state.ui.audioStatus.textContent;
+    // Expired test toasts stay expired when the real performance clock resumes.
+    now = -100000;
+    const controls = [
+      ["btnRepeat", "click", null, "Updated: repeat"],
+      ["chkMute", "change", true, "Updated: mute"],
+      ["rngVol", "input", "0.4", "Updated: volume (playback only)"],
+    ];
+    for (const [id, event, value, message] of controls) {
+      if (typeof value === "boolean") state.ui[id].checked = value;
+      else if (value !== null) state.ui[id].value = value;
+      state.ui[id].dispatch(event);
+      UI.refreshAllUiText();
+      assert.equal(state.ui.audioStatus.textContent, message, id);
+      now += 2499;
+      UI.refreshAllUiText();
+      assert.equal(state.ui.audioStatus.textContent, message, "existing toast duration is retained");
+      now += 1;
+      UI.refreshAllUiText();
+      assert.equal(state.ui.audioStatus.textContent, sourceStatus, "normal source status resumes after expiry");
+      assert.deepEqual(statusWrites.visualizerEditStatus, [], `${id} must never write to Visualizers`);
+      assert.deepEqual(statusWrites.sceneStatus, [], `${id} must never write to Scene`);
+      assert.deepEqual(statusWrites.analysisStatus, [], `${id} must never write to Analysis`);
+    }
+  });
+});
+
+test("M.H individual Orb and Spectral Ring edits emit only Visualizer feedback", async (t) => {
+  await withSettingsActionHarness(t, ({ statusWrites }) => {
+    const control = state.ui.orbEditorList.children[0].querySelectorAll("input").find((node) => node.id?.endsWith("angular-speed"));
+    control.value = "2";
+    control.dispatch("input");
+    assert.equal(runtime.settings.orbs[0].motion.angularSpeedRadPerSec, 2);
+    assert.equal(statusWrites.visualizerEditStatus.length, 1);
+    assert.match(state.ui.visualizerEditStatus.textContent, /^Updated: .* angular speed$/);
+    state.ui.rngBandAlpha.value = "0.4";
+    state.ui.rngBandAlpha.dispatch("input");
+    assert.equal(runtime.settings.bands.overlay.alpha, 0.4);
+    assert.equal(statusWrites.visualizerEditStatus.length, 2);
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Updated: spectral ring alpha");
+    assert.deepEqual(statusWrites.sceneStatus, []);
+    assert.deepEqual(statusWrites.analysisStatus, []);
+    assert.deepEqual(statusWrites.audioStatus, []);
+    t.mock.timers.tick(2500);
+    assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
+  });
+});
+
+test("M.H generic preference application is status-neutral and internal synchronization stays silent", async (t) => {
+  await withSettingsActionHarness(t, ({ statusWrites }) => {
+    const explicitStatus = t.mock.fn();
+    UI.applyPrefs("generic synchronization");
+    UI.applyPrefs("non-callable callback", { showStatus: true });
+    UI.applyPrefs(null);
+    UI.applyPrefs(null, { showStatus: explicitStatus });
+    assert.equal(explicitStatus.mock.callCount(), 0);
+    for (const [id, writes] of Object.entries(statusWrites)) assert.deepEqual(writes, [], id);
   });
 });
 

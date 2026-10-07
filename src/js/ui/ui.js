@@ -327,6 +327,7 @@ const UI = (() => {
   // - visualizer edit lane carries Orb and Spectral Ring configuration toasts.
   // - scene lane carries shared Scene settings and preset toasts.
   // - audio lane carries transport/audio toasts plus a short recording-state summary.
+  // - analysis lane carries analysis configuration and validation feedback.
   const STATUS_DEFAULT_VISUALIZER_EDIT = "Choose a visualizer to shape its response.";
   const STATUS_DEFAULT_SCENE = "Shared scene settings and preset controls.";
   let _visualizerEditStatusToastTimer = null;
@@ -336,11 +337,15 @@ const UI = (() => {
   let queuePanelRefresher = () => {};
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
   const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
-  const analysisPanelUi = createAnalysisPanelUi({ ui, commitPreferences: applyPrefs, bandColor: (index) => ColorPolicy.bandRgb01(index) });
+  const analysisPanelUi = createAnalysisPanelUi({
+    ui,
+    commitPreferences: (reason, options = {}) => applyPrefs(reason, { ...options, showStatus: analysisStatus }),
+    bandColor: (index) => ColorPolicy.bandRgb01(index),
+  });
   const orbEditorUi = createOrbEditorUi({
     ui,
     commitOrbChangeById: applyOrbPrefChangeById,
-    commitPreferences: applyPrefs,
+    commitPreferences: (reason) => applyPrefs(reason, { showStatus: visualizerEditStatusToast }),
     showStatus: visualizerEditStatusToast,
     onControlsChanged: () => { initConfigTooltips(); wireConfigTooltipFeedbackEvents(); },
   });
@@ -348,7 +353,7 @@ const UI = (() => {
     ui,
     preferences,
     getSettings: () => runtime.settings,
-    commitPreferences: applyPrefs,
+    commitPreferences: (reason) => applyPrefs(reason, { showStatus: visualizerEditStatusToast }),
   });
   const visualizersPanelUi = createVisualizersPanelUi({
     ui,
@@ -393,6 +398,10 @@ const UI = (() => {
     _audioStatusToastUntilMs = performance.now() + holdMs;
   }
 
+  function analysisStatus(msg) {
+    if (ui.analysisStatus) ui.analysisStatus.textContent = msg;
+  }
+
   function clearAudioStatusToast() {
     _audioStatusToastText = "";
     _audioStatusToastUntilMs = 0;
@@ -404,12 +413,12 @@ const UI = (() => {
     if (orbIndex < 0) return false;
     const defaults = CONFIG.defaults.orbs;
     preferences.orbs[orbIndex] = normalizeOrbDef(preferences.orbs[orbIndex], defaults[orbIndex % defaults.length]);
-    applyPrefs(reason);
+    applyPrefs(reason, { showStatus: visualizerEditStatusToast });
     return true;
   }
 
   function applyPrefs(reason, options = {}) {
-    const { rebuildBandsOnDefinitionChange = false, showStatus = visualizerEditStatusToast } = options;
+    const { rebuildBandsOnDefinitionChange = false, showStatus = null } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
@@ -428,8 +437,7 @@ const UI = (() => {
     orbEditorUi.refresh();
     scenePanelUi.refresh(runtime.settings);
 
-    if (reason) showStatus(`Updated: ${reason}`);
-    if (_sceneStatusToastTimer === null) ui.sceneStatus.textContent = STATUS_DEFAULT_SCENE;
+    if (reason && typeof showStatus === "function") showStatus(`Updated: ${reason}`);
   }
 
 
@@ -1662,7 +1670,7 @@ const UI = (() => {
       if (!isFileWorkflowMode(state.source)) return;
       const mode = preferences.audio.repeatMode;
       preferences.audio.repeatMode = mode === "none" ? "one" : (mode === "one" ? "all" : "none");
-      applyPrefs("repeat");
+      applyPrefs("repeat", { showStatus: audioStatusToast });
     });
     if (ui.btnShuffle) {
       ui.btnShuffle.addEventListener("click", () => {
@@ -1670,11 +1678,11 @@ const UI = (() => {
         if (Queue.shuffle()) refreshQueuePanel();
       });
     }
-    ui.chkMute.addEventListener("change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute"); });
+    ui.chkMute.addEventListener("change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute", { showStatus: audioStatusToast }); });
 
     ui.rngVol.addEventListener("input", () => {
       preferences.audio.volume = Number(ui.rngVol.value);
-      applyPrefs("volume (playback only)");
+      applyPrefs("volume (playback only)", { showStatus: audioStatusToast });
     });
 
 
