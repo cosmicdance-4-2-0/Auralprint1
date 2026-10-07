@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 7, 2026. Development revision: `v0.1.15m.h.a` / Build 115. Preset schema: 10 (frozen for Build 115).
+Updated: October 7, 2026. Development revision: `v0.1.15m.h.b` / Build 115. Preset schema: 10 (frozen for Build 115).
 
-The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A corrects RC-01 only, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
+The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A closed RC-01; M.H.B adds infrastructure-only CI/build validation. RC-06 and remaining release-audit findings remain unresolved, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -25,7 +25,7 @@ Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are p
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A corrects RC-01; stages 14–15 belong to 115N and remain withheld.
+Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A closed RC-01; M.H.B establishes CI/build infrastructure only; stages 14–15 belong to 115N and remain withheld.
 
 1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
 2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
@@ -47,7 +47,7 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: v0.1.15m.h.a corrects RC-01 unsafe numeric Orb ID allocation. Audit remediation remains active; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
+**Status: v0.1.15m.h.b establishes the infrastructure-only CI/build baseline; RC-01 remains closed after M.H.A. Audit remediation remains active; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 
@@ -79,6 +79,14 @@ Revision 115J.A established channel-complete spectral analysis. L/R/C reuse inde
 
 The Node suite and clean-install single-file build cover preset, source-lifecycle, recording, chooser, packaging, status ownership, and template structure. M.E Stream stereo correctness is fixed and locally validated; the optional browser diagnostic retains stereo/left-only/right-only/dual-mono, file-versus-stream graph, splitter, built-artifact status, and optional native-capture checks. This evidence does not complete the wider real-media, device/permission, recording-export, accessibility, or performance acceptance required by 115N. Validation commands remain sequential because a build and the build-directory test can interfere with each other.
 
+### Revision 115M.H.B — CI/build baseline
+
+Canonical developer/agent bootstrap is `npm ci`, `npm test`, then `npm run build`, sequentially. GitHub Actions now validates a clean lockfile install/test/build on Linux and Windows for pull requests and pushes to `main`, explicitly provisioning Node 24 and Python 3.12. setup-node caches npm packages only; `node_modules/`, `.build/`, `build/`, and `dist/` remain ignored and untracked. CI checks the non-empty versioned single-file HTML, its version marker, generated-file tracking, and `git diff --check`.
+
+Package installation may require network access even though the built application works offline. Use a disposable workspace-local npm cache if the default cache is unwritable; see [README bootstrap commands](README.md#developer-and-agent-bootstrap). Sandbox native-executable/child-process EPERM is an environment concern and must not be worked around in product source. No dependency, build-script, product-behavior, or schema change is part of M.H.B; schema remains 10.
+
+Browser/device acceptance remains separate from fast repository CI and still gates release readiness. RC-01 remains closed; RC-06 and the remaining release-audit findings remain unresolved. **115N remains withheld.**
+
 ### Known deferrals after 115M.H
 
 | Remaining issue | Status / future home |
@@ -92,9 +100,8 @@ The Node suite and clean-install single-file build cover preset, source-lifecycl
 | AUD-012 per-frame allocation / UI refresh performance | Build 117, including channel-complete analysis cost |
 | AUD-004 adjacent positive-width FFT-bin overlap | Intentional current behavior; Build 118 spectral partition work |
 | AUD-013 duplicate legacy band-name migration ambiguity | Build 118 |
-| Hosted CI / GitHub Actions | Desired repository infrastructure improvement; not implemented in M.H and not a Build-115 product correctness blocker |
 
-Accepted/fixed items are excluded from that ledger: AUD-001, AUD-003, AUD-005, M.C editor jump, M.E Stream stereo correctness, M.F schema-10 closure, and M.G Visualizer ownership. M.H adds no Queue UX, hosted CI, Orb-editor redesign, Camera, or new product features.
+Accepted/fixed items are excluded from that ledger: AUD-001, AUD-003, AUD-005, M.C editor jump, M.E Stream stereo correctness, M.F schema-10 closure, and M.G Visualizer ownership. M.H added no Queue UX, Orb-editor redesign, Camera, or new product features. Hosted CI is now implemented in M.H.B as infrastructure only.
 
 ## Build 116: camera controls, render separate from simulation
 

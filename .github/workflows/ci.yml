@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test-build:
+    name: Test and build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Test
+        run: npm test
+      - name: Build single-file application
+        run: npm run build
+      - name: Verify versioned artifact and untracked generated output
+        shell: node {0}
+        run: |
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const { execFileSync } = require('node:child_process');
+          const version = fs.readFileSync('version', 'utf8').trim();
+          assert.match(version, /^v.+/);
+          const artifact = `dist/auralprint_${version.slice(1)}.html`;
+          assert.ok(fs.statSync(artifact).size > 0, `Empty artifact: ${artifact}`);
+          assert.ok(fs.readFileSync(artifact, 'utf8').includes(version), 'Missing version marker');
+          const tracked = execFileSync('git', ['ls-files', '--', 'node_modules/', '.build/', 'build/', 'dist/'], { encoding: 'utf8' });
+          assert.equal(tracked.trim(), '', `Generated output is tracked: ${tracked}`);
+          console.log(`Verified ${artifact}`);
+      - name: Check diff whitespace
+        run: git diff --check
