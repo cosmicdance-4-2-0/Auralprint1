@@ -1,0 +1,388 @@
+[
+  {
+    "case": "clear-during-context-resume",
+    "defectConfirmed": true,
+    "afterClear": {
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": "",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": false,
+        "streamMeta": {
+          "hasAudio": false,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": false,
+      "media": null,
+      "status": "File mode ready. Load audio files to begin analysis."
+    },
+    "afterRelease": {
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "tone.wav",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": true,
+        "streamMeta": {
+          "hasAudio": true,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "tone.wav",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": true,
+      "media": {
+        "paused": false,
+        "src": "blob:http://127.0.0.1:40517/9796d4bd-57b8-40ca-9bac-ec096ed09b32"
+      },
+      "status": "Loaded: tone.wav"
+    },
+    "errors": []
+  },
+  {
+    "case": "clear-during-play-promise",
+    "defectConfirmed": true,
+    "afterClear": {
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": "",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": false,
+        "streamMeta": {
+          "hasAudio": false,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": false,
+      "media": null,
+      "status": "File mode ready. Load audio files to begin analysis."
+    },
+    "afterRelease": {
+      "source": {
+        "kind": "file",
+        "status": "error",
+        "label": "tone.wav",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "file-activation-failed",
+        "errorMessage": "Playback failed.",
+        "sessionActive": false,
+        "streamMeta": {
+          "hasAudio": false,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": false,
+      "media": null,
+      "status": "Playback failed."
+    },
+    "errors": []
+  },
+  {
+    "case": "multi-file-clear-repopulates-queue",
+    "defectConfirmed": true,
+    "afterClear": {
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": "",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": false,
+        "streamMeta": {
+          "hasAudio": false,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": false,
+      "media": null,
+      "status": "File mode ready. Load audio files to begin analysis."
+    },
+    "afterRelease": {
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "second.wav",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": true,
+        "streamMeta": {
+          "hasAudio": true,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "second.wav",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [
+          {
+            "index": 0,
+            "name": "second.wav",
+            "active": true
+          }
+        ],
+        "cursor": 0,
+        "length": 1
+      },
+      "graphReady": true,
+      "media": {
+        "paused": false,
+        "src": "blob:http://127.0.0.1:40517/d398cadd-e1e1-4c44-993c-47b1cf937e75"
+      },
+      "status": "Loaded: second.wav"
+    },
+    "errors": []
+  },
+  {
+    "case": "playPause-unload-null-dereference",
+    "defectConfirmed": true,
+    "after": {
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": "",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": false,
+        "streamMeta": {
+          "hasAudio": false,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": false,
+      "media": null,
+      "status": "Loaded: tone.wav"
+    },
+    "errors": [
+      "Cannot read properties of null (reading 'paused')"
+    ]
+  },
+  {
+    "case": "cancelled-mic-attach-destroys-new-stream-graph",
+    "defectConfirmed": true,
+    "beforeOldAttachResolves": {
+      "source": {
+        "kind": "stream",
+        "status": "active",
+        "label": "MediaStreamAudioDestinationNode",
+        "permission": {
+          "mic": "prompt",
+          "stream": "granted"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": true,
+        "streamMeta": {
+          "hasAudio": true,
+          "hasVideo": false,
+          "audioChannelCount": 2
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": true,
+      "media": null,
+      "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: mono-ish (L≈R)"
+    },
+    "afterOldAttachResolves": {
+      "source": {
+        "kind": "stream",
+        "status": "active",
+        "label": "MediaStreamAudioDestinationNode",
+        "permission": {
+          "mic": "prompt",
+          "stream": "granted"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": true,
+        "streamMeta": {
+          "hasAudio": true,
+          "hasVideo": false,
+          "audioChannelCount": 2
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [],
+        "cursor": -1,
+        "length": 0
+      },
+      "graphReady": false,
+      "media": null,
+      "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: n/a"
+    },
+    "trackStates": {
+      "mic": "ended",
+      "stream": "live"
+    },
+    "errors": []
+  },
+  {
+    "case": "touchcancel-leaves-global-seek-drag-active",
+    "defectConfirmed": true,
+    "result": {
+      "timeAfterStart": 5,
+      "timeAfterCancelledGestureAndUnrelatedMove": 15,
+      "unrelatedMoveDefaultPrevented": true
+    },
+    "errors": []
+  }
+]

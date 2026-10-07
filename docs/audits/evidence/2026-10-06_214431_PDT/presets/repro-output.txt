@@ -1,0 +1,21 @@
+normal ID allocation: "ORB43"
+huge ID single-Orb URL import: {"ok":true,"orbs":[{"id":"ORB9007199254740992","chanId":"R","bandIds":[]}]}
+direct collection normalization reserves valid future IDs: [{"id":"ORB1","chanId":"R"},{"id":"ORB0","chanId":"C"}]
+same input through URL preset renumbers the valid Orb: {"ok":true,"orbs":[{"id":"ORB0","chanId":"R","bandIds":[]},{"id":"ORB1","chanId":"C","bandIds":[]}]}
+malformed band IDs through URL transport: {"input":[null,false,"",[],true],"ok":true,"orbs":[{"id":"X","chanId":"R","bandIds":[0,1]}]}
+resulting target response instead of full-channel response: {"sanitizedBandIds":[0,1],"channelEnergy01":0.9,"energyOverride01":0,"selectedDominantBandIndex":0}
+actual Orb.step radius consequence at 1000px: {"malformedTargetRadius":10,"emptySelectionRadius":721}
+two-band preset loses 1 kHz spectral input: {"count":2,"ranges":[[0,20],[22500,"Infinity"]],"energies":[0,0]}
+three-band control represents 1 kHz input: {"count":3,"ranges":[[0,20],[20,22500],[22500,"Infinity"]],"energies":[0,0.0002605523710265763,0]}
+canonical default encode-decode-sanitize stable: true
+schema boundary 2: true
+schema boundary 3: true
+schema boundary 4: true
+schema boundary 5: true
+schema boundary 6: true
+schema boundary 7: true
+schema boundary 8: true
+schema boundary 9: true
+schema boundary 10: true
+schema boundary 11: false
+PASS: all non-hanging observations asserted against actual implementation
