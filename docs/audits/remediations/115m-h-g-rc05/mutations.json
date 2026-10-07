@@ -7,7 +7,7 @@
   },
   {
     "mutation": "B",
-    "test": "RC-05: no-next/repeat-off",
+    "test": "RC-05: Repeat One",
     "exitCode": 1,
     "rejected": true
   }

@@ -1,5 +1,7 @@
 # Build 115 remediation — stopped at RC-15
 
+Publication follow-up: this report records the autonomous mission stop before publication. The developer subsequently explicitly requested a review PR for the completed work. Review packaging preserves the RC-15 stop and does not claim release readiness. The branch incorporates accepted `main` commit e481e3c, including its additional RC-05 reentrancy regression and closure evidence; no production behavior changed during integration.
+
 **RC-07 through RC-14 are locally CLOSED in eight separate implementation commits. RC-15 remains an unresolved P2 release blocker. The autonomous mission STOPPED at the explicit product-policy condition. No release-readiness PR was created; branch was not pushed; hosted Linux/Windows CI was not invoked. No merge, promotion, renewed acceptance audit or release occurred.**
 
 Current development revision: **v0.1.15m.h.o** (115M.H.O, not release-candidate 115N). Preset schema remains **10**. **115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped.**
