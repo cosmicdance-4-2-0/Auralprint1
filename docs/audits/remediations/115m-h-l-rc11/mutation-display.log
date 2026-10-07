@@ -23,9 +23,9 @@
 test at tests/orb-editor.test.js:23:1
 ✖ RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once (2.588132ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   'dominantBand' !== ''
-  
+
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/orb-editor.test.js:31:14)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)

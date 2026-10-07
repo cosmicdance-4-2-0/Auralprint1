@@ -17,7 +17,7 @@ test at tests/workspace-ui.test.js:31:1
   AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
   + actual - expected
   ... Skipped lines
-  
+
     {
       addEventListener: [Function: addEventListener],
       attributes: {},
@@ -29,7 +29,7 @@ test at tests/workspace-ui.test.js:31:1
   -     display: 'block'
       }
     }
-  
+
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/workspace-ui.test.js:53:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)

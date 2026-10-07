@@ -15,11 +15,11 @@ test at tests/fft-coordinate.test.js:17:1
 ✖ RC-08: bins below the aligned 22.5 kHz top boundary cannot energize a targeted Orb (3.164054ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
   + actual - expected
-  
+
   + 0.14285714285714285
   - 0.125
        ^
-  
+
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/fft-coordinate.test.js:27:14)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -37,7 +37,7 @@ test at tests/fft-coordinate.test.js:32:1
 ✖ RC-08: correct FFT geometry preserves inclusive adjacent overlap and final-bin clamping (1.488196ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
     [
   -   0.3333333333333333,
   -   0.2,
@@ -45,7 +45,7 @@ test at tests/fft-coordinate.test.js:32:1
   +   0.25,
   +   0
     ]
-  
+
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/fft-coordinate.test.js:43:14)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)

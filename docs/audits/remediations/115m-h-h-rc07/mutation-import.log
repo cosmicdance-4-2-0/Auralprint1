@@ -15,9 +15,9 @@
 test at tests/band-count-coverage.test.js:21:1
 ✖ RC-07: count-2 URL input represents 1 kHz after canonical import/resolve/rebuild (6.221278ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   2 !== 256
-  
+
       at file:///workspace/Auralprint1/tests/band-count-coverage.test.js:29:10
       at withSettings (file:///workspace/Auralprint1/tests/band-count-coverage.test.js:14:9)
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/band-count-coverage.test.js:21:96)
@@ -36,9 +36,9 @@ test at tests/band-count-coverage.test.js:21:1
 test at tests/band-count-coverage.test.js:34:1
 ✖ RC-07: import and runtime share minimum/maximum validation without mutating preferences (3.943105ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   2 !== 256
-  
+
       at file:///workspace/Auralprint1/tests/band-count-coverage.test.js:40:14
       at withSettings (file:///workspace/Auralprint1/tests/band-count-coverage.test.js:14:9)
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/band-count-coverage.test.js:34:103)

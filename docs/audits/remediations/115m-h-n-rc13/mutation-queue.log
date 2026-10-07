@@ -16,7 +16,7 @@ test at tests/targeted-audit.test.js:3650:1
   AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
   + actual - expected
   ... Skipped lines
-  
+
     <ref *2> UiElementStub {
       addEventListener: [Function: addEventListener],
       append: [Function: append],
@@ -213,7 +213,7 @@ test at tests/targeted-audit.test.js:3650:1
       querySelector: [Function: querySelector],
       querySelectorAll: [Function: querySelectorAll],
       remove: [Function: remove],
-  
+
       at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3657:12
       at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
       at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
@@ -234,7 +234,7 @@ test at tests/targeted-audit.test.js:3666:1
   AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
   + actual - expected
   ... Skipped lines
-  
+
     <ref *1> UiElementStub {
       addEventListener: [Function: addEventListener],
       append: [Function: append],
@@ -422,7 +422,7 @@ test at tests/targeted-audit.test.js:3666:1
           add: [Function: add],
           contains: [Function: contains],
           remove: [Function: remove],
-  
+
       at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3674:12
       at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
       at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)

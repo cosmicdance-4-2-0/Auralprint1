@@ -14,7 +14,7 @@ test at tests/ring-phase-lock.test.js:10:1
 ✖ RC-10: rendered Orb lock uses current-frame first Orb after variable deltas and reconciliation (6.2989ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
     [
       'clear',
   +   'B',
@@ -23,7 +23,7 @@ test at tests/ring-phase-lock.test.js:10:1
   -   'A',
   -   'B'
     ]
-  
+
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/ring-phase-lock.test.js:40:14)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)

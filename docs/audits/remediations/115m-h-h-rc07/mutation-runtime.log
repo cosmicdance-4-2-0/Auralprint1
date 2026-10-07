@@ -15,9 +15,9 @@
 test at tests/band-count-coverage.test.js:34:1
 ✖ RC-07: import and runtime share minimum/maximum validation without mutating preferences (1.451321ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   undefined !== 256
-  
+
       at file:///workspace/Auralprint1/tests/band-count-coverage.test.js:44:12
       at withSettings (file:///workspace/Auralprint1/tests/band-count-coverage.test.js:14:9)
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/band-count-coverage.test.js:34:103)

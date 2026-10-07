@@ -1,0 +1,230 @@
+{
+  "version": "v0.1.15m.h.o",
+  "runtime": "v24.19.0",
+  "results": {
+    "admission": {
+      "requestedOrbs": 4096,
+      "acceptedOrbs": 4096,
+      "sanitationMs": 94.267088
+    },
+    "admittedTiming": [
+      {
+        "requested": 0.03333333333333333,
+        "accepted": 0.03333333333333333
+      },
+      {
+        "requested": 120,
+        "accepted": 120
+      },
+      {
+        "requested": 1000000,
+        "accepted": 1000000
+      },
+      {
+        "requested": 1.7976931348623157e+308,
+        "accepted": 1.7976931348623157e+308
+      }
+    ],
+    "curves": [
+      {
+        "count": 2,
+        "warmMs": 14.321383999999995,
+        "particles": 480,
+        "updates": [
+          {
+            "ms": 1.1912580000000048,
+            "emits": 8,
+            "overlapComparisons": 1920,
+            "expiryVisits": 480
+          },
+          {
+            "ms": 0.9160660000000007,
+            "emits": 8,
+            "overlapComparisons": 1920,
+            "expiryVisits": 480
+          },
+          {
+            "ms": 0.08984499999999684,
+            "emits": 8,
+            "overlapComparisons": 1920,
+            "expiryVisits": 480
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 2,
+          "beginPath": 482,
+          "moveTo": 2,
+          "lineTo": 20,
+          "stroke": 2,
+          "restore": 2,
+          "arc": 480,
+          "fill": 480
+        },
+        "instrumentedRenderMs": 3.8626390000000015,
+        "nativeRenderSubmissionMs": []
+      },
+      {
+        "count": 8,
+        "warmMs": 20.46288900000002,
+        "particles": 1920,
+        "updates": [
+          {
+            "ms": 0.09865800000000036,
+            "emits": 32,
+            "overlapComparisons": 7680,
+            "expiryVisits": 1920
+          },
+          {
+            "ms": 0.073110000000014,
+            "emits": 32,
+            "overlapComparisons": 7680,
+            "expiryVisits": 1920
+          },
+          {
+            "ms": 0.08001999999999043,
+            "emits": 32,
+            "overlapComparisons": 7680,
+            "expiryVisits": 1920
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 8,
+          "beginPath": 1928,
+          "moveTo": 8,
+          "lineTo": 80,
+          "stroke": 8,
+          "restore": 8,
+          "arc": 1920,
+          "fill": 1920
+        },
+        "instrumentedRenderMs": 8.009834000000012,
+        "nativeRenderSubmissionMs": []
+      },
+      {
+        "count": 16,
+        "warmMs": 25.153419999999983,
+        "particles": 3840,
+        "updates": [
+          {
+            "ms": 0.08941499999997404,
+            "emits": 64,
+            "overlapComparisons": 15360,
+            "expiryVisits": 3840
+          },
+          {
+            "ms": 0.1383379999999761,
+            "emits": 64,
+            "overlapComparisons": 15360,
+            "expiryVisits": 3840
+          },
+          {
+            "ms": 0.07321000000001732,
+            "emits": 64,
+            "overlapComparisons": 15360,
+            "expiryVisits": 3840
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 16,
+          "beginPath": 3856,
+          "moveTo": 16,
+          "lineTo": 160,
+          "stroke": 16,
+          "restore": 16,
+          "arc": 3840,
+          "fill": 3840
+        },
+        "instrumentedRenderMs": 3.646953999999994,
+        "nativeRenderSubmissionMs": []
+      },
+      {
+        "count": 64,
+        "warmMs": 107.024426,
+        "particles": 15360,
+        "updates": [
+          {
+            "ms": 1.5113790000000336,
+            "emits": 256,
+            "overlapComparisons": 61440,
+            "expiryVisits": 15360
+          },
+          {
+            "ms": 0.6871820000000071,
+            "emits": 256,
+            "overlapComparisons": 61440,
+            "expiryVisits": 15360
+          },
+          {
+            "ms": 0.2871509999999944,
+            "emits": 256,
+            "overlapComparisons": 61440,
+            "expiryVisits": 15360
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 64,
+          "beginPath": 15424,
+          "moveTo": 64,
+          "lineTo": 640,
+          "stroke": 64,
+          "restore": 64,
+          "arc": 15360,
+          "fill": 15360
+        },
+        "instrumentedRenderMs": 46.80896999999999,
+        "nativeRenderSubmissionMs": []
+      },
+      {
+        "count": 256,
+        "warmMs": 753.3301430000001,
+        "particles": 61440,
+        "updates": [
+          {
+            "ms": 2.4780100000000402,
+            "emits": 1024,
+            "overlapComparisons": 245760,
+            "expiryVisits": 61440
+          },
+          {
+            "ms": 2.8062529999999697,
+            "emits": 1024,
+            "overlapComparisons": 245760,
+            "expiryVisits": 61440
+          },
+          {
+            "ms": 2.6009540000000015,
+            "emits": 1024,
+            "overlapComparisons": 245760,
+            "expiryVisits": 61440
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 256,
+          "beginPath": 61696,
+          "moveTo": 256,
+          "lineTo": 2560,
+          "stroke": 256,
+          "restore": 256,
+          "arc": 61440,
+          "fill": 61440
+        },
+        "instrumentedRenderMs": 99.71326999999997,
+        "nativeRenderSubmissionMs": []
+      }
+    ],
+    "burst": {
+      "acceptedMaxDeltaTimeSec": 120,
+      "acceptedTtlSec": 600,
+      "emits": 28800,
+      "overlapComparisons": 6912000,
+      "elapsedMs": 31.010487999999896,
+      "retainedParticles": 240
+    },
+    "caveat": "Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. No budget is selected."
+  }
+}

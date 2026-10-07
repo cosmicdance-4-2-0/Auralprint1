@@ -25,7 +25,7 @@ test at tests/orb-editor.test.js:23:1
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
   ... Skipped lines
-  
+
     {
       audio: {
         fftSize: 8192,
@@ -49,7 +49,7 @@ test at tests/orb-editor.test.js:23:1
             numLines: 10
           }
         }
-  
+
       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/orb-editor.test.js:38:14)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
