@@ -1,0 +1,13 @@
+✔ RC-14: touchcancel terminates touch drag ownership before unrelated moves (2.285574ms)
+✔ RC-14: touchend terminates touch drag ownership before unrelated moves (2.149359ms)
+✔ RC-14: reset terminates touch drag ownership before unrelated moves (0.294613ms)
+✔ RC-14: load terminates touch drag ownership before unrelated moves (0.681544ms)
+✔ RC-14: init terminates touch drag ownership before unrelated moves (0.272569ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13.190881

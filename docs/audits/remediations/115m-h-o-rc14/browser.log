@@ -1,0 +1,55 @@
+{
+  "version": "v0.1.15m.h.o",
+  "browser": "151.0.7922.173",
+  "defect": false,
+  "results": [
+    {
+      "mode": "cancel-canvas",
+      "startTime": 5,
+      "afterTime": 5,
+      "intercepted": false,
+      "freshDragTime": 11.999999,
+      "errors": []
+    },
+    {
+      "mode": "cancel-window",
+      "startTime": 5,
+      "afterTime": 5,
+      "intercepted": false,
+      "freshDragTime": 11.999999,
+      "errors": []
+    },
+    {
+      "mode": "end",
+      "startTime": 5,
+      "afterTime": 5,
+      "intercepted": false,
+      "freshDragTime": 11.999999,
+      "errors": []
+    },
+    {
+      "mode": "reset",
+      "startTime": 5,
+      "afterTime": 5,
+      "intercepted": false,
+      "freshDragTime": 11.999999,
+      "errors": []
+    },
+    {
+      "mode": "load",
+      "startTime": 5,
+      "afterTime": 5,
+      "intercepted": false,
+      "freshDragTime": 11.999999,
+      "errors": []
+    },
+    {
+      "mode": "ordinary",
+      "startTime": 5,
+      "afterTime": 15,
+      "intercepted": true,
+      "freshDragTime": 11.999999,
+      "errors": []
+    }
+  ]
+}
