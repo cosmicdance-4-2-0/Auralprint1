@@ -491,6 +491,8 @@ bands: {
     },
 
     bands: {
+      // Floor band, at least one interior band, and open-ended top band.
+      count: { min: 3, max: 256 },
       overlayAlpha: { min: 0, max: 1, step: 0.01 },
       overlayLineAlpha: { min: 0, max: 1, step: 0.01 },
       overlayLineWidthPx: { min: 1, max: 6, step: 1 },
