@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.m");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.m\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.n");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.n\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3646,6 +3646,41 @@ function assertRc02Empty() {
   assert.equal(AudioEngine.sample().ready, false);
   assert.equal(state.ui.audioStatus.textContent, "File mode ready. Load audio files to begin analysis.");
 }
+
+test("RC-13: queue removal retains neighboring action focus and empty queue restores Hide", async t => {
+  await withRc02FileWorkflow(t, {}, async ({ ingest, getElement }) => {
+    await ingest(["A.wav", "B.wav", "C.wav"]);
+    const list = getElement("queueList");
+    list.children[1].children[2].focus();
+    await list.children[1].children[2].dispatch("click");
+    assert.deepEqual(Queue.snapshot().items.map(item => item.name), ["A.wav", "C.wav"]);
+    assert.equal(document.activeElement, list.children[1].children[2]);
+    await document.activeElement.dispatch("click");
+    assert.equal(document.activeElement, list.children[0].children[2]);
+    await document.activeElement.dispatch("click");
+    assert.equal(Queue.length, 0);
+    assert.equal(document.activeElement, getElement("btnHideQueue"));
+  });
+});
+
+test("RC-13: queue activation/refresh preserves row focus and never steals outside focus", async t => {
+  await withRc02FileWorkflow(t, {}, async ({ ingest, getElement }) => {
+    await ingest(["A.wav", "B.wav"]);
+    let list = getElement("queueList");
+    list.children[1].focus();
+    await list.children[1].dispatch("click");
+    for (let i = 0; i < 10; i++) await Promise.resolve();
+    UI.refreshAllUiText();
+    assert.equal(document.activeElement, list.children[1]);
+    getElement("btnLoad").focus();
+    await ingest(["C.wav"]);
+    assert.equal(document.activeElement, getElement("btnLoad"));
+    getElement("btnClearQueue").focus();
+    await getElement("btnClearQueue").dispatch("click");
+    assert.equal(document.activeElement, getElement("btnHideQueue"));
+    assert.equal(Queue.length, 0);
+  });
+});
 
 for (const entry of ["picker", "drop"]) {
   for (const type of ["", "application/ogg", "application/octet-stream", "video/mp4", "audio/wav"]) {

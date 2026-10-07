@@ -1,0 +1,44 @@
+✖ RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle (4.324078ms)
+✔ workspace owns deterministic visibility, restore, focus, record, collapse, and idempotent wiring (2.183411ms)
+✔ Record restore remains eligible only while hooks are enabled (0.376346ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17.974717
+
+✖ failing tests:
+
+test at tests/workspace-ui.test.js:31:1
+✖ RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle (4.324078ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      addEventListener: [Function: addEventListener],
+      attributes: {},
+      classList: {
+        add: [Function: add],
+  ...
+      style: {
+  +     display: 'none'
+  -     display: 'block'
+      }
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/workspace-ui.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

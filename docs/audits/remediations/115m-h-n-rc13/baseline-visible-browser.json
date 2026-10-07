@@ -1,0 +1,72 @@
+{
+  "version": "v0.1.15m.h.m",
+  "browser": "151.0.7922.173",
+  "defect": true,
+  "cases": [
+    {
+      "kind": "visible-panel-keyboard-ownership",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "focused": {
+        "id": "inpBandCeilingHz",
+        "tag": "INPUT",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "scenePanel"
+        ],
+        "hitPanel": "scenePanel",
+        "visibleFocus": false
+      }
+    },
+    {
+      "kind": "visible-panel-keyboard-ownership",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "focused": {
+        "id": "inpBandCeilingHz",
+        "tag": "INPUT",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "scenePanel"
+        ],
+        "hitPanel": "scenePanel",
+        "visibleFocus": false
+      }
+    },
+    {
+      "kind": "visible-queue-hide-discards-focus",
+      "focused": {
+        "id": "",
+        "tag": "BODY",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "visible-queue-removal-discards-focus",
+      "focused": {
+        "id": "",
+        "tag": "BODY",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "",
+        "visibleFocus": true
+      }
+    }
+  ],
+  "errors": []
+}

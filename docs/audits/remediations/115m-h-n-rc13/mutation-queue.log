@@ -1,0 +1,439 @@
+✖ RC-13: queue removal retains neighboring action focus and empty queue restores Hide (67.502561ms)
+✖ RC-13: queue activation/refresh preserves row focus and never steals outside focus (20.263455ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.965756
+
+✖ failing tests:
+
+test at tests/targeted-audit.test.js:3650:1
+✖ RC-13: queue removal retains neighboring action focus and empty queue restores Hide (67.502561ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    <ref *2> UiElementStub {
+      addEventListener: [Function: addEventListener],
+      append: [Function: append],
+      appendChild: [Function: appendChild],
+      checked: false,
+  ...
+            tagName: 'SPAN',
+  +         textContent: 'B.wav',
+  -         textContent: 'C.wav',
+            title: '',
+            value: ''
+          },
+          [Circular *2]
+        ],
+  ...
+            },
+  +         <ref *5> UiElementStub {
+  +           addEventListener: [Function: addEventListener],
+  +           append: [Function: append],
+  +           appendChild: [Function: appendChild],
+  +           checked: false,
+  +           children: [
+  +             UiElementStub {
+  +               addEventListener: [Function: addEventListener],
+  +               append: [Function: append],
+  +               appendChild: [Function: appendChild],
+  +               checked: false,
+  +               children: [],
+  +               classList: {
+  +                 add: [Function: add],
+  +                 contains: [Function: contains],
+  +                 remove: [Function: remove],
+  +                 toggle: [Function: toggle]
+  +               },
+  +               className: 'q-idx',
+  +               click: [Function: click],
+  +               closest: [Function: closest],
+  +               contains: [Function: contains],
+  +               dataset: {},
+  +               disabled: false,
+  +               dispatch: [Function: dispatch],
+  +               focus: [Function: focus],
+  +               getAttribute: [Function: getAttribute],
+  +               hidden: false,
+  +               insertBefore: [Function: insertBefore],
+  +               options: [],
+  +               parentNode: [Circular *5],
+  +               querySelector: [Function: querySelector],
+  +               querySelectorAll: [Function: querySelectorAll],
+  +               remove: [Function: remove],
+  +               removeEventListener: [Function: removeEventListener],
+  +               replaceChildren: [Function: replaceChildren],
+  +               scrollIntoView: [Function: scrollIntoView],
+  +               setAttribute: [Function: setAttribute],
+  +               style: {
+  +                 display: 'block'
+  +               },
+  +               tabIndex: 0,
+  +               tagName: 'SPAN',
+  +               textContent: '2',
+  +               title: '',
+  +               value: ''
+  +             },
+  +             UiElementStub {
+  +               addEventListener: [Function: addEventListener],
+  +               append: [Function: append],
+  +               appendChild: [Function: appendChild],
+  +               checked: false,
+  +               children: [],
+  +               classList: {
+  +                 add: [Function: add],
+  +                 contains: [Function: contains],
+  +                 remove: [Function: remove],
+  +                 toggle: [Function: toggle]
+  +               },
+  +               className: 'q-name',
+  +               click: [Function: click],
+  +               closest: [Function: closest],
+  +               contains: [Function: contains],
+  +               dataset: {},
+  +               disabled: false,
+  +               dispatch: [Function: dispatch],
+  +               focus: [Function: focus],
+  +               getAttribute: [Function: getAttribute],
+  +               hidden: false,
+  +               insertBefore: [Function: insertBefore],
+  +               options: [],
+  +               parentNode: [Circular *5],
+  +               querySelector: [Function: querySelector],
+  +               querySelectorAll: [Function: querySelectorAll],
+  +               remove: [Function: remove],
+  +               removeEventListener: [Function: removeEventListener],
+  +               replaceChildren: [Function: replaceChildren],
+  +               scrollIntoView: [Function: scrollIntoView],
+  +               setAttribute: [Function: setAttribute],
+  +               style: {
+  +                 display: 'block'
+  +               },
+  +               tabIndex: 0,
+  +               tagName: 'SPAN',
+  +               textContent: 'C.wav',
+  +               title: '',
+  +               value: ''
+  +             },
+  +             UiElementStub {
+  +               addEventListener: [Function: addEventListener],
+  +               append: [Function: append],
+  +               appendChild: [Function: appendChild],
+  +               checked: false,
+  +               children: [],
+  +               classList: {
+  +                 add: [Function: add],
+  +                 contains: [Function: contains],
+  +                 remove: [Function: remove],
+  +                 toggle: [Function: toggle]
+  +               },
+  +               className: 'q-remove',
+  +               click: [Function: click],
+  +               closest: [Function: closest],
+  +               contains: [Function: contains],
+  +               dataset: {},
+  +               disabled: false,
+  +               dispatch: [Function: dispatch],
+  +               focus: [Function: focus],
+  +               getAttribute: [Function: getAttribute],
+  +               hidden: false,
+  +               insertBefore: [Function: insertBefore],
+  +               options: [],
+  +               parentNode: [Circular *5],
+  +               querySelector: [Function: querySelector],
+  +               querySelectorAll: [Function: querySelectorAll],
+  +               remove: [Function: remove],
+  +               removeEventListener: [Function: removeEventListener],
+  +               replaceChildren: [Function: replaceChildren],
+  +               scrollIntoView: [Function: scrollIntoView],
+  +               setAttribute: [Function: setAttribute],
+  +               style: {
+  +                 display: 'block'
+  +               },
+  +               tabIndex: 0,
+  +               tagName: 'BUTTON',
+  +               textContent: '×',
+  +               title: 'Remove from queue',
+  +               value: ''
+  +             }
+  +           ],
+  +           classList: {
+  +             add: [Function: add],
+  +             contains: [Function: contains],
+  +             remove: [Function: remove],
+  +             toggle: [Function: toggle]
+  +           },
+  +           className: 'queue-item',
+  +           click: [Function: click],
+  +           closest: [Function: closest],
+  +           contains: [Function: contains],
+  +           dataset: {},
+  +           disabled: false,
+  +           dispatch: [Function: dispatch],
+  +           focus: [Function: focus],
+  +           getAttribute: [Function: getAttribute],
+  +           hidden: false,
+  +           insertBefore: [Function: insertBefore],
+  +           options: [],
+  +           parentNode: [Circular *4],
+  +           querySelector: [Function: querySelector],
+  +           querySelectorAll: [Function: querySelectorAll],
+  +           remove: [Function: remove],
+  +           removeEventListener: [Function: removeEventListener],
+  +           replaceChildren: [Function: replaceChildren],
+  +           scrollIntoView: [Function: scrollIntoView],
+  +           setAttribute: [Function: setAttribute],
+  +           style: {
+  +             display: 'block'
+  +           },
+  +           tabIndex: 0,
+  +           tagName: 'DIV',
+  +           textContent: '',
+  +           title: 'C.wav',
+  +           value: ''
+  +         }
+  -         [Circular *1]
+          ],
+          classList: {
+            add: [Function: add],
+            contains: [Function: contains],
+            remove: [Function: remove],
+  ...
+        textContent: '',
+  +     title: 'B.wav',
+  -     title: 'C.wav',
+        value: ''
+      },
+      querySelector: [Function: querySelector],
+      querySelectorAll: [Function: querySelectorAll],
+      remove: [Function: remove],
+  
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3657:12
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3651:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [UiElementStub],
+    expected: [UiElementStub],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/targeted-audit.test.js:3666:1
+✖ RC-13: queue activation/refresh preserves row focus and never steals outside focus (20.263455ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    <ref *1> UiElementStub {
+      addEventListener: [Function: addEventListener],
+      append: [Function: append],
+      appendChild: [Function: appendChild],
+      checked: false,
+  ...
+      },
+  +   className: 'queue-item',
+  -   className: 'queue-item active',
+      click: [Function: click],
+      closest: [Function: closest],
+      contains: [Function: contains],
+      dataset: {},
+      disabled: false,
+  ...
+          },
+  +       <ref *4> UiElementStub {
+  +         addEventListener: [Function: addEventListener],
+  +         append: [Function: append],
+  +         appendChild: [Function: appendChild],
+  +         checked: false,
+  +         children: [
+  +           UiElementStub {
+  +             addEventListener: [Function: addEventListener],
+  +             append: [Function: append],
+  +             appendChild: [Function: appendChild],
+  +             checked: false,
+  +             children: [],
+  +             classList: {
+  +               add: [Function: add],
+  +               contains: [Function: contains],
+  +               remove: [Function: remove],
+  +               toggle: [Function: toggle]
+  +             },
+  +             className: 'q-idx',
+  +             click: [Function: click],
+  +             closest: [Function: closest],
+  +             contains: [Function: contains],
+  +             dataset: {},
+  +             disabled: false,
+  +             dispatch: [Function: dispatch],
+  +             focus: [Function: focus],
+  +             getAttribute: [Function: getAttribute],
+  +             hidden: false,
+  +             insertBefore: [Function: insertBefore],
+  +             options: [],
+  +             parentNode: [Circular *4],
+  +             querySelector: [Function: querySelector],
+  +             querySelectorAll: [Function: querySelectorAll],
+  +             remove: [Function: remove],
+  +             removeEventListener: [Function: removeEventListener],
+  +             replaceChildren: [Function: replaceChildren],
+  +             scrollIntoView: [Function: scrollIntoView],
+  +             setAttribute: [Function: setAttribute],
+  +             style: {
+  +               display: 'block'
+  +             },
+  +             tabIndex: 0,
+  +             tagName: 'SPAN',
+  +             textContent: '2',
+  +             title: '',
+  +             value: ''
+  +           },
+  +           UiElementStub {
+  +             addEventListener: [Function: addEventListener],
+  +             append: [Function: append],
+  +             appendChild: [Function: appendChild],
+  +             checked: false,
+  +             children: [],
+  +             classList: {
+  +               add: [Function: add],
+  +               contains: [Function: contains],
+  +               remove: [Function: remove],
+  +               toggle: [Function: toggle]
+  +             },
+  +             className: 'q-name',
+  +             click: [Function: click],
+  +             closest: [Function: closest],
+  +             contains: [Function: contains],
+  +             dataset: {},
+  +             disabled: false,
+  +             dispatch: [Function: dispatch],
+  +             focus: [Function: focus],
+  +             getAttribute: [Function: getAttribute],
+  +             hidden: false,
+  +             insertBefore: [Function: insertBefore],
+  +             options: [],
+  +             parentNode: [Circular *4],
+  +             querySelector: [Function: querySelector],
+  +             querySelectorAll: [Function: querySelectorAll],
+  +             remove: [Function: remove],
+  +             removeEventListener: [Function: removeEventListener],
+  +             replaceChildren: [Function: replaceChildren],
+  +             scrollIntoView: [Function: scrollIntoView],
+  +             setAttribute: [Function: setAttribute],
+  +             style: {
+  +               display: 'block'
+  +             },
+  +             tabIndex: 0,
+  +             tagName: 'SPAN',
+  +             textContent: 'B.wav',
+  +             title: '',
+  +             value: ''
+  +           },
+  +           UiElementStub {
+  +             addEventListener: [Function: addEventListener],
+  +             append: [Function: append],
+  +             appendChild: [Function: appendChild],
+  +             checked: false,
+  +             children: [],
+  +             classList: {
+  +               add: [Function: add],
+  +               contains: [Function: contains],
+  +               remove: [Function: remove],
+  +               toggle: [Function: toggle]
+  +             },
+  +             className: 'q-remove',
+  +             click: [Function: click],
+  +             closest: [Function: closest],
+  +             contains: [Function: contains],
+  +             dataset: {},
+  +             disabled: false,
+  +             dispatch: [Function: dispatch],
+  +             focus: [Function: focus],
+  +             getAttribute: [Function: getAttribute],
+  +             hidden: false,
+  +             insertBefore: [Function: insertBefore],
+  +             options: [],
+  +             parentNode: [Circular *4],
+  +             querySelector: [Function: querySelector],
+  +             querySelectorAll: [Function: querySelectorAll],
+  +             remove: [Function: remove],
+  +             removeEventListener: [Function: removeEventListener],
+  +             replaceChildren: [Function: replaceChildren],
+  +             scrollIntoView: [Function: scrollIntoView],
+  +             setAttribute: [Function: setAttribute],
+  +             style: {
+  +               display: 'block'
+  +             },
+  +             tabIndex: 0,
+  +             tagName: 'BUTTON',
+  +             textContent: '×',
+  +             title: 'Remove from queue',
+  +             value: ''
+  +           }
+  +         ],
+  +         classList: {
+  +           add: [Function: add],
+  +           contains: [Function: contains],
+  +           remove: [Function: remove],
+  +           toggle: [Function: toggle]
+  +         },
+  +         className: 'queue-item active',
+  +         click: [Function: click],
+  +         closest: [Function: closest],
+  +         contains: [Function: contains],
+  +         dataset: {},
+  +         disabled: false,
+  +         dispatch: [Function: dispatch],
+  +         focus: [Function: focus],
+  +         getAttribute: [Function: getAttribute],
+  +         hidden: false,
+  +         insertBefore: [Function: insertBefore],
+  +         options: [],
+  +         parentNode: [Circular *3],
+  +         querySelector: [Function: querySelector],
+  +         querySelectorAll: [Function: querySelectorAll],
+  +         remove: [Function: remove],
+  +         removeEventListener: [Function: removeEventListener],
+  +         replaceChildren: [Function: replaceChildren],
+  +         scrollIntoView: [Function: scrollIntoView],
+  +         setAttribute: [Function: setAttribute],
+  +         style: {
+  +           display: 'block'
+  +         },
+  +         tabIndex: 0,
+  +         tagName: 'DIV',
+  +         textContent: '',
+  +         title: 'B.wav',
+  +         value: ''
+  +       }
+  -       [Circular *1]
+        ],
+        classList: {
+          add: [Function: add],
+          contains: [Function: contains],
+          remove: [Function: remove],
+  
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3674:12
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3667:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [UiElementStub],
+    expected: [UiElementStub],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

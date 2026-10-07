@@ -1,0 +1,11 @@
+✔ RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle (1.851312ms)
+✔ workspace owns deterministic visibility, restore, focus, record, collapse, and idempotent wiring (1.959124ms)
+✔ Record restore remains eligible only while hooks are enabled (0.5529ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16.620412

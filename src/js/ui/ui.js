@@ -1481,6 +1481,11 @@ const UI = (() => {
     function refreshQueuePanel() {
       if (!ui.queueList) return;
       const snap = Queue.snapshot();
+      const focused = document.activeElement;
+      const oldRows = Array.from(ui.queueList.children);
+      const focusIndex = oldRows.findIndex(row => row.contains(focused));
+      const focusWasRemove = focusIndex >= 0 && oldRows[focusIndex].children[2] === focused;
+      const clearedFocus = snap.length === 0 && focused === ui.btnClearQueue;
       const fileTransportMutationLocked = isFinalizingFileTransportLocked();
       const allowQueueInteraction = isFileWorkflowMode(state.source) && !fileTransportMutationLocked;
       const queueLockText = readFinalizingFileTransportLockText("Track changes");
@@ -1569,6 +1574,13 @@ const UI = (() => {
         });
 
         ui.queueList.appendChild(row);
+      }
+      if ((focusIndex >= 0 || clearedFocus) && workspace.isPanelVisible(ui.queuePanel)) {
+        const row = ui.queueList.children[Math.min(focusIndex, snap.length - 1)];
+        const target = row && allowQueueInteraction
+          ? (focusWasRemove ? row.children[2] : row)
+          : ui.btnHideQueue;
+        target?.focus();
       }
       ui.queuePanelSyncKey = buildQueuePanelSyncKey();
     }
