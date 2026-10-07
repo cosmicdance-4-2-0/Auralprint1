@@ -1,0 +1,130 @@
+✖ RC-05: no-next/repeat-off clears pending ownership before reentrant and repeated refresh (60.571301ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 145.141922
+
+✖ failing tests:
+
+test at tests/targeted-audit.test.js:3853:1
+✖ RC-05: no-next/repeat-off clears pending ownership before reentrant and repeated refresh (60.571301ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      {
+        details: {
+          reason: 'track-ended-no-next'
+        },
+        kind: 'audio-unloaded'
+      },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   },
+  +   {
+  +     details: {
+  +       reason: 'track-ended-no-next'
+  +     },
+  +     kind: 'audio-unloaded'
+  +   }
+    ]
+
+      at file:///workspace/Auralprint1/tests/targeted-audit.test.js:3868:12
+      at async file:///workspace/Auralprint1/tests/targeted-audit.test.js:3622:9
+      at async withUiWireHarnessState (file:///workspace/Auralprint1/tests/targeted-audit.test.js:304:12)
+      at async withRc02FileWorkflow (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3607:5)
+      at async TestContext.<anonymous> (file:///workspace/Auralprint1/tests/targeted-audit.test.js:3854:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

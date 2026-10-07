@@ -1,0 +1,356 @@
+{
+  "artifact": "/workspace/Auralprint1/dist/auralprint_0.1.15m.h.g.html",
+  "evidence": [
+    {
+      "case": "clear-during-context-resume",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "clear-during-play-promise",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "stale-play-failure-after-clear",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "multi-file-clear-repopulates-queue",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "drop-batch-clear",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "final-removal-during-resume",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "final-removal-during-play",
+      "afterCancellation": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 0
+      },
+      "afterRelease": {
+        "queue": [],
+        "status": "File mode ready. Load audio files to begin analysis.",
+        "fileSelector": "File workflow selected. Load audio files to begin.",
+        "playDisabled": true,
+        "playText": "Play",
+        "scrubber": "--:-- / --:-- • no track loaded",
+        "media": [
+          {
+            "src": null,
+            "paused": true
+          }
+        ],
+        "graphsAttached": 0,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "ordinary-multi-and-append-picker",
+      "loaded": {
+        "queue": [
+          "A.wav",
+          "B.wav",
+          "C.wav"
+        ],
+        "status": "Loaded: A.wav",
+        "fileSelector": "File workflow selected. Current file: A.wav.",
+        "playDisabled": false,
+        "playText": "Pause",
+        "scrubber": "0:00 / 0:20",
+        "media": [
+          {
+            "src": "blob:http://rc02.test/4926e0b5-ef03-4246-a58e-734097efc6c2",
+            "paused": false
+          }
+        ],
+        "graphsAttached": 1,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "appended": {
+        "queue": [
+          "A.wav",
+          "B.wav",
+          "C.wav",
+          "D.wav",
+          "E.wav"
+        ],
+        "status": "Loaded: A.wav",
+        "fileSelector": "File workflow selected. Current file: A.wav.",
+        "playDisabled": false,
+        "playText": "Pause",
+        "scrubber": "0:00 / 0:20",
+        "media": [
+          {
+            "src": "blob:http://rc02.test/4926e0b5-ef03-4246-a58e-734097efc6c2",
+            "paused": false
+          }
+        ],
+        "graphsAttached": 1,
+        "liveUrls": [],
+        "handlersSettled": 2
+      },
+      "passed": true,
+      "pageErrors": []
+    },
+    {
+      "case": "ordinary-multi-and-append-drop",
+      "loaded": {
+        "queue": [
+          "A.wav",
+          "B.wav",
+          "C.wav"
+        ],
+        "status": "Loaded: A.wav",
+        "fileSelector": "File workflow selected. Current file: A.wav.",
+        "playDisabled": false,
+        "playText": "Pause",
+        "scrubber": "0:00 / 0:20 • decoding waveform",
+        "media": [
+          {
+            "src": "blob:http://rc02.test/915ec7db-1c1d-4161-ae7d-45cfa6314d35",
+            "paused": false
+          }
+        ],
+        "graphsAttached": 1,
+        "liveUrls": [],
+        "handlersSettled": 1
+      },
+      "appended": {
+        "queue": [
+          "A.wav",
+          "B.wav",
+          "C.wav",
+          "D.wav",
+          "E.wav"
+        ],
+        "status": "File [1/5]: A.wav - Playing - Bands: mono-ish (L≈R)",
+        "fileSelector": "File workflow selected. Current file: A.wav.",
+        "playDisabled": false,
+        "playText": "Pause",
+        "scrubber": "0:13 / 0:20",
+        "media": [
+          {
+            "src": "blob:http://rc02.test/915ec7db-1c1d-4161-ae7d-45cfa6314d35",
+            "paused": false
+          }
+        ],
+        "graphsAttached": 1,
+        "liveUrls": [],
+        "handlersSettled": 2
+      },
+      "passed": true,
+      "pageErrors": []
+    }
+  ]
+}
