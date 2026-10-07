@@ -1,0 +1,166 @@
+✖ RC-03: stale mic resume cannot destroy winning stream graph (65.545222ms)
+✖ RC-03: stale mic resume rejection cannot commit an attachment error (13.820705ms)
+✔ RC-03 positive control: ordinary mic to stream switch (16.033414ms)
+✖ RC-03: stale stream resume cannot destroy winning mic graph (6.817744ms)
+✖ RC-03: stale stream resume rejection cannot commit an attachment error (11.824024ms)
+✔ RC-03 positive control: ordinary stream to mic switch (6.569582ms)
+✔ RC-03 positive control: normal mic graph and explicit File-mode teardown (34.694644ms)
+✖ RC-03: explicit teardown cancels pending mic attachment (4.380088ms)
+✔ RC-03: current mic attachment failure still reports error and releases tracks (3.593989ms)
+✔ RC-03 positive control: normal stream graph and explicit File-mode teardown (10.01538ms)
+✖ RC-03: explicit teardown cancels pending stream attachment (5.417024ms)
+✔ RC-03: current stream attachment failure still reports error and releases tracks (4.537813ms)
+✖ RC-03: optional attachment guard also protects a running context (6.497714ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 6
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 206.537397
+
+✖ failing tests:
+
+test at tests/live-source-ownership.test.js:135:3
+✖ RC-03: stale mic resume cannot destroy winning stream graph (65.545222ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at Object.assertWinner (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:114:12)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:146:24)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:153:3
+✖ RC-03: stale mic resume rejection cannot commit an attachment error (13.820705ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   errorCode: 'mic-attach-failed',
+  +   errorMessage: 'Microphone activation failed: delayed attachment failure',
+  -   errorCode: 'mic-activation-cancelled',
+  -   errorMessage: '',
+      kind: 'mic',
+      ok: false,
+  +   status: 'error'
+  -   status: 'idle'
+    }
+
+      at assertCancelled (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:129:10)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:162:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:135:3
+✖ RC-03: stale stream resume cannot destroy winning mic graph (6.817744ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at Object.assertWinner (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:114:12)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:146:24)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:153:3
+✖ RC-03: stale stream resume rejection cannot commit an attachment error (11.824024ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   errorCode: 'stream-attach-failed',
+  +   errorMessage: 'Stream activation failed: delayed attachment failure',
+  -   errorCode: 'stream-activation-cancelled',
+  -   errorMessage: '',
+      kind: 'stream',
+      ok: false,
+  +   status: 'error'
+  -   status: 'idle'
+    }
+
+      at assertCancelled (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:129:10)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:162:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:193:3
+✖ RC-03: explicit teardown cancels pending mic attachment (4.380088ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:205:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:193:3
+✖ RC-03: explicit teardown cancels pending stream attachment (5.417024ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:205:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:221:1
+✖ RC-03: optional attachment guard also protects a running context (6.497714ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:226:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

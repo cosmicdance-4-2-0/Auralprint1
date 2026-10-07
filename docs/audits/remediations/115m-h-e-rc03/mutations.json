@@ -1,0 +1,37 @@
+[
+  {
+    "case": "baseline",
+    "exitCode": 1,
+    "auditedMicToStreamFailed": true,
+    "failedCases": [
+      "\u2716 RC-03: stale mic resume cannot destroy winning stream graph (65.545222ms)",
+      "\u2716 RC-03: stale mic resume rejection cannot commit an attachment error (13.820705ms)",
+      "\u2716 RC-03: stale stream resume cannot destroy winning mic graph (6.817744ms)",
+      "\u2716 RC-03: stale stream resume rejection cannot commit an attachment error (11.824024ms)",
+      "\u2716 RC-03: explicit teardown cancels pending mic attachment (4.380088ms)",
+      "\u2716 RC-03: explicit teardown cancels pending stream attachment (5.417024ms)",
+      "\u2716 RC-03: optional attachment guard also protects a running context (6.497714ms)"
+    ]
+  },
+  {
+    "case": "mutation-a",
+    "exitCode": 1,
+    "auditedMicToStreamFailed": true,
+    "failedCases": [
+      "\u2716 RC-03: stale mic resume cannot destroy winning stream graph (24.739185ms)",
+      "\u2716 RC-03: stale stream resume cannot destroy winning mic graph (6.990951ms)",
+      "\u2716 RC-03: explicit teardown cancels pending mic attachment (7.215961ms)",
+      "\u2716 RC-03: explicit teardown cancels pending stream attachment (5.170034ms)",
+      "\u2716 RC-03: optional attachment guard also protects a running context (8.650626ms)"
+    ]
+  },
+  {
+    "case": "mutation-b",
+    "exitCode": 1,
+    "auditedMicToStreamFailed": true,
+    "failedCases": [
+      "\u2716 RC-03: stale mic resume cannot destroy winning stream graph (28.875825ms)",
+      "\u2716 RC-03: stale stream resume cannot destroy winning mic graph (5.951707ms)"
+    ]
+  }
+]

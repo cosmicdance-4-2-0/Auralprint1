@@ -263,7 +263,10 @@ test("activateMic tears down an active file source, attaches the microphone stre
   assert.equal(calls.unload, 1);
   assert.equal(calls.attachMediaStreamSource.length, 1);
   assert.equal(calls.attachMediaStreamSource[0].mediaStream, micSession.stream);
-  assert.deepEqual(calls.attachMediaStreamSource[0].opts, {
+  assert.equal(typeof calls.attachMediaStreamSource[0].opts.isCurrent, "function");
+  assert.equal(calls.attachMediaStreamSource[0].opts.isCurrent(), true);
+  const { isCurrent, ...attachmentOptions } = calls.attachMediaStreamSource[0].opts;
+  assert.deepEqual(attachmentOptions, {
     kind: "mic",
     label: "USB Microphone",
     monitorOutput: false,
@@ -332,7 +335,10 @@ test("activateStream tears down an active file source, attaches shared stream au
   assert.equal(calls.unload, 1);
   assert.equal(calls.attachMediaStreamSource.length, 1);
   assert.equal(calls.attachMediaStreamSource[0].mediaStream, sharedSession.stream);
-  assert.deepEqual(calls.attachMediaStreamSource[0].opts, {
+  assert.equal(typeof calls.attachMediaStreamSource[0].opts.isCurrent, "function");
+  assert.equal(calls.attachMediaStreamSource[0].opts.isCurrent(), true);
+  const { isCurrent, ...attachmentOptions } = calls.attachMediaStreamSource[0].opts;
+  assert.deepEqual(attachmentOptions, {
     kind: "stream",
     label: "Browser Tab",
     monitorOutput: false,
@@ -362,7 +368,10 @@ test("activateStream accepts audio-only display capture and uses the audio track
 
   assert.equal(result.ok, true);
   assert.equal(calls.attachMediaStreamSource.length, 1);
-  assert.deepEqual(calls.attachMediaStreamSource[0].opts, {
+  assert.equal(typeof calls.attachMediaStreamSource[0].opts.isCurrent, "function");
+  assert.equal(calls.attachMediaStreamSource[0].opts.isCurrent(), true);
+  const { isCurrent, ...attachmentOptions } = calls.attachMediaStreamSource[0].opts;
+  assert.deepEqual(attachmentOptions, {
     kind: "stream",
     label: "System Mix",
     monitorOutput: false,
