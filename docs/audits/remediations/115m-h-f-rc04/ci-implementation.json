@@ -1,0 +1,159 @@
+{
+  "run": {
+    "conclusion": "success",
+    "head_sha": "aba13a65a8b0688a2710b2ef602cb49ee765a400",
+    "html_url": "https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37624390126",
+    "id": 37624390126,
+    "status": "completed"
+  },
+  "jobs": [
+    {
+      "conclusion": "success",
+      "html_url": "https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37624390126/job/112802322485",
+      "id": 112802322485,
+      "name": "Test and build (windows-latest)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-python@v6",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install locked dependencies",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Test",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Build single-file application",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify versioned artifact and untracked generated output",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check diff whitespace",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@v6",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "html_url": "https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37624390126/job/112802323046",
+      "id": 112802323046,
+      "name": "Test and build (ubuntu-latest)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-python@v6",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install locked dependencies",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Test",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Build single-file application",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify versioned artifact and untracked generated output",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check diff whitespace",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@v6",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    }
+  ]
+}

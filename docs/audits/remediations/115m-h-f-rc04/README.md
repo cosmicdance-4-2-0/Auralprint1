@@ -28,4 +28,4 @@ Playwright/Chromium use existing developer tooling through `RC04_PLAYWRIGHT_MODU
 ## Status
 
 RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED.
-RC-04 awaits hosted Linux/Windows CI before closure. All other unresolved findings remain unresolved. **115N remains WITHHELD.** Broader Build-117 lifecycle/resource hardening stays deferred.
+RC-04 **CLOSED** after all local/browser/mutation evidence and hosted Linux/Windows CI passed on the implementation commit ([PR #32](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/32), [CI run](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37624390126)). `ci-implementation.json` records the exact implementation SHA and successful job/step results. All other unresolved findings remain unresolved. **115N remains WITHHELD.** Broader Build-117 lifecycle/resource hardening stays deferred.
