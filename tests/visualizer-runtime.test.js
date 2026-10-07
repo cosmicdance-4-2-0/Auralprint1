@@ -81,7 +81,7 @@ test("current visualizers have stable identities and deterministic overlay-befor
   runtime.update(frame());
   runtime.render({ clearFrame: () => order.push("clear") }, frame());
   assert.deepEqual(order, [
-    "update:overlay", "update:ORB0", "update:ORB1",
+    "update:ORB0", "update:ORB1", "update:overlay",
     "clear", "render:overlay", "render:ORB0", "render:ORB1",
   ]);
 });

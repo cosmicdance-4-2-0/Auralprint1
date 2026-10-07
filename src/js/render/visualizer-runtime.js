@@ -135,7 +135,14 @@ function createVisualizerRuntime({
   }
 
   function update(frameContext) {
-    for (const visualizer of visualizers) visualizer.update(frameContext);
+    // Orb-locked Ring phase depends on current-frame Orb simulation.
+    // Update dependency order is separate from render/composition order.
+    for (const visualizer of visualizers) {
+      if (visualizer.type !== "spectral-ring") visualizer.update(frameContext);
+    }
+    for (const visualizer of visualizers) {
+      if (visualizer.type === "spectral-ring") visualizer.update(frameContext);
+    }
   }
 
   function render(renderer, frameContext) {
