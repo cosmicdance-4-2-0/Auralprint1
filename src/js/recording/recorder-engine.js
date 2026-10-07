@@ -680,17 +680,6 @@ const RecorderEngine = (() => {
     }
   }
 
-  function clearRetainedExportState() {
-    const recording = readStateRef();
-    if (recording && recording.lastExportUrl) revokeObjectUrl(recording.lastExportUrl);
-    runtime.completedBlob = null;
-    if (recording) {
-      recording.lastExportUrl = null;
-      recording.lastExportFileName = "";
-      recording.lastExportByteSize = 0;
-    }
-  }
-
   function assembleCompletedRecordingExport() {
     if (!runtime.pendingChunks.length) {
       throw createRecorderError("no-captured-chunks", "Recording finished without any captured data.");
@@ -1039,7 +1028,8 @@ const RecorderEngine = (() => {
 
     runtime.stoppedAtMs = Number.isFinite(runtime.stoppedAtMs) ? runtime.stoppedAtMs : runtime.deps.nowMs();
     const elapsedMs = readElapsedMs(runtime.stoppedAtMs);
-    const previous = readStateRef() || {};
+    // commitStatus mutates the canonical state; capture URL ownership by value.
+    const previousExportUrl = readStateRef()?.lastExportUrl || null;
 
     let nextUrl = null;
     let nextFileName = "";
@@ -1047,7 +1037,6 @@ const RecorderEngine = (() => {
 
     try {
       const completedExport = assembleCompletedRecordingExport();
-      runtime.completedBlob = completedExport.blob;
       nextFileName = completedExport.fileName;
       nextByteSize = completedExport.byteSize;
       nextUrl = completedExport.objectUrl;
@@ -1068,7 +1057,9 @@ const RecorderEngine = (() => {
         lastExportByteSize: nextByteSize,
       }), "finalize");
 
-      if (previous.lastExportUrl && previous.lastExportUrl !== nextUrl) revokeObjectUrl(previous.lastExportUrl);
+      runtime.completedBlob = completedExport.blob;
+      // Replacement owns the new URL only after its metadata is committed.
+      if (previousExportUrl && previousExportUrl !== nextUrl) revokeObjectUrl(previousExportUrl);
       resetSessionRuntime({ keepExport: true });
       return;
     } catch (err) {
@@ -1174,7 +1165,8 @@ const RecorderEngine = (() => {
       }), "start");
     }
 
-    clearRetainedExportState();
+    // A new session does not own the last completed export. Retain it until
+    // successful replacement in finalizeStoppedRecorder(), or full disposal.
     resetSessionRuntime({ keepExport: true });
 
     try {
