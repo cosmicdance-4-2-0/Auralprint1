@@ -3834,6 +3834,15 @@ for (const [label, names, cursor, repeat, expected, nextCursor] of [
       assert.deepEqual(scrubberLoads, ["A.wav"], "pending EOF cannot load while locked");
       assert.equal(mutations.filter(m => m.kind === "track-change-start").length, 1);
       Object.assign(state.recording, { phase: "complete", lastExportUrl: "blob:valid-export", lastExportByteSize: 123 });
+      if (repeat === "one") {
+        const current = Queue.current;
+        let reads = 0;
+        t.mock.method(Queue, "current", () => {
+          // Reenter after ownership validation, while the policy selects A.
+          if (++reads === 2) UI.refreshRecordingUi();
+          return current();
+        });
+      }
       UI.refreshRecordingUi();
       await rc05Settle();
       assert.equal(Queue.currentIndex, nextCursor);
