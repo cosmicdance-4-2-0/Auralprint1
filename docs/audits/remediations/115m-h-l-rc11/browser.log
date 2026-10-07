@@ -1,0 +1,67 @@
+{
+  "version": "v0.1.15m.h.l",
+  "browser": "151.0.7922.173",
+  "expectedDefect": false,
+  "results": [
+    {
+      "desired": "fixed",
+      "before": {
+        "value": "",
+        "readout": "mixed",
+        "modes": [
+          "fixed",
+          "dominantBand"
+        ]
+      },
+      "after": {
+        "value": "fixed",
+        "modes": [
+          "fixed",
+          "fixed"
+        ],
+        "changes": 1
+      },
+      "errors": []
+    },
+    {
+      "desired": "lastParticle",
+      "before": {
+        "value": "",
+        "readout": "mixed",
+        "modes": [
+          "fixed",
+          "dominantBand"
+        ]
+      },
+      "after": {
+        "value": "lastParticle",
+        "modes": [
+          "lastParticle",
+          "lastParticle"
+        ],
+        "changes": 1
+      },
+      "errors": []
+    },
+    {
+      "desired": "dominantBand",
+      "before": {
+        "value": "",
+        "readout": "mixed",
+        "modes": [
+          "fixed",
+          "dominantBand"
+        ]
+      },
+      "after": {
+        "value": "dominantBand",
+        "modes": [
+          "dominantBand",
+          "dominantBand"
+        ],
+        "changes": 1
+      },
+      "errors": []
+    }
+  ]
+}

@@ -20,6 +20,40 @@ test("generated controls commit by persistent ID after reorder and focusOrb is I
 
 test("bulk helper keeps mixed and zero semantics",()=>{assert.deepEqual(readBulkOrbValue([],"particles","emitPerSecond"),{available:false,mixed:false,value:undefined});assert.equal(readBulkOrbValue([orb("A"),orb("B")],"particles","emitPerSecond").mixed,false);});
 
+test("RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once", () => {
+  for (const value of ["fixed", "lastParticle", "dominantBand"]) {
+    const h = harness(["A", "B"]);
+    try {
+      h.editor.init();
+      const select = h.view.selLineColorMode;
+      preferences.orbs[0].trace.lineColorMode = "fixed";
+      resolveSettings(); h.editor.refresh();
+      assert.equal(select.value, "");
+      assert.equal(h.view.valLineColorMode.textContent, "mixed");
+      const sentinel = select.children.find(option => option.value === "");
+      assert.equal(sentinel.textContent, "mixed");
+      assert.equal(sentinel.disabled, true);
+      const before = structuredClone(preferences);
+      select.dispatch("change");
+      assert.deepEqual(preferences, before);
+      assert.equal(h.calls.length, 0);
+      select.value = value; select.dispatch("change");
+      assert.deepEqual(preferences.orbs.map(orb => orb.trace.lineColorMode), [value, value]);
+      assert.equal(h.calls.length, 1);
+      resolveSettings(); h.editor.refresh();
+      assert.equal(select.value, value);
+      assert.notEqual(h.view.valLineColorMode.textContent, "mixed");
+      assert.equal(h.editor.init(), false);
+      assert.equal(select.children.filter(option => option.value === "").length, 1);
+      assert.equal(select.listenerCount("change"), 1);
+      preferences.orbs = []; resolveSettings(); h.editor.refresh();
+      assert.equal(select.disabled, true);
+      select.value = value; select.dispatch("change");
+      assert.equal(h.calls.length, 1);
+    } finally { h.restore(); }
+  }
+});
+
 test("refresh synchronizes invalidated content without moving stable roots or disturbing focus",()=>{const h=harness(["A","B","C"]);const oldEdges=state.bands.lowHz;let insertions=0,syncs=0;const insertBefore=h.view.orbEditorList.insertBefore.bind(h.view.orbEditorList);h.view.orbEditorList.insertBefore=(node,before)=>{insertions++;return insertBefore(node,before)};h.editor=createOrbEditorUi({ui:h.view,commitOrbChangeById:()=>{},commitPreferences:()=>{},showStatus:()=>{},createBandPicker:()=>({sync(){syncs++}})});try{h.editor.init();assert.deepEqual({insertions,syncs},{insertions:3,syncs:3});const b=h.editor.getController("B"),root=b.root,emit=b.emit;emit.focus();h.editor.refresh(runtime.settings);assert.deepEqual({insertions,syncs},{insertions:3,syncs:3});preferences.orbs[1].particles.emitPerSecond+=1;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(b.emit.value,String(runtime.settings.orbs[1].particles.emitPerSecond));assert.equal(document.activeElement,emit);assert.equal(h.editor.getController("B").root,root);assert.deepEqual({insertions,syncs},{insertions:3,syncs:6});state.bands.lowHz=[...oldEdges];h.editor.refresh(runtime.settings);assert.equal(document.activeElement,emit);assert.equal(h.editor.getController("B").root,root);assert.deepEqual({insertions,syncs},{insertions:3,syncs:9});h.editor.refresh(runtime.settings);assert.deepEqual({insertions,syncs},{insertions:3,syncs:9});}finally{state.bands.lowHz=oldEdges;h.restore()}});
 
 test("programmatic select synchronization keeps generated readouts aligned with selected options",()=>{const h=harness(["A"]);try{h.editor.init();const c=h.editor.getController("A");for(const [value,label] of [["inherit","Inherit Scene"],["dominant","Global Dominant Band"],["angle","Orb Phase Palette (Glitch Mode)"],["fixed","Scene Fixed Particle Color"]]){preferences.orbs[0].colorSource=value;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(c.color.value,value);assert.equal(c.colorValue.textContent,label);}for(const [value,label] of [["fixed","Scene Fixed Particle Color"],["lastParticle","Last Particle"],["dominantBand","Global Dominant Band"]]){preferences.orbs[0].trace.lineColorMode=value;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(c.lineColor.value,value);assert.equal(c.lineColorValue.textContent,label);}}finally{h.restore()}});

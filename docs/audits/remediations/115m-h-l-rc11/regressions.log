@@ -1,0 +1,19 @@
+✔ dynamic editor supports zero, one, and N Orbs and disables bulk at zero (27.502369ms)
+✔ editor reconciliation retains roots by ID, reorders nodes, and replaces only structural changes (11.826258ms)
+✔ generated controls commit by persistent ID after reorder and focusOrb is ID based (10.434997ms)
+✔ bulk helper keeps mixed and zero semantics (0.320542ms)
+✔ RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once (19.34388ms)
+✔ refresh synchronizes invalidated content without moving stable roots or disturbing focus (9.750974ms)
+✔ programmatic select synchronization keeps generated readouts aligned with selected options (11.39857ms)
+✔ every schema-10 Orb setting has a generated writable control (12.84493ms)
+✔ phase is presented accessibly in degrees and commits radians by stable ID (18.676256ms)
+✔ nested controls remain independent and canonical normalization refreshes their values (3.31968ms)
+✔ ten arbitrary-ID Orb cards retain independent phase and nested values (3.96458ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 148.028136

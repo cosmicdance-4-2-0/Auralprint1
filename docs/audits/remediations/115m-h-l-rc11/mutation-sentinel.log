@@ -1,0 +1,66 @@
+✔ dynamic editor supports zero, one, and N Orbs and disables bulk at zero (27.032814ms)
+✔ editor reconciliation retains roots by ID, reorders nodes, and replaces only structural changes (15.405265ms)
+✔ generated controls commit by persistent ID after reorder and focusOrb is ID based (9.220726ms)
+✔ bulk helper keeps mixed and zero semantics (0.300041ms)
+✖ RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once (3.255735ms)
+✔ refresh synchronizes invalidated content without moving stable roots or disturbing focus (2.740491ms)
+✔ programmatic select synchronization keeps generated readouts aligned with selected options (2.551196ms)
+✔ every schema-10 Orb setting has a generated writable control (1.70217ms)
+✔ phase is presented accessibly in degrees and commits radians by stable ID (2.572969ms)
+✔ nested controls remain independent and canonical normalization refreshes their values (6.306022ms)
+✔ ten arbitrary-ID Orb cards retain independent phase and nested values (10.018614ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96.616447
+
+✖ failing tests:
+
+test at tests/orb-editor.test.js:23:1
+✖ RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once (3.255735ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      audio: {
+        fftSize: 8192,
+        muted: false,
+        repeatMode: 'none',
+  ...
+            lineAlpha: 0.35,
+  +         lineColorMode: '',
+  -         lineColorMode: 'fixed',
+            lineWidthPx: 2,
+            lines: true,
+            numLines: 10
+          }
+        },
+  ...
+            lineAlpha: 0.35,
+  +         lineColorMode: '',
+  -         lineColorMode: 'dominantBand',
+            lineWidthPx: 2,
+            lines: true,
+            numLines: 10
+          }
+        }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/orb-editor.test.js:38:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
