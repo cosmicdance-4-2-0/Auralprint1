@@ -254,9 +254,13 @@ const AudioEngine = (() => {
     throw new Error(`Unsupported sourceType: ${descriptor.sourceType || "unknown"}`);
   }
 
-  async function attachSource(descriptor) {
+  async function attachSource(descriptor, options = {}) {
     const ctx = ensureContext();
     if (ctx.state === "suspended") await ctx.resume();
+
+    // A superseded activation may release its own stream, but cannot replace
+    // the graph installed by the current owner while resume was pending.
+    if (options.isCurrent && !options.isCurrent()) return false;
 
     teardown();
 
@@ -283,7 +287,7 @@ const AudioEngine = (() => {
       label: opts.label || "",
       monitorOutput: !!opts.monitorOutput,
       mediaStream: nextMediaStream,
-    });
+    }, { isCurrent: opts.isCurrent });
   }
 
   async function loadFile(file, requestId = null, opts = {}) {

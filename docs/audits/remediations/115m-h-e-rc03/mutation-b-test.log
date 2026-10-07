@@ -1,0 +1,59 @@
+✖ RC-03: stale mic resume cannot destroy winning stream graph (28.875825ms)
+✔ RC-03: stale mic resume rejection cannot commit an attachment error (9.881952ms)
+✔ RC-03 positive control: ordinary mic to stream switch (15.584354ms)
+✖ RC-03: stale stream resume cannot destroy winning mic graph (5.951707ms)
+✔ RC-03: stale stream resume rejection cannot commit an attachment error (5.842853ms)
+✔ RC-03 positive control: ordinary stream to mic switch (7.908057ms)
+✔ RC-03 positive control: normal mic graph and explicit File-mode teardown (6.071623ms)
+✔ RC-03: explicit teardown cancels pending mic attachment (2.421479ms)
+✔ RC-03: current mic attachment failure still reports error and releases tracks (1.634025ms)
+✔ RC-03 positive control: normal stream graph and explicit File-mode teardown (29.499686ms)
+✔ RC-03: explicit teardown cancels pending stream attachment (4.1391ms)
+✔ RC-03: current stream attachment failure still reports error and releases tracks (3.911517ms)
+✔ RC-03: optional attachment guard also protects a running context (8.592827ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 11
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 145.214952
+
+✖ failing tests:
+
+test at tests/live-source-ownership.test.js:135:3
+✖ RC-03: stale mic resume cannot destroy winning stream graph (28.875825ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at Object.assertWinner (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:114:12)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:146:24)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:135:3
+✖ RC-03: stale stream resume cannot destroy winning mic graph (5.951707ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at Object.assertWinner (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:114:12)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:146:24)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

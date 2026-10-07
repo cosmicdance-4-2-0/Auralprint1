@@ -1,0 +1,21 @@
+✔ RC-03: stale mic resume cannot destroy winning stream graph (16.369704ms)
+✔ RC-03: stale mic resume rejection cannot commit an attachment error (6.6348ms)
+✔ RC-03 positive control: ordinary mic to stream switch (6.727145ms)
+✔ RC-03: stale stream resume cannot destroy winning mic graph (5.643502ms)
+✔ RC-03: stale stream resume rejection cannot commit an attachment error (6.401263ms)
+✔ RC-03 positive control: ordinary stream to mic switch (6.479453ms)
+✔ RC-03 positive control: normal mic graph and explicit File-mode teardown (30.276039ms)
+✔ RC-03: explicit teardown cancels pending mic attachment (2.631849ms)
+✔ RC-03: current mic attachment failure still reports error and releases tracks (3.792882ms)
+✔ RC-03 positive control: normal stream graph and explicit File-mode teardown (4.873275ms)
+✔ RC-03: explicit teardown cancels pending stream attachment (3.841537ms)
+✔ RC-03: current stream attachment failure still reports error and releases tracks (1.984387ms)
+✔ RC-03: optional attachment guard also protects a running context (9.244037ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.366287

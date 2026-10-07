@@ -1,0 +1,40 @@
+✔ state.source exists and starts in the idle none state (2.174096ms)
+✔ input source manager init marks unsupported capabilities when media APIs are absent (0.683532ms)
+✔ activateFile transitions through requesting to active and forwards load arguments (0.883496ms)
+✔ activateFile failure leaves attempted kind in error without a live session (0.258554ms)
+✔ teardownActiveSource is idempotent and unloads the active session only once (0.913262ms)
+✔ activateMic tears down an active file source, attaches the microphone stream, and marks the source active (2.013159ms)
+✔ activateMic reports denied microphone permission as a recoverable error (0.792357ms)
+✔ activateStream tears down an active file source, attaches shared stream audio, and marks the source active (1.115017ms)
+✔ activateStream accepts audio-only display capture and uses the audio track label (0.478557ms)
+✔ Stream requests supported stereo/fidelity preferences without mandatory constraints (2.155387ms)
+✔ Stream omits unsupported audio fields and still activates (1.767854ms)
+✔ Stream falls back to audio:true when constraint inspection is missing, empty, or throws (0.497295ms)
+✔ Stream stores the actual returned channel count and keeps the original live stream (0.388694ms)
+✔ Stream leaves channel count unknown for absent, unavailable, or invalid track settings (0.514073ms)
+✔ Stream metadata describes the track selected by MediaStreamAudioSourceNode ID ordering (0.178536ms)
+✔ Stream channel metadata resets on file, mic, end, failure, and a new pending session (2.120698ms)
+✔ activateStream rejects shared streams that do not provide usable audio (0.165674ms)
+✔ activateStream treats cancelled or denied picker results conservatively (0.191997ms)
+✔ activateStream reports blocked stream capture honestly when the browser context forbids it (0.146931ms)
+✔ file -> mic -> file switches cleanly through the source manager contract (0.207845ms)
+✔ mic -> stream switches cleanly and stops the previous live session once (0.829066ms)
+✔ stream -> mic switches cleanly and stops the previous shared stream once (0.313618ms)
+✔ a late microphone grant is stopped and discarded after teardown (0.358322ms)
+✔ a late stream grant is stopped and discarded after teardown (0.215537ms)
+✔ external microphone end tears down the stream and leaves a recoverable mic error (0.257921ms)
+✔ stream ignores video-track end while audio remains live (0.117454ms)
+✔ stream ends only after all audio tracks have ended (0.138434ms)
+✔ external shared stream end tears down the stream, resets live visuals, and leaves a recoverable stream error (0.449861ms)
+✔ teardownActiveSource stops stream-backed sessions even when the kind is mic (0.349275ms)
+✔ unsupported microphone activation reports unsupported state without mutating file transport fields (0.131552ms)
+✔ unsupported stream activation reports unsupported state without mutating file transport fields (0.139588ms)
+✔ URL preset serialization excludes runtime source state (2.096791ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 36.075694

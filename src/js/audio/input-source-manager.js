@@ -543,14 +543,17 @@ function createInputSourceManager(deps = {}) {
       });
     }
 
+    let attached;
     try {
-      await audioEngine.attachMediaStreamSource(mediaStream, {
+      attached = await audioEngine.attachMediaStreamSource(mediaStream, {
         kind: "mic",
         label,
         monitorOutput: false,
+        isCurrent: () => isActivationTokenCurrent(activationToken),
       });
     } catch (err) {
       stopSessionStreamTracks({ mediaStream });
+      if (!isActivationTokenCurrent(activationToken)) return readCancelledActivation("mic");
       return commitFailure("mic", {
         status: "error",
         code: "mic-attach-failed",
@@ -561,9 +564,8 @@ function createInputSourceManager(deps = {}) {
       });
     }
 
-    if (!isActivationTokenCurrent(activationToken)) {
+    if (attached === false || !isActivationTokenCurrent(activationToken)) {
       stopSessionStreamTracks({ mediaStream });
-      if (audioEngine && typeof audioEngine.unload === "function") audioEngine.unload();
       return readCancelledActivation("mic");
     }
 
@@ -627,14 +629,17 @@ function createInputSourceManager(deps = {}) {
       });
     }
 
+    let attached;
     try {
-      await audioEngine.attachMediaStreamSource(mediaStream, {
+      attached = await audioEngine.attachMediaStreamSource(mediaStream, {
         kind: "stream",
         label,
         monitorOutput: false,
+        isCurrent: () => isActivationTokenCurrent(activationToken),
       });
     } catch (err) {
       stopSessionStreamTracks({ mediaStream });
+      if (!isActivationTokenCurrent(activationToken)) return readCancelledActivation("stream");
       sourceState.permission.stream = "granted";
       return commitFailure("stream", {
         status: "error",
@@ -646,9 +651,8 @@ function createInputSourceManager(deps = {}) {
       });
     }
 
-    if (!isActivationTokenCurrent(activationToken)) {
+    if (attached === false || !isActivationTokenCurrent(activationToken)) {
       stopSessionStreamTracks({ mediaStream });
-      if (audioEngine && typeof audioEngine.unload === "function") audioEngine.unload();
       return readCancelledActivation("stream");
     }
 

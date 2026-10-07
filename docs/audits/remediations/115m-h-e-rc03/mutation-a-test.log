@@ -1,0 +1,154 @@
+✖ RC-03: stale mic resume cannot destroy winning stream graph (24.739185ms)
+✔ RC-03: stale mic resume rejection cannot commit an attachment error (9.467513ms)
+✔ RC-03 positive control: ordinary mic to stream switch (12.184218ms)
+✖ RC-03: stale stream resume cannot destroy winning mic graph (6.990951ms)
+✔ RC-03: stale stream resume rejection cannot commit an attachment error (4.685267ms)
+✔ RC-03 positive control: ordinary stream to mic switch (40.107867ms)
+✔ RC-03 positive control: normal mic graph and explicit File-mode teardown (5.122799ms)
+✖ RC-03: explicit teardown cancels pending mic attachment (7.215961ms)
+✔ RC-03: current mic attachment failure still reports error and releases tracks (3.710074ms)
+✔ RC-03 positive control: normal stream graph and explicit File-mode teardown (6.651069ms)
+✖ RC-03: explicit teardown cancels pending stream attachment (5.170034ms)
+✔ RC-03: current stream attachment failure still reports error and releases tracks (5.283443ms)
+✖ RC-03: optional attachment guard also protects a running context (8.650626ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 8
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 156.062914
+
+✖ failing tests:
+
+test at tests/live-source-ownership.test.js:135:3
+✖ RC-03: stale mic resume cannot destroy winning stream graph (24.739185ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+
+    EventTarget {
+      Symbol(events.maxEventTargetListeners): 10,
+      Symbol(events.maxEventTargetListenersWarned): false,
+  +   Symbol(kEvents): undefined,
+  -   Symbol(kEvents): SafeMap(1) {
+  -     'inactive' => <ref *1> {
+  -       next: Listener {
+  -         callback: [Function: onInactive],
+  -         flags: 0,
+  -         listener: [Function: onInactive],
+  -         next: undefined,
+  -         previous: [Circular *1]
+  -       },
+  -       resistStopPropagation: false,
+  -       size: 1
+  -     }
+  -   },
+      Symbol(kHandlers): undefined,
+      getAudioTracks: [Function: getAudioTracks],
+      getTracks: [Function: getTracks],
+      getVideoTracks: [Function: getVideoTracks]
+    }
+
+      at Object.assertWinner (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:116:12)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:146:24)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [EventTarget],
+    expected: [EventTarget],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:135:3
+✖ RC-03: stale stream resume cannot destroy winning mic graph (6.990951ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+
+    EventTarget {
+      Symbol(events.maxEventTargetListeners): 10,
+      Symbol(events.maxEventTargetListenersWarned): false,
+  +   Symbol(kEvents): undefined,
+  -   Symbol(kEvents): SafeMap(1) {
+  -     'inactive' => <ref *1> {
+  -       next: Listener {
+  -         callback: [Function: onInactive],
+  -         flags: 0,
+  -         listener: [Function: onInactive],
+  -         next: undefined,
+  -         previous: [Circular *1]
+  -       },
+  -       resistStopPropagation: false,
+  -       size: 1
+  -     }
+  -   },
+      Symbol(kHandlers): undefined,
+      getAudioTracks: [Function: getAudioTracks],
+      getTracks: [Function: getTracks],
+      getVideoTracks: [Function: getVideoTracks]
+    }
+
+      at Object.assertWinner (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:116:12)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:146:24)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [EventTarget],
+    expected: [EventTarget],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:193:3
+✖ RC-03: explicit teardown cancels pending mic attachment (7.215961ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:203:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:193:3
+✖ RC-03: explicit teardown cancels pending stream attachment (5.170034ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:203:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/live-source-ownership.test.js:221:1
+✖ RC-03: optional attachment guard also protects a running context (8.650626ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/live-source-ownership.test.js:226:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
