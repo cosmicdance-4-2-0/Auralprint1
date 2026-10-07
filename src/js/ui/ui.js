@@ -1235,6 +1235,10 @@ const UI = (() => {
     }
 
     function resetEmptyFileWorkflowState(reason) {
+      // Revoke file activation ownership before releasing media or resetting state.
+      invalidatePendingTrackLoads();
+      Queue.clear();
+      clearAudioStatusToast();
       InputSourceManager.teardownActiveSource({ reason });
       clearRecoverableIdleSourceError();
       clearAudioState();
@@ -1386,6 +1390,22 @@ const UI = (() => {
        The hook survives teardown() intentionally — registered once at boot,
        must persist across track loads. Documented in 111c/111d. */
     AudioEngine._isLoadRequestCurrent = (requestId) => requestId === activeLoadRequestId;
+
+    function enqueueFileBatch(files) {
+      const wasEmpty = Queue.length === 0;
+      const firstIndex = Queue.length;
+      // Commit the accepted batch synchronously. No continuation may add files
+      // from this user action after Clear or final removal cancels its load.
+      for (const file of files) Queue.add(file);
+      if (wasEmpty) {
+        Queue.setCursor(firstIndex);
+        const activation = loadAndPlay(files[0]);
+        refreshQueuePanel();
+        return activation;
+      }
+      refreshQueuePanel();
+      return true;
+    }
 
     AudioEngine._onTrackEnded = () => {
       if (isFinalizingFileTransportLocked()) return;
@@ -1590,15 +1610,7 @@ const UI = (() => {
       const files = Array.from(ui.fileInput.files || []).filter(f => f.type.startsWith("audio/"));
       if (!files.length) return;
 
-      for (const file of files) {
-        const wasEmpty = Queue.length === 0;
-        const idx = Queue.add(file);
-        if (wasEmpty) {
-          Queue.setCursor(idx);
-          await loadAndPlay(file);
-        }
-      }
-      refreshQueuePanel();
+      await enqueueFileBatch(files);
     });
 
     ui.btnPlay.addEventListener("click", async () => {
@@ -1655,10 +1667,7 @@ const UI = (() => {
         toastFinalizingTransportLock();
         return;
       }
-      // 3.4 — Clear queue clean-slate path. Order matters:
-      // Queue.clear() first so Prev/Next disable correctly in next refreshAllUiText.
-      // Source teardown before clearAudioState() so no media remains attached.
-      Queue.clear();
+      // Cancel file activation, clear queue, then release source and reset state.
       resetEmptyFileWorkflowState("queue-cleared"); // sets isLoaded/isPlaying/filename, resets scrubber + trails
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "queue-cleared",
@@ -1712,15 +1721,7 @@ const UI = (() => {
       }
       const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("audio/"));
       if (!files.length) return;
-      for (const file of files) {
-        const wasEmpty = Queue.length === 0;
-        const idx = Queue.add(file);
-        if (wasEmpty) {
-          Queue.setCursor(idx);
-          await loadAndPlay(file);
-        }
-      }
-      refreshQueuePanel();
+      await enqueueFileBatch(files);
     });
 
     // Safety net: dropping files outside the canvas should never navigate away.

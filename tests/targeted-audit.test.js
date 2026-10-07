@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.c");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.c\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.d");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.d\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -315,7 +315,9 @@ async function withUiWireHarnessState({
   }
 }
 
-function createAudioEngineHarness() {
+let audioEngineHarnessContext = null;
+
+function createAudioEngineHarness({ contextState = "running", onResume = null } = {}) {
   const previousWindow = globalThis.window;
   const previousDocument = globalThis.document;
   const previousURL = globalThis.URL;
@@ -325,6 +327,17 @@ function createAudioEngineHarness() {
   const connectionLog = [];
   const analysers = [];
   let destinationNode = null;
+  const previousContextState = audioEngineHarnessContext?.state;
+  const previousResume = audioEngineHarnessContext?.resume;
+  const resume = function () {
+    if (onResume) return onResume(this);
+    this.state = "running";
+    return Promise.resolve();
+  };
+  if (audioEngineHarnessContext) {
+    audioEngineHarnessContext.state = contextState;
+    audioEngineHarnessContext.resume = resume;
+  }
 
   function createNode(extra = {}) {
     const node = {
@@ -355,13 +368,14 @@ function createAudioEngineHarness() {
     listeners: new Map(),
     addEventListener(type, handler, options = {}) {
       const entries = this.listeners.get(type) || [];
-      entries.push({ handler, once: !!options.once });
+      entries.push({ handler, once: !!options.once, signal: options.signal });
       this.listeners.set(type, entries);
     },
     dispatch(type) {
       const entries = [...(this.listeners.get(type) || [])];
       const kept = [];
       for (const entry of entries) {
+        if (entry.signal?.aborted) continue;
         entry.handler();
         if (!entry.once) kept.push(entry);
       }
@@ -391,7 +405,9 @@ function createAudioEngineHarness() {
   class FakeAudioContext {
     constructor() {
       this.sampleRate = 48000;
-      this.state = "running";
+      this.state = contextState;
+      this.resume = resume;
+      audioEngineHarnessContext = this;
       this.destination = createNode({ kind: "destination" });
       destinationNode = this.destination;
     }
@@ -460,6 +476,10 @@ function createAudioEngineHarness() {
     revokedUrls,
     restore() {
       try { AudioEngine.unload(); } catch {}
+      if (audioEngineHarnessContext) {
+        audioEngineHarnessContext.state = previousContextState || "running";
+        if (previousResume) audioEngineHarnessContext.resume = previousResume;
+      }
       AudioEngine._onFilePlaybackError = previousOnFilePlaybackError;
       state.audio.isLoaded = previousAudioState.isLoaded;
       state.audio.isPlaying = previousAudioState.isPlaying;
@@ -630,15 +650,13 @@ function createStubUiElement(tagName = "div") {
     },
     dispatch(type, event = {}) {
       const entries = listeners.get(type) || [];
-      for (const handler of entries) {
-        handler({
-          preventDefault() {},
-          stopPropagation() {},
-          target: this,
-          currentTarget: this,
-          ...event,
-        });
-      }
+      return Promise.all(entries.map(handler => handler({
+        preventDefault() {},
+        stopPropagation() {},
+        target: this,
+        currentTarget: this,
+        ...event,
+      })));
     },
     click() {
       if (this.disabled) return;
@@ -3557,6 +3575,217 @@ test("Visualizers focus round-trip and H/View restore the same layout with local
     assert.deepEqual(panels.map((panel) => panel.style.display), before);
     assert.deepEqual(state.ui.orbEditorList.children, roots); assert.equal(roots[0].open, true);
     assert.equal(state.ui.openVisualizers.hidden, false);
+  });
+});
+
+function rc02Deferred() {
+  let resolve, reject;
+  const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
+  return { promise, resolve, reject };
+}
+
+async function withRc02FileWorkflow(t, options, run) {
+  const audio = createAudioEngineHarness(options);
+  const previousRequestGuard = AudioEngine._isLoadRequestCurrent;
+  const previousEnded = AudioEngine._onTrackEnded;
+  const mutations = [];
+  const scrubberLoads = [];
+  const activations = [];
+  t.mock.method(RecorderEngine, "onTransportMutation", (kind, details) => {
+    mutations.push({ kind, details });
+    return { ok: true };
+  });
+  t.mock.method(RecorderEngine, "getSupportStatus", () => ({ ok: true }));
+  t.mock.method(Scrubber, "loadFile", file => { scrubberLoads.push(file.name); });
+  const activateFile = InputSourceManager.activateFile;
+  t.mock.method(InputSourceManager, "activateFile", async (...args) => {
+    const result = await activateFile(...args);
+    activations.push(result);
+    return result;
+  });
+  try {
+    await withUiWireHarnessState({
+      sourceState: { kind: "none", status: "idle", sessionActive: false, label: "", errorCode: "", errorMessage: "" },
+      audioState: { isLoaded: false, isPlaying: false, filename: "", transportError: "" },
+      recordingState: { phase: "idle" },
+      queueVisible: true,
+    }, async ({ getElement }) => {
+      const createElement = document.createElement;
+      document.createElement = tag => tag === "audio" ? audio.audioEl : createElement(tag);
+      function ingest(names, entry = "picker") {
+        const files = names.map(createNamedAudioFile);
+        if (entry === "drop") return state.canvas.dispatch("drop", { dataTransfer: { files } });
+        getElement("fileInput").files = files;
+        return getElement("fileInput").dispatch("change");
+      }
+      try {
+        await run({ audio, ingest, getElement, mutations, scrubberLoads, activations });
+      } finally {
+        await InputSourceManager.teardownActiveSource({ reason: "rc02-test-cleanup" });
+      }
+    });
+  } finally {
+    AudioEngine._isLoadRequestCurrent = previousRequestGuard;
+    AudioEngine._onTrackEnded = previousEnded;
+    audio.restore();
+  }
+}
+
+function assertRc02Empty() {
+  UI.refreshAllUiText();
+  assert.deepEqual(Queue.snapshot(), { items: [], cursor: -1, length: 0 });
+  assert.deepEqual(state.audio, { isLoaded: false, isPlaying: false, filename: "", transportError: "" });
+  assert.equal(state.source.kind, "none");
+  assert.equal(state.source.status, "idle");
+  assert.equal(state.source.label, "");
+  assert.equal(state.source.sessionActive, false);
+  assert.equal(state.source.errorCode, "");
+  assert.equal(state.source.errorMessage, "");
+  assert.equal(state.source.streamMeta.hasAudio, false);
+  assert.equal(AudioEngine.getMediaEl(), null);
+  assert.equal(AudioEngine.sample().ready, false);
+  assert.equal(state.ui.audioStatus.textContent, "File mode ready. Load audio files to begin analysis.");
+}
+
+for (const removal of ["clear", "final-remove"]) {
+  test(`RC-02: ${removal} during delayed context resume leaves an empty workflow`, async (t) => {
+    const entered = rc02Deferred(), resume = rc02Deferred();
+    await withRc02FileWorkflow(t, {
+      contextState: "suspended",
+      onResume(ctx) {
+        entered.resolve();
+        return resume.promise.then(() => { ctx.state = "running"; });
+      },
+    }, async ({ ingest, getElement, scrubberLoads, mutations, activations }) => {
+      const pending = ingest(["A.wav"]);
+      await entered.promise;
+      assert.equal(Queue.length, 1);
+      if (removal === "clear") await getElement("btnClearQueue").dispatch("click");
+      else await getElement("queueList").children[0].children[2].dispatch("click");
+      assertRc02Empty();
+      const notifications = mutations.length;
+      resume.resolve();
+      await pending;
+      assertRc02Empty();
+      assert.deepEqual(activations, [false], "cancelled activation resolves quietly");
+      assert.deepEqual(scrubberLoads, []);
+      assert.equal(mutations.length, notifications, "no stale recorder transport notification");
+    });
+  });
+}
+
+for (const outcome of ["resolve", "reject"]) {
+  test(`RC-02: Clear during delayed load-time play ${outcome} ignores stale commits and callbacks`, async (t) => {
+    const entered = rc02Deferred(), play = rc02Deferred();
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, getElement, scrubberLoads, mutations, activations }) => {
+      audio.audioEl.play = () => {
+        audio.audioEl.paused = false;
+        audio.audioEl.dispatch("play");
+        entered.resolve();
+        return play.promise;
+      };
+      const pending = ingest(["A.wav"]);
+      await entered.promise;
+      assert.equal(AudioEngine.sample().ready, true);
+      await getElement("btnClearQueue").dispatch("click");
+      assertRc02Empty();
+      assert.equal(audio.audioEl.src, "");
+      assert.ok(audio.revokedUrls.includes("blob:test-audio"));
+      assert.ok(audio.audioEl.releaseCalls.pause > 0);
+      assert.ok(audio.audioEl.releaseCalls.load > 0);
+      const notifications = mutations.length;
+      // Teardown aborts every old listener, including late decode/error/EOF events.
+      for (const event of ["loadeddata", "error", "play", "pause", "ended"]) audio.audioEl.dispatch(event);
+      assertRc02Empty();
+      if (outcome === "reject") play.reject(Object.assign(new Error("old playback failed"), { name: "NotSupportedError" }));
+      else play.resolve();
+      await pending;
+      assertRc02Empty();
+      assert.deepEqual(activations, [false]);
+      assert.deepEqual(scrubberLoads, []);
+      assert.equal(mutations.length, notifications);
+    });
+  });
+}
+
+for (const entry of ["picker", "drop"]) {
+  test(`RC-02: two-file ${entry} batch cannot repopulate after Clear`, async (t) => {
+    const entered = rc02Deferred(), play = rc02Deferred();
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, getElement, scrubberLoads }) => {
+      let playCalls = 0;
+      audio.audioEl.play = () => { playCalls++; entered.resolve(); return play.promise; };
+      const pending = ingest(["A.wav", "B.wav"], entry);
+      await entered.promise;
+      await getElement("btnClearQueue").dispatch("click");
+      assertRc02Empty();
+      play.resolve();
+      await pending;
+      assertRc02Empty();
+      assert.equal(playCalls, 1, "B never begins an old activation");
+      assert.deepEqual(scrubberLoads, []);
+    });
+  });
+}
+
+test("RC-02: ordinary single file still loads, plays, and notifies recording", async (t) => {
+  await withRc02FileWorkflow(t, {}, async ({ ingest, scrubberLoads, mutations }) => {
+    await ingest(["A.wav"]);
+    assert.equal(state.source.kind, "file");
+    assert.equal(state.source.status, "active");
+    assert.equal(state.source.sessionActive, true);
+    assert.deepEqual(state.audio, { isLoaded: true, isPlaying: true, filename: "A.wav", transportError: "" });
+    assert.equal(AudioEngine.sample().ready, true);
+    assert.equal(Queue.currentIndex, 0);
+    assert.deepEqual(scrubberLoads, ["A.wav"]);
+    assert.deepEqual(mutations.map(item => item.kind), ["track-change-start", "track-change-complete"]);
+  });
+});
+
+for (const entry of ["picker", "drop"]) {
+  test(`RC-02: ordinary A/B/C ${entry} batch preserves order and first activation`, async (t) => {
+    await withRc02FileWorkflow(t, {}, async ({ ingest, scrubberLoads }) => {
+      await ingest(["A.wav", "B.wav", "C.wav"], entry);
+      assert.deepEqual(Queue.snapshot().items.map(item => item.name), ["A.wav", "B.wav", "C.wav"]);
+      assert.equal(Queue.currentIndex, 0);
+      assert.equal(state.audio.filename, "A.wav");
+      assert.equal(state.audio.isPlaying, true);
+      assert.deepEqual(scrubberLoads, ["A.wav"]);
+      assert.equal(Queue.next().name, "B.wav");
+      assert.equal(Queue.next().name, "C.wav");
+    });
+  });
+
+  test(`RC-02: ${entry} B/C appends once without replacing active A`, async (t) => {
+    await withRc02FileWorkflow(t, {}, async ({ ingest, scrubberLoads, mutations }) => {
+      await ingest(["A.wav"]);
+      await ingest(["B.wav", "C.wav"], entry);
+      assert.deepEqual(Queue.snapshot().items.map(item => item.name), ["A.wav", "B.wav", "C.wav"]);
+      assert.equal(Queue.currentIndex, 0);
+      assert.equal(state.audio.filename, "A.wav");
+      assert.equal(state.audio.isPlaying, true);
+      assert.deepEqual(scrubberLoads, ["A.wav"]);
+      assert.deepEqual(mutations.map(item => item.kind), ["track-change-start", "track-change-complete"]);
+    });
+  });
+}
+
+test("RC-02: a new user action can load normally after cancellation", async (t) => {
+  const entered = rc02Deferred(), play = rc02Deferred();
+  await withRc02FileWorkflow(t, {}, async ({ audio, ingest, getElement, scrubberLoads }) => {
+    const ordinaryPlay = audio.audioEl.play.bind(audio.audioEl);
+    audio.audioEl.play = () => { entered.resolve(); return play.promise; };
+    const pending = ingest(["A.wav"]);
+    await entered.promise;
+    await getElement("btnClearQueue").dispatch("click");
+    play.resolve();
+    await pending;
+    assertRc02Empty();
+    audio.audioEl.play = ordinaryPlay;
+    await ingest(["new.wav"]);
+    assert.equal(state.audio.filename, "new.wav");
+    assert.equal(state.audio.isPlaying, true);
+    assert.deepEqual(scrubberLoads, ["new.wav"]);
+    assert.equal(Queue.length, 1);
   });
 });
 
