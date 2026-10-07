@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 4, 2026. Development revision: `v0.1.15l` / Build 115. Preset schema: 10.
+Updated: October 6, 2026. Development revision: `v0.1.15m.h` / Build 115. Preset schema: 10 (frozen for Build 115).
 
-The immediate priority is **Visualizer Architecture + Orb Overhaul v1**. Build 115 is mid-development: revisions 115A–115J plus tactical hardening revisions are complete. 115I.A makes generated select readouts truthful, standardizes Orb-editor invalidation on `runtime.settings`, removes redundant per-Orb runtime synchronization, exposes Phase Offset accessibly in degrees, and corrects current version metadata; preset schema remains 10. Analysis now has a dedicated Orb-independent workspace; Spectral Ring promotion is complete; color ownership, lifecycle/preset hardening, and final acceptance remain open. Build 116 Camera work is blocked until this sequence is complete.
+The immediate priority is **115N — Release Candidate / final acceptance / canonization** for **Visualizer Architecture + Orb Overhaul v1**. Revisions through 115M.G are complete, and 115M.H is the final pre-RC closure pass: status ownership, developer/test portability, repository hygiene, and documentation reconciliation close 115M. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -15,8 +15,8 @@ The following capabilities are present in the current source. Passing unit tests
 | Playback and queue | Multi-file loading, drag and drop, queue navigation, removal, clear, shuffle, repeat, decoded waveform seeking | Queue access and transport must remain discoverable when panels are hidden or the viewport is narrow |
 | Audio sources | File, microphone, and shared stream source manager; supported/unsupported/requesting/error states; teardown on source change | Source controls and file-only restrictions need understandable labels and coherent recovery paths |
 | Analysis | L/R/C analysis, canonical 256-band default, linear/log/mel/bark/ERB distribution, Nyquist-aware ceiling | Technical controls need grouping and explanations; avoid exposing another wall of controls |
-| Orbs | Complete schema-10 per-Orb controls, including chooser-backed targeting and degree-presented designed Phase Offset | Large scenes rely on collapsible cards; broader color ownership remains deferred to 115L |
-| Visuals | Trails and particles, band overlay, global color controls, reset visuals | Related settings are scattered across long panels; first-use and advanced controls compete for space |
+| Orbs | All 23 schema-10 per-Orb controls and 13 Bulk Edit fields in Visualizers, including chooser-backed targeting and degree-presented designed Phase Offset | High-Orb-count navigation and editor ergonomics are deferred to Build 117 |
+| Visuals | Spectral Ring and Orbs share Visualizers; Settings owns Scene appearance, shared color/palette and presets; Reset Visuals | Long-panel ergonomics need Build 117 refinement; resize/move/orientation smearing belongs to Build 116 |
 | Capture | Recording panel, canvas video and optional source audio, negotiated formats, target frame rate, latest-export download | Capture actions and availability must remain visible and truthful across file/live/recording states |
 | Presets | URL configuration serialization; schema 10 complete Orb fields; accepted legacy schemas and migrations | No dedicated preset-file import/export workflow yet |
 | Workspace | Panel show/hide controls, unified launcher, launcher collapse, global panel visibility shortcut | Launchers need visible names; long panels and queue recovery need improvement |
@@ -25,7 +25,7 @@ Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are p
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. The first seven stages are complete through revision 115G, with 115F.A recorded as tactical hardening rather than a numbered stage; later stages must not be inferred from their presence in this plan.
+Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H closes the small pre-RC hardening pass; stages 14–15 belong to 115N and remain acceptance work.
 
 1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
 2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
@@ -36,30 +36,30 @@ Build 115 proceeds in this order. The first seven stages are complete through re
 7. **Visualizers panel** — establish a runtime-backed inventory and navigation home for visualizer instances. *(115G complete)*
 8. **Dynamic Orb management UI** — add, edit, remove, and duplicate Orb instances with generated ID-aware cards. *(115H complete)*
 9. **Complete per-Orb controls** — expose every schema-10 Orb-owned setting, including designed Phase Offset. *(115I complete)*
-10. **Dedicated Analysis panel** — separate analysis configuration from visualization configuration.
-11. **Band Overlay → Spectral Ring promotion** — promote the existing rendering feature after lifecycle support exists.
-12. **Explicit color ownership** — clarify and implement visualizer/color-policy boundaries.
-13. **Preset/lifecycle hardening** — persist only deliberately designed configuration with migrations.
-14. **Final acceptance** — complete browser, real-media, accessibility, and constrained-hardware performance validation.
-15. **Canonization** — mark Build 115 complete only after every applicable gate has evidence.
+10. **Dedicated Analysis panel** — separate analysis configuration from visualization configuration. *(115J/J.A complete)*
+11. **Band Overlay → Spectral Ring promotion** — promote the existing rendering feature after lifecycle support exists. *(115K complete)*
+12. **Explicit color ownership** — clarify and implement visualizer/color-policy boundaries. *(115L complete)*
+13. **Preset/lifecycle hardening** — persist only deliberately designed configuration with migrations. *(115M.A–M.G complete; M.H final pre-RC closure complete)*
+14. **Final acceptance** — complete browser, real-media, accessibility, and constrained-hardware performance validation. *(115N next)*
+15. **Canonization** — mark Build 115 complete only after every applicable gate has evidence. *(115N after acceptance)*
 
 Existing Node tests and a successful offline single-file build are useful regression evidence. They are **not Build 115 completion evidence** and do not replace browser, media, accessibility, or performance validation.
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: actively under development; revisions through 115L are complete with schema 10 retained. Scene owns shared appearance/color policy; hardening (115M) and final acceptance (115N) remain pending.**
+**Status: v0.1.15m.h pre-RC closure complete; revisions through 115M.G accepted, 115M closed, and 115N next. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 
-The Visualizers panel now offers Add/Edit/Duplicate/Remove through canonical runtime operations, and the Orbs panel generates one stable-ID editor card for every current Orb. Zero Orbs is valid and Spectral Ring remains a singleton. Every schema-10 Orb-owned simulation and presentation setting is individually editable in stable-ID cards; retained Bulk Edit controls are explicit apply-to-all conveniences with mixed-value display. Spectral Ring presentation has one owner in Visualizers; Scene now owns the shared color/palette controls as of 115L.
+The Visualizers panel offers Add/Edit/Duplicate/Remove through canonical runtime operations and generates one stable-ID editor card for every current Orb in that same workspace. The separate Orbs workspace is retired. Zero Orbs is valid and Spectral Ring remains a singleton. All 23 per-Orb controls and 13 Bulk Edit fields remain available; Bulk Edit reports mixed values truthfully. Settings owns Scene color/palette and preset controls. Audio, Analysis, Visualizer editing, and Scene preference feedback each use their own status lane; generic/internal preference synchronization is silent.
 
-Revision 115I completes per-Orb control exposure. Phase Offset presents `startAngleRad` in degrees as designed phase, does not live-teleport a running Orb, and is applied by Reset Visuals. Nested controls commit by stable ID, schema remains 10, and 115J Analysis is next; Band Overlay naming waits for 115K, broader color ownership for 115L, and Camera for Build 116.
+Revision 115I completed per-Orb control exposure. Phase Offset presents `startAngleRad` in degrees as designed phase, does not live-teleport a running Orb, and is applied by Reset Visuals. Nested controls commit by stable ID. Subsequent 115J Analysis, 115K Spectral Ring promotion, and 115L color ownership are complete; Camera remains Build 116.
 
 Revision 115I.A tactically hardens that accepted editor: generated select readouts follow their synchronized values, Orb-editor invalidation reads only `runtime.settings`, per-Orb commits perform one runtime Orb synchronization, and Phase Offset exposes degree-based accessible value text. Current version metadata is aligned and schema remains 10.
 
 Revision 115H.A guards the generated Orb editor by settings and BandBank edge references so unchanged animation frames do no controller, reorder, or open-picker row synchronization. Targeted Orbs inheriting the global dominant policy now use the strongest band in their selected target; explicit Orb Dominant Band remains tied to the global full-spectrum dominant band. Schema remains 10.
 
-Revision 115F.A tactically hardened the accepted UI decomposition without changing architecture or schema. Revision 115G established the runtime-backed inventory; 115H grants that panel Orb collection management while configuration remains in the generated Orbs editor. Band Overlay controls remain in Bands.
+Revision 115F.A tactically hardened the accepted UI decomposition without changing architecture or schema. Revision 115G established the runtime-backed inventory; 115H added Orb collection management with generated editors. 115K moved Spectral Ring presentation into Visualizers, 115L retired Bands, and 115M.G consolidated the Orb editors into Visualizers.
 
 The intended data direction is `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Scene / Renderer → Camera → Canvas`. Visualizers consume analysis; they do not own or perform it. The Camera stage belongs to Build 116 and is not ready to begin.
 
@@ -68,16 +68,33 @@ The intended data direction is `Audio Sources → Audio / Spectral Analysis → 
 - L/R/C are first-class analysis channels. Orb `chanId` selects waveform, full-spectrum energy, and selected-band spectral energy; empty `bandIds` retains selected-channel full-spectrum behavior. Global spectrum and dominant remain the real combined C analysis.
 - Preset schema remains 10; 115E changes collection lifecycle behavior without adding persisted fields.
 - `state.bands` may remain producer state while the consumer boundary is extracted; visual state such as ring phase does not become analysis data.
-- Revision 115H exposes the dynamic Orb collection through canonical runtime operations and generated stable-ID editor cards. Band Overlay keeps its current name, singleton lifecycle, and control location. Camera behavior remains blocked; schema 10 is unchanged.
+- Dynamic Orb management uses canonical runtime operations and generated stable-ID editor cards. Spectral Ring retains its singleton lifecycle and schema-10 `bands.overlay` persistence; its sole presentation editor shares Visualizers with the Orb editors. Camera behavior remains blocked; schema 10 is unchanged.
 - Track/source/recording ownership, immutable configuration, Nyquist-aware ceilings, and single-file output remain protected.
 
-Revision 115J establishes the dedicated Analysis workspace. It owns FFT size, smoothing, RMS gain, band distribution/floor/configured ceiling, metadata, dominant-band diagnostics, and energy inspection. It consumes `AnalysisFrame`, has no Orb or visualizer dependency, exposes no band-count editor, and retains preset schema 10. Bands temporarily retains color and Band Overlay presentation. 115K is next; Camera remains blocked.
+Revision 115J established the dedicated Analysis workspace. It owns FFT size, smoothing, RMS gain, band distribution/floor/configured ceiling, metadata, dominant-band diagnostics, and energy inspection. It consumes `AnalysisFrame`, has no Orb or visualizer dependency, exposes no band-count editor, and retains preset schema 10. Subsequent 115K/115L completed presentation/color ownership; Camera remains blocked.
 
-Revision 115J.A establishes channel-complete spectral analysis. L/R/C reuse independent analyser FFT buffers and BandBank energy arrays while sharing one band definition. This intentionally changes existing schema-10 targeted L/R rendering without migrating presets. Three frequency reads and three channel BandBank calculations per ready sample are accepted for analyzer correctness; Build 117 must measure and harden that cost on constrained hardware without demand-driven channel pruning. Schema remains 10, with 115K Band Overlay promotion and 115L color ownership still deferred.
+Revision 115J.A established channel-complete spectral analysis. L/R/C reuse independent analyser FFT buffers and BandBank energy arrays while sharing one band definition. This intentionally changed existing schema-10 targeted L/R rendering without migrating presets. Three frequency reads and three channel BandBank calculations per ready sample are accepted for analyzer correctness; Build 117 must measure and harden that cost on constrained hardware without demand-driven channel pruning. Schema remains 10; Spectral Ring promotion and Scene color ownership are complete.
 
 ### Current regression evidence
 
-The existing Node suite and build cover valuable preset, source-lifecycle, recording, chooser, and packaging behavior. Browser validation is not complete, so this evidence does not establish rendered layout, live playback, device permission, recording export, accessibility, or performance acceptance. Validation commands must remain sequential because a build and the build-directory test can interfere with each other.
+The Node suite and clean-install single-file build cover preset, source-lifecycle, recording, chooser, packaging, status ownership, and template structure. M.E Stream stereo correctness is fixed and locally validated; the optional browser diagnostic retains stereo/left-only/right-only/dual-mono, file-versus-stream graph, splitter, built-artifact status, and optional native-capture checks. This evidence does not complete the wider real-media, device/permission, recording-export, accessibility, or performance acceptance required by 115N. Validation commands remain sequential because a build and the build-directory test can interfere with each other.
+
+### Known deferrals after 115M.H
+
+| Remaining issue | Status / future home |
+| --- | --- |
+| Resize / move / orientation visual smearing | Deferred to Build 116 simulation-space / Camera separation |
+| Orb editor ergonomics / high-Orb-count navigation | Architecture is correct and controls are complete; UX refinement deferred to Build 117 |
+| File / Queue UX refinement | Explicitly deferred from M.H to Build 117 UX hardening |
+| AUD-002 unbounded preset-controlled work / resource governance | Build 117 performance/resource hardening |
+| AUD-006 source/load concurrency | Not reproduced / deferred; existing guards retained; Build 117 lifecycle hardening |
+| AUD-009 recorder retained-memory / backpressure | Build 117 |
+| AUD-012 per-frame allocation / UI refresh performance | Build 117, including channel-complete analysis cost |
+| AUD-004 adjacent positive-width FFT-bin overlap | Intentional current behavior; Build 118 spectral partition work |
+| AUD-013 duplicate legacy band-name migration ambiguity | Build 118 |
+| Hosted CI / GitHub Actions | Desired repository infrastructure improvement; not implemented in M.H and not a Build-115 product correctness blocker |
+
+Accepted/fixed items are excluded from that ledger: AUD-001, AUD-003, AUD-005, M.C editor jump, M.E Stream stereo correctness, M.F schema-10 closure, and M.G Visualizer ownership. M.H adds no Queue UX, hosted CI, Orb-editor redesign, Camera, or new product features.
 
 ## Build 116: camera controls, render separate from simulation
 
@@ -158,4 +175,4 @@ The historical Band Overlay is now the singleton `spectral-ring` VisualizerRunti
 
 ### Revision 115L — explicit Scene-level color ownership (complete)
 
-The transitional Bands workspace is replaced by Scene. Scene owns background, fixed particle color, the default Orb particle policy, and the shared band palette, while persistence intentionally stays at schema-10 `visuals.*` and `bands.*` paths. Orbs own their local `colorSource`, hue offset, and trace color mode. Spectral Ring consumes the shared palette, and Analysis uses it as its diagnostic legend. Inherited dominant is target/channel-aware for targeted Orbs; explicit Orb and trace dominant remain global combined-C. No persisted Scene object or per-visualizer palette was introduced. 115M hardening is next; Camera remains blocked, and Builds 117/118 retain their performance/band-expansion scopes.
+The transitional Bands workspace was replaced by Scene (now labeled Settings). Scene owns background, fixed particle color, the default Orb particle policy, and the shared band palette, while persistence intentionally stays at schema-10 `visuals.*` and `bands.*` paths. Orbs own their local `colorSource`, hue offset, and trace color mode. Spectral Ring consumes the shared palette, and Analysis uses it as its diagnostic legend. Inherited dominant is target/channel-aware for targeted Orbs; explicit Orb and trace dominant remain global combined-C. No persisted Scene object or per-visualizer palette was introduced. 115M hardening is complete through final M.H closure; 115N is next, Camera remains Build 116, and Builds 117/118 retain their performance/band-expansion scopes.

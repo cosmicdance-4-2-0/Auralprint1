@@ -2,9 +2,11 @@
 
 This repo tracks **Auralprint** an offline-capable audio analysis suite.(“analyzer cosplaying as a visualizer”).
 
-The active development order, capability inventory, and acceptance evidence are in [ROADMAP.md](ROADMAP.md). Build 115 is actively under development as **Visualizer Architecture + Orb Overhaul v1**. Revision 115L is complete: the Scene workspace now owns shared appearance and color policy, replacing the transitional Bands workspace without changing schema-10 persistence. Scene owns the canvas background, fixed particle color, default Orb particle-color policy, and shared band palette. Orbs retain local source/hue and trace-mode overrides; Spectral Ring consumes the shared palette, and Analysis uses it as a diagnostic legend. Targeted inherited dominant remains channel/target-aware while explicit dominant remains global combined-C. Preset schema remains 10; 115M hardening is next, and Build 116 Camera remains blocked.
+The active development order, capability inventory, acceptance evidence, and known deferrals are in [ROADMAP.md](ROADMAP.md). Current development revision **v0.1.15m.h** completes the final pre-RC closure pass for Build 115, **Visualizer Architecture + Orb Overhaul v1**. Revisions through 115M.G are complete, including stable Orb editor reconciliation, Scene/preset consolidation, validated Stream stereo correctness, schema-10 closure, and unified Visualizers editing. Visualizers owns Spectral Ring and all 23 per-Orb controls plus 13 Bulk Edit fields in one workspace. Settings owns shared Scene appearance and presets; Orbs retain local source/hue and trace-mode overrides. Spectral Ring consumes the shared palette, and Analysis uses it as a diagnostic legend. Targeted inherited dominant remains channel/target-aware while explicit dominant remains global combined-C. Schema 10 is frozen for Build 115. **115N — Release Candidate / final acceptance / canonization — is next**; Build 115 is not shipped/canonical, and Camera remains Build 116 after acceptance.
 
-To try a development revision, read the canonical root `version`, run `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15m.g.html`). Start with **Load audio**. **Audio** owns source/playback, **Analysis** owns analysis configuration and diagnostics, **Visualizers** owns inventory, Spectral Ring presentation, complete per-Orb editing, and Bulk Edit All Orbs; **Settings** owns shared Scene appearance/color policy and presets, and **Record** owns capture. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused.
+To try a development revision, read the canonical root `version`, run `npm ci`, `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15m.h.html`). Start with **Load audio**. **Audio** owns source/playback, **Analysis** owns analysis configuration and diagnostics, **Visualizers** owns inventory, Spectral Ring presentation, complete per-Orb editing, and Bulk Edit All Orbs; **Settings** owns shared Scene appearance/color policy and presets, and **Record** owns capture. Preference feedback stays with its owning panel; generic/internal preference synchronization is silent. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused.
+
+Node/npm and Python are the build toolchain; the assembler tries `PYTHON`, `python`, `python3`, then `py -3` on Windows. Scene template tests inspect structure in JavaScript without Python or a DOM dependency. `package-lock.json` is canonical; dependencies and generated `node_modules/`, `.build/`, `build/`, and `dist/` directories are untracked and ignored. The optional `node scripts/validate-stream-stereo.cjs` diagnostic requires a Playwright-enabled developer environment; Playwright is not a project dependency and is not required by tests/build. It uses Playwright's normal browser resolution unless `--chromium=<path>` is supplied. Run it after building; `--report=<path>` saves evidence and `--generator=<path>` optionally attempts native display capture.
 
 ## Versioning and what the numbers mean
 
@@ -34,7 +36,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 (`v0.1.15l` development revision) | — | In Progress | Visualizer Architecture + Orb Overhaul v1 |
+| 115 | v0.1.15 (`v0.1.15m.h` development revision) | — | Pre-RC closure complete; 115N next | Visualizer Architecture + Orb Overhaul v1 |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Richer spectral selection |
@@ -127,14 +129,14 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 115 — v0.1.15: Visualizer Architecture + Orb Overhaul v1
 
-**Staged status:** revisions through 115L are complete. Scene now explicitly owns shared appearance/color policy while persistence intentionally remains in schema-10 `visuals.*` and `bands.*` fields; no persisted `scene` object exists. Orbs own local color source/hue and trace color mode. Spectral Ring and Analysis consume the shared palette without independent color state. Hardening (115M) and acceptance (115N) remain future work. Preset schema remains 10, and Camera remains blocked behind Build 115.
+**Staged status:** revisions through 115M.G are complete; 115M.H closes pre-RC hardening with explicit status ownership, portable tests/diagnostic invocation, repository hygiene, and reconciled documentation. 115N Release Candidate / final acceptance / canonization is next. Settings owns shared Scene appearance/color policy while persistence intentionally remains in schema-10 `visuals.*` and `bands.*` fields; no persisted `scene` object exists. Orbs own local color source/hue and trace color mode. Spectral Ring and Analysis consume the shared palette without independent color state. Schema 10 is frozen for Build 115, and Camera remains Build 116 after acceptance.
 
 **Goal:** establish a clean analysis-consumer boundary and make Orbs first-class visualizers before camera work begins.
 
 **Scope**
-- The reorganized menus and editing for two existing Orb instances are substantially present.
+- One Visualizers workspace owns the Spectral Ring singleton and zero/one/N stable-ID Orb editors, collection management, and Bulk Edit All Orbs.
 - Per-Orb channel, spectral targeting, chirality, degree-presented designed phase, hue offset, color source, center, motion, response, particle, and trace controls exist.
-- The AnalysisFrame boundary and shared runtime lifecycle for the current Band Overlay and Orbs are complete; ID-aware runtime reconciliation and create/removal/duplication model operations are complete; their final user-facing controls remain a future Build 115 stage.
+- The AnalysisFrame boundary and shared runtime lifecycle for Spectral Ring and Orbs are complete; ID-aware runtime reconciliation and user-facing add/edit/remove/duplicate operations are complete.
 - Motion, radius response, particle, trace, source, position, and color settings are schema-10 Orb-owned and individually editable; optional Bulk Edit controls apply one field to all Orbs while preserving truthful mixed states.
 - Spectral Ring is a singleton VisualizerRuntime participant configured in Visualizers. It uses combined C spectrum/waveform data; free-run resets to phase zero, while explicit Orb-lock follows the first Orb when present. Line alpha and width are editable.
 

@@ -2,7 +2,16 @@
 // part of npm test or the app build. Run after npm run build:
 // node scripts/validate-stream-stereo.cjs --report=/path/to/report.json
 // Add --generator=/path/to/generator.html to try native capture of that tab.
-const { chromium } = require('playwright');
+// Add --chromium=/path/to/browser to override Playwright's browser resolution.
+let chromium;
+try {
+  ({ chromium } = require('playwright'));
+} catch (err) {
+  if (err.code !== 'MODULE_NOT_FOUND' || !err.message.startsWith("Cannot find module 'playwright'")) throw err;
+  console.error('This optional stereo diagnostic requires an environment with Playwright available. ' +
+    'npm test and npm run build do not require Playwright. Run it from a Playwright-enabled developer environment.');
+  process.exit(1);
+}
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const http = require('node:http');
@@ -24,7 +33,8 @@ const version = fs.readFileSync(path.join(root, 'version'), 'utf8').trim();
   const origin = `http://127.0.0.1:${server.address().port}`;
   let browser;
   try {
-    browser = await chromium.launch({ executablePath: option('chromium') || '/usr/bin/chromium', headless: true,
+    const chromiumPath = option('chromium');
+    browser = await chromium.launch({ ...(chromiumPath ? { executablePath: chromiumPath } : {}), headless: true,
       args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--use-fake-ui-for-media-stream',
         '--auto-select-desktop-capture-source=Stereo Tone Generator', '--auto-select-tab-capture-source-by-title=Stereo Tone Generator'] });
     const page = await browser.newPage();

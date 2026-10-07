@@ -1,47 +1,57 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import { CONFIG } from "../src/js/core/config.js";
 import { createScenePanelUi, SOURCE_LABELS } from "../src/js/ui/scene-panel.js";
 
-// Use the build's Python dependency and its standard HTML parser to inspect
-// actual element ancestry, without introducing a DOM package for this move.
-const { stdout: templateJson } = await promisify(execFile)(process.env.PYTHON || "python3", ["-c", `
-import json, sys
-from html.parser import HTMLParser
+// Inspect the static template's explicit nesting in JavaScript. This is a
+// limited structure reader, not a browser DOM parser; comments and void tags
+// must not invent ancestors or hide duplicate IDs.
+function readTemplateStructure(html) {
+  const voidTags = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
+  const nodes = [], stack = [];
+  const decodeText = (text) => text.replace(/&(?:#(x[\da-f]+|\d+)|(amp|lt|gt|quot|apos|nbsp));/gi, (_match, code, name) => code
+    ? String.fromCodePoint(code[0].toLowerCase() === "x" ? parseInt(code.slice(1), 16) : Number(code))
+    : ({ amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: "\u00a0" })[name.toLowerCase()]);
+  for (const [token] of html.matchAll(/<!--[\s\S]*?-->|<![^>]*>|<\/?[a-z](?:[^>"']|"[^"]*"|'[^']*')*>|[^<]+/gi)) {
+    if (token.startsWith("<!")) continue;
+    if (!token.startsWith("<")) {
+      for (const node of stack) node.text += decodeText(token);
+      continue;
+    }
+    const tag = token.match(/^<\/?([\w-]+)/)[1].toLowerCase();
+    if (token.startsWith("</")) {
+      const index = stack.findLastIndex((node) => node.tag === tag);
+      if (index >= 0) stack.length = index;
+      continue;
+    }
+    const attrs = {};
+    const attributes = token.replace(/^<[\w-]+/, "").slice(0, -1).replace(/\/$/, "");
+    for (const [, name, doubleQuoted, singleQuoted, unquoted] of attributes.matchAll(/([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g)) {
+      attrs[name.toLowerCase()] = decodeText(doubleQuoted ?? singleQuoted ?? unquoted ?? "");
+    }
+    const node = { tag, attrs, ancestors: stack.map((ancestor) => ancestor.attrs.id), text: "" };
+    nodes.push(node);
+    if (!voidTags.has(tag) && !/\/\s*>$/.test(token)) stack.push(node);
+  }
+  return nodes;
+}
+const templateNodes = readTemplateStructure(readFileSync(new URL("../src/index.template.html", import.meta.url), "utf8"));
 
-class TemplateParser(HTMLParser):
-    void_tags = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
-    def __init__(self):
-        super().__init__()
-        self.nodes = []
-        self.stack = []
-    def handle_starttag(self, tag, attrs):
-        node = {"tag": tag, "attrs": dict(attrs), "ancestors": [self.nodes[i]["attrs"].get("id") for i in self.stack], "text": ""}
-        self.nodes.append(node)
-        if tag not in self.void_tags:
-            self.stack.append(len(self.nodes) - 1)
-    def handle_startendtag(self, tag, attrs):
-        self.handle_starttag(tag, attrs)
-        if tag not in self.void_tags:
-            self.handle_endtag(tag)
-    def handle_endtag(self, tag):
-        for i in range(len(self.stack) - 1, -1, -1):
-            if self.nodes[self.stack[i]]["tag"] == tag:
-                del self.stack[i:]
-                break
-    def handle_data(self, data):
-        for i in self.stack:
-            self.nodes[i]["text"] += data
-
-parser = TemplateParser()
-with open(sys.argv[1]) as template:
-    parser.feed(template.read())
-print(json.dumps(parser.nodes))
-`, fileURLToPath(new URL("../src/index.template.html", import.meta.url))], { encoding: "utf8" });
-const templateNodes = JSON.parse(templateJson);
+test("template structure reader retains nested ancestry and duplicate IDs across void tags and comments", () => {
+  const nodes = readTemplateStructure(`<!doctype html><div id="scenePanel"><!-- <button id="fake"> -->
+    <details><summary>Presets<span>Share &amp; restore</span></summary><input id="control" />
+    <button id="action" title="Share > restore">Copy &#83;hare Link</button></details></div>
+    <div id='visualizersPanel'><input id='control'><button id='action'>Duplicate</button></div>`);
+  assert.ok(!nodes.some((node) => node.attrs.id === "fake"));
+  const actions = nodes.filter((node) => node.attrs.id === "action");
+  assert.equal(actions.length, 2, "duplicates remain visible to uniqueness assertions");
+  assert.deepEqual(actions.map((node) => node.ancestors.filter(Boolean)), [["scenePanel"], ["visualizersPanel"]]);
+  assert.equal(actions[0].attrs.title, "Share > restore");
+  assert.equal(actions[0].text, "Copy Share Link");
+  assert.equal(nodes.find((node) => node.tag === "summary").text, "PresetsShare & restore");
+  assert.ok(actions.every((node) => !node.ancestors.includes("control")), "inputs are not ancestors");
+});
 
 test("preset buttons exist once under Scene Settings and never under Visualizers", () => {
   for (const [id, label] of [["btnShare", "Copy Share Link"], ["btnApplyUrl", "Apply URL Preset"], ["btnResetPrefs", "Reset All Settings"]]) {
