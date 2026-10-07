@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 7, 2026. Development revision: `v0.1.15m.h.e` / Build 115. Preset schema: 10 (frozen for Build 115).
+Updated: October 7, 2026. Development revision: `v0.1.15m.h.f` / Build 115. Preset schema: 10 (frozen for Build 115).
 
-The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A closed RC-01; M.H.B adds infrastructure-only CI/build validation. M.H.C closes RC-06; M.H.D closes RC-02 cancellation with Linux/Windows CI green. RC-01, RC-06, RC-02, and RC-03 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; RC-04 and all other unresolved findings remain open, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
+The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A closed RC-01; M.H.B adds infrastructure-only CI/build validation. M.H.C closes RC-06; M.H.D closes RC-02 cancellation with Linux/Windows CI green. RC-01, RC-06, RC-02, and RC-03 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F implements RC-04 transport ownership pending CI closure; all other unresolved findings remain open, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -25,7 +25,7 @@ Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are p
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A closed RC-01; M.H.B establishes CI/build infrastructure only; M.H.C closes RC-06; M.H.D closes RC-02 cancellation; M.H.E closes RC-03 live attachment ownership with Linux/Windows CI green; stages 14–15 belong to 115N and remain withheld.
+Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A closed RC-01; M.H.B establishes CI/build infrastructure only; M.H.C closes RC-06; M.H.D closes RC-02 cancellation; M.H.E closes RC-03 live attachment ownership with Linux/Windows CI green; M.H.F implements RC-04 transport ownership pending CI closure; stages 14–15 belong to 115N and remain withheld.
 
 1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
 2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
@@ -47,7 +47,7 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: v0.1.15m.h.e closes RC-03 live attachment ownership with Linux/Windows CI green; RC-01, RC-06, and RC-02 remain CLOSED. Audit remediation remains active; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
+**Status: v0.1.15m.h.f implements RC-04 transport ownership pending CI closure; RC-01, RC-06, RC-02, and RC-03 remain CLOSED. Audit remediation remains active; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 
@@ -85,7 +85,7 @@ Canonical developer/agent bootstrap is `npm ci`, `npm test`, then `npm run build
 
 Package installation may require network access even though the built application works offline. Use a disposable workspace-local npm cache if the default cache is unwritable; see [README bootstrap commands](README.md#developer-and-agent-bootstrap). Sandbox native-executable/child-process EPERM is an environment concern and must not be worked around in product source. No dependency, build-script, product-behavior, or schema change is part of M.H.B; schema remains 10.
 
-Browser/device acceptance remains separate from fast repository CI and still gates release readiness. RC-01, RC-06, RC-02, and RC-03 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; RC-04 and all other unresolved findings remain open. **115N remains withheld.**
+Browser/device acceptance remains separate from fast repository CI and still gates release readiness. RC-01, RC-06, RC-02, and RC-03 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F implements RC-04 transport ownership pending CI closure; all other unresolved findings remain open. **115N remains withheld.**
 
 ### Revision 115M.H.C — RC-06 retained export ownership
 
@@ -110,6 +110,12 @@ RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED after local and hosted Li
 AudioEngine accepts an optional attachment guard and checks it after asynchronous context resume, immediately before teardown. Mic/Stream use the existing activationSeq token; a cancelled attachment stops only its acquired tracks, and a stale attachment exception cannot commit source errors or stream metadata. Canonical teardown retains its global unload. No persisted fields, recorder ownership changes, File-generation redesign, or playPause() changes are introduced.
 
 Validation: 13 focused real-engine regressions cover both delayed-resume orderings, both stale errors, normal Mic/Stream, both ordinary switches, explicit/pending File-mode teardown, current failures, running-context cancellation, exact upstream identity, and passive recorder-tap continuity. Both required mutations fail the audited Mic→Stream regression; correct implementation is restored. Six native Chromium scenarios use real generated MediaStreams and settle the old activation before checking source state, winning/losing tracks, exact upstream, graph readiness, and teardown. RC-02's 12 Node regressions and nine native built-artifact scenarios remain green; full tests/build pass. [New evidence](docs/audits/remediations/115m-h-e-rc03/) preserves the historical audit unchanged. Native devices/permission dialogs and RC-04 are outside this revision.
+
+### Revision 115M.H.F — RC-04 Play/Clear transport ownership
+
+RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED. RC-04 closure awaits final local/browser evidence and hosted Linux/Windows CI. All other unresolved findings remain open. **115N remains WITHHELD.** Schema remains exactly 10.
+
+Transport captures the intended media element by value, revalidates after context resume and after play completion, and returns quietly when Clear/replacement wins. Stale success/rejection cannot read or act on the replacement or commit canonical playback/errors. Identity is sufficient because each file load creates a fresh element and teardown detaches the old one. No generation/framework, UI, load-cancellation, live attachment, EOF, or recording-finalization change is introduced. [New evidence](docs/audits/remediations/115m-h-f-rc04/) preserves the original audit/evidence unchanged.
 
 ### Known deferrals after 115M.H
 

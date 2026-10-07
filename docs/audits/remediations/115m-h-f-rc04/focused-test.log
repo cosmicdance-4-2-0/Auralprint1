@@ -1,0 +1,21 @@
+✔ RC-04: Clear during delayed Play resolve leaves the workflow idle without commits (17.552048ms)
+✔ RC-04: Clear during delayed Play reject leaves the workflow idle without commits (7.10073ms)
+✔ RC-04: Clear during delayed resume never invokes old Play (5.918955ms)
+✔ RC-04: replacement (paused) during resume retains ownership (12.741564ms)
+✔ RC-04: replacement (paused) during Play resolve retains ownership (7.969193ms)
+✔ RC-04: replacement (paused) during Play reject retains ownership (10.39626ms)
+✔ RC-04: replacement (playing) during resume retains ownership (6.414663ms)
+✔ RC-04: replacement (playing) during Play resolve retains ownership (8.650621ms)
+✔ RC-04: replacement (playing) during Play reject retains ownership (8.24544ms)
+✔ RC-04: ordinary Play succeeds and clears the current playback error (5.613553ms)
+✔ RC-04: ordinary Pause is synchronous and reflects the current element (6.073408ms)
+✔ RC-04: current Play rejection retains truthful playback failure (3.856948ms)
+✔ RC-04: Play with no loaded element is a quiet no-op (2.755944ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 286.192152

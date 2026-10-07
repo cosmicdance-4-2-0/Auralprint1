@@ -1,0 +1,17 @@
+
+> build
+> node scripts/build.mjs
+
+
+  .build/auralprint.css  25.3kb
+
+⚡ Done in 21ms
+
+  .build/auralprint.js  315.4kb
+
+⚡ Done in 46ms
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
