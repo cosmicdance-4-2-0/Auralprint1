@@ -151,6 +151,16 @@ test("zero Orbs round-trip without fabricating defaults", () => withUrl((locatio
   assert.deepEqual(preferences, empty);
 }));
 
+test("schema-10 URL import preserves opaque identities including the Ring type name", () => withUrl((location) => {
+  const ids = ["HISTORICAL-Z", "spectral-ring", "CUSTOM-7"];
+  location.hash = rawHash({ schema: 10, prefs: { orbs: ids.map((id) => ({ id })) } });
+  assert.equal(UrlPreset.applyFromLocationHash(), true);
+  assert.deepEqual(preferences.orbs.map((orb) => orb.id), ids);
+  const expected = structuredClone(preferences);
+  assert.deepEqual(roundTrip(expected, location), { schema: 10, prefs: expected });
+  assert.deepEqual(preferences.orbs.map((orb) => orb.id), ids);
+}));
+
 test("duplicate Orb IDs retain canonical collection repair and array order", () => withUrl((location) => {
   const incoming = structuredClone(full);
   incoming.orbs = ["ORB0", "ORB0", "custom-id", "custom-id", ""].map((id, i) => ({ ...structuredClone(full.orbs[i % 3]), id }));
