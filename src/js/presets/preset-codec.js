@@ -1,7 +1,7 @@
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
-import { sanitizeOrbBandIds, normalizeOrbDef, normalizeBandCount } from "../core/preferences.js";
+import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 
 // Preset data contract, independent of URL/base64 or application state.
@@ -198,7 +198,7 @@ function sanitizePreset(decoded) {
         mappedOrb.particles = { ...base.particles, ...(incoming.particles || {}) };
         mappedOrb.trace = { ...base.trace, ...(incoming.trace || {}) };
       }
-      return normalizeOrbDef(mappedOrb, defaults[i % defaults.length]);
+      return mappedOrb;
     }));
   }
 

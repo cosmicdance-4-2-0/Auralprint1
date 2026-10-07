@@ -1,0 +1,10 @@
+✔ RC-09: URL import reserves later explicit identity before missing-ID fallback and sharing (4.523223ms)
+✔ RC-09: collection owns missing/duplicate repair while valid opaque identities retain configuration (10.030823ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22.480479

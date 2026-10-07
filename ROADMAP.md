@@ -47,7 +47,7 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: v0.1.15m.h.i corrects RC-08: correct FFT coordinates while retaining inclusive overlap, with local acceptance checks passing. RC-01 through RC-06 remain CLOSED. RC-07 through RC-08 pass local acceptance. Remaining blockers are open; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
+**Status: v0.1.15m.h.j corrects RC-09: reserve explicit Orb identities before fallback assignment, with local acceptance checks passing. RC-01 through RC-06 remain CLOSED. RC-07 through RC-09 pass local acceptance. Remaining blockers are open; 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 

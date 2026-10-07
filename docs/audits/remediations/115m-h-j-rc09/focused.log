@@ -1,0 +1,12 @@
+✔ tests/orb-collection.test.js (135.876898ms)
+✔ tests/orb-id-termination.test.js (201.721363ms)
+✔ tests/preset-id-reservation.test.js (92.932794ms)
+✔ tests/preset-schema-10.test.js (170.282574ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 614.256463
