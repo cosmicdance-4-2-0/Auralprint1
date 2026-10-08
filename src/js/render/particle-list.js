@@ -1,9 +1,12 @@
 // Renderer-visible chronological, read-only collection. Nodes belong to the
 // retention governor and this list; unlink releases both ownership links.
 class ParticleList {
-  constructor() { this.head = null; this.tail = null; this.length = 0; }
+  constructor() { this.head = null; this.tail = null; this.length = 0; this.birthOrderMonotonic = true; }
 
   append(node) {
+    // Direct/standalone callers may supply older birth times. Flag once in O(1),
+    // without changing insertion/render order or scanning normal trails.
+    if (this.tail && node.particle.bornSec < this.tail.particle.bornSec) this.birthOrderMonotonic = false;
     node.prev = this.tail;
     node.next = null;
     if (this.tail) this.tail.next = node;
@@ -18,6 +21,7 @@ class ParticleList {
     if (node.next) node.next.prev = node.prev;
     else this.tail = node.prev;
     this.length--;
+    if (this.length <= 1) this.birthOrderMonotonic = true;
     node.prev = node.next = node.trail = null;
   }
 

@@ -45,15 +45,15 @@ function createSpectralRingVisualizer({ settingsRef = runtime, stateRef = state 
     isVisible() {
       return !!settingsRef.settings.bands.overlay.enabled;
     },
-    update({ dtSec }) {
+    update({ dtSec, motionDtSec = dtSec, simPaused = false }) {
       const overlay = settingsRef.settings.bands.overlay;
       if (overlay.phaseMode === "orb") {
         stateRef.bands.ringPhaseRad = stateRef.orbs.length
           ? stateRef.orbs[0].angleRad
           : stateRef.bands.ringPhaseRad;
-      } else {
+      } else if (!simPaused) {
         stateRef.bands.ringPhaseRad = (
-          (stateRef.bands.ringPhaseRad + overlay.ringSpeedRadPerSec * dtSec) % TAU + TAU
+          (stateRef.bands.ringPhaseRad + overlay.ringSpeedRadPerSec * motionDtSec) % TAU + TAU
         ) % TAU;
       }
     },
@@ -78,8 +78,12 @@ function createOrbVisualizer(orb) {
     type: "orb",
     orb,
     isVisible() { return true; },
-    update({ dtSec, nowSec, simPaused, analysisFrame }) {
-      if (simPaused) return;
+    update({ dtSec, motionDtSec = dtSec, nowSec, simPaused, analysisFrame }) {
+      if (simPaused) {
+        // Pause motion/emission, while real-time lifetime retirement continues.
+        orb.trail?.expireParticles?.(nowSec, orb.particles?.ttlSec);
+        return;
+      }
       const selection = analysisFrame.ready ? selectOrbAnalysis(orb, analysisFrame) : null;
       orb.step(
         dtSec,
@@ -88,6 +92,7 @@ function createOrbVisualizer(orb) {
         selection ? selection.energyOverride01 : null,
         analysisFrame.spectrum.dominantIndex,
         selection ? selection.selectedDominantBandIndex : null,
+        motionDtSec,
       );
     },
     render(renderer, frameContext) {

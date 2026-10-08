@@ -182,6 +182,7 @@ test("budgets: full 1,048,576 retention boundary is usable, evicts one oldest an
     // Retention-only admission probe; shared per-update admission is tested above.
     for(let i=0;i<1048576;i++)assert.equal(t.emitAt(i,0,0,rgb),true);
     assert.equal(g.activeParticles,1048576);assert.equal(t.particles.length,1048576);
+    g.beginFrame();t.updateAndEmit(0,1,0,0,rgb,{...particles,emitPerSecond:0});g.finishFrame();assert.equal(g.stats.expiryVisits,1,"full permitted retention inspects only its unexpired head");
     const oldest=t.particles.head;assert.equal(t.emitAt(1048576,0,0,rgb),true);
     assert.equal(g.activeParticles,1048576);assert.equal(oldest.trail,null);assert.equal(oldest.heapIndex,-1);assert.equal(g.retentionEvictionsTotal,1);
     assert.equal(t.particles.head.particle.xSim,1);assert.equal(t.particles.tail.particle.xSim,1048576);

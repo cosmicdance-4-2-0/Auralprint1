@@ -236,6 +236,28 @@ whole opportunities, and retains fractional rate progress. Zero bypasses spacing
 and preserves dense emission semantics. Spatial suppression never deletes history
 or spends governor service priority; per-frame diagnostic counts are ephemeral.
 
+Visual frame timing has three explicit responsibilities. The main callback owns
+clock sampling: `dtSec` remains bounded emission-work time (immutable maximum
+1/30 s), additive `motionDtSec` integrates ordinary visible elapsed time, and
+`nowSec` is monotonic real time for particle birth, fade, and TTL. CONFIG owns the
+nonpersistent .5 s motion-discontinuity threshold: exactly .5 integrates motion;
+larger/invalid/hidden intervals discard both deltas without debt. First/rebased
+callbacks use zero deltas but still age/expire particles and refresh consumers.
+Visibility changes rebase the existing frame anchor. Audio, analysis, recording,
+and transport do not consume motion delta.
+
+Orb and free Ring phase use motion time; Orb updates precede current-frame Ring
+lock. Visual pause freezes Orb/free Ring motion and emission, preserves fractions,
+and still retires particles by real age. Legacy frame/Orb callers omitting the
+additive motion value retain their supplied delta convention; explicit direct
+callers own valid elapsed values, while the application enforces discontinuities.
+
+Normal trail births are nondecreasing. ParticleList tracks ordering conservatively
+in O(1) on append/unlink; supported out-of-order direct emission flags a safe expiry
+scan until the list shrinks to <=1 node or resets. Ordered expiry visits only the
+expired prefix plus one unexpired head, retiring through the existing governor.
+No second expiry index, coordinate cache, or per-frame ordering validation scan.
+
 ### 4.4 Dynamic Orb Collection
 
 - `preferences.orbs[]` order defines composition order; `orb.id` defines stable identity. Collection mutation must never renumber survivors.

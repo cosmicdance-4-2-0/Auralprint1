@@ -1,0 +1,181 @@
+✔ production callback: 120 FPS chirality -1 integrates one second of motion and independent emission delta (9.973731ms)
+✔ production callback: 120 FPS chirality 1 integrates one second of motion and independent emission delta (2.993399ms)
+✔ production callback: 60 FPS chirality -1 integrates one second of motion and independent emission delta (2.652413ms)
+✔ production callback: 60 FPS chirality 1 integrates one second of motion and independent emission delta (2.744794ms)
+✔ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (1.25561ms)
+✔ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (1.277533ms)
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (1.554582ms)
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.948896ms)
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.901905ms)
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.979853ms)
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.888785ms)
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (1.450269ms)
+✖ production callback: hidden/rebased foreground never integrates missed work; invalid timestamps recover (0.837507ms)
+✖ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.042096ms)
+✖ slow 5 FPS history spans real TTL motion, fade uses real particle age (1.127747ms)
+✖ slow 10 FPS history spans real TTL motion, fade uses real particle age (4.103419ms)
+✔ ordered expiry [] at 1: 0 retirements/0 age inspections (0.269198ms)
+✔ ordered expiry [0] at 0.9: 0 retirements/1 age inspections (0.119401ms)
+✔ ordered expiry [0] at 1: 1 retirements/1 age inspections (0.09259ms)
+✔ ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.154594ms)
+✔ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.117097ms)
+✔ ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.271761ms)
+✔ ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.088954ms)
+✔ ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.061924ms)
+✔ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (49.394489ms)
+✔ unordered supported timestamps use safe fallback; transfer/eviction/reset preserve or restore ordering flag (0.793551ms)
+✔ different Orb TTLs retire independently, last-tail spacing resumes on empty trail without coordinate cache (0.856877ms)
+✖ direct Orb and frame callers retain default delta convention; explicit motion wraps independently (0.344191ms)
+✔ motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field (1.549795ms)
+✖ smaller selected emission delta never slows independent motion (3.757966ms)
+✔ template structure reader retains nested ancestry and duplicate IDs across void tags and comments (0.557253ms)
+✔ preset buttons exist once under Scene Settings and never under Visualizers (0.396229ms)
+✔ Settings copy retains canonical Scene IDs alongside Visualizers (0.33746ms)
+✔ Scene panel initializes idempotently from the canonical source enum (1.240167ms)
+✔ Scene refresh is reference guarded and source readouts follow selected labels (0.592356ms)
+✔ Scene controls mutate only historical schema-10 fields (1.283583ms)
+✔ Visualizers contains one inventory, Ring editor, Orb editor host, management and all 13 bulk fields (4.459027ms)
+✔ retired Orbs workspace and escape hatch are absent and every template ID is unique (0.462961ms)
+✔ Performance resource controls have scene ownership, explicit numeric labels, help and warning (0.496962ms)
+✔ budget numeric editing commits change only, refuses invalid/empty, preserves focus and listener identity (0.831368ms)
+✔ diagnostics read actual governor fields even with unchanged settings; unchanged text avoids DOM writes (0.329048ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 29
+ℹ fail 12
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 140.746401
+
+✖ failing tests:
+
+test at tests/rc15-timing-performance.test.js:34:65
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (1.554582ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 0.7499999999999964 != 0.25
+      at close (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:39:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:34:65
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.948896ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 1.2500000000000036 != 1.75
+      at close (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:39:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:34:65
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.901905ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 0.8749999999999982 != 0.25
+      at close (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:39:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+[Large assertion diff omitted.]
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:87:25
+✖ slow 5 FPS history spans real TTL motion, fade uses real particle age (1.127747ms)
+  AssertionError [ERR_ASSERTION]: retained actual-time angular history: 0.07500000000000107 != 0.44999999999999574
+      at close (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:93:202)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:87:25
+✖ slow 10 FPS history spans real TTL motion, fade uses real particle age (4.103419ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert.ok(age<.6+1e-12&&age>=.6-1/fps-1e-12)
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:93:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:129:1
+✖ direct Orb and frame callers retain default delta convention; explicit motion wraps independently (0.344191ms)
+  AssertionError [ERR_ASSERTION]: explicit motion field: 0.16681469282041306 != 0.41681469282041395
+      at close (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:131:126)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:141:1
+✖ smaller selected emission delta never slows independent motion (3.757966ms)
+  AssertionError [ERR_ASSERTION]: phase independent of smaller emission maximum: 1.0075000000000003 != 1.15
+      at close (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:142:240)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

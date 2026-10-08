@@ -472,7 +472,7 @@ bands: {
       maxEmissionsPerFrame: { min: 0, max: 16384, step: 1 },
       maxActiveParticles: { min: 0, max: 1048576, step: 1 },
     },
-    timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC },
+    timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC, motionDiscontinuitySec: 0.5 },
     trace: {
       numLines: { min: 10, max: 1000, step: 10 },
       lineAlpha: { min: 0, max: 1, step: 0.01 },

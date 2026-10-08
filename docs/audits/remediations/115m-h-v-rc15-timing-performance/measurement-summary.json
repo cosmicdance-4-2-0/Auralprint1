@@ -1,0 +1,4396 @@
+[
+  {
+    "case": "default-two",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 2,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 240,
+    "totals": {
+      "requestedDemand": 2880,
+      "emissions": 240,
+      "spatiallyRejectedDemand": 2640,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 43320,
+      "heapComparisons": 239,
+      "schedulingVisits": 960
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": -9.424777960769646,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 1.32,
+        "p95": 6.685,
+        "mean": 3.535333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.03500000014901161
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.019999999552965164
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.044999999925494194
+      }
+    ]
+  },
+  {
+    "case": "default-two",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 2,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 240,
+    "totals": {
+      "requestedDemand": 2880,
+      "emissions": 240,
+      "spatiallyRejectedDemand": 2640,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 43320,
+      "heapComparisons": 239,
+      "schedulingVisits": 960
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": -9.424777960769646,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.2,
+        "p95": 1.045,
+        "mean": 0.623167
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.205,
+        "p95": 1.055,
+        "mean": 0.643333
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.000333
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0015
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.007833
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.025,
+        "mean": 0.037
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000667
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.003333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.0625
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.23,
+        "p95": 0.665,
+        "mean": 0.432833
+      },
+      "diagnosticsMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.007333
+      },
+      "uiRefreshMs": {
+        "p50": 0.185,
+        "p95": 0.585,
+        "mean": 0.359833
+      },
+      "totalCallbackMs": {
+        "p50": 1.035,
+        "p95": 2.68,
+        "mean": 2.449833
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.018
+      },
+      "motionResponseMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.029167
+      },
+      "demandPreparationMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.006167
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0015
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.0025
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.029999999329447746
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.024999999441206455
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.02500000037252903
+      }
+    ]
+  },
+  {
+    "case": "default-two",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 2,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 240,
+    "totals": {
+      "requestedDemand": 2880,
+      "emissions": 240,
+      "spatiallyRejectedDemand": 2640,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 718,
+      "heapComparisons": 239,
+      "schedulingVisits": 960
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": -9.424777960769646,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 1.32,
+        "p95": 5.07,
+        "mean": 2.774833
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.03500000014901161
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.024999999441206455
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.07499999925494194
+      }
+    ]
+  },
+  {
+    "case": "default-two",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 2,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 240,
+    "totals": {
+      "requestedDemand": 2880,
+      "emissions": 240,
+      "spatiallyRejectedDemand": 2640,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 718,
+      "heapComparisons": 239,
+      "schedulingVisits": 960
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": -9.424777960769646,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.21,
+        "p95": 1.2,
+        "mean": 0.641833
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.225,
+        "p95": 1.21,
+        "mean": 0.651
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000667
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.008667
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.025,
+        "mean": 0.018167
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.002333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.02,
+        "p95": 0.06,
+        "mean": 0.038667
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.27,
+        "p95": 2.12,
+        "mean": 0.552333
+      },
+      "diagnosticsMs": {
+        "p50": 0.01,
+        "p95": 0.015,
+        "mean": 0.009167
+      },
+      "uiRefreshMs": {
+        "p50": 0.205,
+        "p95": 1,
+        "mean": 0.762833
+      },
+      "totalCallbackMs": {
+        "p50": 1.205,
+        "p95": 4.52,
+        "mean": 3.0275
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.011667
+      },
+      "motionResponseMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0095
+      },
+      "demandPreparationMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.008333
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001667
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.03500000014901161
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.03000000026077032
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "trimMs": 0.03000000026077032
+      }
+    ]
+  },
+  {
+    "case": "moving-sixteen",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 90240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 1033920,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 4.89,
+        "p95": 60.335,
+        "mean": 14.93
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.1699999999254942
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.07499999925494194
+      }
+    ]
+  },
+  {
+    "case": "moving-sixteen",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 90240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 1033920,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.795,
+        "p95": 1.29,
+        "mean": 0.786667
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.795,
+        "p95": 1.305,
+        "mean": 0.796
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.06,
+        "p95": 0.205,
+        "mean": 0.092167
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.085,
+        "p95": 0.245,
+        "mean": 0.113833
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.11,
+        "p95": 0.325,
+        "mean": 0.144167
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002333
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.007333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.14,
+        "p95": 0.38,
+        "mean": 0.170333
+      },
+      "canvasSubmissionMs": {
+        "p50": 3.07,
+        "p95": 58.345,
+        "mean": 11.621833
+      },
+      "diagnosticsMs": {
+        "p50": 0.015,
+        "p95": 0.03,
+        "mean": 0.015167
+      },
+      "uiRefreshMs": {
+        "p50": 0.465,
+        "p95": 1.46,
+        "mean": 1.5515
+      },
+      "totalCallbackMs": {
+        "p50": 4.94,
+        "p95": 61.065,
+        "mean": 14.8455
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.01
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.075,
+        "mean": 0.030333
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.045,
+        "mean": 0.021667
+      },
+      "expirationChecksMs": {
+        "p50": 0.06,
+        "p95": 0.205,
+        "mean": 0.092167
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.005167
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.15500000026077032
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.125
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.15499999932944775
+      }
+    ]
+  },
+  {
+    "case": "moving-sixteen",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 90240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 4.91,
+        "p95": 61.14,
+        "mean": 15.094333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.1600000001490116
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.1699999999254942
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      }
+    ]
+  },
+  {
+    "case": "moving-sixteen",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 90240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.805,
+        "p95": 1.005,
+        "mean": 0.757
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.81,
+        "p95": 1.01,
+        "mean": 0.768167
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.000167
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.002333
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.022667
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.04,
+        "p95": 0.145,
+        "mean": 0.0575
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.003
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.007667
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.055,
+        "p95": 0.195,
+        "mean": 0.086833
+      },
+      "canvasSubmissionMs": {
+        "p50": 3.18,
+        "p95": 56.89,
+        "mean": 11.542
+      },
+      "diagnosticsMs": {
+        "p50": 0.01,
+        "p95": 0.025,
+        "mean": 0.013833
+      },
+      "uiRefreshMs": {
+        "p50": 0.53,
+        "p95": 1.235,
+        "mean": 1.3485
+      },
+      "totalCallbackMs": {
+        "p50": 4.79,
+        "p95": 59.35,
+        "mean": 14.324833
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.011167
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.05,
+        "mean": 0.0235
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.035,
+        "mean": 0.020333
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.002333
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0045
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.10500000044703484
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.10999999940395355
+      }
+    ]
+  },
+  {
+    "case": "dense-sixteen",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 96000,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 79616,
+      "expiryVisits": 5386368,
+      "heapComparisons": 2166015,
+      "schedulingVisits": 101760
+    },
+    "historySec": 1.0166666666669641,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 11.32,
+        "p95": 88.35,
+        "mean": 46.472833
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.7400000002235174
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.0949999997392297
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.4050000002607703
+      }
+    ]
+  },
+  {
+    "case": "dense-sixteen",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 96000,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 79616,
+      "expiryVisits": 5386368,
+      "heapComparisons": 2166015,
+      "schedulingVisits": 101760
+    },
+    "historySec": 1.0166666666669641,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.84,
+        "p95": 1.125,
+        "mean": 0.954667
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.86,
+        "p95": 1.135,
+        "mean": 0.970167
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.39,
+        "p95": 0.985,
+        "mean": 0.5265
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.44,
+        "p95": 1.005,
+        "mean": 0.555833
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.47,
+        "p95": 1.02,
+        "mean": 0.590833
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.09,
+        "p95": 0.125,
+        "mean": 0.094
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.16,
+        "p95": 0.23,
+        "mean": 0.1765
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.2,
+        "p95": 0.355,
+        "mean": 0.226667
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.73,
+        "p95": 1.285,
+        "mean": 0.840667
+      },
+      "canvasSubmissionMs": {
+        "p50": 13.09,
+        "p95": 87.685,
+        "mean": 42.6855
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.03,
+        "mean": 0.022167
+      },
+      "uiRefreshMs": {
+        "p50": 0.87,
+        "p95": 1.2,
+        "mean": 1.394167
+      },
+      "totalCallbackMs": {
+        "p50": 17.255,
+        "p95": 90.71,
+        "mean": 46.538
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.0125
+      },
+      "motionResponseMs": {
+        "p50": 0.025,
+        "p95": 0.055,
+        "mean": 0.0325
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.026167
+      },
+      "expirationChecksMs": {
+        "p50": 0.39,
+        "p95": 0.985,
+        "mean": 0.5265
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.04,
+        "p95": 0.09,
+        "mean": 0.050167
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 6.834999999962747
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.339999999850988
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.5249999994412065
+      }
+    ]
+  },
+  {
+    "case": "dense-sixteen",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 96000,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 79616,
+      "expiryVisits": 5744,
+      "heapComparisons": 2166015,
+      "schedulingVisits": 101760
+    },
+    "historySec": 1.0166666666669641,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 13.625,
+        "p95": 89.225,
+        "mean": 45.236333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.014999999664724
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.0699999993667006
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.080000000074506
+      }
+    ]
+  },
+  {
+    "case": "dense-sixteen",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 96000,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 79616,
+      "expiryVisits": 5744,
+      "heapComparisons": 2166015,
+      "schedulingVisits": 101760
+    },
+    "historySec": 1.0166666666669641,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.82,
+        "p95": 1.07,
+        "mean": 0.9775
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.84,
+        "p95": 1.145,
+        "mean": 0.989333
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0045
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.027667
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.045,
+        "p95": 0.11,
+        "mean": 0.056167
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.105,
+        "p95": 0.17,
+        "mean": 0.118
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.185,
+        "p95": 0.27,
+        "mean": 0.202833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.225,
+        "p95": 0.575,
+        "mean": 0.272
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.28,
+        "p95": 0.63,
+        "mean": 0.3505
+      },
+      "canvasSubmissionMs": {
+        "p50": 10.62,
+        "p95": 82.4,
+        "mean": 40.6725
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.03,
+        "mean": 0.021333
+      },
+      "uiRefreshMs": {
+        "p50": 0.835,
+        "p95": 1.23,
+        "mean": 1.350833
+      },
+      "totalCallbackMs": {
+        "p50": 13.035,
+        "p95": 86.855,
+        "mean": 44.0595
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.012667
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.0285
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.045,
+        "mean": 0.023333
+      },
+      "expirationChecksMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0045
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.04,
+        "p95": 0.15,
+        "mean": 0.0705
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.209999999962747
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.2349999994039536
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.309999999590218
+      }
+    ]
+  },
+  {
+    "case": "stationary-sixteen",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 16,
+      "spatiallyRejectedDemand": 95984,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 15,
+      "schedulingVisits": 5776
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 1.2,
+        "p95": 3.45,
+        "mean": 3.382
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.11500000022351742
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      }
+    ]
+  },
+  {
+    "case": "stationary-sixteen",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 16,
+      "spatiallyRejectedDemand": 95984,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 15,
+      "schedulingVisits": 5776
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.2,
+        "p95": 1.015,
+        "mean": 0.418333
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.205,
+        "p95": 1.02,
+        "mean": 0.427333
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000667
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001667
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.015,
+        "p95": 0.035,
+        "mean": 0.020167
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.035,
+        "p95": 0.08,
+        "mean": 0.043833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.045,
+        "p95": 0.105,
+        "mean": 0.0605
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.045,
+        "p95": 0.08,
+        "mean": 0.2385
+      },
+      "diagnosticsMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.015833
+      },
+      "uiRefreshMs": {
+        "p50": 0.295,
+        "p95": 1.08,
+        "mean": 1.0155
+      },
+      "totalCallbackMs": {
+        "p50": 1.02,
+        "p95": 2.08,
+        "mean": 2.852667
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.011167
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.06,
+        "mean": 0.025667
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.035,
+        "mean": 0.0185
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001667
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.08999999985098839
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.06000000052154064
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      }
+    ]
+  },
+  {
+    "case": "stationary-sixteen",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 16,
+      "spatiallyRejectedDemand": 95984,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 15,
+      "schedulingVisits": 5776
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 1.315,
+        "p95": 3.59,
+        "mean": 3.1725
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.12000000011175871
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.06999999936670065
+      }
+    ]
+  },
+  {
+    "case": "stationary-sixteen",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16,
+    "totals": {
+      "requestedDemand": 96000,
+      "emissions": 16,
+      "spatiallyRejectedDemand": 95984,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 15,
+      "schedulingVisits": 5776
+    },
+    "historySec": 5.983333333335082,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.24,
+        "p95": 1.11,
+        "mean": 0.501333
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.26,
+        "p95": 1.11,
+        "mean": 0.522167
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0025
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.035,
+        "mean": 0.0195
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.04,
+        "p95": 0.08,
+        "mean": 0.049833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.045,
+        "p95": 0.105,
+        "mean": 0.11
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.045,
+        "p95": 0.15,
+        "mean": 0.150167
+      },
+      "diagnosticsMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.009
+      },
+      "uiRefreshMs": {
+        "p50": 0.345,
+        "p95": 1,
+        "mean": 1.610167
+      },
+      "totalCallbackMs": {
+        "p50": 1.115,
+        "p95": 3.83,
+        "mean": 2.922833
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.014667
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.055,
+        "mean": 0.030833
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.035,
+        "mean": 0.017167
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0025
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "retired": 0,
+        "trimMs": 0.06500000040978193
+      }
+    ]
+  },
+  {
+    "case": "stress-64",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 64,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 384000,
+      "emissions": 23040,
+      "spatiallyRejectedDemand": 360960,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 6656,
+      "expiryVisits": 3792896,
+      "heapComparisons": 196095,
+      "schedulingVisits": 46080
+    },
+    "historySec": 4.250000000001236,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 16.625,
+        "p95": 77.035,
+        "mean": 42.867333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.9350000005215406
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.209999999962747
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.6400000005960464
+      }
+    ]
+  },
+  {
+    "case": "stress-64",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 64,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 384000,
+      "emissions": 23040,
+      "spatiallyRejectedDemand": 360960,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 6656,
+      "expiryVisits": 3792896,
+      "heapComparisons": 196095,
+      "schedulingVisits": 46080
+    },
+    "historySec": 4.250000000001236,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.84,
+        "p95": 1.195,
+        "mean": 0.969167
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.84,
+        "p95": 1.205,
+        "mean": 0.982667
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.65,
+        "p95": 1.12,
+        "mean": 0.689667
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.71,
+        "p95": 1.2,
+        "mean": 0.7465
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.79,
+        "p95": 1.29,
+        "mean": 0.806167
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.024
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.04,
+        "p95": 0.055,
+        "mean": 0.042
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.065,
+        "p95": 0.085,
+        "mean": 0.0685
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.905,
+        "p95": 1.57,
+        "mean": 0.955
+      },
+      "canvasSubmissionMs": {
+        "p50": 9.905,
+        "p95": 66.21,
+        "mean": 33.8205
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.035,
+        "mean": 0.024
+      },
+      "uiRefreshMs": {
+        "p50": 1.99,
+        "p95": 2.42,
+        "mean": 3.689333
+      },
+      "totalCallbackMs": {
+        "p50": 14.975,
+        "p95": 74.805,
+        "mean": 40.2435
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.0105
+      },
+      "motionResponseMs": {
+        "p50": 0.05,
+        "p95": 0.13,
+        "mean": 0.069333
+      },
+      "demandPreparationMs": {
+        "p50": 0.045,
+        "p95": 0.14,
+        "mean": 0.060833
+      },
+      "expirationChecksMs": {
+        "p50": 0.65,
+        "p95": 1.12,
+        "mean": 0.689667
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.025,
+        "p95": 0.035,
+        "mean": 0.026333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.434999999590218
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.40500000026077
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.020000000484288
+      }
+    ]
+  },
+  {
+    "case": "stress-64",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 64,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 384000,
+      "emissions": 23040,
+      "spatiallyRejectedDemand": 360960,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 6656,
+      "expiryVisits": 22976,
+      "heapComparisons": 196095,
+      "schedulingVisits": 46080
+    },
+    "historySec": 4.250000000001236,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 15.95,
+        "p95": 74.15,
+        "mean": 44.388333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.0550000006332994
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.440000000409782
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.7000000001862645
+      }
+    ]
+  },
+  {
+    "case": "stress-64",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 64,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 384000,
+      "emissions": 23040,
+      "spatiallyRejectedDemand": 360960,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 6656,
+      "expiryVisits": 22976,
+      "heapComparisons": 196095,
+      "schedulingVisits": 46080
+    },
+    "historySec": 4.250000000001236,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.82,
+        "p95": 1.07,
+        "mean": 0.945333
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.825,
+        "p95": 1.08,
+        "mean": 0.9585
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.03,
+        "mean": 0.0095
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.035,
+        "p95": 0.095,
+        "mean": 0.046
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.07,
+        "p95": 0.185,
+        "mean": 0.097167
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.03,
+        "p95": 0.045,
+        "mean": 0.029667
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.045,
+        "p95": 0.075,
+        "mean": 0.052833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.07,
+        "p95": 0.105,
+        "mean": 0.0765
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.17,
+        "p95": 0.47,
+        "mean": 0.228667
+      },
+      "canvasSubmissionMs": {
+        "p50": 12.74,
+        "p95": 67.545,
+        "mean": 35.421167
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.03,
+        "mean": 0.022833
+      },
+      "uiRefreshMs": {
+        "p50": 1.995,
+        "p95": 3,
+        "mean": 4.192
+      },
+      "totalCallbackMs": {
+        "p50": 16.53,
+        "p95": 73.975,
+        "mean": 41.962333
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.011833
+      },
+      "motionResponseMs": {
+        "p50": 0.035,
+        "p95": 0.1,
+        "mean": 0.051833
+      },
+      "demandPreparationMs": {
+        "p50": 0.03,
+        "p95": 0.07,
+        "mean": 0.0365
+      },
+      "expirationChecksMs": {
+        "p50": 0.005,
+        "p95": 0.03,
+        "mean": 0.0095
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.026
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.104999999515712
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.330000000074506
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5
+      }
+    ]
+  },
+  {
+    "case": "stress-256",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 256,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 1536000,
+      "emissions": 92160,
+      "spatiallyRejectedDemand": 1443840,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 75776,
+      "expiryVisits": 5365760,
+      "heapComparisons": 2062335,
+      "schedulingVisits": 184320
+    },
+    "historySec": 1.0500000000003098,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 21.51,
+        "p95": 99.055,
+        "mean": 62.428333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 3.5700000002980232
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.940000000409782
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 3.110000000335276
+      }
+    ]
+  },
+  {
+    "case": "stress-256",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 256,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 1536000,
+      "emissions": 92160,
+      "spatiallyRejectedDemand": 1443840,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 75776,
+      "expiryVisits": 5365760,
+      "heapComparisons": 2062335,
+      "schedulingVisits": 184320
+    },
+    "historySec": 1.0500000000003098,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.835,
+        "p95": 1.235,
+        "mean": 0.962833
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.845,
+        "p95": 1.235,
+        "mean": 0.975667
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000667
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.535,
+        "p95": 0.7,
+        "mean": 0.531833
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.655,
+        "p95": 0.895,
+        "mean": 0.664333
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.865,
+        "p95": 1.105,
+        "mean": 0.906
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.065,
+        "p95": 0.12,
+        "mean": 0.077
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.145,
+        "p95": 0.22,
+        "mean": 0.159
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.19,
+        "p95": 0.285,
+        "mean": 0.230667
+      },
+      "visualizerUpdateMs": {
+        "p50": 1.225,
+        "p95": 1.59,
+        "mean": 1.264667
+      },
+      "canvasSubmissionMs": {
+        "p50": 9.42,
+        "p95": 84.035,
+        "mean": 41.415833
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.025,
+        "mean": 0.022833
+      },
+      "uiRefreshMs": {
+        "p50": 7.05,
+        "p95": 8.16,
+        "mean": 15.642667
+      },
+      "totalCallbackMs": {
+        "p50": 19.855,
+        "p95": 96.605,
+        "mean": 60.621333
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.012833
+      },
+      "motionResponseMs": {
+        "p50": 0.2,
+        "p95": 0.34,
+        "mean": 0.231667
+      },
+      "demandPreparationMs": {
+        "p50": 0.115,
+        "p95": 0.28,
+        "mean": 0.1325
+      },
+      "expirationChecksMs": {
+        "p50": 0.535,
+        "p95": 0.7,
+        "mean": 0.531833
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.055,
+        "p95": 0.1,
+        "mean": 0.066667
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.134999999776483
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.554999999701977
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.269999999552965
+      }
+    ]
+  },
+  {
+    "case": "stress-256",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 256,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 1536000,
+      "emissions": 92160,
+      "spatiallyRejectedDemand": 1443840,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 75776,
+      "expiryVisits": 91904,
+      "heapComparisons": 2062335,
+      "schedulingVisits": 184320
+    },
+    "historySec": 1.0500000000003098,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 24.36,
+        "p95": 98.09,
+        "mean": 61.251
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 3.7749999994412065
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 3.7400000002235174
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 3.544999999925494
+      }
+    ]
+  },
+  {
+    "case": "stress-256",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 256,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 1536000,
+      "emissions": 92160,
+      "spatiallyRejectedDemand": 1443840,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 75776,
+      "expiryVisits": 91904,
+      "heapComparisons": 2062335,
+      "schedulingVisits": 184320
+    },
+    "historySec": 1.0500000000003098,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.835,
+        "p95": 1.18,
+        "mean": 0.955333
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.84,
+        "p95": 1.19,
+        "mean": 0.97
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.000333
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.03,
+        "p95": 0.09,
+        "mean": 0.039167
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.13,
+        "p95": 0.24,
+        "mean": 0.15
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.275,
+        "p95": 0.535,
+        "mean": 0.339333
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.09,
+        "p95": 0.21,
+        "mean": 0.109333
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.16,
+        "p95": 0.335,
+        "mean": 0.193833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.215,
+        "p95": 0.49,
+        "mean": 0.276333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.61,
+        "p95": 1,
+        "mean": 0.732167
+      },
+      "canvasSubmissionMs": {
+        "p50": 11.555,
+        "p95": 88.03,
+        "mean": 42.3375
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.03,
+        "mean": 0.021833
+      },
+      "uiRefreshMs": {
+        "p50": 6.865,
+        "p95": 8.84,
+        "mean": 15.314833
+      },
+      "totalCallbackMs": {
+        "p50": 20.83,
+        "p95": 98.345,
+        "mean": 60.792833
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.013667
+      },
+      "motionResponseMs": {
+        "p50": 0.135,
+        "p95": 0.26,
+        "mean": 0.158
+      },
+      "demandPreparationMs": {
+        "p50": 0.09,
+        "p95": 0.205,
+        "mean": 0.110833
+      },
+      "expirationChecksMs": {
+        "p50": 0.03,
+        "p95": 0.09,
+        "mean": 0.039167
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.06,
+        "p95": 0.17,
+        "mean": 0.0825
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.404999999329448
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.105000000447035
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.660000000149012
+      }
+    ]
+  },
+  {
+    "case": "large-retention",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 131072
+    },
+    "liveParticles": 100000,
+    "totals": {
+      "requestedDemand": 0,
+      "emissions": 0,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 36000000,
+      "heapComparisons": 0,
+      "schedulingVisits": 5760
+    },
+    "historySec": 6.000000000001748,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 43.98,
+        "p95": 50.04,
+        "mean": 49.353167
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 19.639999999664724
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 19.980000000447035
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 22.449999999254942
+      }
+    ]
+  },
+  {
+    "case": "large-retention",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 131072
+    },
+    "liveParticles": 100000,
+    "totals": {
+      "requestedDemand": 0,
+      "emissions": 0,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 36000000,
+      "heapComparisons": 0,
+      "schedulingVisits": 5760
+    },
+    "historySec": 6.000000000001748,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.83,
+        "p95": 1.03,
+        "mean": 0.933167
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.835,
+        "p95": 1.035,
+        "mean": 0.946
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "expiryInclusiveMs": {
+        "p50": 2.04,
+        "p95": 2.38,
+        "mean": 2.215167
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 2.08,
+        "p95": 2.445,
+        "mean": 2.268667
+      },
+      "orbStepInclusiveMs": {
+        "p50": 2.125,
+        "p95": 2.485,
+        "mean": 2.310667
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002
+      },
+      "visualizerUpdateMs": {
+        "p50": 2.15,
+        "p95": 2.505,
+        "mean": 2.343333
+      },
+      "canvasSubmissionMs": {
+        "p50": 35,
+        "p95": 41.64,
+        "mean": 39.973333
+      },
+      "diagnosticsMs": {
+        "p50": 0.015,
+        "p95": 0.02,
+        "mean": 0.015
+      },
+      "uiRefreshMs": {
+        "p50": 0.86,
+        "p95": 1.11,
+        "mean": 1.4065
+      },
+      "totalCallbackMs": {
+        "p50": 39.39,
+        "p95": 47.5,
+        "mean": 45.413667
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.011333
+      },
+      "motionResponseMs": {
+        "p50": 0.04,
+        "p95": 0.06,
+        "mean": 0.042
+      },
+      "demandPreparationMs": {
+        "p50": 0.035,
+        "p95": 0.15,
+        "mean": 0.0535
+      },
+      "expirationChecksMs": {
+        "p50": 2.04,
+        "p95": 2.38,
+        "mean": 2.215167
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 34.485000000335276
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 40.84499999973923
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 40.169999999925494
+      }
+    ]
+  },
+  {
+    "case": "large-retention",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 131072
+    },
+    "liveParticles": 100000,
+    "totals": {
+      "requestedDemand": 0,
+      "emissions": 0,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5760,
+      "heapComparisons": 0,
+      "schedulingVisits": 5760
+    },
+    "historySec": 6.000000000001748,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 40.45,
+        "p95": 48.245,
+        "mean": 47.574333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 20.604999999515712
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 19
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 21.604999999515712
+      }
+    ]
+  },
+  {
+    "case": "large-retention",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 6.000000000001746,
+    "policy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 131072
+    },
+    "liveParticles": 100000,
+    "totals": {
+      "requestedDemand": 0,
+      "emissions": 0,
+      "spatiallyRejectedDemand": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5760,
+      "heapComparisons": 0,
+      "schedulingVisits": 5760
+    },
+    "historySec": 6.000000000001748,
+    "angularAdvanceFirstOrb": 5.9999999999999645,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.835,
+        "p95": 1.115,
+        "mean": 0.998833
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.835,
+        "p95": 1.12,
+        "mean": 1.033833
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001167
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002167
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.024167
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.045,
+        "p95": 0.12,
+        "mean": 0.064667
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.065,
+        "p95": 0.14,
+        "mean": 0.091333
+      },
+      "canvasSubmissionMs": {
+        "p50": 36.43,
+        "p95": 45.02,
+        "mean": 43.217833
+      },
+      "diagnosticsMs": {
+        "p50": 0.015,
+        "p95": 0.02,
+        "mean": 0.015667
+      },
+      "uiRefreshMs": {
+        "p50": 0.895,
+        "p95": 1.165,
+        "mean": 1.467333
+      },
+      "totalCallbackMs": {
+        "p50": 38.805,
+        "p95": 47.74,
+        "mean": 47.5965
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.011667
+      },
+      "motionResponseMs": {
+        "p50": 0.025,
+        "p95": 0.055,
+        "mean": 0.039
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.022
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002167
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 40.59500000067055
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 36.15500000026077
+      },
+      {
+        "from": 100000,
+        "to": 8192,
+        "retired": 91808,
+        "trimMs": 49.325000000186265
+      }
+    ]
+  },
+  {
+    "case": "slow-10",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 10,
+    "elapsedSec": 36,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 1033920,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 35.900000000000006,
+    "angularAdvanceFirstOrb": 11.999999999999957,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 6.405,
+        "p95": 59.495,
+        "mean": 15.147667
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.09500000067055225
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.09999999962747097
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.09999999962747097
+      }
+    ]
+  },
+  {
+    "case": "slow-10",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 10,
+    "elapsedSec": 36,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 1033920,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 35.900000000000006,
+    "angularAdvanceFirstOrb": 11.999999999999957,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.79,
+        "p95": 1.005,
+        "mean": 0.854667
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.79,
+        "p95": 1.015,
+        "mean": 0.865333
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.065,
+        "p95": 0.175,
+        "mean": 0.089333
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.09,
+        "p95": 0.22,
+        "mean": 0.122
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.11,
+        "p95": 0.295,
+        "mean": 0.149
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.007333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.13,
+        "p95": 0.315,
+        "mean": 0.181
+      },
+      "canvasSubmissionMs": {
+        "p50": 3.995,
+        "p95": 50.445,
+        "mean": 11.275333
+      },
+      "diagnosticsMs": {
+        "p50": 0.015,
+        "p95": 0.03,
+        "mean": 0.0205
+      },
+      "uiRefreshMs": {
+        "p50": 0.48,
+        "p95": 1.29,
+        "mean": 1.389167
+      },
+      "totalCallbackMs": {
+        "p50": 5.77,
+        "p95": 54.065,
+        "mean": 14.7875
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.010667
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.037667
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.055,
+        "mean": 0.030333
+      },
+      "expirationChecksMs": {
+        "p50": 0.065,
+        "p95": 0.175,
+        "mean": 0.089333
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0045
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0849999999627471
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      }
+    ]
+  },
+  {
+    "case": "slow-10",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 10,
+    "elapsedSec": 36,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 35.900000000000006,
+    "angularAdvanceFirstOrb": 36.00000000000023,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 6.115,
+        "p95": 55.52,
+        "mean": 15.697167
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.09000000078231096
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0849999999627471
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.10500000044703484
+      }
+    ]
+  },
+  {
+    "case": "slow-10",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 10,
+    "elapsedSec": 36,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 5760,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "expiryVisits": 5744,
+      "heapComparisons": 5759,
+      "schedulingVisits": 11520
+    },
+    "historySec": 35.900000000000006,
+    "angularAdvanceFirstOrb": 36.00000000000023,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.8,
+        "p95": 1.43,
+        "mean": 0.892667
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.805,
+        "p95": 1.45,
+        "mean": 0.905333
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.000333
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.003
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.025,
+        "p95": 0.055,
+        "mean": 0.026667
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.04,
+        "p95": 0.09,
+        "mean": 0.055333
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002667
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.01,
+        "mean": 0.0085
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.06,
+        "p95": 0.155,
+        "mean": 0.092333
+      },
+      "canvasSubmissionMs": {
+        "p50": 4.195,
+        "p95": 49.88,
+        "mean": 12.870333
+      },
+      "diagnosticsMs": {
+        "p50": 0.015,
+        "p95": 0.03,
+        "mean": 0.015667
+      },
+      "uiRefreshMs": {
+        "p50": 0.55,
+        "p95": 1.855,
+        "mean": 1.300833
+      },
+      "totalCallbackMs": {
+        "p50": 6.115,
+        "p95": 52.84,
+        "mean": 15.765833
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.013833
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.07,
+        "mean": 0.028667
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.055,
+        "mean": 0.023667
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.003
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.005833
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.4199999999254942
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 5760,
+        "to": 5760,
+        "retired": 0,
+        "trimMs": 0.09999999962747097
+      }
+    ]
+  },
+  {
+    "case": "slow-5",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 5,
+    "elapsedSec": 72,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 4800,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 960,
+      "evicted": 0,
+      "expiryVisits": 1005792,
+      "heapComparisons": 26109,
+      "schedulingVisits": 11520
+    },
+    "historySec": 59.8,
+    "angularAdvanceFirstOrb": 11.999999999999957,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 6.11,
+        "p95": 54.29,
+        "mean": 14.109333
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      }
+    ]
+  },
+  {
+    "case": "slow-5",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 5,
+    "elapsedSec": 72,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 4800,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 960,
+      "evicted": 0,
+      "expiryVisits": 1005792,
+      "heapComparisons": 26109,
+      "schedulingVisits": 11520
+    },
+    "historySec": 59.8,
+    "angularAdvanceFirstOrb": 11.999999999999957,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.805,
+        "p95": 1.195,
+        "mean": 0.823667
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.805,
+        "p95": 1.2,
+        "mean": 0.833667
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000833
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.08,
+        "p95": 0.19,
+        "mean": 0.115667
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.095,
+        "p95": 0.225,
+        "mean": 0.136833
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.12,
+        "p95": 0.27,
+        "mean": 0.159167
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.001833
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.015,
+        "mean": 0.012167
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.145,
+        "p95": 0.32,
+        "mean": 0.1915
+      },
+      "canvasSubmissionMs": {
+        "p50": 4.095,
+        "p95": 48.035,
+        "mean": 9.877333
+      },
+      "diagnosticsMs": {
+        "p50": 0.01,
+        "p95": 0.025,
+        "mean": 0.013167
+      },
+      "uiRefreshMs": {
+        "p50": 0.505,
+        "p95": 1.035,
+        "mean": 1.133667
+      },
+      "totalCallbackMs": {
+        "p50": 5.885,
+        "p95": 49.97,
+        "mean": 12.838833
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.02,
+        "mean": 0.010333
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.022833
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.035,
+        "mean": 0.021833
+      },
+      "expirationChecksMs": {
+        "p50": 0.065,
+        "p95": 0.18,
+        "mean": 0.0985
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.01,
+        "p95": 0.015,
+        "mean": 0.0105
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.02,
+        "mean": 0.0105
+      },
+      "ttlRetirementMs": {
+        "p50": 0.01,
+        "p95": 0.035,
+        "mean": 0.0155
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.10500000044703484
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.10499999951571226
+      }
+    ]
+  },
+  {
+    "case": "slow-5",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 5,
+    "elapsedSec": 72,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 4800,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 960,
+      "evicted": 0,
+      "expiryVisits": 6704,
+      "heapComparisons": 26109,
+      "schedulingVisits": 11520
+    },
+    "historySec": 59.8,
+    "angularAdvanceFirstOrb": 72.00000000000048,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 5.68,
+        "p95": 52.62,
+        "mean": 13.330667
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      }
+    ]
+  },
+  {
+    "case": "slow-5",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 5,
+    "elapsedSec": 72,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 4800,
+    "totals": {
+      "requestedDemand": 192000,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 186240,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 960,
+      "evicted": 0,
+      "expiryVisits": 6704,
+      "heapComparisons": 26109,
+      "schedulingVisits": 11520
+    },
+    "historySec": 59.8,
+    "angularAdvanceFirstOrb": 72.00000000000048,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.79,
+        "p95": 1.015,
+        "mean": 0.811833
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.795,
+        "p95": 1.06,
+        "mean": 0.8215
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.0005
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.024333
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.04,
+        "p95": 0.07,
+        "mean": 0.047167
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.055,
+        "p95": 0.14,
+        "mean": 0.069
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.003167
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.015,
+        "mean": 0.013333
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.08,
+        "p95": 0.17,
+        "mean": 0.112833
+      },
+      "canvasSubmissionMs": {
+        "p50": 4.165,
+        "p95": 48.885,
+        "mean": 9.956833
+      },
+      "diagnosticsMs": {
+        "p50": 0.01,
+        "p95": 0.02,
+        "mean": 0.0125
+      },
+      "uiRefreshMs": {
+        "p50": 0.46,
+        "p95": 0.94,
+        "mean": 1.166833
+      },
+      "totalCallbackMs": {
+        "p50": 5.83,
+        "p95": 50.945,
+        "mean": 12.579
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.01
+      },
+      "motionResponseMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.024
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.022833
+      },
+      "expirationChecksMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.005667
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.009167
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.03,
+        "mean": 0.015
+      },
+      "ttlRetirementMs": {
+        "p50": 0.015,
+        "p95": 0.04,
+        "mean": 0.019
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.18000000063329935
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.11000000033527613
+      },
+      {
+        "from": 4800,
+        "to": 4800,
+        "retired": 0,
+        "trimMs": 0.1299999998882413
+      }
+    ]
+  },
+  {
+    "case": "suspension",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 125.98333333333466,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 480,
+    "totals": {
+      "requestedDemand": 96256,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 90496,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 5280,
+      "evicted": 0,
+      "expiryVisits": 880800,
+      "heapComparisons": 28241,
+      "schedulingVisits": 11520
+    },
+    "historySec": 0.4833333333330643,
+    "angularAdvanceFirstOrb": 6.016666666666161,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 1.39,
+        "p95": 2.525,
+        "mean": 3.3705
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 480,
+        "to": 480,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 480,
+        "to": 480,
+        "retired": 0,
+        "trimMs": 0.10500000044703484
+      },
+      {
+        "from": 480,
+        "to": 480,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      }
+    ]
+  },
+  {
+    "case": "suspension",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 125.98333333333466,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 480,
+    "totals": {
+      "requestedDemand": 96256,
+      "emissions": 5760,
+      "spatiallyRejectedDemand": 90496,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 5280,
+      "evicted": 0,
+      "expiryVisits": 880800,
+      "heapComparisons": 28241,
+      "schedulingVisits": 11520
+    },
+    "historySec": 0.4833333333330643,
+    "angularAdvanceFirstOrb": 6.016666666666161,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.205,
+        "p95": 0.875,
+        "mean": 0.456833
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.215,
+        "p95": 0.88,
+        "mean": 0.465167
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.000333
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.0885
+      },
+      "ttlRetirementMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.150167
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.194833
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.06,
+        "mean": 0.223833
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.04,
+        "p95": 0.075,
+        "mean": 0.243333
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002167
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.007167
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.05,
+        "p95": 0.105,
+        "mean": 0.2665
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.29,
+        "p95": 0.765,
+        "mean": 0.391167
+      },
+      "diagnosticsMs": {
+        "p50": 0.01,
+        "p95": 0.015,
+        "mean": 0.0125
+      },
+      "uiRefreshMs": {
+        "p50": 0.37,
+        "p95": 0.99,
+        "mean": 1.799
+      },
+      "totalCallbackMs": {
+        "p50": 1.51,
+        "p95": 2.47,
+        "mean": 3.479667
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.0095
+      },
+      "motionResponseMs": {
+        "p50": 0.015,
+        "p95": 0.03,
+        "mean": 0.02
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.05,
+        "mean": 0.0245
+      },
+      "expirationChecksMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.044667
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0055
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 480,
+        "to": 480,
+        "retired": 0,
+        "trimMs": 0.07000000029802322
+      },
+      {
+        "from": 480,
+        "to": 480,
+        "retired": 0,
+        "trimMs": 0.07000000029802322
+      },
+      {
+        "from": 480,
+        "to": 480,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      }
+    ]
+  },
+  {
+    "case": "suspension",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 125.98333333333466,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 464,
+    "totals": {
+      "requestedDemand": 95728,
+      "emissions": 5744,
+      "spatiallyRejectedDemand": 89984,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 5280,
+      "evicted": 0,
+      "expiryVisits": 10992,
+      "heapComparisons": 28225,
+      "schedulingVisits": 11504
+    },
+    "historySec": 0.46666666666638434,
+    "angularAdvanceFirstOrb": 5.983333333332828,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 1.635,
+        "p95": 4.755,
+        "mean": 3.705
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 464,
+        "to": 464,
+        "retired": 0,
+        "trimMs": 0.0849999999627471
+      },
+      {
+        "from": 464,
+        "to": 464,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      },
+      {
+        "from": 464,
+        "to": 464,
+        "retired": 0,
+        "trimMs": 0.07500000018626451
+      }
+    ]
+  },
+  {
+    "case": "suspension",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 125.98333333333466,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 464,
+    "totals": {
+      "requestedDemand": 95728,
+      "emissions": 5744,
+      "spatiallyRejectedDemand": 89984,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 5280,
+      "evicted": 0,
+      "expiryVisits": 10992,
+      "heapComparisons": 28225,
+      "schedulingVisits": 11504
+    },
+    "historySec": 0.46666666666638434,
+    "angularAdvanceFirstOrb": 5.983333333332828,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.28,
+        "p95": 1.2,
+        "mean": 0.5565
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.285,
+        "p95": 1.2,
+        "mean": 0.567
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.000333
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.114
+      },
+      "ttlRetirementMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.148833
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.180333
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.2105
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.035,
+        "p95": 0.07,
+        "mean": 0.2505
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.0195
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.05,
+        "p95": 0.105,
+        "mean": 0.285667
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.29,
+        "p95": 1.04,
+        "mean": 0.459
+      },
+      "diagnosticsMs": {
+        "p50": 0.01,
+        "p95": 0.015,
+        "mean": 0.013
+      },
+      "uiRefreshMs": {
+        "p50": 0.36,
+        "p95": 0.905,
+        "mean": 1.051667
+      },
+      "totalCallbackMs": {
+        "p50": 1.65,
+        "p95": 3.72,
+        "mean": 3.769667
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.0095
+      },
+      "motionResponseMs": {
+        "p50": 0.015,
+        "p95": 0.03,
+        "mean": 0.0245
+      },
+      "demandPreparationMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.024167
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.0315
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.01,
+        "mean": 0.018333
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.002167
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 464,
+        "to": 464,
+        "retired": 0,
+        "trimMs": 0.07000000029802322
+      },
+      {
+        "from": 464,
+        "to": 464,
+        "retired": 0,
+        "trimMs": 0.125
+      },
+      {
+        "from": 464,
+        "to": 464,
+        "retired": 0,
+        "trimMs": 0.0800000000745058
+      }
+    ]
+  },
+  {
+    "case": "saturated-sixteen",
+    "mode": "hu",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 20.00000000000582,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 320000,
+      "emissions": 19200,
+      "spatiallyRejectedDemand": 300800,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 2816,
+      "expiryVisits": 11264000,
+      "heapComparisons": 92415,
+      "schedulingVisits": 38400
+    },
+    "historySec": 17.05000000000497,
+    "angularAdvanceFirstOrb": 19.9999999999999,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 12.995,
+        "p95": 66.885,
+        "mean": 33.436958
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.480000000447035
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.650000000372529
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.6300000008195639
+      }
+    ]
+  },
+  {
+    "case": "saturated-sixteen",
+    "mode": "hu",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 20.00000000000582,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 320000,
+      "emissions": 19200,
+      "spatiallyRejectedDemand": 300800,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 2816,
+      "expiryVisits": 11264000,
+      "heapComparisons": 92415,
+      "schedulingVisits": 38400
+    },
+    "historySec": 17.05000000000497,
+    "angularAdvanceFirstOrb": 19.9999999999999,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.815,
+        "p95": 1.025,
+        "mean": 0.877417
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.82,
+        "p95": 1.03,
+        "mean": 0.884
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000708
+      },
+      "expiryInclusiveMs": {
+        "p50": 0.45,
+        "p95": 0.84,
+        "mean": 0.483708
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.48,
+        "p95": 0.855,
+        "mean": 0.500625
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.51,
+        "p95": 0.87,
+        "mean": 0.521625
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.01,
+        "p95": 0.02,
+        "mean": 0.013
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.015,
+        "p95": 0.025,
+        "mean": 0.0185
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.05,
+        "mean": 0.0275
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.56,
+        "p95": 0.935,
+        "mean": 0.572708
+      },
+      "canvasSubmissionMs": {
+        "p50": 10.855,
+        "p95": 62.09,
+        "mean": 30.64225
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.04,
+        "mean": 0.02275
+      },
+      "uiRefreshMs": {
+        "p50": 0.815,
+        "p95": 1.13,
+        "mean": 0.936917
+      },
+      "totalCallbackMs": {
+        "p50": 14.245,
+        "p95": 65.9,
+        "mean": 33.556792
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.00725
+      },
+      "motionResponseMs": {
+        "p50": 0.015,
+        "p95": 0.045,
+        "mean": 0.027417
+      },
+      "demandPreparationMs": {
+        "p50": 0.015,
+        "p95": 0.045,
+        "mean": 0.019542
+      },
+      "expirationChecksMs": {
+        "p50": 0.45,
+        "p95": 0.84,
+        "mean": 0.483708
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.0105
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.419999999925494
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.384999999776483
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.224999999627471
+      }
+    ]
+  },
+  {
+    "case": "saturated-sixteen",
+    "mode": "hv",
+    "profile": false,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 20.00000000000582,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 320000,
+      "emissions": 19200,
+      "spatiallyRejectedDemand": 300800,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 2816,
+      "expiryVisits": 19184,
+      "heapComparisons": 92415,
+      "schedulingVisits": 38400
+    },
+    "historySec": 17.05000000000497,
+    "angularAdvanceFirstOrb": 19.9999999999999,
+    "timings": {
+      "totalCallbackMs": {
+        "p50": 13.055,
+        "p95": 69.285,
+        "mean": 34.328792
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.5499999998137355
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.8800000008195639
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.205000000074506
+      }
+    ]
+  },
+  {
+    "case": "saturated-sixteen",
+    "mode": "hv",
+    "profile": true,
+    "orbs": 16,
+    "spacing": 0.5,
+    "fps": 60,
+    "elapsedSec": 20.00000000000582,
+    "policy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "liveParticles": 16384,
+    "totals": {
+      "requestedDemand": 320000,
+      "emissions": 19200,
+      "spatiallyRejectedDemand": 300800,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0,
+      "expired": 0,
+      "evicted": 2816,
+      "expiryVisits": 19184,
+      "heapComparisons": 92415,
+      "schedulingVisits": 38400
+    },
+    "historySec": 17.05000000000497,
+    "angularAdvanceFirstOrb": 19.9999999999999,
+    "timings": {
+      "audioSampleMs": {
+        "p50": 0.82,
+        "p95": 1.025,
+        "mean": 0.8935
+      },
+      "audioAndAnalysisMs": {
+        "p50": 0.825,
+        "p95": 1.03,
+        "mean": 0.899917
+      },
+      "policySyncMs": {
+        "p50": 0,
+        "p95": 0.005,
+        "mean": 0.000708
+      },
+      "expiryInclusiveMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.003167
+      },
+      "particlePreparationInclusiveMs": {
+        "p50": 0.015,
+        "p95": 0.04,
+        "mean": 0.018042
+      },
+      "orbStepInclusiveMs": {
+        "p50": 0.025,
+        "p95": 0.07,
+        "mean": 0.036542
+      },
+      "heapRetirementInclusiveMs": {
+        "p50": 0.015,
+        "p95": 0.03,
+        "mean": 0.017458
+      },
+      "heapAdmissionInclusiveMs": {
+        "p50": 0.02,
+        "p95": 0.045,
+        "mean": 0.026125
+      },
+      "schedulingInclusiveMs": {
+        "p50": 0.03,
+        "p95": 0.08,
+        "mean": 0.035
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.07,
+        "p95": 0.18,
+        "mean": 0.092292
+      },
+      "canvasSubmissionMs": {
+        "p50": 10.945,
+        "p95": 61.25,
+        "mean": 31.254583
+      },
+      "diagnosticsMs": {
+        "p50": 0.02,
+        "p95": 0.03,
+        "mean": 0.020125
+      },
+      "uiRefreshMs": {
+        "p50": 0.785,
+        "p95": 1.105,
+        "mean": 0.9155
+      },
+      "totalCallbackMs": {
+        "p50": 13.085,
+        "p95": 64.98,
+        "mean": 33.726083
+      },
+      "analysisUpdateMs": {
+        "p50": 0.005,
+        "p95": 0.015,
+        "mean": 0.0065
+      },
+      "motionResponseMs": {
+        "p50": 0.015,
+        "p95": 0.04,
+        "mean": 0.018583
+      },
+      "demandPreparationMs": {
+        "p50": 0.01,
+        "p95": 0.035,
+        "mean": 0.014875
+      },
+      "expirationChecksMs": {
+        "p50": 0,
+        "p95": 0.01,
+        "mean": 0.003167
+      },
+      "fairnessSchedulingMs": {
+        "p50": 0.005,
+        "p95": 0.025,
+        "mean": 0.009458
+      }
+    },
+    "policyTrimTrials": [
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 5.5150000005960464
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.75
+      },
+      {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 4.139999999664724
+      }
+    ]
+  }
+]

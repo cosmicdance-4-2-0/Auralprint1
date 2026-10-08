@@ -13,4 +13,11 @@ function simulationDeltaSec(elapsedSec, requestedMax) {
   return Math.min(elapsedSec, normalizeMaxDeltaTimeSec(requestedMax));
 }
 
-export { normalizeMaxDeltaTimeSec, simulationDeltaSec };
+// Motion integrates ordinary visible elapsed time independently of emission work.
+// Exactly the threshold is ordinary; excess/invalid intervals are discarded.
+function visualMotionDeltaSec(elapsedSec) {
+  return Number.isFinite(elapsedSec) && elapsedSec > 0 &&
+    elapsedSec <= CONFIG.limits.timing.motionDiscontinuitySec ? elapsedSec : 0;
+}
+
+export { normalizeMaxDeltaTimeSec, simulationDeltaSec, visualMotionDeltaSec };

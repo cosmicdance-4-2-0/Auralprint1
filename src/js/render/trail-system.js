@@ -56,16 +56,22 @@ class TrailSystem {
     return true;
   }
 
-  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings, dpr = 1) {
-    if (this.standalone) this.governor.beginFrame();
-    const g = this.governor;
-    const ttl = Math.max(0.0001, particleSettings.ttlSec);
+  expireParticles(nowSec, ttlSec) {
+    const g = this.governor, ttl = Math.max(0.0001, ttlSec);
+    const ordered = this.particles.birthOrderMonotonic;
     for (let node = this.particles.head; node;) {
       const next = node.next;
       g.stats.expiryVisits++;
       if ((nowSec - node.particle.bornSec) >= ttl) g.retire(node, "expired");
+      else if (ordered) break;
       node = next;
     }
+  }
+
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings, dpr = 1) {
+    if (this.standalone) this.governor.beginFrame();
+    const g = this.governor;
+    this.expireParticles(nowSec, particleSettings.ttlSec);
 
     const rate = Number.isFinite(particleSettings.emitPerSecond)
       ? Math.max(0, Math.min(particleSettings.emitPerSecond, CONFIG.limits.particles.emitPerSecond.max)) : 0;

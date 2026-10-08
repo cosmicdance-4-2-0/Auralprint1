@@ -1,0 +1,81 @@
+
+> test
+> node --test
+
+✔ tests/analysis-frame.test.js (58.965405ms)
+✔ tests/analysis-panel.test.js (52.758665ms)
+✔ tests/band-bank.test.js (49.283268ms)
+✔ tests/band-count-coverage.test.js (172.347378ms)
+✔ tests/fft-coordinate.test.js (54.118528ms)
+✔ tests/input-source-manager.test.js (82.028185ms)
+✔ tests/live-source-ownership.test.js (98.850072ms)
+✔ tests/orb-band-picker.test.js (59.391541ms)
+✔ tests/orb-collection.test.js (66.585278ms)
+✔ tests/orb-editor.test.js (107.561357ms)
+✔ tests/orb-id-termination.test.js (115.412994ms)
+✔ tests/per-orb-ownership.test.js (67.138506ms)
+✔ tests/preset-id-reservation.test.js (60.110469ms)
+✔ tests/preset-schema-10.test.js (113.093842ms)
+✔ tests/rc15-budgets.test.js (996.993578ms)
+✔ tests/rc15-phase1.test.js (66.231018ms)
+✔ tests/rc15-phase2.test.js (301.293296ms)
+✔ tests/rc15-phase3.test.js (598.954928ms)
+✔ tests/rc15-spacing.test.js (124.046535ms)
+✔ tests/rc15-timing-performance.test.js (154.348575ms)
+✔ tests/recording-export.test.js (101.252113ms)
+✔ tests/ring-phase-lock.test.js (57.180752ms)
+✔ tests/scene-panel.test.js (65.937669ms)
+✔ tests/scrubber-drag-ownership.test.js (58.873482ms)
+✔ tests/scrubber-waveform.test.js (53.358479ms)
+✔ tests/spectral-ring-editor.test.js (47.36999ms)
+✔ tests/stream-graph.test.js (58.365074ms)
+✔ tests/targeted-audit.test.js (478.789584ms)
+✔ tests/transport-ownership.test.js (90.543853ms)
+✔ tests/url-preset-band-rebuild.test.js (55.37442ms)
+✔ tests/visualizer-runtime.test.js (56.014337ms)
+✔ tests/visualizers-panel.test.js (140.669722ms)
+✔ tests/workspace-ui.test.js (51.585206ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4767.975101
+
+> build
+> node scripts/build.mjs
+
+
+  .build/auralprint.css  25.3kb
+
+⚡ Done in 18ms
+
+  .build/auralprint.js  340.4kb
+
+⚡ Done in 31ms
+
+git diff --check: PASS
+{
+  "version": "v0.1.15m.h.v",
+  "schema": 10,
+  "artifact": "dist/auralprint_0.1.15m.h.v.html",
+  "bytes": 397772,
+  "sha256": "f5a020c0623e3939c52e6deb03684031ef6ec77615b095ca26ee1cd8f0fb591d",
+  "inlineScripts": 1,
+  "inlineStylesheets": 1,
+  "externalScriptsOrStylesheets": 0,
+  "trackedGeneratedOutputsOrDependencies": 0,
+  "focusedRegressionsPassed": 188,
+  "fullSuiteFilesPassed": 33,
+  "mutationsDetected": 8,
+  "nativeClockDpr": [
+    1,
+    2
+  ],
+  "nativeStandaloneDpr": [
+    1,
+    2
+  ]
+}

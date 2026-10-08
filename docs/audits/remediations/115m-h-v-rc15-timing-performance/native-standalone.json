@@ -1,0 +1,269 @@
+{
+  "version": "v0.1.15m.h.v",
+  "browser": "151.0.7922.173",
+  "verified": [
+    "offline standalone boot",
+    "DPR 1 and 2",
+    "numeric maximum attributes",
+    "keyboard ArrowUp and Enter change commit",
+    "empty refusal and visible feedback",
+    "selected value display",
+    "focus/input/host identity",
+    "share schema 10 without runtime counters",
+    "URL reload",
+    "Reset All defaults",
+    "zero policy URL reload",
+    "actual empty-scene diagnostic counts"
+  ],
+  "results": [
+    {
+      "dpr": 1,
+      "payload": {
+        "schema": 10,
+        "prefs": {
+          "visuals": {
+            "backgroundColor": "#000000",
+            "particleColor": "#ffffff"
+          },
+          "audio": {
+            "fftSize": 8192,
+            "smoothingTimeConstant": 0.1,
+            "rmsGain": 1,
+            "repeatMode": "none",
+            "muted": false,
+            "volume": 1
+          },
+          "orbs": [
+            {
+              "id": "ORB0",
+              "chanId": "R",
+              "bandIds": [],
+              "chirality": -1,
+              "startAngleRad": 0,
+              "hueOffsetDeg": 0,
+              "colorSource": "inherit",
+              "centerXFrac": 0,
+              "centerYFrac": 0,
+              "motion": {
+                "angularSpeedRadPerSec": 1.5707963267948966
+              },
+              "response": {
+                "minRadiusFrac": 0.01,
+                "maxRadiusFrac": 0.8,
+                "waveformRadialDisplaceFrac": 0.1
+              },
+              "particles": {
+                "emitPerSecond": 240,
+                "sizeMaxPx": 8,
+                "sizeMinPx": 1,
+                "sizeToMinSec": 3,
+                "ttlSec": 6,
+                "minPlacementDistancePx": 0.5
+              },
+              "trace": {
+                "lines": true,
+                "numLines": 10,
+                "lineAlpha": 0.35,
+                "lineWidthPx": 2,
+                "lineColorMode": "dominantBand"
+              }
+            },
+            {
+              "id": "ORB1",
+              "chanId": "L",
+              "bandIds": [],
+              "chirality": -1,
+              "startAngleRad": 3.141592653589793,
+              "hueOffsetDeg": 0,
+              "colorSource": "inherit",
+              "centerXFrac": 0,
+              "centerYFrac": 0,
+              "motion": {
+                "angularSpeedRadPerSec": 1.5707963267948966
+              },
+              "response": {
+                "minRadiusFrac": 0.01,
+                "maxRadiusFrac": 0.8,
+                "waveformRadialDisplaceFrac": 0.1
+              },
+              "particles": {
+                "emitPerSecond": 240,
+                "sizeMaxPx": 8,
+                "sizeMinPx": 1,
+                "sizeToMinSec": 3,
+                "ttlSec": 6,
+                "minPlacementDistancePx": 0.5
+              },
+              "trace": {
+                "lines": true,
+                "numLines": 10,
+                "lineAlpha": 0.35,
+                "lineWidthPx": 2,
+                "lineColorMode": "dominantBand"
+              }
+            }
+          ],
+          "bands": {
+            "count": 256,
+            "floorHz": 20,
+            "ceilingHz": 22500,
+            "distributionMode": "erb",
+            "overlay": {
+              "enabled": false,
+              "connectAdjacent": true,
+              "alpha": 0.65,
+              "pointSizePx": 3,
+              "minRadiusFrac": 0.01,
+              "maxRadiusFrac": 0.8,
+              "waveformRadialDisplaceFrac": 0.18,
+              "lineAlpha": 0.35,
+              "lineWidthPx": 1,
+              "phaseMode": "free",
+              "ringSpeedRadPerSec": 0
+            },
+            "rainbow": {
+              "hueOffsetDeg": 0,
+              "saturation": 0.9,
+              "value": 1
+            },
+            "particleColorSource": "dominant"
+          },
+          "timing": {
+            "maxDeltaTimeSec": 0.03333333333333333
+          },
+          "particleSafety": {
+            "maxEmissionsPerFrame": 4096,
+            "maxActiveParticles": 65536
+          }
+        }
+      },
+      "zeroReload": true,
+      "externalRequests": 0
+    },
+    {
+      "dpr": 2,
+      "payload": {
+        "schema": 10,
+        "prefs": {
+          "visuals": {
+            "backgroundColor": "#000000",
+            "particleColor": "#ffffff"
+          },
+          "audio": {
+            "fftSize": 8192,
+            "smoothingTimeConstant": 0.1,
+            "rmsGain": 1,
+            "repeatMode": "none",
+            "muted": false,
+            "volume": 1
+          },
+          "orbs": [
+            {
+              "id": "ORB0",
+              "chanId": "R",
+              "bandIds": [],
+              "chirality": -1,
+              "startAngleRad": 0,
+              "hueOffsetDeg": 0,
+              "colorSource": "inherit",
+              "centerXFrac": 0,
+              "centerYFrac": 0,
+              "motion": {
+                "angularSpeedRadPerSec": 1.5707963267948966
+              },
+              "response": {
+                "minRadiusFrac": 0.01,
+                "maxRadiusFrac": 0.8,
+                "waveformRadialDisplaceFrac": 0.1
+              },
+              "particles": {
+                "emitPerSecond": 240,
+                "sizeMaxPx": 8,
+                "sizeMinPx": 1,
+                "sizeToMinSec": 3,
+                "ttlSec": 6,
+                "minPlacementDistancePx": 0.5
+              },
+              "trace": {
+                "lines": true,
+                "numLines": 10,
+                "lineAlpha": 0.35,
+                "lineWidthPx": 2,
+                "lineColorMode": "dominantBand"
+              }
+            },
+            {
+              "id": "ORB1",
+              "chanId": "L",
+              "bandIds": [],
+              "chirality": -1,
+              "startAngleRad": 3.141592653589793,
+              "hueOffsetDeg": 0,
+              "colorSource": "inherit",
+              "centerXFrac": 0,
+              "centerYFrac": 0,
+              "motion": {
+                "angularSpeedRadPerSec": 1.5707963267948966
+              },
+              "response": {
+                "minRadiusFrac": 0.01,
+                "maxRadiusFrac": 0.8,
+                "waveformRadialDisplaceFrac": 0.1
+              },
+              "particles": {
+                "emitPerSecond": 240,
+                "sizeMaxPx": 8,
+                "sizeMinPx": 1,
+                "sizeToMinSec": 3,
+                "ttlSec": 6,
+                "minPlacementDistancePx": 0.5
+              },
+              "trace": {
+                "lines": true,
+                "numLines": 10,
+                "lineAlpha": 0.35,
+                "lineWidthPx": 2,
+                "lineColorMode": "dominantBand"
+              }
+            }
+          ],
+          "bands": {
+            "count": 256,
+            "floorHz": 20,
+            "ceilingHz": 22500,
+            "distributionMode": "erb",
+            "overlay": {
+              "enabled": false,
+              "connectAdjacent": true,
+              "alpha": 0.65,
+              "pointSizePx": 3,
+              "minRadiusFrac": 0.01,
+              "maxRadiusFrac": 0.8,
+              "waveformRadialDisplaceFrac": 0.18,
+              "lineAlpha": 0.35,
+              "lineWidthPx": 1,
+              "phaseMode": "free",
+              "ringSpeedRadPerSec": 0
+            },
+            "rainbow": {
+              "hueOffsetDeg": 0,
+              "saturation": 0.9,
+              "value": 1
+            },
+            "particleColorSource": "dominant"
+          },
+          "timing": {
+            "maxDeltaTimeSec": 0.03333333333333333
+          },
+          "particleSafety": {
+            "maxEmissionsPerFrame": 4096,
+            "maxActiveParticles": 65536
+          }
+        }
+      },
+      "zeroReload": true,
+      "externalRequests": 0
+    }
+  ],
+  "errors": []
+}
