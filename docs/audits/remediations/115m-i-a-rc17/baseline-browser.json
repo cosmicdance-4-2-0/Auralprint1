@@ -1,0 +1,413 @@
+{
+  "version": "v0.1.15m.i",
+  "baseline": true,
+  "method": "Actual URL import, boot-generated Orb editor, public Share transport; native Chromium at DPR 1/2.",
+  "rows": [
+    {
+      "dpr": 1,
+      "standalone": false,
+      "defect": {
+        "value": 6.26573201465964,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "0.017453292519943295",
+        "degrees": 358.99999999999983,
+        "display": "720°",
+        "accessibleValue": "720 degrees",
+        "stepMismatch": false,
+        "persisted": 12.566370614359172
+      },
+      "fractional": [
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "1°",
+          "accessibleValue": "1 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "2°",
+          "accessibleValue": "2 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "value": 0.994837673636768,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 57.000000000000014,
+          "display": "57°",
+          "accessibleValue": "57 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "value": 0,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 0,
+          "display": "-90°",
+          "accessibleValue": "-90 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": -1.5707963267948966
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "450°",
+          "accessibleValue": "450 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 7.853981633974483
+        }
+      ]
+    },
+    {
+      "dpr": 1,
+      "standalone": true,
+      "defect": {
+        "value": 6.26573201465964,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "0.017453292519943295",
+        "degrees": 358.99999999999983,
+        "display": "720°",
+        "accessibleValue": "720 degrees",
+        "stepMismatch": false,
+        "persisted": 12.566370614359172
+      },
+      "fractional": [
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "1°",
+          "accessibleValue": "1 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "2°",
+          "accessibleValue": "2 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "value": 0.994837673636768,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 57.000000000000014,
+          "display": "57°",
+          "accessibleValue": "57 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "value": 0,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 0,
+          "display": "-90°",
+          "accessibleValue": "-90 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": -1.5707963267948966
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "450°",
+          "accessibleValue": "450 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 7.853981633974483
+        }
+      ]
+    },
+    {
+      "dpr": 2,
+      "standalone": false,
+      "defect": {
+        "value": 6.26573201465964,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "0.017453292519943295",
+        "degrees": 358.99999999999983,
+        "display": "720°",
+        "accessibleValue": "720 degrees",
+        "stepMismatch": false,
+        "persisted": 12.566370614359172
+      },
+      "fractional": [
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "1°",
+          "accessibleValue": "1 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "2°",
+          "accessibleValue": "2 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "value": 0.994837673636768,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 57.000000000000014,
+          "display": "57°",
+          "accessibleValue": "57 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "value": 0,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 0,
+          "display": "-90°",
+          "accessibleValue": "-90 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": -1.5707963267948966
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "450°",
+          "accessibleValue": "450 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 7.853981633974483
+        }
+      ]
+    },
+    {
+      "dpr": 2,
+      "standalone": true,
+      "defect": {
+        "value": 6.26573201465964,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "0.017453292519943295",
+        "degrees": 358.99999999999983,
+        "display": "720°",
+        "accessibleValue": "720 degrees",
+        "stepMismatch": false,
+        "persisted": 12.566370614359172
+      },
+      "fractional": [
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "1°",
+          "accessibleValue": "1 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "value": 0.0174532925199433,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 1.0000000000000002,
+          "display": "2°",
+          "accessibleValue": "2 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "value": 0.994837673636768,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 57.000000000000014,
+          "display": "57°",
+          "accessibleValue": "57 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "360°",
+          "accessibleValue": "360 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "value": 0,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 0,
+          "display": "-90°",
+          "accessibleValue": "-90 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": -1.5707963267948966
+        },
+        {
+          "value": 6.26573201465964,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "0.017453292519943295",
+          "degrees": 358.99999999999983,
+          "display": "450°",
+          "accessibleValue": "450 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 7.853981633974483
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "browser": "151.0.7922.173"
+}

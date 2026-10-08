@@ -86,6 +86,10 @@ fall back independently and valid integers clamp to CONFIG range metadata.
 Schema 9 historically had both Scene-node and later top-level forms; input
 migration recognizes both, with top-level values taking precedence. Abandoned
 Scene layout/editor semantics have no schema-10 equivalent and are discarded.
+Revision v0.1.15m.i.a is an authorized pre-release RC-17 correction: designed
+`orbs[].startAngleRad` describes a position within `[0, TAU)`, with finite numbers
+wrapped modulo TAU and invalid input using the normalized corresponding fallback.
+Canonical radians retain their precision; no degree-valued field or schema bump.
 
 URL/hash is one transport, not the owner of preset semantics. The pure
 `preset-codec.js` owns payload encoding, supported-schema decoding, migration,
@@ -197,6 +201,11 @@ trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 
 Rules:
 - Only fields returned by `normalizeOrbDef()` are valid
+- `startAngleRad` is canonical designed phase in `[0, TAU)`, distinct from live
+  `angleRad`. Editing preserves live phase/history; Reset Visuals applies design.
+  The native phase range preserves fractional imports (`step=any`); Arrow keys
+  use CONFIG's one-degree increment. Its 360-degree endpoint commits as zero,
+  synchronously refreshing the thumb and shared visible/accessibility readout.
 - Adding a field requires full preset pipeline update (Section 2)
 - `bandIds` accepts only integer numbers in `[0, CONFIG.bandNames.length - 1]`,
   retaining first-occurrence order and uniqueness. Discard unsupported entries,

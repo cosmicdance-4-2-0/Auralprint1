@@ -15,6 +15,16 @@ function readBulkOrbValue(orbs, group, field) {
 }
 function applyBulkOrbValue(orbs, group, field, value) { if (!Array.isArray(orbs) || !orbs.length) return false; for (const orb of orbs) orb[group][field] = value; return true; }
 
+function formatOrbPhaseDegrees(radians) {
+  const degrees = radians * RAD_TO_DEG;
+  const whole = Math.round(degrees);
+  if (whole < 360 && radians === whole / RAD_TO_DEG) return String(whole);
+  // Keep ordinary fractions readable; retain full precision if rounding would
+  // describe a fractional phase as an exact integer (especially 360 degrees).
+  const readable = Number(degrees.toPrecision(12));
+  return String(Number.isInteger(readable) && readable !== degrees ? degrees : readable);
+}
+
 let nextEditorToken = 0;
 function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus, onControlsChanged = () => {}, createBandPicker = createOrbBandPicker } = {}) {
   const controllers = new Map();
@@ -55,6 +65,20 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     const yField = rangeField(motionBody, token, "center-y", "Center Y", CONFIG.limits.orbs.centerYFrac);
     const chirField = selectField(motionBody, token, "direction", "Direction", [["1", "+1 (CCW)"], ["-1", "-1 (CW)"]]);
     const phaseField = rangeField(motionBody, token, "phase-offset", "Phase Offset", CONFIG.limits.orbs.startAngleRad, "Starting orbital phase; applied on Reset Visuals.");
+    // A fixed step snaps imported radians in native HTML range controls.
+    // Keep exact representation; Arrow keys still use CONFIG's degree step.
+    phaseField.control.step = "any";
+    phaseField.control.addEventListener("keydown", (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const direction = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[event.key];
+      if (!direction) return;
+      event.preventDefault();
+      const limits = CONFIG.limits.orbs.startAngleRad;
+      const designedPhase = runtime.settings.orbs.find(orb => orb.id === id)?.startAngleRad;
+      if (!Number.isFinite(designedPhase)) return;
+      commit("startAngleRad", Math.max(limits.min, Math.min(limits.max,
+        designedPhase + direction * limits.step)), `${id} phase offset`);
+    });
     const speedField = rangeField(motionBody, token, "angular-speed", "Angular Speed", CONFIG.limits.motion.angularSpeedRadPerSec);
     body.append(section(motionBody, "Position & Motion"));
 
@@ -95,7 +119,10 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     const findOrb = () => preferences.orbs.find((orb) => orb.id === id);
     const commit = (field, value, reason) => { const orb = findOrb(); if (!orb) return; orb[field] = value; commitOrbChangeById(id, reason); };
     const commitNested = (group, field, value, reason) => { const orb = findOrb(); if (!orb) return; orb[group][field] = value; commitOrbChangeById(id, reason); };
-    for (const [control, event, field, read, reason] of [[chanField.control,"change","chanId",c=>c.value,"channel"],[chirField.control,"change","chirality",c=>Number(c.value),"direction"],[phaseField.control,"input","startAngleRad",c=>Number(c.value),"phase offset"],[hueField.control,"input","hueOffsetDeg",c=>Number(c.value),"hue offset"],[colorField.control,"change","colorSource",c=>c.value,"color source"],[xField.control,"input","centerXFrac",c=>Number(c.value),"center X"],[yField.control,"input","centerYFrac",c=>Number(c.value),"center Y"]]) control.addEventListener(event, () => commit(field, read(control), `${id} ${reason}`));
+    // Chromium's range number serialization can round the native maximum just
+    // above TAU. Submit the exact CONFIG endpoint so canonical wrapping yields 0.
+    const readPhase = c => Number(c.value) >= Number(c.max) ? Number(c.max) : Number(c.value);
+    for (const [control, event, field, read, reason] of [[chanField.control,"change","chanId",c=>c.value,"channel"],[chirField.control,"change","chirality",c=>Number(c.value),"direction"],[phaseField.control,"input","startAngleRad",readPhase,"phase offset"],[hueField.control,"input","hueOffsetDeg",c=>Number(c.value),"hue offset"],[colorField.control,"change","colorSource",c=>c.value,"color source"],[xField.control,"input","centerXFrac",c=>Number(c.value),"center X"],[yField.control,"input","centerYFrac",c=>Number(c.value),"center Y"]]) control.addEventListener(event, () => commit(field, read(control), `${id} ${reason}`));
     for (const [field, group, key, reason] of [[speedField,"motion","angularSpeedRadPerSec","angular speed"],[minRadiusField,"response","minRadiusFrac","min radius"],[maxRadiusField,"response","maxRadiusFrac","max radius"],[waveformField,"response","waveformRadialDisplaceFrac","waveform displacement"],[emitField,"particles","emitPerSecond","emit rate"],[sizeMinField,"particles","sizeMinPx","minimum size"],[sizeMaxField,"particles","sizeMaxPx","maximum size"],[decayField,"particles","sizeToMinSec","size decay"],[ttlField,"particles","ttlSec","lifetime"],[spacingField,"particles","minPlacementDistancePx","minimum placement distance"],[numLinesField,"trace","numLines","line count"],[alphaField,"trace","lineAlpha","line alpha"],[widthField,"trace","lineWidthPx","line width"]]) field.control.addEventListener("input", () => commitNested(group, key, Number(field.control.value), `${id} ${reason}`));
     linesField.control.addEventListener("change", () => commitNested("trace", "lines", !!linesField.control.checked, `${id} lines`));
     lineColorField.control.addEventListener("change", () => commitNested("trace", "lineColorMode", lineColorField.control.value, `${id} line color mode`));
@@ -112,7 +139,7 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     };
     c.title.textContent = `Orb ${position + 1}`; c.identity.textContent = orb.id; c.summary.setAttribute("aria-label", `Edit Orb ${position + 1}, ${orb.id}`);
     setSelect(c.chan,c.chanValue,orb.chanId); setSelect(c.chir,c.chirValue,orb.chirality);
-    const phaseDegrees = fmt(orb.startAngleRad * RAD_TO_DEG, 0);
+    const phaseDegrees = formatOrbPhaseDegrees(orb.startAngleRad);
     set(c.phase,c.phaseValue,orb.startAngleRad,`${phaseDegrees}°`); c.phase.setAttribute("aria-valuetext", `${phaseDegrees} degrees`); set(c.hue,c.hueValue,orb.hueOffsetDeg,`${orb.hueOffsetDeg}°`); setSelect(c.color,c.colorValue,orb.colorSource);
     set(c.x,c.xValue,orb.centerXFrac,fmt(orb.centerXFrac,2)); set(c.y,c.yValue,orb.centerYFrac,fmt(orb.centerYFrac,2)); set(c.speed,c.speedValue,orb.motion.angularSpeedRadPerSec,`${fmt(orb.motion.angularSpeedRadPerSec,3)} rad/s (${fmt(orb.motion.angularSpeedRadPerSec*RAD_TO_DEG,1)}°/s)`);
     set(c.minRadius,c.minRadiusValue,orb.response.minRadiusFrac,fmt(orb.response.minRadiusFrac,3)); set(c.maxRadius,c.maxRadiusValue,orb.response.maxRadiusFrac,fmt(orb.response.maxRadiusFrac,3)); set(c.waveform,c.waveformValue,orb.response.waveformRadialDisplaceFrac,fmt(orb.response.waveformRadialDisplaceFrac,3));

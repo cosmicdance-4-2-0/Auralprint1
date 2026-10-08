@@ -1,0 +1,17 @@
+{
+  "artifact": "dist/auralprint_0.1.15m.i.a.html",
+  "version": "v0.1.15m.i.a",
+  "schema": 10,
+  "bytes": 399279,
+  "sha256": "f89c9cee50929cd37938b0c96964d44a3eafad2881ad36f09081da14e7a189c5",
+  "verified": [
+    "canonical modulo helper bundled",
+    "canonical fast path and negative-zero handling",
+    "phase step any",
+    "exact native endpoint adapter",
+    "shared guarded degree formatting",
+    "canonical designed-phase keyboard input",
+    "version marker replaced",
+    "schema 10"
+  ]
+}

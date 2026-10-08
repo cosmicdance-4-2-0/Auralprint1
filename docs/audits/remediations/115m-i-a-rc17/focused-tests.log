@@ -1,0 +1,41 @@
+✔ RC-17 normalization: zero (2.683055ms)
+✔ RC-17 normalization: negative zero (0.229927ms)
+✔ RC-17 normalization: quarter (0.200315ms)
+✔ RC-17 normalization: half (0.115598ms)
+✔ RC-17 normalization: three quarters (0.239821ms)
+✔ RC-17 normalization: TAU (0.137158ms)
+✔ RC-17 normalization: 2TAU (0.245118ms)
+✔ RC-17 normalization: -TAU (0.196661ms)
+✔ RC-17 normalization: -2TAU (0.173013ms)
+✔ RC-17 normalization: 450 degrees (0.177577ms)
+✔ RC-17 normalization: negative quarter (0.091241ms)
+✔ RC-17 normalization: many turns positive (0.071675ms)
+✔ RC-17 normalization: many turns negative (0.058344ms)
+✔ RC-17 normalization: canonical inputs retain exact bits, without degree quantization or boundary snapping (3.554101ms)
+✔ RC-17 normalization: invalid types/nonfinite numbers use only a finite normalized fallback (0.673113ms)
+✔ RC-17 presets: schema 2 applies the same phase boundary (4.946218ms)
+✔ RC-17 presets: schema 3 applies the same phase boundary (0.93883ms)
+✔ RC-17 presets: schema 4 applies the same phase boundary (0.672456ms)
+✔ RC-17 presets: schema 5 applies the same phase boundary (1.026404ms)
+✔ RC-17 presets: schema 6 applies the same phase boundary (0.432278ms)
+✔ RC-17 presets: schema 7 applies the same phase boundary (0.311869ms)
+✔ RC-17 presets: schema 8 applies the same phase boundary (0.737988ms)
+✔ RC-17 presets: schema 9 applies the same phase boundary (1.283371ms)
+✔ RC-17 presets: schema 10 applies the same phase boundary (0.90893ms)
+✔ RC-17 presets: historical fixtures and both schema-9 formats retain unrelated canonical settings (4.901328ms)
+✔ RC-17 collection: defaults, creation and independent duplication use canonical designed phase (0.586242ms)
+✔ RC-17 URL/replacement: import/export preserve precise phase, canonical shape and independent runtime history (5.956349ms)
+✔ RC-17 geometry: equivalent phases produce actual matching coordinates, waveform sampling and phase color (1102.433499ms)
+✔ RC-17 lifecycle: moving edit and orb Ring preserve history until explicit visual reset (36.521051ms)
+✔ RC-17 lifecycle: moving edit and free Ring preserve history until explicit visual reset (1.450642ms)
+✔ RC-17 UI: generated controls reflect imported canonical design, fractional values and shared display/ARIA (21.832544ms)
+✔ RC-17 UI: native endpoint input resynchronizes in the same commit, stable IDs/focus/listeners survive reorder and replacement (13.089081ms)
+✔ RC-17 UI: Arrow keys move one degree while preserving imported fractions and synchronizing endpoint zero (5.303098ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1322.177725
