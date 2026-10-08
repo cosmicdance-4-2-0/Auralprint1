@@ -1,0 +1,8 @@
+{
+  "initialBothPackagesValid": true,
+  "jsChangeRegeneratesBoth": true,
+  "cssChangeRegeneratesBoth": true,
+  "sharedBundlesVerified": true,
+  "sourceCheckoutUntouched": true,
+  "log": "\n> watch\n> node scripts/watch.mjs\n\n[watch] watching src/js and src/css for changes...\n[watch] build finished, watching for changes...\n[watch] build finished, watching for changes...\n[watch] assembled /tmp/rc20-watch-xood9M/dist/auralprint_0.1.15m.i.d.html and /tmp/rc20-watch-xood9M/dist/hosted\n[watch] build started (change: \"src/js/main.js\")\n[watch] build finished\n[watch] assembled /tmp/rc20-watch-xood9M/dist/auralprint_0.1.15m.i.d.html and /tmp/rc20-watch-xood9M/dist/hosted\n[watch] build started (change: \"src/css/base.css\")\n[watch] build finished\n[watch] assembled /tmp/rc20-watch-xood9M/dist/auralprint_0.1.15m.i.d.html and /tmp/rc20-watch-xood9M/dist/hosted\n"
+}

@@ -1,0 +1,14 @@
+{
+  "acceptedMain": "f5bbf2a25ffbf8b122e81bd9f54e3639a53a6243",
+  "assetIntake": "f5bbf2a25ffbf8b122e81bd9f54e3639a53a6243",
+  "pr42Merge": "d2d55d21406834bd9551385a04ae7cc6c4f52e11",
+  "baselineArtifact": {
+    "bytes": 400363,
+    "sha256": "15d661654b2161e506ffcbb15cb72739b68b910a1f102499c037719327f070dd"
+  },
+  "canonicalAssetsUnchanged": true,
+  "historicalAuditUnchanged": true,
+  "repeatedBuildArtifactsIdentical": true,
+  "excludedDiagnostic": "dist/esbuild-metafile.json includes generatedAt timestamp",
+  "artifactCount": 9
+}

@@ -33,7 +33,7 @@ function queueAssemble() {
       await prepareWatchBuild();
       await writeCombinedMetafile(jsMetafile, cssMetafile);
       await assembleSingleFile();
-      console.log(`[watch] assembled ${paths.distHtml}`);
+      console.log(`[watch] assembled ${paths.distHtml} and ${paths.hostedDir}`);
     })
     .catch((error) => {
       console.error(error);

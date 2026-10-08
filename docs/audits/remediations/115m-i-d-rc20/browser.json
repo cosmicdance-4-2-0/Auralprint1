@@ -1,0 +1,865 @@
+{
+  "version": "v0.1.15m.i.d",
+  "modes": [
+    {
+      "mode": "portable-http",
+      "url": "http://127.0.0.1:36441/portable.html",
+      "requests": [
+        {
+          "url": "http://127.0.0.1:36441/portable.html",
+          "type": "document"
+        },
+        {
+          "url": "blob:http://127.0.0.1:36441/b4337082-dd32-4981-be93-5c5f8168aefa",
+          "type": "media"
+        }
+      ],
+      "responses": [
+        {
+          "url": "http://127.0.0.1:36441/portable.html",
+          "status": 200,
+          "mime": "text/html"
+        },
+        {
+          "url": "blob:http://127.0.0.1:36441/b4337082-dd32-4981-be93-5c5f8168aefa",
+          "status": 206,
+          "mime": "audio/wav"
+        }
+      ],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": [],
+      "launch": "success",
+      "entryStatus": 200,
+      "title": "Auralprint - Waveform Analysis Tool - v0.1.15m.i.d",
+      "embeddedFavicon": {
+        "width": 150,
+        "height": 150,
+        "mime": "image/svg+xml",
+        "decoded": true
+      },
+      "application": {
+        "stereoWavLoaded": true,
+        "playbackAndScrubber": "0:01 / 0:12",
+        "visualizers": {
+          "width": 1280,
+          "height": 900,
+          "colored": 11144
+        },
+        "pauseResumeStop": true,
+        "spaceShortcutActivated": true
+      }
+    },
+    {
+      "mode": "hosted-root",
+      "url": "http://127.0.0.1:36441/index.html",
+      "requests": [
+        {
+          "url": "http://127.0.0.1:36441/index.html",
+          "type": "document"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon.svg",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon-96x96.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon-96x96.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon.svg",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon.svg",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/site.webmanifest",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-192x192.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-192x192.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-512x512.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-512x512.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/site.webmanifest",
+          "type": "manifest"
+        },
+        {
+          "url": "blob:http://127.0.0.1:36441/726e6df0-e635-466d-821f-8adf67b7f4c9",
+          "type": "media"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "type": "other"
+        }
+      ],
+      "responses": [
+        {
+          "url": "http://127.0.0.1:36441/index.html",
+          "status": 200,
+          "mime": "text/html"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon.svg",
+          "status": 200,
+          "mime": "image/svg+xml"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon-96x96.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon-96x96.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon.svg",
+          "status": 200,
+          "mime": "image/svg+xml"
+        },
+        {
+          "url": "http://127.0.0.1:36441/favicon.svg",
+          "status": 200,
+          "mime": "image/svg+xml"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/site.webmanifest",
+          "status": 200,
+          "mime": "application/manifest+json"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-192x192.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-192x192.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-512x512.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/web-app-manifest-512x512.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/site.webmanifest",
+          "status": 200,
+          "mime": "application/manifest+json"
+        },
+        {
+          "url": "blob:http://127.0.0.1:36441/726e6df0-e635-466d-821f-8adf67b7f4c9",
+          "status": 206,
+          "mime": "audio/wav"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "status": 200,
+          "mime": "image/png"
+        }
+      ],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": [],
+      "launch": "success",
+      "entryStatus": 200,
+      "title": "Auralprint - Waveform Analysis Tool - v0.1.15m.i.d",
+      "linkProbes": [
+        {
+          "rel": "shortcut icon",
+          "href": "./favicon.ico",
+          "resolved": "http://127.0.0.1:36441/favicon.ico",
+          "type": "image/x-icon",
+          "status": 200,
+          "mime": "image/x-icon",
+          "dimensions": [
+            48,
+            48
+          ]
+        },
+        {
+          "rel": "icon",
+          "href": "./favicon-96x96.png",
+          "resolved": "http://127.0.0.1:36441/favicon-96x96.png",
+          "type": "image/png",
+          "status": 200,
+          "mime": "image/png",
+          "dimensions": [
+            96,
+            96
+          ]
+        },
+        {
+          "rel": "icon",
+          "href": "./favicon.svg",
+          "resolved": "http://127.0.0.1:36441/favicon.svg",
+          "type": "image/svg+xml",
+          "status": 200,
+          "mime": "image/svg+xml",
+          "dimensions": [
+            150,
+            150
+          ]
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "./apple-touch-icon.png",
+          "resolved": "http://127.0.0.1:36441/apple-touch-icon.png",
+          "type": "",
+          "status": 200,
+          "mime": "image/png",
+          "dimensions": [
+            180,
+            180
+          ]
+        },
+        {
+          "rel": "manifest",
+          "href": "./site.webmanifest",
+          "resolved": "http://127.0.0.1:36441/site.webmanifest",
+          "type": "",
+          "status": 200,
+          "mime": "application/manifest+json",
+          "manifest": {
+            "name": "Auralprint - Waveform Analysis Tool",
+            "short_name": "Auralprint",
+            "icons": [
+              {
+                "src": "./web-app-manifest-192x192.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "maskable"
+              },
+              {
+                "src": "./web-app-manifest-512x512.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "maskable"
+              }
+            ],
+            "start_url": "./index.html",
+            "theme_color": "#ffffff",
+            "background_color": "#ffffff",
+            "display": "standalone",
+            "scope": "./"
+          }
+        }
+      ],
+      "manifestResolution": {
+        "url": "http://127.0.0.1:36441/site.webmanifest",
+        "startUrl": "http://127.0.0.1:36441/index.html",
+        "scope": "http://127.0.0.1:36441/",
+        "icons": [
+          {
+            "url": "http://127.0.0.1:36441/web-app-manifest-192x192.png",
+            "status": 200,
+            "mime": "image/png",
+            "dimensions": [
+              192,
+              192
+            ]
+          },
+          {
+            "url": "http://127.0.0.1:36441/web-app-manifest-512x512.png",
+            "status": 200,
+            "mime": "image/png",
+            "dimensions": [
+              512,
+              512
+            ]
+          }
+        ]
+      },
+      "chromiumManifest": {
+        "url": "http://127.0.0.1:36441/site.webmanifest",
+        "errors": [],
+        "data": "{\n  \"name\": \"Auralprint - Waveform Analysis Tool\",\n  \"short_name\": \"Auralprint\",\n  \"icons\": [\n    {\n      \"src\": \"./web-app-manifest-192x192.png\",\n      \"sizes\": \"192x192\",\n      \"type\": \"image/png\",\n      \"purpose\": \"maskable\"\n    },\n    {\n      \"src\": \"./web-app-manifest-512x512.png\",\n      \"sizes\": \"512x512\",\n      \"type\": \"image/png\",\n      \"purpose\": \"maskable\"\n    }\n  ],\n  \"start_url\": \"./index.html\",\n  \"theme_color\": \"#ffffff\",\n  \"background_color\": \"#ffffff\",\n  \"display\": \"standalone\",\n  \"scope\": \"./\"\n}\n",
+        "parsed": {
+          "scope": "http://127.0.0.1:36441/"
+        },
+        "manifest": {
+          "backgroundColor": "rgba(255,255,255,1)",
+          "display": "kStandalone",
+          "icons": [
+            {
+              "url": "http://127.0.0.1:36441/web-app-manifest-192x192.png",
+              "sizes": "192x192",
+              "type": "image/png"
+            },
+            {
+              "url": "http://127.0.0.1:36441/web-app-manifest-512x512.png",
+              "sizes": "512x512",
+              "type": "image/png"
+            }
+          ],
+          "id": "http://127.0.0.1:36441/index.html",
+          "name": "Auralprint - Waveform Analysis Tool",
+          "orientation": "DEFAULT",
+          "preferRelatedApplications": false,
+          "scope": "http://127.0.0.1:36441/",
+          "startUrl": "http://127.0.0.1:36441/index.html",
+          "themeColor": "rgba(255,255,255,1)"
+        }
+      },
+      "application": {
+        "stereoWavLoaded": true,
+        "playbackAndScrubber": "0:01 / 0:12",
+        "visualizers": {
+          "width": 1280,
+          "height": 900,
+          "colored": 11072
+        },
+        "pauseResumeStop": true,
+        "spaceShortcutActivated": true
+      }
+    },
+    {
+      "mode": "hosted-subdirectory",
+      "url": "http://127.0.0.1:36441/apps/auralprint/index.html",
+      "requests": [
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/index.html",
+          "type": "document"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon-96x96.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon-96x96.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-192x192.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-192x192.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-512x512.png",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-512x512.png",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+          "type": "manifest"
+        },
+        {
+          "url": "blob:http://127.0.0.1:36441/6b928c47-5d68-40d7-9fe4-342a69f023e2",
+          "type": "media"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "type": "other"
+        }
+      ],
+      "responses": [
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/index.html",
+          "status": 200,
+          "mime": "text/html"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "status": 200,
+          "mime": "image/svg+xml"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon-96x96.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon-96x96.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "status": 200,
+          "mime": "image/svg+xml"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "status": 200,
+          "mime": "image/svg+xml"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+          "status": 200,
+          "mime": "application/manifest+json"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-192x192.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-192x192.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-512x512.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-512x512.png",
+          "status": 200,
+          "mime": "image/png"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+          "status": 200,
+          "mime": "application/manifest+json"
+        },
+        {
+          "url": "blob:http://127.0.0.1:36441/6b928c47-5d68-40d7-9fe4-342a69f023e2",
+          "status": 206,
+          "mime": "audio/wav"
+        },
+        {
+          "url": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "status": 200,
+          "mime": "image/png"
+        }
+      ],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": [],
+      "launch": "success",
+      "entryStatus": 200,
+      "title": "Auralprint - Waveform Analysis Tool - v0.1.15m.i.d",
+      "linkProbes": [
+        {
+          "rel": "shortcut icon",
+          "href": "./favicon.ico",
+          "resolved": "http://127.0.0.1:36441/apps/auralprint/favicon.ico",
+          "type": "image/x-icon",
+          "status": 200,
+          "mime": "image/x-icon",
+          "dimensions": [
+            48,
+            48
+          ]
+        },
+        {
+          "rel": "icon",
+          "href": "./favicon-96x96.png",
+          "resolved": "http://127.0.0.1:36441/apps/auralprint/favicon-96x96.png",
+          "type": "image/png",
+          "status": 200,
+          "mime": "image/png",
+          "dimensions": [
+            96,
+            96
+          ]
+        },
+        {
+          "rel": "icon",
+          "href": "./favicon.svg",
+          "resolved": "http://127.0.0.1:36441/apps/auralprint/favicon.svg",
+          "type": "image/svg+xml",
+          "status": 200,
+          "mime": "image/svg+xml",
+          "dimensions": [
+            150,
+            150
+          ]
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "./apple-touch-icon.png",
+          "resolved": "http://127.0.0.1:36441/apps/auralprint/apple-touch-icon.png",
+          "type": "",
+          "status": 200,
+          "mime": "image/png",
+          "dimensions": [
+            180,
+            180
+          ]
+        },
+        {
+          "rel": "manifest",
+          "href": "./site.webmanifest",
+          "resolved": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+          "type": "",
+          "status": 200,
+          "mime": "application/manifest+json",
+          "manifest": {
+            "name": "Auralprint - Waveform Analysis Tool",
+            "short_name": "Auralprint",
+            "icons": [
+              {
+                "src": "./web-app-manifest-192x192.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "maskable"
+              },
+              {
+                "src": "./web-app-manifest-512x512.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "maskable"
+              }
+            ],
+            "start_url": "./index.html",
+            "theme_color": "#ffffff",
+            "background_color": "#ffffff",
+            "display": "standalone",
+            "scope": "./"
+          }
+        }
+      ],
+      "manifestResolution": {
+        "url": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+        "startUrl": "http://127.0.0.1:36441/apps/auralprint/index.html",
+        "scope": "http://127.0.0.1:36441/apps/auralprint/",
+        "icons": [
+          {
+            "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-192x192.png",
+            "status": 200,
+            "mime": "image/png",
+            "dimensions": [
+              192,
+              192
+            ]
+          },
+          {
+            "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-512x512.png",
+            "status": 200,
+            "mime": "image/png",
+            "dimensions": [
+              512,
+              512
+            ]
+          }
+        ]
+      },
+      "chromiumManifest": {
+        "url": "http://127.0.0.1:36441/apps/auralprint/site.webmanifest",
+        "errors": [],
+        "data": "{\n  \"name\": \"Auralprint - Waveform Analysis Tool\",\n  \"short_name\": \"Auralprint\",\n  \"icons\": [\n    {\n      \"src\": \"./web-app-manifest-192x192.png\",\n      \"sizes\": \"192x192\",\n      \"type\": \"image/png\",\n      \"purpose\": \"maskable\"\n    },\n    {\n      \"src\": \"./web-app-manifest-512x512.png\",\n      \"sizes\": \"512x512\",\n      \"type\": \"image/png\",\n      \"purpose\": \"maskable\"\n    }\n  ],\n  \"start_url\": \"./index.html\",\n  \"theme_color\": \"#ffffff\",\n  \"background_color\": \"#ffffff\",\n  \"display\": \"standalone\",\n  \"scope\": \"./\"\n}\n",
+        "parsed": {
+          "scope": "http://127.0.0.1:36441/apps/auralprint/"
+        },
+        "manifest": {
+          "backgroundColor": "rgba(255,255,255,1)",
+          "display": "kStandalone",
+          "icons": [
+            {
+              "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-192x192.png",
+              "sizes": "192x192",
+              "type": "image/png"
+            },
+            {
+              "url": "http://127.0.0.1:36441/apps/auralprint/web-app-manifest-512x512.png",
+              "sizes": "512x512",
+              "type": "image/png"
+            }
+          ],
+          "id": "http://127.0.0.1:36441/apps/auralprint/index.html",
+          "name": "Auralprint - Waveform Analysis Tool",
+          "orientation": "DEFAULT",
+          "preferRelatedApplications": false,
+          "scope": "http://127.0.0.1:36441/apps/auralprint/",
+          "startUrl": "http://127.0.0.1:36441/apps/auralprint/index.html",
+          "themeColor": "rgba(255,255,255,1)"
+        }
+      },
+      "application": {
+        "stereoWavLoaded": true,
+        "playbackAndScrubber": "0:01 / 0:12",
+        "visualizers": {
+          "width": 1280,
+          "height": 900,
+          "colored": 11151
+        },
+        "pauseResumeStop": true,
+        "spaceShortcutActivated": true
+      }
+    },
+    {
+      "mode": "portable-file",
+      "url": "file:///workspace/Auralprint1/dist/auralprint_0.1.15m.i.d.html",
+      "requests": [],
+      "responses": [],
+      "console": [],
+      "pageErrors": [],
+      "failedRequests": [],
+      "launch": "environment blocked local-file navigation (ERR_BLOCKED_BY_ADMINISTRATOR)"
+    }
+  ],
+  "scope": "Unmodified final artifacts; local HTTP root/subdirectory and actual file launch. No installability or hosted offline-cache claim.",
+  "browser": "151.0.7922.173",
+  "serverRequests": [
+    {
+      "url": "/portable.html",
+      "status": 200,
+      "mime": "text/html"
+    },
+    {
+      "url": "/index.html",
+      "status": 200,
+      "mime": "text/html"
+    },
+    {
+      "url": "/favicon.svg",
+      "status": 200,
+      "mime": "image/svg+xml"
+    },
+    {
+      "url": "/favicon.ico",
+      "status": 200,
+      "mime": "image/x-icon"
+    },
+    {
+      "url": "/favicon.ico",
+      "status": 200,
+      "mime": "image/x-icon"
+    },
+    {
+      "url": "/favicon.ico",
+      "status": 200,
+      "mime": "image/x-icon"
+    },
+    {
+      "url": "/favicon-96x96.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/favicon-96x96.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/favicon.svg",
+      "status": 200,
+      "mime": "image/svg+xml"
+    },
+    {
+      "url": "/favicon.svg",
+      "status": 200,
+      "mime": "image/svg+xml"
+    },
+    {
+      "url": "/apple-touch-icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apple-touch-icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/site.webmanifest",
+      "status": 200,
+      "mime": "application/manifest+json"
+    },
+    {
+      "url": "/web-app-manifest-192x192.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/web-app-manifest-192x192.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/web-app-manifest-512x512.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/web-app-manifest-512x512.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/site.webmanifest",
+      "status": 200,
+      "mime": "application/manifest+json"
+    },
+    {
+      "url": "/apple-touch-icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/index.html",
+      "status": 200,
+      "mime": "text/html"
+    },
+    {
+      "url": "/apps/auralprint/favicon.svg",
+      "status": 200,
+      "mime": "image/svg+xml"
+    },
+    {
+      "url": "/apps/auralprint/favicon.ico",
+      "status": 200,
+      "mime": "image/x-icon"
+    },
+    {
+      "url": "/apps/auralprint/favicon.ico",
+      "status": 200,
+      "mime": "image/x-icon"
+    },
+    {
+      "url": "/apps/auralprint/favicon.ico",
+      "status": 200,
+      "mime": "image/x-icon"
+    },
+    {
+      "url": "/apps/auralprint/favicon-96x96.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/favicon-96x96.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/favicon.svg",
+      "status": 200,
+      "mime": "image/svg+xml"
+    },
+    {
+      "url": "/apps/auralprint/favicon.svg",
+      "status": 200,
+      "mime": "image/svg+xml"
+    },
+    {
+      "url": "/apps/auralprint/apple-touch-icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/apple-touch-icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/site.webmanifest",
+      "status": 200,
+      "mime": "application/manifest+json"
+    },
+    {
+      "url": "/apps/auralprint/web-app-manifest-192x192.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/web-app-manifest-192x192.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/web-app-manifest-512x512.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/web-app-manifest-512x512.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "url": "/apps/auralprint/site.webmanifest",
+      "status": 200,
+      "mime": "application/manifest+json"
+    },
+    {
+      "url": "/apps/auralprint/apple-touch-icon.png",
+      "status": 200,
+      "mime": "image/png"
+    }
+  ]
+}

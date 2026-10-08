@@ -30,8 +30,10 @@ jobs:
         run: npm ci
       - name: Test
         run: npm test
-      - name: Build single-file application
+      - name: Build portable and hosted distributions
         run: npm run build
+      - name: Verify portable and hosted packaging contracts
+        run: python scripts/verify_distribution.py
       - name: Verify versioned artifact and untracked generated output
         shell: node {0}
         run: |

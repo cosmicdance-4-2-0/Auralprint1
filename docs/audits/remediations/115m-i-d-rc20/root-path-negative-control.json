@@ -1,0 +1,61 @@
+{
+  "browser": "151.0.7922.173",
+  "mutation": "Generated HTML href=\"./ changed to href=\"/ in memory only",
+  "assertion": "Metadata works at root but all five references return 404 when the same package is mounted only in a subdirectory",
+  "results": [
+    {
+      "prefix": "/",
+      "appBoot": true,
+      "resources": [
+        {
+          "url": "http://127.0.0.1:45841/favicon.ico",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:45841/favicon-96x96.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:45841/favicon.svg",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:45841/apple-touch-icon.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:45841/site.webmanifest",
+          "status": 200
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "prefix": "/apps/auralprint/",
+      "appBoot": true,
+      "resources": [
+        {
+          "url": "http://127.0.0.1:45841/favicon.ico",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:45841/favicon-96x96.png",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:45841/favicon.svg",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:45841/apple-touch-icon.png",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:45841/site.webmanifest",
+          "status": 404
+        }
+      ],
+      "pageErrors": []
+    }
+  ]
+}
