@@ -1,0 +1,8 @@
+{
+  "version": "v0.1.15m.i.b",
+  "schema": 10,
+  "artifact": "dist/auralprint_0.1.15m.i.b.html",
+  "bytes": 400289,
+  "sha256": "d73e568759d0caba5352b68c77d81d04c89485357c64ec8f428a9bf51ff1fdbe",
+  "nativeShutdownIncluded": true
+}

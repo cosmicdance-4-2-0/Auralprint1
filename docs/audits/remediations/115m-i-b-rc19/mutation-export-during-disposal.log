@@ -1,0 +1,222 @@
+not ok 2 - RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+  ---
+  duration_ms: 5.229834
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'recording'
+    - 'inactive'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'inactive'
+  actual: 'recording'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:184:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 3 - RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+  ---
+  duration_ms: 2.923833
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'recording'
+    - 'inactive'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'inactive'
+  actual: 'recording'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:184:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 4 - RC-19: normal Stop then disposal fences queued completion without double native stop
+  ---
+  duration_ms: 2.679602
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:198:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+    + [
+    +   'blob:nodedata:743bea36-9a8c-43a4-ad5e-c11092b17dde'
+    + ]
+    - []
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'blob:nodedata:743bea36-9a8c-43a4-ad5e-c11092b17dde'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:204:49)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 6 - RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+  ---
+  duration_ms: 27.530541
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:212:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    2 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:224:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 7 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 2.54576
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:233:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 8 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 2.098503
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:233:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 9 - RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.53542
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:250:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 10 - RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 3.016671
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:250:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 11 - RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.191019
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:250:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 12 - RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+  ---
+  duration_ms: 2.658582
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:258:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:260:43)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# tests 17
+# pass 7
+# fail 10

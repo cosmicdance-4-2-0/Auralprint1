@@ -1,0 +1,62 @@
+[
+  {
+    "mutation": "original-disposal",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "omitted-native-stop",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "accepted-stale-events",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "double-stop-finalizing",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "stop-shared-upstream",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "export-during-disposal",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "reinitialize-token-reuse",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "stop-failure-reported-success",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "stale-timer-accepted",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  },
+  {
+    "mutation": "owner-failure-stops-upstream",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "killed": true
+  }
+]

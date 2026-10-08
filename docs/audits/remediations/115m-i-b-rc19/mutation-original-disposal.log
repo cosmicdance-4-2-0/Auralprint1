@@ -1,0 +1,276 @@
+not ok 1 - RC-19: uninitialized and idle disposal are safe and acquire no resources
+  ---
+  duration_ms: 7.873904
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:169:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'uninitialized'
+    - 'disabled'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'disabled'
+  actual: 'uninitialized'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:174:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+not ok 2 - RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+  ---
+  duration_ms: 3.505844
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'recording'
+    - 'inactive'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'inactive'
+  actual: 'recording'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:184:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 3 - RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+  ---
+  duration_ms: 2.752921
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'recording'
+    - 'inactive'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'inactive'
+  actual: 'recording'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:184:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 6 - RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+  ---
+  duration_ms: 3.086284
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:212:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+
+      {
+        availableMimeTypes: [
+          'video/webm;codecs=vp9,opus',
+          'video/webm;codecs=vp8,opus',
+          'video/webm',
+    ...
+        chunkCount: 1,
+    +   elapsedMs: 1000,
+    -   elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: true,
+        lastAction: 'start',
+        lastCode: 'recorder-input-audio-video',
+    ...
+        lastMessage: 'Recording audio + video.',
+    +   lastUpdatedAtMs: 2000,
+    -   lastUpdatedAtMs: 1000,
+        phase: 'recording',
+        resolvedMimeType: 'video/webm;codecs=vp9,opus',
+        selectedMimeType: 'video/webm;codecs=vp9,opus',
+        startedAtMs: 1000,
+        stoppedAtMs: null,
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'recording'
+    supportProbeStatus: 'supported'
+    isSupported: true
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+      0: 'video/webm;codecs=vp9,opus'
+      1: 'video/webm;codecs=vp8,opus'
+      2: 'video/webm'
+      3: 'video/mp4;codecs=avc1.42E01E,mp4a.40.2'
+      4: 'video/mp4'
+    selectedMimeType: 'video/webm;codecs=vp9,opus'
+    resolvedMimeType: 'video/webm;codecs=vp9,opus'
+    startedAtMs: 1000
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 1
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'start'
+    lastCode: 'recorder-input-audio-video'
+    lastMessage: 'Recording audio + video.'
+    lastUpdatedAtMs: 1000
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 72.650492
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:217:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 7 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 2.348563
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:233:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 8 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 1.934802
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:233:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 9 - RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 3.007878
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: 'cannot detach ondataavailable'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+    releaseMediaRecorderInstance (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:514:45)
+    releaseActiveSession (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:524:5)
+    Object.dispose (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:1352:5)
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 10 - RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 1.953108
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: 'cannot detach onstop'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+    releaseMediaRecorderInstance (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:515:36)
+    releaseActiveSession (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:524:5)
+    Object.dispose (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:1352:5)
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 11 - RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 1.761815
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: 'cannot detach onerror'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+    releaseMediaRecorderInstance (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:516:37)
+    releaseActiveSession (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:524:5)
+    Object.dispose (file:///tmp/rc19-5LyDx7/recorder-engine.mjs:1352:5)
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 12 - RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+  ---
+  duration_ms: 1.856215
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:258:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:260:43)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# tests 17
+# pass 7
+# fail 10

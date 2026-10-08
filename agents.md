@@ -162,6 +162,23 @@ Violation results in:
 
 ---
 
+### 3.4 Recorder Shutdown Ownership (RC-19)
+
+- RecorderEngine owns native MediaRecorder shutdown. Public `dispose()` is a
+  terminal abort: invalidate the session before native `stop()`, discard chunks,
+  fence queued callbacks/timers, and clear retained exports. Ordinary `stop()`
+  remains the export finalization path.
+- RecorderEngine stops only its render capture tracks. Merged streams are glue
+  containing shared track references, never track owners. AudioEngine owns
+  recorder tap release through `releaseStream()`; live source tracks remain owned
+  by InputSourceManager. An audio-owner cleanup failure never authorizes stopping
+  upstream tracks.
+- Disposal remains disabled if native shutdown or handler cleanup fails, with a
+  truthful failed status that persists until explicit reinitialization. Do not
+  infer native inactivity from dropping the application reference.
+
+---
+
 ## 4. Analysis Engine Constraints
 
 ### 4.0 Analysis and Consumer Ownership

@@ -1,0 +1,327 @@
+{
+  "result": {
+    "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+    "support": {
+      "phase": "idle",
+      "availableMimeTypes": [
+        "video/webm;codecs=vp9,opus",
+        "video/webm;codecs=vp8,opus",
+        "video/webm",
+        "video/mp4"
+      ]
+    },
+    "cycles": [
+      {
+        "mimeType": "video/webm;codecs=vp9,opus",
+        "start": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "stop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "complete": {
+          "hooksEnabled": true,
+          "phase": "complete",
+          "supportProbeStatus": "supported",
+          "isSupported": true,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm",
+            "video/mp4"
+          ],
+          "selectedMimeType": "video/webm;codecs=vp9,opus",
+          "resolvedMimeType": "video/webm;codecs=vp9,opus",
+          "startedAtMs": 322.5,
+          "stoppedAtMs": 1423.699999999997,
+          "elapsedMs": 1101,
+          "chunkCount": 2,
+          "lastExportUrl": "blob:http://recording.audit/7cfa4891-da7b-4e1f-b0ff-337605865c6d",
+          "lastExportFileName": "auralprint-capture-20261008-191140.webm",
+          "lastExportByteSize": 63904,
+          "lastAction": "finalize",
+          "lastCode": "complete",
+          "lastMessage": "Recording export ready.",
+          "lastUpdatedAtMs": 1428.5
+        },
+        "blob": {
+          "size": 63904,
+          "type": "video/webm"
+        },
+        "videoInfo": {
+          "width": 400,
+          "height": 300,
+          "duration": "Infinity"
+        },
+        "nativeMimeType": "video/webm;codecs=vp9,opus",
+        "nativeState": "inactive",
+        "audioTrackState": "live"
+      },
+      {
+        "mimeType": "video/webm;codecs=vp8,opus",
+        "start": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "stop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "complete": {
+          "hooksEnabled": true,
+          "phase": "complete",
+          "supportProbeStatus": "supported",
+          "isSupported": true,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm",
+            "video/mp4"
+          ],
+          "selectedMimeType": "video/webm;codecs=vp8,opus",
+          "resolvedMimeType": "video/webm;codecs=vp8,opus",
+          "startedAtMs": 1457.0999999999913,
+          "stoppedAtMs": 2559.399999999994,
+          "elapsedMs": 1102,
+          "chunkCount": 2,
+          "lastExportUrl": "blob:http://recording.audit/16cdd868-598f-45a9-a71b-9e97ca7cb880",
+          "lastExportFileName": "auralprint-capture-20261008-191141.webm",
+          "lastExportByteSize": 24799,
+          "lastAction": "finalize",
+          "lastCode": "complete",
+          "lastMessage": "Recording export ready.",
+          "lastUpdatedAtMs": 2560.899999999994
+        },
+        "blob": {
+          "size": 24799,
+          "type": "video/webm"
+        },
+        "videoInfo": {
+          "width": 400,
+          "height": 300,
+          "duration": "Infinity"
+        },
+        "nativeMimeType": "video/webm;codecs=vp8,opus",
+        "nativeState": "inactive",
+        "audioTrackState": "live"
+      },
+      {
+        "mimeType": "video/webm",
+        "start": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "stop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "complete": {
+          "hooksEnabled": true,
+          "phase": "complete",
+          "supportProbeStatus": "supported",
+          "isSupported": true,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm",
+            "video/mp4"
+          ],
+          "selectedMimeType": "video/webm",
+          "resolvedMimeType": "video/webm",
+          "startedAtMs": 2586.699999999997,
+          "stoppedAtMs": 3687.199999999997,
+          "elapsedMs": 1101,
+          "chunkCount": 2,
+          "lastExportUrl": "blob:http://recording.audit/7431c920-23b6-4393-8e1e-ee4bdf2fe1d5",
+          "lastExportFileName": "auralprint-capture-20261008-191142.webm",
+          "lastExportByteSize": 24787,
+          "lastAction": "finalize",
+          "lastCode": "complete",
+          "lastMessage": "Recording export ready.",
+          "lastUpdatedAtMs": 3688.5999999999913
+        },
+        "blob": {
+          "size": 24787,
+          "type": "video/webm"
+        },
+        "videoInfo": {
+          "width": 400,
+          "height": 300,
+          "duration": "Infinity"
+        },
+        "nativeMimeType": "video/webm;codecs=vp8,opus",
+        "nativeState": "inactive",
+        "audioTrackState": "live"
+      },
+      {
+        "mimeType": "video/mp4",
+        "start": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "stop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "complete": {
+          "hooksEnabled": true,
+          "phase": "complete",
+          "supportProbeStatus": "supported",
+          "isSupported": true,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm",
+            "video/mp4"
+          ],
+          "selectedMimeType": "video/mp4",
+          "resolvedMimeType": "video/mp4",
+          "startedAtMs": 3712.800000000003,
+          "stoppedAtMs": 4815.399999999994,
+          "elapsedMs": 1103,
+          "chunkCount": 2,
+          "lastExportUrl": "blob:http://recording.audit/2a8ac774-041d-45e0-ac3f-1699adb635b4",
+          "lastExportFileName": "auralprint-capture-20261008-191143.mp4",
+          "lastExportByteSize": 61911,
+          "lastAction": "finalize",
+          "lastCode": "complete",
+          "lastMessage": "Recording export ready.",
+          "lastUpdatedAtMs": 4822.300000000003
+        },
+        "blob": {
+          "size": 61911,
+          "type": "video/mp4"
+        },
+        "videoInfo": {
+          "width": 400,
+          "height": 300,
+          "duration": 1.099367
+        },
+        "nativeMimeType": "video/mp4;codecs=vp9,opus",
+        "nativeState": "inactive",
+        "audioTrackState": "live"
+      }
+    ],
+    "failedRestart": {
+      "previousExportSize": 61911,
+      "previousUrl": "blob:http://recording.audit/2a8ac774-041d-45e0-ac3f-1699adb635b4",
+      "start": {
+        "ok": false,
+        "code": "render-capture-unavailable",
+        "message": "Canvas capture did not provide a video stream.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "error",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/mp4",
+        "resolvedMimeType": null,
+        "startedAtMs": null,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": "blob:http://recording.audit/2a8ac774-041d-45e0-ac3f-1699adb635b4",
+        "lastExportFileName": "auralprint-capture-20261008-191143.mp4",
+        "lastExportByteSize": 61911,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      },
+      "after": {
+        "hooksEnabled": true,
+        "phase": "error",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/mp4",
+        "resolvedMimeType": null,
+        "startedAtMs": null,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": "blob:http://recording.audit/2a8ac774-041d-45e0-ac3f-1699adb635b4",
+        "lastExportFileName": "auralprint-capture-20261008-191143.mp4",
+        "lastExportByteSize": 61911,
+        "lastAction": "start",
+        "lastCode": "render-capture-unavailable",
+        "lastMessage": "Canvas capture did not provide a video stream.",
+        "lastUpdatedAtMs": 4846
+      },
+      "previousUrlFetch": "still accessible"
+    },
+    "dispose": {
+      "ok": true,
+      "code": "disposed",
+      "message": "RecorderEngine has been disposed.",
+      "hooksEnabled": true,
+      "includePlaybackAudio": true,
+      "targetFps": 30,
+      "phase": "disabled",
+      "supportProbeStatus": "not-started",
+      "isSupported": false,
+      "availableMimeTypes": [],
+      "selectedMimeType": null,
+      "resolvedMimeType": null,
+      "startedAtMs": null,
+      "stoppedAtMs": null,
+      "elapsedMs": 0,
+      "chunkCount": 0,
+      "lastExportUrl": null,
+      "lastExportFileName": "",
+      "lastExportByteSize": 0,
+      "configuredMimeTypes": [
+        "video/webm;codecs=vp9,opus",
+        "video/webm;codecs=vp8,opus",
+        "video/webm",
+        "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+        "video/mp4"
+      ],
+      "requestedMimeType": null
+    },
+    "afterDispose": {
+      "phase": "disabled",
+      "nativeState": "recording",
+      "tracks": [
+        {
+          "kind": "audio",
+          "state": "live"
+        },
+        {
+          "kind": "video",
+          "state": "ended"
+        }
+      ],
+      "liveInputState": "live"
+    }
+  },
+  "errors": []
+}

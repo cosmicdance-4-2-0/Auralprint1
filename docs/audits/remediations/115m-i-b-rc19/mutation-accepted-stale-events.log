@@ -1,0 +1,920 @@
+not ok 2 - RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+  ---
+  duration_ms: 7.821126
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+    +   chunkCount: 1,
+    -   chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'finalize',
+    +   lastCode: 'export-filename-unresolved',
+    -   lastAction: 'dispose',
+    -   lastCode: 'disposed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording export filename could not be resolved.',
+    +   lastUpdatedAtMs: 63.395106,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed.',
+    -   lastUpdatedAtMs: 59.561487,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 63.225165,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 59.561487
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'export-filename-unresolved'
+    lastMessage: 'Recording export filename could not be resolved.'
+    lastUpdatedAtMs: 64.502754
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:193:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 3 - RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+  ---
+  duration_ms: 5.012812
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+    +   chunkCount: 1,
+    -   chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'finalize',
+    +   lastCode: 'export-filename-unresolved',
+    -   lastAction: 'dispose',
+    -   lastCode: 'disposed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording export filename could not be resolved.',
+    +   lastUpdatedAtMs: 69.344234,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed.',
+    -   lastUpdatedAtMs: 67.615327,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 69.242954,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 67.615327
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'export-filename-unresolved'
+    lastMessage: 'Recording export filename could not be resolved.'
+    lastUpdatedAtMs: 69.638979
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:193:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 4 - RC-19: normal Stop then disposal fences queued completion without double native stop
+  ---
+  duration_ms: 3.306159
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:198:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'disposed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 72.788167,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed.',
+    -   lastUpdatedAtMs: 72.138235,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 72.767746,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 72.138235
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 73.027971
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:204:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 6 - RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+  ---
+  duration_ms: 2.90111
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:212:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+
+      {
+        availableMimeTypes: [
+          'video/webm;codecs=vp9,opus',
+          'video/webm;codecs=vp8,opus',
+          'video/webm',
+    ...
+        chunkCount: 1,
+    +   elapsedMs: 1000,
+    -   elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: true,
+    +   lastAction: 'finalize',
+    +   lastCode: 'export-filename-unresolved',
+    +   lastExportByteSize: 22,
+    +   lastExportFileName: 'auralprint-capture-20261008-191913.webm',
+    +   lastExportUrl: 'blob:nodedata:8c14d1c4-17e6-47dd-b128-e2187a9a8cca',
+    +   lastMessage: 'Recording export filename could not be resolved.',
+    +   lastUpdatedAtMs: 2000,
+    +   phase: 'error',
+    +   resolvedMimeType: null,
+    -   lastAction: 'start',
+    -   lastCode: 'recorder-input-audio-video',
+    -   lastExportByteSize: 0,
+    -   lastExportFileName: '',
+    -   lastExportUrl: null,
+    -   lastMessage: 'Recording audio + video.',
+    -   lastUpdatedAtMs: 1000,
+    -   phase: 'recording',
+    -   resolvedMimeType: 'video/webm;codecs=vp9,opus',
+        selectedMimeType: 'video/webm;codecs=vp9,opus',
+    +   startedAtMs: null,
+    +   stoppedAtMs: 2000,
+    -   startedAtMs: 1000,
+    -   stoppedAtMs: null,
+        supportProbeStatus: 'supported',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'recording'
+    supportProbeStatus: 'supported'
+    isSupported: true
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+      0: 'video/webm;codecs=vp9,opus'
+      1: 'video/webm;codecs=vp8,opus'
+      2: 'video/webm'
+      3: 'video/mp4;codecs=avc1.42E01E,mp4a.40.2'
+      4: 'video/mp4'
+    selectedMimeType: 'video/webm;codecs=vp9,opus'
+    resolvedMimeType: 'video/webm;codecs=vp9,opus'
+    startedAtMs: 1000
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 1
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'start'
+    lastCode: 'recorder-input-audio-video'
+    lastMessage: 'Recording audio + video.'
+    lastUpdatedAtMs: 1000
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 78.122124
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:217:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 7 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 3.715474
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'dispose-stop-failed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 81.513529,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine disposed; native shutdown failed (stop refused). Native recorder state is recording; shutdown is not confirmed.',
+    -   lastUpdatedAtMs: 81.089742,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 81.491607,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'dispose-stop-failed'
+    lastMessage: 'RecorderEngine disposed; native shutdown failed (stop refused). Native recorder state is recording; shutdown is not confirmed.'
+    lastUpdatedAtMs: 81.089742
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 81.85869
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:237:63)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 8 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 3.033005
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'dispose-stop-failed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 84.738308,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine disposed; native shutdown failed (stop refused). Native recorder is inactive.',
+    -   lastUpdatedAtMs: 84.440698,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 84.717587,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'dispose-stop-failed'
+    lastMessage: 'RecorderEngine disposed; native shutdown failed (stop refused). Native recorder is inactive.'
+    lastUpdatedAtMs: 84.440698
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 84.986385
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:237:63)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 9 - RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.612042
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'dispose-cleanup-failed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 87.283832,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed. Some recorder-owned cleanup failed; upstream audio ownership is preserved.',
+    -   lastUpdatedAtMs: 87.006322,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 87.266306,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'dispose-cleanup-failed'
+    lastMessage: 'RecorderEngine has been disposed. Some recorder-owned cleanup failed; upstream audio ownership is preserved.'
+    lastUpdatedAtMs: 87.006322
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 87.562454
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:253:63)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 10 - RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.518774
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'dispose-cleanup-failed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 90.000359,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed. Some recorder-owned cleanup failed; upstream audio ownership is preserved.',
+    -   lastUpdatedAtMs: 89.756028,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 89.982813,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'dispose-cleanup-failed'
+    lastMessage: 'RecorderEngine has been disposed. Some recorder-owned cleanup failed; upstream audio ownership is preserved.'
+    lastUpdatedAtMs: 89.756028
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 90.234545
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:253:63)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 11 - RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.341472
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'dispose-cleanup-failed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 92.352768,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed. Some recorder-owned cleanup failed; upstream audio ownership is preserved.',
+    -   lastUpdatedAtMs: 92.059334,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 92.313349,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'dispose-cleanup-failed'
+    lastMessage: 'RecorderEngine has been disposed. Some recorder-owned cleanup failed; upstream audio ownership is preserved.'
+    lastUpdatedAtMs: 92.059334
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 92.649106
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:253:63)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 17 - RC-19: native error then dispose is terminal and cannot resurrect an export
+  ---
+  duration_ms: 2.462552
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:289:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+        availableMimeTypes: [],
+        chunkCount: 0,
+        elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: false,
+    +   lastAction: 'error',
+    +   lastCode: 'recorder-error',
+    -   lastAction: 'dispose',
+    -   lastCode: 'disposed',
+        lastExportByteSize: 0,
+        lastExportFileName: '',
+        lastExportUrl: null,
+    +   lastMessage: 'Recording failed: stale error',
+    +   lastUpdatedAtMs: 106.441091,
+    +   phase: 'error',
+    -   lastMessage: 'RecorderEngine has been disposed.',
+    -   lastUpdatedAtMs: 106.160006,
+    -   phase: 'disabled',
+        resolvedMimeType: null,
+        selectedMimeType: null,
+        startedAtMs: null,
+    +   stoppedAtMs: 106.422694,
+    +   supportProbeStatus: 'unsupported',
+    -   stoppedAtMs: null,
+    -   supportProbeStatus: 'not-started',
+        targetFps: 30
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 106.160006
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'recorder-error'
+    lastMessage: 'Recording failed: stale error'
+    lastUpdatedAtMs: 106.694556
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:292:61)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# tests 17
+# pass 7
+# fail 10
