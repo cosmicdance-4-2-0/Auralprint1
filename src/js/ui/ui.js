@@ -337,7 +337,7 @@ const UI = (() => {
   let _audioStatusToastUntilMs = 0;
   let queuePanelRefresher = () => {};
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel });
-  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
+  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,
     commitPreferences: (reason, options = {}) => applyPrefs(reason, { ...options, showStatus: analysisStatus }),
@@ -425,6 +425,7 @@ const UI = (() => {
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
 
     resolveSettings();
+    VisualizerRuntime.syncSettings(runtime.settings);
     syncOrbsFromSettings();
 
     BandBankController.syncFromSettings();

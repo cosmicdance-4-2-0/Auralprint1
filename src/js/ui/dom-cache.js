@@ -17,6 +17,12 @@ function primeDomCache() {
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
     ui.scenePanel = document.getElementById("scenePanel");
+    for (const id of ["numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError",
+      "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError",
+      "statParticleLive", "statParticleEmitted", "statParticleSpacingRejected", "statParticleBudgetRejected",
+      "statParticleRateLimited", "statParticleRetentionRejected", "statParticleExpired", "statParticleRetentionRetired"]) {
+      ui[id] = document.getElementById(id);
+    }
     ui.visualizersPanel = document.getElementById("visualizersPanel");
     ui.visualizersStatus = document.getElementById("visualizersStatus");
     ui.visualizerList = document.getElementById("visualizerList");

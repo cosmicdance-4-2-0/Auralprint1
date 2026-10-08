@@ -79,7 +79,7 @@ class TrailSystem {
     this.emitAccumulator = Number.isFinite(total) ? total % 1 : 0;
     this.pendingEmissions = Number.isFinite(nowSec) && g.frameActive ? Math.min(whole, maximum) : 0;
     g.stats.requestedDemand = Math.min(Number.MAX_SAFE_INTEGER, g.stats.requestedDemand + whole);
-    g.addDropped(whole - this.pendingEmissions);
+    g.addDropped(whole - this.pendingEmissions, "rateLimitedDemand");
     const spacingPx = normalizeMinPlacementDistancePx(particleSettings.minPlacementDistancePx);
     if (spacingPx > 0 && this.pendingEmissions > 0) {
       // One sampled position per callback: extra whole opportunities are redundant.

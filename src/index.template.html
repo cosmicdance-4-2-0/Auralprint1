@@ -280,6 +280,35 @@
     </div>
 
 </div></details>
+    <details id="performanceSection" class="settings-section"><summary>Performance</summary><div class="section-body">
+      <h3>Particle Resources</h3>
+      <p class="section-description">Scene-wide limits across all Orbs; individual Orb emission rates remain separate.</p>
+      <div class="row">
+        <label for="numMaxActiveParticles">Maximum Live Particles</label>
+        <input id="numMaxActiveParticles" type="number" inputmode="numeric" aria-describedby="maxActiveParticlesHelp maxActiveParticlesError" />
+        <div id="valMaxActiveParticles" class="val"></div>
+      </div>
+      <p id="maxActiveParticlesHelp" class="section-description">Maximum number of particles retained across all Orbs. Older particles are retired when the scene reaches this limit. Higher values increase memory and rendering costs.</p>
+      <p id="maxActiveParticlesError" class="picker-error" role="alert"></p>
+      <div class="row">
+        <label for="numMaxEmissionsPerFrame">Maximum Emissions Per Update</label>
+        <input id="numMaxEmissionsPerFrame" type="number" inputmode="numeric" aria-describedby="maxEmissionsPerFrameHelp maxEmissionsPerFrameError" />
+        <div id="valMaxEmissionsPerFrame" class="val"></div>
+      </div>
+      <p id="maxEmissionsPerFrameHelp" class="section-description">Maximum number of new particles created across all Orbs during one visualizer update. Higher values can increase CPU and rendering costs.</p>
+      <p id="maxEmissionsPerFrameError" class="picker-error" role="alert"></p>
+      <p class="section-description">High particle limits may significantly reduce performance or exhaust browser resources.</p>
+      <div id="particleDiagnostics" class="section-description" aria-label="Particle resource diagnostics">
+        <p>Live particles: <span id="statParticleLive">0</span></p>
+        <p>Emitted (last update): <span id="statParticleEmitted">0</span></p>
+        <p>Spacing suppression (last update): <span id="statParticleSpacingRejected">0</span></p>
+        <p>Emission-budget rejection (last update): <span id="statParticleBudgetRejected">0</span></p>
+        <p>Rate/timestep refusal (last update): <span id="statParticleRateLimited">0</span></p>
+        <p>Zero-capacity rejection (last update): <span id="statParticleRetentionRejected">0</span></p>
+        <p>TTL expiration (last update): <span id="statParticleExpired">0</span></p>
+        <p>Retention retirements (since runtime initialization): <span id="statParticleRetentionRetired">0</span></p>
+      </div>
+    </div></details>
     <details class="settings-section"><summary>Presets<span class="section-description">Share or restore configuration</span></summary><div class="section-body">
       <p class="panel-description">Links include settings. Your files, queue and recordings stay in this session.</p>
       <div class="panel-actions"><button id="btnShare">Copy Share Link</button><button id="btnApplyUrl">Apply URL Preset</button><button id="btnResetPrefs">Reset All Settings</button></div>

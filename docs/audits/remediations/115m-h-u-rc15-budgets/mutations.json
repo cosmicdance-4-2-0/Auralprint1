@@ -1,0 +1,37 @@
+[
+  {
+    "mutation": "old-emission-cap",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "old-retention-cap",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "governor-recreation",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "missing-retention-trim",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "stale-runtime-policy",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "incorrect-zero-retention",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "persist-runtime-counter",
+    "detected": true,
+    "exitCode": 1
+  }
+]

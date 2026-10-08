@@ -1,6 +1,7 @@
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
+import { normalizeParticleSafety } from "../core/particle-safety.js";
 import { CONFIG } from "../core/config.js";
 import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
@@ -10,7 +11,8 @@ import { assertOrbAdmission } from "../core/orb-admission.js";
 // Build 115 freezes schema 10; future persisted additions, removals, renames,
 // ownership moves or semantic changes require schema 11 plus migration.
 // Authorized pre-release v0.1.15m.h.t correction adds Orb placement distance;
-// normalization supplies its default to missing schema-2–10 input fields.
+// and v0.1.15m.h.u adds selected scene-wide particle resource budgets.
+// Normalization supplies CONFIG defaults to missing schema-2–10 fields.
 const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
@@ -176,6 +178,7 @@ function sanitizePreset(decoded) {
   }
 
   next.timing.maxDeltaTimeSec = normalizeMaxDeltaTimeSec(incoming.timing?.maxDeltaTimeSec);
+  next.particleSafety = normalizeParticleSafety(incoming.particleSafety);
 
   next.bands.ceilingHz = Math.max(next.bands.floorHz, next.bands.ceilingHz);
 

@@ -1,4 +1,5 @@
 {
+  "particleSafety": { "maxEmissionsPerFrame": 4096, "maxActiveParticles": 65536 },
   "visuals": { "backgroundColor": "#123456", "particleColor": "#fedcba" },
   "audio": { "fftSize": 2048, "smoothingTimeConstant": 0.43, "rmsGain": 2.7, "repeatMode": "all", "muted": true, "volume": 0.37 },
   "orbs": [

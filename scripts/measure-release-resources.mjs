@@ -64,7 +64,7 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256, 1024, 409
   const burstStart = performance.now(); burstOrb.step(simulationDeltaSec(120, burstPrefs.timing.maxDeltaTimeSec), 126, band, null, 0);
   const burst = { acceptedMaxDeltaTimeSec: burstPrefs.timing.maxDeltaTimeSec, acceptedTtlSec: burstPrefs.orbs[0].particles.ttlSec, emits, elapsedMs: performance.now() - burstStart, retainedParticles: burstOrb.trail.particles.length };
   check(burst.acceptedMaxDeltaTimeSec === CONFIG.limits.timing.maxDeltaTimeSec && emits === 8, 'simulation timestep protection failed');
-  check(curves.every(x => x.particles <= CONFIG.limits.particleSafety.maxActiveParticles && x.updates.every(u => u.emits <= CONFIG.limits.particleSafety.maxEmissionsPerFrame)), 'aggregate safety boundary failed');
+  check(curves.every(x => x.particles <= CONFIG.defaults.particleSafety.maxActiveParticles && x.updates.every(u => u.emits <= CONFIG.defaults.particleSafety.maxEmissionsPerFrame)), 'aggregate safety boundary failed');
   return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. Initial CONFIG emission/retention thresholds are engineering safeguards, not a real-time performance guarantee. Orb motion/targeting is bounded by admission and band limits; Canvas submission is bounded by retained particles and canonical Ring count, but can remain expensive.' };
 }
 

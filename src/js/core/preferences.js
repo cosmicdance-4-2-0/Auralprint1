@@ -1,4 +1,5 @@
 import { normalizeMaxDeltaTimeSec } from "./timing.js";
+import { normalizeParticleSafety } from "./particle-safety.js";
 import { CONFIG } from "./config.js";
 import { assertOrbAdmission } from "./orb-admission.js";
 import { clamp, deepClone } from "./utils.js";
@@ -38,6 +39,7 @@ function resolveSettings() {
   runtime.settings = deepClone(preferences);
   runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
   runtime.settings.timing = { maxDeltaTimeSec: normalizeMaxDeltaTimeSec(preferences.timing?.maxDeltaTimeSec) };
+  runtime.settings.particleSafety = normalizeParticleSafety(preferences.particleSafety);
 }
 
 

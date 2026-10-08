@@ -163,9 +163,9 @@ for(const count of [0,2,64,256,1024,4096])test(`RC-15 phase 3: aggregate arcs/tr
       list.slice=()=>{throw Error('whole-trail materialization');};
       list.suffix=function*(n){backSteps+=Math.max(0,Math.min(this.length,n)-1);for(const p of suffix.call(this,n)){suffixVisits++;yield p;}};
     }
-    if(count)for(let i=0;i<CONFIG.limits.particleSafety.maxActiveParticles+1;i++)s.orbs[i%count].trail.emitAt(i,0,0,color);
+    if(count)for(let i=0;i<CONFIG.defaults.particleSafety.maxActiveParticles+1;i++)s.orbs[i%count].trail.emitAt(i,0,0,color);
     const c=canvas();state.ctx=c.ctx;s.v.render(Renderer,s.context);
-    const live=count?CONFIG.limits.particleSafety.maxActiveParticles:0;
+    const live=count?CONFIG.defaults.particleSafety.maxActiveParticles:0;
     const traceSegments=s.orbs.reduce((n,o)=>n+Math.max(0,Math.min(o.trail.particles.length-1,o.trace.numLines)),0);
     assert.equal(c.calls.arc,live+256);assert.equal(c.calls.lineTo||0,traceSegments+256);
     assert.ok(traceSegments<=live);assert.ok(suffixVisits<=live);assert.ok(backSteps<=live);

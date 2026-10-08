@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.t");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.t\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.u");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.u\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -4087,5 +4087,20 @@ test('RC-15 phase 3: tooltip discovery indexes labels once while preserving asso
     assert.equal(queries,2);assert.equal(state.ui.configTooltipByControl.get(control),spec);
     assert.equal(listener.mock.callCount(),0);UI.refreshAllUiText();assert.equal(queries,2);
     assert.match(control.title,/Angular Speed/);
+  });
+});
+
+test('RC-15 budgets: committed Settings edits synchronize without recreating governor, Orb history or focus',async(t)=>{
+  await withSettingsActionHarness(t,({location})=>{
+    const orb=state.orbs[0],g=orb.trail.governor;orb.trail.emitAt(0,0,0,{r:1,g:0,b:0});orb.trail.emitAccumulator=.75;
+    const tail=orb.trail.particles.tail,phase=orb.angleRad,control=state.ui.numMaxActiveParticles;
+    control.focus();control.value='65536';control.dispatch('change');
+    assert.equal(orb.trail.governor,g);assert.equal(orb.trail.particles.tail,tail);assert.equal(orb.trail.emitAccumulator,.75);assert.equal(orb.angleRad,phase);assert.equal(document.activeElement,control);
+    assert.equal(g.policy.maxActiveParticles,65536);assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(runtime.settings.particleSafety.maxActiveParticles,65536);
+    control.value='';control.dispatch('change');assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(control.getAttribute('aria-invalid'),'true');
+    state.ui.numMaxEmissionsPerFrame.value='4096';state.ui.numMaxEmissionsPerFrame.dispatch('change');assert.equal(g.policy.maxEmissionsPerFrame,4096);
+    state.ui.btnShare.click();const payload=JSON.parse(Buffer.from(location.hash.slice(3),'base64url').toString('utf8'));assert.deepEqual(payload.prefs.particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});
+    const imported=structuredClone(CONFIG.defaults);imported.particleSafety={maxEmissionsPerFrame:0,maxActiveParticles:0};location.hash=settingsPresetHash(imported);state.ui.btnApplyUrl.click();assert.deepEqual(g.policy,imported.particleSafety);assert.equal(g.activeParticles,0);assert.equal(state.ui.numMaxActiveParticles.value,'0');
+    state.ui.btnResetPrefs.click();assert.deepEqual(g.policy,CONFIG.defaults.particleSafety);assert.equal(state.ui.numMaxActiveParticles.value,'16384');assert.equal(state.ui.numMaxEmissionsPerFrame.value,'512');
   });
 });

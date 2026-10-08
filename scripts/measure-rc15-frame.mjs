@@ -73,7 +73,7 @@ export async function measureRc15Frame({count=2,maximum=false,warmFrames=360}={}
     const t=performance.now();onAnimationFrame(stamp);const totalFrameMs=performance.now()-t;
     const stats=VisualizerRuntime.getParticleStats();
     const orbTraceSegments=state.orbs.reduce((n,o)=>n+Math.max(0,Math.min(o.trail.particles.length-1,Math.ceil(o.trace.numLines))),0);
-    if(stats.emissions>CONFIG.limits.particleSafety.maxEmissionsPerFrame||stats.activeParticles>CONFIG.limits.particleSafety.maxActiveParticles)throw Error('Aggregate budget exceeded');
+    if(stats.emissions>runtime.settings.particleSafety.maxEmissionsPerFrame||stats.activeParticles>runtime.settings.particleSafety.maxActiveParticles)throw Error('Aggregate budget exceeded');
     const ringPoints=runtime.settings.bands.overlay.enabled?CONFIG.defaults.bands.count:0;
     if(counters.arc!==stats.activeParticles+ringPoints||counters.lineTo!==orbTraceSegments+ringPoints)throw Error('Rendering ownership mismatch');
     frames.push({...counters,totalFrameMs,...stats,orbTraceSegments,heapEntries:governor?.heap.length||0,trailOwners:governor?.trails.length||0,

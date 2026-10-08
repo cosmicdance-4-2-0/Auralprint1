@@ -79,6 +79,10 @@ schema 10 adds `particles.minPlacementDistancePx` (CSS pixels, default 0.5;
 0 disables placement filtering). Missing schema-2–10 fields receive that default;
 obsolete overlap fields remain discarded, never aliased. Neither exception
 permits changes to a published schema.
+Revision v0.1.15m.h.u is separately authorized before release: schema 10 adds
+`particleSafety { maxEmissionsPerFrame, maxActiveParticles }` at the preference
+root. Missing schema-2–10 values use CONFIG defaults; malformed types/nonintegers
+fall back independently and valid integers clamp to CONFIG range metadata.
 Schema 9 historically had both Scene-node and later top-level forms; input
 migration recognizes both, with top-level values taking precedence. Abandoned
 Scene layout/editor semantics have no schema-10 equivalent and are discarded.
@@ -206,7 +210,24 @@ Rules:
 - Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Every canonical Orb-owned simulation/presentation field has a per-Orb UI owner; Bulk Edit is an apply-to-all convenience and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
 
-Orb particle safeguards are ephemeral and owned by each `VisualizerRuntime`, never presets. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
+Each `VisualizerRuntime` owns one ephemeral ParticleGovernor. Scene-wide selected
+particle budgets persist at `preferences.particleSafety` and derive into
+`runtime.settings.particleSafety`. CONFIG defaults are 512 emissions/update and
+16,384 retained particles; permissible integer ranges are 0–16,384 and
+0–1,048,576 respectively. Settings → Performance → Particle Resources is their
+sole UI owner. User selections, including zero and expert maxima, are enforced
+without an additional default-valued ceiling.
+
+Runtime settings synchronization applies policies in place; update/render and
+lifecycle entry points also synchronize changed active settings references.
+Retention reductions retire globally oldest heap entries before rendering.
+Increasing limits preserves history, fractions, and fairness ownership; zero
+emission preserves retained history, and zero retention retires all and rejects
+new retention. Diagnostics and cumulative retention counts are ephemeral. Explicit
+factory test-policy injection fixes an isolated test policy and is not supplied
+by production initialization.
+
+Particle heap/list ownership is ephemeral and belongs to each runtime. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
 
 Minimum placement distance compares only the same Orb's currently retained
 trail tail using squared distance scaled by active DPR. Nonzero spacing prepares
@@ -237,7 +258,7 @@ Panels:
 - Audio
 - Queue
 - Visualizers
-- Settings (Scene appearance and presets)
+- Settings (Scene appearance, particle resources, and presets)
 - Analysis
 - Record (when enabled)
 

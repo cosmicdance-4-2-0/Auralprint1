@@ -1,0 +1,85 @@
+✖ budgets: one integer normalization contract for sanitation, resolution and active governor (7.397114ms)
+✔ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (2.595678ms)
+✔ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (5.69311ms)
+✔ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.527978ms)
+✖ budgets: actual upper-budget admissions exceed both retired immutable ceilings (34.21229ms)
+✔ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (0.519877ms)
+✔ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (1.377264ms)
+✔ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.601053ms)
+✖ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (351.871412ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 6
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 433.658858
+
+✖ failing tests:
+
+test at tests/rc15-budgets.test.js:42:1
+✖ budgets: one integer normalization contract for sanitation, resolution and active governor (7.397114ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   maxActiveParticles: 16384,
+  -   maxActiveParticles: 1048576,
+      maxEmissionsPerFrame: 512
+    }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:54:76)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:103:1
+✖ budgets: actual upper-budget admissions exceed both retired immutable ceilings (34.21229ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  16384 !== 32768
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:109:52)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 16384,
+    expected: 32768,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:179:1
+✖ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (351.871412ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  16384 !== 1048576
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:184:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 16384,
+    expected: 1048576,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

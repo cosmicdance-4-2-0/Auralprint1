@@ -464,10 +464,14 @@ bands: {
     timing: {
       maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC,
     },
+    particleSafety: { maxEmissionsPerFrame: 512, maxActiveParticles: 16384 },
   },
 
   limits: {
-    particleSafety: { maxEmissionsPerFrame: 512, maxActiveParticles: 16384 },
+    particleSafety: {
+      maxEmissionsPerFrame: { min: 0, max: 16384, step: 1 },
+      maxActiveParticles: { min: 0, max: 1048576, step: 1 },
+    },
     timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC },
     trace: {
       numLines: { min: 10, max: 1000, step: 10 },

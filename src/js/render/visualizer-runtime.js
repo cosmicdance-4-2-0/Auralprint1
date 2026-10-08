@@ -1,4 +1,5 @@
 import { ParticleGovernor } from "./particle-governor.js";
+import { normalizeParticleSafety } from "../core/particle-safety.js";
 import { assertRuntimeOrbAdmission } from "../core/orb-admission.js";
 import { TAU } from "../core/constants.js";
 import { runtime, normalizeOrbChannelId } from "../core/preferences.js";
@@ -104,9 +105,20 @@ function createVisualizerRuntime({
   createSpectralRing = createSpectralRingVisualizer,
   createOrb = createOrbVisualizer,
   particlePolicy,
+  settingsRef = runtime,
 } = {}) {
   let visualizers = [];
-  const particleGovernor = new ParticleGovernor(particlePolicy);
+  // Explicit injection fixes an isolated test policy. Production supplies none
+  // and follows runtime.settings through the same existing governor instance.
+  const injectedPolicy = particlePolicy === undefined ? null : Object.freeze(normalizeParticleSafety(particlePolicy));
+  const particleGovernor = new ParticleGovernor(injectedPolicy || settingsRef.settings?.particleSafety);
+  let lastPolicySource = null;
+  function syncSettings(settings = settingsRef.settings) {
+    const source = injectedPolicy || settings?.particleSafety;
+    if (source === lastPolicySource) return false;
+    lastPolicySource = source;
+    return particleGovernor.applyPolicy(source);
+  }
   const syncParticleTrails = orbs => particleGovernor.setTrails(orbs
     .filter(orb => orb.trail?.governor === particleGovernor)
     .map(orb => orb.trail));
@@ -118,6 +130,7 @@ function createVisualizerRuntime({
 
   function rebuild(orbs = state.orbs) {
     assertRuntimeOrbAdmission(orbs);
+    syncSettings();
     // Replacing adapters need not reset surviving Orb-owned particle history.
     for (const visualizer of visualizers) visualizer.dispose();
     visualizers = [createSpectralRing()];
@@ -128,6 +141,7 @@ function createVisualizerRuntime({
 
   function reconcile(orbs = state.orbs) {
     assertRuntimeOrbAdmission(orbs);
+    syncSettings();
     let overlay = visualizers.find((visualizer) => visualizer.type === "spectral-ring");
     if (!overlay) overlay = createSpectralRing();
     const existing = new Map(
@@ -152,6 +166,7 @@ function createVisualizerRuntime({
   }
 
   function update(frameContext) {
+    syncSettings();
     particleGovernor.beginFrame();
     // Orb-locked Ring phase depends on current-frame Orb simulation.
     // Update dependency order is separate from render/composition order.
@@ -165,6 +180,7 @@ function createVisualizerRuntime({
   }
 
   function render(renderer, frameContext) {
+    syncSettings();
     renderer.clearFrame();
     for (const visualizer of visualizers) {
       if (visualizer.isVisible()) visualizer.render(renderer, frameContext);
@@ -172,6 +188,7 @@ function createVisualizerRuntime({
   }
 
   function reset(reason) {
+    syncSettings();
     for (const visualizer of visualizers) visualizer.reset(reason);
   }
 
@@ -185,7 +202,7 @@ function createVisualizerRuntime({
     return visualizers;
   }
 
-  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers, getParticleStats: () => particleGovernor.getStats() };
+  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers, syncSettings, getParticleStats: () => particleGovernor.getStats() };
 }
 
 const VisualizerRuntime = createVisualizerRuntime();
