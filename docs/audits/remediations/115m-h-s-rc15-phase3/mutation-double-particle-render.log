@@ -1,0 +1,64 @@
+✖ RC-15 phase 3: normal rendering preserves coordinates, size/age/fade, chronological suffix and trace colors without arrays (12.133262ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.485544
+
+✖ failing tests:
+
+test at tests/rc15-phase3.test.js:131:1
+✖ RC-15 phase 3: normal rendering preserves coordinates, size/age/fade, chronological suffix and trace colors without arrays (12.133262ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      [
+        50,
+        50,
+        2
+  ...
+      ],
+  +   [
+  +     50,
+  +     50,
+  +     2
+  +   ],
+  +   [
+  +     51,
+  +     48,
+  +     2
+  +   ],
+  +   [
+  +     52,
+  +     46,
+  +     2
+  +   ],
+  +   [
+  +     53,
+  +     44,
+  +     2
+  +   ],
+  +   [
+  +     54,
+  +     42,
+  +     5
+  +   ]
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-phase3.test.js:140:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

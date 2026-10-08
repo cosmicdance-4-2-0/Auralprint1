@@ -119,7 +119,8 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
   function refresh(settings = runtime.settings) {
     const bandEdgesRef = state.bands.lowHz; if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
     lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; let controlsChanged = false; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
-    for (const [id, controller] of controllers) if (!orbs.some((orb) => orb.id === id)) { controller.root.remove(); controllers.delete(id); controlsChanged = true; }
+    const ids = new Set(orbs.map(orb => orb.id));
+    for (const [id, controller] of controllers) if (!ids.has(id)) { controller.root.remove(); controllers.delete(id); controlsChanged = true; }
     orbs.forEach((orb, position) => {
       let controller = controllers.get(orb.id);
       if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); controlsChanged = true; }

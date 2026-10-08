@@ -1,0 +1,118 @@
+{
+  "version": "v0.1.15m.h.p",
+  "nodeVersion": "v24.19.0",
+  "results": [
+    {
+      "count": 64,
+      "mode": "unique",
+      "ms": 1.3344489999999993,
+      "repeatMs": 1.2452149999999946
+    },
+    {
+      "count": 64,
+      "mode": "duplicate",
+      "ms": 2.4521020000000036,
+      "repeatMs": 0.2509280000000018
+    },
+    {
+      "count": 64,
+      "mode": "missing",
+      "ms": 1.647630999999997,
+      "repeatMs": 0.2758749999999992
+    },
+    {
+      "count": 64,
+      "mode": "huge-duplicate",
+      "ms": 10.400702000000003,
+      "repeatMs": 0.2630359999999996
+    },
+    {
+      "count": 256,
+      "mode": "unique",
+      "ms": 0.9123340000000013,
+      "repeatMs": 1.902154000000003
+    },
+    {
+      "count": 256,
+      "mode": "duplicate",
+      "ms": 14.322566000000002,
+      "repeatMs": 0.42167500000000757
+    },
+    {
+      "count": 256,
+      "mode": "missing",
+      "ms": 5.285848999999999,
+      "repeatMs": 0.8641819999999996
+    },
+    {
+      "count": 256,
+      "mode": "huge-duplicate",
+      "ms": 160.977714,
+      "repeatMs": 0.6583009999999945
+    },
+    {
+      "count": 1024,
+      "mode": "unique",
+      "ms": 5.185642999999999,
+      "repeatMs": 3.1844350000000077
+    },
+    {
+      "count": 1024,
+      "mode": "duplicate",
+      "ms": 172.700254,
+      "repeatMs": 1.7143309999999587
+    },
+    {
+      "count": 1024,
+      "mode": "missing",
+      "ms": 74.525938,
+      "repeatMs": 1.7367049999999722
+    },
+    {
+      "count": 1024,
+      "mode": "huge-duplicate",
+      "ms": 2198.3104160000003,
+      "repeatMs": 1.9328209999998762
+    },
+    {
+      "count": 4096,
+      "mode": "unique",
+      "ms": 7.6963190000001305,
+      "repeatMs": 5.905603000000156
+    },
+    {
+      "count": 4096,
+      "mode": "duplicate",
+      "ms": 2294.102434,
+      "repeatMs": 6.285714999999982
+    },
+    {
+      "count": 4096,
+      "mode": "missing",
+      "ms": 938.5032289999999,
+      "repeatMs": 6.096318999999312
+    },
+    {
+      "count": 4096,
+      "mode": "huge-duplicate",
+      "ms": 33766.926719999996,
+      "repeatMs": 6.499256000002788
+    }
+  ],
+  "malformed": [
+    {
+      "count": 4097,
+      "ms": 916.4574369999973,
+      "code": "accepted"
+    }
+  ],
+  "churn": {
+    "cycles": 0,
+    "orbs": 4096,
+    "framesPerCycle": 34,
+    "ms": 0.22021200000017416,
+    "peakHeap": 0,
+    "peakOwners": 0
+  },
+  "caveat": "Host synchronous Node timings include JIT/GC. Byte parsing before codec admission and native DOM costs are separate; no arbitrary ID-length or encoded-payload-byte policy is introduced."
+}

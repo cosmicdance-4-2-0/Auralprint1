@@ -1,6 +1,7 @@
 import { preferences, resolveSettings, runtime } from "../core/preferences.js";
 import { createOrb as createOrbDefinition, duplicateOrb as duplicateOrbDefinition, removeOrb as removeOrbDefinition } from "../core/orb-collection.js";
 import { state } from "../core/state.js";
+import { assertRuntimeOrbAdmission } from "../core/orb-admission.js";
 import { Orb } from "./orb.js";
 import { VisualizerRuntime, selectOrbAnalysis } from "./visualizer-runtime.js";
 
@@ -8,12 +9,14 @@ import { VisualizerRuntime, selectOrbAnalysis } from "./visualizer-runtime.js";
    Orb Runtime
    ========================================================================== */
 function initOrbs() {
+  assertRuntimeOrbAdmission(runtime.settings.orbs);
   state.orbs.length = 0;
   for (const def of runtime.settings.orbs) state.orbs.push(new Orb(def));
   VisualizerRuntime.rebuild(state.orbs);
 }
 
 function reconcileOrbs() {
+  assertRuntimeOrbAdmission(runtime.settings.orbs);
   const existing = new Map(state.orbs.map((orb) => [orb.id, orb]));
   const next = runtime.settings.orbs.map((def) => {
     const orb = existing.get(def.id);

@@ -1,4 +1,5 @@
 import { ParticleGovernor } from "./particle-governor.js";
+import { assertRuntimeOrbAdmission } from "../core/orb-admission.js";
 import { TAU } from "../core/constants.js";
 import { runtime, normalizeOrbChannelId } from "../core/preferences.js";
 import { state } from "../core/state.js";
@@ -106,9 +107,9 @@ function createVisualizerRuntime({
 } = {}) {
   let visualizers = [];
   const particleGovernor = new ParticleGovernor(particlePolicy);
-  const syncParticleTrails = () => particleGovernor.setTrails(visualizers
-    .filter(v => v.type === "orb" && v.orb?.trail?.governor === particleGovernor)
-    .map(v => v.orb.trail));
+  const syncParticleTrails = orbs => particleGovernor.setTrails(orbs
+    .filter(orb => orb.trail?.governor === particleGovernor)
+    .map(orb => orb.trail));
 
   function createOrbParticipant(orb) {
     orb.trail?.setGovernor?.(particleGovernor);
@@ -116,15 +117,17 @@ function createVisualizerRuntime({
   }
 
   function rebuild(orbs = state.orbs) {
+    assertRuntimeOrbAdmission(orbs);
     // Replacing adapters need not reset surviving Orb-owned particle history.
     for (const visualizer of visualizers) visualizer.dispose();
     visualizers = [createSpectralRing()];
     for (const orb of orbs) visualizers.push(createOrbParticipant(orb));
-    syncParticleTrails();
+    syncParticleTrails(orbs);
     return visualizers;
   }
 
   function reconcile(orbs = state.orbs) {
+    assertRuntimeOrbAdmission(orbs);
     let overlay = visualizers.find((visualizer) => visualizer.type === "spectral-ring");
     if (!overlay) overlay = createSpectralRing();
     const existing = new Map(
@@ -144,7 +147,7 @@ function createVisualizerRuntime({
     }
     for (const removed of existing.values()) removed.dispose();
     visualizers = next;
-    syncParticleTrails();
+    syncParticleTrails(orbs);
     return visualizers;
   }
 

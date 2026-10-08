@@ -45,6 +45,15 @@ class ParticleList {
     if (count > 0) for (; node; node = node.next) result.push(node.particle);
     return result;
   }
+
+  *suffix(count) {
+    // Visit only the requested suffix; renderer never materializes its payloads.
+    count = Math.min(this.length, Math.max(0, Math.ceil(count)));
+    if (!(count > 0)) return;
+    let node = this.tail;
+    for (let i = 1; i < count; i++) node = node.prev;
+    for (; node; node = node.next) yield node.particle;
+  }
 }
 
 export { ParticleList };

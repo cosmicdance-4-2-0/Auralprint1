@@ -1,4 +1,4 @@
-// Optional RC-15 investigation against current production behavior; emission/retention budgets are enforced; rendering/admission remain ungoverned.
+// Optional RC-15 investigation against current production behavior; emission/retention and Orb admission ceilings are enforced; rendering uses bounded trails.
 import { CONFIG } from '../src/js/core/config.js';
 import { simulationDeltaSec } from '../src/js/core/timing.js';
 import { runtime } from '../src/js/core/preferences.js';
@@ -12,7 +12,7 @@ import { Renderer } from '../src/js/render/renderer.js';
 import { Orb } from '../src/js/render/orb.js';
 const check = (value, message) => { if (!value) throw new Error(message); };
 
-export function measureReleaseResources({ counts = [2, 8, 16, 64, 256, 4096], warmFrames = 360, nativeContext = null } = {}) {
+export function measureReleaseResources({ counts = [2, 8, 16, 64, 256, 1024, 4096], warmFrames = 360, nativeContext = null } = {}) {
   state.widthPx = state.heightPx = 1000; state.dpr = 1;
   const largeStart = performance.now();
   const large = sanitizePreset({ schema: 10, prefs: { orbs: Array.from({ length: 4096 }, (_, i) => ({ ...structuredClone(CONFIG.defaults.orbs[0]), id: `SAFE-${i}` })) } });
@@ -65,7 +65,7 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256, 4096], wa
   const burst = { acceptedMaxDeltaTimeSec: burstPrefs.timing.maxDeltaTimeSec, acceptedTtlSec: burstPrefs.orbs[0].particles.ttlSec, emits, elapsedMs: performance.now() - burstStart, retainedParticles: burstOrb.trail.particles.length };
   check(burst.acceptedMaxDeltaTimeSec === CONFIG.limits.timing.maxDeltaTimeSec && emits === 8, 'simulation timestep protection failed');
   check(curves.every(x => x.particles <= CONFIG.limits.particleSafety.maxActiveParticles && x.updates.every(u => u.emits <= CONFIG.limits.particleSafety.maxEmissionsPerFrame)), 'aggregate safety boundary failed');
-  return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. Initial CONFIG emission/retention thresholds are engineering safeguards, not a real-time performance guarantee. Orb motion, targeting, trace and Canvas submission work remain ungoverned.' };
+  return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. Initial CONFIG emission/retention thresholds are engineering safeguards, not a real-time performance guarantee. Orb motion/targeting is bounded by admission and band limits; Canvas submission is bounded by retained particles and canonical Ring count, but can remain expensive.' };
 }
 
 if (typeof window === 'undefined') {

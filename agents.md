@@ -201,12 +201,13 @@ Rules:
 - Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Every canonical Orb-owned simulation/presentation field has a per-Orb UI owner; Bulk Edit is an apply-to-all convenience and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
 
-Orb particle safeguards are ephemeral and owned by each `VisualizerRuntime`, never presets. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`); only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
+Orb particle safeguards are ephemeral and owned by each `VisualizerRuntime`, never presets. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
 
 ### 4.4 Dynamic Orb Collection
 
 - `preferences.orbs[]` order defines composition order; `orb.id` defines stable identity. Collection mutation must never renumber survivors.
 - Zero Orbs is valid. Runtime reconciliation is ID-based and preserves surviving Orb objects and ephemeral phase/trail/emission state.
+- `CONFIG.limits.orbs.maxCount` is a provisional operational admission ceiling, not a performance guarantee. Oversized imports/normalization/replacement are rejected before Orb processing; Add/Duplicate at the ceiling make no change. Runtime lifecycle validates count and unique canonical identities before mutation. Collection normalization alone owns ID repair and reserves later explicit IDs in one pass.
 - Duplication copies configuration, never live simulation history. UI must not fabricate missing instances or implicitly create an Orb by accessing an indexed slot.
 
 ## 5. UI System Constraints

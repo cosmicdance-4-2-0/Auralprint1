@@ -105,35 +105,39 @@ test("RC-15 phase 1: effective simulation delta rejects invalid elapsed time and
 test("RC-15 phase 1: production animation boundary discards stall time with no later catch-up and keeps real clocks", () => {
   // Execute the production callback with subsystem seams. Boot remains covered
   // by the normal build/browser checks; no copied timestep implementation here.
-  const source = readFileSync(new URL("../src/js/main.js", import.meta.url), "utf8")
-    .replace(/^import .*;\n/gm, "").replace(/^main\(\);$/m, "").replace(/^export .*;$/m, "");
-  const frames = [], nowSec = 1234;
-  const testState = { time: { lastTimestampMs: null, simPaused: false }, bands: {} };
-  const testRuntime = { settings: { timing: { maxDeltaTimeSec: Number.MAX_VALUE } } };
-  const context = vm.createContext({
-    CONFIG, state: testState, runtime: testRuntime, simulationDeltaSec,
-    requestAnimationFrame() {}, resizeCanvasToDisplaySize() {},
-    performance: { now: () => nowSec * 1000 }, createAnalysisFrame: () => ({}),
-    updateAnalysisFrame() {}, AudioEngine: { sample: () => ({}) }, Renderer: {},
-    VisualizerRuntime: { update: frame => frames.push({ ...frame }), render() {} },
-    UI: { refreshAllUiText() {} }, Scrubber: { draw() {} },
-  });
-  vm.runInContext(source, context);
-  const frame = ts => context.onAnimationFrame(ts);
-  frame(0); assert.equal(frames.length, 0);
-  frame(1000 / 60); assert.equal(frames.at(-1).dtSec, 1 / 60);
-  frame(120000); assert.equal(frames.at(-1).dtSec, ceiling);
-  frame(120000 + 1000 / 60); assert.ok(Math.abs(frames.at(-1).dtSec - 1 / 60) < 1e-12);
-  assert.equal(testState.time.lastTimestampMs, 120000 + 1000 / 60);
-  assert.ok(frames.every(f => f.nowSec === nowSec && f.dtSec <= ceiling));
-  let ts = testState.time.lastTimestampMs;
-  for (const [requested, expected] of timingCases) {
-    testRuntime.settings.timing = { maxDeltaTimeSec: requested };
-    ts += 120000; frame(ts);
-    assert.equal(frames.at(-1).dtSec, expected);
+  const productionSource = readFileSync(new URL("../src/js/main.js", import.meta.url), "utf8");
+  // Windows checkout uses CRLF; execute all the same assertions for both forms.
+  for (const lineEnding of ["\n", "\r\n"]) {
+    const source = productionSource.replace(/\r?\n/g, lineEnding).replace(/\r\n/g, "\n")
+      .replace(/^import .*;\n/gm, "").replace(/^main\(\);$/m, "").replace(/^export .*;$/m, "");
+    const frames = [], nowSec = 1234;
+    const testState = { time: { lastTimestampMs: null, simPaused: false }, bands: {} };
+    const testRuntime = { settings: { timing: { maxDeltaTimeSec: Number.MAX_VALUE } } };
+    const context = vm.createContext({
+      CONFIG, state: testState, runtime: testRuntime, simulationDeltaSec,
+      requestAnimationFrame() {}, resizeCanvasToDisplaySize() {},
+      performance: { now: () => nowSec * 1000 }, createAnalysisFrame: () => ({}),
+      updateAnalysisFrame() {}, AudioEngine: { sample: () => ({}) }, Renderer: {},
+      VisualizerRuntime: { update: frame => frames.push({ ...frame }), render() {} },
+      UI: { refreshAllUiText() {} }, Scrubber: { draw() {} },
+    });
+    vm.runInContext(source, context);
+    const frame = ts => context.onAnimationFrame(ts);
+    frame(0); assert.equal(frames.length, 0);
+    frame(1000 / 60); assert.equal(frames.at(-1).dtSec, 1 / 60);
+    frame(120000); assert.equal(frames.at(-1).dtSec, ceiling);
+    frame(120000 + 1000 / 60); assert.ok(Math.abs(frames.at(-1).dtSec - 1 / 60) < 1e-12);
+    assert.equal(testState.time.lastTimestampMs, 120000 + 1000 / 60);
+    assert.ok(frames.every(f => f.nowSec === nowSec && f.dtSec <= ceiling));
+    let ts = testState.time.lastTimestampMs;
+    for (const [requested, expected] of timingCases) {
+      testRuntime.settings.timing = { maxDeltaTimeSec: requested };
+      ts += 120000; frame(ts);
+      assert.equal(frames.at(-1).dtSec, expected);
+    }
+    testRuntime.settings.timing = null; ts += 120000; frame(ts);
+    assert.equal(frames.at(-1).dtSec, ceiling);
   }
-  testRuntime.settings.timing = null; ts += 120000; frame(ts);
-  assert.equal(frames.at(-1).dtSec, ceiling);
 });
 
 test("RC-15 phase 1: per-Orb burst guard is independent of imported timing and bounded by CONFIG rate limits", () => {

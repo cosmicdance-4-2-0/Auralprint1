@@ -19,13 +19,9 @@ const Renderer = (() => {
   function drawTrailLines(particles, dominantBandIndex, trace) {
     if (!trace.lines) return;
 
-    const segments = trace.numLines;
-    const neededPts = segments + 1;
+    const neededPts = Math.min(particles?.length || 0, Math.ceil(trace.numLines) + 1);
     if (!particles || particles.length < 2) return;
-
-    const startIdx = Math.max(0, particles.length - neededPts);
-    const slice = particles.slice(startIdx);
-    if (slice.length < 2) return;
+    if (!(neededPts >= 2)) return;
 
     const ctx = state.ctx;
     const rgb = ColorPolicy.pickLineColorRgb01(particles, dominantBandIndex, trace.lineColorMode);
@@ -38,13 +34,12 @@ const Renderer = (() => {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
 
-    const p0 = Spaces.simToScreen(slice[0].xSim, slice[0].ySim);
     ctx.beginPath();
-    ctx.moveTo(p0.x, p0.y);
-
-    for (let i = 1; i < slice.length; i++) {
-      const pi = Spaces.simToScreen(slice[i].xSim, slice[i].ySim);
-      ctx.lineTo(pi.x, pi.y);
+    let first = true;
+    for (const particle of particles.suffix(neededPts)) {
+      const point = Spaces.simToScreen(particle.xSim, particle.ySim);
+      if (first) { ctx.moveTo(point.x, point.y); first = false; }
+      else ctx.lineTo(point.x, point.y);
     }
     ctx.stroke();
     ctx.restore();

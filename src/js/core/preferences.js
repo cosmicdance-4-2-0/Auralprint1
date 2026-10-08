@@ -1,5 +1,6 @@
 import { normalizeMaxDeltaTimeSec } from "./timing.js";
 import { CONFIG } from "./config.js";
+import { assertOrbAdmission } from "./orb-admission.js";
 import { clamp, deepClone } from "./utils.js";
 
 /* =============================================================================
@@ -10,6 +11,7 @@ const runtime = { settings: deepClone(CONFIG.defaults) };
 
 function replacePreferences(next) {
   const replacement = (next && typeof next === "object") ? next : deepClone(CONFIG.defaults);
+  assertOrbAdmission(replacement.orbs);
   for (const key of Object.keys(preferences)) delete preferences[key];
   Object.assign(preferences, replacement);
   return preferences;
@@ -26,6 +28,7 @@ function normalizeBandCount(count) {
 }
 
 function resolveSettings() {
+  assertOrbAdmission(preferences.orbs);
   runtime.settings = deepClone(preferences);
   runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
   runtime.settings.timing = { maxDeltaTimeSec: normalizeMaxDeltaTimeSec(preferences.timing?.maxDeltaTimeSec) };

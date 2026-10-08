@@ -1,0 +1,42 @@
+[
+  {
+    "mutation": "per-orb-only",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "first-orb-monopoly",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "retain-emission-debt",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "missing-retention",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "stale-reset",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "stale-removal",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "periodic-cursor-alias",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "admission-bypass",
+    "exitCode": 1,
+    "assertionDetected": true
+  }
+]

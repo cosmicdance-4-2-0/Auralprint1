@@ -523,6 +523,8 @@ bands: {
     },
 
     orbs: {
+      // Provisional operational safety ceiling, not a frame-rate guarantee.
+      maxCount: 4096,
       response: {
         minRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
         maxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },

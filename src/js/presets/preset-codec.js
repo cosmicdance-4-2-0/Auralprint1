@@ -4,6 +4,7 @@ import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
 import { CONFIG } from "../core/config.js";
 import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
+import { assertOrbAdmission } from "../core/orb-admission.js";
 
 // Preset data contract, independent of URL/base64 or application state.
 // Build 115 freezes schema 10; future persisted additions, removals, renames,
@@ -15,6 +16,9 @@ const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 function decodePresetPayload(payload) {
   if (!isRecord(payload) || !isRecord(payload.prefs)) return { ok: false, code: "malformed-payload" };
   if (!SUPPORTED_SCHEMAS.includes(payload.schema)) return { ok: false, code: "unsupported-schema" };
+  const incoming = payload.schema === LEGACY_SCHEMA_V9 ? recoverScene9Preferences(payload.prefs) : payload.prefs;
+  try { assertOrbAdmission(incoming.orbs); }
+  catch (error) { return { ok: false, code: error.code }; }
   return { ok: true, schema: payload.schema, prefs: payload.prefs };
 }
 
@@ -52,6 +56,7 @@ function sanitizePreset(decoded) {
   const incoming = schema === LEGACY_SCHEMA_V9
     ? recoverScene9Preferences(decoded.prefs)
     : decoded.prefs;
+  assertOrbAdmission(incoming.orbs);
   // Presets are full configuration snapshots. Always migrate/sanitize from
   // canonical defaults so older or partial payloads cannot inherit live state.
   const next = deepClone(CONFIG.defaults);
