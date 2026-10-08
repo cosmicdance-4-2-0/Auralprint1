@@ -1,0 +1,19 @@
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (7.546896ms)
+✖ failing tests:
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (7.546896ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  -   trails: []
+    }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-budgets.test.js:153:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ParticleGovernor],
+    expected: [ParticleGovernor],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

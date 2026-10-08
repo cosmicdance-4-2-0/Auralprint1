@@ -1,0 +1,31 @@
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.522913ms)
+✖ RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (2.057583ms)
+✖ RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (1.049378ms)
+✖ RC-15 phase 2: periodic low-rate demand cannot starve through cursor/clock alignment (0.854102ms)
+✖ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (1.122858ms)
+✖ failing tests:
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.522913ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (2.057583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (1.049378ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ RC-15 phase 2: periodic low-rate demand cannot starve through cursor/clock alignment (0.854102ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (1.122858ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-spacing.test.js:131:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,61 @@
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (6.424108ms)
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.395581ms)
+✖ integrated: long-running phase modulo stays finite; track reset keeps phase and visual reset restores design (2.680294ms)
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.801372ms)
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.739108ms)
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.754361ms)
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.664625ms)
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.785888ms)
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.732778ms)
+✖ production callback: hidden/rebased foreground never integrates missed work; invalid timestamps recover (0.771448ms)
+✖ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (0.688342ms)
+✖ slow 5 FPS history spans real TTL motion, fade uses real particle age (0.889716ms)
+✖ slow 10 FPS history spans real TTL motion, fade uses real particle age (1.013724ms)
+✖ direct Orb and frame callers retain default delta convention; explicit motion wraps independently (0.283048ms)
+✖ smaller selected emission delta never slows independent motion (1.033093ms)
+✖ failing tests:
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (6.424108ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.395581ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated: long-running phase modulo stays finite; track reset keeps phase and visual reset restores design (2.680294ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.801372ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 0.7499999999999964 != 0.25
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.739108ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 1.2500000000000036 != 1.75
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.754361ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 0.8749999999999982 != 0.25
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.664625ms)
+  AssertionError [ERR_ASSERTION]: one-second Orb phase: 1.1250000000000018 != 1.75
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.785888ms)
+  AssertionError [ERR_ASSERTION]: exact threshold integrates: 1.0250000000000004 != 1.375
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.732778ms)
+  AssertionError [ERR_ASSERTION]: first ordinary recovery frame: 1.0500000000000007 != 1.1000000000000003
+✖ production callback: hidden/rebased foreground never integrates missed work; invalid timestamps recover (0.771448ms)
+  AssertionError [ERR_ASSERTION]: foreground ordinary recovery: 1.0500000000000007 != 1.1000000000000003
+✖ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (0.688342ms)
+  AssertionError [ERR_ASSERTION]: pause recovery: 1.0500000000000007 != 1.1000000000000003
+✖ slow 5 FPS history spans real TTL motion, fade uses real particle age (0.889716ms)
+  AssertionError [ERR_ASSERTION]: retained actual-time angular history: 0.07500000000000107 != 0.44999999999999574
+✖ slow 10 FPS history spans real TTL motion, fade uses real particle age (1.013724ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ direct Orb and frame callers retain default delta convention; explicit motion wraps independently (0.283048ms)
+  AssertionError [ERR_ASSERTION]: explicit motion field: 0.16681469282041306 != 0.41681469282041395
+✖ smaller selected emission delta never slows independent motion (1.033093ms)
+  AssertionError [ERR_ASSERTION]: phase independent of smaller emission maximum: 1.0075000000000003 != 1.15
+      at close (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:18:35)
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:142:240)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,0 +1,19 @@
+✖ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.462843ms)
+✖ failing tests:
+✖ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.462843ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:80:139)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1.2249999999999996,
+    expected: 1.0750000000000002,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

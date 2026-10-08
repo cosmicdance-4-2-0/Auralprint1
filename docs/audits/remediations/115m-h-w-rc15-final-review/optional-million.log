@@ -1,0 +1,25 @@
+✔ budgets: one integer normalization contract for sanitation, resolution and active governor (10.699721ms)
+✔ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (2.76908ms)
+✔ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (6.270008ms)
+✔ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.580578ms)
+✔ budgets: actual upper-budget admissions exceed both retired immutable ceilings (51.15511ms)
+✔ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (0.823286ms)
+✔ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (1.874817ms)
+✔ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (2.415976ms)
+✔ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (1422.220548ms)
+✔ budgets: both zero settings leave Orb motion and free Spectral Ring active, pause still refuses emission (0.996378ms)
+✔ integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (353.116833ms)
+✔ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (127.492273ms)
+✔ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (105.998693ms)
+✔ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (50.438046ms)
+✔ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.951864ms)
+✔ integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (236.323672ms)
+✔ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.668251ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2419.206587

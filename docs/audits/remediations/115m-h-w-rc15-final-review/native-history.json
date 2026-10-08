@@ -1,0 +1,712 @@
+{
+  "version": "v0.1.15m.h.w",
+  "browser": "151.0.7922.173",
+  "method": "Synthetic 16-Orb configured TTL rotation and independent Trace coverage,actual source callback draw. No interpolation or human preset claim.",
+  "results": [
+    {
+      "fps": 120,
+      "dpr": 1,
+      "totals": {
+        "emissions": 38400,
+        "evicted": 0,
+        "expired": 11520,
+        "spatiallyRejectedDemand": 281600
+      },
+      "histories": [
+        {
+          "id": "synthetic-history-0",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 3.7168146928198453,
+          "expectedAngleRad": 3.7168146928204138
+        },
+        {
+          "id": "synthetic-history-1",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 4.10951377451857,
+          "expectedAngleRad": 4.109513774519138
+        },
+        {
+          "id": "synthetic-history-2",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 4.5022128562172945,
+          "expectedAngleRad": 4.502212856217863
+        },
+        {
+          "id": "synthetic-history-3",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 4.894911937916019,
+          "expectedAngleRad": 4.894911937916586
+        },
+        {
+          "id": "synthetic-history-4",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 5.287611019614742,
+          "expectedAngleRad": 5.28761101961531
+        },
+        {
+          "id": "synthetic-history-5",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 5.6803101013134665,
+          "expectedAngleRad": 5.680310101314035
+        },
+        {
+          "id": "synthetic-history-6",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 6.073009183012191,
+          "expectedAngleRad": 6.073009183012758
+        },
+        {
+          "id": "synthetic-history-7",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 0.1825229575313294,
+          "expectedAngleRad": 0.18252295753189607
+        },
+        {
+          "id": "synthetic-history-8",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 0.5752220392300522,
+          "expectedAngleRad": 0.5752220392306207
+        },
+        {
+          "id": "synthetic-history-9",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 0.9679211209287768,
+          "expectedAngleRad": 0.9679211209293452
+        },
+        {
+          "id": "synthetic-history-10",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 1.3606202026275014,
+          "expectedAngleRad": 1.3606202026280698
+        },
+        {
+          "id": "synthetic-history-11",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 1.7533192843262242,
+          "expectedAngleRad": 1.7533192843267926
+        },
+        {
+          "id": "synthetic-history-12",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 2.1460183660249488,
+          "expectedAngleRad": 2.146018366025517
+        },
+        {
+          "id": "synthetic-history-13",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 2.5387174477236734,
+          "expectedAngleRad": 2.538717447724242
+        },
+        {
+          "id": "synthetic-history-14",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 2.931416529422396,
+          "expectedAngleRad": 2.9314165294229646
+        },
+        {
+          "id": "synthetic-history-15",
+          "live": 1680,
+          "oldestAgeSec": 13.99166666666666,
+          "historySec": 13.99166666666666,
+          "particleCoverageRad": 6.99583333333333,
+          "traceCoverageRad": 4.166666666666664,
+          "angleRad": 3.3241156111211208,
+          "expectedAngleRad": 3.324115611121689
+        }
+      ],
+      "live": 26880,
+      "fixture": "synthetic-history-schema10.json",
+      "expectedTtlCoverageRad": 7,
+      "method": "20s update-only warmup,then actual callback renders the complete retained source scene. 16 Orbs, .5rad/s,TTL14,spacing.5CSS,selected512/65536; no supplied human preset."
+    },
+    {
+      "fps": 60,
+      "dpr": 1,
+      "totals": {
+        "emissions": 19200,
+        "evicted": 0,
+        "expired": 5760,
+        "spatiallyRejectedDemand": 300800
+      },
+      "histories": [
+        {
+          "id": "synthetic-history-0",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 3.716814692819952,
+          "expectedAngleRad": 3.7168146928204138
+        },
+        {
+          "id": "synthetic-history-1",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 4.109513774518636,
+          "expectedAngleRad": 4.109513774519138
+        },
+        {
+          "id": "synthetic-history-2",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 4.502212856217348,
+          "expectedAngleRad": 4.502212856217863
+        },
+        {
+          "id": "synthetic-history-3",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 4.894911937916074,
+          "expectedAngleRad": 4.894911937916586
+        },
+        {
+          "id": "synthetic-history-4",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 5.287611019614797,
+          "expectedAngleRad": 5.28761101961531
+        },
+        {
+          "id": "synthetic-history-5",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 5.68031010131352,
+          "expectedAngleRad": 5.680310101314035
+        },
+        {
+          "id": "synthetic-history-6",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 6.073009183012246,
+          "expectedAngleRad": 6.073009183012758
+        },
+        {
+          "id": "synthetic-history-7",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 0.18252295753140224,
+          "expectedAngleRad": 0.18252295753189607
+        },
+        {
+          "id": "synthetic-history-8",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 0.5752220392301588,
+          "expectedAngleRad": 0.5752220392306207
+        },
+        {
+          "id": "synthetic-history-9",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 0.9679211209288852,
+          "expectedAngleRad": 0.9679211209293452
+        },
+        {
+          "id": "synthetic-history-10",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 1.360620202627608,
+          "expectedAngleRad": 1.3606202026280698
+        },
+        {
+          "id": "synthetic-history-11",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 1.7533192843263308,
+          "expectedAngleRad": 1.7533192843267926
+        },
+        {
+          "id": "synthetic-history-12",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 2.146018366025057,
+          "expectedAngleRad": 2.146018366025517
+        },
+        {
+          "id": "synthetic-history-13",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 2.53871744772378,
+          "expectedAngleRad": 2.538717447724242
+        },
+        {
+          "id": "synthetic-history-14",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 2.9314165294225063,
+          "expectedAngleRad": 2.9314165294229646
+        },
+        {
+          "id": "synthetic-history-15",
+          "live": 840,
+          "oldestAgeSec": 13.983333333333334,
+          "historySec": 13.983333333333334,
+          "particleCoverageRad": 6.991666666666667,
+          "traceCoverageRad": 6.991666666666667,
+          "angleRad": 3.324115611121229,
+          "expectedAngleRad": 3.324115611121689
+        }
+      ],
+      "live": 13440,
+      "fixture": "synthetic-history-schema10.json",
+      "expectedTtlCoverageRad": 7,
+      "method": "20s update-only warmup,then actual callback renders the complete retained source scene. 16 Orbs, .5rad/s,TTL14,spacing.5CSS,selected512/65536; no supplied human preset."
+    },
+    {
+      "fps": 10,
+      "dpr": 1,
+      "totals": {
+        "emissions": 3200,
+        "evicted": 0,
+        "expired": 960,
+        "spatiallyRejectedDemand": 103456
+      },
+      "histories": [
+        {
+          "id": "synthetic-history-0",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 3.716814692820492,
+          "expectedAngleRad": 3.7168146928204138
+        },
+        {
+          "id": "synthetic-history-1",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 4.109513774519225,
+          "expectedAngleRad": 4.109513774519138
+        },
+        {
+          "id": "synthetic-history-2",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 4.502212856217955,
+          "expectedAngleRad": 4.502212856217863
+        },
+        {
+          "id": "synthetic-history-3",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 4.894911937916685,
+          "expectedAngleRad": 4.894911937916586
+        },
+        {
+          "id": "synthetic-history-4",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 5.287611019615419,
+          "expectedAngleRad": 5.28761101961531
+        },
+        {
+          "id": "synthetic-history-5",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 5.6803101013141415,
+          "expectedAngleRad": 5.680310101314035
+        },
+        {
+          "id": "synthetic-history-6",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 6.073009183012868,
+          "expectedAngleRad": 6.073009183012758
+        },
+        {
+          "id": "synthetic-history-7",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 0.18252295753200087,
+          "expectedAngleRad": 0.18252295753189607
+        },
+        {
+          "id": "synthetic-history-8",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 0.5752220392307201,
+          "expectedAngleRad": 0.5752220392306207
+        },
+        {
+          "id": "synthetic-history-9",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 0.9679211209294358,
+          "expectedAngleRad": 0.9679211209293452
+        },
+        {
+          "id": "synthetic-history-10",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 1.3606202026281515,
+          "expectedAngleRad": 1.3606202026280698
+        },
+        {
+          "id": "synthetic-history-11",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 1.7533192843268708,
+          "expectedAngleRad": 1.7533192843267926
+        },
+        {
+          "id": "synthetic-history-12",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 2.1460183660255936,
+          "expectedAngleRad": 2.146018366025517
+        },
+        {
+          "id": "synthetic-history-13",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 2.53871744772432,
+          "expectedAngleRad": 2.538717447724242
+        },
+        {
+          "id": "synthetic-history-14",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 2.9314165294230428,
+          "expectedAngleRad": 2.9314165294229646
+        },
+        {
+          "id": "synthetic-history-15",
+          "live": 140,
+          "oldestAgeSec": 13.900000000000006,
+          "historySec": 13.900000000000006,
+          "particleCoverageRad": 6.950000000000003,
+          "traceCoverageRad": 6.950000000000003,
+          "angleRad": 3.3241156111217656,
+          "expectedAngleRad": 3.324115611121689
+        }
+      ],
+      "live": 2240,
+      "fixture": "synthetic-history-schema10.json",
+      "expectedTtlCoverageRad": 7,
+      "method": "20s update-only warmup,then actual callback renders the complete retained source scene. 16 Orbs, .5rad/s,TTL14,spacing.5CSS,selected512/65536; no supplied human preset."
+    },
+    {
+      "fps": 5,
+      "dpr": 1,
+      "totals": {
+        "emissions": 1600,
+        "evicted": 0,
+        "expired": 480,
+        "spatiallyRejectedDemand": 51728
+      },
+      "histories": [
+        {
+          "id": "synthetic-history-0",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 3.7168146928203782,
+          "expectedAngleRad": 3.7168146928204138
+        },
+        {
+          "id": "synthetic-history-1",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 4.109513774519103,
+          "expectedAngleRad": 4.109513774519138
+        },
+        {
+          "id": "synthetic-history-2",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 4.502212856217827,
+          "expectedAngleRad": 4.502212856217863
+        },
+        {
+          "id": "synthetic-history-3",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 4.894911937916552,
+          "expectedAngleRad": 4.894911937916586
+        },
+        {
+          "id": "synthetic-history-4",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 5.287611019615275,
+          "expectedAngleRad": 5.28761101961531
+        },
+        {
+          "id": "synthetic-history-5",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 5.680310101313999,
+          "expectedAngleRad": 5.680310101314035
+        },
+        {
+          "id": "synthetic-history-6",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 6.073009183012724,
+          "expectedAngleRad": 6.073009183012758
+        },
+        {
+          "id": "synthetic-history-7",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 0.18252295753186054,
+          "expectedAngleRad": 0.18252295753189607
+        },
+        {
+          "id": "synthetic-history-8",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 0.5752220392305851,
+          "expectedAngleRad": 0.5752220392306207
+        },
+        {
+          "id": "synthetic-history-9",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 0.9679211209293097,
+          "expectedAngleRad": 0.9679211209293452
+        },
+        {
+          "id": "synthetic-history-10",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 1.3606202026280325,
+          "expectedAngleRad": 1.3606202026280698
+        },
+        {
+          "id": "synthetic-history-11",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 1.753319284326757,
+          "expectedAngleRad": 1.7533192843267926
+        },
+        {
+          "id": "synthetic-history-12",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 2.1460183660254817,
+          "expectedAngleRad": 2.146018366025517
+        },
+        {
+          "id": "synthetic-history-13",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 2.5387174477242063,
+          "expectedAngleRad": 2.538717447724242
+        },
+        {
+          "id": "synthetic-history-14",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 2.931416529422931,
+          "expectedAngleRad": 2.9314165294229646
+        },
+        {
+          "id": "synthetic-history-15",
+          "live": 70,
+          "oldestAgeSec": 13.799999999999997,
+          "historySec": 13.799999999999997,
+          "particleCoverageRad": 6.899999999999999,
+          "traceCoverageRad": 6.899999999999999,
+          "angleRad": 3.3241156111216537,
+          "expectedAngleRad": 3.324115611121689
+        }
+      ],
+      "live": 1120,
+      "fixture": "synthetic-history-schema10.json",
+      "expectedTtlCoverageRad": 7,
+      "method": "20s update-only warmup,then actual callback renders the complete retained source scene. 16 Orbs, .5rad/s,TTL14,spacing.5CSS,selected512/65536; no supplied human preset."
+    }
+  ],
+  "errors": []
+}

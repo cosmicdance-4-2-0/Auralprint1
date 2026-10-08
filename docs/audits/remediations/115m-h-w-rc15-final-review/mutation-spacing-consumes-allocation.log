@@ -1,0 +1,40 @@
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.248098ms)
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.795145ms)
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (4.894243ms)
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.211984ms)
+✖ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.623653ms)
+✖ independent Orbs at identical locations admit independently and suppress before shared allocation (0.421057ms)
+✖ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (0.330931ms)
+✖ nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (1.774324ms)
+✖ failing tests:
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.248098ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.795145ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (4.894243ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.211984ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.623653ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ independent Orbs at identical locations admit independently and suppress before shared allocation (0.421057ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (0.330931ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (1.774324ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-spacing.test.js:173:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 512,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

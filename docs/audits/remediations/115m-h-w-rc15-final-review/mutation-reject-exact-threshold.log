@@ -1,0 +1,28 @@
+✖ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (1.140135ms)
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.241605ms)
+✖ CSS spacing and production Orb DPR wiring at DPR 1 (0.279994ms)
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.155595ms)
+✖ failing tests:
+✖ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (1.140135ms)
+  AssertionError [ERR_ASSERTION]: exact threshold accepted
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.241605ms)
+  AssertionError [ERR_ASSERTION]: 3-4-5 exact squared threshold
+✖ CSS spacing and production Orb DPR wiring at DPR 1 (0.279994ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.155595ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-spacing.test.js:79:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

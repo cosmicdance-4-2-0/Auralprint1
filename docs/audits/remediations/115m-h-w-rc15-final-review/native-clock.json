@@ -1,0 +1,204 @@
+{
+  "version": "v0.1.15m.h.w",
+  "browser": "151.0.7922.173",
+  "method": "Native production source modules and actual boot/callback. Synthetic timestamps, visibility property and visibility events; no browser timing-policy reimplementation.",
+  "results": [
+    {
+      "dpr": 1,
+      "cases": [
+        {
+          "fps": 120,
+          "chirality": -1,
+          "phase": 0.2500000000000071,
+          "ringPhase": 1.7499999999999574,
+          "live": 60,
+          "historySec": 0.9916666666666742
+        },
+        {
+          "fps": 120,
+          "chirality": 1,
+          "phase": 1.7499999999999574,
+          "ringPhase": 1.7499999999999574,
+          "live": 60,
+          "historySec": 0.9916666666666742
+        },
+        {
+          "fps": 60,
+          "chirality": -1,
+          "phase": 0.24999999999998934,
+          "ringPhase": 1.749999999999993,
+          "live": 60,
+          "historySec": 0.9833333333333343
+        },
+        {
+          "fps": 60,
+          "chirality": 1,
+          "phase": 1.749999999999993,
+          "ringPhase": 1.749999999999993,
+          "live": 60,
+          "historySec": 0.9833333333333343
+        },
+        {
+          "fps": 30,
+          "chirality": -1,
+          "phase": 0.24999999999998934,
+          "ringPhase": 1.7500000000000107,
+          "live": 30,
+          "historySec": 0.9666666666666686
+        },
+        {
+          "fps": 30,
+          "chirality": 1,
+          "phase": 1.7500000000000107,
+          "ringPhase": 1.7500000000000107,
+          "live": 30,
+          "historySec": 0.9666666666666686
+        },
+        {
+          "fps": 10,
+          "chirality": -1,
+          "phase": 0.24999999999999822,
+          "ringPhase": 1.7500000000000018,
+          "live": 10,
+          "historySec": 0.9000000000000057
+        },
+        {
+          "fps": 10,
+          "chirality": 1,
+          "phase": 1.7500000000000018,
+          "ringPhase": 1.7500000000000018,
+          "live": 10,
+          "historySec": 0.9000000000000057
+        },
+        {
+          "fps": 5,
+          "chirality": -1,
+          "phase": 0.24999999999999822,
+          "ringPhase": 1.7500000000000018,
+          "live": 5,
+          "historySec": 0.7999999999999972
+        },
+        {
+          "fps": 5,
+          "chirality": 1,
+          "phase": 1.7500000000000018,
+          "ringPhase": 1.7500000000000018,
+          "live": 5,
+          "historySec": 0.7999999999999972
+        }
+      ],
+      "verified": [
+        "actual production callback 120/60/30/10/5 FPS, both chiralities",
+        "bounded emission delta",
+        "current-frame Orb Ring lock",
+        "120-second real-age expiry and no catch-up",
+        "native registered visibility listener with synthetic hidden/visible events",
+        "first foreground callback rebase and next-frame recovery",
+        "free Ring/Orb global pause with real-time expiry",
+        "live zero policy without governor recreation",
+        "focus/editor host retention",
+        "accurate live/cumulative diagnostics"
+      ],
+      "nativeTimerSampleMs": 2492.0999999996275
+    },
+    {
+      "dpr": 2,
+      "cases": [
+        {
+          "fps": 120,
+          "chirality": -1,
+          "phase": 0.2500000000000071,
+          "ringPhase": 1.7499999999999574,
+          "live": 60,
+          "historySec": 0.9916666666666742
+        },
+        {
+          "fps": 120,
+          "chirality": 1,
+          "phase": 1.7499999999999574,
+          "ringPhase": 1.7499999999999574,
+          "live": 60,
+          "historySec": 0.9916666666666742
+        },
+        {
+          "fps": 60,
+          "chirality": -1,
+          "phase": 0.24999999999998934,
+          "ringPhase": 1.749999999999993,
+          "live": 60,
+          "historySec": 0.9833333333333343
+        },
+        {
+          "fps": 60,
+          "chirality": 1,
+          "phase": 1.749999999999993,
+          "ringPhase": 1.749999999999993,
+          "live": 60,
+          "historySec": 0.9833333333333343
+        },
+        {
+          "fps": 30,
+          "chirality": -1,
+          "phase": 0.24999999999998934,
+          "ringPhase": 1.7500000000000107,
+          "live": 30,
+          "historySec": 0.9666666666666686
+        },
+        {
+          "fps": 30,
+          "chirality": 1,
+          "phase": 1.7500000000000107,
+          "ringPhase": 1.7500000000000107,
+          "live": 30,
+          "historySec": 0.9666666666666686
+        },
+        {
+          "fps": 10,
+          "chirality": -1,
+          "phase": 0.24999999999999822,
+          "ringPhase": 1.7500000000000018,
+          "live": 10,
+          "historySec": 0.9000000000000057
+        },
+        {
+          "fps": 10,
+          "chirality": 1,
+          "phase": 1.7500000000000018,
+          "ringPhase": 1.7500000000000018,
+          "live": 10,
+          "historySec": 0.9000000000000057
+        },
+        {
+          "fps": 5,
+          "chirality": -1,
+          "phase": 0.24999999999999822,
+          "ringPhase": 1.7500000000000018,
+          "live": 5,
+          "historySec": 0.7999999999999972
+        },
+        {
+          "fps": 5,
+          "chirality": 1,
+          "phase": 1.7500000000000018,
+          "ringPhase": 1.7500000000000018,
+          "live": 5,
+          "historySec": 0.7999999999999972
+        }
+      ],
+      "verified": [
+        "actual production callback 120/60/30/10/5 FPS, both chiralities",
+        "bounded emission delta",
+        "current-frame Orb Ring lock",
+        "120-second real-age expiry and no catch-up",
+        "native registered visibility listener with synthetic hidden/visible events",
+        "first foreground callback rebase and next-frame recovery",
+        "free Ring/Orb global pause with real-time expiry",
+        "live zero policy without governor recreation",
+        "focus/editor host retention",
+        "accurate live/cumulative diagnostics"
+      ],
+      "nativeTimerSampleMs": 2225.399999999441
+    }
+  ],
+  "errors": []
+}

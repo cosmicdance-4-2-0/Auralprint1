@@ -176,7 +176,7 @@ test("budgets: canonical lifecycle, preset replacement and default reset never r
   }finally{VisualizerRuntime.dispose();replacePreferences(oldPrefs);runtime.settings=oldSettings;state.orbs=oldOrbs;}
 });
 
-test("budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero",()=>{
+test("budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero",{skip:process.env.AP_MILLION_STRESS !== "1"},()=>{
   const {g,trails}=scene(1,{maxEmissionsPerFrame:16384,maxActiveParticles:1048576}),t=trails[0];
   try {
     // Retention-only admission probe; shared per-update admission is tested above.

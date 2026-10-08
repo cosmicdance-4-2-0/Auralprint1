@@ -1,0 +1,19 @@
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.920353ms)
+✖ failing tests:
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.920353ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-spacing.test.js:78:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

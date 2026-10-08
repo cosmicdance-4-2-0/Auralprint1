@@ -1,0 +1,63 @@
+Dependencies already installed; package manifests/lock unchanged. No npm ci required.
+
+
+> test
+> node --test
+
+✔ tests/analysis-frame.test.js (60.356793ms)
+✔ tests/analysis-panel.test.js (54.567454ms)
+✔ tests/band-bank.test.js (61.202833ms)
+✔ tests/band-count-coverage.test.js (172.943604ms)
+✔ tests/fft-coordinate.test.js (56.537475ms)
+✔ tests/input-source-manager.test.js (73.710638ms)
+✔ tests/live-source-ownership.test.js (103.116361ms)
+✔ tests/orb-band-picker.test.js (54.336895ms)
+✔ tests/orb-collection.test.js (67.283503ms)
+✔ tests/orb-editor.test.js (109.720944ms)
+✔ tests/orb-id-termination.test.js (107.087184ms)
+✔ tests/per-orb-ownership.test.js (72.259467ms)
+✔ tests/preset-id-reservation.test.js (57.963452ms)
+✔ tests/preset-schema-10.test.js (123.18098ms)
+✔ tests/rc15-budgets.test.js (125.056514ms)
+✔ tests/rc15-integrated-review.test.js (494.002912ms)
+✔ tests/rc15-phase1.test.js (69.392344ms)
+✔ tests/rc15-phase2.test.js (337.626618ms)
+✔ tests/rc15-phase3.test.js (696.831798ms)
+✔ tests/rc15-spacing.test.js (138.057408ms)
+✔ tests/rc15-timing-performance.test.js (205.617546ms)
+✔ tests/recording-export.test.js (126.107699ms)
+✔ tests/ring-phase-lock.test.js (65.874452ms)
+✔ tests/scene-panel.test.js (66.099978ms)
+✔ tests/scrubber-drag-ownership.test.js (54.340162ms)
+✔ tests/scrubber-waveform.test.js (54.784944ms)
+✔ tests/spectral-ring-editor.test.js (52.120373ms)
+✔ tests/stream-graph.test.js (58.291165ms)
+✔ tests/targeted-audit.test.js (524.543976ms)
+✔ tests/transport-ownership.test.js (94.319677ms)
+✔ tests/url-preset-band-rebuild.test.js (55.950929ms)
+✔ tests/visualizer-runtime.test.js (63.236361ms)
+✔ tests/visualizers-panel.test.js (151.437641ms)
+✔ tests/workspace-ui.test.js (54.806232ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4720.915598
+
+
+> build
+> node scripts/build.mjs
+
+
+  .build/auralprint.css  25.3kb
+
+⚡ Done in 12ms
+
+  .build/auralprint.js  340.4kb
+
+⚡ Done in 27ms
+
+git diff --check: PASS

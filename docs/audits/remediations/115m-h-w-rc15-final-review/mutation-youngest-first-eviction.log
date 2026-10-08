@@ -1,0 +1,49 @@
+✖ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (72.194221ms)
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (4.378393ms)
+✖ integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (1.036718ms)
+✖ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (106.515876ms)
+✖ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (16.317612ms)
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (3.144196ms)
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.251453ms)
+✖ integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (1.653861ms)
+✖ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.393986ms)
+✖ RC-15 phase 2: oldest means birth timestamp across trails, with independent TTL expiry and replacement (0.690304ms)
+✖ RC-15 phase 2: actual 16,384-particle cap holds during sustained aggregate overload (24.167506ms)
+✖ failing tests:
+✖ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (72.194221ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (4.378393ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (1.036718ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (106.515876ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (16.317612ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (3.144196ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.251453ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (1.653861ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.393986ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: oldest means birth timestamp across trails, with independent TTL expiry and replacement (0.690304ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ RC-15 phase 2: actual 16,384-particle cap holds during sustained aggregate overload (24.167506ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-phase2.test.js:255:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

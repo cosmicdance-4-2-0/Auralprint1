@@ -1,0 +1,25 @@
+✖ budgets: one integer normalization contract for sanitation, resolution and active governor (9.852825ms)
+✖ budgets: actual upper-budget admissions exceed both retired immutable ceilings (26.531395ms)
+✖ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (48.601961ms)
+✖ failing tests:
+✖ budgets: one integer normalization contract for sanitation, resolution and active governor (9.852825ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ budgets: actual upper-budget admissions exceed both retired immutable ceilings (26.531395ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (48.601961ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:110:36)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 50001,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

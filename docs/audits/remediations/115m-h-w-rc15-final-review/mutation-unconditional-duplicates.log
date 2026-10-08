@@ -1,0 +1,79 @@
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.241909ms)
+✖ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (253.340231ms)
+✖ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (173.977981ms)
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (44.240893ms)
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (20.417034ms)
+✖ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.57487ms)
+✖ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (0.425013ms)
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.329578ms)
+✖ CSS spacing and production Orb DPR wiring at DPR 1 (0.309789ms)
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.2846ms)
+✖ stationary trail becomes eligible after TTL expiry, eviction, or explicit reset without a coordinate cache (0.365533ms)
+✖ independent Orbs at identical locations admit independently and suppress before shared allocation (0.736894ms)
+✖ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (4.073071ms)
+✖ rate below frame rate remains authoritative even after large movement; fractions survive spatial rejection (0.321857ms)
+✖ nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (2.236293ms)
+✖ schema 10 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated (0.768552ms)
+✖ canonical creation, duplication, ID reconciliation, preset apply, track/visual reset, rebuild and disposal (0.87243ms)
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (1.118182ms)
+✖ slow 5 FPS history spans real TTL motion, fade uses real particle age (1.618288ms)
+✖ slow 10 FPS history spans real TTL motion, fade uses real particle age (1.118502ms)
+✖ different Orb TTLs retire independently, last-tail spacing resumes on empty trail without coordinate cache (0.287435ms)
+✖ failing tests:
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.241909ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (253.340231ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (173.977981ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (44.240893ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (20.417034ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.57487ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (0.425013ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.329578ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ CSS spacing and production Orb DPR wiring at DPR 1 (0.309789ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.2846ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ stationary trail becomes eligible after TTL expiry, eviction, or explicit reset without a coordinate cache (0.365533ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ independent Orbs at identical locations admit independently and suppress before shared allocation (0.736894ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+✖ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (4.073071ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ rate below frame rate remains authoritative even after large movement; fractions survive spatial rejection (0.321857ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (2.236293ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ schema 10 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated (0.768552ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ canonical creation, duplication, ID reconciliation, preset apply, track/visual reset, rebuild and disposal (0.87243ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (1.118182ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ slow 5 FPS history spans real TTL motion, fade uses real particle age (1.618288ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ slow 10 FPS history spans real TTL motion, fade uses real particle age (1.118502ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ different Orb TTLs retire independently, last-tail spacing resumes on empty trail without coordinate cache (0.287435ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:126:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
