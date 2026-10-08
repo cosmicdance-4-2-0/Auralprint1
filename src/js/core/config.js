@@ -1,10 +1,12 @@
 import { TAU, RAD_TO_DEG } from "./constants.js";
 import { deepFreeze } from "./utils.js";
 
+const SIMULATION_MAX_DELTA_TIME_SEC = 1 / 30;
+
 const DEFAULT_ORB_BEHAVIOR = {
   motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
   response: { minRadiusFrac: 0.01, maxRadiusFrac: 0.80, waveformRadialDisplaceFrac: 0.10 },
-  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0, overlapRadiusPx: 1.0 },
+  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0 },
   trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand" },
 };
 
@@ -460,11 +462,12 @@ bands: {
     },
 
     timing: {
-      maxDeltaTimeSec: 1 / 30,
+      maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC,
     },
   },
 
   limits: {
+    timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC },
     trace: {
       numLines: { min: 10, max: 1000, step: 10 },
       lineAlpha: { min: 0, max: 1, step: 0.01 },
@@ -477,7 +480,6 @@ bands: {
       sizeMinPx: { min: 0.5, max: 6, step: 0.1 },
       sizeToMinSec: { min: 0.1, max: 120, step: 0.1 },
       ttlSec: { min: 0.1, max: 600, step: 0.1 },
-      overlapRadiusPx: { min: 0.5, max: 10, step: 0.1 },
     },
 
     motion: {

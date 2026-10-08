@@ -1,0 +1,27 @@
+[
+  {
+    "mutation": "proximity-deletion",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "remove-config-ceiling",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "bypass-frame-ceiling",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "unbounded-emission-timing",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "unbounded-emission-rate",
+    "exitCode": 1,
+    "detected": true
+  }
+]

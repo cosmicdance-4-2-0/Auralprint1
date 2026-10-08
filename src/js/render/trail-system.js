@@ -1,5 +1,5 @@
-import { runtime } from "../core/preferences.js";
-import { state } from "../core/state.js";
+import { CONFIG } from "../core/config.js";
+import { clamp } from "../core/utils.js";
 
 /* =============================================================================
    TrailSystem
@@ -15,25 +15,11 @@ class TrailSystem {
     this.emitAccumulator = 0;
   }
 
-  removeOverlaps(xSim, ySim, rPx) {
-    if (rPx <= 0) return;
-    const r2 = rPx * rPx;
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      const p = this.particles[i];
-      const dx = p.xSim - xSim;
-      const dy = p.ySim - ySim;
-      if ((dx*dx + dy*dy) <= r2) this.particles.splice(i, 1);
-    }
-  }
-
-  emitAt(xSim, ySim, nowSec, rgbStart, particleSettings) {
-    this.removeOverlaps(xSim, ySim, particleSettings.overlapRadiusPx * state.dpr);
+  emitAt(xSim, ySim, nowSec, rgbStart) {
     this.particles.push({ xSim, ySim, bornSec: nowSec, rgbStart });
   }
 
   updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings) {
-    const s = runtime.settings;
-
     const ttl = Math.max(0.0001, particleSettings.ttlSec);
     for (let i = this.particles.length - 1; i >= 0; i--) {
       if ((nowSec - this.particles[i].bornSec) >= ttl) this.particles.splice(i, 1);
@@ -41,11 +27,16 @@ class TrailSystem {
 
     this.emitAccumulator += particleSettings.emitPerSecond * dtSec;
 
-    const maxEmitThisFrame = Math.ceil(particleSettings.emitPerSecond * s.timing.maxDeltaTimeSec) + 2;
+    // Temporary per-Orb guard. Aggregate allocation belongs to RC-15 phase 2.
+    const rateLimit = CONFIG.limits.particles.emitPerSecond;
+    const boundedRate = clamp(Number.isFinite(particleSettings.emitPerSecond)
+      ? particleSettings.emitPerSecond : CONFIG.defaults.orbs[0].particles.emitPerSecond,
+      rateLimit.min, rateLimit.max);
+    const maxEmitThisFrame = Math.ceil(boundedRate * CONFIG.limits.timing.maxDeltaTimeSec) + 2;
 
     let emits = 0;
     while (this.emitAccumulator >= 1 && emits < maxEmitThisFrame) {
-      this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart, particleSettings);
+      this.emitAt(emitterXSim, emitterYSim, nowSec, rgbStart);
       this.emitAccumulator -= 1;
       emits += 1;
     }

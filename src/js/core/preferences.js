@@ -1,3 +1,4 @@
+import { normalizeMaxDeltaTimeSec } from "./timing.js";
 import { CONFIG } from "./config.js";
 import { clamp, deepClone } from "./utils.js";
 
@@ -27,6 +28,7 @@ function normalizeBandCount(count) {
 function resolveSettings() {
   runtime.settings = deepClone(preferences);
   runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
+  runtime.settings.timing = { maxDeltaTimeSec: normalizeMaxDeltaTimeSec(preferences.timing?.maxDeltaTimeSec) };
 }
 
 
@@ -141,7 +143,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     waveformRadialDisplaceFrac: nestedNumber("response", "waveformRadialDisplaceFrac", orbLim.response.waveformRadialDisplaceFrac),
   };
   const particles = {};
-  for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "overlapRadiusPx"]) {
+  for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec"]) {
     particles[key] = nestedNumber("particles", key, CONFIG.limits.particles[key]);
   }
   particles.sizeMinPx = Math.min(particles.sizeMinPx, particles.sizeMaxPx);

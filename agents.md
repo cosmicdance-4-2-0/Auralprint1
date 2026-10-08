@@ -69,6 +69,11 @@ Preset system is **versioned and backward-compatible**.
 Schema 10 is frozen when Build 115 ships. Any future persisted-field addition,
 removal, rename, ownership move, or semantic change requires schema 11 and
 migration from 10. Schema numbers must never be reused for incompatible formats.
+Narrow pre-release exception: Build 115 has not shipped. Revision v0.1.15m.h.q
+retires `particles.overlapRadiusPx` from schema 10 without incrementing it.
+Development-era schema-10 inputs containing this property remain accepted;
+normalization and encoding strip it. This exception adds no migration or schema
+11 and does not relax the frozen public contract after Build 115 ships.
 Schema 9 historically had both Scene-node and later top-level forms; input
 migration recognizes both, with top-level values taking precedence. Abandoned
 Scene layout/editor semantics have no schema-10 equivalent and are discarded.
@@ -85,8 +90,8 @@ If you add/change any persisted field:
 2. `sanitizePreset()`
 3. `normalize*()` helpers (e.g., `normalizeOrbDef`)
 4. `encodePresetPayload()` and schema-contract tests
-5. `PRESET_SCHEMA_VERSION` (increment)
-6. Migration handling for older schemas
+5. `PRESET_SCHEMA_VERSION` (increment, except the explicitly authorized pre-release overlap retirement above)
+6. Migration handling for older schemas (preserve existing migrations for that exception)
 
 Failure to update all = **silent data corruption risk**
 
@@ -177,7 +182,7 @@ id, chanId, bandIds, chirality, startAngleRad,
 hueOffsetDeg, colorSource, centerXFrac, centerYFrac,
 motion { angularSpeedRadPerSec },
 response { minRadiusFrac, maxRadiusFrac, waveformRadialDisplaceFrac },
-particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, overlapRadiusPx },
+particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec },
 trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 ```
 

@@ -1,5 +1,6 @@
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
+import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
 import { CONFIG } from "../core/config.js";
 import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
@@ -167,11 +168,7 @@ function sanitizePreset(decoded) {
     }
   }
 
-  if (incoming.timing) {
-    if (Number.isFinite(incoming.timing.maxDeltaTimeSec) && incoming.timing.maxDeltaTimeSec > 0) {
-      next.timing.maxDeltaTimeSec = incoming.timing.maxDeltaTimeSec;
-    }
-  }
+  next.timing.maxDeltaTimeSec = normalizeMaxDeltaTimeSec(incoming.timing?.maxDeltaTimeSec);
 
   next.bands.ceilingHz = Math.max(next.bands.floorHz, next.bands.ceilingHz);
 

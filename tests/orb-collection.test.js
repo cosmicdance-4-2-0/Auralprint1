@@ -112,6 +112,7 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     const [a, b] = state.orbs;
     a.angleRad = 1.25;
     a.trail.particles.push({ history: "source" });
+    a.trail.emitAccumulator = .5;
     b.trail.emitAccumulator = 9;
     const [, aAdapter, bAdapter] = VisualizerRuntime.getVisualizers();
 
@@ -131,6 +132,8 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     assert.equal(state.orbs.find((orb) => orb.id === "A"), a);
     assert.deepEqual(a.trail.particles, [{ history: "source" }]);
     assert.deepEqual(state.orbs.find((orb) => orb.id === duplicate.id).trail.particles, []);
+    assert.equal(state.orbs.find((orb) => orb.id === duplicate.id).trail.emitAccumulator, 0);
+    assert.equal(a.trail.emitAccumulator, .5);
     assert.equal(state.orbs.find((orb) => orb.id === "B"), b);
     assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "B"), bAdapter);
 
