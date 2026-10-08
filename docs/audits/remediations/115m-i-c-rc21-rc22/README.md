@@ -182,9 +182,16 @@ object identity is intentionally not exposed.
   Correct help and type-plus-ID lookup are present; original help absent. Schema
   10 and version are correct. Generated output/dependencies are untracked/ignored.
 
-Hosted Ubuntu/Windows CI will be inspected on the PR head separately from local
-Node/native-browser results. At report preparation, the PR has not yet been
-opened; no hosted result is claimed here.
+[PR #42](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/42) is open and
+unmerged. Implementation commit: **`2d459565d800fd90e8704f1df87d7039008efac1`**.
+[Hosted CI run 37838603676](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37838603676)
+completed **SUCCESS**, with **Ubuntu and Windows both PASS** on that exact commit.
+Both jobs passed locked dependency installation, full tests, single-file build,
+versioned artifact/untracked output verification, and whitespace checks; see
+[job and step results](ci-implementation.json). This evidence follow-up changes
+only this report, the hosted results, and the file inventory; production and
+test code are identical to the validated implementation. Final PR-head checks
+are verified separately before handoff and recorded in the PR description.
 
 ## Changed files, limitations and remaining work
 

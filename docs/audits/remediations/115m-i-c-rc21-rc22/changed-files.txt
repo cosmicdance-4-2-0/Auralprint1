@@ -6,6 +6,7 @@ docs/audits/remediations/115m-i-c-rc21-rc22/baseline-native.json
 docs/audits/remediations/115m-i-c-rc21-rc22/baseline-protections.log
 docs/audits/remediations/115m-i-c-rc21-rc22/build.log
 docs/audits/remediations/115m-i-c-rc21-rc22/changed-files.txt
+docs/audits/remediations/115m-i-c-rc21-rc22/ci-implementation.json
 docs/audits/remediations/115m-i-c-rc21-rc22/focused.log
 docs/audits/remediations/115m-i-c-rc21-rc22/full-test.log
 docs/audits/remediations/115m-i-c-rc21-rc22/million-stress.log
