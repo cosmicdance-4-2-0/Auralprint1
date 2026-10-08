@@ -1,6 +1,7 @@
 import { normalizeMaxDeltaTimeSec } from "./timing.js";
 import { normalizeParticleSafety } from "./particle-safety.js";
 import { CONFIG } from "./config.js";
+import { TAU } from "./constants.js";
 import { assertOrbAdmission } from "./orb-admission.js";
 import { clamp, deepClone } from "./utils.js";
 
@@ -91,6 +92,17 @@ function normalizeOrbColorSource(raw, fallback) {
   return lim.includes(candidate) ? candidate : "inherit";
 }
 
+function normalizeOrbPhaseRad(value, fallback = 0) {
+  const phase = Number.isFinite(value) ? value : (Number.isFinite(fallback) ? fallback : 0);
+  // Preserve canonical radians exactly, including sub-degree imports.
+  if (phase >= 0 && phase < TAU) return phase === 0 ? 0 : phase;
+  const remainder = phase % TAU;
+  const wrapped = remainder < 0 ? remainder + TAU : remainder;
+  // Addition can round a tiny negative remainder to TAU. Keep the half-open
+  // contract without epsilon snapping; exact multiples and -0 become +0.
+  return wrapped === TAU || wrapped === 0 ? 0 : wrapped;
+}
+
 function normalizeOrbDef(incomingOrb, fallbackOrb) {
   // Canonical orb fields (v10 schema): see agents.md §4.2.
   const fallback = fallbackOrb || {};
@@ -105,9 +117,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   const chiralityRaw = Number.isFinite(orb.chirality) ? orb.chirality : fallback.chirality;
   const chirality = chiralityRaw >= 0 ? 1 : -1;
 
-  const startAngleRad = Number.isFinite(orb.startAngleRad)
-    ? orb.startAngleRad
-    : (Number.isFinite(fallback.startAngleRad) ? fallback.startAngleRad : 0);
+  const startAngleRad = normalizeOrbPhaseRad(orb.startAngleRad, fallback.startAngleRad);
 
   const chanId = (hasOwn(orb, "chanId") || hasOwn(orb, "bandId"))
     ? normalizeOrbChannelId(orb.chanId, orb.bandId)
@@ -189,4 +199,4 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   };
 }
 
-export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeBandCount, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef, normalizeMinPlacementDistancePx };
+export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeBandCount, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef, normalizeOrbPhaseRad, normalizeMinPlacementDistancePx };

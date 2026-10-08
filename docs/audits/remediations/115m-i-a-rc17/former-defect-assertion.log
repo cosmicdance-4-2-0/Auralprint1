@@ -1,0 +1,14 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 0
+- 12.566370614359172
+
+    at /workspace/Auralprint1/scripts/validate-rc17.cjs:65:18 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 12.566370614359172,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

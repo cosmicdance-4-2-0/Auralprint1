@@ -1,0 +1,765 @@
+{
+  "version": "v0.1.15m.i.a",
+  "baseline": false,
+  "method": "Actual URL import, boot-generated Orb editor, public Share transport; native Chromium at DPR 1/2.",
+  "rows": [
+    {
+      "dpr": 1,
+      "standalone": false,
+      "defect": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false,
+        "persisted": 0
+      },
+      "fractional": [
+        {
+          "rawValue": "0.00872664625997165",
+          "value": 0.00872664625997165,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 0.5000000000000001,
+          "display": "0.5°",
+          "accessibleValue": "0.5 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "rawValue": "0.0261799387799149",
+          "value": 0.0261799387799149,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 1.4999999999999976,
+          "display": "1.5°",
+          "accessibleValue": "1.5 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "rawValue": "1.00000035756417",
+          "value": 1.00000035756417,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 57.29580000000017,
+          "display": "57.2958°",
+          "accessibleValue": "57.2958 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "rawValue": "6.27445866091962",
+          "value": 6.27445866091962,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 359.50000000000034,
+          "display": "359.5°",
+          "accessibleValue": "359.5 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "rawValue": "6.28318530717959",
+          "value": 6.28318530717959,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 360.0000000000002,
+          "display": "359.99999999999994°",
+          "accessibleValue": "359.99999999999994 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "rawValue": "4.71238898038469",
+          "value": 4.71238898038469,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 270,
+          "display": "270°",
+          "accessibleValue": "270 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": 4.71238898038469
+        },
+        {
+          "rawValue": "1.5707963267949",
+          "value": 1.5707963267949,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 90.0000000000002,
+          "display": "90°",
+          "accessibleValue": "90 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 1.5707963267948966
+        }
+      ],
+      "lifecycle": [
+        {
+          "phaseMode": "orb",
+          "beforeEditLive": 0.4500000000000002,
+          "afterEditLive": 0.4500000000000002,
+          "designed": {
+            "value": 0.0261799387799149,
+            "display": "1.5°",
+            "aria": "1.5 degrees"
+          },
+          "trackResetLive": 0.6500000000000004,
+          "visualResetApplied": 0.0261799387799149,
+          "duplicateDesigned": 0.0261799387799149,
+          "nativeListenerCount": 5,
+          "endpoint": {
+            "value": 0,
+            "display": "0°",
+            "aria": "0 degrees"
+          },
+          "replacement": {
+            "value": 4.71238898038469,
+            "display": "270°",
+            "aria": "270 degrees"
+          },
+          "preserved": [
+            "Orb object",
+            "trail/list/tail",
+            "governor",
+            "emission fraction",
+            "Ring phase",
+            "independent Orb",
+            "focus",
+            "open editor",
+            "listeners"
+          ]
+        },
+        {
+          "phaseMode": "free",
+          "beforeEditLive": 0.4500000000000002,
+          "afterEditLive": 0.4500000000000002,
+          "designed": {
+            "value": 0.0261799387799149,
+            "display": "1.5°",
+            "aria": "1.5 degrees"
+          },
+          "trackResetLive": 0.6500000000000004,
+          "visualResetApplied": 0.0261799387799149,
+          "duplicateDesigned": 0.0261799387799149,
+          "nativeListenerCount": 5,
+          "endpoint": {
+            "value": 0,
+            "display": "0°",
+            "aria": "0 degrees"
+          },
+          "replacement": {
+            "value": 4.71238898038469,
+            "display": "270°",
+            "aria": "270 degrees"
+          },
+          "preserved": [
+            "Orb object",
+            "trail/list/tail",
+            "governor",
+            "emission fraction",
+            "Ring phase",
+            "independent Orb",
+            "focus",
+            "open editor",
+            "listeners"
+          ]
+        }
+      ],
+      "keyboard": {
+        "rawValue": "0.0436332312998582",
+        "value": 0.0436332312998582,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 2.4999999999999982,
+        "display": "2.5°",
+        "accessibleValue": "2.5 degrees",
+        "stepMismatch": false
+      },
+      "endpoint": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false
+      },
+      "pointer": {
+        "rawValue": "3.14159265358979",
+        "value": 3.14159265358979,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 179.99999999999983,
+        "display": "179.99999999999983°",
+        "accessibleValue": "179.99999999999983 degrees",
+        "stepMismatch": false
+      },
+      "resetAll": [
+        0,
+        3.141592653589793
+      ]
+    },
+    {
+      "dpr": 1,
+      "standalone": true,
+      "defect": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false,
+        "persisted": 0
+      },
+      "fractional": [
+        {
+          "rawValue": "0.00872664625997165",
+          "value": 0.00872664625997165,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 0.5000000000000001,
+          "display": "0.5°",
+          "accessibleValue": "0.5 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "rawValue": "0.0261799387799149",
+          "value": 0.0261799387799149,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 1.4999999999999976,
+          "display": "1.5°",
+          "accessibleValue": "1.5 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "rawValue": "1.00000035756417",
+          "value": 1.00000035756417,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 57.29580000000017,
+          "display": "57.2958°",
+          "accessibleValue": "57.2958 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "rawValue": "6.27445866091962",
+          "value": 6.27445866091962,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 359.50000000000034,
+          "display": "359.5°",
+          "accessibleValue": "359.5 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "rawValue": "6.28318530717959",
+          "value": 6.28318530717959,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 360.0000000000002,
+          "display": "359.99999999999994°",
+          "accessibleValue": "359.99999999999994 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "rawValue": "4.71238898038469",
+          "value": 4.71238898038469,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 270,
+          "display": "270°",
+          "accessibleValue": "270 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": 4.71238898038469
+        },
+        {
+          "rawValue": "1.5707963267949",
+          "value": 1.5707963267949,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 90.0000000000002,
+          "display": "90°",
+          "accessibleValue": "90 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 1.5707963267948966
+        }
+      ],
+      "keyboard": {
+        "rawValue": "0.0436332312998582",
+        "value": 0.0436332312998582,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 2.4999999999999982,
+        "display": "2.5°",
+        "accessibleValue": "2.5 degrees",
+        "stepMismatch": false
+      },
+      "endpoint": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false
+      },
+      "pointer": {
+        "rawValue": "3.14159265358979",
+        "value": 3.14159265358979,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 179.99999999999983,
+        "display": "179.99999999999983°",
+        "accessibleValue": "179.99999999999983 degrees",
+        "stepMismatch": false
+      },
+      "thumbScreenshot": "native-phase-dpr1.png",
+      "resetAll": [
+        0,
+        3.141592653589793
+      ]
+    },
+    {
+      "dpr": 1,
+      "standalone": true,
+      "normalScheduling": true,
+      "verified": [
+        "unmodified standalone boot/import",
+        "Reset Visuals button",
+        "stereo WAV decode/playback",
+        "advancing scrubber",
+        "designed readout stays fixed during motion",
+        "stop"
+      ]
+    },
+    {
+      "dpr": 2,
+      "standalone": false,
+      "defect": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false,
+        "persisted": 0
+      },
+      "fractional": [
+        {
+          "rawValue": "0.00872664625997165",
+          "value": 0.00872664625997165,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 0.5000000000000001,
+          "display": "0.5°",
+          "accessibleValue": "0.5 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "rawValue": "0.0261799387799149",
+          "value": 0.0261799387799149,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 1.4999999999999976,
+          "display": "1.5°",
+          "accessibleValue": "1.5 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "rawValue": "1.00000035756417",
+          "value": 1.00000035756417,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 57.29580000000017,
+          "display": "57.2958°",
+          "accessibleValue": "57.2958 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "rawValue": "6.27445866091962",
+          "value": 6.27445866091962,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 359.50000000000034,
+          "display": "359.5°",
+          "accessibleValue": "359.5 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "rawValue": "6.28318530717959",
+          "value": 6.28318530717959,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 360.0000000000002,
+          "display": "359.99999999999994°",
+          "accessibleValue": "359.99999999999994 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "rawValue": "4.71238898038469",
+          "value": 4.71238898038469,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 270,
+          "display": "270°",
+          "accessibleValue": "270 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": 4.71238898038469
+        },
+        {
+          "rawValue": "1.5707963267949",
+          "value": 1.5707963267949,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 90.0000000000002,
+          "display": "90°",
+          "accessibleValue": "90 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 1.5707963267948966
+        }
+      ],
+      "lifecycle": [
+        {
+          "phaseMode": "orb",
+          "beforeEditLive": 0.4500000000000002,
+          "afterEditLive": 0.4500000000000002,
+          "designed": {
+            "value": 0.0261799387799149,
+            "display": "1.5°",
+            "aria": "1.5 degrees"
+          },
+          "trackResetLive": 0.6500000000000004,
+          "visualResetApplied": 0.0261799387799149,
+          "duplicateDesigned": 0.0261799387799149,
+          "nativeListenerCount": 5,
+          "endpoint": {
+            "value": 0,
+            "display": "0°",
+            "aria": "0 degrees"
+          },
+          "replacement": {
+            "value": 4.71238898038469,
+            "display": "270°",
+            "aria": "270 degrees"
+          },
+          "preserved": [
+            "Orb object",
+            "trail/list/tail",
+            "governor",
+            "emission fraction",
+            "Ring phase",
+            "independent Orb",
+            "focus",
+            "open editor",
+            "listeners"
+          ]
+        },
+        {
+          "phaseMode": "free",
+          "beforeEditLive": 0.4500000000000002,
+          "afterEditLive": 0.4500000000000002,
+          "designed": {
+            "value": 0.0261799387799149,
+            "display": "1.5°",
+            "aria": "1.5 degrees"
+          },
+          "trackResetLive": 0.6500000000000004,
+          "visualResetApplied": 0.0261799387799149,
+          "duplicateDesigned": 0.0261799387799149,
+          "nativeListenerCount": 5,
+          "endpoint": {
+            "value": 0,
+            "display": "0°",
+            "aria": "0 degrees"
+          },
+          "replacement": {
+            "value": 4.71238898038469,
+            "display": "270°",
+            "aria": "270 degrees"
+          },
+          "preserved": [
+            "Orb object",
+            "trail/list/tail",
+            "governor",
+            "emission fraction",
+            "Ring phase",
+            "independent Orb",
+            "focus",
+            "open editor",
+            "listeners"
+          ]
+        }
+      ],
+      "keyboard": {
+        "rawValue": "0.0436332312998582",
+        "value": 0.0436332312998582,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 2.4999999999999982,
+        "display": "2.5°",
+        "accessibleValue": "2.5 degrees",
+        "stepMismatch": false
+      },
+      "endpoint": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false
+      },
+      "pointer": {
+        "rawValue": "3.14159265358979",
+        "value": 3.14159265358979,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 179.99999999999983,
+        "display": "179.99999999999983°",
+        "accessibleValue": "179.99999999999983 degrees",
+        "stepMismatch": false
+      },
+      "resetAll": [
+        0,
+        3.141592653589793
+      ]
+    },
+    {
+      "dpr": 2,
+      "standalone": true,
+      "defect": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false,
+        "persisted": 0
+      },
+      "fractional": [
+        {
+          "rawValue": "0.00872664625997165",
+          "value": 0.00872664625997165,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 0.5000000000000001,
+          "display": "0.5°",
+          "accessibleValue": "0.5 degrees",
+          "stepMismatch": false,
+          "input": 0.008726646259971648,
+          "persisted": 0.008726646259971648
+        },
+        {
+          "rawValue": "0.0261799387799149",
+          "value": 0.0261799387799149,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 1.4999999999999976,
+          "display": "1.5°",
+          "accessibleValue": "1.5 degrees",
+          "stepMismatch": false,
+          "input": 0.02617993877991494,
+          "persisted": 0.02617993877991494
+        },
+        {
+          "rawValue": "1.00000035756417",
+          "value": 1.00000035756417,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 57.29580000000017,
+          "display": "57.2958°",
+          "accessibleValue": "57.2958 degrees",
+          "stepMismatch": false,
+          "input": 1.0000003575641672,
+          "persisted": 1.0000003575641672
+        },
+        {
+          "rawValue": "6.27445866091962",
+          "value": 6.27445866091962,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 359.50000000000034,
+          "display": "359.5°",
+          "accessibleValue": "359.5 degrees",
+          "stepMismatch": false,
+          "input": 6.274458660919615,
+          "persisted": 6.274458660919615
+        },
+        {
+          "rawValue": "6.28318530717959",
+          "value": 6.28318530717959,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 360.0000000000002,
+          "display": "359.99999999999994°",
+          "accessibleValue": "359.99999999999994 degrees",
+          "stepMismatch": false,
+          "input": 6.283185307179585,
+          "persisted": 6.283185307179585
+        },
+        {
+          "rawValue": "4.71238898038469",
+          "value": 4.71238898038469,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 270,
+          "display": "270°",
+          "accessibleValue": "270 degrees",
+          "stepMismatch": false,
+          "input": -1.5707963267948966,
+          "persisted": 4.71238898038469
+        },
+        {
+          "rawValue": "1.5707963267949",
+          "value": 1.5707963267949,
+          "min": "0",
+          "max": "6.283185307179586",
+          "step": "any",
+          "degrees": 90.0000000000002,
+          "display": "90°",
+          "accessibleValue": "90 degrees",
+          "stepMismatch": false,
+          "input": 7.853981633974483,
+          "persisted": 1.5707963267948966
+        }
+      ],
+      "keyboard": {
+        "rawValue": "0.0436332312998582",
+        "value": 0.0436332312998582,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 2.4999999999999982,
+        "display": "2.5°",
+        "accessibleValue": "2.5 degrees",
+        "stepMismatch": false
+      },
+      "endpoint": {
+        "rawValue": "0",
+        "value": 0,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 0,
+        "display": "0°",
+        "accessibleValue": "0 degrees",
+        "stepMismatch": false
+      },
+      "pointer": {
+        "rawValue": "3.14159265358979",
+        "value": 3.14159265358979,
+        "min": "0",
+        "max": "6.283185307179586",
+        "step": "any",
+        "degrees": 179.99999999999983,
+        "display": "179.99999999999983°",
+        "accessibleValue": "179.99999999999983 degrees",
+        "stepMismatch": false
+      },
+      "thumbScreenshot": "native-phase-dpr2.png",
+      "resetAll": [
+        0,
+        3.141592653589793
+      ]
+    },
+    {
+      "dpr": 2,
+      "standalone": true,
+      "normalScheduling": true,
+      "verified": [
+        "unmodified standalone boot/import",
+        "Reset Visuals button",
+        "stereo WAV decode/playback",
+        "advancing scrubber",
+        "designed readout stays fixed during motion",
+        "stop"
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "browser": "151.0.7922.173"
+}
