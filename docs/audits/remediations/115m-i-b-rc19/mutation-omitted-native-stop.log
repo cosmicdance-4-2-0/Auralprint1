@@ -1,0 +1,185 @@
+not ok 2 - RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+  ---
+  duration_ms: 4.80118
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:183:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 3 - RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+  ---
+  duration_ms: 3.032764
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:179:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:183:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 7 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 2.724179
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    0 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:236:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 8 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 2.074718
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'recording'
+    - 'inactive'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'inactive'
+  actual: 'recording'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:235:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 9 - RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.209757
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'dispose-stop-failed'
+    - 'dispose-cleanup-failed'
+               ^
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dispose-cleanup-failed'
+  actual: 'dispose-stop-failed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:250:44)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 10 - RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.63036
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'dispose-stop-failed'
+    - 'dispose-cleanup-failed'
+               ^
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dispose-cleanup-failed'
+  actual: 'dispose-stop-failed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:250:44)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 11 - RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.044233
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:247:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'dispose-stop-failed'
+    - 'dispose-cleanup-failed'
+               ^
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dispose-cleanup-failed'
+  actual: 'dispose-stop-failed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:250:44)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 12 - RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+  ---
+  duration_ms: 2.124472
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:258:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + 'dispose-stop-failed'
+    - 'dispose-cleanup-failed'
+               ^
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dispose-cleanup-failed'
+  actual: 'dispose-stop-failed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:260:75)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# tests 17
+# pass 9
+# fail 8

@@ -1,0 +1,93 @@
+not ok 6 - RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+  ---
+  duration_ms: 4.937141
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:212:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+
+      {
+        availableMimeTypes: [
+          'video/webm;codecs=vp9,opus',
+          'video/webm;codecs=vp8,opus',
+          'video/webm',
+    ...
+        chunkCount: 1,
+    +   elapsedMs: 1000,
+    -   elapsedMs: 0,
+        hooksEnabled: true,
+        includePlaybackAudio: true,
+        isSupported: true,
+        lastAction: 'start',
+        lastCode: 'recorder-input-audio-video',
+    ...
+        lastMessage: 'Recording audio + video.',
+    +   lastUpdatedAtMs: 2000,
+    -   lastUpdatedAtMs: 1000,
+        phase: 'recording',
+        resolvedMimeType: 'video/webm;codecs=vp9,opus',
+        selectedMimeType: 'video/webm;codecs=vp9,opus',
+        startedAtMs: 1000,
+        stoppedAtMs: null,
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    hooksEnabled: true
+    phase: 'recording'
+    supportProbeStatus: 'supported'
+    isSupported: true
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+      0: 'video/webm;codecs=vp9,opus'
+      1: 'video/webm;codecs=vp8,opus'
+      2: 'video/webm'
+      3: 'video/mp4;codecs=avc1.42E01E,mp4a.40.2'
+      4: 'video/mp4'
+    selectedMimeType: 'video/webm;codecs=vp9,opus'
+    resolvedMimeType: 'video/webm;codecs=vp9,opus'
+    startedAtMs: 1000
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 1
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'start'
+    lastCode: 'recorder-input-audio-video'
+    lastMessage: 'Recording audio + video.'
+    lastUpdatedAtMs: 1000
+  actual:
+    hooksEnabled: true
+    phase: 'disabled'
+    supportProbeStatus: 'not-started'
+    isSupported: false
+    includePlaybackAudio: true
+    targetFps: 30
+    availableMimeTypes:
+    selectedMimeType: ~
+    resolvedMimeType: ~
+    startedAtMs: ~
+    stoppedAtMs: ~
+    elapsedMs: 0
+    chunkCount: 0
+    lastExportUrl: ~
+    lastExportFileName: ''
+    lastExportByteSize: 0
+    lastAction: 'dispose'
+    lastCode: 'disposed'
+    lastMessage: 'RecorderEngine has been disposed.'
+    lastUpdatedAtMs: 77.24725
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:217:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# tests 17
+# pass 16
+# fail 1

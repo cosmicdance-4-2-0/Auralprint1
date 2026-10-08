@@ -1,0 +1,489 @@
+TAP version 13
+# Subtest: RC-03: stale mic resume cannot destroy winning stream graph
+ok 1 - RC-03: stale mic resume cannot destroy winning stream graph
+  ---
+  duration_ms: 9.010104
+  type: 'test'
+  ...
+# Subtest: RC-03: stale mic resume rejection cannot commit an attachment error
+ok 2 - RC-03: stale mic resume rejection cannot commit an attachment error
+  ---
+  duration_ms: 3.882251
+  type: 'test'
+  ...
+# Subtest: RC-03 positive control: ordinary mic to stream switch
+ok 3 - RC-03 positive control: ordinary mic to stream switch
+  ---
+  duration_ms: 4.586041
+  type: 'test'
+  ...
+# Subtest: RC-03: stale stream resume cannot destroy winning mic graph
+ok 4 - RC-03: stale stream resume cannot destroy winning mic graph
+  ---
+  duration_ms: 3.520686
+  type: 'test'
+  ...
+# Subtest: RC-03: stale stream resume rejection cannot commit an attachment error
+ok 5 - RC-03: stale stream resume rejection cannot commit an attachment error
+  ---
+  duration_ms: 5.507875
+  type: 'test'
+  ...
+# Subtest: RC-03 positive control: ordinary stream to mic switch
+ok 6 - RC-03 positive control: ordinary stream to mic switch
+  ---
+  duration_ms: 3.781211
+  type: 'test'
+  ...
+# Subtest: RC-03 positive control: normal mic graph and explicit File-mode teardown
+ok 7 - RC-03 positive control: normal mic graph and explicit File-mode teardown
+  ---
+  duration_ms: 3.502881
+  type: 'test'
+  ...
+# Subtest: RC-03: explicit teardown cancels pending mic attachment
+ok 8 - RC-03: explicit teardown cancels pending mic attachment
+  ---
+  duration_ms: 2.024664
+  type: 'test'
+  ...
+# Subtest: RC-03: current mic attachment failure still reports error and releases tracks
+ok 9 - RC-03: current mic attachment failure still reports error and releases tracks
+  ---
+  duration_ms: 1.806301
+  type: 'test'
+  ...
+# Subtest: RC-03 positive control: normal stream graph and explicit File-mode teardown
+ok 10 - RC-03 positive control: normal stream graph and explicit File-mode teardown
+  ---
+  duration_ms: 2.713953
+  type: 'test'
+  ...
+# Subtest: RC-03: explicit teardown cancels pending stream attachment
+ok 11 - RC-03: explicit teardown cancels pending stream attachment
+  ---
+  duration_ms: 2.210208
+  type: 'test'
+  ...
+# Subtest: RC-03: current stream attachment failure still reports error and releases tracks
+ok 12 - RC-03: current stream attachment failure still reports error and releases tracks
+  ---
+  duration_ms: 1.694716
+  type: 'test'
+  ...
+# Subtest: RC-03: optional attachment guard also protects a running context
+ok 13 - RC-03: optional attachment guard also protects a running context
+  ---
+  duration_ms: 2.509921
+  type: 'test'
+  ...
+# Subtest: RC-19: uninitialized and idle disposal are safe and acquire no resources
+ok 14 - RC-19: uninitialized and idle disposal are safe and acquire no resources
+  ---
+  duration_ms: 6.511098
+  type: 'test'
+  ...
+# Subtest: RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+ok 15 - RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+  ---
+  duration_ms: 7.051448
+  type: 'test'
+  ...
+# Subtest: RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+ok 16 - RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+  ---
+  duration_ms: 4.067725
+  type: 'test'
+  ...
+# Subtest: RC-19: normal Stop then disposal fences queued completion without double native stop
+ok 17 - RC-19: normal Stop then disposal fences queued completion without double native stop
+  ---
+  duration_ms: 2.282045
+  type: 'test'
+  ...
+# Subtest: RC-19: inactive backend is not stopped unnecessarily
+ok 18 - RC-19: inactive backend is not stopped unnecessarily
+  ---
+  duration_ms: 2.135788
+  type: 'test'
+  ...
+# [RecorderEngine] dispose-stop-failed Error: stop refused
+#     at NativeRecorder.stop (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:72:15)
+#     at Object.dispose (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1374:63)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:232:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] dispose-stop-failed Error: stop refused
+#     at NativeRecorder.stop (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:72:15)
+#     at Object.dispose (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1374:63)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:232:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] recorder-handler-release-failed Error: cannot detach ondataavailable
+#     at NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+#     at releaseMediaRecorderInstance (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:520:31)
+#     at releaseActiveSession (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:531:30)
+#     at Object.dispose (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] recorder-handler-release-failed Error: cannot detach onstop
+#     at NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+#     at releaseMediaRecorderInstance (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:520:31)
+#     at releaseActiveSession (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:531:30)
+#     at Object.dispose (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] recorder-handler-release-failed Error: cannot detach onerror
+#     at NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+#     at releaseMediaRecorderInstance (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:520:31)
+#     at releaseActiveSession (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:531:30)
+#     at Object.dispose (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] audio-stream-release-failed Error: owner cleanup refused
+#     at Object.releaseStream (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:138:80)
+#     at releaseAudioStream (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:661:22)
+#     at releaseMergedStream (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:887:12)
+#     at releaseActiveSession (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:533:29)
+#     at Object.dispose (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:260:25)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] media-recorder-create-failed Error: MediaRecorder could not be created: constructor refused
+#     at createRecorderError (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:297:17)
+#     at Object.start (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1187:15)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'media-recorder-create-failed',
+#   cause: Error: constructor refused
+#       at new NativeRecorder (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:54:37)
+#       at Object.start (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1185:33)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#       at async Test.run (node:internal/test_runner/test:1389:7)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# }
+# [RecorderEngine] media-recorder-start-failed Error: MediaRecorder could not start: start refused
+#     at createRecorderError (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:297:17)
+#     at Object.start (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1220:15)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'media-recorder-start-failed',
+#   cause: Error: start refused
+#       at NativeRecorder.start (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:65:39)
+#       at Object.start (file:///tmp/rc19-qGuIv0/recorder-engine.mjs:1218:31)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#       at async Test.run (node:internal/test_runner/test:1389:7)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# }
+# [RecorderEngine] recorder-error Error: native fatal error
+#     at NativeRecorder.error (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:86:31)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:290:115)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# Subtest: RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+ok 19 - RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+  ---
+  duration_ms: 29.184376
+  type: 'test'
+  ...
+# Subtest: RC-19: native stop exception reports failure with actual recording state and still cleans up
+ok 20 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 3.088767
+  type: 'test'
+  ...
+# Subtest: RC-19: native stop exception reports failure with actual inactive state and still cleans up
+ok 21 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 3.659341
+  type: 'test'
+  ...
+# Subtest: RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+ok 22 - RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 3.13154
+  type: 'test'
+  ...
+# Subtest: RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+ok 23 - RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.911376
+  type: 'test'
+  ...
+# Subtest: RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+ok 24 - RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 3.03628
+  type: 'test'
+  ...
+# Subtest: RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+ok 25 - RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+  ---
+  duration_ms: 3.327961
+  type: 'test'
+  ...
+# Subtest: RC-19: file playback tap is released by AudioEngine without disturbing playback or analysis
+ok 26 - RC-19: file playback tap is released by AudioEngine without disturbing playback or analysis
+  ---
+  duration_ms: 3.162967
+  type: 'test'
+  ...
+# Subtest: RC-19: failed capture acquisition/start then disposal creates no export or native stop
+ok 27 - RC-19: failed capture acquisition/start then disposal creates no export or native stop
+  ---
+  duration_ms: 1.634587
+  type: 'test'
+  ...
+# Subtest: RC-19: failed constructor acquisition/start then disposal creates no export or native stop
+ok 28 - RC-19: failed constructor acquisition/start then disposal creates no export or native stop
+  ---
+  duration_ms: 2.429212
+  type: 'test'
+  ...
+# Subtest: RC-19: failed start acquisition/start then disposal creates no export or native stop
+ok 29 - RC-19: failed start acquisition/start then disposal creates no export or native stop
+  ---
+  duration_ms: 4.689735
+  type: 'test'
+  ...
+# Subtest: RC-19: native error then dispose is terminal and cannot resurrect an export
+ok 30 - RC-19: native error then dispose is terminal and cannot resurrect an export
+  ---
+  duration_ms: 3.940907
+  type: 'test'
+  ...
+# [RecorderEngine] media-recorder-create-failed Error: MediaRecorder could not be created: injected constructor failure
+#     at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+#     at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1187:15)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+#     ... 5 lines matching cause stack trace ...
+#     at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+#   recordingCode: 'media-recorder-create-failed',
+#   cause: Error: injected constructor failure
+#       at new FakeRecorder (file:///workspace/Auralprint1/tests/recording-export.test.js:32:37)
+#       at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1185:33)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+#       at Test.runInAsyncScope (node:async_hooks:227:14)
+#       at Test.run (node:internal/test_runner/test:1382:25)
+#       at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+#       at Test.postRun (node:internal/test_runner/test:1522:19)
+#       at Test.run (node:internal/test_runner/test:1447:12)
+#       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+# }
+# Subtest: RC-06: successful A survives failed B acquisition
+ok 31 - RC-06: successful A survives failed B acquisition
+  ---
+  duration_ms: 42.128642
+  type: 'test'
+  ...
+# [RecorderEngine] media-recorder-start-failed Error: MediaRecorder could not start: injected start failure
+#     at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+#     at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1220:15)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+#     ... 5 lines matching cause stack trace ...
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'media-recorder-start-failed',
+#   cause: Error: injected start failure
+#       at FakeRecorder.start (file:///workspace/Auralprint1/tests/recording-export.test.js:38:31)
+#       at Object.start (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1218:31)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:126:35)
+#       at Test.runInAsyncScope (node:async_hooks:227:14)
+#       at Test.run (node:internal/test_runner/test:1382:25)
+#       at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+#       at Test.postRun (node:internal/test_runner/test:1522:19)
+#       at Test.run (node:internal/test_runner/test:1447:12)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# }
+# Subtest: RC-06: successful A survives failed B constructor
+ok 32 - RC-06: successful A survives failed B constructor
+  ---
+  duration_ms: 3.38065
+  type: 'test'
+  ...
+# Subtest: RC-06: successful A survives failed B start
+ok 33 - RC-06: successful A survives failed B start
+  ---
+  duration_ms: 2.363856
+  type: 'test'
+  ...
+# [RecorderEngine] recorder-error Error: injected recorder error
+#     at FakeRecorder.error (file:///workspace/Auralprint1/tests/recording-export.test.js:47:39)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:150:5)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# Subtest: RC-06: successful A survives B recorder error and stale callbacks
+ok 34 - RC-06: successful A survives B recorder error and stale callbacks
+  ---
+  duration_ms: 4.657237
+  type: 'test'
+  ...
+# [RecorderEngine] no-captured-chunks Error: Recording finished without any captured data.
+#     at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+#     at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:689:13)
+#     at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1032:31)
+#     at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1213:44)
+#     at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'no-captured-chunks'
+# }
+# Subtest: RC-06: successful A survives B finalization failure (noChunks)
+ok 35 - RC-06: successful A survives B finalization failure (noChunks)
+  ---
+  duration_ms: 3.588296
+  type: 'test'
+  ...
+# [RecorderEngine] empty-recording-export Error: Recording export is empty.
+#     at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+#     at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:696:13)
+#     at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1032:31)
+#     at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1213:44)
+#     at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'empty-recording-export'
+# }
+# Subtest: RC-06: successful A survives B finalization failure (emptyBlob)
+ok 36 - RC-06: successful A survives B finalization failure (emptyBlob)
+  ---
+  duration_ms: 2.241104
+  type: 'test'
+  ...
+# [RecorderEngine] export-filename-unresolved Error: Recording export filename could not be resolved.
+#     at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+#     at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:701:13)
+#     at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1032:31)
+#     at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1213:44)
+#     at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'export-filename-unresolved'
+# }
+# Subtest: RC-06: successful A survives B finalization failure (filename)
+ok 37 - RC-06: successful A survives B finalization failure (filename)
+  ---
+  duration_ms: 1.547318
+  type: 'test'
+  ...
+# [RecorderEngine] object-url-create-failed Error: Recording export URL could not be created: injected URL creation failure
+#     at createRecorderError (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:297:17)
+#     at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:708:13)
+#     at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1032:31)
+#     ... 4 lines matching cause stack trace ...
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'object-url-create-failed',
+#   cause: Error: injected URL creation failure
+#       at URL.createObjectURL (file:///workspace/Auralprint1/tests/recording-export.test.js:64:33)
+#       at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:706:23)
+#       at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1032:31)
+#       at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1213:44)
+#       at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+#       at async Test.run (node:internal/test_runner/test:1389:7)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# }
+# Subtest: RC-06: successful A survives B finalization failure (objectUrl)
+ok 38 - RC-06: successful A survives B finalization failure (objectUrl)
+  ---
+  duration_ms: 2.016302
+  type: 'test'
+  ...
+# [RecorderEngine] finalize-failed Error: injected Blob failure
+#     at new globalThis.Blob (file:///workspace/Auralprint1/tests/recording-export.test.js:184:81)
+#     at assembleCompletedRecordingExport (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:692:18)
+#     at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1032:31)
+#     at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1213:44)
+#     at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# Subtest: RC-06: successful A survives B finalization failure (blobThrows)
+ok 39 - RC-06: successful A survives B finalization failure (blobThrows)
+  ---
+  duration_ms: 1.682228
+  type: 'test'
+  ...
+# [RecorderEngine] finalize-failed Error: injected failure after URL assembly
+#     at Object.getRenderTap (file:///workspace/Auralprint1/tests/recording-export.test.js:80:15)
+#     at readSupportDetails (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:188:36)
+#     at finalizeStoppedRecorder (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1041:18)
+#     at runtime.mediaRecorder.onstop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1213:44)
+#     at FakeRecorder.finish (file:///workspace/Auralprint1/tests/recording-export.test.js:46:29)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:188:7)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] stop-failed Error: injected stop failure
+#     at FakeRecorder.stop (file:///workspace/Auralprint1/tests/recording-export.test.js:42:30)
+#     at Object.stop (file:///workspace/Auralprint1/src/js/recording/recorder-engine.js:1306:29)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/recording-export.test.js:211:35)
+#     at Test.runInAsyncScope (node:async_hooks:227:14)
+#     at Test.run (node:internal/test_runner/test:1382:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+#     at Test.postRun (node:internal/test_runner/test:1522:19)
+#     at Test.run (node:internal/test_runner/test:1447:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# Subtest: RC-06: successful A survives B finalization failure (afterUrl)
+ok 40 - RC-06: successful A survives B finalization failure (afterUrl)
+  ---
+  duration_ms: 2.585994
+  type: 'test'
+  ...
+# Subtest: RC-06: successful A survives B stop exception
+ok 41 - RC-06: successful A survives B stop exception
+  ---
+  duration_ms: 1.815745
+  type: 'test'
+  ...
+# Subtest: RC-06: successful A survives B inactive recorder
+ok 42 - RC-06: successful A survives B inactive recorder
+  ---
+  duration_ms: 0.810258
+  type: 'test'
+  ...
+# Subtest: RC-06: successful B commits before revoking A exactly once; repeated replacement does not leak
+ok 43 - RC-06: successful B commits before revoking A exactly once; repeated replacement does not leak
+  ---
+  duration_ms: 3.012996
+  type: 'test'
+  ...
+# Subtest: RC-06: first recording works without a previous export
+ok 44 - RC-06: first recording works without a previous export
+  ---
+  duration_ms: 0.85172
+  type: 'test'
+  ...
+# Subtest: RC-06: reset retains the completed export
+ok 45 - RC-06: reset retains the completed export
+  ---
+  duration_ms: 1.057003
+  type: 'test'
+  ...
+# Subtest: RC-06: completed-export disposal revokes and clears exactly once
+ok 46 - RC-06: completed-export disposal revokes and clears exactly once
+  ---
+  duration_ms: 0.935664
+  type: 'test'
+  ...
+# Subtest: Stream graph preserves L/R output indices, Center adaptation, and upstream recorder ownership
+ok 47 - Stream graph preserves L/R output indices, Center adaptation, and upstream recorder ownership
+  ---
+  duration_ms: 8.729684
+  type: 'test'
+  ...
+1..47
+# tests 47
+# suites 0
+# pass 47
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 453.27942

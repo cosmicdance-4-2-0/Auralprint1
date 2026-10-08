@@ -500,7 +500,9 @@ const RecorderEngine = (() => {
 
   function startRecordingTimerSync() {
     stopRecordingTimerSync();
+    const sessionToken = runtime.sessionToken;
     runtime.timerIntervalId = setInterval(() => {
+      if (sessionToken !== runtime.sessionToken) return;
       if (runtime.lifecycle.phase !== "recording") {
         stopRecordingTimerSync();
         return;
@@ -510,22 +512,27 @@ const RecorderEngine = (() => {
   }
 
   function releaseMediaRecorderInstance() {
-    if (runtime.mediaRecorder) {
-      runtime.mediaRecorder.ondataavailable = null;
-      runtime.mediaRecorder.onstop = null;
-      runtime.mediaRecorder.onerror = null;
-      runtime.mediaRecorder = null;
+    const recorder = runtime.mediaRecorder;
+    runtime.mediaRecorder = null;
+    if (!recorder) return true;
+    let released = true;
+    for (const handler of ["ondataavailable", "onstop", "onerror"]) {
+      try { recorder[handler] = null; } catch (err) {
+        released = false;
+        logRecorderException("recorder-handler-release-failed", err);
+      }
     }
+    return released;
   }
 
   function releaseActiveSession() {
     runtime.sessionToken += 1;
     stopRecordingTimerSync();
-    releaseMediaRecorderInstance();
-    // RecorderEngine owns all recorder capture seams; when a session ends there
-    // is no valid downstream owner, so render/audio tap streams are always released.
-    releaseMergedStream();
+    const recorderReleased = releaseMediaRecorderInstance();
+    // Capture cleanup follows the render and audio owners, never merged tracks.
+    const streamsReleased = releaseMergedStream();
     runtime.isStopRequested = false;
+    return recorderReleased && streamsReleased;
   }
 
   // ── Render stream tap ──────────────────────────────────────────────────
@@ -646,20 +653,17 @@ const RecorderEngine = (() => {
 
   function releaseAudioStream() {
     const audioTap = runtime.audioTap;
-    const audioStream = runtime.audioStream;
     runtime.audioTap = null;
     runtime.audioStream = null;
-    let releasedByOwner = false;
-
+    // Only the audio owner may stop tap tracks. Its failure must never transfer
+    // ownership of a shared upstream source to RecorderEngine.
     if (audioTap && typeof audioTap.releaseStream === "function") {
-      // AudioEngine owns recorder-audio cleanup. For live upstream streams this
-      // can be a deliberate no-op so recording never stops the active source.
-      try {
-        audioTap.releaseStream();
-        releasedByOwner = true;
-      } catch {}
+      try { audioTap.releaseStream(); } catch (err) {
+        logRecorderException("audio-stream-release-failed", err);
+        return false;
+      }
     }
-    if (!releasedByOwner && audioStream) stopStreamTracks(audioStream);
+    return true;
   }
 
   function resetSessionRuntime({ keepExport = true } = {}) {
@@ -720,15 +724,7 @@ const RecorderEngine = (() => {
 
   function applySupportSnapshot(action = null) {
     if (runtime.isDisposed) {
-      updateLifecycle("disabled", "disposed", "RecorderEngine has been disposed.");
-      return commitStatus(buildStatus(false, "disposed", "RecorderEngine has been disposed.", {
-        phase: "disabled",
-        supportProbeStatus: "not-started",
-        isSupported: false,
-        availableMimeTypes: [],
-        selectedMimeType: null,
-        resolvedMimeType: null,
-      }), action);
+      return commitStatus(buildDisposedStatus(), action);
     }
 
     const support = readSupportDetails();
@@ -885,14 +881,10 @@ const RecorderEngine = (() => {
   }
 
   function releaseMergedStream() {
-    const mergedStream = runtime.mergedStream;
-    const hasUnderlyingCapture = !!runtime.renderStream || !!runtime.audioStream;
+    // This wrapper shares audio track references; it never owns their shutdown.
     runtime.mergedStream = null;
-    // The merged stream is recorder-owned glue only; actual track ownership
-    // lives on the render/audio tap streams below.
     releaseRenderStream();
-    releaseAudioStream();
-    if (!hasUnderlyingCapture && mergedStream) stopStreamTracks(mergedStream);
+    return releaseAudioStream();
   }
 
   function init(options = {}) {
@@ -915,6 +907,7 @@ const RecorderEngine = (() => {
   }
 
   function getSupportStatus() {
+    if (runtime.isDisposed) return applySupportSnapshot();
     if (!runtime.didInit) {
       return commitStatus(buildStatus(false, "not-initialized", "RecorderEngine has not been initialized.", {
         phase: "uninitialized",
@@ -1347,19 +1340,8 @@ const RecorderEngine = (() => {
     return applySupportSnapshot("reset");
   }
 
-  function dispose() {
-    runtime.sessionToken += 1;
-    releaseActiveSession();
-    resetSessionRuntime({ keepExport: false });
-
-    runtime.deps.getRenderTap = () => null;
-    runtime.deps.getAudioTap = () => null;
-    runtime.deps.nowMs = () => performance.now();
-    runtime.didInit = false;
-    runtime.isDisposed = true;
-    updateLifecycle("disabled", "disposed", "RecorderEngine has been disposed.");
-
-    return commitStatus(buildStatus(true, "disposed", "RecorderEngine has been disposed.", {
+  function buildDisposedStatus(ok = false) {
+    return buildStatus(ok, runtime.lifecycle.lastCode, runtime.lifecycle.lastMessage, {
       phase: "disabled",
       supportProbeStatus: "not-started",
       isSupported: false,
@@ -1373,7 +1355,46 @@ const RecorderEngine = (() => {
       lastExportUrl: null,
       lastExportFileName: "",
       lastExportByteSize: 0,
-    }), "dispose");
+    });
+  }
+
+  function dispose() {
+    if (runtime.isDisposed) {
+      return commitStatus(buildDisposedStatus(runtime.lifecycle.lastCode === "disposed"), "dispose");
+    }
+    // Terminal abort, not ordinary Stop/export finalization. Fence callbacks
+    // before native stop(), including synchronous test-double event delivery.
+    runtime.sessionToken += 1;
+    runtime.isDisposed = true;
+    runtime.didInit = false;
+    const recorder = runtime.mediaRecorder;
+    let code = "disposed";
+    let message = "RecorderEngine has been disposed.";
+    try {
+      if (recorder && recorder.state !== "inactive") recorder.stop();
+      if (recorder && recorder.state !== "inactive") {
+        throw new Error("Native recorder did not become inactive.");
+      }
+    } catch (err) {
+      logRecorderException("dispose-stop-failed", err);
+      code = "dispose-stop-failed";
+      message = `RecorderEngine disposed; native shutdown failed (${err.message || "unknown error"}). `
+        + (recorder.state === "inactive"
+          ? "Native recorder is inactive."
+          : `Native recorder state is ${recorder.state}; shutdown is not confirmed.`);
+    }
+
+    const released = releaseActiveSession();
+    if (!released) {
+      if (code === "disposed") code = "dispose-cleanup-failed";
+      message += " Some recorder-owned cleanup failed; upstream audio ownership is preserved.";
+    }
+    resetSessionRuntime({ keepExport: false });
+    runtime.deps.getRenderTap = () => null;
+    runtime.deps.getAudioTap = () => null;
+    runtime.deps.nowMs = () => performance.now();
+    updateLifecycle("disabled", code, message);
+    return commitStatus(buildDisposedStatus(code === "disposed"), "dispose");
   }
 
   function onAnimationFrame(tsMs) {

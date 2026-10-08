@@ -1,0 +1,45 @@
+{
+  "version": "v0.1.15m.i.b",
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+  "a": {
+    "url": "blob:http://rc06.test/df417e61-55c6-4812-a702-4d6635c779bc",
+    "filename": "auralprint-capture-20261008-192012.webm",
+    "size": 64984,
+    "type": "video/webm",
+    "meta": "Latest export: auralprint-capture-20261008-192012.webm (64984 bytes)"
+  },
+  "failed": {
+    "url": "blob:http://rc06.test/df417e61-55c6-4812-a702-4d6635c779bc",
+    "filename": "auralprint-capture-20261008-192012.webm",
+    "size": 64984,
+    "type": "video/webm",
+    "meta": "Latest export: auralprint-capture-20261008-192012.webm (64984 bytes)"
+  },
+  "errorStatus": "Canvas capture did not provide a video stream.",
+  "b": {
+    "url": "blob:http://rc06.test/1f1a0548-774c-456e-8715-457cca209020",
+    "filename": "auralprint-capture-20261008-192013.webm",
+    "size": 108074,
+    "type": "video/webm",
+    "meta": "Latest export: auralprint-capture-20261008-192013.webm (108074 bytes)"
+  },
+  "ownership": {
+    "oldResolves": false,
+    "oldRevocations": 1,
+    "newRevocations": 0,
+    "newResolves": true,
+    "created": [
+      {
+        "url": "blob:http://rc06.test/df417e61-55c6-4812-a702-4d6635c779bc",
+        "size": 64984,
+        "type": "video/webm;codecs=vp9,opus"
+      },
+      {
+        "url": "blob:http://rc06.test/1f1a0548-774c-456e-8715-457cca209020",
+        "size": 108074,
+        "type": "video/webm;codecs=vp9,opus"
+      }
+    ]
+  },
+  "errors": []
+}

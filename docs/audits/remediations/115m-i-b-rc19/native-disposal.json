@@ -1,0 +1,494 @@
+{
+  "baseline": false,
+  "version": "v0.1.15m.i.b",
+  "results": [
+    {
+      "mode": "live-active",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+      "before": {
+        "utc": "2026-10-08T19:17:56.026Z",
+        "performanceMs": 827.0999999999767,
+        "nativeState": "recording",
+        "phase": "recording",
+        "tracks": [
+          {
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "kind": "video",
+            "state": "live"
+          }
+        ]
+      },
+      "atDispose": {
+        "utc": "2026-10-08T19:17:56.027Z",
+        "performanceMs": 827.1999999999534,
+        "nativeState": "recording",
+        "phase": "recording"
+      },
+      "disposition": {
+        "ok": true,
+        "code": "disposed",
+        "message": "RecorderEngine has been disposed.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "disabled",
+        "supportProbeStatus": "not-started",
+        "isSupported": false,
+        "availableMimeTypes": [],
+        "selectedMimeType": null,
+        "resolvedMimeType": null,
+        "startedAtMs": null,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      },
+      "returned": {
+        "utc": "2026-10-08T19:17:56.031Z",
+        "performanceMs": 831.2999999999884,
+        "nativeState": "inactive",
+        "phase": "disabled"
+      },
+      "staleUnchanged": true,
+      "after": {
+        "utc": "2026-10-08T19:17:57.532Z",
+        "performanceMs": 2332.5999999999767,
+        "nativeState": "inactive",
+        "phase": "disabled",
+        "tracks": [
+          {
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "kind": "video",
+            "state": "ended"
+          }
+        ],
+        "upstreamState": "live",
+        "upstreamStops": 0,
+        "sourceAttached": true,
+        "sampleReady": true,
+        "graphDisconnects": 0,
+        "playbackLoaded": false,
+        "recording": {
+          "hooksEnabled": true,
+          "phase": "disabled",
+          "supportProbeStatus": "not-started",
+          "isSupported": false,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [],
+          "selectedMimeType": null,
+          "resolvedMimeType": null,
+          "startedAtMs": null,
+          "stoppedAtMs": null,
+          "elapsedMs": 0,
+          "chunkCount": 0,
+          "lastExportUrl": null,
+          "lastExportFileName": "",
+          "lastExportByteSize": 0,
+          "lastAction": "dispose",
+          "lastCode": "disposed",
+          "lastMessage": "RecorderEngine has been disposed.",
+          "lastUpdatedAtMs": 831.2999999999884
+        },
+        "releases": 1,
+        "nativeStopCalls": 1,
+        "unchangedAfterNativeEvents": true,
+        "recordingUrls": []
+      },
+      "events": [
+        {
+          "type": "dataavailable",
+          "utc": "2026-10-08T19:17:56.033Z",
+          "performanceMs": 833.1999999999534,
+          "state": "inactive",
+          "appPhase": "disabled",
+          "bytes": 27488
+        },
+        {
+          "type": "stop",
+          "utc": "2026-10-08T19:17:56.033Z",
+          "performanceMs": 833.1999999999534,
+          "state": "inactive",
+          "appPhase": "disabled",
+          "bytes": 0
+        }
+      ],
+      "reinitialized": {
+        "restart": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "nativeStateAfterStart": "recording",
+        "cleanAfterOldCallbacks": true,
+        "ordinaryStop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "phase": "complete",
+        "nativeStateAfterStop": "inactive",
+        "nativeStopCalls": 1,
+        "exportBytes": 22711,
+        "exportType": "video/webm",
+        "oldCallbacksPreserveExport": true,
+        "upstreamState": "live",
+        "upstreamStops": 0,
+        "exportRevocations": 1,
+        "exportCleared": true
+      },
+      "errors": []
+    },
+    {
+      "mode": "live-finalizing",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+      "before": {
+        "utc": "2026-10-08T19:17:59.047Z",
+        "performanceMs": 726.3999999999651,
+        "nativeState": "recording",
+        "phase": "recording",
+        "tracks": [
+          {
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "kind": "video",
+            "state": "live"
+          }
+        ]
+      },
+      "atDispose": {
+        "utc": "2026-10-08T19:17:59.048Z",
+        "performanceMs": 727.2000000000116,
+        "nativeState": "inactive",
+        "phase": "finalizing"
+      },
+      "disposition": {
+        "ok": true,
+        "code": "disposed",
+        "message": "RecorderEngine has been disposed.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "disabled",
+        "supportProbeStatus": "not-started",
+        "isSupported": false,
+        "availableMimeTypes": [],
+        "selectedMimeType": null,
+        "resolvedMimeType": null,
+        "startedAtMs": null,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      },
+      "returned": {
+        "utc": "2026-10-08T19:17:59.049Z",
+        "performanceMs": 727.8999999999651,
+        "nativeState": "inactive",
+        "phase": "disabled"
+      },
+      "stop": {
+        "ok": true,
+        "code": "finalizing",
+        "message": "Finalizing recording export...",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "finalizing",
+        "supportProbeStatus": "supported",
+        "isSupported": true,
+        "availableMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4"
+        ],
+        "selectedMimeType": "video/webm;codecs=vp9,opus",
+        "resolvedMimeType": "video/webm;codecs=vp9,opus",
+        "startedAtMs": 172.70000000001164,
+        "stoppedAtMs": 726.5999999999767,
+        "elapsedMs": 554,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      },
+      "staleUnchanged": true,
+      "after": {
+        "utc": "2026-10-08T19:18:00.552Z",
+        "performanceMs": 2230.5,
+        "nativeState": "inactive",
+        "phase": "disabled",
+        "tracks": [
+          {
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "kind": "video",
+            "state": "ended"
+          }
+        ],
+        "upstreamState": "live",
+        "upstreamStops": 0,
+        "sourceAttached": true,
+        "sampleReady": true,
+        "graphDisconnects": 0,
+        "playbackLoaded": false,
+        "recording": {
+          "hooksEnabled": true,
+          "phase": "disabled",
+          "supportProbeStatus": "not-started",
+          "isSupported": false,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [],
+          "selectedMimeType": null,
+          "resolvedMimeType": null,
+          "startedAtMs": null,
+          "stoppedAtMs": null,
+          "elapsedMs": 0,
+          "chunkCount": 0,
+          "lastExportUrl": null,
+          "lastExportFileName": "",
+          "lastExportByteSize": 0,
+          "lastAction": "dispose",
+          "lastCode": "disposed",
+          "lastMessage": "RecorderEngine has been disposed.",
+          "lastUpdatedAtMs": 727.8999999999651
+        },
+        "releases": 1,
+        "nativeStopCalls": 1,
+        "unchangedAfterNativeEvents": true,
+        "recordingUrls": []
+      },
+      "events": [
+        {
+          "type": "dataavailable",
+          "utc": "2026-10-08T19:17:59.050Z",
+          "performanceMs": 729,
+          "state": "inactive",
+          "appPhase": "disabled",
+          "bytes": 27619
+        },
+        {
+          "type": "stop",
+          "utc": "2026-10-08T19:17:59.050Z",
+          "performanceMs": 729,
+          "state": "inactive",
+          "appPhase": "disabled",
+          "bytes": 0
+        }
+      ],
+      "reinitialized": {
+        "restart": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "nativeStateAfterStart": "recording",
+        "cleanAfterOldCallbacks": true,
+        "ordinaryStop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "phase": "complete",
+        "nativeStateAfterStop": "inactive",
+        "nativeStopCalls": 1,
+        "exportBytes": 21749,
+        "exportType": "video/webm",
+        "oldCallbacksPreserveExport": true,
+        "upstreamState": "live",
+        "upstreamStops": 0,
+        "exportRevocations": 1,
+        "exportCleared": true
+      },
+      "errors": []
+    },
+    {
+      "mode": "file-active",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+      "before": {
+        "utc": "2026-10-08T19:18:02.116Z",
+        "performanceMs": 759.5999999999767,
+        "nativeState": "recording",
+        "phase": "recording",
+        "tracks": [
+          {
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "kind": "video",
+            "state": "live"
+          }
+        ]
+      },
+      "atDispose": {
+        "utc": "2026-10-08T19:18:02.116Z",
+        "performanceMs": 759.8999999999651,
+        "nativeState": "recording",
+        "phase": "recording"
+      },
+      "disposition": {
+        "ok": true,
+        "code": "disposed",
+        "message": "RecorderEngine has been disposed.",
+        "hooksEnabled": true,
+        "includePlaybackAudio": true,
+        "targetFps": 30,
+        "phase": "disabled",
+        "supportProbeStatus": "not-started",
+        "isSupported": false,
+        "availableMimeTypes": [],
+        "selectedMimeType": null,
+        "resolvedMimeType": null,
+        "startedAtMs": null,
+        "stoppedAtMs": null,
+        "elapsedMs": 0,
+        "chunkCount": 0,
+        "lastExportUrl": null,
+        "lastExportFileName": "",
+        "lastExportByteSize": 0,
+        "configuredMimeTypes": [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+          "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+          "video/mp4"
+        ],
+        "requestedMimeType": null
+      },
+      "returned": {
+        "utc": "2026-10-08T19:18:02.118Z",
+        "performanceMs": 761.5,
+        "nativeState": "inactive",
+        "phase": "disabled"
+      },
+      "staleUnchanged": true,
+      "after": {
+        "utc": "2026-10-08T19:18:03.620Z",
+        "performanceMs": 2263.399999999965,
+        "nativeState": "inactive",
+        "phase": "disabled",
+        "tracks": [
+          {
+            "kind": "audio",
+            "state": "ended"
+          },
+          {
+            "kind": "video",
+            "state": "ended"
+          }
+        ],
+        "upstreamState": "live",
+        "upstreamStops": 0,
+        "sourceAttached": false,
+        "sampleReady": true,
+        "playbackPaused": false,
+        "playbackLoaded": true,
+        "recording": {
+          "hooksEnabled": true,
+          "phase": "disabled",
+          "supportProbeStatus": "not-started",
+          "isSupported": false,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [],
+          "selectedMimeType": null,
+          "resolvedMimeType": null,
+          "startedAtMs": null,
+          "stoppedAtMs": null,
+          "elapsedMs": 0,
+          "chunkCount": 0,
+          "lastExportUrl": null,
+          "lastExportFileName": "",
+          "lastExportByteSize": 0,
+          "lastAction": "dispose",
+          "lastCode": "disposed",
+          "lastMessage": "RecorderEngine has been disposed.",
+          "lastUpdatedAtMs": 761.5
+        },
+        "releases": 1,
+        "nativeStopCalls": 1,
+        "unchangedAfterNativeEvents": true,
+        "recordingUrls": []
+      },
+      "events": [
+        {
+          "type": "dataavailable",
+          "utc": "2026-10-08T19:18:02.119Z",
+          "performanceMs": 762.5999999999767,
+          "state": "inactive",
+          "appPhase": "disabled",
+          "bytes": 27417
+        },
+        {
+          "type": "stop",
+          "utc": "2026-10-08T19:18:02.119Z",
+          "performanceMs": 762.5999999999767,
+          "state": "inactive",
+          "appPhase": "disabled",
+          "bytes": 0
+        }
+      ],
+      "reinitialized": {
+        "restart": {
+          "ok": true,
+          "code": "recorder-input-audio-video"
+        },
+        "nativeStateAfterStart": "recording",
+        "cleanAfterOldCallbacks": true,
+        "ordinaryStop": {
+          "ok": true,
+          "code": "finalizing"
+        },
+        "phase": "complete",
+        "nativeStateAfterStop": "inactive",
+        "nativeStopCalls": 1,
+        "exportBytes": 21894,
+        "exportType": "video/webm",
+        "oldCallbacksPreserveExport": true,
+        "upstreamState": "live",
+        "upstreamStops": 0,
+        "playbackPaused": false,
+        "exportRevocations": 1,
+        "exportCleared": true
+      },
+      "errors": []
+    }
+  ]
+}

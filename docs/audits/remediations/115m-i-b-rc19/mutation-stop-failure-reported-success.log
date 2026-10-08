@@ -1,0 +1,45 @@
+not ok 7 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 4.51764
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:233:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+not ok 8 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 1.914832
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:229:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:233:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# tests 17
+# pass 15
+# fail 2
