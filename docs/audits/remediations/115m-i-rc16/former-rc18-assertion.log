@@ -1,0 +1,39 @@
+{
+  "rc16": {
+    "input": [
+      null,
+      false,
+      "",
+      [],
+      true
+    ],
+    "bandIds": [],
+    "radius": 721,
+    "emptyControlRadius": 721
+  },
+  "rc18": {
+    "simPaused": true,
+    "orbBefore": 1,
+    "orbAfter": 1,
+    "ringBefore": 1,
+    "ringAfter": 1
+  }
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(Math.abs(rc18.ringAfter - (1 + 2 / 30)) < 1e-12)
+
+    at file:///workspace/Auralprint1/docs/audits/remediations/115m-i-rc16/reproduce.mjs:40:59 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

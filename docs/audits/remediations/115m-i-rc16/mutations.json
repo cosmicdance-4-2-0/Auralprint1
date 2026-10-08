@@ -1,0 +1,22 @@
+[
+  {
+    "mutation": "permissive-coercion",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "drop-valid-zero",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "reject-all-targets",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "free-ring-pause-ignored",
+    "exitCode": 1,
+    "detected": true
+  }
+]

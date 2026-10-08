@@ -58,8 +58,9 @@ function sanitizeOrbBandIds(rawBandIds, rawBandNames) {
     const out = [];
     const seen = new Set();
     for (const v of rawBandIds) {
-      const n = Number(v);
-      if (!Number.isInteger(n)) continue;
+      // Canonical references are integer numbers; imported types never coerce.
+      const n = v;
+      if (typeof n !== "number" || !Number.isInteger(n)) continue;
       if (n < 0 || n >= bandCount) continue;
       if (seen.has(n)) continue;
       seen.add(n);

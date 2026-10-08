@@ -9,7 +9,8 @@ function parseBandSelection(text, count = BAND_NAMES.length) {
   if (tokens.some(token => !/^\d+$/.test(token) || Number(token) >= count)) {
     return { ids: null, error: `Use whole band indices from 0 to ${count - 1}, separated by commas. Leave blank for full spectrum.` };
   }
-  return { ids: sanitizeOrbBandIds(tokens), error: "" };
+  // Convert only human-entered digit tokens after the explicit validation above.
+  return { ids: sanitizeOrbBandIds(tokens.map(Number)), error: "" };
 }
 
 function bandRangeSelection(start, end, count = BAND_NAMES.length) {

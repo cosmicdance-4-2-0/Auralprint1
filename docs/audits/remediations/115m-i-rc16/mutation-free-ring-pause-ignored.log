@@ -1,0 +1,67 @@
+✔ RC-16: zero (4.015644ms)
+✔ RC-16: highest (0.168334ms)
+✔ RC-16: interior (0.1389ms)
+✔ RC-16: invalid type/value 0 (0.082468ms)
+✔ RC-16: invalid type/value 1 (0.218067ms)
+✔ RC-16: invalid type/value 2 (0.086976ms)
+✔ RC-16: invalid type/value 3 (0.089161ms)
+✔ RC-16: invalid type/value 4 (0.059529ms)
+✔ RC-16: invalid type/value 5 (0.14433ms)
+✔ RC-16: invalid type/value 6 (0.230749ms)
+✔ RC-16: invalid type/value 7 (0.230646ms)
+✔ RC-16: invalid type/value 8 (0.128271ms)
+✔ RC-16: invalid type/value 9 (0.306644ms)
+✔ RC-16: invalid type/value 10 (0.108967ms)
+✔ RC-16: invalid type/value 11 (0.04055ms)
+✔ RC-16: invalid type/value 12 (0.075818ms)
+✔ RC-16: invalid type/value 13 (0.051453ms)
+✔ RC-16: invalid type/value 14 (0.03678ms)
+✔ RC-16: invalid type/value 15 (0.073768ms)
+✔ RC-16: invalid type/value 16 (0.048593ms)
+✔ RC-16: invalid type/value 17 (0.165305ms)
+✔ RC-16: stable first occurrences, fresh arrays, empty/all-invalid collections and legacy names (1.143639ms)
+✔ RC-16: independent Orb normalization and duplication retain configuration and ordering (0.588849ms)
+✔ RC-16: validated human text remains an explicit numbers-only model boundary (0.676544ms)
+✔ RC-16: schemas 2–10 discard entries without losing scenes or reviving aliases (7.337891ms)
+✔ RC-16: inspected historical fixtures keep all expected values, including both schema-9 forms (3.652673ms)
+✔ RC-16: original URL import and actual Orb.step radius now match the empty control (2.482518ms)
+ℹ Original malformed URL radius: 721 px; empty control: 721 px; explicit silent Band 0: 10 px.
+✔ RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy, waveform and radius (5.324901ms)
+ℹ [{"chanId":"L","fullRadius":721,"selectedRadius":299.6666666666667,"band0Radius":89},{"chanId":"R","fullRadius":247,"selectedRadius":326,"band0Radius":168},{"chanId":"C","fullRadius":484,"selectedRadius":405.0000000000001,"band0Radius":247}]
+✔ RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors (13.790896ms)
+✖ RC-18: production Space/callback freezes free Ring and Orb while analysis continues (6.517714ms)
+✔ RC-18: production Space/callback freezes orb Ring and Orb while analysis continues (3.17123ms)
+ℹ {"phaseMode":"orb","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+ℹ tests 31
+ℹ suites 0
+ℹ pass 30
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 97.300991
+
+✖ failing tests:
+
+test at tests/rc18-motion-pause.test.js:11:42
+✖ RC-18: production Space/callback freezes free Ring and Orb while analysis continues (6.517714ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 2.3504440784612015
+  - 1.2000000000000002
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc18-motion-pause.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2.3504440784612015,
+    expected: 1.2000000000000002,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

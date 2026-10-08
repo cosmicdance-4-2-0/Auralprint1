@@ -1,0 +1,21 @@
+{
+  "rc16": {
+    "input": [
+      null,
+      false,
+      "",
+      [],
+      true
+    ],
+    "bandIds": [],
+    "radius": 721,
+    "emptyControlRadius": 721
+  },
+  "rc18": {
+    "simPaused": true,
+    "orbBefore": 1,
+    "orbAfter": 1,
+    "ringBefore": 1,
+    "ringAfter": 1
+  }
+}

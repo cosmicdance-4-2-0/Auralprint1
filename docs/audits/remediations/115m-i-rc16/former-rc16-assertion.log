@@ -1,0 +1,44 @@
+{
+  "rc16": {
+    "input": [
+      null,
+      false,
+      "",
+      [],
+      true
+    ],
+    "bandIds": [],
+    "radius": 721,
+    "emptyControlRadius": 721
+  },
+  "rc18": {
+    "simPaused": true,
+    "orbBefore": 1,
+    "orbAfter": 1,
+    "ringBefore": 1,
+    "ringAfter": 1
+  }
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ []
+- [
+-   0,
+-   1
+- ]
+
+    at file:///workspace/Auralprint1/docs/audits/remediations/115m-i-rc16/reproduce.mjs:36:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [],
+  expected: [ 0, 1 ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
