@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="IDIW favicon">
+  <title>IDIW</title>
+
+  <defs>
+    <linearGradient id="idiwStroke" x1="10" y1="10" x2="118" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7C5CFF"/>
+      <stop offset="0.60" stop-color="#2FE6C9"/>
+      <stop offset="1" stop-color="#FF7A59"/>
+    </linearGradient>
+  </defs>
+
+  <!-- dark badge -->
+  <rect x="0" y="0" width="128" height="128" rx="26" fill="#070A12"/>
+
+  <!-- circle -->
+  <circle cx="64" cy="64" r="50" fill="none" stroke="url(#idiwStroke)" stroke-width="5"/>
+
+  <!-- triangle -->
+  <path d="M64 22 L30 94 L98 94 Z" fill="none" stroke="url(#idiwStroke)" stroke-width="5" stroke-linejoin="round"/>
+
+  <!-- infinity -->
+  <path d="
+      M 36 64
+      C 36 46, 54 44, 64 58
+      C 74 72, 92 72, 92 58
+      C 92 44, 74 44, 64 58
+      C 54 72, 36 82, 36 64
+    "
+    fill="none"
+    stroke="url(#idiwStroke)"
+    stroke-width="7"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+
+  <!-- knot dot -->
+  <circle cx="64" cy="58" r="3" fill="url(#idiwStroke)"/>
+</svg>

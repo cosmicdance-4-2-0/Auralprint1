@@ -1,0 +1,217 @@
+<!-- IDIW OG Image (1200x630)
+     Brand: Infinite Diversity · Infinite Wonder
+     Mark: Infinity inside triangle inside circle (sigil)
+     Palette: Violet + Teal + Ember on Deep Night
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="IDIW Open Graph preview">
+  <title>IDIW — Infinite Diversity · Infinite Wonder</title>
+  <desc>Auralprint - Waveform Analysis tool</desc>
+
+  <defs>
+    <!-- Background glow -->
+    <radialGradient id="bgGlowA" cx="18%" cy="22%" r="60%">
+      <stop offset="0" stop-color="rgba(124,92,255,0.28)"/>
+      <stop offset="55%" stop-color="rgba(124,92,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+
+    <radialGradient id="bgGlowB" cx="82%" cy="28%" r="62%">
+      <stop offset="0" stop-color="rgba(47,230,201,0.22)"/>
+      <stop offset="55%" stop-color="rgba(47,230,201,0.07)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+
+    <radialGradient id="bgGlowC" cx="56%" cy="120%" r="68%">
+      <stop offset="0" stop-color="rgba(255,122,89,0.14)"/>
+      <stop offset="55%" stop-color="rgba(255,122,89,0.04)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+
+    <!-- Stroke gradient for sigil -->
+    <linearGradient id="idiwStroke" x1="240" y1="120" x2="520" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7C5CFF"/>
+      <stop offset="0.55" stop-color="#2FE6C9"/>
+      <stop offset="1" stop-color="#FF7A59"/>
+    </linearGradient>
+
+    <!-- Text gradient -->
+    <linearGradient id="titleGrad" x1="600" y1="0" x2="1150" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="rgba(255,255,255,0.96)"/>
+      <stop offset="1" stop-color="rgba(255,255,255,0.82)"/>
+    </linearGradient>
+
+    <!-- Soft glow filter -->
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Grid pattern -->
+    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M 56 0 L 0 0 0 56" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+
+    <!-- Tiny star sparkle -->
+    <filter id="spark" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#070A12"/>
+  <rect width="1200" height="630" fill="url(#bgGlowA)"/>
+  <rect width="1200" height="630" fill="url(#bgGlowB)"/>
+  <rect width="1200" height="630" fill="url(#bgGlowC)"/>
+
+  <!-- Subtle grid -->
+  <rect x="0" y="0" width="1200" height="630" fill="url(#grid)" opacity="0.85"/>
+
+  <!-- Random stars -->
+  <g opacity="0.55" filter="url(#spark)">
+    <circle cx="104" cy="92" r="1.6" fill="rgba(255,255,255,0.55)"/>
+    <circle cx="210" cy="180" r="1.3" fill="rgba(255,255,255,0.44)"/>
+    <circle cx="420" cy="84" r="1.7" fill="rgba(255,255,255,0.58)"/>
+    <circle cx="980" cy="126" r="1.4" fill="rgba(255,255,255,0.45)"/>
+    <circle cx="1110" cy="240" r="1.5" fill="rgba(255,255,255,0.50)"/>
+    <circle cx="900" cy="520" r="1.4" fill="rgba(255,255,255,0.46)"/>
+    <circle cx="640" cy="560" r="1.6" fill="rgba(255,255,255,0.54)"/>
+  </g>
+
+  <!-- Left: IDIW sigil mark -->
+  <g transform="translate(120,120)">
+    <!-- Glass panel behind sigil -->
+    <rect x="0" y="0" width="360" height="390" rx="28"
+          fill="rgba(255,255,255,0.03)"
+          stroke="rgba(255,255,255,0.10)"
+          stroke-width="2"/>
+    <rect x="0" y="0" width="360" height="390" rx="28"
+          fill="rgba(255,255,255,0.02)"/>
+
+    <!-- Sigil centered -->
+    <g transform="translate(180,195)">
+      <!-- Outer circle -->
+      <circle cx="0" cy="0" r="128"
+              fill="none"
+              stroke="url(#idiwStroke)"
+              stroke-width="8"
+              opacity="0.95"/>
+
+      <!-- Triangle -->
+      <path d="M 0 -108 L -92 88 L 92 88 Z"
+            fill="none"
+            stroke="url(#idiwStroke)"
+            stroke-width="8"
+            stroke-linejoin="round"
+            opacity="0.88"/>
+
+      <!-- Infinity glow -->
+      <path d="
+        M -72 0
+        C -72 -50, -16 -52, 0 -20
+        C 16 12, 72 12, 72 -20
+        C 72 -52, 16 -52, 0 -20
+        C -16 12, -72 34, -72 0
+      "
+      fill="none"
+      stroke="rgba(47,230,201,0.18)"
+      stroke-width="26"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#softGlow)"/>
+
+      <!-- Infinity crisp -->
+      <path d="
+        M -72 0
+        C -72 -50, -16 -52, 0 -20
+        C 16 12, 72 12, 72 -20
+        C 72 -52, 16 -52, 0 -20
+        C -16 12, -72 34, -72 0
+      "
+      fill="none"
+      stroke="url(#idiwStroke)"
+      stroke-width="11"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+
+      <!-- Knot dot -->
+      <circle cx="0" cy="-20" r="6.2" fill="#070A12" opacity="0.9"/>
+      <circle cx="0" cy="-20" r="4.3" fill="url(#idiwStroke)" opacity="0.98"/>
+
+      <!-- Corner nodes -->
+      <circle cx="0" cy="-108" r="5" fill="url(#idiwStroke)"/>
+      <circle cx="-92" cy="88" r="5" fill="url(#idiwStroke)"/>
+      <circle cx="92" cy="88" r="5" fill="url(#idiwStroke)"/>
+    </g>
+
+    <!-- Badge text -->
+    <text x="180" y="360" text-anchor="middle"
+          fill="rgba(255,255,255,0.72)"
+          font-size="18"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial">
+      IDIW · Auralprint
+    </text>
+  </g>
+
+  <!-- Right: copy block -->
+  <g transform="translate(540,160)">
+    <text x="0" y="0"
+          fill="url(#titleGrad)"
+          font-size="74"
+          font-weight="800"
+          letter-spacing="0.14em"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial">
+      IDIW
+    </text>
+
+    <text x="0" y="62"
+          fill="rgba(255,255,255,0.82)"
+          font-size="34"
+          font-weight="650"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial">
+      Infinite Diversity · Infinite Wonder
+    </text>
+
+    <text x="0" y="120"
+          fill="rgba(255,255,255,0.70)"
+          font-size="26"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial">
+      Curated AI adventure games.
+    </text>
+
+    <text x="0" y="158"
+          fill="rgba(255,255,255,0.62)"
+          font-size="22"
+          font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial">
+      Consistent worlds · clear safety modes · optional adult gating
+    </text>
+
+    <!-- Pill footer line -->
+    <g transform="translate(0,220)">
+      <rect x="0" y="-22" width="560" height="52" rx="26"
+            fill="rgba(255,255,255,0.03)"
+            stroke="rgba(255,255,255,0.10)"
+            stroke-width="2"/>
+      <text x="22" y="10"
+            fill="rgba(255,255,255,0.76)"
+            font-size="20"
+            font-weight="600"
+            font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial">
+        Auralprint - Waveform Analysis Tool
+      </text>
+    </g>
+
+    <text x="0" y="320"
+          fill="rgba(255,255,255,0.52)"
+          font-size="18"
+          font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace">
+      idiw.net · under active development
+    </text>
+  </g>
+</svg>
