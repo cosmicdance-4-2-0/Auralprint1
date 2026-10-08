@@ -1,0 +1,129 @@
+{
+  "version": "v0.1.15m.i",
+  "browser": "151.0.7922.173",
+  "method": "Native source boot with controlled AudioEngine.sample and performance clock, actual callback/UI/Space, DPR 1/2; unmodified standalone artifact playback smoke.",
+  "sourceResults": [
+    {
+      "dpr": 1,
+      "rows": [
+        {
+          "chanId": "L",
+          "fullRadiusPx": 576.8000000000001,
+          "selectedRadiusPx": 239.73333333333335,
+          "band0RadiusPx": 71.2
+        },
+        {
+          "chanId": "R",
+          "fullRadiusPx": 197.6,
+          "selectedRadiusPx": 260.79999999999995,
+          "band0RadiusPx": 134.4
+        },
+        {
+          "chanId": "C",
+          "fullRadiusPx": 387.2,
+          "selectedRadiusPx": 324.00000000000006,
+          "band0RadiusPx": 197.6
+        }
+      ],
+      "pauses": [
+        {
+          "phaseMode": "free",
+          "orbBefore": 1.2000000000000002,
+          "ringBefore": 1.2000000000000002,
+          "samplesDuringPause": 20,
+          "resumedOrb": 1.4000000000000004,
+          "resumedRing": 1.4000000000000004
+        },
+        {
+          "phaseMode": "orb",
+          "orbBefore": 1.2000000000000002,
+          "ringBefore": 1.2000000000000002,
+          "samplesDuringPause": 20,
+          "resumedOrb": 1.4000000000000004,
+          "resumedRing": 1.4000000000000004
+        }
+      ],
+      "ui": [
+        "validated text produces numeric IDs",
+        "invalid text preserves selection",
+        "blank text uses full spectrum",
+        "picker preserves Band 0"
+      ],
+      "samples": 59
+    },
+    {
+      "dpr": 2,
+      "rows": [
+        {
+          "chanId": "L",
+          "fullRadiusPx": 1153.6000000000001,
+          "selectedRadiusPx": 479.4666666666667,
+          "band0RadiusPx": 142.4
+        },
+        {
+          "chanId": "R",
+          "fullRadiusPx": 395.2,
+          "selectedRadiusPx": 521.5999999999999,
+          "band0RadiusPx": 268.8
+        },
+        {
+          "chanId": "C",
+          "fullRadiusPx": 774.4,
+          "selectedRadiusPx": 648.0000000000001,
+          "band0RadiusPx": 395.2
+        }
+      ],
+      "pauses": [
+        {
+          "phaseMode": "free",
+          "orbBefore": 1.2000000000000002,
+          "ringBefore": 1.2000000000000002,
+          "samplesDuringPause": 20,
+          "resumedOrb": 1.4000000000000004,
+          "resumedRing": 1.4000000000000004
+        },
+        {
+          "phaseMode": "orb",
+          "orbBefore": 1.2000000000000002,
+          "ringBefore": 1.2000000000000002,
+          "samplesDuringPause": 20,
+          "resumedOrb": 1.4000000000000004,
+          "resumedRing": 1.4000000000000004
+        }
+      ],
+      "ui": [
+        "validated text produces numeric IDs",
+        "invalid text preserves selection",
+        "blank text uses full spectrum",
+        "picker preserves Band 0"
+      ],
+      "samples": 59
+    }
+  ],
+  "artifact": {
+    "httpStatus": 200,
+    "title": "Auralprint - Waveform Analysis Tool - v0.1.15m.i",
+    "verified": [
+      "standalone boot",
+      "stereo WAV decode",
+      "playback",
+      "advancing scrubber",
+      "stop"
+    ]
+  },
+  "pageErrors": [],
+  "missingAssets": [
+    {
+      "url": "/favicon.svg",
+      "status": 404
+    },
+    {
+      "url": "/favicon-96x96.png",
+      "status": 404
+    },
+    {
+      "url": "/apple-touch-icon.png",
+      "status": 404
+    }
+  ]
+}

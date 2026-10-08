@@ -253,12 +253,19 @@ test("malformed values preserve existing clamps, defaults, enum rejection and de
   expected.bands.floorHz = expected.bands.ceilingHz = 40000;
   Object.assign(expected.bands.overlay, { alpha: 0, pointSizePx: 10, minRadiusFrac: .01, maxRadiusFrac: 1, lineAlpha: 1, lineWidthPx: 1, ringSpeedRadPerSec: constants.TAU });
   Object.assign(expected.bands.rainbow, { hueOffsetDeg: 0, saturation: 1 });
-  expected.orbs = [{ ...structuredClone(CONFIG.defaults.orbs[0]), id: "BAD", chanId: "C", bandIds: [7, 2, 19], chirality: 1,
+  expected.orbs = [{ ...structuredClone(CONFIG.defaults.orbs[0]), id: "BAD", chanId: "C", bandIds: [7, 19], chirality: 1,
     hueOffsetDeg: 360, colorSource: "inherit", centerXFrac: -.95, centerYFrac: .95,
     motion: { angularSpeedRadPerSec: .01 },
     response: { minRadiusFrac: .01, maxRadiusFrac: 1, waveformRadialDisplaceFrac: .1 },
     particles: { emitPerSecond: 1000, sizeMaxPx: 2, sizeMinPx: 2, sizeToMinSec: 8, ttlSec: 8, minPlacementDistancePx: 0.5 },
     trace: { lines: true, numLines: 1000, lineAlpha: 0, lineWidthPx: 6, lineColorMode: "dominantBand" } }];
+  location.hash = rawHash({ schema: 10, prefs: input });
+  assert.equal(UrlPreset.applyFromLocationHash(), true);
+  assert.deepEqual(preferences, expected);
+  assert.deepEqual(encodePresetPayload(input).prefs, expected);
+  // RC-16 rejects numeric strings; deliberate numeric selections still survive.
+  input.orbs[0].bandIds = [7, 2, 19];
+  expected.orbs[0].bandIds = [7, 2, 19];
   location.hash = rawHash({ schema: 10, prefs: input });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences, expected);
@@ -451,9 +458,11 @@ test("bandNames migration validates unique indices and canonical bandIds take pr
   const next = sanitizePreset({ schema: 6, prefs: { orbs: [
     { id: "names", bandNames: ["Eternal Core", "Iron Heartbeat", "unknown", "Eternal Core", 5] },
     { id: "ids", bandIds: [7, 7, "19", -1], bandNames: ["Eternal Core"] },
+    { id: "numeric-ids", bandIds: [7, 7, 19, -1], bandNames: ["Eternal Core"] },
   ] } });
   assert.deepEqual(next.orbs[0].bandIds, [0, 2]);
-  assert.deepEqual(next.orbs[1].bandIds, [7, 19]);
+  assert.deepEqual(next.orbs[1].bandIds, [7]);
+  assert.deepEqual(next.orbs[2].bandIds, [7, 19]);
   assert.equal("bandNames" in next.orbs[0], false);
 });
 

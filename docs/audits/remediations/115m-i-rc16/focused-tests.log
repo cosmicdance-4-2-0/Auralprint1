@@ -1,0 +1,43 @@
+✔ RC-16: zero (2.073326ms)
+✔ RC-16: highest (0.140467ms)
+✔ RC-16: interior (0.084247ms)
+✔ RC-16: invalid type/value 0 (0.077327ms)
+✔ RC-16: invalid type/value 1 (0.108418ms)
+✔ RC-16: invalid type/value 2 (0.072099ms)
+✔ RC-16: invalid type/value 3 (0.082737ms)
+✔ RC-16: invalid type/value 4 (0.061345ms)
+✔ RC-16: invalid type/value 5 (0.100183ms)
+✔ RC-16: invalid type/value 6 (0.15704ms)
+✔ RC-16: invalid type/value 7 (0.081334ms)
+✔ RC-16: invalid type/value 8 (0.121542ms)
+✔ RC-16: invalid type/value 9 (0.087436ms)
+✔ RC-16: invalid type/value 10 (0.06465ms)
+✔ RC-16: invalid type/value 11 (0.04338ms)
+✔ RC-16: invalid type/value 12 (0.075322ms)
+✔ RC-16: invalid type/value 13 (0.041235ms)
+✔ RC-16: invalid type/value 14 (0.033873ms)
+✔ RC-16: invalid type/value 15 (0.052935ms)
+✔ RC-16: invalid type/value 16 (0.031853ms)
+✔ RC-16: invalid type/value 17 (0.036841ms)
+✔ RC-16: stable first occurrences, fresh arrays, empty/all-invalid collections and legacy names (1.017606ms)
+✔ RC-16: independent Orb normalization and duplication retain configuration and ordering (0.599456ms)
+✔ RC-16: validated human text remains an explicit numbers-only model boundary (0.760386ms)
+✔ RC-16: schemas 2–10 discard entries without losing scenes or reviving aliases (6.142034ms)
+✔ RC-16: inspected historical fixtures keep all expected values, including both schema-9 forms (3.968837ms)
+✔ RC-16: original URL import and actual Orb.step radius now match the empty control (2.975463ms)
+ℹ Original malformed URL radius: 721 px; empty control: 721 px; explicit silent Band 0: 10 px.
+✔ RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy, waveform and radius (2.521146ms)
+ℹ [{"chanId":"L","fullRadius":721,"selectedRadius":299.6666666666667,"band0Radius":89},{"chanId":"R","fullRadius":247,"selectedRadius":326,"band0Radius":168},{"chanId":"C","fullRadius":484,"selectedRadius":405.0000000000001,"band0Radius":247}]
+✔ RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors (9.3425ms)
+✔ RC-18: production Space/callback freezes free Ring and Orb while analysis continues (4.688397ms)
+ℹ {"phaseMode":"free","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+✔ RC-18: production Space/callback freezes orb Ring and Orb while analysis continues (2.543404ms)
+ℹ {"phaseMode":"orb","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.82412

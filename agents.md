@@ -198,6 +198,11 @@ trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 Rules:
 - Only fields returned by `normalizeOrbDef()` are valid
 - Adding a field requires full preset pipeline update (Section 2)
+- `bandIds` accepts only integer numbers in `[0, CONFIG.bandNames.length - 1]`,
+  retaining first-occurrence order and uniqueness. Discard unsupported entries,
+  including numeric strings; an empty result uses the selected channel's full
+  spectrum. Human text controls explicitly parse validated digit tokens before
+  normalization. Legacy `bandNames` mapping remains supported on input.
 
 ---
 

@@ -1,0 +1,19 @@
+{
+  "input": [
+    null,
+    false,
+    "",
+    [],
+    true
+  ],
+  "helper": [
+    0,
+    1
+  ],
+  "urlBandIds": [
+    0,
+    1
+  ],
+  "radius": 10,
+  "emptyControlRadius": 721
+}

@@ -1,0 +1,290 @@
+✖ RC-16: zero (5.227331ms)
+✔ RC-16: highest (0.506448ms)
+✔ RC-16: interior (0.134282ms)
+✔ RC-16: invalid type/value 0 (0.106499ms)
+✔ RC-16: invalid type/value 1 (0.125084ms)
+✔ RC-16: invalid type/value 2 (0.103796ms)
+✔ RC-16: invalid type/value 3 (0.075159ms)
+✔ RC-16: invalid type/value 4 (0.105041ms)
+✔ RC-16: invalid type/value 5 (0.561146ms)
+✔ RC-16: invalid type/value 6 (0.264509ms)
+✔ RC-16: invalid type/value 7 (0.161477ms)
+✔ RC-16: invalid type/value 8 (0.081611ms)
+✔ RC-16: invalid type/value 9 (0.146518ms)
+✔ RC-16: invalid type/value 10 (0.112064ms)
+✔ RC-16: invalid type/value 11 (0.050325ms)
+✔ RC-16: invalid type/value 12 (0.114868ms)
+✔ RC-16: invalid type/value 13 (0.072667ms)
+✔ RC-16: invalid type/value 14 (0.041496ms)
+✔ RC-16: invalid type/value 15 (0.040834ms)
+✔ RC-16: invalid type/value 16 (0.073245ms)
+✔ RC-16: invalid type/value 17 (0.062375ms)
+✖ RC-16: stable first occurrences, fresh arrays, empty/all-invalid collections and legacy names (0.691175ms)
+✖ RC-16: independent Orb normalization and duplication retain configuration and ordering (1.487158ms)
+✖ RC-16: validated human text remains an explicit numbers-only model boundary (0.968515ms)
+✖ RC-16: schemas 2–10 discard entries without losing scenes or reviving aliases (1.459947ms)
+✖ RC-16: inspected historical fixtures keep all expected values, including both schema-9 forms (5.296161ms)
+✖ RC-16: original URL import and actual Orb.step radius now match the empty control (2.85225ms)
+✖ RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy, waveform and radius (3.867943ms)
+✖ RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors (2.235777ms)
+✔ RC-18: production Space/callback freezes free Ring and Orb while analysis continues (5.782288ms)
+ℹ {"phaseMode":"free","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+✔ RC-18: production Space/callback freezes orb Ring and Orb while analysis continues (4.438444ms)
+ℹ {"phaseMode":"orb","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+ℹ tests 31
+ℹ suites 0
+ℹ pass 22
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96.666883
+
+✖ failing tests:
+
+test at tests/rc16-band-references.test.js:26:4
+✖ RC-16: zero (5.227331ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + []
+  - [
+  -   0
+  - ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:26:41)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:28:1
+✖ RC-16: stable first occurrences, fresh arrays, empty/all-invalid collections and legacy names (0.691175ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      255,
+  -   0,
+      17
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:29:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:49:1
+✖ RC-16: independent Orb normalization and duplication retain configuration and ordering (1.487158ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      [
+        7,
+        3,
+  -     0
+      ],
+      [
+        7,
+        3,
+  -     0
+      ],
+      []
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:55:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:67:1
+✖ RC-16: validated human text remains an explicit numbers-only model boundary (0.968515ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+      error: '',
+      ids: [
+        7,
+        3,
+  -     0,
+        255
+      ]
+    }
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:69:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:78:1
+✖ RC-16: schemas 2–10 discard entries without losing scenes or reviving aliases (1.459947ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      [
+        7,
+        3,
+  -     0,
+        255
+      ],
+      [],
+      [
+        7,
+  -     0
+      ]
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:87:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:99:1
+✖ RC-16: inspected historical fixtures keep all expected values, including both schema-9 forms (5.296161ms)
+  AssertionError [ERR_ASSERTION]: schema 6: orbs.1.bandIds
+  + actual - expected
+
+    [
+  -   0,
+      2
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:104:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:136:1
+✖ RC-16: original URL import and actual Orb.step radius now match the empty control (2.85225ms)
+  AssertionError [ERR_ASSERTION]: deliberately selected silent Band 0 still targets Band 0
+
+  721 !== 10
+
+      at file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:148:10
+      at withScene (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:127:16)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:136:96)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 721,
+    expected: 10,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:152:1
+✖ RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy, waveform and radius (3.867943ms)
+  AssertionError [ERR_ASSERTION]: 405 != 299.6666666666667
+      at close (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:20:44)
+      at file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:188:7
+      at withScene (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:127:16)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:152:110)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/rc16-band-references.test.js:208:1
+✖ RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors (2.235777ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      [
+        7,
+        3,
+  -     0
+      ],
+      []
+    ]
+
+      at file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:218:10
+      at withScene (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:127:16)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/work/auralprint-rc16-mutations-0uwqagen/tests/rc16-band-references.test.js:208:111)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

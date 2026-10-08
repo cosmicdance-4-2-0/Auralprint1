@@ -1,0 +1,14 @@
+{
+  "version": "v0.1.15m.i",
+  "schema": 10,
+  "artifact": "dist/auralprint_0.1.15m.i.html",
+  "bytes": 397799,
+  "sha256": "a75733cb48a3ebd27ed06fda7a00836063b2a0d4df4e0bbe3e0d6b64426002fb",
+  "checks": [
+    "version marker replaced",
+    "schema 10",
+    "strict sanitizer bundled",
+    "explicit human text conversion bundled",
+    "old version absent"
+  ]
+}
