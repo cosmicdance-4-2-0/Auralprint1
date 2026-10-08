@@ -1,0 +1,47 @@
+[
+  {
+    "mutation": "admission-removed",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "add-duplicate-unbounded",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "quadratic-id-repair",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "trace-materialization",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "runtime-admission-bypass",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "duplicate-runtime-ownership",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "quadratic-tooltip-discovery",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "adapter-owned-membership",
+    "exitCode": 1,
+    "assertionDetected": true
+  },
+  {
+    "mutation": "double-particle-render",
+    "exitCode": 1,
+    "assertionDetected": true
+  }
+]

@@ -87,8 +87,6 @@ function primeDomCache() {
     ui.valSizeToMin = document.getElementById("valSizeToMin");
     ui.rngTTL = document.getElementById("rngTTL");
     ui.valTTL = document.getElementById("valTTL");
-    ui.rngOverlap = document.getElementById("rngOverlap");
-    ui.valOverlap = document.getElementById("valOverlap");
 
     ui.rngOmega = document.getElementById("rngOmega");
     ui.valOmega = document.getElementById("valOmega");
@@ -200,7 +198,6 @@ function primeDomCache() {
     bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
     bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
     bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
-    bindRange(ui.rngOverlap, CONFIG.limits.particles.overlapRadiusPx);
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);

@@ -1,4 +1,4 @@
-import { clamp } from "./core/utils.js";
+import { simulationDeltaSec } from "./core/timing.js";
 import { CONFIG } from "./core/config.js";
 import { runtime, resolveSettings } from "./core/preferences.js";
 import { state } from "./core/state.js";
@@ -42,7 +42,7 @@ function onAnimationFrame(tsMs) {
   // Integrate with real frame time, but cap to a single "slow frame" (~33 ms)
   // so tab-switch or GC spikes can't cause huge jumps. Normal 60/120 Hz frames
   // stay untouched, lower bound remains 0, and downstream emit overflow guards stay valid.
-  const dtSec = clamp(dtSecRaw, 0, runtime.settings.timing.maxDeltaTimeSec);
+  const dtSec = simulationDeltaSec(dtSecRaw, runtime.settings.timing?.maxDeltaTimeSec);
   const nowSec = performance.now() / 1000;
 
   updateAnalysisFrame(analysisFrame, AudioEngine.sample(), state.bands);

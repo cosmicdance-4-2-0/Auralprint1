@@ -1,0 +1,17 @@
+{
+  "version": "v0.1.15m.h.r",
+  "browser": "151.0.7922.173",
+  "verified": [
+    "single-file boot on localhost with external requests blocked",
+    "schema-10 obsolete overlap import",
+    "120-second timing sanitation",
+    "no overlap DOM controls/labels",
+    "per-Orb emission edit",
+    "Bulk lifetime edit",
+    "encoded schema remains 10",
+    "encoded overlap omitted",
+    "canvas initialized",
+    "no external asset requests"
+  ],
+  "errors": []
+}

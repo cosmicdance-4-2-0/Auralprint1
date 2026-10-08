@@ -1,5 +1,6 @@
-// Optional RC-15 investigation. No limits are chosen or production behavior changed.
+// Optional RC-15 investigation against current production behavior; emission/retention and Orb admission ceilings are enforced; rendering uses bounded trails.
 import { CONFIG } from '../src/js/core/config.js';
+import { simulationDeltaSec } from '../src/js/core/timing.js';
 import { runtime } from '../src/js/core/preferences.js';
 import { state } from '../src/js/core/state.js';
 import { sanitizePreset } from '../src/js/presets/preset-codec.js';
@@ -11,7 +12,7 @@ import { Renderer } from '../src/js/render/renderer.js';
 import { Orb } from '../src/js/render/orb.js';
 const check = (value, message) => { if (!value) throw new Error(message); };
 
-export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeContext = null } = {}) {
+export function measureReleaseResources({ counts = [2, 8, 16, 64, 256, 1024, 4096], warmFrames = 360, nativeContext = null } = {}) {
   state.widthPx = state.heightPx = 1000; state.dpr = 1;
   const largeStart = performance.now();
   const large = sanitizePreset({ schema: 10, prefs: { orbs: Array.from({ length: 4096 }, (_, i) => ({ ...structuredClone(CONFIG.defaults.orbs[0]), id: `SAFE-${i}` })) } });
@@ -27,20 +28,18 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeCo
     const frame = updateAnalysisFrame(createAnalysisFrame(), { ready: true, monoLike: false, bands: Object.fromEntries(['L', 'R', 'C'].map(id => [id, { timeDomain: waveform, rms: 1, energy01: 1 }])) }, state.bands);
     const context = { dtSec: 1 / 60, nowSec: 0, simPaused: false, analysisFrame: frame };
     const warmStart = performance.now();
-    for (let i = 0; i < 360; i++) { context.nowSec = i / 60; visualizers.update(context); }
+    for (let i = 0; i < warmFrames; i++) { context.nowSec = i / 60; visualizers.update(context); }
     const warmMs = performance.now() - warmStart;
-    let emits = 0, overlapComparisons = 0, expiryVisits = 0;
+    let emits = 0;
     for (const orb of state.orbs) {
-      const originalEmit = orb.trail.emitAt, originalOverlap = orb.trail.removeOverlaps, originalUpdate = orb.trail.updateAndEmit;
-      orb.trail.emitAt = function (...args) { emits++; return originalEmit.apply(this, args); };
-      orb.trail.removeOverlaps = function (...args) { if (args[2] > 0) overlapComparisons += this.particles.length; return originalOverlap.apply(this, args); };
-      orb.trail.updateAndEmit = function (...args) { expiryVisits += this.particles.length; return originalUpdate.apply(this, args); };
+      const originalEmit = orb.trail.emitAt;
+      orb.trail.emitAt = function (...args) { const result = originalEmit.apply(this, args); if (result !== false) emits++; return result; };
     }
     const updates = [];
     for (let i = 0; i < 3; i++) {
-      emits = overlapComparisons = expiryVisits = 0; context.nowSec = 6 + i / 60;
+      emits = 0; context.nowSec = warmFrames / 60 + i / 60;
       const start = performance.now(); visualizers.update(context);
-      updates.push({ ms: performance.now() - start, emits, overlapComparisons, expiryVisits });
+      updates.push({ ms: performance.now() - start, emits, ...visualizers.getParticleStats() });
     }
     const particles = state.orbs.reduce((n, orb) => n + orb.trail.particles.length, 0);
     const drawCalls = {};
@@ -52,21 +51,21 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeCo
       state.ctx = nativeContext;
       for (let i = 0; i < 3; i++) { const start = performance.now(); visualizers.render(Renderer, context); nativeRenderSubmissionMs.push(performance.now() - start); }
     }
-    curves.push({ count, warmMs, particles, updates, drawCalls, instrumentedRenderMs, nativeRenderSubmissionMs });
+    curves.push({ count, warmFrames, warmMs, particles, updates, drawCalls, instrumentedRenderMs, nativeRenderSubmissionMs });
+    visualizers.dispose();
   }
   const burstPrefs = sanitizePreset({ schema: 10, prefs: { timing: { maxDeltaTimeSec: 120 }, orbs: [{ ...structuredClone(CONFIG.defaults.orbs[0]), id: 'BURST', particles: { ...CONFIG.defaults.orbs[0].particles, ttlSec: 600 } }] } });
   runtime.settings = burstPrefs;
   const burstOrb = new Orb(burstPrefs.orbs[0]); const band = { energy01: 1, waveform };
   for (let i = 0; i < 360; i++) burstOrb.step(1 / 60, i / 60, band, null, 0);
-  let emits = 0, overlapComparisons = 0;
-  const emit = burstOrb.trail.emitAt, overlap = burstOrb.trail.removeOverlaps;
+  let emits = 0;
+  const emit = burstOrb.trail.emitAt;
   burstOrb.trail.emitAt = function (...args) { emits++; return emit.apply(this, args); };
-  burstOrb.trail.removeOverlaps = function (...args) { if (args[2] > 0) overlapComparisons += this.particles.length; return overlap.apply(this, args); };
-  const burstStart = performance.now(); burstOrb.step(120, 126, band, null, 0);
-  const burst = { acceptedMaxDeltaTimeSec: burstPrefs.timing.maxDeltaTimeSec, acceptedTtlSec: burstPrefs.orbs[0].particles.ttlSec, emits, overlapComparisons, elapsedMs: performance.now() - burstStart, retainedParticles: burstOrb.trail.particles.length };
-  check(emits === 28800 && overlapComparisons > 1e6, 'burst no longer reproduces');
-  check(curves.find(x => x.count === 256)?.particles > 50000, 'aggregate case no longer reproduces');
-  return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. No budget is selected.' };
+  const burstStart = performance.now(); burstOrb.step(simulationDeltaSec(120, burstPrefs.timing.maxDeltaTimeSec), 126, band, null, 0);
+  const burst = { acceptedMaxDeltaTimeSec: burstPrefs.timing.maxDeltaTimeSec, acceptedTtlSec: burstPrefs.orbs[0].particles.ttlSec, emits, elapsedMs: performance.now() - burstStart, retainedParticles: burstOrb.trail.particles.length };
+  check(burst.acceptedMaxDeltaTimeSec === CONFIG.limits.timing.maxDeltaTimeSec && emits === 8, 'simulation timestep protection failed');
+  check(curves.every(x => x.particles <= CONFIG.limits.particleSafety.maxActiveParticles && x.updates.every(u => u.emits <= CONFIG.limits.particleSafety.maxEmissionsPerFrame)), 'aggregate safety boundary failed');
+  return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. Initial CONFIG emission/retention thresholds are engineering safeguards, not a real-time performance guarantee. Orb motion/targeting is bounded by admission and band limits; Canvas submission is bounded by retained particles and canonical Ring count, but can remain expensive.' };
 }
 
 if (typeof window === 'undefined') {

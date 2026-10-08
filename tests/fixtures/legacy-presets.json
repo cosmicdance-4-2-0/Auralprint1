@@ -188,7 +188,7 @@
       "bands.overlay.pointSizePx": 5,
       "bands.rainbow.hueOffsetDeg": 63,
       "bands.particleColorSource": "angle",
-      "timing.maxDeltaTimeSec": 0.12,
+      "timing.maxDeltaTimeSec": 0.03333333333333333,
       "orbs.0.id": "LEGACY-Z",
       "orbs.0.chanId": "C",
       "orbs.0.bandIds": [],
@@ -312,7 +312,7 @@
       "bands.overlay.pointSizePx": 5,
       "bands.rainbow.hueOffsetDeg": 63,
       "bands.particleColorSource": "angle",
-      "timing.maxDeltaTimeSec": 0.12,
+      "timing.maxDeltaTimeSec": 0.03333333333333333,
       "orbs.0.id": "LEGACY-Z",
       "orbs.0.chanId": "C",
       "orbs.0.bandIds": [
@@ -441,7 +441,7 @@
       "bands.overlay.pointSizePx": 5,
       "bands.rainbow.hueOffsetDeg": 63,
       "bands.particleColorSource": "angle",
-      "timing.maxDeltaTimeSec": 0.12,
+      "timing.maxDeltaTimeSec": 0.03333333333333333,
       "orbs.0.id": "LEGACY-Z",
       "orbs.0.chanId": "C",
       "orbs.0.bandIds": [
@@ -571,7 +571,7 @@
       "bands.overlay.pointSizePx": 5,
       "bands.rainbow.hueOffsetDeg": 63,
       "bands.particleColorSource": "angle",
-      "timing.maxDeltaTimeSec": 0.12,
+      "timing.maxDeltaTimeSec": 0.03333333333333333,
       "orbs.0.id": "LEGACY-Z",
       "orbs.0.chanId": "C",
       "orbs.0.bandIds": [
@@ -709,7 +709,7 @@
       "bands.overlay.pointSizePx": 5,
       "bands.rainbow.hueOffsetDeg": 63,
       "bands.particleColorSource": "angle",
-      "timing.maxDeltaTimeSec": 0.12,
+      "timing.maxDeltaTimeSec": 0.03333333333333333,
       "orbs.0.id": "LEGACY-Z",
       "orbs.0.chanId": "C",
       "orbs.0.bandIds": [

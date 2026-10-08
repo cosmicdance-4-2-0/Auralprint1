@@ -1,0 +1,46 @@
+✖ RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (6.260699ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39.573127
+
+✖ failing tests:
+
+test at tests/rc15-phase2.test.js:117:1
+✖ RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (6.260699ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+  +   28,
+  +   0,
+  +   0,
+  +   0,
+  +   0,
+  +   0,
+  +   0
+  -   4,
+  -   4,
+  -   4,
+  -   4,
+  -   4,
+  -   4,
+  -   4
+    ]
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-phase2.test.js:124:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

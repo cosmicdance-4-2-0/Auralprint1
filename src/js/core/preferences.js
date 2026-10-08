@@ -1,4 +1,6 @@
+import { normalizeMaxDeltaTimeSec } from "./timing.js";
 import { CONFIG } from "./config.js";
+import { assertOrbAdmission } from "./orb-admission.js";
 import { clamp, deepClone } from "./utils.js";
 
 /* =============================================================================
@@ -9,6 +11,7 @@ const runtime = { settings: deepClone(CONFIG.defaults) };
 
 function replacePreferences(next) {
   const replacement = (next && typeof next === "object") ? next : deepClone(CONFIG.defaults);
+  assertOrbAdmission(replacement.orbs);
   for (const key of Object.keys(preferences)) delete preferences[key];
   Object.assign(preferences, replacement);
   return preferences;
@@ -25,8 +28,10 @@ function normalizeBandCount(count) {
 }
 
 function resolveSettings() {
+  assertOrbAdmission(preferences.orbs);
   runtime.settings = deepClone(preferences);
   runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
+  runtime.settings.timing = { maxDeltaTimeSec: normalizeMaxDeltaTimeSec(preferences.timing?.maxDeltaTimeSec) };
 }
 
 
@@ -141,7 +146,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     waveformRadialDisplaceFrac: nestedNumber("response", "waveformRadialDisplaceFrac", orbLim.response.waveformRadialDisplaceFrac),
   };
   const particles = {};
-  for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "overlapRadiusPx"]) {
+  for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec"]) {
     particles[key] = nestedNumber("particles", key, CONFIG.limits.particles[key]);
   }
   particles.sizeMinPx = Math.min(particles.sizeMinPx, particles.sizeMaxPx);

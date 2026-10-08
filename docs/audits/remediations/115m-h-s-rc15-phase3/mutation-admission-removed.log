@@ -1,0 +1,41 @@
+✖ RC-15 phase 3: immutable admission policy accepts zero and exactly 4096; rejects 4097 before element access (30.08872ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55.751866
+
+✖ failing tests:
+
+test at tests/rc15-phase3.test.js:43:1
+✖ RC-15 phase 3: immutable admission policy accepts zero and exactly 4096; rejects 4097 before element access (30.08872ms)
+  AssertionError [ERR_ASSERTION]: The "overLimit" validation function is expected to return "true". Received false
+
+  Caught error:
+
+  Error: must not normalize oversized elements
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-phase3.test.js:51:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: must not normalize oversized elements
+        at Array.get (file:///workspace/Auralprint1/tests/rc15-phase3.test.js:50:83)
+        at Array Iterator.next (<anonymous>)
+        at largestOrbSuffix (file:///workspace/Auralprint1/src/js/core/orb-collection.js:14:14)
+        at normalizeOrbCollection (file:///workspace/Auralprint1/src/js/core/orb-collection.js:40:20)
+        at file:///workspace/Auralprint1/tests/rc15-phase3.test.js:51:21
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-phase3.test.js:51:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25),
+    expected: [Function: overLimit],
+    operator: 'throws',
+    diff: 'simple'
+  }

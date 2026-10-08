@@ -127,3 +127,26 @@ test("Orb management uses stable IDs, confirmation, and excludes non-Orb rows", 
     assert.equal(calls.some(call=>call[0]==="remove"),false);
   } finally { restore(); }
 });
+
+test('RC-15 phase 3: refused Add/Duplicate at admission ceiling preserve focused DOM and collection', async()=>{
+  const {CONFIG}=await import('../src/js/core/config.js');
+  const {createOrb,duplicateOrb}=await import('../src/js/core/orb-collection.js');
+  const restore=installDocument();
+  const definitions=Array.from({length:CONFIG.limits.orbs.maxCount},(_,i)=>({id:`ORB${i}`}));
+  const collection=[visualizer('spectral-ring','spectral-ring'),...definitions.map(d=>visualizer('orb',d.id))];
+  const list=element();list.contains=()=>true;
+  const addButton=element(),ui={visualizerList:list,visualizersStatus:element(),btnVisualizersAddOrb:addButton};
+  const settings={};let replacements=0;const replace=list.replaceChildren.bind(list);
+  list.replaceChildren=(...nodes)=>{replacements++;replace(...nodes);};
+  try{
+    const panel=createVisualizersPanelUi({ui,getSettings:()=>settings,getVisualizers:()=>collection,
+      addOrb:()=>createOrb(definitions),duplicateOrb:id=>duplicateOrb(definitions,id)});
+    panel.init();const rows=list.children;
+    document.activeElement=addButton;addButton.dispatch('click');
+    assert.equal(document.activeElement,addButton);assert.equal(list.children,rows);assert.equal(replacements,1);
+    const duplicate=rows.at(-1).children[2].children[1];duplicate.closest=()=>duplicate;
+    document.activeElement=duplicate;list.dispatch('click',{target:duplicate});
+    assert.equal(document.activeElement,duplicate);assert.equal(list.children,rows);assert.equal(replacements,1);
+    assert.equal(definitions.length,4096);assert.equal(definitions.at(-1).id,'ORB4095');
+  }finally{restore();}
+});

@@ -501,16 +501,14 @@ const UI = (() => {
     return controls;
   }
 
-  function findLabelForControl(control) {
+  function findLabelForControl(control, labelsById) {
     if (!control) return "Control";
 
     const ownLabel = control.closest("label");
     if (ownLabel) return ownLabel.textContent.replace(/\s+/g, " ").trim();
 
-    const allLabels = document.querySelectorAll("label[for]");
-    for (const label of allLabels) {
-      if (label.htmlFor === control.id) return label.textContent.replace(/\s+/g, " ").trim();
-    }
+    const label = labelsById.get(control.id);
+    if (label) return label.textContent.replace(/\s+/g, " ").trim();
 
     const row = control.closest(".row");
     const rowLabel = row ? row.querySelector("label") : null;
@@ -539,9 +537,15 @@ const UI = (() => {
   function initConfigTooltips() {
     const controls = collectOperatorFacingControls();
     const existingSpecs = ui.configTooltipByControl;
+    // One ephemeral association index, preserving the first matching label.
+    // Scanning all labels for every newly admitted control is quadratic.
+    const labelsById = new Map();
+    for (const label of document.querySelectorAll("label[for]")) {
+      if (!labelsById.has(label.htmlFor)) labelsById.set(label.htmlFor, label);
+    }
     ui.configTooltipSpecs = controls.map((control) => existingSpecs?.get(control) || ({
       control,
-      label: findLabelForControl(control),
+      label: findLabelForControl(control, labelsById),
       valueEl: findValueElementForControl(control),
       staticTitle: (control.getAttribute("title") || "").trim(),
     }));

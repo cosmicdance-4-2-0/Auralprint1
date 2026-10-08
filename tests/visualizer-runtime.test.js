@@ -162,7 +162,7 @@ test("Orb visualizer passes selected dominant context through Orb.step into inhe
     state.widthPx = state.heightPx = 1000;
     const def = structuredClone(CONFIG.defaults.orbs[0]);
     def.chanId = "L"; def.bandIds = [0, 1]; def.colorSource = "inherit"; def.hueOffsetDeg = 23;
-    def.particles.emitPerSecond = 10; def.particles.overlapRadiusPx = 0;
+    def.particles.emitPerSecond = 10;
     const orb = new Orb(def);
     const visualizer = createOrbVisualizer(orb);
     visualizer.update(frame());

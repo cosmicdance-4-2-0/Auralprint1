@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.p");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.p\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.s");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.s\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -1702,7 +1702,7 @@ test("URL preset round-trips persisted config fields that were previously droppe
     preferences.bands.ceilingHz = 18000;
     preferences.bands.overlay.lineAlpha = 0.18;
     preferences.bands.overlay.lineWidthPx = 4;
-    preferences.timing.maxDeltaTimeSec = 0.5;
+    preferences.timing.maxDeltaTimeSec = 1 / 120;
 
     UrlPreset.writeHashFromPrefs();
 
@@ -1718,7 +1718,7 @@ test("URL preset round-trips persisted config fields that were previously droppe
     assert.equal(preferences.bands.ceilingHz, 18000);
     assert.equal(preferences.bands.overlay.lineAlpha, 0.18);
     assert.equal(preferences.bands.overlay.lineWidthPx, 4);
-    assert.equal(preferences.timing.maxDeltaTimeSec, 0.5);
+    assert.equal(preferences.timing.maxDeltaTimeSec, 1 / 120);
   } finally {
     replacePreferences(previousPrefs);
     resolveSettings();
@@ -3397,7 +3397,6 @@ const MG_BULK_FIELDS = [
   ["rngSizeMin", "valSizeMin", "particles", "sizeMinPx", "input", 1, 2],
   ["rngSizeToMin", "valSizeToMin", "particles", "sizeToMinSec", "input", 2, 4],
   ["rngTTL", "valTTL", "particles", "ttlSec", "input", 10, 12],
-  ["rngOverlap", "valOverlap", "particles", "overlapRadiusPx", "input", 1, 3],
 ];
 
 for (const [controlId, outputId, group, field, event, first, second] of MG_BULK_FIELDS) {
@@ -4045,3 +4044,26 @@ for (const phase of ["idle", "recording", "complete", "error"]) {
     });
   });
 }
+
+test('RC-15 phase 3: tooltip discovery indexes labels once while preserving associations and listener identity',async(t)=>{
+  await withSettingsActionHarness(t,()=>{
+    hostVisualizerEditors();
+    let queries=0;
+    document.querySelectorAll=selector=>{
+      if(selector==='label[for]'){queries++;return state.ui.orbEditorList.querySelectorAll('label');}
+      if(selector==='#visualizersPanel input')return state.ui.orbEditorList.querySelectorAll('input');
+      if(selector==='#visualizersPanel select')return state.ui.orbEditorList.querySelectorAll('select');
+      return [];
+    };
+    state.ui.btnVisualizersAddOrb.click();
+    assert.equal(queries,1,'one label index per collection discovery');
+    const root=state.ui.orbEditorList.children.at(-1);
+    const control=root.querySelectorAll('input').find(node=>node.id?.endsWith('angular-speed'));
+    const spec=state.ui.configTooltipByControl.get(control);assert.equal(spec.label,'Angular Speed');
+    const listener=t.mock.method(control,'addEventListener');
+    state.ui.btnVisualizersAddOrb.click();
+    assert.equal(queries,2);assert.equal(state.ui.configTooltipByControl.get(control),spec);
+    assert.equal(listener.mock.callCount(),0);UI.refreshAllUiText();assert.equal(queries,2);
+    assert.match(control.title,/Angular Speed/);
+  });
+});

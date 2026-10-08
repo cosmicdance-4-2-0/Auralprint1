@@ -77,14 +77,14 @@ test("ID-aware Orb reconciliation preserves survivors and freshens additions acr
     initOrbs();
     const [a, b, c] = state.orbs;
     a.angleRad = 2; c.angleRad = 3;
-    a.trail.particles.push({ marker: "a" }); c.trail.emitAccumulator = 7;
+    a.trail.emitAt(1, 2, 0, { marker: "a" }); c.trail.emitAccumulator = 7;
     runtime.settings = { ...structuredClone(CONFIG.defaults), orbs: defs(["A", "D", "C"]) };
     reconcileOrbs();
     assert.equal(state.orbs[0], a);
     assert.equal(state.orbs[2], c);
     assert.notEqual(state.orbs[1], b);
     assert.equal(a.angleRad, 2);
-    assert.deepEqual(a.trail.particles, [{ marker: "a" }]);
+    assert.deepEqual(Array.from(a.trail.particles), [{ xSim: 1, ySim: 2, bornSec: 0, rgbStart: { marker: "a" } }]);
     assert.equal(c.trail.emitAccumulator, 7);
     assert.equal(state.orbs[1].trail.particles.length, 0);
     runtime.settings = { ...structuredClone(CONFIG.defaults), orbs: defs(["C", "A", "D"]) };
@@ -111,7 +111,8 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     initOrbs();
     const [a, b] = state.orbs;
     a.angleRad = 1.25;
-    a.trail.particles.push({ history: "source" });
+    a.trail.emitAt(1, 2, 0, { history: "source" });
+    a.trail.emitAccumulator = .5;
     b.trail.emitAccumulator = 9;
     const [, aAdapter, bAdapter] = VisualizerRuntime.getVisualizers();
 
@@ -129,8 +130,10 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     assert.notEqual(duplicate.id, "A");
     assert.deepEqual({ ...duplicate, id: "A" }, { ...preferences.orbs[0], id: "A" });
     assert.equal(state.orbs.find((orb) => orb.id === "A"), a);
-    assert.deepEqual(a.trail.particles, [{ history: "source" }]);
-    assert.deepEqual(state.orbs.find((orb) => orb.id === duplicate.id).trail.particles, []);
+    assert.deepEqual(Array.from(a.trail.particles), [{ xSim: 1, ySim: 2, bornSec: 0, rgbStart: { history: "source" } }]);
+    assert.deepEqual(Array.from(state.orbs.find((orb) => orb.id === duplicate.id).trail.particles), []);
+    assert.equal(state.orbs.find((orb) => orb.id === duplicate.id).trail.emitAccumulator, 0);
+    assert.equal(a.trail.emitAccumulator, .5);
     assert.equal(state.orbs.find((orb) => orb.id === "B"), b);
     assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "B"), bAdapter);
 

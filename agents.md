@@ -69,6 +69,11 @@ Preset system is **versioned and backward-compatible**.
 Schema 10 is frozen when Build 115 ships. Any future persisted-field addition,
 removal, rename, ownership move, or semantic change requires schema 11 and
 migration from 10. Schema numbers must never be reused for incompatible formats.
+Narrow pre-release exception: Build 115 has not shipped. Revision v0.1.15m.h.q
+retires `particles.overlapRadiusPx` from schema 10 without incrementing it.
+Development-era schema-10 inputs containing this property remain accepted;
+normalization and encoding strip it. This exception adds no migration or schema
+11 and does not relax the frozen public contract after Build 115 ships.
 Schema 9 historically had both Scene-node and later top-level forms; input
 migration recognizes both, with top-level values taking precedence. Abandoned
 Scene layout/editor semantics have no schema-10 equivalent and are discarded.
@@ -85,8 +90,8 @@ If you add/change any persisted field:
 2. `sanitizePreset()`
 3. `normalize*()` helpers (e.g., `normalizeOrbDef`)
 4. `encodePresetPayload()` and schema-contract tests
-5. `PRESET_SCHEMA_VERSION` (increment)
-6. Migration handling for older schemas
+5. `PRESET_SCHEMA_VERSION` (increment, except the explicitly authorized pre-release overlap retirement above)
+6. Migration handling for older schemas (preserve existing migrations for that exception)
 
 Failure to update all = **silent data corruption risk**
 
@@ -177,7 +182,7 @@ id, chanId, bandIds, chirality, startAngleRad,
 hueOffsetDeg, colorSource, centerXFrac, centerYFrac,
 motion { angularSpeedRadPerSec },
 response { minRadiusFrac, maxRadiusFrac, waveformRadialDisplaceFrac },
-particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, overlapRadiusPx },
+particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec },
 trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 ```
 
@@ -196,10 +201,13 @@ Rules:
 - Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Every canonical Orb-owned simulation/presentation field has a per-Orb UI owner; Bulk Edit is an apply-to-all convenience and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
 
+Orb particle safeguards are ephemeral and owned by each `VisualizerRuntime`, never presets. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
+
 ### 4.4 Dynamic Orb Collection
 
 - `preferences.orbs[]` order defines composition order; `orb.id` defines stable identity. Collection mutation must never renumber survivors.
 - Zero Orbs is valid. Runtime reconciliation is ID-based and preserves surviving Orb objects and ephemeral phase/trail/emission state.
+- `CONFIG.limits.orbs.maxCount` is a provisional operational admission ceiling, not a performance guarantee. Oversized imports/normalization/replacement are rejected before Orb processing; Add/Duplicate at the ceiling make no change. Runtime lifecycle validates count and unique canonical identities before mutation. Collection normalization alone owns ID repair and reserves later explicit IDs in one pass.
 - Duplication copies configuration, never live simulation history. UI must not fabricate missing instances or implicitly create an Orb by accessing an indexed slot.
 
 ## 5. UI System Constraints

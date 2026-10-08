@@ -1,0 +1,226 @@
+{
+  "version": "v0.1.15m.h.q",
+  "nodeVersion": "v24.19.0",
+  "count": 4096,
+  "frames": 40,
+  "simulationMs": 460.64754000000005,
+  "retained": 655360,
+  "updates": [
+    {
+      "ms": 19.308317999999993,
+      "emissions": 16384,
+      "expiryVisits": 0
+    },
+    {
+      "ms": 6.908794999999998,
+      "emissions": 16384,
+      "expiryVisits": 16384
+    },
+    {
+      "ms": 7.832476,
+      "emissions": 16384,
+      "expiryVisits": 32768
+    },
+    {
+      "ms": 3.546631000000005,
+      "emissions": 16384,
+      "expiryVisits": 49152
+    },
+    {
+      "ms": 5.197748000000004,
+      "emissions": 16384,
+      "expiryVisits": 65536
+    },
+    {
+      "ms": 13.124024999999989,
+      "emissions": 16384,
+      "expiryVisits": 81920
+    },
+    {
+      "ms": 6.763745999999998,
+      "emissions": 16384,
+      "expiryVisits": 98304
+    },
+    {
+      "ms": 5.596277999999998,
+      "emissions": 16384,
+      "expiryVisits": 114688
+    },
+    {
+      "ms": 5.316665999999998,
+      "emissions": 16384,
+      "expiryVisits": 131072
+    },
+    {
+      "ms": 4.883605000000017,
+      "emissions": 16384,
+      "expiryVisits": 147456
+    },
+    {
+      "ms": 6.995184999999992,
+      "emissions": 16384,
+      "expiryVisits": 163840
+    },
+    {
+      "ms": 6.134118000000001,
+      "emissions": 16384,
+      "expiryVisits": 180224
+    },
+    {
+      "ms": 6.544837000000001,
+      "emissions": 16384,
+      "expiryVisits": 196608
+    },
+    {
+      "ms": 7.092241000000001,
+      "emissions": 16384,
+      "expiryVisits": 212992
+    },
+    {
+      "ms": 7.551843000000019,
+      "emissions": 16384,
+      "expiryVisits": 229376
+    },
+    {
+      "ms": 7.535919000000007,
+      "emissions": 16384,
+      "expiryVisits": 245760
+    },
+    {
+      "ms": 8.755116000000015,
+      "emissions": 16384,
+      "expiryVisits": 262144
+    },
+    {
+      "ms": 8.84306699999999,
+      "emissions": 16384,
+      "expiryVisits": 278528
+    },
+    {
+      "ms": 9.740304000000009,
+      "emissions": 16384,
+      "expiryVisits": 294912
+    },
+    {
+      "ms": 12.747377999999998,
+      "emissions": 16384,
+      "expiryVisits": 311296
+    },
+    {
+      "ms": 12.942200000000014,
+      "emissions": 16384,
+      "expiryVisits": 327680
+    },
+    {
+      "ms": 11.102600000000024,
+      "emissions": 16384,
+      "expiryVisits": 344064
+    },
+    {
+      "ms": 11.966841999999986,
+      "emissions": 16384,
+      "expiryVisits": 360448
+    },
+    {
+      "ms": 11.298516000000035,
+      "emissions": 16384,
+      "expiryVisits": 376832
+    },
+    {
+      "ms": 11.796605,
+      "emissions": 16384,
+      "expiryVisits": 393216
+    },
+    {
+      "ms": 11.286917000000017,
+      "emissions": 16384,
+      "expiryVisits": 409600
+    },
+    {
+      "ms": 12.157970000000034,
+      "emissions": 16384,
+      "expiryVisits": 425984
+    },
+    {
+      "ms": 14.128176999999994,
+      "emissions": 16384,
+      "expiryVisits": 442368
+    },
+    {
+      "ms": 13.431066999999985,
+      "emissions": 16384,
+      "expiryVisits": 458752
+    },
+    {
+      "ms": 13.938551000000018,
+      "emissions": 16384,
+      "expiryVisits": 475136
+    },
+    {
+      "ms": 14.48749799999996,
+      "emissions": 16384,
+      "expiryVisits": 491520
+    },
+    {
+      "ms": 15.080091000000039,
+      "emissions": 16384,
+      "expiryVisits": 507904
+    },
+    {
+      "ms": 14.455640000000017,
+      "emissions": 16384,
+      "expiryVisits": 524288
+    },
+    {
+      "ms": 14.902472999999986,
+      "emissions": 16384,
+      "expiryVisits": 540672
+    },
+    {
+      "ms": 15.499652999999967,
+      "emissions": 16384,
+      "expiryVisits": 557056
+    },
+    {
+      "ms": 23.201391,
+      "emissions": 16384,
+      "expiryVisits": 573440
+    },
+    {
+      "ms": 21.252291000000014,
+      "emissions": 16384,
+      "expiryVisits": 589824
+    },
+    {
+      "ms": 19.904735999999957,
+      "emissions": 16384,
+      "expiryVisits": 606208
+    },
+    {
+      "ms": 17.348145999999986,
+      "emissions": 16384,
+      "expiryVisits": 622592
+    },
+    {
+      "ms": 19.638690999999938,
+      "emissions": 16384,
+      "expiryVisits": 638976
+    }
+  ],
+  "calls": {
+    "fillRect": 1,
+    "save": 4096,
+    "beginPath": 659456,
+    "moveTo": 4096,
+    "lineTo": 40960,
+    "stroke": 4096,
+    "restore": 4096,
+    "arc": 655360,
+    "fill": 655360
+  },
+  "renderingMs": 266.95998099999997,
+  "initialHeapBytes": 5209688,
+  "heapUsedBytes": 131831952,
+  "heapDeltaBytes": 126622264,
+  "gcAvailable": false
+}
