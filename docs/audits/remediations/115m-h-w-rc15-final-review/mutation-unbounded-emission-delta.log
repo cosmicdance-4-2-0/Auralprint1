@@ -1,0 +1,37 @@
+✖ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (4.66986ms)
+✖ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (0.962743ms)
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.855642ms)
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (1.047812ms)
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.856023ms)
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (1.524232ms)
+✖ smaller selected emission delta never slows independent motion (1.357029ms)
+✖ failing tests:
+✖ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (4.66986ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (0.962743ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.855642ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (1.047812ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.856023ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (1.524232ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ smaller selected emission delta never slows independent motion (1.357029ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:142:171)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0.2,
+    expected: 0.01,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

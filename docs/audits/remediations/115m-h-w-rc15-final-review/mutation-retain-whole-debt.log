@@ -1,0 +1,100 @@
+✖ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (5.399878ms)
+✖ integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (1.501691ms)
+✖ RC-15 phase 2: exact aggregate frame limit with 1 accepted Orbs (0.599297ms)
+✖ RC-15 phase 2: exact aggregate frame limit with 2 accepted Orbs (0.423971ms)
+✖ RC-15 phase 2: exact aggregate frame limit with 256 accepted Orbs (4.620529ms)
+✖ RC-15 phase 2: exact aggregate frame limit with 4096 accepted Orbs (79.570698ms)
+✖ RC-15 phase 2: normal 60/120 Hz scenes preserve exact fractional frequency, positions and color (38.657768ms)
+✖ RC-15 phase 2: high, nonfinite and corrupt demand cannot create debt or unbounded loops (11.770795ms)
+✖ RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (0.505765ms)
+✖ RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (0.702192ms)
+✖ RC-15 phase 2: denied whole demand is discarded while fractional remainder stays smooth (0.567368ms)
+✖ RC-15 phase 2: pause, stall resume and zero delta do not create a compensating burst or disturb Ring phase (3.234433ms)
+✖ RC-15 phase 2: actual 16,384-particle cap holds during sustained aggregate overload (3.341054ms)
+✖ RC-15 phase 2: lifecycle removal/reset/disposal releases heap nodes, cursor and scene ownership (0.500567ms)
+✖ RC-15 phase 2: full adapter rebuild preserves surviving Orb history and clears replaced owners (0.752108ms)
+✖ RC-15 phase 2: periodic low-rate demand cannot starve through cursor/clock alignment (0.625096ms)
+✖ rate below frame rate remains authoritative even after large movement; fractions survive spatial rejection (0.869315ms)
+✖ running spacing changes preserve particles and fractions, and paused runtime emits nothing (0.557834ms)
+✖ production callback: 120 FPS chirality -1 integrates one second of motion and independent emission delta (2.80272ms)
+✖ production callback: 120 FPS chirality 1 integrates one second of motion and independent emission delta (1.514151ms)
+✖ production callback: 60 FPS chirality -1 integrates one second of motion and independent emission delta (1.256ms)
+✖ production callback: 60 FPS chirality 1 integrates one second of motion and independent emission delta (1.241839ms)
+✖ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (0.955015ms)
+✖ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (1.074976ms)
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.778247ms)
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.897988ms)
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.750285ms)
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.685437ms)
+✖ failing tests:
+✖ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (5.399878ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (1.501691ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: exact aggregate frame limit with 1 accepted Orbs (0.599297ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: exact aggregate frame limit with 2 accepted Orbs (0.423971ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: exact aggregate frame limit with 256 accepted Orbs (4.620529ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: exact aggregate frame limit with 4096 accepted Orbs (79.570698ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: normal 60/120 Hz scenes preserve exact fractional frequency, positions and color (38.657768ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: high, nonfinite and corrupt demand cannot create debt or unbounded loops (11.770795ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (0.505765ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (0.702192ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: denied whole demand is discarded while fractional remainder stays smooth (0.567368ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: pause, stall resume and zero delta do not create a compensating burst or disturb Ring phase (3.234433ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: actual 16,384-particle cap holds during sustained aggregate overload (3.341054ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: lifecycle removal/reset/disposal releases heap nodes, cursor and scene ownership (0.500567ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: full adapter rebuild preserves surviving Orb history and clears replaced owners (0.752108ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: periodic low-rate demand cannot starve through cursor/clock alignment (0.625096ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ rate below frame rate remains authoritative even after large movement; fractions survive spatial rejection (0.869315ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ running spacing changes preserve particles and fractions, and paused runtime emits nothing (0.557834ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ production callback: 120 FPS chirality -1 integrates one second of motion and independent emission delta (2.80272ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 120 FPS chirality 1 integrates one second of motion and independent emission delta (1.514151ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 60 FPS chirality -1 integrates one second of motion and independent emission delta (1.256ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 60 FPS chirality 1 integrates one second of motion and independent emission delta (1.241839ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (0.955015ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (1.074976ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.778247ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.897988ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.750285ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.685437ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:41:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

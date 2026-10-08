@@ -1,26 +1,37 @@
-import { CONFIG } from "../core/config.js";
+import { normalizeParticleSafety } from "../core/particle-safety.js";
 
 // One instance per VisualizerRuntime; standalone trails own an isolated instance.
-// Test policies can tighten CONFIG safety, never enlarge it.
+// The selected policy is bounded only by CONFIG's documented permissible ranges.
 class ParticleGovernor {
-  constructor(policy = CONFIG.limits.particleSafety) {
-    const canonical = CONFIG.limits.particleSafety;
-    const limit = key => Number.isInteger(policy?.[key]) && policy[key] > 0
-      ? Math.min(policy[key], canonical[key]) : canonical[key];
-    Object.defineProperty(this, "policy", { value: Object.freeze({
-      maxEmissionsPerFrame: limit("maxEmissionsPerFrame"),
-      maxActiveParticles: limit("maxActiveParticles"),
-    }) });
+  #policy;
+
+  constructor(policy) {
+    this.#policy = Object.freeze(normalizeParticleSafety(policy));
     this.heap = [];
     this.trails = [];
     this.nextPriority = null;
     this.priorityTail = null;
     this.sequence = 0;
     this.frameActive = false;
-    this.stats = { emissions: 0, droppedDemand: 0, expired: 0, evicted: 0, expiryVisits: 0, schedulingVisits: 0, heapComparisons: 0 };
+    this.retentionEvictionsTotal = 0;
+    this.stats = { emissions: 0, requestedDemand: 0, spatiallyRejectedDemand: 0, placementComparisons: 0,
+      budgetRejectedDemand: 0, rateLimitedDemand: 0, retentionRejectedDemand: 0,
+      droppedDemand: 0, expired: 0, evicted: 0, expiryVisits: 0, schedulingVisits: 0, heapComparisons: 0 };
   }
 
+  get policy() { return this.#policy; }
   get activeParticles() { return this.heap.length; }
+
+  applyPolicy(policy) {
+    const next = normalizeParticleSafety(policy);
+    if (next.maxEmissionsPerFrame === this.policy.maxEmissionsPerFrame &&
+        next.maxActiveParticles === this.policy.maxActiveParticles) return false;
+    this.#policy = Object.freeze(next);
+    // Indexed-heap retirement preserves global timestamp/sequence ordering and
+    // every surviving trail, fraction, and priority link. Satisfy before render.
+    while (this.heap.length > next.maxActiveParticles) this.retire(this.heap[0], "evicted");
+    return true;
+  }
 
   appendPriority(trail) {
     trail.priorityPrev = this.priorityTail;
@@ -78,7 +89,8 @@ class ParticleGovernor {
       tail = trail;
     }
     if (tail) tail.nextPending = head;
-    let remaining = this.policy.maxEmissionsPerFrame - this.stats.emissions;
+    let remaining = this.policy.maxActiveParticles > 0
+      ? this.policy.maxEmissionsPerFrame - this.stats.emissions : 0;
     while (head && remaining > 0) {
       const trail = head;
       this.stats.schedulingVisits++;
@@ -95,7 +107,8 @@ class ParticleGovernor {
     }
     // Whole demand is never debt. Fractional accumulation lives on each trail.
     for (const trail of this.trails) {
-      this.addDropped(trail.pendingEmissions);
+      this.addDropped(trail.pendingEmissions,
+        this.policy.maxActiveParticles === 0 ? "retentionRejectedDemand" : "budgetRejectedDemand");
       trail.pendingEmissions = 0;
       trail.nextPending = null;
       trail.emission.rgbStart = null;
@@ -103,8 +116,9 @@ class ParticleGovernor {
     this.frameActive = false;
   }
 
-  addDropped(count) {
+  addDropped(count, reason = "budgetRejectedDemand") {
     this.stats.droppedDemand = Math.min(Number.MAX_SAFE_INTEGER, this.stats.droppedDemand + count);
+    this.stats[reason] = Math.min(Number.MAX_SAFE_INTEGER, this.stats[reason] + count);
   }
 
   older(a, b) {
@@ -139,6 +153,7 @@ class ParticleGovernor {
   }
 
   admit(node) {
+    if (this.policy.maxActiveParticles === 0) return false;
     if (this.frameActive && this.stats.emissions >= this.policy.maxEmissionsPerFrame) return false;
     // Retire before insertion, so the ceiling holds throughout admission.
     if (this.heap.length >= this.policy.maxActiveParticles) this.retire(this.heap[0], "evicted");
@@ -161,6 +176,7 @@ class ParticleGovernor {
     node.trail.particles.unlink(node);
     node.heapIndex = -1;
     if (reason) this.stats[reason]++;
+    if (reason === "evicted") this.retentionEvictionsTotal++;
     if (!this.heap.length) this.sequence = 0;
   }
 
@@ -173,10 +189,12 @@ class ParticleGovernor {
     this.nextPriority = this.priorityTail = null;
     this.frameActive = false;
     this.sequence = 0;
+    this.retentionEvictionsTotal = 0;
     for (const key in this.stats) this.stats[key] = 0;
   }
 
-  getStats() { return { ...this.stats, activeParticles: this.activeParticles }; }
+  getStats() { return { ...this.stats, activeParticles: this.activeParticles,
+    retentionEvictionsTotal: this.retentionEvictionsTotal }; }
 }
 
 export { ParticleGovernor };

@@ -1,0 +1,79 @@
+
+> test
+> node --test
+
+✔ tests/analysis-frame.test.js (59.252441ms)
+✔ tests/analysis-panel.test.js (56.218044ms)
+✔ tests/band-bank.test.js (54.122343ms)
+✔ tests/band-count-coverage.test.js (179.048762ms)
+✔ tests/fft-coordinate.test.js (55.241687ms)
+✔ tests/input-source-manager.test.js (69.902052ms)
+✔ tests/live-source-ownership.test.js (88.421958ms)
+✔ tests/orb-band-picker.test.js (47.931083ms)
+✔ tests/orb-collection.test.js (59.221249ms)
+✔ tests/orb-editor.test.js (102.737256ms)
+✔ tests/orb-id-termination.test.js (108.997194ms)
+✔ tests/per-orb-ownership.test.js (61.339675ms)
+✔ tests/preset-id-reservation.test.js (54.311198ms)
+✔ tests/preset-schema-10.test.js (120.317425ms)
+✔ tests/rc15-budgets.test.js (1122.065458ms)
+✔ tests/rc15-phase1.test.js (62.624138ms)
+✔ tests/rc15-phase2.test.js (310.59875ms)
+✔ tests/rc15-phase3.test.js (614.913006ms)
+✔ tests/rc15-spacing.test.js (129.706358ms)
+✔ tests/recording-export.test.js (102.109401ms)
+✔ tests/ring-phase-lock.test.js (55.069565ms)
+✔ tests/scene-panel.test.js (63.449838ms)
+✔ tests/scrubber-drag-ownership.test.js (54.283947ms)
+✔ tests/scrubber-waveform.test.js (51.420318ms)
+✔ tests/spectral-ring-editor.test.js (45.274218ms)
+✔ tests/stream-graph.test.js (57.161778ms)
+✔ tests/targeted-audit.test.js (514.659444ms)
+✔ tests/transport-ownership.test.js (85.679987ms)
+✔ tests/url-preset-band-rebuild.test.js (54.088832ms)
+✔ tests/visualizer-runtime.test.js (58.823922ms)
+✔ tests/visualizers-panel.test.js (152.753227ms)
+✔ tests/workspace-ui.test.js (52.007783ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4756.932114
+
+> build
+> node scripts/build.mjs
+
+
+  .build/auralprint.css  25.3kb
+
+⚡ Done in 13ms
+
+  .build/auralprint.js  338.9kb
+
+⚡ Done in 27ms
+
+git diff --check: PASS
+{
+  "version": "v0.1.15m.h.u",
+  "schema": 10,
+  "artifact": "dist/auralprint_0.1.15m.h.u.html",
+  "bytes": 396211,
+  "sha256": "5772cdd3302776106b199b42aa1aa9590fa227525bb48ff59f89072f3a016853",
+  "inlineCss": true,
+  "inlineJavaScript": true,
+  "unresolvedVersionTokens": 0,
+  "trackedDistributionOrDependencies": 0,
+  "nativeOfflineValidation": "native-ui.json, Chromium DPR 1 and 2",
+  "focusedTests": {
+    "passed": 139,
+    "failed": 0
+  },
+  "fullSuite": {
+    "filesPassed": 32,
+    "filesFailed": 0
+  },
+  "mutationsDetected": 7
+}

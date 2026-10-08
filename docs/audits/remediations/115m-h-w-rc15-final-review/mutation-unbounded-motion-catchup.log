@@ -1,0 +1,22 @@
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (1.462929ms)
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.865567ms)
+✖ failing tests:
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (1.462929ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.865567ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:60:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 120,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

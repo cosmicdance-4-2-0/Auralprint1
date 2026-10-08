@@ -174,11 +174,11 @@ test("Orb visualizer passes selected dominant context through Orb.step into inhe
   }
 });
 
-test("Spectral Ring updates while simulation is paused and preserves free and orb phase modes", () => {
+test("Spectral Ring freezes free motion while paused and preserves current Orb lock", () => {
   const free = overlayHarness();
   const freeVisualizer = createSpectralRingVisualizer(free);
   freeVisualizer.update(frame({ simPaused: true }));
-  assert.equal(free.stateRef.bands.ringPhaseRad, 1.5);
+  assert.equal(free.stateRef.bands.ringPhaseRad, 1);
 
   const carrier = fakeOrb("ORB0", { angleRad: 2.25 });
   const locked = overlayHarness({ phaseMode: "orb", orbs: [carrier] });

@@ -1,0 +1,69 @@
+✖ budgets: one integer normalization contract for sanitation, resolution and active governor (3.197398ms)
+✖ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (1.239205ms)
+✔ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (4.616967ms)
+✔ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.583783ms)
+✔ budgets: actual upper-budget admissions exceed both retired immutable ceilings (37.159891ms)
+✔ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (0.59464ms)
+✔ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (2.360001ms)
+✔ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (3.291871ms)
+✔ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (928.660649ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 7
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1008.556187
+
+✖ failing tests:
+
+test at tests/rc15-budgets.test.js:42:1
+✖ budgets: one integer normalization contract for sanitation, resolution and active governor (3.197398ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   emissions: 0,
+      maxActiveParticles: 16384,
+      maxEmissionsPerFrame: 512
+    }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:52:87)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:60:1
+✖ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (1.239205ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   emissions: 0,
+      maxActiveParticles: 0,
+      maxEmissionsPerFrame: 0
+    }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:64:85)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

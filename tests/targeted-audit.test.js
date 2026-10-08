@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.s");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.s\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.w");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.w\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3397,6 +3397,7 @@ const MG_BULK_FIELDS = [
   ["rngSizeMin", "valSizeMin", "particles", "sizeMinPx", "input", 1, 2],
   ["rngSizeToMin", "valSizeToMin", "particles", "sizeToMinSec", "input", 2, 4],
   ["rngTTL", "valTTL", "particles", "ttlSec", "input", 10, 12],
+  ["rngMinPlacementDistance", "valMinPlacementDistance", "particles", "minPlacementDistancePx", "input", 0, 2],
 ];
 
 for (const [controlId, outputId, group, field, event, first, second] of MG_BULK_FIELDS) {
@@ -3526,6 +3527,27 @@ test("M.C relocated Orb roots, disclosure, picker, focus and scroll survive norm
     assert.equal(host.children[0], root); assert.equal(document.activeElement, control);
     assert.equal(root.open, true); assert.equal(motion.open, true); assert.equal(picker.open, true);
     assert.equal(state.ui.visualizersPanel.scrollTop, 432);
+  });
+});
+
+test("spacing individual live edit retains Orb phase, particles, editor focus, and survives unrelated collection changes", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    const orb=state.orbs[0],id=orb.id,root=state.ui.orbEditorList.children[0];
+    orb.angleRad=2.5; orb.trail.emitAt(3,4,0,{r:1,g:0,b:0}); orb.trail.emitAccumulator=.37;
+    const tail=orb.trail.particles.tail;
+    const control=root.querySelectorAll("input").find(node=>node.id?.endsWith("min-placement-distance"));
+    control.focus(); control.value="2.3"; control.dispatch("input");
+    for(const source of [preferences.orbs,runtime.settings.orbs,state.orbs])assert.equal(source.find(o=>o.id===id).particles.minPlacementDistancePx,2.3);
+    assert.equal(state.orbs.find(o=>o.id===id),orb); assert.equal(orb.angleRad,2.5);
+    assert.equal(orb.trail.particles.tail,tail); assert.equal(orb.trail.emitAccumulator,.37);
+    assert.equal(state.ui.orbEditorList.children[0],root); assert.equal(document.activeElement,control);
+    const commits=t.mock.method(UI,"refreshAllUiText");
+    control.value="0"; control.dispatch("input"); assert.equal(orb.particles.minPlacementDistancePx,0);
+    assert.ok(commits.mock.callCount()<=1,"a single input has one refresh path");
+    state.ui.btnVisualizersAddOrb.click();
+    assert.equal(state.ui.orbEditorList.children.find(node=>node.dataset.orbId===id),root);
+    assert.equal(orb.trail.particles.tail,tail); assert.equal(orb.angleRad,2.5);
   });
 });
 
@@ -4065,5 +4087,20 @@ test('RC-15 phase 3: tooltip discovery indexes labels once while preserving asso
     assert.equal(queries,2);assert.equal(state.ui.configTooltipByControl.get(control),spec);
     assert.equal(listener.mock.callCount(),0);UI.refreshAllUiText();assert.equal(queries,2);
     assert.match(control.title,/Angular Speed/);
+  });
+});
+
+test('RC-15 budgets: committed Settings edits synchronize without recreating governor, Orb history or focus',async(t)=>{
+  await withSettingsActionHarness(t,({location})=>{
+    const orb=state.orbs[0],g=orb.trail.governor;orb.trail.emitAt(0,0,0,{r:1,g:0,b:0});orb.trail.emitAccumulator=.75;
+    const tail=orb.trail.particles.tail,phase=orb.angleRad,control=state.ui.numMaxActiveParticles;
+    control.focus();control.value='65536';control.dispatch('change');
+    assert.equal(orb.trail.governor,g);assert.equal(orb.trail.particles.tail,tail);assert.equal(orb.trail.emitAccumulator,.75);assert.equal(orb.angleRad,phase);assert.equal(document.activeElement,control);
+    assert.equal(g.policy.maxActiveParticles,65536);assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(runtime.settings.particleSafety.maxActiveParticles,65536);
+    control.value='';control.dispatch('change');assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(control.getAttribute('aria-invalid'),'true');
+    state.ui.numMaxEmissionsPerFrame.value='4096';state.ui.numMaxEmissionsPerFrame.dispatch('change');assert.equal(g.policy.maxEmissionsPerFrame,4096);
+    state.ui.btnShare.click();const payload=JSON.parse(Buffer.from(location.hash.slice(3),'base64url').toString('utf8'));assert.deepEqual(payload.prefs.particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});
+    const imported=structuredClone(CONFIG.defaults);imported.particleSafety={maxEmissionsPerFrame:0,maxActiveParticles:0};location.hash=settingsPresetHash(imported);state.ui.btnApplyUrl.click();assert.deepEqual(g.policy,imported.particleSafety);assert.equal(g.activeParticles,0);assert.equal(state.ui.numMaxActiveParticles.value,'0');
+    state.ui.btnResetPrefs.click();assert.deepEqual(g.policy,CONFIG.defaults.particleSafety);assert.equal(state.ui.numMaxActiveParticles.value,'16384');assert.equal(state.ui.numMaxEmissionsPerFrame.value,'512');
   });
 });

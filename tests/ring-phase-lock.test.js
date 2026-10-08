@@ -59,6 +59,6 @@ test("RC-10: rendered Orb lock uses current-frame first Orb after variable delta
     runtime.settings.bands.overlay.phaseMode = "free";
     runtime.settings.bands.overlay.ringSpeedRadPerSec = 2;
     visualizers.update({ dtSec: .1, nowSec: 4, simPaused: true, analysisFrame });
-    assert.ok(Math.abs(state.bands.ringPhaseRad - .2) < 1e-12);
+    assert.equal(state.bands.ringPhaseRad, 0, "free Ring respects visual pause");
   } finally { runtime.settings = oldSettings; state.orbs = oldOrbs; state.bands.ringPhaseRad = oldPhase; }
 });

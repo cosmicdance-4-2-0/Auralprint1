@@ -1,0 +1,166 @@
+✔ production callback: 120 FPS chirality -1 integrates one second of motion and independent emission delta (9.594178ms)
+✔ production callback: 120 FPS chirality 1 integrates one second of motion and independent emission delta (3.248916ms)
+✔ production callback: 60 FPS chirality -1 integrates one second of motion and independent emission delta (2.431028ms)
+✔ production callback: 60 FPS chirality 1 integrates one second of motion and independent emission delta (1.983181ms)
+✔ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (1.44087ms)
+✔ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (1.290663ms)
+✔ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.866241ms)
+✔ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.784617ms)
+✔ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.955876ms)
+✔ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.919972ms)
+✔ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.845169ms)
+✔ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (1.290243ms)
+✔ production callback: hidden/rebased foreground never integrates missed work; invalid timestamps recover (0.886181ms)
+✔ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.409883ms)
+✔ slow 5 FPS history spans real TTL motion, fade uses real particle age (1.455232ms)
+✔ slow 10 FPS history spans real TTL motion, fade uses real particle age (1.00415ms)
+✔ ordered expiry [] at 1: 0 retirements/0 age inspections (0.240604ms)
+✔ ordered expiry [0] at 0.9: 0 retirements/1 age inspections (0.176457ms)
+✖ ordered expiry [0] at 1: 1 retirements/1 age inspections (0.87227ms)
+✔ ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.083175ms)
+✖ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.197278ms)
+✖ ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.221264ms)
+✖ ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.134794ms)
+✖ ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.122495ms)
+✔ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (68.286515ms)
+✔ unordered supported timestamps use safe fallback; transfer/eviction/reset preserve or restore ordering flag (0.471523ms)
+✔ different Orb TTLs retire independently, last-tail spacing resumes on empty trail without coordinate cache (0.254555ms)
+✔ direct Orb and frame callers retain default delta convention; explicit motion wraps independently (0.282117ms)
+✔ motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field (1.261699ms)
+✔ smaller selected emission delta never slows independent motion (1.243681ms)
+✔ template structure reader retains nested ancestry and duplicate IDs across void tags and comments (0.45593ms)
+✔ preset buttons exist once under Scene Settings and never under Visualizers (0.395018ms)
+✔ Settings copy retains canonical Scene IDs alongside Visualizers (0.308637ms)
+✔ Scene panel initializes idempotently from the canonical source enum (0.799289ms)
+✔ Scene refresh is reference guarded and source readouts follow selected labels (0.447567ms)
+✔ Scene controls mutate only historical schema-10 fields (0.351332ms)
+✔ Visualizers contains one inventory, Ring editor, Orb editor host, management and all 13 bulk fields (0.596853ms)
+✔ retired Orbs workspace and escape hatch are absent and every template ID is unique (0.437071ms)
+✔ Performance resource controls have scene ownership, explicit numeric labels, help and warning (0.498664ms)
+✔ budget numeric editing commits change only, refuses invalid/empty, preserves focus and listener identity (0.74721ms)
+✔ diagnostics read actual governor fields even with unchanged settings; unchanged text avoids DOM writes (0.374617ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 36
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 146.087187
+
+✖ failing tests:
+
+test at tests/rc15-timing-performance.test.js:104:188
+✖ ordered expiry [0] at 1: 1 retirements/1 age inspections (0.87227ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== -1
+
+      at file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:274
+      at Array.forEach (<anonymous>)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:255)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: -1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:104:188
+✖ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.197278ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== -1
+
+      at file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:274
+      at Array.forEach (<anonymous>)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:255)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: -1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:104:188
+✖ ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.221264ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== -1
+
+      at file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:274
+      at Array.forEach (<anonymous>)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:255)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: -1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:104:188
+✖ ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.134794ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== -1
+
+      at file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:274
+      at Array.forEach (<anonymous>)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:255)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: -1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:104:188
+✖ ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.122495ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== -1
+
+      at file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:274
+      at Array.forEach (<anonymous>)
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:105:255)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: -1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

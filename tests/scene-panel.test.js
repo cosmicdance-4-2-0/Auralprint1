@@ -77,12 +77,14 @@ test("Settings copy retains canonical Scene IDs alongside Visualizers", () => {
   assert.equal(byId("btnHideScene").attrs["aria-label"], "Hide Scene Settings panel");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("scenePanel")).text, "Scene Settings");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("visualizersPanel")).text, "Visualizers");
-  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Canvas", "Particle Defaults", "Band Palette", "PresetsShare or restore configuration"]);
+  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
 });
 
 function element(tag = "div") {
   const listeners = new Map();
-  return { tagName: tag.toUpperCase(), value: "", textContent: "", children: [],
+  return { tagName: tag.toUpperCase(), value: "", textContent: "", children: [], attributes: {},
+    setAttribute(name,value) { this.attributes[name]=String(value); }, getAttribute(name) { return this.attributes[name]; },
+    listenerCount(name) { return (listeners.get(name)||[]).length; }, focus() { document.activeElement=this; },
     get options() { return this.tagName === "SELECT" ? this.children : undefined; },
     get selectedIndex() { return this.tagName === "SELECT" ? this.children.findIndex((option) => option.value === this.value) : -1; },
     addEventListener(name, fn) { const list = listeners.get(name) || []; list.push(fn); listeners.set(name, list); },
@@ -90,13 +92,13 @@ function element(tag = "div") {
     appendChild(child) { this.children.push(child); return child; }
   };
 }
-function harness() {
-  const ids = ["clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal"];
+function harness(getParticleStats) {
+  const ids = ["clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
   const ui = Object.fromEntries(ids.map((id) => [id, element(id === "selParticleColorSrc" ? "select" : "div")]));
   ui.scenePanel = element();
   const preferences = structuredClone(CONFIG.defaults);
   let settings = structuredClone(CONFIG.defaults), commits = 0;
-  const panel = createScenePanelUi({ ui, preferences, getSettings: () => settings, commitPreferences: () => { commits += 1; } });
+  const panel = createScenePanelUi({ ui, preferences, getSettings: () => settings, getParticleStats, commitPreferences: () => { commits += 1; } });
   return { ui, preferences, panel, commits: () => commits, replaceSettings(next) { settings = next; } };
 }
 
@@ -118,7 +120,7 @@ test("Scene controls mutate only historical schema-10 fields", () => {
   finally { globalThis.document = oldDocument; }
 });
 
-const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL"];
+const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL", "rngMinPlacementDistance"];
 const RING_CONTROL_IDS = ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"];
 
 test("Visualizers contains one inventory, Ring editor, Orb editor host, management and all 13 bulk fields", () => {
@@ -143,4 +145,46 @@ test("retired Orbs workspace and escape hatch are absent and every template ID i
   assert.ok(!launchers.some((node) => /Orbs|Orb Editor|Open Orb Controls/.test(node.text)));
   assert.equal(templateNodes.filter((node) => node.attrs.class?.split(" ").includes("spectral-ring-editor")).length, 1);
   for (const id of RING_CONTROL_IDS) assert.ok(templateNodes.find((node) => node.attrs.id === id).ancestors.includes("spectralRingEditor"), id);
+});
+
+test("Performance resource controls have scene ownership, explicit numeric labels, help and warning",()=>{
+  for(const [id,label,helpId] of [["numMaxActiveParticles","Maximum Live Particles","maxActiveParticlesHelp"],["numMaxEmissionsPerFrame","Maximum Emissions Per Update","maxEmissionsPerFrameHelp"]]) {
+    const control=templateNodes.find(n=>n.attrs.id===id);
+    assert.equal(control.attrs.type,'number');assert.ok(control.ancestors.includes('scenePanel'));assert.ok(control.ancestors.includes('performanceSection'));
+    assert.ok(!control.ancestors.includes('visualizersPanel'));assert.equal(templateNodes.find(n=>n.attrs.for===id).text,label);
+    assert.ok(control.attrs['aria-describedby'].includes(helpId));
+    assert.ok(templateNodes.find(n=>n.attrs.id===helpId).text.length>50);
+  }
+  assert.ok(templateNodes.some(n=>n.text==='High particle limits may significantly reduce performance or exhaust browser resources.'));
+});
+
+test("budget numeric editing commits change only, refuses invalid/empty, preserves focus and listener identity",()=>{
+  const old=globalThis.document;globalThis.document={createElement:tag=>element(tag),activeElement:null};
+  try {
+    const h=harness();h.panel.init();h.panel.init();
+    for(const [key,id,max] of [['maxActiveParticles','numMaxActiveParticles',1048576],['maxEmissionsPerFrame','numMaxEmissionsPerFrame',16384]]) {
+      const c=h.ui[id];assert.equal(c.min,'0');assert.equal(c.max,String(max));assert.equal(c.step,'1');assert.equal(c.listenerCount('change'),1);assert.equal(c.listenerCount('input'),0);
+      c.focus();const baseline=h.preferences.particleSafety[key],before=h.commits();
+      for(const value of ['','-1','1.2','NaN',String(max+1)]){c.value=value;c.dispatch('input');assert.equal(h.commits(),before);c.dispatch('change');assert.equal(h.commits(),before);assert.equal(h.preferences.particleSafety[key],baseline);assert.equal(c.getAttribute('aria-invalid'),'true');assert.match(h.ui[key+'Error'].textContent,/Enter a whole number/);}
+      c.value=String(max);c.dispatch('change');assert.equal(h.preferences.particleSafety[key],max);assert.equal(h.commits(),before+1);assert.equal(c.getAttribute('aria-invalid'),'false');
+      h.replaceSettings(structuredClone(h.preferences));h.panel.refresh();assert.equal(document.activeElement,c);assert.equal(h.ui['val'+key[0].toUpperCase()+key.slice(1)].textContent,`Selected: ${max}`);
+      c.dispatch('change');assert.equal(h.commits(),before+1);
+      c.value='';h.replaceSettings(structuredClone(h.preferences));h.panel.refresh();assert.equal(c.value,'','unrelated refresh preserves partial focused entry');
+      c.value='0';c.dispatch('change');assert.equal(h.preferences.particleSafety[key],0);
+    }
+    h.replaceSettings(structuredClone(CONFIG.defaults));h.panel.refresh();assert.equal(h.ui.numMaxActiveParticles.value,'16384');assert.equal(h.ui.numMaxEmissionsPerFrame.value,'512');
+  }finally{globalThis.document=old;}
+});
+
+test("diagnostics read actual governor fields even with unchanged settings; unchanged text avoids DOM writes",()=>{
+  const old=globalThis.document;globalThis.document={createElement:tag=>element(tag)};
+  try {
+    let stats={activeParticles:100,emissions:3,spatiallyRejectedDemand:12,budgetRejectedDemand:4,rateLimitedDemand:5,retentionRejectedDemand:6,expired:7,retentionEvictionsTotal:8};
+    const h=harness(()=>stats);h.panel.init();assert.equal(h.ui.statParticleLive.textContent,'100');assert.equal(h.ui.statParticleEmitted.textContent,'3');
+    let writes=0,value=h.ui.statParticleLive.textContent;Object.defineProperty(h.ui.statParticleLive,'textContent',{get:()=>value,set:v=>{writes++;value=v;}});
+    assert.equal(h.panel.refresh(),false);assert.equal(writes,0);
+    stats={...stats,activeParticles:101,emissions:0};assert.equal(h.panel.refresh(),false);assert.equal(writes,1);assert.equal(h.ui.statParticleEmitted.textContent,'0');
+    assert.equal(h.ui.statParticleSpacingRejected.textContent,'12');assert.equal(h.ui.statParticleBudgetRejected.textContent,'4');assert.equal(h.ui.statParticleRateLimited.textContent,'5');assert.equal(h.ui.statParticleRetentionRejected.textContent,'6');assert.equal(h.ui.statParticleExpired.textContent,'7');assert.equal(h.ui.statParticleRetentionRetired.textContent,'8');
+    assert.ok(templateNodes.some(n=>n.text.includes('Retention retirements (since runtime initialization)')));
+  }finally{globalThis.document=old;}
 });

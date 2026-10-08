@@ -1,0 +1,22 @@
+{
+  "version": "v0.1.15m.h.v",
+  "schema": 10,
+  "artifact": "dist/auralprint_0.1.15m.h.v.html",
+  "bytes": 397772,
+  "sha256": "f5a020c0623e3939c52e6deb03684031ef6ec77615b095ca26ee1cd8f0fb591d",
+  "inlineScripts": 1,
+  "inlineStylesheets": 1,
+  "externalScriptsOrStylesheets": 0,
+  "trackedGeneratedOutputsOrDependencies": 0,
+  "focusedRegressionsPassed": 188,
+  "fullSuiteFilesPassed": 33,
+  "mutationsDetected": 8,
+  "nativeClockDpr": [
+    1,
+    2
+  ],
+  "nativeStandaloneDpr": [
+    1,
+    2
+  ]
+}

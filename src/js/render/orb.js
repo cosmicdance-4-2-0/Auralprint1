@@ -51,8 +51,10 @@ class Orb {
     this.trace = def.trace;
   }
 
-  step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null) {
-    this.angleRad += this.chirality * this.motion.angularSpeedRadPerSec * dtSec;
+  // Legacy direct callers omit motionDtSec and retain their supplied delta.
+  // The application frame loop supplies independently bounded emission/motion.
+  step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null, motionDtSec = dtSec) {
+    this.angleRad += this.chirality * this.motion.angularSpeedRadPerSec * motionDtSec;
     this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
 
     const minDim = Math.min(state.widthPx, state.heightPx);
@@ -87,7 +89,7 @@ class Orb {
       globalDominantBandIndex,
       selectedDominantBandIndex,
     );
-    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles);
+    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles, state.dpr);
   }
 }
 

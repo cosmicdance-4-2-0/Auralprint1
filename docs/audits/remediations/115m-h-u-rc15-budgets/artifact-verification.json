@@ -1,0 +1,21 @@
+{
+  "version": "v0.1.15m.h.u",
+  "schema": 10,
+  "artifact": "dist/auralprint_0.1.15m.h.u.html",
+  "bytes": 396211,
+  "sha256": "5772cdd3302776106b199b42aa1aa9590fa227525bb48ff59f89072f3a016853",
+  "inlineCss": true,
+  "inlineJavaScript": true,
+  "unresolvedVersionTokens": 0,
+  "trackedDistributionOrDependencies": 0,
+  "nativeOfflineValidation": "native-ui.json, Chromium DPR 1 and 2",
+  "focusedTests": {
+    "passed": 139,
+    "failed": 0
+  },
+  "fullSuite": {
+    "filesPassed": 32,
+    "filesFailed": 0
+  },
+  "mutationsDetected": 7
+}

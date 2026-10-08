@@ -1,0 +1,69 @@
+✔ budgets: one integer normalization contract for sanitation, resolution and active governor (7.442622ms)
+✔ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (2.505542ms)
+✔ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (3.896978ms)
+✔ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.734281ms)
+✔ budgets: actual upper-budget admissions exceed both retired immutable ceilings (31.785018ms)
+✔ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (0.723735ms)
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (2.92718ms)
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.631319ms)
+✔ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (957.731819ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 7
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1061.133969
+
+✖ failing tests:
+
+test at tests/rc15-budgets.test.js:148:1
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (2.92718ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  4 !== 2
+
+      at Object.clearFrame (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:155:35)
+      at Object.render (file:///tmp/auralprint-budget-mutations-qmm5_a1u/src/js/render/visualizer-runtime.js:184:14)
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:155:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 4,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:164:1
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.631319ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   maxActiveParticles: 16384,
+  +   maxEmissionsPerFrame: 512
+  -   maxActiveParticles: 9,
+  -   maxEmissionsPerFrame: 3
+    }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:169:79)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

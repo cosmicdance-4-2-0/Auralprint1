@@ -1,0 +1,25 @@
+✖ ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.777807ms)
+✖ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.169817ms)
+✖ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (77.188835ms)
+✖ failing tests:
+✖ ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.777807ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.169817ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (77.188835ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:109:97)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 100000,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

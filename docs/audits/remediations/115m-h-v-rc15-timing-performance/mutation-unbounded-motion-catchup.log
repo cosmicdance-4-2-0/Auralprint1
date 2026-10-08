@@ -1,0 +1,93 @@
+✔ production callback: 120 FPS chirality -1 integrates one second of motion and independent emission delta (8.544509ms)
+✔ production callback: 120 FPS chirality 1 integrates one second of motion and independent emission delta (2.652043ms)
+✔ production callback: 60 FPS chirality -1 integrates one second of motion and independent emission delta (2.174921ms)
+✔ production callback: 60 FPS chirality 1 integrates one second of motion and independent emission delta (1.78408ms)
+✔ production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (1.199936ms)
+✔ production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (1.341811ms)
+✔ production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.83319ms)
+✔ production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.742263ms)
+✔ production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (1.351355ms)
+✔ production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.882315ms)
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.914644ms)
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.822004ms)
+✔ production callback: hidden/rebased foreground never integrates missed work; invalid timestamps recover (0.837568ms)
+✔ Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.293507ms)
+✔ slow 5 FPS history spans real TTL motion, fade uses real particle age (1.227838ms)
+✔ slow 10 FPS history spans real TTL motion, fade uses real particle age (0.909867ms)
+✔ ordered expiry [] at 1: 0 retirements/0 age inspections (0.254284ms)
+✔ ordered expiry [0] at 0.9: 0 retirements/1 age inspections (0.147803ms)
+✔ ordered expiry [0] at 1: 1 retirements/1 age inspections (0.130097ms)
+✔ ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.064347ms)
+✔ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.051558ms)
+✔ ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.082515ms)
+✔ ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.070927ms)
+✔ ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.104618ms)
+✔ 100,000 unexpired ordered particles require one age inspection, including live TTL changes (84.563935ms)
+✔ unordered supported timestamps use safe fallback; transfer/eviction/reset preserve or restore ordering flag (0.484533ms)
+✔ different Orb TTLs retire independently, last-tail spacing resumes on empty trail without coordinate cache (0.332182ms)
+✔ direct Orb and frame callers retain default delta convention; explicit motion wraps independently (0.281907ms)
+✔ motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field (1.339527ms)
+✔ smaller selected emission delta never slows independent motion (9.029357ms)
+✔ template structure reader retains nested ancestry and duplicate IDs across void tags and comments (0.709784ms)
+✔ preset buttons exist once under Scene Settings and never under Visualizers (0.505154ms)
+✔ Settings copy retains canonical Scene IDs alongside Visualizers (0.262807ms)
+✔ Scene panel initializes idempotently from the canonical source enum (0.814613ms)
+✔ Scene refresh is reference guarded and source readouts follow selected labels (0.392103ms)
+✔ Scene controls mutate only historical schema-10 fields (0.402019ms)
+✔ Visualizers contains one inventory, Ring editor, Orb editor host, management and all 13 bulk fields (0.644475ms)
+✔ retired Orbs workspace and escape hatch are absent and every template ID is unique (0.546016ms)
+✔ Performance resource controls have scene ownership, explicit numeric labels, help and warning (0.393956ms)
+✔ budget numeric editing commits change only, refuses invalid/empty, preserves focus and listener identity (0.881644ms)
+✔ diagnostics read actual governor fields even with unchanged settings; unchanged text avoids DOM writes (0.371812ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 39
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160.849659
+
+✖ failing tests:
+
+test at tests/rc15-timing-performance.test.js:45:1
+✖ motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.914644ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0.500000001 !== 0
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:48:91)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0.500000001,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-timing-performance.test.js:57:1
+✖ production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.822004ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  120 !== 0
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-timing-mutations-4xa0kl95/tests/rc15-timing-performance.test.js:60:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 120,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

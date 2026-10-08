@@ -1,0 +1,46 @@
+✖ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (1.493109ms)
+✖ integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (5.475703ms)
+✖ RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (0.93852ms)
+✖ RC-15 phase 2: exact retention boundaries and same-timestamp oldest ordering retire before insertion (0.614239ms)
+✖ RC-15 phase 2: lifecycle removal/reset/disposal releases heap nodes, cursor and scene ownership (0.942896ms)
+✖ ordered expiry [0] at 1: 1 retirements/1 age inspections (0.220213ms)
+✖ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.124268ms)
+✖ ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.186752ms)
+✖ ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.188775ms)
+✖ ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.162936ms)
+✖ failing tests:
+✖ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (1.493109ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (5.475703ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (0.93852ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ RC-15 phase 2: exact retention boundaries and same-timestamp oldest ordering retire before insertion (0.614239ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ RC-15 phase 2: lifecycle removal/reset/disposal releases heap nodes, cursor and scene ownership (0.942896ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+✖ ordered expiry [0] at 1: 1 retirements/1 age inspections (0.220213ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.124268ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.186752ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.188775ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.162936ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+      at Array.forEach (<anonymous>)
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-timing-performance.test.js:105:255)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: -1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

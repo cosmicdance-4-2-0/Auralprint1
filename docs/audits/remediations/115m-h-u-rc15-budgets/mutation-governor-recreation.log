@@ -1,0 +1,157 @@
+✔ budgets: one integer normalization contract for sanitation, resolution and active governor (7.022416ms)
+✔ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (2.298528ms)
+✔ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (7.922309ms)
+✔ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.641771ms)
+✔ budgets: actual upper-budget admissions exceed both retired immutable ceilings (27.997691ms)
+✔ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (0.592026ms)
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (3.079019ms)
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.634433ms)
+✔ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (731.554468ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 7
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 807.223625
+
+✖ failing tests:
+
+test at tests/rc15-budgets.test.js:148:1
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (3.079019ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+
+  + <ref *1> ParticleGovernor {
+  - ParticleGovernor {
+      frameActive: false,
+      heap: [],
+  +   nextPriority: TrailSystem {
+  +     emission: {
+  +       nowSec: 0,
+  +       rgbStart: null,
+  +       xSim: 0,
+  +       ySim: 0
+  +     },
+  +     emitAccumulator: 0,
+  +     governor: [Circular *1],
+  +     nextPending: null,
+  +     particles: ParticleList {
+  +       head: null,
+  +       length: 0,
+  +       tail: null
+  +     },
+  +     pendingEmissions: 0,
+  +     priorityNext: null,
+  +     priorityPrev: null,
+  +     standalone: true
+  +   },
+  +   priorityTail: TrailSystem {
+  +     emission: {
+  +       nowSec: 0,
+  +       rgbStart: null,
+  +       xSim: 0,
+  +       ySim: 0
+  +     },
+  +     emitAccumulator: 0,
+  +     governor: [Circular *1],
+  +     nextPending: null,
+  +     particles: ParticleList {
+  +       head: null,
+  +       length: 0,
+  +       tail: null
+  +     },
+  +     pendingEmissions: 0,
+  +     priorityNext: null,
+  +     priorityPrev: null,
+  +     standalone: true
+  +   },
+  -   nextPriority: null,
+  -   priorityTail: null,
+      retentionEvictionsTotal: 0,
+      sequence: 0,
+      stats: {
+        budgetRejectedDemand: 0,
+        droppedDemand: 0,
+  ...
+      },
+  +   trails: [
+  +     TrailSystem {
+  +       emission: {
+  +         nowSec: 0,
+  +         rgbStart: null,
+  +         xSim: 0,
+  +         ySim: 0
+  +       },
+  +       emitAccumulator: 0,
+  +       governor: [Circular *1],
+  +       nextPending: null,
+  +       particles: ParticleList {
+  +         head: null,
+  +         length: 0,
+  +         tail: null
+  +       },
+  +       pendingEmissions: 0,
+  +       priorityNext: null,
+  +       priorityPrev: null,
+  +       standalone: true
+  +     }
+  +   ]
+  -   trails: []
+    }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:153:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ParticleGovernor],
+    expected: [ParticleGovernor],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:164:1
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.634433ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + null
+  - {
+  -   heapIndex: -1,
+  -   next: null,
+  -   particle: {
+  -     bornSec: 0,
+  -     rgbStart: {
+  -       b: 0.09999999999999998,
+  -       g: 0.09999999999999998,
+  -       r: 1
+  -     },
+  -     xSim: 0,
+  -     ySim: 0
+  -   },
+  -   prev: null,
+  -   sequence: 0,
+  -   trail: null
+  - }
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:170:73)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

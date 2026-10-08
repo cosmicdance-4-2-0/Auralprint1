@@ -14,12 +14,15 @@ import { initOrbs, reconcileOrbs, createRuntimeOrb, duplicateRuntimeOrb, removeR
 import { Renderer } from "../src/js/render/renderer.js";
 import { ColorPolicy } from "../src/js/render/color-policy.js";
 
-const policy = CONFIG.limits.particleSafety;
+const policy = CONFIG.defaults.particleSafety;
 const rgb = { r: .2, g: .4, b: .6 };
 const particles = trail => Array.from(trail.particles);
 function def(id, rate = 240, ttl = 600) {
   const result = structuredClone(CONFIG.defaults.orbs[0]);
+  // These unchanged governance assertions exercise deliberately dense zero spacing.
+  // The spacing-default path is covered separately in rc15-spacing.test.js.
   result.id = id; result.particles.emitPerSecond = rate; result.particles.ttlSec = ttl;
+  result.particles.minPlacementDistancePx = 0;
   return result;
 }
 function scene(count, particlePolicy, rate = 240) {
@@ -44,12 +47,12 @@ function assertAccounting(s) {
   }
 }
 
-test("RC-15 phase 2: CONFIG budgets are independent, frozen, and absent from presets", () => {
+test("RC-15 phase 2: default budgets are independent and frozen; governor state is absent from presets", () => {
   assert.deepEqual(policy, { maxEmissionsPerFrame: 512, maxActiveParticles: 16384 });
   assert.ok(Object.isFrozen(policy));
   assert.throws(() => { policy.maxEmissionsPerFrame = 1e6; }, TypeError);
   const governor = new ParticleGovernor({ maxEmissionsPerFrame: 1e6, maxActiveParticles: Infinity });
-  assert.deepEqual(governor.policy, policy);
+  assert.deepEqual(governor.policy, { maxEmissionsPerFrame: CONFIG.limits.particleSafety.maxEmissionsPerFrame.max, maxActiveParticles: policy.maxActiveParticles });
   assert.ok(Object.isFrozen(governor.policy));
   assert.throws(() => { governor.policy = policy; }, TypeError);
   const dirty = structuredClone(CONFIG.defaults); dirty.particleSafety = policy;

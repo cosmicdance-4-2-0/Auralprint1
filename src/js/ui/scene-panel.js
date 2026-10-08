@@ -1,4 +1,5 @@
 import { CONFIG } from "../core/config.js";
+import { normalizeParticleSafety } from "../core/particle-safety.js";
 import { fmt } from "../core/utils.js";
 
 const SOURCE_LABELS = {
@@ -13,15 +14,52 @@ function bindRange(control, limit) {
   control.step = String(limit.step);
 }
 
-// Owns Scene appearance controls only. Workspace visibility and rendering stay
+// Owns Scene appearance and scene-wide resource controls. Visibility/rendering stay
 // with their respective modules; persistence retains historical schema paths.
-function createScenePanelUi({ ui, preferences, getSettings, commitPreferences = () => {} } = {}) {
+function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, commitPreferences = () => {} } = {}) {
   let initializedOn = null;
   let lastSettingsRef = null;
+  const resources = [
+    ["maxActiveParticles", "numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError"],
+    ["maxEmissionsPerFrame", "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError"],
+  ];
+  const diagnosticFields = [
+    ["statParticleLive", "activeParticles"], ["statParticleEmitted", "emissions"],
+    ["statParticleSpacingRejected", "spatiallyRejectedDemand"], ["statParticleBudgetRejected", "budgetRejectedDemand"],
+    ["statParticleRateLimited", "rateLimitedDemand"], ["statParticleRetentionRejected", "retentionRejectedDemand"],
+    ["statParticleExpired", "expired"], ["statParticleRetentionRetired", "retentionEvictionsTotal"],
+  ];
+
+  function refreshDiagnostics() {
+    if (!getParticleStats) return;
+    const stats = getParticleStats();
+    for (const [id, key] of diagnosticFields) {
+      const text = String(stats[key]);
+      if (ui[id].textContent !== text) ui[id].textContent = text;
+    }
+  }
 
   function init() {
     if (initializedOn === ui?.scenePanel) return false;
     initializedOn = ui?.scenePanel || null;
+    for (const [key, inputId, , errorId] of resources) {
+      const control = ui[inputId], limits = CONFIG.limits.particleSafety[key];
+      bindRange(control, limits);
+      control.addEventListener("change", () => {
+        // Empty/partial/invalid input must never coerce the saved choice to zero.
+        const raw = control.value.trim(), value = raw === "" ? NaN : Number(raw);
+        if (!Number.isInteger(value) || value < limits.min || value > limits.max) {
+          control.setAttribute("aria-invalid", "true");
+          ui[errorId].textContent = `Enter a whole number from ${limits.min} to ${limits.max}.`;
+          return;
+        }
+        control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = "";
+        const current = normalizeParticleSafety(preferences.particleSafety);
+        if (current[key] === value) { control.value = String(value); return; }
+        preferences.particleSafety = { ...current, [key]: value };
+        commitPreferences(key === "maxActiveParticles" ? "maximum live particles" : "maximum emissions per update");
+      });
+    }
     bindRange(ui.rngHueOff, CONFIG.limits.sceneColor.hueOffsetDeg);
     bindRange(ui.rngSat, CONFIG.limits.sceneColor.saturation);
     bindRange(ui.rngVal, CONFIG.limits.sceneColor.value);
@@ -44,8 +82,17 @@ function createScenePanelUi({ ui, preferences, getSettings, commitPreferences = 
   }
 
   function refresh(settings = getSettings?.()) {
+    refreshDiagnostics();
     if (!settings || settings === lastSettingsRef) return false;
+    const previous = lastSettingsRef;
     lastSettingsRef = settings;
+    for (const [key, inputId, outputId, errorId] of resources) {
+      const control = ui[inputId], value = settings.particleSafety[key];
+      const changed = previous?.particleSafety?.[key] !== value;
+      if (changed || (document.activeElement !== control && control.getAttribute("aria-invalid") !== "true")) control.value = String(value);
+      if (changed) { control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = ""; }
+      ui[outputId].textContent = `Selected: ${value}`;
+    }
     ui.clrBg.value = settings.visuals.backgroundColor; ui.valBg.textContent = settings.visuals.backgroundColor;
     ui.clrParticle.value = settings.visuals.particleColor; ui.valParticle.textContent = settings.visuals.particleColor;
     ui.selParticleColorSrc.value = settings.bands.particleColorSource;
@@ -56,7 +103,7 @@ function createScenePanelUi({ ui, preferences, getSettings, commitPreferences = 
     return true;
   }
 
-  return { init, refresh };
+  return { init, refresh, refreshDiagnostics };
 }
 
 export { createScenePanelUi, SOURCE_LABELS };

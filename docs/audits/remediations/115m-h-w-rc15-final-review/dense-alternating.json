@@ -1,0 +1,7575 @@
+{
+  "checkpoints": {
+    "hs": "ec5c6238",
+    "ht": "ddbba02c",
+    "hu": "beef098c",
+    "hv": "1987bed8",
+    "hw": "working-final-source"
+  },
+  "version": "v0.1.15m.h.v",
+  "method": "Configurable rotating fresh-page trials; forced GC before imports/warmup; CDP heap snapshots of numeric metrics only; Canvas particle/Trace split in profile mode. Historical unsupported spacing/expert policy marked non-equivalent; fixed synthetic schedule; 330 update-only warmup plus 30 actual production callbacks, or 1,080 + 120 for saturated-sixteen. Uninstrumented measures only callback duration. Profile mode uses measurement-only HTTP source seams for baseline expiry/analysis/policy/diagnostic timers plus nested method wrappers. COOP/COEP for native timer resolution. Viewport 1280x800 DPR1, generated silent stereo PCM. No human preset. Canvas CPU submission excludes GPU completion.",
+  "results": [
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2437248,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.529999999329448,
+          "p95": 88.88499999977648,
+          "mean": 43.1708888888566
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 9.464999999850988
+        },
+        {
+          "totalCallbackMs": 83.1000000005588
+        },
+        {
+          "totalCallbackMs": 9.595000000670552
+        },
+        {
+          "totalCallbackMs": 9.024999999441206
+        },
+        {
+          "totalCallbackMs": 81.13000000081956
+        },
+        {
+          "totalCallbackMs": 9.339999999850988
+        },
+        {
+          "totalCallbackMs": 80.90999999921769
+        },
+        {
+          "totalCallbackMs": 9.650000000372529
+        },
+        {
+          "totalCallbackMs": 80.93999999947846
+        },
+        {
+          "totalCallbackMs": 9.974999999627471
+        },
+        {
+          "totalCallbackMs": 80.0550000006333
+        },
+        {
+          "totalCallbackMs": 10.525000000372529
+        },
+        {
+          "totalCallbackMs": 9.245000000111759
+        },
+        {
+          "totalCallbackMs": 83.2250000005588
+        },
+        {
+          "totalCallbackMs": 10.080000000074506
+        },
+        {
+          "totalCallbackMs": 81.40000000037253
+        },
+        {
+          "totalCallbackMs": 10.28000000026077
+        },
+        {
+          "totalCallbackMs": 86.80000000074506
+        },
+        {
+          "totalCallbackMs": 17.09499999973923
+        },
+        {
+          "totalCallbackMs": 10.075000000186265
+        },
+        {
+          "totalCallbackMs": 128.68499999959022
+        },
+        {
+          "totalCallbackMs": 10.739999999292195
+        },
+        {
+          "totalCallbackMs": 92.53000000026077
+        },
+        {
+          "totalCallbackMs": 11.605000000447035
+        },
+        {
+          "totalCallbackMs": 87.10999999940395
+        },
+        {
+          "totalCallbackMs": 10.014999999664724
+        },
+        {
+          "totalCallbackMs": 85.0100000007078
+        },
+        {
+          "totalCallbackMs": 10.040000000037253
+        },
+        {
+          "totalCallbackMs": 9.915000000037253
+        },
+        {
+          "totalCallbackMs": 84.75999999977648
+        },
+        {
+          "totalCallbackMs": 9.640000000596046
+        },
+        {
+          "totalCallbackMs": 84.89499999955297
+        },
+        {
+          "totalCallbackMs": 9.839999999850988
+        },
+        {
+          "totalCallbackMs": 86.0800000000745
+        },
+        {
+          "totalCallbackMs": 10.004999999888241
+        },
+        {
+          "totalCallbackMs": 82.29000000003725
+        },
+        {
+          "totalCallbackMs": 10.494999999180436
+        },
+        {
+          "totalCallbackMs": 9.274999999441206
+        },
+        {
+          "totalCallbackMs": 84.26999999955297
+        },
+        {
+          "totalCallbackMs": 9.240000000223517
+        },
+        {
+          "totalCallbackMs": 84.20999999996275
+        },
+        {
+          "totalCallbackMs": 11.519999999552965
+        },
+        {
+          "totalCallbackMs": 84.9899999992922
+        },
+        {
+          "totalCallbackMs": 10.139999999664724
+        },
+        {
+          "totalCallbackMs": 9.409999999217689
+        },
+        {
+          "totalCallbackMs": 86.50999999977648
+        },
+        {
+          "totalCallbackMs": 9.709999999962747
+        },
+        {
+          "totalCallbackMs": 82.71000000089407
+        },
+        {
+          "totalCallbackMs": 9.669999999925494
+        },
+        {
+          "totalCallbackMs": 79.8850000007078
+        },
+        {
+          "totalCallbackMs": 10.389999999664724
+        },
+        {
+          "totalCallbackMs": 87.72999999951571
+        },
+        {
+          "totalCallbackMs": 10.629999999888241
+        },
+        {
+          "totalCallbackMs": 9.610000000335276
+        },
+        {
+          "totalCallbackMs": 88.88499999977648
+        },
+        {
+          "totalCallbackMs": 11.559999999590218
+        },
+        {
+          "totalCallbackMs": 87.30499999970198
+        },
+        {
+          "totalCallbackMs": 10.920000000856817
+        },
+        {
+          "totalCallbackMs": 89.46999999973923
+        },
+        {
+          "totalCallbackMs": 11.529999999329448
+        },
+        {
+          "totalCallbackMs": 10.459999999962747
+        },
+        {
+          "totalCallbackMs": 91.24500000011176
+        },
+        {
+          "totalCallbackMs": 9.955000000074506
+        },
+        {
+          "totalCallbackMs": 80.43999999947846
+        },
+        {
+          "totalCallbackMs": 9.990000000223517
+        },
+        {
+          "totalCallbackMs": 85.625
+        },
+        {
+          "totalCallbackMs": 10.165000000037253
+        },
+        {
+          "totalCallbackMs": 84.07499999925494
+        },
+        {
+          "totalCallbackMs": 10.959999999962747
+        },
+        {
+          "totalCallbackMs": 10.179999999701977
+        },
+        {
+          "totalCallbackMs": 81.27999999932945
+        },
+        {
+          "totalCallbackMs": 10.690000000409782
+        },
+        {
+          "totalCallbackMs": 81.31500000040978
+        },
+        {
+          "totalCallbackMs": 10.870000000111759
+        },
+        {
+          "totalCallbackMs": 81.8500000005588
+        },
+        {
+          "totalCallbackMs": 11.5
+        },
+        {
+          "totalCallbackMs": 10.859999999403954
+        },
+        {
+          "totalCallbackMs": 88.7949999999255
+        },
+        {
+          "totalCallbackMs": 11.995000000111759
+        },
+        {
+          "totalCallbackMs": 90.71500000078231
+        },
+        {
+          "totalCallbackMs": 11.245000000111759
+        },
+        {
+          "totalCallbackMs": 85.0800000000745
+        },
+        {
+          "totalCallbackMs": 11.81000000052154
+        },
+        {
+          "totalCallbackMs": 87.46999999973923
+        },
+        {
+          "totalCallbackMs": 15.070000000298023
+        },
+        {
+          "totalCallbackMs": 8.724999999627471
+        },
+        {
+          "totalCallbackMs": 84.78500000014901
+        },
+        {
+          "totalCallbackMs": 9.629999999888241
+        },
+        {
+          "totalCallbackMs": 83.68499999959022
+        },
+        {
+          "totalCallbackMs": 9.779999999329448
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.9799999995157123
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hu",
+      "trial": 0,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7464.876526
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 0
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000036
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000061
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000025
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.0001
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.07
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7464.702731
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7464.516105
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7472.023271
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1964
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 41
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.067855
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.013409
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.002477
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.046397
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.957015
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.826877
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.744463
+            },
+            {
+              "name": "ProcessTime",
+              "value": 7.1
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 9522120
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26214400
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7464.702731
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7464.516105
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2864,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 10.625,
+          "p95": 83.67999999970198,
+          "mean": 40.636277777774055
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 9.525000000372529
+        },
+        {
+          "totalCallbackMs": 80.67499999981374
+        },
+        {
+          "totalCallbackMs": 9.5550000006333
+        },
+        {
+          "totalCallbackMs": 9.504999999888241
+        },
+        {
+          "totalCallbackMs": 81.8300000000745
+        },
+        {
+          "totalCallbackMs": 9.334999999962747
+        },
+        {
+          "totalCallbackMs": 81.63999999966472
+        },
+        {
+          "totalCallbackMs": 9.815000000409782
+        },
+        {
+          "totalCallbackMs": 83.7050000000745
+        },
+        {
+          "totalCallbackMs": 10.240000000223517
+        },
+        {
+          "totalCallbackMs": 81.67500000074506
+        },
+        {
+          "totalCallbackMs": 11.254999999888241
+        },
+        {
+          "totalCallbackMs": 10.120000000111759
+        },
+        {
+          "totalCallbackMs": 82.73499999940395
+        },
+        {
+          "totalCallbackMs": 9.174999999813735
+        },
+        {
+          "totalCallbackMs": 84.98000000044703
+        },
+        {
+          "totalCallbackMs": 10.580000000074506
+        },
+        {
+          "totalCallbackMs": 80.78500000014901
+        },
+        {
+          "totalCallbackMs": 10.620000000111759
+        },
+        {
+          "totalCallbackMs": 10.214999999850988
+        },
+        {
+          "totalCallbackMs": 83.67999999970198
+        },
+        {
+          "totalCallbackMs": 10.979999999515712
+        },
+        {
+          "totalCallbackMs": 83.2250000005588
+        },
+        {
+          "totalCallbackMs": 10.525000000372529
+        },
+        {
+          "totalCallbackMs": 81.96499999985099
+        },
+        {
+          "totalCallbackMs": 10.104999999515712
+        },
+        {
+          "totalCallbackMs": 81.45999999996275
+        },
+        {
+          "totalCallbackMs": 10.214999999850988
+        },
+        {
+          "totalCallbackMs": 9.3050000006333
+        },
+        {
+          "totalCallbackMs": 83.72499999962747
+        },
+        {
+          "totalCallbackMs": 9.474999999627471
+        },
+        {
+          "totalCallbackMs": 82.45999999996275
+        },
+        {
+          "totalCallbackMs": 9.90500000026077
+        },
+        {
+          "totalCallbackMs": 79.07000000029802
+        },
+        {
+          "totalCallbackMs": 10.709999999962747
+        },
+        {
+          "totalCallbackMs": 79.70999999996275
+        },
+        {
+          "totalCallbackMs": 9.830000000074506
+        },
+        {
+          "totalCallbackMs": 9.15500000026077
+        },
+        {
+          "totalCallbackMs": 80.19500000029802
+        },
+        {
+          "totalCallbackMs": 9.434999999590218
+        },
+        {
+          "totalCallbackMs": 80.30499999970198
+        },
+        {
+          "totalCallbackMs": 9.43999999947846
+        },
+        {
+          "totalCallbackMs": 79.27500000037253
+        },
+        {
+          "totalCallbackMs": 9.589999999850988
+        },
+        {
+          "totalCallbackMs": 9.200000000186265
+        },
+        {
+          "totalCallbackMs": 80.24500000011176
+        },
+        {
+          "totalCallbackMs": 9.760000000707805
+        },
+        {
+          "totalCallbackMs": 80.9449999993667
+        },
+        {
+          "totalCallbackMs": 8.9449999993667
+        },
+        {
+          "totalCallbackMs": 78.625
+        },
+        {
+          "totalCallbackMs": 9.179999999701977
+        },
+        {
+          "totalCallbackMs": 78.95999999996275
+        },
+        {
+          "totalCallbackMs": 10.915000000037253
+        },
+        {
+          "totalCallbackMs": 10.334999999962747
+        },
+        {
+          "totalCallbackMs": 80.89000000059605
+        },
+        {
+          "totalCallbackMs": 9.43999999947846
+        },
+        {
+          "totalCallbackMs": 80.22499999962747
+        },
+        {
+          "totalCallbackMs": 8.915000000037253
+        },
+        {
+          "totalCallbackMs": 84.58999999985099
+        },
+        {
+          "totalCallbackMs": 10.625
+        },
+        {
+          "totalCallbackMs": 10.65500000026077
+        },
+        {
+          "totalCallbackMs": 80.21499999985099
+        },
+        {
+          "totalCallbackMs": 9.484999999403954
+        },
+        {
+          "totalCallbackMs": 81.1499999994412
+        },
+        {
+          "totalCallbackMs": 9.25
+        },
+        {
+          "totalCallbackMs": 78.96499999985099
+        },
+        {
+          "totalCallbackMs": 9.299999999813735
+        },
+        {
+          "totalCallbackMs": 77.92499999981374
+        },
+        {
+          "totalCallbackMs": 9.389999999664724
+        },
+        {
+          "totalCallbackMs": 9.380000000819564
+        },
+        {
+          "totalCallbackMs": 79.9550000000745
+        },
+        {
+          "totalCallbackMs": 9.390000000596046
+        },
+        {
+          "totalCallbackMs": 78.34499999973923
+        },
+        {
+          "totalCallbackMs": 10.21999999973923
+        },
+        {
+          "totalCallbackMs": 79.12000000011176
+        },
+        {
+          "totalCallbackMs": 9.544999999925494
+        },
+        {
+          "totalCallbackMs": 9.705000000074506
+        },
+        {
+          "totalCallbackMs": 88.45999999996275
+        },
+        {
+          "totalCallbackMs": 10.879999999888241
+        },
+        {
+          "totalCallbackMs": 78.46499999985099
+        },
+        {
+          "totalCallbackMs": 9.5
+        },
+        {
+          "totalCallbackMs": 76.9300000006333
+        },
+        {
+          "totalCallbackMs": 9.674999999813735
+        },
+        {
+          "totalCallbackMs": 80.16000000014901
+        },
+        {
+          "totalCallbackMs": 10.104999999515712
+        },
+        {
+          "totalCallbackMs": 8.875
+        },
+        {
+          "totalCallbackMs": 78.79000000003725
+        },
+        {
+          "totalCallbackMs": 9.315000000409782
+        },
+        {
+          "totalCallbackMs": 81.74000000022352
+        },
+        {
+          "totalCallbackMs": 8.875
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.6100000003352761
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hv",
+      "trial": 0,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7472.391939
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000053
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000428
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000375
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000503
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.09
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7472.324498
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7472.192479
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7479.008377
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1965
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.121252
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.013523
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.003002
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.02836
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.446855
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.280718
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.371321
+            },
+            {
+              "name": "ProcessTime",
+              "value": 6.71
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 11828344
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26476544
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7472.324498
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7472.192479
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2864,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.395000000484288,
+          "p95": 90.75999999977648,
+          "mean": 42.72572222215434
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 15.575000000186265
+        },
+        {
+          "totalCallbackMs": 115.86000000033528
+        },
+        {
+          "totalCallbackMs": 10.910000000149012
+        },
+        {
+          "totalCallbackMs": 9.910000000149012
+        },
+        {
+          "totalCallbackMs": 90.79999999981374
+        },
+        {
+          "totalCallbackMs": 10.729999999515712
+        },
+        {
+          "totalCallbackMs": 92.1149999992922
+        },
+        {
+          "totalCallbackMs": 10.089999999850988
+        },
+        {
+          "totalCallbackMs": 81.76999999955297
+        },
+        {
+          "totalCallbackMs": 9.9449999993667
+        },
+        {
+          "totalCallbackMs": 82.11999999918044
+        },
+        {
+          "totalCallbackMs": 11.395000000484288
+        },
+        {
+          "totalCallbackMs": 9.434999999590218
+        },
+        {
+          "totalCallbackMs": 82.39500000048429
+        },
+        {
+          "totalCallbackMs": 10.129999999888241
+        },
+        {
+          "totalCallbackMs": 84.03999999910593
+        },
+        {
+          "totalCallbackMs": 11.75
+        },
+        {
+          "totalCallbackMs": 83.70999999996275
+        },
+        {
+          "totalCallbackMs": 11.054999999701977
+        },
+        {
+          "totalCallbackMs": 10.425000000745058
+        },
+        {
+          "totalCallbackMs": 83.80999999959022
+        },
+        {
+          "totalCallbackMs": 10.325000000186265
+        },
+        {
+          "totalCallbackMs": 83.41500000003725
+        },
+        {
+          "totalCallbackMs": 11.705000000074506
+        },
+        {
+          "totalCallbackMs": 81.75499999988824
+        },
+        {
+          "totalCallbackMs": 12.3050000006333
+        },
+        {
+          "totalCallbackMs": 84.50999999977648
+        },
+        {
+          "totalCallbackMs": 10.125
+        },
+        {
+          "totalCallbackMs": 9.945000000298023
+        },
+        {
+          "totalCallbackMs": 82.54000000003725
+        },
+        {
+          "totalCallbackMs": 9.479999999515712
+        },
+        {
+          "totalCallbackMs": 84.73500000033528
+        },
+        {
+          "totalCallbackMs": 9.9449999993667
+        },
+        {
+          "totalCallbackMs": 81.8649999992922
+        },
+        {
+          "totalCallbackMs": 10.389999999664724
+        },
+        {
+          "totalCallbackMs": 86.48500000033528
+        },
+        {
+          "totalCallbackMs": 10.75
+        },
+        {
+          "totalCallbackMs": 9.304999999701977
+        },
+        {
+          "totalCallbackMs": 81.54999999981374
+        },
+        {
+          "totalCallbackMs": 9.850000000558794
+        },
+        {
+          "totalCallbackMs": 81.55999999959022
+        },
+        {
+          "totalCallbackMs": 8.959999999962747
+        },
+        {
+          "totalCallbackMs": 80.10500000044703
+        },
+        {
+          "totalCallbackMs": 9.884999999776483
+        },
+        {
+          "totalCallbackMs": 8.739999999292195
+        },
+        {
+          "totalCallbackMs": 80.97499999962747
+        },
+        {
+          "totalCallbackMs": 9.0699999993667
+        },
+        {
+          "totalCallbackMs": 81.78499999921769
+        },
+        {
+          "totalCallbackMs": 9.125
+        },
+        {
+          "totalCallbackMs": 80.35500000044703
+        },
+        {
+          "totalCallbackMs": 9.740000000223517
+        },
+        {
+          "totalCallbackMs": 79.53500000014901
+        },
+        {
+          "totalCallbackMs": 10.329999999143183
+        },
+        {
+          "totalCallbackMs": 9.149999999441206
+        },
+        {
+          "totalCallbackMs": 81.16500000003725
+        },
+        {
+          "totalCallbackMs": 9.940000000409782
+        },
+        {
+          "totalCallbackMs": 83.73000000044703
+        },
+        {
+          "totalCallbackMs": 9.850000000558794
+        },
+        {
+          "totalCallbackMs": 80.3300000000745
+        },
+        {
+          "totalCallbackMs": 9.804999999701977
+        },
+        {
+          "totalCallbackMs": 9.120000000111759
+        },
+        {
+          "totalCallbackMs": 80.875
+        },
+        {
+          "totalCallbackMs": 9.745000000111759
+        },
+        {
+          "totalCallbackMs": 80.21499999985099
+        },
+        {
+          "totalCallbackMs": 8.924999999813735
+        },
+        {
+          "totalCallbackMs": 81.1699999999255
+        },
+        {
+          "totalCallbackMs": 8.879999999888241
+        },
+        {
+          "totalCallbackMs": 86.64500000048429
+        },
+        {
+          "totalCallbackMs": 10.674999999813735
+        },
+        {
+          "totalCallbackMs": 11.859999999403954
+        },
+        {
+          "totalCallbackMs": 93.25500000081956
+        },
+        {
+          "totalCallbackMs": 12.75
+        },
+        {
+          "totalCallbackMs": 90.37999999988824
+        },
+        {
+          "totalCallbackMs": 9.765000000596046
+        },
+        {
+          "totalCallbackMs": 95.04999999981374
+        },
+        {
+          "totalCallbackMs": 10.1949999993667
+        },
+        {
+          "totalCallbackMs": 10.770000000484288
+        },
+        {
+          "totalCallbackMs": 88.71500000078231
+        },
+        {
+          "totalCallbackMs": 10.554999999701977
+        },
+        {
+          "totalCallbackMs": 84.28500000014901
+        },
+        {
+          "totalCallbackMs": 11.025000000372529
+        },
+        {
+          "totalCallbackMs": 88.46499999985099
+        },
+        {
+          "totalCallbackMs": 11.234999999403954
+        },
+        {
+          "totalCallbackMs": 84.28500000014901
+        },
+        {
+          "totalCallbackMs": 9.110000000335276
+        },
+        {
+          "totalCallbackMs": 10.009999999776483
+        },
+        {
+          "totalCallbackMs": 90.75999999977648
+        },
+        {
+          "totalCallbackMs": 10.205000000074506
+        },
+        {
+          "totalCallbackMs": 83.90999999921769
+        },
+        {
+          "totalCallbackMs": 9.394999999552965
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.715000000782311
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hv",
+      "trial": 1,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7479.308126
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000024
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000031
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000007
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000111
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.06
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7479.241323
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7479.135154
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7486.244207
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1965
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.065491
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.016207
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.001883
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.066615
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.701294
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.551098
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.628107
+            },
+            {
+              "name": "ProcessTime",
+              "value": 6.95
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 10796228
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26476544
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7479.241323
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7479.135154
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2437248,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 15.245000000111759,
+          "p95": 117.83499999996275,
+          "mean": 49.00105555555266
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 10.574999999254942
+        },
+        {
+          "totalCallbackMs": 84.57500000018626
+        },
+        {
+          "totalCallbackMs": 10.900000000372529
+        },
+        {
+          "totalCallbackMs": 9.360000000335276
+        },
+        {
+          "totalCallbackMs": 87.00999999977648
+        },
+        {
+          "totalCallbackMs": 10.4449999993667
+        },
+        {
+          "totalCallbackMs": 91.00999999977648
+        },
+        {
+          "totalCallbackMs": 15.179999999701977
+        },
+        {
+          "totalCallbackMs": 92.62999999988824
+        },
+        {
+          "totalCallbackMs": 11.240000000223517
+        },
+        {
+          "totalCallbackMs": 89.26500000059605
+        },
+        {
+          "totalCallbackMs": 10.745000000111759
+        },
+        {
+          "totalCallbackMs": 11.065000000409782
+        },
+        {
+          "totalCallbackMs": 90.72000000067055
+        },
+        {
+          "totalCallbackMs": 10.865000000223517
+        },
+        {
+          "totalCallbackMs": 95.78500000014901
+        },
+        {
+          "totalCallbackMs": 16.725000000558794
+        },
+        {
+          "totalCallbackMs": 91.77500000037253
+        },
+        {
+          "totalCallbackMs": 11.034999999217689
+        },
+        {
+          "totalCallbackMs": 10.379999999888241
+        },
+        {
+          "totalCallbackMs": 88.23500000033528
+        },
+        {
+          "totalCallbackMs": 9.964999999850988
+        },
+        {
+          "totalCallbackMs": 82.64499999955297
+        },
+        {
+          "totalCallbackMs": 9.779999999329448
+        },
+        {
+          "totalCallbackMs": 82.43499999959022
+        },
+        {
+          "totalCallbackMs": 11.40500000026077
+        },
+        {
+          "totalCallbackMs": 82.58999999985099
+        },
+        {
+          "totalCallbackMs": 10.1800000006333
+        },
+        {
+          "totalCallbackMs": 10.035000000149012
+        },
+        {
+          "totalCallbackMs": 82.54999999981374
+        },
+        {
+          "totalCallbackMs": 9.730000000447035
+        },
+        {
+          "totalCallbackMs": 80.98000000044703
+        },
+        {
+          "totalCallbackMs": 9.625
+        },
+        {
+          "totalCallbackMs": 88.80000000074506
+        },
+        {
+          "totalCallbackMs": 9.769999999552965
+        },
+        {
+          "totalCallbackMs": 90.7749999994412
+        },
+        {
+          "totalCallbackMs": 10.580000000074506
+        },
+        {
+          "totalCallbackMs": 8.735000000335276
+        },
+        {
+          "totalCallbackMs": 84.64500000048429
+        },
+        {
+          "totalCallbackMs": 9.209999999962747
+        },
+        {
+          "totalCallbackMs": 92.30999999959022
+        },
+        {
+          "totalCallbackMs": 9.104999999515712
+        },
+        {
+          "totalCallbackMs": 80.54000000003725
+        },
+        {
+          "totalCallbackMs": 9.309999999590218
+        },
+        {
+          "totalCallbackMs": 8.894999999552965
+        },
+        {
+          "totalCallbackMs": 83.9199999999255
+        },
+        {
+          "totalCallbackMs": 9.304999999701977
+        },
+        {
+          "totalCallbackMs": 83.75500000081956
+        },
+        {
+          "totalCallbackMs": 9.224999999627471
+        },
+        {
+          "totalCallbackMs": 80.97499999962747
+        },
+        {
+          "totalCallbackMs": 9.019999999552965
+        },
+        {
+          "totalCallbackMs": 81.21499999985099
+        },
+        {
+          "totalCallbackMs": 9.815000000409782
+        },
+        {
+          "totalCallbackMs": 9.290000000037253
+        },
+        {
+          "totalCallbackMs": 88.64500000048429
+        },
+        {
+          "totalCallbackMs": 9.919999999925494
+        },
+        {
+          "totalCallbackMs": 87.07499999925494
+        },
+        {
+          "totalCallbackMs": 11.709999999962747
+        },
+        {
+          "totalCallbackMs": 94.59500000067055
+        },
+        {
+          "totalCallbackMs": 9.525000000372529
+        },
+        {
+          "totalCallbackMs": 8.434999999590218
+        },
+        {
+          "totalCallbackMs": 90.1499999994412
+        },
+        {
+          "totalCallbackMs": 9.024999999441206
+        },
+        {
+          "totalCallbackMs": 88.44999999925494
+        },
+        {
+          "totalCallbackMs": 11.325000000186265
+        },
+        {
+          "totalCallbackMs": 116.44500000029802
+        },
+        {
+          "totalCallbackMs": 16.200000000186265
+        },
+        {
+          "totalCallbackMs": 184.81500000040978
+        },
+        {
+          "totalCallbackMs": 15.995000000111759
+        },
+        {
+          "totalCallbackMs": 16.00499999988824
+        },
+        {
+          "totalCallbackMs": 167.375
+        },
+        {
+          "totalCallbackMs": 9.865000000223517
+        },
+        {
+          "totalCallbackMs": 112.66000000014901
+        },
+        {
+          "totalCallbackMs": 14.68999999947846
+        },
+        {
+          "totalCallbackMs": 117.83499999996275
+        },
+        {
+          "totalCallbackMs": 11.790000000037253
+        },
+        {
+          "totalCallbackMs": 14.254999999888241
+        },
+        {
+          "totalCallbackMs": 100.25
+        },
+        {
+          "totalCallbackMs": 16.37999999988824
+        },
+        {
+          "totalCallbackMs": 122.62000000011176
+        },
+        {
+          "totalCallbackMs": 14.0550000006333
+        },
+        {
+          "totalCallbackMs": 107.46999999973923
+        },
+        {
+          "totalCallbackMs": 15.049999999813735
+        },
+        {
+          "totalCallbackMs": 119.49500000011176
+        },
+        {
+          "totalCallbackMs": 18.33999999985099
+        },
+        {
+          "totalCallbackMs": 13.709999999962747
+        },
+        {
+          "totalCallbackMs": 109.8500000005588
+        },
+        {
+          "totalCallbackMs": 13.964999999850988
+        },
+        {
+          "totalCallbackMs": 126.24500000011176
+        },
+        {
+          "totalCallbackMs": 15.245000000111759
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.625
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hu",
+      "trial": 1,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7486.597152
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000017
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.00002
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000003
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.00008
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.07
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7486.497057
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7486.408686
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7494.077554
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1771
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 937
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 13026
+            },
+            {
+              "name": "Resources",
+              "value": 40
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 323
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.07395
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.01317
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.0024
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.053878
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 7.285163
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 7.141765
+            },
+            {
+              "name": "ThreadTime",
+              "value": 7.002535
+            },
+            {
+              "name": "ProcessTime",
+              "value": 7.37
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 9183208
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26476544
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7486.497057
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7486.408686
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2437248,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.320000000298023,
+          "p95": 89.05999999959022,
+          "mean": 43.13133333328491
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 10.304999999701977
+        },
+        {
+          "totalCallbackMs": 83.32000000029802
+        },
+        {
+          "totalCallbackMs": 10.490000000223517
+        },
+        {
+          "totalCallbackMs": 10.625
+        },
+        {
+          "totalCallbackMs": 87.21500000078231
+        },
+        {
+          "totalCallbackMs": 11.214999999850988
+        },
+        {
+          "totalCallbackMs": 86.78999999910593
+        },
+        {
+          "totalCallbackMs": 10.134999999776483
+        },
+        {
+          "totalCallbackMs": 84.14000000059605
+        },
+        {
+          "totalCallbackMs": 10.674999999813735
+        },
+        {
+          "totalCallbackMs": 85.61999999918044
+        },
+        {
+          "totalCallbackMs": 10.174999999813735
+        },
+        {
+          "totalCallbackMs": 9.56000000052154
+        },
+        {
+          "totalCallbackMs": 87.31500000040978
+        },
+        {
+          "totalCallbackMs": 10.879999999888241
+        },
+        {
+          "totalCallbackMs": 89.05999999959022
+        },
+        {
+          "totalCallbackMs": 11.09499999973923
+        },
+        {
+          "totalCallbackMs": 84.66500000003725
+        },
+        {
+          "totalCallbackMs": 11.320000000298023
+        },
+        {
+          "totalCallbackMs": 10.190000000409782
+        },
+        {
+          "totalCallbackMs": 94.5449999999255
+        },
+        {
+          "totalCallbackMs": 12.114999999292195
+        },
+        {
+          "totalCallbackMs": 87.44500000029802
+        },
+        {
+          "totalCallbackMs": 11.040000000037253
+        },
+        {
+          "totalCallbackMs": 83.7949999999255
+        },
+        {
+          "totalCallbackMs": 12.290000000037253
+        },
+        {
+          "totalCallbackMs": 83.91500000003725
+        },
+        {
+          "totalCallbackMs": 11.669999999925494
+        },
+        {
+          "totalCallbackMs": 10.370000000111759
+        },
+        {
+          "totalCallbackMs": 83.60500000044703
+        },
+        {
+          "totalCallbackMs": 9.964999999850988
+        },
+        {
+          "totalCallbackMs": 82.9300000006333
+        },
+        {
+          "totalCallbackMs": 10.264999999664724
+        },
+        {
+          "totalCallbackMs": 85.2949999999255
+        },
+        {
+          "totalCallbackMs": 10.785000000149012
+        },
+        {
+          "totalCallbackMs": 83.5449999999255
+        },
+        {
+          "totalCallbackMs": 11.264999999664724
+        },
+        {
+          "totalCallbackMs": 10.519999999552965
+        },
+        {
+          "totalCallbackMs": 83.91500000003725
+        },
+        {
+          "totalCallbackMs": 9.990000000223517
+        },
+        {
+          "totalCallbackMs": 83.74000000022352
+        },
+        {
+          "totalCallbackMs": 9.910000000149012
+        },
+        {
+          "totalCallbackMs": 82.73499999940395
+        },
+        {
+          "totalCallbackMs": 10.46999999973923
+        },
+        {
+          "totalCallbackMs": 10.06499999947846
+        },
+        {
+          "totalCallbackMs": 83.67000000085682
+        },
+        {
+          "totalCallbackMs": 9.674999999813735
+        },
+        {
+          "totalCallbackMs": 83.67999999970198
+        },
+        {
+          "totalCallbackMs": 9.56499999947846
+        },
+        {
+          "totalCallbackMs": 80.91500000003725
+        },
+        {
+          "totalCallbackMs": 9.919999999925494
+        },
+        {
+          "totalCallbackMs": 83.73500000033528
+        },
+        {
+          "totalCallbackMs": 10.089999999850988
+        },
+        {
+          "totalCallbackMs": 10.294999999925494
+        },
+        {
+          "totalCallbackMs": 82.11500000022352
+        },
+        {
+          "totalCallbackMs": 10.029999999329448
+        },
+        {
+          "totalCallbackMs": 82.60999999940395
+        },
+        {
+          "totalCallbackMs": 10.735000000335276
+        },
+        {
+          "totalCallbackMs": 85.75499999988824
+        },
+        {
+          "totalCallbackMs": 10.454999999143183
+        },
+        {
+          "totalCallbackMs": 10.709999999962747
+        },
+        {
+          "totalCallbackMs": 82.74000000022352
+        },
+        {
+          "totalCallbackMs": 9.809999999590218
+        },
+        {
+          "totalCallbackMs": 81.50499999988824
+        },
+        {
+          "totalCallbackMs": 10.254999999888241
+        },
+        {
+          "totalCallbackMs": 84.11500000022352
+        },
+        {
+          "totalCallbackMs": 11.604999999515712
+        },
+        {
+          "totalCallbackMs": 87.32500000018626
+        },
+        {
+          "totalCallbackMs": 10.434999999590218
+        },
+        {
+          "totalCallbackMs": 10.254999999888241
+        },
+        {
+          "totalCallbackMs": 84.4199999999255
+        },
+        {
+          "totalCallbackMs": 9.934999999590218
+        },
+        {
+          "totalCallbackMs": 83.7749999994412
+        },
+        {
+          "totalCallbackMs": 10.09499999973923
+        },
+        {
+          "totalCallbackMs": 81.41000000014901
+        },
+        {
+          "totalCallbackMs": 10.679999999701977
+        },
+        {
+          "totalCallbackMs": 10.720000000670552
+        },
+        {
+          "totalCallbackMs": 88.06500000040978
+        },
+        {
+          "totalCallbackMs": 9.980000000447035
+        },
+        {
+          "totalCallbackMs": 91.79000000003725
+        },
+        {
+          "totalCallbackMs": 10.649999999441206
+        },
+        {
+          "totalCallbackMs": 88.57999999914318
+        },
+        {
+          "totalCallbackMs": 12.629999999888241
+        },
+        {
+          "totalCallbackMs": 95.46500000078231
+        },
+        {
+          "totalCallbackMs": 10.25
+        },
+        {
+          "totalCallbackMs": 10.3050000006333
+        },
+        {
+          "totalCallbackMs": 92.16000000014901
+        },
+        {
+          "totalCallbackMs": 14.504999999888241
+        },
+        {
+          "totalCallbackMs": 93.83999999985099
+        },
+        {
+          "totalCallbackMs": 9.589999999850988
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.8600000003352761
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hu",
+      "trial": 2,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7494.713546
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000141
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000146
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000005
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.00008
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.08
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7494.622285
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7494.423109
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7501.869577
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1964
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.070037
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.013541
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.00679
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.037587
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.859212
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.731257
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.792477
+            },
+            {
+              "name": "ProcessTime",
+              "value": 7.17
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 6746688
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26214400
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7494.622285
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7494.423109
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2864,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.90500000026077,
+          "p95": 88.54000000003725,
+          "mean": 42.92205555562137
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 9.43500000052154
+        },
+        {
+          "totalCallbackMs": 85.32499999925494
+        },
+        {
+          "totalCallbackMs": 10.540000000037253
+        },
+        {
+          "totalCallbackMs": 10.714999999850988
+        },
+        {
+          "totalCallbackMs": 84.28000000026077
+        },
+        {
+          "totalCallbackMs": 9.240000000223517
+        },
+        {
+          "totalCallbackMs": 82.59000000078231
+        },
+        {
+          "totalCallbackMs": 10.575000000186265
+        },
+        {
+          "totalCallbackMs": 87.28000000026077
+        },
+        {
+          "totalCallbackMs": 11.410000000149012
+        },
+        {
+          "totalCallbackMs": 86.06500000040978
+        },
+        {
+          "totalCallbackMs": 11.650000000372529
+        },
+        {
+          "totalCallbackMs": 10.625
+        },
+        {
+          "totalCallbackMs": 88.54000000003725
+        },
+        {
+          "totalCallbackMs": 12.25
+        },
+        {
+          "totalCallbackMs": 86.41500000003725
+        },
+        {
+          "totalCallbackMs": 12.009999999776483
+        },
+        {
+          "totalCallbackMs": 84.92999999970198
+        },
+        {
+          "totalCallbackMs": 11.629999999888241
+        },
+        {
+          "totalCallbackMs": 10.050000000745058
+        },
+        {
+          "totalCallbackMs": 85.3300000000745
+        },
+        {
+          "totalCallbackMs": 10.544999999925494
+        },
+        {
+          "totalCallbackMs": 85.31499999947846
+        },
+        {
+          "totalCallbackMs": 10.909999999217689
+        },
+        {
+          "totalCallbackMs": 83.4449999993667
+        },
+        {
+          "totalCallbackMs": 9.955000000074506
+        },
+        {
+          "totalCallbackMs": 81.53000000026077
+        },
+        {
+          "totalCallbackMs": 9.96000000089407
+        },
+        {
+          "totalCallbackMs": 9.075000000186265
+        },
+        {
+          "totalCallbackMs": 81.36000000033528
+        },
+        {
+          "totalCallbackMs": 10.224999999627471
+        },
+        {
+          "totalCallbackMs": 82.21999999973923
+        },
+        {
+          "totalCallbackMs": 9.584999999962747
+        },
+        {
+          "totalCallbackMs": 83.58500000089407
+        },
+        {
+          "totalCallbackMs": 12.650000000372529
+        },
+        {
+          "totalCallbackMs": 84.09499999973923
+        },
+        {
+          "totalCallbackMs": 11.1949999993667
+        },
+        {
+          "totalCallbackMs": 9.054999999701977
+        },
+        {
+          "totalCallbackMs": 88.625
+        },
+        {
+          "totalCallbackMs": 10.910000000149012
+        },
+        {
+          "totalCallbackMs": 86.42999999970198
+        },
+        {
+          "totalCallbackMs": 10.599999999627471
+        },
+        {
+          "totalCallbackMs": 87.26500000059605
+        },
+        {
+          "totalCallbackMs": 11.525000000372529
+        },
+        {
+          "totalCallbackMs": 8.924999999813735
+        },
+        {
+          "totalCallbackMs": 86.81499999947846
+        },
+        {
+          "totalCallbackMs": 10.169999999925494
+        },
+        {
+          "totalCallbackMs": 83.3300000000745
+        },
+        {
+          "totalCallbackMs": 11.955000000074506
+        },
+        {
+          "totalCallbackMs": 86.19000000040978
+        },
+        {
+          "totalCallbackMs": 9.609999999403954
+        },
+        {
+          "totalCallbackMs": 81.53500000014901
+        },
+        {
+          "totalCallbackMs": 10.200000000186265
+        },
+        {
+          "totalCallbackMs": 11.90500000026077
+        },
+        {
+          "totalCallbackMs": 83.16000000014901
+        },
+        {
+          "totalCallbackMs": 9.78000000026077
+        },
+        {
+          "totalCallbackMs": 83.82000000029802
+        },
+        {
+          "totalCallbackMs": 10.025000000372529
+        },
+        {
+          "totalCallbackMs": 82.06500000040978
+        },
+        {
+          "totalCallbackMs": 9.900000000372529
+        },
+        {
+          "totalCallbackMs": 12.950000000186265
+        },
+        {
+          "totalCallbackMs": 96.96499999985099
+        },
+        {
+          "totalCallbackMs": 9.865000000223517
+        },
+        {
+          "totalCallbackMs": 86.6800000006333
+        },
+        {
+          "totalCallbackMs": 9.245000000111759
+        },
+        {
+          "totalCallbackMs": 91.1800000006333
+        },
+        {
+          "totalCallbackMs": 9.5
+        },
+        {
+          "totalCallbackMs": 91.42999999970198
+        },
+        {
+          "totalCallbackMs": 9.514999999664724
+        },
+        {
+          "totalCallbackMs": 9.455000000074506
+        },
+        {
+          "totalCallbackMs": 88.5
+        },
+        {
+          "totalCallbackMs": 9.765000000596046
+        },
+        {
+          "totalCallbackMs": 89.47000000067055
+        },
+        {
+          "totalCallbackMs": 10.174999999813735
+        },
+        {
+          "totalCallbackMs": 87.81499999947846
+        },
+        {
+          "totalCallbackMs": 11.099999999627471
+        },
+        {
+          "totalCallbackMs": 18.1949999993667
+        },
+        {
+          "totalCallbackMs": 81.58499999996275
+        },
+        {
+          "totalCallbackMs": 10.120000000111759
+        },
+        {
+          "totalCallbackMs": 80.27500000037253
+        },
+        {
+          "totalCallbackMs": 9.834999999962747
+        },
+        {
+          "totalCallbackMs": 80.9750000005588
+        },
+        {
+          "totalCallbackMs": 10.214999999850988
+        },
+        {
+          "totalCallbackMs": 84.60500000044703
+        },
+        {
+          "totalCallbackMs": 10.599999999627471
+        },
+        {
+          "totalCallbackMs": 9.754999999888241
+        },
+        {
+          "totalCallbackMs": 84.90500000026077
+        },
+        {
+          "totalCallbackMs": 9.490000000223517
+        },
+        {
+          "totalCallbackMs": 79.94500000029802
+        },
+        {
+          "totalCallbackMs": 8.544999999925494
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.7350000003352761
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hv",
+      "trial": 2,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7502.233112
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 0
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000015
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000033
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000018
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000071
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.08
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7502.183754
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7502.04229
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7509.159781
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1965
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 41
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.089217
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.015529
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.003951
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.028183
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.725779
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.588899
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.665061
+            },
+            {
+              "name": "ProcessTime",
+              "value": 7.01
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 8678988
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26738688
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7502.183754
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7502.04229
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2864,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.735000000335276,
+          "p95": 84.99500000011176,
+          "mean": 41.81833333329608
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 11.714999999850988
+        },
+        {
+          "totalCallbackMs": 83.40499999932945
+        },
+        {
+          "totalCallbackMs": 10.855000000447035
+        },
+        {
+          "totalCallbackMs": 10.049999999813735
+        },
+        {
+          "totalCallbackMs": 82.625
+        },
+        {
+          "totalCallbackMs": 10.020000000484288
+        },
+        {
+          "totalCallbackMs": 82.17999999970198
+        },
+        {
+          "totalCallbackMs": 10.330000000074506
+        },
+        {
+          "totalCallbackMs": 81.75999999977648
+        },
+        {
+          "totalCallbackMs": 11.025000000372529
+        },
+        {
+          "totalCallbackMs": 82.30000000074506
+        },
+        {
+          "totalCallbackMs": 12.665000000037253
+        },
+        {
+          "totalCallbackMs": 11.739999999292195
+        },
+        {
+          "totalCallbackMs": 81.59999999962747
+        },
+        {
+          "totalCallbackMs": 10.21999999973923
+        },
+        {
+          "totalCallbackMs": 85.86500000022352
+        },
+        {
+          "totalCallbackMs": 11.735000000335276
+        },
+        {
+          "totalCallbackMs": 87.52000000048429
+        },
+        {
+          "totalCallbackMs": 16.100000000558794
+        },
+        {
+          "totalCallbackMs": 12.979999999515712
+        },
+        {
+          "totalCallbackMs": 99.45999999996275
+        },
+        {
+          "totalCallbackMs": 11.670000000856817
+        },
+        {
+          "totalCallbackMs": 93.64499999955297
+        },
+        {
+          "totalCallbackMs": 17.269999999552965
+        },
+        {
+          "totalCallbackMs": 86.17999999970198
+        },
+        {
+          "totalCallbackMs": 10.75
+        },
+        {
+          "totalCallbackMs": 84.99500000011176
+        },
+        {
+          "totalCallbackMs": 10.56000000052154
+        },
+        {
+          "totalCallbackMs": 8.959999999962747
+        },
+        {
+          "totalCallbackMs": 81.23000000044703
+        },
+        {
+          "totalCallbackMs": 10.200000000186265
+        },
+        {
+          "totalCallbackMs": 83.125
+        },
+        {
+          "totalCallbackMs": 10.31499999947846
+        },
+        {
+          "totalCallbackMs": 79.74500000011176
+        },
+        {
+          "totalCallbackMs": 12.754999999888241
+        },
+        {
+          "totalCallbackMs": 79.70999999996275
+        },
+        {
+          "totalCallbackMs": 10.769999999552965
+        },
+        {
+          "totalCallbackMs": 9.629999999888241
+        },
+        {
+          "totalCallbackMs": 83.11500000022352
+        },
+        {
+          "totalCallbackMs": 10.31000000052154
+        },
+        {
+          "totalCallbackMs": 81.04000000003725
+        },
+        {
+          "totalCallbackMs": 10.899999999441206
+        },
+        {
+          "totalCallbackMs": 81.77000000048429
+        },
+        {
+          "totalCallbackMs": 10.205000000074506
+        },
+        {
+          "totalCallbackMs": 9.364999999292195
+        },
+        {
+          "totalCallbackMs": 82.6149999992922
+        },
+        {
+          "totalCallbackMs": 9.639999999664724
+        },
+        {
+          "totalCallbackMs": 81.79000000003725
+        },
+        {
+          "totalCallbackMs": 9.549999999813735
+        },
+        {
+          "totalCallbackMs": 80.48000000044703
+        },
+        {
+          "totalCallbackMs": 10.140000000596046
+        },
+        {
+          "totalCallbackMs": 83.1499999994412
+        },
+        {
+          "totalCallbackMs": 10.554999999701977
+        },
+        {
+          "totalCallbackMs": 9.604999999515712
+        },
+        {
+          "totalCallbackMs": 82.97000000067055
+        },
+        {
+          "totalCallbackMs": 9.275000000372529
+        },
+        {
+          "totalCallbackMs": 81.01499999966472
+        },
+        {
+          "totalCallbackMs": 9.945000000298023
+        },
+        {
+          "totalCallbackMs": 80.65000000037253
+        },
+        {
+          "totalCallbackMs": 10.96999999973923
+        },
+        {
+          "totalCallbackMs": 8.794999999925494
+        },
+        {
+          "totalCallbackMs": 80.2949999999255
+        },
+        {
+          "totalCallbackMs": 9.254999999888241
+        },
+        {
+          "totalCallbackMs": 81.00499999988824
+        },
+        {
+          "totalCallbackMs": 9.120000000111759
+        },
+        {
+          "totalCallbackMs": 81.00499999988824
+        },
+        {
+          "totalCallbackMs": 9.294999999925494
+        },
+        {
+          "totalCallbackMs": 80.65000000037253
+        },
+        {
+          "totalCallbackMs": 9.584999999962747
+        },
+        {
+          "totalCallbackMs": 8.584999999962747
+        },
+        {
+          "totalCallbackMs": 80.8999999994412
+        },
+        {
+          "totalCallbackMs": 9.684999999590218
+        },
+        {
+          "totalCallbackMs": 83.5699999993667
+        },
+        {
+          "totalCallbackMs": 9.370000000111759
+        },
+        {
+          "totalCallbackMs": 81.7250000005588
+        },
+        {
+          "totalCallbackMs": 10.104999999515712
+        },
+        {
+          "totalCallbackMs": 9.415000000037253
+        },
+        {
+          "totalCallbackMs": 81.20999999996275
+        },
+        {
+          "totalCallbackMs": 9.109999999403954
+        },
+        {
+          "totalCallbackMs": 82.83499999996275
+        },
+        {
+          "totalCallbackMs": 9.150000000372529
+        },
+        {
+          "totalCallbackMs": 81.75999999977648
+        },
+        {
+          "totalCallbackMs": 9.154999999329448
+        },
+        {
+          "totalCallbackMs": 81.1699999999255
+        },
+        {
+          "totalCallbackMs": 9.495000000111759
+        },
+        {
+          "totalCallbackMs": 9.570000000298023
+        },
+        {
+          "totalCallbackMs": 80.87000000011176
+        },
+        {
+          "totalCallbackMs": 9.359999999403954
+        },
+        {
+          "totalCallbackMs": 81.34999999962747
+        },
+        {
+          "totalCallbackMs": 9.540000000037253
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 1.875
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hv",
+      "trial": 3,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7509.481539
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000025
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000038
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000013
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000123
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.07
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7509.416438
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7509.311236
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7516.324895
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1965
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 364
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.066167
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.014883
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.004316
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.058342
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.583156
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.439448
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.510458
+            },
+            {
+              "name": "ProcessTime",
+              "value": 6.85
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 16344428
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26476544
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7509.416438
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7509.311236
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2437248,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.264999999664724,
+          "p95": 86.48499999940395,
+          "mean": 42.27388888890338
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 11.264999999664724
+        },
+        {
+          "totalCallbackMs": 85.75500000081956
+        },
+        {
+          "totalCallbackMs": 11.195000000298023
+        },
+        {
+          "totalCallbackMs": 9.760000000707805
+        },
+        {
+          "totalCallbackMs": 83.26499999966472
+        },
+        {
+          "totalCallbackMs": 10.574999999254942
+        },
+        {
+          "totalCallbackMs": 86.48499999940395
+        },
+        {
+          "totalCallbackMs": 10.3199999993667
+        },
+        {
+          "totalCallbackMs": 83.08999999985099
+        },
+        {
+          "totalCallbackMs": 10.830000000074506
+        },
+        {
+          "totalCallbackMs": 83.05999999959022
+        },
+        {
+          "totalCallbackMs": 10.949999999254942
+        },
+        {
+          "totalCallbackMs": 10.804999999701977
+        },
+        {
+          "totalCallbackMs": 88.90000000037253
+        },
+        {
+          "totalCallbackMs": 10.990000000223517
+        },
+        {
+          "totalCallbackMs": 87.79500000085682
+        },
+        {
+          "totalCallbackMs": 11.285000000149012
+        },
+        {
+          "totalCallbackMs": 84.03000000026077
+        },
+        {
+          "totalCallbackMs": 10.329999999143183
+        },
+        {
+          "totalCallbackMs": 9.224999999627471
+        },
+        {
+          "totalCallbackMs": 83.98000000044703
+        },
+        {
+          "totalCallbackMs": 9.919999999925494
+        },
+        {
+          "totalCallbackMs": 84.25999999977648
+        },
+        {
+          "totalCallbackMs": 10.510000000707805
+        },
+        {
+          "totalCallbackMs": 86.62000000011176
+        },
+        {
+          "totalCallbackMs": 11.5
+        },
+        {
+          "totalCallbackMs": 81.59000000078231
+        },
+        {
+          "totalCallbackMs": 10.695000000298023
+        },
+        {
+          "totalCallbackMs": 9.470000000670552
+        },
+        {
+          "totalCallbackMs": 85.18499999959022
+        },
+        {
+          "totalCallbackMs": 13.46999999973923
+        },
+        {
+          "totalCallbackMs": 88.34500000067055
+        },
+        {
+          "totalCallbackMs": 9.715000000782311
+        },
+        {
+          "totalCallbackMs": 81.88999999966472
+        },
+        {
+          "totalCallbackMs": 13.884999999776483
+        },
+        {
+          "totalCallbackMs": 83.5800000000745
+        },
+        {
+          "totalCallbackMs": 11.220000000670552
+        },
+        {
+          "totalCallbackMs": 9.509999999776483
+        },
+        {
+          "totalCallbackMs": 85.27000000048429
+        },
+        {
+          "totalCallbackMs": 9.570000000298023
+        },
+        {
+          "totalCallbackMs": 84.32500000018626
+        },
+        {
+          "totalCallbackMs": 10.879999999888241
+        },
+        {
+          "totalCallbackMs": 83.28000000026077
+        },
+        {
+          "totalCallbackMs": 10.275000000372529
+        },
+        {
+          "totalCallbackMs": 9.589999999850988
+        },
+        {
+          "totalCallbackMs": 84.67999999970198
+        },
+        {
+          "totalCallbackMs": 9.765000000596046
+        },
+        {
+          "totalCallbackMs": 95.68500000052154
+        },
+        {
+          "totalCallbackMs": 9.915000000037253
+        },
+        {
+          "totalCallbackMs": 81.88499999977648
+        },
+        {
+          "totalCallbackMs": 10.089999999850988
+        },
+        {
+          "totalCallbackMs": 81.82500000018626
+        },
+        {
+          "totalCallbackMs": 11.859999999403954
+        },
+        {
+          "totalCallbackMs": 9.43500000052154
+        },
+        {
+          "totalCallbackMs": 84.25999999977648
+        },
+        {
+          "totalCallbackMs": 9.484999999403954
+        },
+        {
+          "totalCallbackMs": 82.48499999940395
+        },
+        {
+          "totalCallbackMs": 9.9449999993667
+        },
+        {
+          "totalCallbackMs": 82.64499999955297
+        },
+        {
+          "totalCallbackMs": 9.665000000037253
+        },
+        {
+          "totalCallbackMs": 10.644999999552965
+        },
+        {
+          "totalCallbackMs": 82.51999999955297
+        },
+        {
+          "totalCallbackMs": 9.330000000074506
+        },
+        {
+          "totalCallbackMs": 82.32000000029802
+        },
+        {
+          "totalCallbackMs": 9.804999999701977
+        },
+        {
+          "totalCallbackMs": 84.71499999985099
+        },
+        {
+          "totalCallbackMs": 9.870000000111759
+        },
+        {
+          "totalCallbackMs": 82.75500000081956
+        },
+        {
+          "totalCallbackMs": 10.360000000335276
+        },
+        {
+          "totalCallbackMs": 9.5
+        },
+        {
+          "totalCallbackMs": 82.5449999999255
+        },
+        {
+          "totalCallbackMs": 8.544999999925494
+        },
+        {
+          "totalCallbackMs": 82.06000000052154
+        },
+        {
+          "totalCallbackMs": 9.145000000484288
+        },
+        {
+          "totalCallbackMs": 82.6699999999255
+        },
+        {
+          "totalCallbackMs": 9.634999999776483
+        },
+        {
+          "totalCallbackMs": 9.190000000409782
+        },
+        {
+          "totalCallbackMs": 83.97499999962747
+        },
+        {
+          "totalCallbackMs": 9.3199999993667
+        },
+        {
+          "totalCallbackMs": 81.81499999947846
+        },
+        {
+          "totalCallbackMs": 9.294999999925494
+        },
+        {
+          "totalCallbackMs": 80.54000000003725
+        },
+        {
+          "totalCallbackMs": 13.340000000782311
+        },
+        {
+          "totalCallbackMs": 81.76499999966472
+        },
+        {
+          "totalCallbackMs": 9.615000000223517
+        },
+        {
+          "totalCallbackMs": 9.709999999962747
+        },
+        {
+          "totalCallbackMs": 85.00499999988824
+        },
+        {
+          "totalCallbackMs": 10.490000000223517
+        },
+        {
+          "totalCallbackMs": 81.81499999947846
+        },
+        {
+          "totalCallbackMs": 10.285000000149012
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.415000000037253
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hu",
+      "trial": 3,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7516.617834
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000017
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000032
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000015
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000112
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.06
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7516.555135
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7516.490185
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7523.481244
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1964
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.065039
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.015239
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.002753
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.029458
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.647766
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.535277
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.579127
+            },
+            {
+              "name": "ProcessTime",
+              "value": 6.9
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 8982364
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 27525120
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7516.555135
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7516.490185
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2437248,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.269999999552965,
+          "p95": 89.4199999999255,
+          "mean": 43.322444444387735
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 10.870000000111759
+        },
+        {
+          "totalCallbackMs": 87.5
+        },
+        {
+          "totalCallbackMs": 11.71999999973923
+        },
+        {
+          "totalCallbackMs": 9.8199999993667
+        },
+        {
+          "totalCallbackMs": 88.32000000029802
+        },
+        {
+          "totalCallbackMs": 10.304999999701977
+        },
+        {
+          "totalCallbackMs": 86.80000000074506
+        },
+        {
+          "totalCallbackMs": 11.445000000298023
+        },
+        {
+          "totalCallbackMs": 85.58999999985099
+        },
+        {
+          "totalCallbackMs": 11.120000000111759
+        },
+        {
+          "totalCallbackMs": 89.4199999999255
+        },
+        {
+          "totalCallbackMs": 12.114999999292195
+        },
+        {
+          "totalCallbackMs": 11.984999999403954
+        },
+        {
+          "totalCallbackMs": 98.86000000033528
+        },
+        {
+          "totalCallbackMs": 10.56000000052154
+        },
+        {
+          "totalCallbackMs": 92.66500000003725
+        },
+        {
+          "totalCallbackMs": 10.895000000484288
+        },
+        {
+          "totalCallbackMs": 94.07500000018626
+        },
+        {
+          "totalCallbackMs": 10.879999999888241
+        },
+        {
+          "totalCallbackMs": 10.445000000298023
+        },
+        {
+          "totalCallbackMs": 87.82500000018626
+        },
+        {
+          "totalCallbackMs": 10.009999999776483
+        },
+        {
+          "totalCallbackMs": 85.52000000048429
+        },
+        {
+          "totalCallbackMs": 9.919999999925494
+        },
+        {
+          "totalCallbackMs": 95.27000000048429
+        },
+        {
+          "totalCallbackMs": 11.875
+        },
+        {
+          "totalCallbackMs": 87.24500000011176
+        },
+        {
+          "totalCallbackMs": 11.004999999888241
+        },
+        {
+          "totalCallbackMs": 10.270000000484288
+        },
+        {
+          "totalCallbackMs": 85.28500000014901
+        },
+        {
+          "totalCallbackMs": 10.714999999850988
+        },
+        {
+          "totalCallbackMs": 84.04999999981374
+        },
+        {
+          "totalCallbackMs": 9.599999999627471
+        },
+        {
+          "totalCallbackMs": 88.59500000067055
+        },
+        {
+          "totalCallbackMs": 11.330000000074506
+        },
+        {
+          "totalCallbackMs": 85.86999999918044
+        },
+        {
+          "totalCallbackMs": 11.269999999552965
+        },
+        {
+          "totalCallbackMs": 10.774999999441206
+        },
+        {
+          "totalCallbackMs": 84.66000000014901
+        },
+        {
+          "totalCallbackMs": 9.730000000447035
+        },
+        {
+          "totalCallbackMs": 88.75499999988824
+        },
+        {
+          "totalCallbackMs": 9.484999999403954
+        },
+        {
+          "totalCallbackMs": 82.45000000018626
+        },
+        {
+          "totalCallbackMs": 10.254999999888241
+        },
+        {
+          "totalCallbackMs": 9.354999999515712
+        },
+        {
+          "totalCallbackMs": 95.6499999994412
+        },
+        {
+          "totalCallbackMs": 10.419999999925494
+        },
+        {
+          "totalCallbackMs": 85.9550000000745
+        },
+        {
+          "totalCallbackMs": 10.894999999552965
+        },
+        {
+          "totalCallbackMs": 84.05999999959022
+        },
+        {
+          "totalCallbackMs": 9.794999999925494
+        },
+        {
+          "totalCallbackMs": 88.48500000033528
+        },
+        {
+          "totalCallbackMs": 10.270000000484288
+        },
+        {
+          "totalCallbackMs": 9.809999999590218
+        },
+        {
+          "totalCallbackMs": 87.1699999999255
+        },
+        {
+          "totalCallbackMs": 11.065000000409782
+        },
+        {
+          "totalCallbackMs": 87.19000000040978
+        },
+        {
+          "totalCallbackMs": 9.66499999910593
+        },
+        {
+          "totalCallbackMs": 87.38499999977648
+        },
+        {
+          "totalCallbackMs": 10.120000000111759
+        },
+        {
+          "totalCallbackMs": 9.794999999925494
+        },
+        {
+          "totalCallbackMs": 83.63499999977648
+        },
+        {
+          "totalCallbackMs": 10.019999999552965
+        },
+        {
+          "totalCallbackMs": 85.64499999955297
+        },
+        {
+          "totalCallbackMs": 9.639999999664724
+        },
+        {
+          "totalCallbackMs": 85.54000000003725
+        },
+        {
+          "totalCallbackMs": 9.695000000298023
+        },
+        {
+          "totalCallbackMs": 80.34499999973923
+        },
+        {
+          "totalCallbackMs": 9.56499999947846
+        },
+        {
+          "totalCallbackMs": 9.440000000409782
+        },
+        {
+          "totalCallbackMs": 81.78500000014901
+        },
+        {
+          "totalCallbackMs": 9.739999999292195
+        },
+        {
+          "totalCallbackMs": 82.95999999996275
+        },
+        {
+          "totalCallbackMs": 9.544999999925494
+        },
+        {
+          "totalCallbackMs": 82.52999999932945
+        },
+        {
+          "totalCallbackMs": 9.625
+        },
+        {
+          "totalCallbackMs": 9.424999999813735
+        },
+        {
+          "totalCallbackMs": 81.42499999981374
+        },
+        {
+          "totalCallbackMs": 10.049999999813735
+        },
+        {
+          "totalCallbackMs": 82.2949999999255
+        },
+        {
+          "totalCallbackMs": 9.729999999515712
+        },
+        {
+          "totalCallbackMs": 81.72499999962747
+        },
+        {
+          "totalCallbackMs": 9.415000000037253
+        },
+        {
+          "totalCallbackMs": 81.17499999981374
+        },
+        {
+          "totalCallbackMs": 10.410000000149012
+        },
+        {
+          "totalCallbackMs": 8.885000000707805
+        },
+        {
+          "totalCallbackMs": 83.78500000014901
+        },
+        {
+          "totalCallbackMs": 10.955000000074506
+        },
+        {
+          "totalCallbackMs": 85.65500000026077
+        },
+        {
+          "totalCallbackMs": 10.139999999664724
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.4950000001117587
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hu",
+      "trial": 4,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7523.793011
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000017
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.00002
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000003
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000065
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.06
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7523.727074
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7523.64959
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7530.717663
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1964
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.065304
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.014588
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.004495
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.072034
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.73832
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.581899
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.61804
+            },
+            {
+              "name": "ProcessTime",
+              "value": 6.93
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 10259412
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26214400
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7523.727074
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7523.64959
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    },
+    {
+      "scenario": "moving-sixteen",
+      "spacing": 0,
+      "expert": false,
+      "allCallbacks": true,
+      "seedCount": 100000,
+      "profile": false,
+      "count": 16,
+      "fps": 60,
+      "frames": 180,
+      "samples": 90,
+      "elapsedSec": 3.000000000000873,
+      "selectedPolicy": {
+        "maxEmissionsPerFrame": 512,
+        "maxActiveParticles": 16384
+      },
+      "liveParticles": 16384,
+      "totals": {
+        "requestedDemand": 48000,
+        "emissions": 48000,
+        "spatiallyRejectedDemand": 0,
+        "budgetRejectedDemand": 0,
+        "rateLimitedDemand": 0,
+        "retentionRejectedDemand": 0,
+        "expired": 0,
+        "evicted": 31616,
+        "expiryVisits": 2864,
+        "heapComparisons": 870015,
+        "schedulingVisits": 50880
+      },
+      "heapAdmissionCalls": null,
+      "heapRetirementCalls": null,
+      "history": [
+        {
+          "id": "SYNTHETIC-0",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-1",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-2",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-3",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-4",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-5",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-6",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-7",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-8",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-9",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-10",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-11",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-12",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-13",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-14",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        },
+        {
+          "id": "SYNTHETIC-15",
+          "live": 1024,
+          "historySec": 1.01666666666695,
+          "angularAdvanceRad": 3.000000000000801,
+          "angularSpeedRadPerSec": 1,
+          "chirality": 1
+        }
+      ],
+      "summary": {
+        "totalCallbackMs": {
+          "p50": 11.199999999254942,
+          "p95": 84.67499999981374,
+          "mean": 42.07661111111649
+        }
+      },
+      "timings": [
+        {
+          "totalCallbackMs": 9.709999999962747
+        },
+        {
+          "totalCallbackMs": 84.23499999940395
+        },
+        {
+          "totalCallbackMs": 10.669999999925494
+        },
+        {
+          "totalCallbackMs": 9.25
+        },
+        {
+          "totalCallbackMs": 81.0449999999255
+        },
+        {
+          "totalCallbackMs": 9.955000000074506
+        },
+        {
+          "totalCallbackMs": 83.98000000044703
+        },
+        {
+          "totalCallbackMs": 9.175000000745058
+        },
+        {
+          "totalCallbackMs": 85.1949999993667
+        },
+        {
+          "totalCallbackMs": 10.299999999813735
+        },
+        {
+          "totalCallbackMs": 83.02500000037253
+        },
+        {
+          "totalCallbackMs": 11.199999999254942
+        },
+        {
+          "totalCallbackMs": 9.849999999627471
+        },
+        {
+          "totalCallbackMs": 83.64000000059605
+        },
+        {
+          "totalCallbackMs": 9.855000000447035
+        },
+        {
+          "totalCallbackMs": 84.29999999981374
+        },
+        {
+          "totalCallbackMs": 10.054999999701977
+        },
+        {
+          "totalCallbackMs": 82.6000000005588
+        },
+        {
+          "totalCallbackMs": 10.440000000409782
+        },
+        {
+          "totalCallbackMs": 11.009999999776483
+        },
+        {
+          "totalCallbackMs": 83.4550000000745
+        },
+        {
+          "totalCallbackMs": 10.849999999627471
+        },
+        {
+          "totalCallbackMs": 83.20000000018626
+        },
+        {
+          "totalCallbackMs": 10.149999999441206
+        },
+        {
+          "totalCallbackMs": 83.77000000048429
+        },
+        {
+          "totalCallbackMs": 10.735000000335276
+        },
+        {
+          "totalCallbackMs": 82.40000000037253
+        },
+        {
+          "totalCallbackMs": 10.644999999552965
+        },
+        {
+          "totalCallbackMs": 9.105000000447035
+        },
+        {
+          "totalCallbackMs": 82.81500000040978
+        },
+        {
+          "totalCallbackMs": 9.565000000409782
+        },
+        {
+          "totalCallbackMs": 91.64500000048429
+        },
+        {
+          "totalCallbackMs": 12.140000000596046
+        },
+        {
+          "totalCallbackMs": 83.86500000022352
+        },
+        {
+          "totalCallbackMs": 12.5550000006333
+        },
+        {
+          "totalCallbackMs": 88.80499999970198
+        },
+        {
+          "totalCallbackMs": 14.660000000149012
+        },
+        {
+          "totalCallbackMs": 9.745000000111759
+        },
+        {
+          "totalCallbackMs": 81.99500000011176
+        },
+        {
+          "totalCallbackMs": 9.359999999403954
+        },
+        {
+          "totalCallbackMs": 82.0449999999255
+        },
+        {
+          "totalCallbackMs": 9.440000000409782
+        },
+        {
+          "totalCallbackMs": 80.87999999988824
+        },
+        {
+          "totalCallbackMs": 10.974999999627471
+        },
+        {
+          "totalCallbackMs": 10.18999999947846
+        },
+        {
+          "totalCallbackMs": 81.31499999947846
+        },
+        {
+          "totalCallbackMs": 11.245000000111759
+        },
+        {
+          "totalCallbackMs": 79.01499999966472
+        },
+        {
+          "totalCallbackMs": 9.40500000026077
+        },
+        {
+          "totalCallbackMs": 80.9199999999255
+        },
+        {
+          "totalCallbackMs": 9.665000000037253
+        },
+        {
+          "totalCallbackMs": 79.07499999925494
+        },
+        {
+          "totalCallbackMs": 10.705000000074506
+        },
+        {
+          "totalCallbackMs": 10.330000000074506
+        },
+        {
+          "totalCallbackMs": 79.63999999966472
+        },
+        {
+          "totalCallbackMs": 9.009999999776483
+        },
+        {
+          "totalCallbackMs": 82.45000000018626
+        },
+        {
+          "totalCallbackMs": 10.150000000372529
+        },
+        {
+          "totalCallbackMs": 81.81000000052154
+        },
+        {
+          "totalCallbackMs": 9.265000000596046
+        },
+        {
+          "totalCallbackMs": 9.419999999925494
+        },
+        {
+          "totalCallbackMs": 84.08999999985099
+        },
+        {
+          "totalCallbackMs": 9.459999999962747
+        },
+        {
+          "totalCallbackMs": 83.08999999985099
+        },
+        {
+          "totalCallbackMs": 9.700000000186265
+        },
+        {
+          "totalCallbackMs": 82.06500000040978
+        },
+        {
+          "totalCallbackMs": 9.544999999925494
+        },
+        {
+          "totalCallbackMs": 81.05499999970198
+        },
+        {
+          "totalCallbackMs": 10.839999999850988
+        },
+        {
+          "totalCallbackMs": 9.495000000111759
+        },
+        {
+          "totalCallbackMs": 85.41500000003725
+        },
+        {
+          "totalCallbackMs": 12.269999999552965
+        },
+        {
+          "totalCallbackMs": 83.34499999973923
+        },
+        {
+          "totalCallbackMs": 10.68999999947846
+        },
+        {
+          "totalCallbackMs": 83.02500000037253
+        },
+        {
+          "totalCallbackMs": 10.224999999627471
+        },
+        {
+          "totalCallbackMs": 8.660000000149012
+        },
+        {
+          "totalCallbackMs": 84.67499999981374
+        },
+        {
+          "totalCallbackMs": 8.570000000298023
+        },
+        {
+          "totalCallbackMs": 82.14500000048429
+        },
+        {
+          "totalCallbackMs": 10.169999999925494
+        },
+        {
+          "totalCallbackMs": 80.72999999951571
+        },
+        {
+          "totalCallbackMs": 9.854999999515712
+        },
+        {
+          "totalCallbackMs": 80.80499999970198
+        },
+        {
+          "totalCallbackMs": 10.040000000037253
+        },
+        {
+          "totalCallbackMs": 9.21999999973923
+        },
+        {
+          "totalCallbackMs": 83.6800000006333
+        },
+        {
+          "totalCallbackMs": 8.90500000026077
+        },
+        {
+          "totalCallbackMs": 115.80999999959022
+        },
+        {
+          "totalCallbackMs": 11.419999999925494
+        }
+      ],
+      "livePolicyChange": {
+        "from": 16384,
+        "to": 8192,
+        "retired": 8192,
+        "trimMs": 2.264999999664724
+      },
+      "cssViewport": [
+        1280,
+        800
+      ],
+      "dpr": 1,
+      "stationaryEmitterSeam": false,
+      "case": "dense-sixteen",
+      "mode": "hv",
+      "trial": 4,
+      "heapMetrics": {
+        "before": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7531.013129
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 0
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 0
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 76
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 1182
+            },
+            {
+              "name": "Resources",
+              "value": 1
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 33
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 0
+            },
+            {
+              "name": "LayoutCount",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 0
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.000014
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 0.000017
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 0.000003
+            },
+            {
+              "name": "ThreadTime",
+              "value": 0.000047
+            },
+            {
+              "name": "ProcessTime",
+              "value": 0.07
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 631200
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 1048576
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7530.977988
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7530.862547
+            }
+          ]
+        },
+        "after": {
+          "metrics": [
+            {
+              "name": "Timestamp",
+              "value": 7537.851389
+            },
+            {
+              "name": "AudioHandlers",
+              "value": 10
+            },
+            {
+              "name": "AudioWorkletProcessors",
+              "value": 0
+            },
+            {
+              "name": "Documents",
+              "value": 1
+            },
+            {
+              "name": "Frames",
+              "value": 1
+            },
+            {
+              "name": "JSEventListeners",
+              "value": 1965
+            },
+            {
+              "name": "LayoutObjects",
+              "value": 981
+            },
+            {
+              "name": "MediaKeySessions",
+              "value": 0
+            },
+            {
+              "name": "MediaKeys",
+              "value": 0
+            },
+            {
+              "name": "Nodes",
+              "value": 14099
+            },
+            {
+              "name": "Resources",
+              "value": 42
+            },
+            {
+              "name": "ContextLifecycleStateObservers",
+              "value": 359
+            },
+            {
+              "name": "V8PerContextDatas",
+              "value": 2
+            },
+            {
+              "name": "WorkerGlobalScopes",
+              "value": 0
+            },
+            {
+              "name": "UACSSResources",
+              "value": 0
+            },
+            {
+              "name": "RTCPeerConnections",
+              "value": 0
+            },
+            {
+              "name": "ResourceFetchers",
+              "value": 1
+            },
+            {
+              "name": "AdSubframes",
+              "value": 0
+            },
+            {
+              "name": "DetachedScriptStates",
+              "value": 0
+            },
+            {
+              "name": "ArrayBufferContents",
+              "value": 7
+            },
+            {
+              "name": "LayoutCount",
+              "value": 363
+            },
+            {
+              "name": "RecalcStyleCount",
+              "value": 363
+            },
+            {
+              "name": "LayoutDuration",
+              "value": 0.061315
+            },
+            {
+              "name": "RecalcStyleDuration",
+              "value": 0.012812
+            },
+            {
+              "name": "DevToolsCommandDuration",
+              "value": 0.001773
+            },
+            {
+              "name": "ScriptDuration",
+              "value": 0.027864
+            },
+            {
+              "name": "V8CompileDuration",
+              "value": 0
+            },
+            {
+              "name": "TaskDuration",
+              "value": 6.589164
+            },
+            {
+              "name": "TaskOtherDuration",
+              "value": 6.4854
+            },
+            {
+              "name": "ThreadTime",
+              "value": 6.580815
+            },
+            {
+              "name": "ProcessTime",
+              "value": 6.89
+            },
+            {
+              "name": "JSHeapUsedSize",
+              "value": 12937744
+            },
+            {
+              "name": "JSHeapTotalSize",
+              "value": 26476544
+            },
+            {
+              "name": "FirstMeaningfulPaint",
+              "value": 0
+            },
+            {
+              "name": "DomContentLoaded",
+              "value": 7530.977988
+            },
+            {
+              "name": "NavigationStart",
+              "value": 7530.862547
+            }
+          ]
+        }
+      },
+      "nonEquivalent": false
+    }
+  ],
+  "errors": [],
+  "browser": "151.0.7922.173"
+}

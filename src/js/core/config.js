@@ -6,7 +6,7 @@ const SIMULATION_MAX_DELTA_TIME_SEC = 1 / 30;
 const DEFAULT_ORB_BEHAVIOR = {
   motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
   response: { minRadiusFrac: 0.01, maxRadiusFrac: 0.80, waveformRadialDisplaceFrac: 0.10 },
-  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0 },
+  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0, minPlacementDistancePx: 0.5 },
   trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand" },
 };
 
@@ -464,11 +464,15 @@ bands: {
     timing: {
       maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC,
     },
+    particleSafety: { maxEmissionsPerFrame: 512, maxActiveParticles: 16384 },
   },
 
   limits: {
-    particleSafety: { maxEmissionsPerFrame: 512, maxActiveParticles: 16384 },
-    timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC },
+    particleSafety: {
+      maxEmissionsPerFrame: { min: 0, max: 16384, step: 1 },
+      maxActiveParticles: { min: 0, max: 1048576, step: 1 },
+    },
+    timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC, motionDiscontinuitySec: 0.5 },
     trace: {
       numLines: { min: 10, max: 1000, step: 10 },
       lineAlpha: { min: 0, max: 1, step: 0.01 },
@@ -481,6 +485,7 @@ bands: {
       sizeMinPx: { min: 0.5, max: 6, step: 0.1 },
       sizeToMinSec: { min: 0.1, max: 120, step: 0.1 },
       ttlSec: { min: 0.1, max: 600, step: 0.1 },
+      minPlacementDistancePx: { min: 0, max: 10, step: 0.1 },
     },
 
     motion: {

@@ -1,0 +1,27 @@
+[
+  {
+    "mutation": "unconditional-duplicates",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "no-dpr-conversion",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "reject-exact-threshold",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "compare-oldest-history",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "retain-whole-debt",
+    "detected": true,
+    "exitCode": 1
+  }
+]

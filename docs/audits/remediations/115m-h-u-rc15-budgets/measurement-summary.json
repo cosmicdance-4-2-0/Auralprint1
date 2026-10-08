@@ -1,0 +1,642 @@
+[
+  {
+    "scenario": "default-two",
+    "spacing": 0.5,
+    "variant": "H.T defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 9600,
+      "spatiallyRejectedDemand": 8800,
+      "emissions": 800,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 560,
+      "placementComparisons": 2398,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 240,
+    "averageRetainedHistorySec": 5.983333333333334,
+    "averageTraceHistorySec": 0.5,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.0025
+      },
+      "visualizerUpdateMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.0183
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.3,
+        "p95": 1,
+        "mean": 0.505
+      },
+      "totalCallbackMs": {
+        "p50": 1.1,
+        "p95": 2.7,
+        "mean": 1.635
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "default-two",
+    "spacing": 0.5,
+    "variant": "H.U defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 9600,
+      "spatiallyRejectedDemand": 8800,
+      "emissions": 800,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 560,
+      "placementComparisons": 2398,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 240,
+    "averageRetainedHistorySec": 5.983333333333334,
+    "averageTraceHistorySec": 0.5,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0
+      },
+      "visualizerUpdateMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.0217
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.2,
+        "p95": 0.6,
+        "mean": 0.3133
+      },
+      "totalCallbackMs": {
+        "p50": 1,
+        "p95": 2.3,
+        "mean": 1.4767
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "default-two",
+    "spacing": 0.5,
+    "variant": "H.U expert",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 65536
+    },
+    "totals": {
+      "requestedDemand": 9600,
+      "spatiallyRejectedDemand": 8800,
+      "emissions": 800,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 560,
+      "placementComparisons": 2398,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 240,
+    "averageRetainedHistorySec": 5.983333333333334,
+    "averageTraceHistorySec": 0.5,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.0017
+      },
+      "visualizerUpdateMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.0292
+      },
+      "canvasSubmissionMs": {
+        "p50": 0.3,
+        "p95": 0.7,
+        "mean": 0.3692
+      },
+      "totalCallbackMs": {
+        "p50": 1.2,
+        "p95": 2.5,
+        "mean": 1.7892
+      }
+    },
+    "retentionReductionTrials": [
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "syncAndTrimMs": 0.19999999972060323
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "syncAndTrimMs": 0.10000000009313226
+      },
+      {
+        "from": 240,
+        "to": 240,
+        "retired": 0,
+        "syncAndTrimMs": 0.10000000009313226
+      }
+    ]
+  },
+  {
+    "scenario": "default-two",
+    "spacing": 0,
+    "variant": "H.T defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 9600,
+      "spatiallyRejectedDemand": 0,
+      "emissions": 9600,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 6720,
+      "placementComparisons": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 2880,
+    "averageRetainedHistorySec": 5.983333333333334,
+    "averageTraceHistorySec": 0.03333333333333144,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.0042
+      },
+      "visualizerUpdateMs": {
+        "p50": 0,
+        "p95": 0.2,
+        "mean": 0.0558
+      },
+      "canvasSubmissionMs": {
+        "p50": 1.5,
+        "p95": 53.6,
+        "mean": 5.7917
+      },
+      "totalCallbackMs": {
+        "p50": 2.5,
+        "p95": 54.8,
+        "mean": 6.9233
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "default-two",
+    "spacing": 0,
+    "variant": "H.U defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 9600,
+      "spatiallyRejectedDemand": 0,
+      "emissions": 9600,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 6720,
+      "placementComparisons": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 2880,
+    "averageRetainedHistorySec": 5.983333333333334,
+    "averageTraceHistorySec": 0.03333333333333144,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.0008
+      },
+      "visualizerUpdateMs": {
+        "p50": 0,
+        "p95": 0.2,
+        "mean": 0.0608
+      },
+      "canvasSubmissionMs": {
+        "p50": 1.6,
+        "p95": 53.6,
+        "mean": 5.7892
+      },
+      "totalCallbackMs": {
+        "p50": 2.5,
+        "p95": 55.3,
+        "mean": 7.2325
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "default-two",
+    "spacing": 0,
+    "variant": "H.U expert",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 65536
+    },
+    "totals": {
+      "requestedDemand": 9600,
+      "spatiallyRejectedDemand": 0,
+      "emissions": 9600,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 6720,
+      "placementComparisons": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 2880,
+    "averageRetainedHistorySec": 5.983333333333334,
+    "averageTraceHistorySec": 0.03333333333333144,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0,
+        "mean": 0.0017
+      },
+      "visualizerUpdateMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.05
+      },
+      "canvasSubmissionMs": {
+        "p50": 1.5,
+        "p95": 52.9,
+        "mean": 5.8017
+      },
+      "totalCallbackMs": {
+        "p50": 2.4,
+        "p95": 54.7,
+        "mean": 6.9567
+      }
+    },
+    "retentionReductionTrials": [
+      {
+        "from": 2880,
+        "to": 2880,
+        "retired": 0,
+        "syncAndTrimMs": 0
+      },
+      {
+        "from": 2880,
+        "to": 2880,
+        "retired": 0,
+        "syncAndTrimMs": 0
+      },
+      {
+        "from": 2880,
+        "to": 2880,
+        "retired": 0,
+        "syncAndTrimMs": 0
+      }
+    ]
+  },
+  {
+    "scenario": "moving-sixteen",
+    "spacing": 0.5,
+    "variant": "H.T defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 320000,
+      "spatiallyRejectedDemand": 300800,
+      "emissions": 19200,
+      "droppedDemand": 0,
+      "evicted": 2816,
+      "expired": 0,
+      "placementComparisons": 19184,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 16384,
+    "averageRetainedHistorySec": 17.049999999999997,
+    "averageTraceHistorySec": 0.1666666666666714,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.0183
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.4,
+        "p95": 0.7,
+        "mean": 0.4167
+      },
+      "canvasSubmissionMs": {
+        "p50": 9.6,
+        "p95": 59.4,
+        "mean": 29.9858
+      },
+      "totalCallbackMs": {
+        "p50": 12.4,
+        "p95": 62.2,
+        "mean": 32.8642
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "moving-sixteen",
+    "spacing": 0.5,
+    "variant": "H.U defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 320000,
+      "spatiallyRejectedDemand": 300800,
+      "emissions": 19200,
+      "droppedDemand": 0,
+      "evicted": 2816,
+      "expired": 0,
+      "placementComparisons": 19184,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 16384,
+    "averageRetainedHistorySec": 17.049999999999997,
+    "averageTraceHistorySec": 0.1666666666666714,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.0158
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.4,
+        "p95": 0.8,
+        "mean": 0.4817
+      },
+      "canvasSubmissionMs": {
+        "p50": 11.4,
+        "p95": 61.6,
+        "mean": 30.5
+      },
+      "totalCallbackMs": {
+        "p50": 14.5,
+        "p95": 64.7,
+        "mean": 33.5033
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "moving-sixteen",
+    "spacing": 0.5,
+    "variant": "H.U expert",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 65536
+    },
+    "totals": {
+      "requestedDemand": 320000,
+      "spatiallyRejectedDemand": 300800,
+      "emissions": 19200,
+      "droppedDemand": 0,
+      "evicted": 0,
+      "expired": 0,
+      "placementComparisons": 19184,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 19200,
+    "averageRetainedHistorySec": 19.983333333333334,
+    "averageTraceHistorySec": 0.1666666666666714,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0,
+        "p95": 0.1,
+        "mean": 0.0058
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.4,
+        "p95": 0.7,
+        "mean": 0.4708
+      },
+      "canvasSubmissionMs": {
+        "p50": 12.3,
+        "p95": 60.1,
+        "mean": 33.0325
+      },
+      "totalCallbackMs": {
+        "p50": 16.8,
+        "p95": 63.1,
+        "mean": 36.0333
+      }
+    },
+    "retentionReductionTrials": [
+      {
+        "from": 19200,
+        "to": 8192,
+        "retired": 11008,
+        "syncAndTrimMs": 5.399999999906868
+      },
+      {
+        "from": 19200,
+        "to": 8192,
+        "retired": 11008,
+        "syncAndTrimMs": 3.8999999999068677
+      },
+      {
+        "from": 19200,
+        "to": 8192,
+        "retired": 11008,
+        "syncAndTrimMs": 4
+      }
+    ]
+  },
+  {
+    "scenario": "moving-sixteen",
+    "spacing": 0,
+    "variant": "H.T defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 320000,
+      "spatiallyRejectedDemand": 0,
+      "emissions": 320000,
+      "droppedDemand": 0,
+      "evicted": 303616,
+      "expired": 0,
+      "placementComparisons": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 16384,
+    "averageRetainedHistorySec": 1.0166666666666657,
+    "averageTraceHistorySec": 0,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0.1,
+        "p95": 0.2,
+        "mean": 0.1025
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.5,
+        "p95": 1.1,
+        "mean": 0.6133
+      },
+      "canvasSubmissionMs": {
+        "p50": 8.9,
+        "p95": 87.7,
+        "mean": 40.45
+      },
+      "totalCallbackMs": {
+        "p50": 12.2,
+        "p95": 91.6,
+        "mean": 43.3775
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "moving-sixteen",
+    "spacing": 0,
+    "variant": "H.U defaults",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 16384
+    },
+    "totals": {
+      "requestedDemand": 320000,
+      "spatiallyRejectedDemand": 0,
+      "emissions": 320000,
+      "droppedDemand": 0,
+      "evicted": 303616,
+      "expired": 0,
+      "placementComparisons": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 16384,
+    "averageRetainedHistorySec": 1.0166666666666657,
+    "averageTraceHistorySec": 0,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0.1,
+        "p95": 0.2,
+        "mean": 0.0917
+      },
+      "visualizerUpdateMs": {
+        "p50": 0.6,
+        "p95": 1.2,
+        "mean": 0.6275
+      },
+      "canvasSubmissionMs": {
+        "p50": 8.8,
+        "p95": 87.3,
+        "mean": 40.5967
+      },
+      "totalCallbackMs": {
+        "p50": 12.2,
+        "p95": 90.5,
+        "mean": 43.5558
+      }
+    },
+    "retentionReductionTrials": []
+  },
+  {
+    "scenario": "moving-sixteen",
+    "spacing": 0,
+    "variant": "H.U expert",
+    "selectedPolicy": {
+      "maxEmissionsPerFrame": 4096,
+      "maxActiveParticles": 65536
+    },
+    "totals": {
+      "requestedDemand": 320000,
+      "spatiallyRejectedDemand": 0,
+      "emissions": 320000,
+      "droppedDemand": 0,
+      "evicted": 254464,
+      "expired": 0,
+      "placementComparisons": 0,
+      "budgetRejectedDemand": 0,
+      "rateLimitedDemand": 0,
+      "retentionRejectedDemand": 0
+    },
+    "liveParticles": 65536,
+    "averageRetainedHistorySec": 4.083333333333329,
+    "averageTraceHistorySec": 0,
+    "timingsMedianAcrossTrials": {
+      "governorSchedulingMs": {
+        "p50": 0.1,
+        "p95": 0.2,
+        "mean": 0.0775
+      },
+      "visualizerUpdateMs": {
+        "p50": 1.3,
+        "p95": 1.7,
+        "mean": 1.36
+      },
+      "canvasSubmissionMs": {
+        "p50": 135.7,
+        "p95": 175.3,
+        "mean": 132.0483
+      },
+      "totalCallbackMs": {
+        "p50": 139.2,
+        "p95": 179.4,
+        "mean": 136.065
+      }
+    },
+    "retentionReductionTrials": [
+      {
+        "from": 65536,
+        "to": 8192,
+        "retired": 57344,
+        "syncAndTrimMs": 13.5
+      },
+      {
+        "from": 65536,
+        "to": 8192,
+        "retired": 57344,
+        "syncAndTrimMs": 13.799999999813735
+      },
+      {
+        "from": 65536,
+        "to": 8192,
+        "retired": 57344,
+        "syncAndTrimMs": 13.5
+      }
+    ]
+  }
+]

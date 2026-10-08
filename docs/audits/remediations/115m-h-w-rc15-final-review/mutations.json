@@ -1,0 +1,383 @@
+[
+  {
+    "mutation": "unconditional-duplicates",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.241909ms)",
+      "\u2716 integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (253.340231ms)",
+      "\u2716 integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (173.977981ms)",
+      "\u2716 integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (44.240893ms)",
+      "\u2716 integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (20.417034ms)",
+      "\u2716 integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.57487ms)",
+      "\u2716 spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (0.425013ms)",
+      "\u2716 spacing uses squared two-dimensional distance and only the most recent retained position (0.329578ms)",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 1 (0.309789ms)",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 2 (0.2846ms)",
+      "\u2716 stationary trail becomes eligible after TTL expiry, eviction, or explicit reset without a coordinate cache (0.365533ms)",
+      "\u2716 independent Orbs at identical locations admit independently and suppress before shared allocation (0.736894ms)"
+    ]
+  },
+  {
+    "mutation": "no-dpr-conversion",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 2 (0.920353ms)",
+      "\u2716 failing tests:",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 2 (0.920353ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "reject-exact-threshold",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (1.140135ms)",
+      "\u2716 spacing uses squared two-dimensional distance and only the most recent retained position (0.241605ms)",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 1 (0.279994ms)",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 2 (0.155595ms)",
+      "\u2716 failing tests:",
+      "\u2716 spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (1.140135ms)",
+      "  AssertionError [ERR_ASSERTION]: exact threshold accepted",
+      "\u2716 spacing uses squared two-dimensional distance and only the most recent retained position (0.241605ms)",
+      "  AssertionError [ERR_ASSERTION]: 3-4-5 exact squared threshold",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 1 (0.279994ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 CSS spacing and production Orb DPR wiring at DPR 2 (0.155595ms)"
+    ]
+  },
+  {
+    "mutation": "compare-oldest-history",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.53375ms)",
+      "\u2716 integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (72.017863ms)",
+      "\u2716 integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (13.436176ms)",
+      "\u2716 spacing uses squared two-dimensional distance and only the most recent retained position (0.371121ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.53375ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (72.017863ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (13.436176ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 spacing uses squared two-dimensional distance and only the most recent retained position (0.371121ms)"
+    ]
+  },
+  {
+    "mutation": "retain-whole-debt",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (5.399878ms)",
+      "\u2716 integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (1.501691ms)",
+      "\u2716 RC-15 phase 2: exact aggregate frame limit with 1 accepted Orbs (0.599297ms)",
+      "\u2716 RC-15 phase 2: exact aggregate frame limit with 2 accepted Orbs (0.423971ms)",
+      "\u2716 RC-15 phase 2: exact aggregate frame limit with 256 accepted Orbs (4.620529ms)",
+      "\u2716 RC-15 phase 2: exact aggregate frame limit with 4096 accepted Orbs (79.570698ms)",
+      "\u2716 RC-15 phase 2: normal 60/120 Hz scenes preserve exact fractional frequency, positions and color (38.657768ms)",
+      "\u2716 RC-15 phase 2: high, nonfinite and corrupt demand cannot create debt or unbounded loops (11.770795ms)",
+      "\u2716 RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (0.505765ms)",
+      "\u2716 RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (0.702192ms)",
+      "\u2716 RC-15 phase 2: denied whole demand is discarded while fractional remainder stays smooth (0.567368ms)",
+      "\u2716 RC-15 phase 2: pause, stall resume and zero delta do not create a compensating burst or disturb Ring phase (3.234433ms)"
+    ]
+  },
+  {
+    "mutation": "old-emission-cap",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: one integer normalization contract for sanitation, resolution and active governor (6.41233ms)",
+      "\u2716 budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (1.039132ms)",
+      "\u2716 budgets: actual upper-budget admissions exceed both retired immutable ceilings (3.872138ms)",
+      "\u2716 RC-15 phase 2: default budgets are independent and frozen; governor state is absent from presets (0.767271ms)",
+      "\u2716 motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field (0.563072ms)",
+      "\u2716 budget numeric editing commits change only, refuses invalid/empty, preserves focus and listener identity (0.899741ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: one integer normalization contract for sanitation, resolution and active governor (6.41233ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (1.039132ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 budgets: actual upper-budget admissions exceed both retired immutable ceilings (3.872138ms)"
+    ]
+  },
+  {
+    "mutation": "old-retention-cap",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: one integer normalization contract for sanitation, resolution and active governor (9.852825ms)",
+      "\u2716 budgets: actual upper-budget admissions exceed both retired immutable ceilings (26.531395ms)",
+      "\u2716 100,000 unexpired ordered particles require one age inspection, including live TTL changes (48.601961ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: one integer normalization contract for sanitation, resolution and active governor (9.852825ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 budgets: actual upper-budget admissions exceed both retired immutable ceilings (26.531395ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 100,000 unexpired ordered particles require one age inspection, including live TTL changes (48.601961ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "governor-recreation",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (7.546896ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (7.546896ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected \"actual\" to be reference-equal to \"expected\":"
+    ]
+  },
+  {
+    "mutation": "missing-retention-trim",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (6624.245857ms)",
+      "\u2716 budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (2.050131ms)",
+      "\u2716 budgets: actual upper-budget admissions exceed both retired immutable ceilings (12.650987ms)",
+      "\u2716 budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (1.27565ms)",
+      "\u2716 budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (2.897203ms)",
+      "\u2716 integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (6.238557ms)",
+      "\u2716 integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.679058ms)",
+      "\u2716 unordered supported timestamps use safe fallback; transfer/eviction/reset preserve or restore ordering flag (0.800812ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (6624.245857ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (2.050131ms)"
+    ]
+  },
+  {
+    "mutation": "stale-runtime-policy",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (1.969409ms)",
+      "\u2716 budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (2.381713ms)",
+      "\u2716 integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (5.081717ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (1.969409ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (2.381713ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (5.081717ms)",
+      "  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:"
+    ]
+  },
+  {
+    "mutation": "incorrect-zero-retention",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.656773ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.656773ms)",
+      "  TypeError: Cannot read properties of undefined (reading 'heapIndex')"
+    ]
+  },
+  {
+    "mutation": "persist-runtime-counter",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: one integer normalization contract for sanitation, resolution and active governor (3.432673ms)",
+      "\u2716 budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (1.237702ms)",
+      "\u2716 RC-15 phase 2: default budgets are independent and frozen; governor state is absent from presets (1.59976ms)",
+      "\u2716 motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field (0.538915ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: one integer normalization contract for sanitation, resolution and active governor (3.432673ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (1.237702ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 RC-15 phase 2: default budgets are independent and frozen; governor state is absent from presets (1.59976ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field (0.538915ms)"
+    ]
+  },
+  {
+    "mutation": "capped-orb-motion",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (6.424108ms)",
+      "\u2716 integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.395581ms)",
+      "\u2716 integrated: long-running phase modulo stays finite; track reset keeps phase and visual reset restores design (2.680294ms)",
+      "\u2716 production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.801372ms)",
+      "\u2716 production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (0.739108ms)",
+      "\u2716 production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.754361ms)",
+      "\u2716 production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (0.664625ms)",
+      "\u2716 motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (0.785888ms)",
+      "\u2716 production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.732778ms)",
+      "\u2716 production callback: hidden/rebased foreground never integrates missed work; invalid timestamps recover (0.771448ms)",
+      "\u2716 Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (0.688342ms)",
+      "\u2716 slow 5 FPS history spans real TTL motion, fade uses real particle age (0.889716ms)"
+    ]
+  },
+  {
+    "mutation": "unbounded-motion-catchup",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (1.462929ms)",
+      "\u2716 production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.865567ms)",
+      "\u2716 failing tests:",
+      "\u2716 motion threshold: frozen CONFIG .5, exact boundary, just above, invalid/negative/zero intervals (1.462929ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 production callback: 120-second stall ages/expires history, retains fractions, no catch-up, recovers (0.865567ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "unbounded-emission-delta",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (4.66986ms)",
+      "\u2716 production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (0.962743ms)",
+      "\u2716 production callback: 10 FPS chirality -1 integrates one second of motion and independent emission delta (0.855642ms)",
+      "\u2716 production callback: 10 FPS chirality 1 integrates one second of motion and independent emission delta (1.047812ms)",
+      "\u2716 production callback: 5 FPS chirality -1 integrates one second of motion and independent emission delta (0.856023ms)",
+      "\u2716 production callback: 5 FPS chirality 1 integrates one second of motion and independent emission delta (1.524232ms)",
+      "\u2716 smaller selected emission delta never slows independent motion (1.357029ms)",
+      "\u2716 failing tests:",
+      "\u2716 production callback: 30 FPS chirality -1 integrates one second of motion and independent emission delta (4.66986ms)",
+      "  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:",
+      "\u2716 production callback: 30 FPS chirality 1 integrates one second of motion and independent emission delta (0.962743ms)",
+      "  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:"
+    ]
+  },
+  {
+    "mutation": "full-trail-expiry-scan",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.777807ms)",
+      "\u2716 ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.169817ms)",
+      "\u2716 100,000 unexpired ordered particles require one age inspection, including live TTL changes (77.188835ms)",
+      "\u2716 failing tests:",
+      "\u2716 ordered expiry [0,0.5,1] at 0.9: 0 retirements/1 age inspections (0.777807ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.169817ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 100,000 unexpired ordered particles require one age inspection, including live TTL changes (77.188835ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "incorrect-unordered-early-exit",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (1.407128ms)",
+      "\u2716 unordered supported timestamps use safe fallback; transfer/eviction/reset preserve or restore ordering flag (0.668712ms)",
+      "\u2716 failing tests:",
+      "\u2716 integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (1.407128ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 unordered supported timestamps use safe fallback; transfer/eviction/reset preserve or restore ordering flag (0.668712ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "broken-retirement-ownership",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (1.493109ms)",
+      "\u2716 integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (5.475703ms)",
+      "\u2716 RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (0.93852ms)",
+      "\u2716 RC-15 phase 2: exact retention boundaries and same-timestamp oldest ordering retire before insertion (0.614239ms)",
+      "\u2716 RC-15 phase 2: lifecycle removal/reset/disposal releases heap nodes, cursor and scene ownership (0.942896ms)",
+      "\u2716 ordered expiry [0] at 1: 1 retirements/1 age inspections (0.220213ms)",
+      "\u2716 ordered expiry [0,0.5,1] at 1: 1 retirements/2 age inspections (0.124268ms)",
+      "\u2716 ordered expiry [0,0.5,1] at 1.5: 2 retirements/3 age inspections (0.186752ms)",
+      "\u2716 ordered expiry [0,0.5,1] at 2: 3 retirements/3 age inspections (0.188775ms)",
+      "\u2716 ordered expiry [0,0,0,1] at 1: 3 retirements/4 age inspections (0.162936ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (1.493109ms)"
+    ]
+  },
+  {
+    "mutation": "stale-diagnostics",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 diagnostics read actual governor fields even with unchanged settings; unchanged text avoids DOM writes (1.068337ms)",
+      "\u2716 failing tests:",
+      "\u2716 diagnostics read actual governor fields even with unchanged settings; unchanged text avoids DOM writes (1.068337ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "free-ring-pause-ignored",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.462843ms)",
+      "\u2716 failing tests:",
+      "\u2716 Orb lock reads current phase; free Ring/Orb pause freeze while lifetime expires without debt (1.462843ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    ]
+  },
+  {
+    "mutation": "youngest-first-eviction",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (72.194221ms)",
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (4.378393ms)",
+      "\u2716 integrated: eligible low-rate demand survives sustained competition, reorder and live policy changes without debt (1.036718ms)",
+      "\u2716 integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (106.515876ms)",
+      "\u2716 integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (16.317612ms)",
+      "\u2716 integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (3.144196ms)",
+      "\u2716 integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.251453ms)",
+      "\u2716 integrated: 200 lifecycle/policy churn cycles preserve survivors, release replaced owners and retain bounded scheduling work (1.653861ms)",
+      "\u2716 integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.393986ms)",
+      "\u2716 RC-15 phase 2: oldest means birth timestamp across trails, with independent TTL expiry and replacement (0.690304ms)",
+      "\u2716 RC-15 phase 2: actual 16,384-particle cap holds during sustained aggregate overload (24.167506ms)",
+      "\u2716 failing tests:"
+    ]
+  },
+  {
+    "mutation": "spacing-consumes-allocation",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.248098ms)",
+      "\u2716 budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.795145ms)",
+      "\u2716 integrated synthetic 16-Orb history: 10 FPS covers TTL rotation; Trace suffix remains independent (4.894243ms)",
+      "\u2716 integrated synthetic 16-Orb history: 5 FPS covers TTL rotation; Trace suffix remains independent (1.211984ms)",
+      "\u2716 integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership (0.623653ms)",
+      "\u2716 independent Orbs at identical locations admit independently and suppress before shared allocation (0.421057ms)",
+      "\u2716 many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (0.330931ms)",
+      "\u2716 nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (1.774324ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.248098ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (1.795145ms)"
+    ]
+  },
+  {
+    "mutation": "lost-fair-priority",
+    "detected": true,
+    "exitCode": 1,
+    "failingChecks": [
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.522913ms)",
+      "\u2716 RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (2.057583ms)",
+      "\u2716 RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (1.049378ms)",
+      "\u2716 RC-15 phase 2: periodic low-rate demand cannot starve through cursor/clock alignment (0.854102ms)",
+      "\u2716 many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (1.122858ms)",
+      "\u2716 failing tests:",
+      "\u2716 budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.522913ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "\u2716 RC-15 phase 2: one-particle quanta and persistent service priority prevent later-Orb starvation with a tiny budget (2.057583ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:",
+      "\u2716 RC-15 phase 2: fairness skips zero demand, serves unequal rates, wraps and survives reorder/removal/add (1.049378ms)",
+      "  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:"
+    ]
+  }
+]

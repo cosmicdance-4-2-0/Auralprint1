@@ -1,4 +1,4 @@
-import { simulationDeltaSec } from "./core/timing.js";
+import { simulationDeltaSec, visualMotionDeltaSec } from "./core/timing.js";
 import { CONFIG } from "./core/config.js";
 import { runtime, resolveSettings } from "./core/preferences.js";
 import { state } from "./core/state.js";
@@ -20,7 +20,8 @@ import { VisualizerRuntime } from "./render/visualizer-runtime.js";
    ========================================================================== */
 const analysisFrame = createAnalysisFrame();
 const visualizerFrameContext = {
-  dtSec: 0,
+  dtSec: 0, // Existing bounded emission-work delta.
+  motionDtSec: 0, // Visible elapsed time, with discontinuities discarded.
   nowSec: 0,
   simPaused: false,
   analysisFrame,
@@ -31,29 +32,31 @@ function onAnimationFrame(tsMs) {
 
   resizeCanvasToDisplaySize();
 
-  if (state.time.lastTimestampMs === null) {
-    state.time.lastTimestampMs = tsMs;
-    return;
-  }
-
-  const dtSecRaw = (tsMs - state.time.lastTimestampMs) / 1000;
-  state.time.lastTimestampMs = tsMs;
-
-  // Integrate with real frame time, but cap to a single "slow frame" (~33 ms)
-  // so tab-switch or GC spikes can't cause huge jumps. Normal 60/120 Hz frames
-  // stay untouched, lower bound remains 0, and downstream emit overflow guards stay valid.
-  const dtSec = simulationDeltaSec(dtSecRaw, runtime.settings.timing?.maxDeltaTimeSec);
+  const validTimestamp = Number.isFinite(tsMs) && tsMs >= 0;
+  const elapsedSec = validTimestamp && state.time.lastTimestampMs !== null
+    ? (tsMs - state.time.lastTimestampMs) / 1000 : 0;
+  // Always rebase: no motion or emission debt survives suspension/invalid time.
+  state.time.lastTimestampMs = validTimestamp ? tsMs : null;
+  const hidden = typeof document !== "undefined" && document.hidden === true;
+  const motionDtSec = hidden ? 0 : visualMotionDeltaSec(elapsedSec);
+  const dtSec = motionDtSec > 0
+    ? simulationDeltaSec(elapsedSec, runtime.settings.timing?.maxDeltaTimeSec) : 0;
   const nowSec = performance.now() / 1000;
 
   updateAnalysisFrame(analysisFrame, AudioEngine.sample(), state.bands);
 
   visualizerFrameContext.dtSec = dtSec;
+  visualizerFrameContext.motionDtSec = motionDtSec;
   visualizerFrameContext.nowSec = nowSec;
   visualizerFrameContext.simPaused = state.time.simPaused;
   VisualizerRuntime.update(visualizerFrameContext);
   VisualizerRuntime.render(Renderer, visualizerFrameContext);
   UI.refreshAllUiText(analysisFrame);
   Scrubber.draw(); // update playhead position every frame
+}
+
+function rebaseVisualFrameClock() {
+  state.time.lastTimestampMs = null;
 }
 
 function main() {
@@ -96,6 +99,7 @@ function main() {
 
   resizeCanvasToDisplaySize();
   window.addEventListener("resize", resizeCanvasToDisplaySize);
+  document.addEventListener("visibilitychange", rebaseVisualFrameClock);
 
   requestAnimationFrame(onAnimationFrame);
 }

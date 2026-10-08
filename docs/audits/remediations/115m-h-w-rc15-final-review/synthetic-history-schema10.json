@@ -1,0 +1,595 @@
+{
+  "schema": 10,
+  "prefs": {
+    "visuals": {
+      "backgroundColor": "#000000",
+      "particleColor": "#ffffff"
+    },
+    "audio": {
+      "fftSize": 8192,
+      "smoothingTimeConstant": 0.1,
+      "rmsGain": 1,
+      "repeatMode": "none",
+      "muted": false,
+      "volume": 1
+    },
+    "orbs": [
+      {
+        "id": "synthetic-history-0",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 0,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.2,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-1",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 0.39269908169872414,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.20500000000000002,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-2",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 0.7853981633974483,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.21000000000000002,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-3",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 1.1780972450961724,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.21500000000000002,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-4",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 1.5707963267948966,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.22,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-5",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 1.9634954084936207,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.225,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-6",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 2.356194490192345,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.23,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-7",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 2.748893571891069,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.23500000000000001,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-8",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 3.141592653589793,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.24000000000000002,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-9",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 3.5342917352885173,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.245,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-10",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 3.9269908169872414,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.25,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-11",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 4.319689898685965,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.255,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-12",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 4.71238898038469,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.26,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-13",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 5.105088062083414,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.265,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-14",
+        "chanId": "R",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 5.497787143782138,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.27,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      },
+      {
+        "id": "synthetic-history-15",
+        "chanId": "L",
+        "bandIds": [],
+        "chirality": 1,
+        "startAngleRad": 5.890486225480862,
+        "hueOffsetDeg": 0,
+        "colorSource": "inherit",
+        "centerXFrac": 0,
+        "centerYFrac": 0,
+        "motion": {
+          "angularSpeedRadPerSec": 0.5
+        },
+        "response": {
+          "minRadiusFrac": 0.275,
+          "maxRadiusFrac": 0.3,
+          "waveformRadialDisplaceFrac": 0.01
+        },
+        "particles": {
+          "emitPerSecond": 1000,
+          "sizeMaxPx": 8,
+          "sizeMinPx": 1,
+          "sizeToMinSec": 3,
+          "ttlSec": 14,
+          "minPlacementDistancePx": 0.5
+        },
+        "trace": {
+          "lines": true,
+          "numLines": 1000,
+          "lineAlpha": 0.35,
+          "lineWidthPx": 2,
+          "lineColorMode": "dominantBand"
+        }
+      }
+    ],
+    "bands": {
+      "count": 256,
+      "floorHz": 20,
+      "ceilingHz": 22500,
+      "distributionMode": "erb",
+      "overlay": {
+        "enabled": false,
+        "connectAdjacent": true,
+        "alpha": 0.65,
+        "pointSizePx": 3,
+        "minRadiusFrac": 0.01,
+        "maxRadiusFrac": 0.8,
+        "waveformRadialDisplaceFrac": 0.18,
+        "lineAlpha": 0.35,
+        "lineWidthPx": 1,
+        "phaseMode": "free",
+        "ringSpeedRadPerSec": 0
+      },
+      "rainbow": {
+        "hueOffsetDeg": 0,
+        "saturation": 0.9,
+        "value": 1
+      },
+      "particleColorSource": "dominant"
+    },
+    "timing": {
+      "maxDeltaTimeSec": 0.03333333333333333
+    },
+    "particleSafety": {
+      "maxEmissionsPerFrame": 512,
+      "maxActiveParticles": 65536
+    }
+  }
+}

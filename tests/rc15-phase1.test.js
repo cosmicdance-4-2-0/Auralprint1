@@ -6,7 +6,7 @@ import { CONFIG } from "../src/js/core/config.js";
 import { PRESET_SCHEMA_VERSION } from "../src/js/core/constants.js";
 import { preferences, runtime, replacePreferences, resolveSettings, normalizeOrbDef } from "../src/js/core/preferences.js";
 import { normalizeOrbCollection } from "../src/js/core/orb-collection.js";
-import { normalizeMaxDeltaTimeSec, simulationDeltaSec } from "../src/js/core/timing.js";
+import { normalizeMaxDeltaTimeSec, simulationDeltaSec, visualMotionDeltaSec } from "../src/js/core/timing.js";
 import { decodePresetPayload, encodePresetPayload, sanitizePreset } from "../src/js/presets/preset-codec.js";
 import { TrailSystem } from "../src/js/render/trail-system.js";
 
@@ -18,9 +18,9 @@ const timingCases = [
   ...[-1, 0, NaN, Infinity, -Infinity, undefined, null, "120", {}, []].map(value => [value, ceiling]),
 ];
 
-test("RC-15 phase 1: emitted particles at identical and nearby coordinates coexist until real-time TTL", () => {
+test("RC-15 phase 1: emitted particles at identical and nearby coordinates coexist until real-time TTL with spacing disabled", () => {
   const trail = new TrailSystem();
-  const settings = { ...CONFIG.defaults.orbs[0].particles, ttlSec: 1 };
+  const settings = { ...CONFIG.defaults.orbs[0].particles, ttlSec: 1, minPlacementDistancePx: 0 };
   for (const [x, y, now] of [[10, 20, 0], [10, 20, .25], [10.1, 20.1, .5]]) {
     trail.updateAndEmit(1 / 60, now, x, y, rgb, settings);
   }
@@ -62,7 +62,7 @@ test("RC-15 phase 1: development schema-10 overlap input decodes, strips, and pr
   const fallback = { ...CONFIG.defaults.orbs[0], particles: dirty.orbs[0].particles };
   for (const orb of [...CONFIG.defaults.orbs, ...normalizeOrbCollection(dirty.orbs), normalizeOrbDef({}, fallback)]) {
     assert.equal("overlapRadiusPx" in orb.particles, false);
-    assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec"]);
+    assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistancePx"]);
   }
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
@@ -114,7 +114,7 @@ test("RC-15 phase 1: production animation boundary discards stall time with no l
     const testState = { time: { lastTimestampMs: null, simPaused: false }, bands: {} };
     const testRuntime = { settings: { timing: { maxDeltaTimeSec: Number.MAX_VALUE } } };
     const context = vm.createContext({
-      CONFIG, state: testState, runtime: testRuntime, simulationDeltaSec,
+      CONFIG, state: testState, runtime: testRuntime, simulationDeltaSec, visualMotionDeltaSec,
       requestAnimationFrame() {}, resizeCanvasToDisplaySize() {},
       performance: { now: () => nowSec * 1000 }, createAnalysisFrame: () => ({}),
       updateAnalysisFrame() {}, AudioEngine: { sample: () => ({}) }, Renderer: {},
@@ -123,9 +123,9 @@ test("RC-15 phase 1: production animation boundary discards stall time with no l
     });
     vm.runInContext(source, context);
     const frame = ts => context.onAnimationFrame(ts);
-    frame(0); assert.equal(frames.length, 0);
+    frame(0); assert.equal(frames.length, 1); assert.equal(frames[0].dtSec, 0); assert.equal(frames[0].motionDtSec, 0);
     frame(1000 / 60); assert.equal(frames.at(-1).dtSec, 1 / 60);
-    frame(120000); assert.equal(frames.at(-1).dtSec, ceiling);
+    frame(120000); assert.equal(frames.at(-1).dtSec, 0); assert.equal(frames.at(-1).motionDtSec, 0);
     frame(120000 + 1000 / 60); assert.ok(Math.abs(frames.at(-1).dtSec - 1 / 60) < 1e-12);
     assert.equal(testState.time.lastTimestampMs, 120000 + 1000 / 60);
     assert.ok(frames.every(f => f.nowSec === nowSec && f.dtSec <= ceiling));
@@ -133,10 +133,10 @@ test("RC-15 phase 1: production animation boundary discards stall time with no l
     for (const [requested, expected] of timingCases) {
       testRuntime.settings.timing = { maxDeltaTimeSec: requested };
       ts += 120000; frame(ts);
-      assert.equal(frames.at(-1).dtSec, expected);
+      assert.equal(frames.at(-1).dtSec, 0, "suspension discards demand under every imported emission ceiling");
     }
     testRuntime.settings.timing = null; ts += 120000; frame(ts);
-    assert.equal(frames.at(-1).dtSec, ceiling);
+    assert.equal(frames.at(-1).dtSec, 0);
   }
 });
 
@@ -147,7 +147,7 @@ test("RC-15 phase 1: per-Orb burst guard is independent of imported timing and b
       runtime.settings = { timing: { maxDeltaTimeSec } };
       for (const rate of [240, 1000, 1e6, Number.MAX_VALUE]) {
         const trail = new TrailSystem();
-        const settings = { ...CONFIG.defaults.orbs[0].particles, emitPerSecond: rate };
+        const settings = { ...CONFIG.defaults.orbs[0].particles, emitPerSecond: rate, minPlacementDistancePx: 0 };
         trail.updateAndEmit(120, 0, 0, 0, rgb, settings);
         assert.equal(trail.particles.length, Math.ceil(Math.min(rate, CONFIG.limits.particles.emitPerSecond.max) * ceiling) + 2);
       }

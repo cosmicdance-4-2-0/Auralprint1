@@ -101,7 +101,7 @@ test("field inventory recursively covers every CONFIG default with distinguishab
   // the non-default fixture AND survive the independent round-trip assertion.
   // This guard does not use a second handwritten persistence field list.
   assert.deepEqual(paths(full), paths(CONFIG.defaults));
-  assert.equal(paths(full).length, 51);
+  assert.equal(paths(full).length, 54);
   for (const orb of full.orbs) assert.deepEqual(paths(orb), paths(CONFIG.defaults.orbs[0]));
   for (const path of paths(full).filter((path) => !path.startsWith("orbs[]"))) {
     assert.notDeepEqual(readPath(full, path), readPath(CONFIG.defaults, path), path);
@@ -117,7 +117,7 @@ test("complete non-default schema-10 fixture round-trips every field through URL
   assert.deepEqual(preferences, full);
   assert.deepEqual(preferences.orbs.map((orb) => orb.id), ["ORB-Z", "ORB-A", "CUSTOM-7"]);
   assert.deepEqual(Object.keys(payload).sort(), ["prefs", "schema"]);
-  assert.deepEqual(Object.keys(payload.prefs).sort(), ["audio", "bands", "orbs", "timing", "visuals"]);
+  assert.deepEqual(Object.keys(payload.prefs).sort(), ["audio", "bands", "orbs", "particleSafety", "timing", "visuals"]);
 }));
 
 test("pure codec round-trips the same complete fixture without browser globals or preference mutation", () => {
@@ -257,7 +257,7 @@ test("malformed values preserve existing clamps, defaults, enum rejection and de
     hueOffsetDeg: 360, colorSource: "inherit", centerXFrac: -.95, centerYFrac: .95,
     motion: { angularSpeedRadPerSec: .01 },
     response: { minRadiusFrac: .01, maxRadiusFrac: 1, waveformRadialDisplaceFrac: .1 },
-    particles: { emitPerSecond: 1000, sizeMaxPx: 2, sizeMinPx: 2, sizeToMinSec: 8, ttlSec: 8 },
+    particles: { emitPerSecond: 1000, sizeMaxPx: 2, sizeMinPx: 2, sizeToMinSec: 8, ttlSec: 8, minPlacementDistancePx: 0.5 },
     trace: { lines: true, numLines: 1000, lineAlpha: 0, lineWidthPx: 6, lineColorMode: "dominantBand" } }];
   location.hash = rawHash({ schema: 10, prefs: input });
   assert.equal(UrlPreset.applyFromLocationHash(), true);

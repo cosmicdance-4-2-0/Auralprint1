@@ -74,6 +74,15 @@ retires `particles.overlapRadiusPx` from schema 10 without incrementing it.
 Development-era schema-10 inputs containing this property remain accepted;
 normalization and encoding strip it. This exception adds no migration or schema
 11 and does not relax the frozen public contract after Build 115 ships.
+Revision v0.1.15m.h.t is an explicitly authorized final pre-release correction:
+schema 10 adds `particles.minPlacementDistancePx` (CSS pixels, default 0.5;
+0 disables placement filtering). Missing schema-2–10 fields receive that default;
+obsolete overlap fields remain discarded, never aliased. Neither exception
+permits changes to a published schema.
+Revision v0.1.15m.h.u is separately authorized before release: schema 10 adds
+`particleSafety { maxEmissionsPerFrame, maxActiveParticles }` at the preference
+root. Missing schema-2–10 values use CONFIG defaults; malformed types/nonintegers
+fall back independently and valid integers clamp to CONFIG range metadata.
 Schema 9 historically had both Scene-node and later top-level forms; input
 migration recognizes both, with top-level values taking precedence. Abandoned
 Scene layout/editor semantics have no schema-10 equivalent and are discarded.
@@ -90,8 +99,8 @@ If you add/change any persisted field:
 2. `sanitizePreset()`
 3. `normalize*()` helpers (e.g., `normalizeOrbDef`)
 4. `encodePresetPayload()` and schema-contract tests
-5. `PRESET_SCHEMA_VERSION` (increment, except the explicitly authorized pre-release overlap retirement above)
-6. Migration handling for older schemas (preserve existing migrations for that exception)
+5. `PRESET_SCHEMA_VERSION` (increment, except the explicitly authorized pre-release corrections above)
+6. Migration handling for older schemas (preserve existing migrations and default missing spacing for those exceptions)
 
 Failure to update all = **silent data corruption risk**
 
@@ -182,7 +191,7 @@ id, chanId, bandIds, chirality, startAngleRad,
 hueOffsetDeg, colorSource, centerXFrac, centerYFrac,
 motion { angularSpeedRadPerSec },
 response { minRadiusFrac, maxRadiusFrac, waveformRadialDisplaceFrac },
-particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec },
+particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, minPlacementDistancePx },
 trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 ```
 
@@ -201,7 +210,53 @@ Rules:
 - Lifecycle runtime state is not automatically preset state. Schema 10 persists complete normalized `preferences.orbs[]` and `preferences.bands.overlay`; schema 9 global Orb behavior migrates into independent nested copies for each Orb. Every canonical Orb-owned simulation/presentation field has a per-Orb UI owner; Bulk Edit is an apply-to-all convenience and must report mixed values without changing them.
 - Camera remains a downstream render/projection concern for Build 116.
 
-Orb particle safeguards are ephemeral and owned by each `VisualizerRuntime`, never presets. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
+Each `VisualizerRuntime` owns one ephemeral ParticleGovernor. Scene-wide selected
+particle budgets persist at `preferences.particleSafety` and derive into
+`runtime.settings.particleSafety`. CONFIG defaults are 512 emissions/update and
+16,384 retained particles; permissible integer ranges are 0–16,384 and
+0–1,048,576 respectively. Settings → Performance → Particle Resources is their
+sole UI owner. User selections, including zero and expert maxima, are enforced
+without an additional default-valued ceiling.
+
+Runtime settings synchronization applies policies in place; update/render and
+lifecycle entry points also synchronize changed active settings references.
+Retention reductions retire globally oldest heap entries before rendering.
+Increasing limits preserves history, fractions, and fairness ownership; zero
+emission preserves retained history, and zero retention retires all and rejects
+new retention. Diagnostics and cumulative retention counts are ephemeral. Explicit
+factory test-policy injection fixes an isolated test policy and is not supplied
+by production initialization.
+
+Particle heap/list ownership is ephemeral and belongs to each runtime. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
+
+Minimum placement distance compares only the same Orb's currently retained
+trail tail using squared distance scaled by active DPR. Nonzero spacing prepares
+at most one candidate per callback before shared scheduling, discards redundant
+whole opportunities, and retains fractional rate progress. Zero bypasses spacing
+and preserves dense emission semantics. Spatial suppression never deletes history
+or spends governor service priority; per-frame diagnostic counts are ephemeral.
+
+Visual frame timing has three explicit responsibilities. The main callback owns
+clock sampling: `dtSec` remains bounded emission-work time (immutable maximum
+1/30 s), additive `motionDtSec` integrates ordinary visible elapsed time, and
+`nowSec` is monotonic real time for particle birth, fade, and TTL. CONFIG owns the
+nonpersistent .5 s motion-discontinuity threshold: exactly .5 integrates motion;
+larger/invalid/hidden intervals discard both deltas without debt. First/rebased
+callbacks use zero deltas but still age/expire particles and refresh consumers.
+Visibility changes rebase the existing frame anchor. Audio, analysis, recording,
+and transport do not consume motion delta.
+
+Orb and free Ring phase use motion time; Orb updates precede current-frame Ring
+lock. Visual pause freezes Orb/free Ring motion and emission, preserves fractions,
+and still retires particles by real age. Legacy frame/Orb callers omitting the
+additive motion value retain their supplied delta convention; explicit direct
+callers own valid elapsed values, while the application enforces discontinuities.
+
+Normal trail births are nondecreasing. ParticleList tracks ordering conservatively
+in O(1) on append/unlink; supported out-of-order direct emission flags a safe expiry
+scan until the list shrinks to <=1 node or resets. Ordered expiry visits only the
+expired prefix plus one unexpired head, retiring through the existing governor.
+No second expiry index, coordinate cache, or per-frame ordering validation scan.
 
 ### 4.4 Dynamic Orb Collection
 
@@ -225,7 +280,7 @@ Panels:
 - Audio
 - Queue
 - Visualizers
-- Settings (Scene appearance and presets)
+- Settings (Scene appearance, particle resources, and presets)
 - Analysis
 - Record (when enabled)
 

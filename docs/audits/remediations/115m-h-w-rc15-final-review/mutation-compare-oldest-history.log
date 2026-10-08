@@ -1,0 +1,28 @@
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.53375ms)
+✖ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (72.017863ms)
+✖ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (13.436176ms)
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.371121ms)
+✖ failing tests:
+✖ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (1.53375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 120 FPS covers TTL rotation; Trace suffix remains independent (72.017863ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ integrated synthetic 16-Orb history: 60 FPS covers TTL rotation; Trace suffix remains independent (13.436176ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.371121ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-spacing.test.js:63:63)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

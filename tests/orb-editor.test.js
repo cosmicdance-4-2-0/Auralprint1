@@ -9,17 +9,54 @@ import { createOrbEditorUi, readBulkOrbValue } from "../src/js/ui/orb-editor.js"
 function element(tag="div") { const listeners=new Map(); return { tagName:tag.toUpperCase(), type:"", dataset:{}, children:[], parentNode:null, value:"", textContent:"", disabled:false, checked:false, indeterminate:false, attributes:{}, open:false,
  get options(){return this.tagName==="SELECT"?this.children:undefined}, get selectedIndex(){return this.tagName==="SELECT"?this.children.findIndex(option=>option.value===this.value):-1},
  addEventListener(n,f){const a=listeners.get(n)||[];a.push(f);listeners.set(n,a)}, dispatch(n){for(const f of listeners.get(n)||[])f({target:this})}, listenerCount(n){return (listeners.get(n)||[]).length}, append(...c){for(const x of c)this.appendChild(x)}, appendChild(c){return this.insertBefore(c,null)}, insertBefore(c,before){if(c.parentNode)c.parentNode.children=c.parentNode.children.filter(x=>x!==c);const index=before?this.children.indexOf(before):-1;if(index<0)this.children.push(c);else this.children.splice(index,0,c);c.parentNode=this;return c}, remove(){if(this.parentNode)this.parentNode.children=this.parentNode.children.filter(x=>x!==this);this.parentNode=null;this.removed=true}, focus(){document.activeElement=this}, scrollIntoView(){}, setAttribute(n,v){this.attributes[n]=String(v)}, getAttribute(n){return this.attributes[n]}, querySelector(){return null} }; }
-function ui() { const result={orbEditorList:element()}; for(const [n,t] of [["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel)/,"")}`]=element(); } return result; }
+function ui() { const result={orbEditorList:element()}; for(const [n,t] of [["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngMinPlacementDistance","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel)/,"")}`]=element(); } return result; }
 function orb(id){return {...structuredClone(CONFIG.defaults.orbs[0]),id};}
 function harness(ids){ const old=structuredClone(preferences), oldDoc=globalThis.document; globalThis.document={activeElement:null,createElement:element}; replacePreferences({...structuredClone(CONFIG.defaults),orbs:ids.map(orb)});resolveSettings();const view=ui(),calls=[];const editor=createOrbEditorUi({ui:view,commitOrbChangeById:(...x)=>calls.push(x),commitPreferences:(...x)=>calls.push(x),showStatus:()=>{}});return {old,oldDoc,view,calls,editor,restore(){replacePreferences(old);resolveSettings();globalThis.document=oldDoc}}; }
 
-test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
+test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngMinPlacementDistance","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
 
 test("editor reconciliation retains roots by ID, reorders nodes, and replaces only structural changes",()=>{const h=harness(["A","B","C"]);try{h.editor.init();const roots=new Map(["A","B","C"].map(id=>[id,h.editor.getController(id).root]));preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["C","A","B"]);for(const id of ["A","B","C"])assert.equal(h.editor.getController(id).root,roots.get(id));preferences.orbs.push(orb("D"));resolveSettings();h.editor.refresh();const dRoot=h.editor.getController("D").root;assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["C","A","B","D"]);for(const id of ["A","B","C"])assert.equal(h.editor.getController(id).root,roots.get(id));preferences.orbs=preferences.orbs.filter(item=>item.id!=="C");resolveSettings();h.editor.refresh();assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["A","B","D"]);assert.equal(h.editor.getController("A").root,roots.get("A"));assert.equal(h.editor.getController("B").root,roots.get("B"));assert.equal(h.editor.getController("C"),undefined);assert.equal(h.editor.getController("D").root,dRoot);}finally{h.restore()}});
 
 test("generated controls commit by persistent ID after reorder and focusOrb is ID based",()=>{const h=harness(["A","B","C"]);try{h.editor.init();preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();const a=h.editor.getController("A");a.chan.value="R";a.chan.dispatch("change");assert.deepEqual(h.calls[0].slice(0,1),["A"]);assert.equal(h.editor.focusOrb("A"),true);assert.equal(document.activeElement,a.summary);assert.equal(h.editor.focusOrb("missing"),false);}finally{h.restore()}});
 
 test("bulk helper keeps mixed and zero semantics",()=>{assert.deepEqual(readBulkOrbValue([],"particles","emitPerSecond"),{available:false,mixed:false,value:undefined});assert.equal(readBulkOrbValue([orb("A"),orb("B")],"particles","emitPerSecond").mixed,false);});
+
+test("minimum placement distance controls bind by ID, report pixels and mixed state, and retain focus/listeners", () => {
+  const h = harness(["A","B"]);
+  try {
+    h.editor.init(); const a=h.editor.getController("A"), control=a.spacing, root=a.root;
+    assert.deepEqual([control.min,control.max,control.step],["0","10","0.1"]);
+    assert.equal(control.value,"0.5"); assert.equal(a.spacingValue.textContent,"0.5 px");
+    assert.equal(control.getAttribute("aria-valuetext"),"0.5 pixels");
+    const help=a.root.children[1].children.flatMap(group=>group.children).flatMap(node=>node.children).find(node=>node.id===control.getAttribute("aria-describedby"));
+    assert.equal(help.textContent,"Minimum distance from this Orb's last retained particle before a new particle is placed. 0 disables filtering.");
+    control.focus(); control.value="0"; control.dispatch("input");
+    assert.equal(preferences.orbs[0].particles.minPlacementDistancePx,0);
+    assert.equal(preferences.orbs[1].particles.minPlacementDistancePx,.5);
+    assert.equal(h.calls.at(-1)[0],"A");
+    preferences.orbs.reverse(); resolveSettings(); h.editor.refresh();
+    assert.equal(h.editor.getController("A").root,root); assert.equal(h.editor.getController("A").spacing,control);
+    assert.equal(document.activeElement,control); assert.equal(a.spacingValue.textContent,"0.0 px");
+    assert.equal(h.view.valMinPlacementDistance.textContent,"mixed");
+    assert.equal(h.view.rngMinPlacementDistance.getAttribute("aria-valuetext"),"mixed");
+    assert.equal(h.editor.init(),false); assert.equal(control.listenerCount("input"),1);
+    assert.equal(h.view.rngMinPlacementDistance.listenerCount("input"),1);
+    h.view.rngMinPlacementDistance.value="2.3"; h.view.rngMinPlacementDistance.dispatch("input");
+    assert.ok(preferences.orbs.every(o=>o.particles.minPlacementDistancePx===2.3));
+    resolveSettings(); h.editor.refresh(); assert.equal(h.view.valMinPlacementDistance.textContent,"2.3 px");
+    const settingsBefore=runtime.settings; h.editor.refresh(settingsBefore);
+    assert.equal(h.editor.getController("A").spacing,control); assert.equal(document.activeElement,control);
+    preferences.orbs=[]; resolveSettings(); h.editor.refresh();
+    assert.equal(h.view.rngMinPlacementDistance.disabled,true); assert.equal(h.view.valMinPlacementDistance.textContent,"—");
+    const calls=h.calls.length; h.view.rngMinPlacementDistance.dispatch("input");
+    assert.equal(h.calls.length,calls); assert.deepEqual(preferences.orbs,[]);
+    const template=readFileSync(new URL("../src/index.template.html",import.meta.url),"utf8");
+    assert.match(template,/label for="rngMinPlacementDistance">Minimum Placement Distance/);
+    assert.match(template,/id="rngMinPlacementDistance" type="range" aria-describedby="minPlacementDistanceHelp"/);
+    const domCache=readFileSync(new URL("../src/js/ui/dom-cache.js",import.meta.url),"utf8");
+    assert.match(domCache,/bindRange\(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistancePx\)/);
+  } finally { h.restore(); }
+});
 
 test("RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once", () => {
   for (const value of ["fixed", "lastParticle", "dominantBand"]) {
@@ -59,7 +96,7 @@ test("refresh synchronizes invalidated content without moving stable roots or di
 
 test("programmatic select synchronization keeps generated readouts aligned with selected options",()=>{const h=harness(["A"]);try{h.editor.init();const c=h.editor.getController("A");for(const [value,label] of [["inherit","Inherit Scene"],["dominant","Global Dominant Band"],["angle","Orb Phase Palette (Glitch Mode)"],["fixed","Scene Fixed Particle Color"]]){preferences.orbs[0].colorSource=value;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(c.color.value,value);assert.equal(c.colorValue.textContent,label);}for(const [value,label] of [["fixed","Scene Fixed Particle Color"],["lastParticle","Last Particle"],["dominantBand","Global Dominant Band"]]){preferences.orbs[0].trace.lineColorMode=value;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(c.lineColor.value,value);assert.equal(c.lineColorValue.textContent,label);}}finally{h.restore()}});
 
-test("every schema-10 Orb setting has a generated writable control",()=>{const h=harness(["unsafe id #1"]);try{h.editor.init();const c=h.editor.getController("unsafe id #1");for(const key of ["chan","bands","chir","phase","hue","color","x","y","speed","minRadius","maxRadius","waveform","emit","sizeMax","sizeMin","decay","ttl","lines","numLines","lineAlpha","lineWidth","lineColor"])assert.ok(c[key],key);const ids=[c.chan,c.bands,c.chir,c.phase,c.hue,c.color,c.x,c.y,c.speed,c.minRadius,c.maxRadius,c.waveform,c.emit,c.sizeMax,c.sizeMin,c.decay,c.ttl,c.lines,c.numLines,c.lineAlpha,c.lineWidth,c.lineColor].map(x=>x.id);assert.equal(new Set(ids).size,ids.length);assert.ok(ids.every(id=>!id.includes("unsafe id #1")));}finally{h.restore()}});
+test("every schema-10 Orb setting has a generated writable control",()=>{const h=harness(["unsafe id #1"]);try{h.editor.init();const c=h.editor.getController("unsafe id #1");for(const key of ["chan","bands","chir","phase","hue","color","x","y","speed","minRadius","maxRadius","waveform","emit","sizeMax","sizeMin","decay","ttl","spacing","lines","numLines","lineAlpha","lineWidth","lineColor"])assert.ok(c[key],key);const ids=[c.chan,c.bands,c.chir,c.phase,c.hue,c.color,c.x,c.y,c.speed,c.minRadius,c.maxRadius,c.waveform,c.emit,c.sizeMax,c.sizeMin,c.decay,c.ttl,c.spacing,c.lines,c.numLines,c.lineAlpha,c.lineWidth,c.lineColor].map(x=>x.id);assert.equal(new Set(ids).size,ids.length);assert.ok(ids.every(id=>!id.includes("unsafe id #1")));}finally{h.restore()}});
 
 test("phase is presented accessibly in degrees and commits radians by stable ID",()=>{const h=harness(["A","B","C"]);try{h.editor.init();const a=h.editor.getController("A");for(const [radians,degrees] of [[0,0],[Math.PI/2,90],[Math.PI,180],[Math.PI*1.5,270]]){preferences.orbs[0].startAngleRad=radians;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(a.phase.value,String(radians));assert.equal(a.phaseValue.textContent,`${degrees}°`);assert.equal(a.phase.getAttribute("aria-valuetext"),`${degrees} degrees`);}preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();a.phase.value=String(Math.PI);a.phase.dispatch("input");assert.equal(preferences.orbs.find(o=>o.id==="A").startAngleRad,Math.PI);assert.equal(preferences.orbs.find(o=>o.id==="B").startAngleRad,CONFIG.defaults.orbs[0].startAngleRad);assert.equal(h.calls.at(-1)[0],"A");}finally{h.restore()}});
 

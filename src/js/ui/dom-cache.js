@@ -17,6 +17,12 @@ function primeDomCache() {
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
     ui.scenePanel = document.getElementById("scenePanel");
+    for (const id of ["numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError",
+      "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError",
+      "statParticleLive", "statParticleEmitted", "statParticleSpacingRejected", "statParticleBudgetRejected",
+      "statParticleRateLimited", "statParticleRetentionRejected", "statParticleExpired", "statParticleRetentionRetired"]) {
+      ui[id] = document.getElementById(id);
+    }
     ui.visualizersPanel = document.getElementById("visualizersPanel");
     ui.visualizersStatus = document.getElementById("visualizersStatus");
     ui.visualizerList = document.getElementById("visualizerList");
@@ -87,6 +93,8 @@ function primeDomCache() {
     ui.valSizeToMin = document.getElementById("valSizeToMin");
     ui.rngTTL = document.getElementById("rngTTL");
     ui.valTTL = document.getElementById("valTTL");
+    ui.rngMinPlacementDistance = document.getElementById("rngMinPlacementDistance");
+    ui.valMinPlacementDistance = document.getElementById("valMinPlacementDistance");
 
     ui.rngOmega = document.getElementById("rngOmega");
     ui.valOmega = document.getElementById("valOmega");
@@ -198,6 +206,7 @@ function primeDomCache() {
     bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
     bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
     bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
+    bindRange(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistancePx);
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);

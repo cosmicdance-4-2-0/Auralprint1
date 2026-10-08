@@ -1,0 +1,42 @@
+[
+  {
+    "mutation": "capped-orb-motion",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "unbounded-motion-catchup",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "unbounded-emission-delta",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "full-trail-expiry-scan",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "incorrect-unordered-early-exit",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "broken-retirement-ownership",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "stale-diagnostics",
+    "detected": true,
+    "exitCode": 1
+  },
+  {
+    "mutation": "free-ring-pause-ignored",
+    "detected": true,
+    "exitCode": 1
+  }
+]

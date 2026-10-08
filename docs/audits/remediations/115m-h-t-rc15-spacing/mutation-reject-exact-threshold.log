@@ -1,0 +1,105 @@
+✖ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (2.207801ms)
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.564654ms)
+✖ CSS spacing and production Orb DPR wiring at DPR 1 (0.448098ms)
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.308617ms)
+✔ stationary trail becomes eligible after TTL expiry, eviction, or explicit reset without a coordinate cache (0.849756ms)
+✔ independent Orbs at identical locations admit independently and suppress before shared allocation (0.910709ms)
+✔ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (1.737369ms)
+✔ rate below frame rate remains authoritative even after large movement; fractions survive spatial rejection (3.282337ms)
+✔ zero fully bypasses comparisons, preserves duplicate rate demand, and obeys both global ceilings (1.188428ms)
+✔ nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (39.338213ms)
+✔ running spacing changes preserve particles and fractions, and paused runtime emits nothing (1.073866ms)
+✔ schema 10 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated (3.884128ms)
+✔ canonical creation, duplication, ID reconciliation, preset apply, track/visual reset, rebuild and disposal (2.012676ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 9
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85.758313
+
+✖ failing tests:
+
+test at tests/rc15-spacing.test.js:42:1
+✖ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (2.207801ms)
+  AssertionError [ERR_ASSERTION]: exact threshold accepted
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-spacing.test.js:51:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-spacing.test.js:59:1
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.564654ms)
+  AssertionError [ERR_ASSERTION]: 3-4-5 exact squared threshold
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-spacing.test.js:67:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-spacing.test.js:71:26
+✖ CSS spacing and production Orb DPR wiring at DPR 1 (0.448098ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-spacing.test.js:79:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-spacing.test.js:71:26
+✖ CSS spacing and production Orb DPR wiring at DPR 2 (0.308617ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-spacing.test.js:79:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,19 @@
+✖ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.656773ms)
+✖ failing tests:
+✖ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.656773ms)
+  TypeError: Cannot read properties of undefined (reading 'heapIndex')
+✖ failing tests:
+
+test at tests/rc15-budgets.test.js:87:1
+✖ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (0.656773ms)
+  TypeError: Cannot read properties of undefined (reading 'heapIndex')
+      at ParticleGovernor.retire (file:///tmp/auralprint-final-mutations-ur2mw_3b/src/js/render/particle-governor.js:169:24)
+      at ParticleGovernor.admit (file:///tmp/auralprint-final-mutations-ur2mw_3b/src/js/render/particle-governor.js:159:66)
+      at TrailSystem.emitAt (file:///tmp/auralprint-final-mutations-ur2mw_3b/src/js/render/trail-system.js:54:24)
+      at TestContext.<anonymous> (file:///tmp/auralprint-final-mutations-ur2mw_3b/tests/rc15-budgets.test.js:97:66)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

@@ -1,0 +1,161 @@
+✔ budgets: one integer normalization contract for sanitation, resolution and active governor (6.488708ms)
+✔ budgets: schema 10 zero/upper limits round trip, historical missing defaults and Orb spacing survive (2.707477ms)
+✖ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (5226.33771ms)
+✖ budgets: zero emissions preserves history; zero retention trims all, refuses safely and recovers without debt (4.442643ms)
+✖ budgets: actual upper-budget admissions exceed both retired immutable ceilings (58.407303ms)
+✔ budgets: fairness survives changing/zero budgets, fractions and spacing remain separate eligibility (4.983702ms)
+✖ budgets: runtime synchronization preserves governor identity, trim precedes render, injection is isolated (2.92813ms)
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (3.316068ms)
+✖ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (1189.629046ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 3
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6529.51658
+
+✖ failing tests:
+
+test at tests/rc15-budgets.test.js:72:1
+✖ budgets: increasing capacity preserves nodes/fractions/priority; decreasing retires globally oldest with deterministic ties (5226.33771ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+  +   <ref *1> {
+  +     heapIndex: 0,
+  +     next: <ref *10> {
+  +       heapIndex: 5,
+  +       next: null,
+  +       particle: {
+  +         bornSec: 1,
+  +         rgbStart: {
+  +           b: 0.6,
+  +           g: 0.4,
+  +           r: 0.2
+  +         },
+  +         xSim: 1,
+  +         ySim: 0
+  +       },
+  +       prev: [Circular *1],
+  +       sequence: 5,
+  +       trail: <ref *2> TrailSystem {
+  +         emission: {
+  +           nowSec: 0,
+  +           rgbStart: null,
+  +           xSim: 0,
+  +           ySim: 0
+  +         },
+  +         emitAccumulator: 0,
+  +         governor: <ref *8> ParticleGovernor {
+  +           frameActive: false,
+  +           heap: [
+  +             [Circular *1],
+  +             <ref *7> {
+  +               heapIndex: 1,
+  +               next: null,
+  +               particle: {
+  +                 bornSec: 2,
+  +                 rgbStart: {
+  +                   b: 0.6,
+  +                   g: 0.4,
+  +                   r: 0.2
+  +                 },
+  +                 xSim: 0,
+  +                 ySim: 0
+  +               },
+  +               prev: <ref *9> {
+  +                 heapIndex: 3,
+  +                 next: [Circular *7],
+  +                 particle: {
+  +                   bornSec: 3,
+  +                   rgbStart: {
+  +                     b: 0.6,
+  +                     g: 0.4,
+  +                     r: 0.2
+  +                   },
+  +                   xSim: 0,
+  +                   ySim: 0
+  +                 },
+  +                 prev: null,
+  +                 sequence: 0,
+  +                 trail: <ref *6> TrailSystem {
+  +                   emission: {
+  +                     nowSec: 0,
+  +                     rgbStart: null,
+  +                     xSim: 0,
+  +                     ySim: 0
+  +                   },
+  +                   emitAccumulator: 0.75,
+  +                   governor: [Circular *8],
+  +                   nextPending: null,
+  +                   particles: ParticleList {
+  +                     head: [Circular *9],
+  +                     length: 2,
+  +                     tail: [Circular *7]
+  +                   },
+  +                   pendingEmissions: 0,
+[Large assertion diff omitted; final failure details follow.]
+  4 !== 2
+
+      at Object.clearFrame (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:155:35)
+      at Object.render (file:///tmp/auralprint-budget-mutations-qmm5_a1u/src/js/render/visualizer-runtime.js:184:14)
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:155:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 4,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:164:1
+✖ budgets: canonical lifecycle, preset replacement and default reset never restore stale policy (3.316068ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  2 !== 1
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:171:268)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/rc15-budgets.test.js:179:1
+✖ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (1189.629046ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1048576 !== 0
+
+      at TestContext.<anonymous> (file:///tmp/auralprint-budget-mutations-qmm5_a1u/tests/rc15-budgets.test.js:188:77)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1048576,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,4 +1,5 @@
 import { normalizeMaxDeltaTimeSec } from "./timing.js";
+import { normalizeParticleSafety } from "./particle-safety.js";
 import { CONFIG } from "./config.js";
 import { assertOrbAdmission } from "./orb-admission.js";
 import { clamp, deepClone } from "./utils.js";
@@ -8,6 +9,12 @@ import { clamp, deepClone } from "./utils.js";
    ========================================================================== */
 const preferences = deepClone(CONFIG.defaults);
 const runtime = { settings: deepClone(CONFIG.defaults) };
+
+function normalizeMinPlacementDistancePx(value, fallback = CONFIG.defaults.orbs[0].particles.minPlacementDistancePx) {
+  const limits = CONFIG.limits.particles.minPlacementDistancePx;
+  const raw = Number.isFinite(value) ? value : fallback;
+  return clamp(Number.isFinite(raw) ? raw : CONFIG.defaults.orbs[0].particles.minPlacementDistancePx, limits.min, limits.max);
+}
 
 function replacePreferences(next) {
   const replacement = (next && typeof next === "object") ? next : deepClone(CONFIG.defaults);
@@ -32,6 +39,7 @@ function resolveSettings() {
   runtime.settings = deepClone(preferences);
   runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
   runtime.settings.timing = { maxDeltaTimeSec: normalizeMaxDeltaTimeSec(preferences.timing?.maxDeltaTimeSec) };
+  runtime.settings.particleSafety = normalizeParticleSafety(preferences.particleSafety);
 }
 
 
@@ -149,6 +157,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   for (const key of ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec"]) {
     particles[key] = nestedNumber("particles", key, CONFIG.limits.particles[key]);
   }
+  particles.minPlacementDistancePx = normalizeMinPlacementDistancePx(orb.particles?.minPlacementDistancePx, fallback.particles?.minPlacementDistancePx);
   particles.sizeMinPx = Math.min(particles.sizeMinPx, particles.sizeMaxPx);
   particles.ttlSec = Math.max(particles.ttlSec, particles.sizeToMinSec);
   const traceSource = orb.trace && typeof orb.trace === "object" ? orb.trace : {};
@@ -179,4 +188,4 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   };
 }
 
-export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeBandCount, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef };
+export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeBandCount, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef, normalizeMinPlacementDistancePx };
