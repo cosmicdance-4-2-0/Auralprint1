@@ -8,6 +8,7 @@ docs/audits/remediations/115m-i-d-rc20/browser.json
 docs/audits/remediations/115m-i-d-rc20/build.log
 docs/audits/remediations/115m-i-d-rc20/changed-files.txt
 docs/audits/remediations/115m-i-d-rc20/check-watch.cjs
+docs/audits/remediations/115m-i-d-rc20/ci-implementation.json
 docs/audits/remediations/115m-i-d-rc20/focused.log
 docs/audits/remediations/115m-i-d-rc20/full-test.log
 docs/audits/remediations/115m-i-d-rc20/integrity-and-determinism.json

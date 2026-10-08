@@ -136,7 +136,7 @@ The existing optional native stereo diagnostic passed L/R/C 440/880 Hz separatio
 
 Linux and Windows matrix, clean locked install, sequential tests/build, generated-file tracking check and `git diff --check` are retained. CI adds `python scripts/verify_distribution.py` immediately after build; it fails for malformed/missing portable **or** hosted output and verifies current bundles/hash integrity. `dist/`, `.build/`, `node_modules/` and Python bytecode caches remain ignored/untracked. Browser tooling remains optional and separate from CI.
 
-Hosted GitHub Actions status will be recorded after the implementation commit is pushed. Local Linux checks above are passed; Windows execution is not inferred from local results.
+Implementation commit **`8f94fc947acc6e068ca273bf69f5d7104a398290`** passed hosted **Ubuntu and Windows** CI: [run 37851935651](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37851935651). Both jobs completed **SUCCESS**, including install, tests, both-output build, packaging-contract verification, untracked-output and whitespace checks. [Exact jobs/steps/head evidence](ci-implementation.json). PR [#43](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/43) remains open and unmerged, with auto-merge disabled. This evidence-only follow-up changes this report, CI evidence and inventory; validated implementation/tests/assets are identical. Final-head CI state will also be checked and recorded in the PR handoff.
 
 ## Changed files and remaining limits
 
