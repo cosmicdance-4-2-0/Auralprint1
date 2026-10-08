@@ -43,7 +43,9 @@ Local environment: Node 24.19.0 / npm 11.9.0 / Python 3.12.14. Commands ran sequ
 | `npm run build` | PASS: both portable and hosted outputs contain I.E and share bundled JS/CSS |
 | `python scripts/verify_distribution.py` | PASS: all nine distributable files, package-relative metadata, source icon integrity and shared application contracts |
 | `git diff --check` / output tracking | PASS: no whitespace errors; dependencies/build/dist remain untracked |
-| Hosted Linux/Windows CI | Pending PR creation; final head will be checked before handoff |
+| Hosted Linux/Windows CI | PASS: Ubuntu and Windows on implementation head `571e59146f893aa1ba8cc8d19ed29dc9ea0c4535`, [run 37858895230](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37858895230); all required install/test/build/package/tracking/whitespace steps succeeded |
+
+This report-only follow-up records hosted evidence without changing validated implementation/tests. Final-head CI and the final SHA are recorded in [PR #44](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/44) and the handoff after both jobs complete; a commit cannot embed its own resulting SHA.
 
 The first sandbox test attempt reported `spawnSync python EPERM` even after Python's 23 assertions completed successfully. The unchanged full suite passed with native child-process access; build used the same execution access. No source/test workaround was introduced. No new browser/device/direct-file acceptance is claimed by this documentation-only validation.
 
