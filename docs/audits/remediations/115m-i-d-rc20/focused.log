@@ -1,0 +1,38 @@
+✔ RC-20 portable/hosted contracts and isolated failure/mutation controls (796.557873ms)
+ℹ test_artifact_external_portable_icon (__main__.Packaging.test_artifact_external_portable_icon) ... ok
+test_artifact_malformed_manifest (__main__.Packaging.test_artifact_malformed_manifest) ... ok
+test_artifact_missing_favicon (__main__.Packaging.test_artifact_missing_favicon) ... ok
+test_artifact_missing_manifest_icon (__main__.Packaging.test_artifact_missing_manifest_icon) ... ok
+test_artifact_root_only_hosted_metadata (__main__.Packaging.test_artifact_root_only_hosted_metadata) ... ok
+test_artifact_root_relative_launch_and_scope (__main__.Packaging.test_artifact_root_relative_launch_and_scope) ... ok
+test_artifact_shared_runtime_divergence (__main__.Packaging.test_artifact_shared_runtime_divergence) ... ok
+test_artifact_stale_version_each_edition (__main__.Packaging.test_artifact_stale_version_each_edition) ... ok
+test_both_contracts_and_asset_integrity (__main__.Packaging.test_both_contracts_and_asset_integrity) ... ok
+test_build_absent_manifest_reference (__main__.Packaging.test_build_absent_manifest_reference) ... ok
+test_build_corrupt_png_payload (__main__.Packaging.test_build_corrupt_png_payload) ... ok
+test_build_external_portable_link (__main__.Packaging.test_build_external_portable_link) ... ok
+test_build_invalid_icon (__main__.Packaging.test_build_invalid_icon) ... ok
+test_build_malformed_manifest (__main__.Packaging.test_build_malformed_manifest) ... ok
+test_build_missing_and_duplicate_markers (__main__.Packaging.test_build_missing_and_duplicate_markers) ... ok
+test_build_missing_favicon (__main__.Packaging.test_build_missing_favicon) ... ok
+test_build_missing_manifest_icon (__main__.Packaging.test_build_missing_manifest_icon) ... ok
+test_build_rejects_external_scripts_and_stylesheets (__main__.Packaging.test_build_rejects_external_scripts_and_stylesheets) ... ok
+test_build_unresolved_marker (__main__.Packaging.test_build_unresolved_marker) ... ok
+test_build_unsafe_svg (__main__.Packaging.test_build_unsafe_svg) ... ok
+test_build_wrong_manifest_mime (__main__.Packaging.test_build_wrong_manifest_mime) ... ok
+test_build_wrong_png_dimensions (__main__.Packaging.test_build_wrong_png_dimensions) ... ok
+test_old_declarations_are_a_preserved_negative_control (__main__.Packaging.test_old_declarations_are_a_preserved_negative_control) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.723s
+
+OK
+
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 854.892585

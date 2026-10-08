@@ -1,0 +1,9 @@
+✔ budgets: full 1,048,576 retention boundary is usable, evicts one oldest and trims safely to zero (433.496837ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 511.216531

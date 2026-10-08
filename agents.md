@@ -55,6 +55,9 @@ The app is intentionally shippable as one file.
 
 Agents MUST:
 - Preserve single-file operability
+- Build 115M.I.D produces a primary self-contained portable HTML and a secondary
+  relocatable `dist/hosted/` package from the same template and JS/CSS bundles.
+  The build owns metadata differences; runtime and preset schema remain shared.
 - Avoid introducing build steps unless explicitly approved
 - Avoid external dependencies unless critical and justified
 

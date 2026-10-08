@@ -1,0 +1,91 @@
+{
+  "browser": "151.0.7922.173",
+  "title": "Auralprint - Waveform Analysis Tool - v0.1.15m.i.c",
+  "boot": true,
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "declaredResourceProbes": [
+    {
+      "rel": "shortcut icon",
+      "href": "/favicon.ico",
+      "resolved": "http://127.0.0.1:46171/favicon.ico",
+      "status": 404,
+      "mime": "text/plain"
+    },
+    {
+      "rel": "icon",
+      "href": "/favicon-96x96.png",
+      "resolved": "http://127.0.0.1:46171/favicon-96x96.png",
+      "status": 404,
+      "mime": "text/plain"
+    },
+    {
+      "rel": "icon",
+      "href": "/favicon.svg",
+      "resolved": "http://127.0.0.1:46171/favicon.svg",
+      "status": 404,
+      "mime": "text/plain"
+    },
+    {
+      "rel": "apple-touch-icon",
+      "href": "/apple-touch-icon.png",
+      "resolved": "http://127.0.0.1:46171/apple-touch-icon.png",
+      "status": 404,
+      "mime": "text/plain"
+    },
+    {
+      "rel": "manifest",
+      "href": "/site.webmanifest",
+      "resolved": "http://127.0.0.1:46171/site.webmanifest",
+      "status": 404,
+      "mime": "text/plain"
+    }
+  ],
+  "serverRequests": [
+    {
+      "url": "/apps/auralprint/index.html",
+      "status": 200
+    },
+    {
+      "url": "/favicon.svg",
+      "status": 404
+    },
+    {
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "url": "/favicon-96x96.png",
+      "status": 404
+    },
+    {
+      "url": "/apple-touch-icon.png",
+      "status": 404
+    },
+    {
+      "url": "/site.webmanifest",
+      "status": 404
+    },
+    {
+      "url": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "url": "/favicon-96x96.png",
+      "status": 404
+    },
+    {
+      "url": "/favicon.svg",
+      "status": 404
+    }
+  ]
+}

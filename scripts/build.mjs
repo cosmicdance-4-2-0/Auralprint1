@@ -24,9 +24,9 @@ function readVersionMetadata(rootDir) {
   if (!versionTag) {
     throw new Error(`Version file is empty: ${versionFile}`);
   }
-  if (!versionTag.startsWith("v") || versionTag.length === 1) {
+  if (!/^v[0-9][A-Za-z0-9.\-]*$/.test(versionTag)) {
     throw new Error(
-      `Version file must start with "v" and include a non-empty version string: ${versionFile}`,
+      `Version file must contain a safe version tag starting with "v": ${versionFile}`,
     );
   }
 
@@ -51,6 +51,8 @@ const paths = {
   jsBundle: path.join(projectRoot, ".build", "auralprint.js"),
   metafile: path.join(projectRoot, "dist", "esbuild-metafile.json"),
   distHtml: versionMetadata.distHtml,
+  branding: path.join(projectRoot, "src", "assets", "branding"),
+  hostedDir: path.join(projectRoot, "dist", "hosted"),
   assembler: path.join(projectRoot, "scripts", "assemble_single_file.py"),
 };
 
@@ -149,6 +151,8 @@ async function assembleSingleFile() {
     paths.jsBundle,
     versionMetadata.versionTag,
     paths.distHtml,
+    "--branding", paths.branding,
+    "--hosted-dir", paths.hostedDir,
   ];
 
   const candidates = [];

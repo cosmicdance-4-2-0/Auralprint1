@@ -1,0 +1,109 @@
+[
+  {
+    "path": "src/assets/branding/apple-touch-icon.png",
+    "bytes": 21085,
+    "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc",
+    "signature": "89504e470d0a1a0a0000000d49484452",
+    "dimensions": [
+      180,
+      180
+    ],
+    "mime": "image/png"
+  },
+  {
+    "path": "src/assets/branding/assets/og-image.svg",
+    "bytes": 7552,
+    "sha256": "adf7ce453d3763e1cc6ca33095398ccdcaa98a459cce95926005964c9eab9b87",
+    "signature": "3c212d2d2049444957204f4720496d61",
+    "viewBox": "0 0 1200 630",
+    "mime": "image/svg+xml",
+    "text": [
+      "\n      IDIW \u00b7 Auralprint\n    ",
+      "\n      IDIW\n    ",
+      "\n      Infinite Diversity \u00b7 Infinite Wonder\n    ",
+      "\n      Curated AI adventure games.\n    ",
+      "\n      Consistent worlds \u00b7 clear safety modes \u00b7 optional adult gating\n    ",
+      "\n        Auralprint - Waveform Analysis Tool\n      ",
+      "\n      idiw.net \u00b7 under active development\n    "
+    ]
+  },
+  {
+    "path": "src/assets/branding/favicon-96x96.png",
+    "bytes": 9034,
+    "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817",
+    "signature": "89504e470d0a1a0a0000000d49484452",
+    "dimensions": [
+      96,
+      96
+    ],
+    "mime": "image/png"
+  },
+  {
+    "path": "src/assets/branding/favicon.ico",
+    "bytes": 15086,
+    "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f",
+    "signature": "0000010003003030000001002000a825",
+    "mime": "image/x-icon",
+    "count": 3
+  },
+  {
+    "path": "src/assets/branding/favicon.svg",
+    "bytes": 1121,
+    "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16",
+    "signature": "3c73766720786d6c6e733d2268747470",
+    "viewBox": "0 0 128 128",
+    "mime": "image/svg+xml",
+    "text": []
+  },
+  {
+    "path": "src/assets/branding/site.webmanifest",
+    "bytes": 496,
+    "sha256": "b90d5a924b0289ed4ad5e50a39d2c40058cbbc8ddd8bfb888043341fdce64e25",
+    "signature": "7b0a2020226e616d65223a2022417572",
+    "manifest": {
+      "name": "Auralprint - Waveform Analysis Tool",
+      "short_name": "Auralprint",
+      "icons": [
+        {
+          "src": "/web-app-manifest-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/web-app-manifest-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "maskable"
+        }
+      ],
+      "start_url": "/index.html",
+      "theme_color": "#ffffff",
+      "background_color": "#ffffff",
+      "display": "standalone"
+    },
+    "mime": "application/manifest+json"
+  },
+  {
+    "path": "src/assets/branding/web-app-manifest-192x192.png",
+    "bytes": 22773,
+    "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991",
+    "signature": "89504e470d0a1a0a0000000d49484452",
+    "dimensions": [
+      192,
+      192
+    ],
+    "mime": "image/png"
+  },
+  {
+    "path": "src/assets/branding/web-app-manifest-512x512.png",
+    "bytes": 105356,
+    "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568",
+    "signature": "89504e470d0a1a0a0000000d49484452",
+    "dimensions": [
+      512,
+      512
+    ],
+    "mime": "image/png"
+  }
+]

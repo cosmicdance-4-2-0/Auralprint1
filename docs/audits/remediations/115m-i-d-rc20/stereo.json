@@ -1,0 +1,273 @@
+{
+  "version": "v0.1.15m.i.d",
+  "browser": "151.0.7922.173",
+  "graph": {
+    "splitters": [
+      {
+        "numberOfOutputs": 2,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "discrete"
+      },
+      {
+        "numberOfOutputs": 2,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "discrete"
+      },
+      {
+        "numberOfOutputs": 2,
+        "channelCount": 2,
+        "channelCountMode": "explicit",
+        "channelInterpretation": "discrete"
+      }
+    ],
+    "stereo": {
+      "settings": {
+        "channelCount": 2,
+        "deviceId": "WebAudio-df581cbb-009f-43cd-aab4-5740ba78df98",
+        "latency": 0.01,
+        "sampleRate": 44100,
+        "sampleSize": 16
+      },
+      "monoLike": false,
+      "correlation": -0.002494317706312039,
+      "L": {
+        "rms": 0.14132404125228668,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -163.34689331054688
+      },
+      "R": {
+        "rms": 0.1414212401118268,
+        "peakHz": 877.47802734375,
+        "db440": -159.53192138671875,
+        "db880": -28.498760223388672
+      },
+      "C": {
+        "rms": 0.099874803658452,
+        "peakHz": 441.4306640625,
+        "db440": -33.86431121826172,
+        "db880": -34.51935577392578
+      }
+    },
+    "leftOnly": {
+      "monoLike": true,
+      "correlation": 0,
+      "L": {
+        "rms": 0.14137503160403608,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -161.90621948242188
+      },
+      "R": {
+        "rms": 0,
+        "peakHz": 877.47802734375,
+        "db440": -634.4530029296875,
+        "db880": -604.5452270507812
+      },
+      "C": {
+        "rms": 0.14137503160403608,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -161.90621948242188
+      }
+    },
+    "rightOnly": {
+      "monoLike": true,
+      "correlation": 0,
+      "L": {
+        "rms": 0,
+        "peakHz": 441.4306640625,
+        "db440": -592.9281005859375,
+        "db880": -617.8882446289062
+      },
+      "R": {
+        "rms": 0.1414251430743997,
+        "peakHz": 877.47802734375,
+        "db440": -159.6064453125,
+        "db880": -28.498756408691406
+      },
+      "C": {
+        "rms": 0.1414251430743997,
+        "peakHz": 877.47802734375,
+        "db440": -159.6064453125,
+        "db880": -28.498756408691406
+      }
+    },
+    "dualMono": {
+      "settings": {
+        "channelCount": 2,
+        "deviceId": "WebAudio-df581cbb-009f-43cd-aab4-5740ba78df98",
+        "latency": 0.01,
+        "sampleRate": 44100,
+        "sampleSize": 16
+      },
+      "monoLike": true,
+      "correlation": 1,
+      "L": {
+        "rms": 0.14128954012566775,
+        "peakHz": 441.4306640625,
+        "db440": -27.843711853027344,
+        "db880": -163.35830688476562
+      },
+      "R": {
+        "rms": 0.14128954012566775,
+        "peakHz": 441.4306640625,
+        "db440": -27.843711853027344,
+        "db880": -163.35830688476562
+      },
+      "C": {
+        "rms": 0.14128954012566775,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -162.4158935546875
+      }
+    },
+    "monoTrackObservation": {
+      "settings": {
+        "channelCount": 1,
+        "deviceId": "WebAudio-3d8b90fd-d9bd-4a2b-aaf8-fea3ad24385b",
+        "latency": 0.01,
+        "sampleRate": 44100,
+        "sampleSize": 16
+      },
+      "monoLike": true,
+      "correlation": 1,
+      "L": {
+        "rms": 0.1413146978466616,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -163.47923278808594
+      },
+      "R": {
+        "rms": 0.1413146978466616,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -163.47923278808594
+      },
+      "C": {
+        "rms": 0.1413146978466616,
+        "peakHz": 441.4306640625,
+        "db440": -27.843713760375977,
+        "db880": -163.47923278808594
+      },
+      "rightSilent": false
+    },
+    "file": {
+      "monoLike": false,
+      "correlation": -0.0024927102247456383,
+      "L": {
+        "rms": 0.1415357679087568,
+        "peakHz": 441.4306640625,
+        "db440": -27.8438663482666,
+        "db880": -132.1291961669922
+      },
+      "R": {
+        "rms": 0.1414124609646552,
+        "peakHz": 877.47802734375,
+        "db440": -144.7150421142578,
+        "db880": -28.498939514160156
+      },
+      "C": {
+        "rms": 0.09992448922531169,
+        "peakHz": 441.4306640625,
+        "db440": -33.864479064941406,
+        "db880": -34.519554138183594
+      }
+    }
+  },
+  "builtArtifact": {
+    "acquisitionStubbed": true,
+    "sessions": [
+      {
+        "mode": "stereo",
+        "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: stereo (L≠R)",
+        "request": {
+          "video": true,
+          "audio": {
+            "channelCount": {
+              "ideal": 2
+            },
+            "echoCancellation": {
+              "ideal": false
+            },
+            "noiseSuppression": {
+              "ideal": false
+            },
+            "autoGainControl": {
+              "ideal": false
+            }
+          }
+        }
+      },
+      {
+        "mode": "dual-mono",
+        "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: mono-ish (L≈R)",
+        "request": {
+          "video": true,
+          "audio": {
+            "channelCount": {
+              "ideal": 2
+            },
+            "echoCancellation": {
+              "ideal": false
+            },
+            "noiseSuppression": {
+              "ideal": false
+            },
+            "autoGainControl": {
+              "ideal": false
+            }
+          }
+        }
+      },
+      {
+        "mode": "mono",
+        "status": "Stream live: MediaStreamAudioDestinationNode - Capture: mono (1ch) - Bands: mono-ish (L≈R)",
+        "request": {
+          "video": true,
+          "audio": {
+            "channelCount": {
+              "ideal": 2
+            },
+            "echoCancellation": {
+              "ideal": false
+            },
+            "noiseSuppression": {
+              "ideal": false
+            },
+            "autoGainControl": {
+              "ideal": false
+            }
+          }
+        }
+      },
+      {
+        "mode": "unknown",
+        "status": "Stream live: MediaStreamAudioDestinationNode - Bands: stereo (L≠R)",
+        "request": {
+          "video": true,
+          "audio": {
+            "channelCount": {
+              "ideal": 2
+            },
+            "echoCancellation": {
+              "ideal": false
+            },
+            "noiseSuppression": {
+              "ideal": false
+            },
+            "autoGainControl": {
+              "ideal": false
+            }
+          }
+        }
+      }
+    ]
+  },
+  "nativeDisplay": {
+    "attempted": false
+  },
+  "pageErrors": []
+}

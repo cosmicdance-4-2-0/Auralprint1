@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawn,execFileSync}=require('node:child_process'),assert=require('node:assert/strict');
+const repo=process.env.RC20_ROOT || path.resolve(__dirname,'../../../..'),root=fs.mkdtempSync(path.join(os.tmpdir(),'rc20-watch-'));
+for(const name of ['scripts','src','version','package.json'])fs.cpSync(path.join(repo,name),path.join(root,name),{recursive:true});
+fs.symlinkSync(path.join(repo,'node_modules'),path.join(root,'node_modules'),'dir');
+let log='',child;const waitFor=async fn=>{const start=Date.now();while(!fn()){assert.ok(Date.now()-start<15000,'Timed out waiting for watch assembly');await new Promise(r=>setTimeout(r,50));}};
+(async()=>{try{child=spawn('npm',['run','watch'],{cwd:root,stdio:['ignore','pipe','pipe'],detached:true});child.stdout.on('data',x=>log+=x);child.stderr.on('data',x=>log+=x);
+const file=path.join(root,'dist/auralprint_0.1.15m.i.d.html');await waitFor(()=>fs.existsSync(file)&&log.includes('[watch] assembled'));
+const verify=()=>JSON.parse(execFileSync('python',[path.join(root,'scripts/verify_distribution.py')],{encoding:'utf8'}));const before=verify();
+fs.appendFileSync(path.join(root,'src/js/main.js'),'\nconsole.debug("RC20 watch fixture");\n');await waitFor(()=>fs.readFileSync(file,'utf8').includes('RC20 watch fixture'));const js=verify();assert.notEqual(js['auralprint_0.1.15m.i.d.html'].sha256,before['auralprint_0.1.15m.i.d.html'].sha256);
+fs.appendFileSync(path.join(root,'src/css/base.css'),'\n.rc20-watch-fixture { color: #123456; }\n');await waitFor(()=>fs.readFileSync(file,'utf8').includes('.rc20-watch-fixture'));const css=verify();assert.notEqual(css['auralprint_0.1.15m.i.d.html'].sha256,js['auralprint_0.1.15m.i.d.html'].sha256);
+fs.writeFileSync(process.env.RC20_REPORT || path.join(__dirname,'watch.json'),JSON.stringify({initialBothPackagesValid:true,jsChangeRegeneratesBoth:true,cssChangeRegeneratesBoth:true,sharedBundlesVerified:true,sourceCheckoutUntouched:true,log},null,2)+'\n');console.log('Watch initial build and JS/CSS regenerations passed in an isolated checkout.');
+}finally{if(child){process.kill(-child.pid,'SIGTERM');await new Promise(r=>child.on('exit',r));}fs.rmSync(root,{recursive:true,force:true});}})().catch(e=>{console.error(e);process.exitCode=1});
