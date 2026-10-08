@@ -46,7 +46,7 @@ function createOrbBandPicker(container, { orbLabel, onChange, formatRange, descr
   const details = make("details", "band-chooser");
   details.appendChild(make("summary", "", "Choose frequency bands"));
   const bank = make("p", "panel-description");
-  const help = make("p", "panel-description", "Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.");
+  const help = make("p", "panel-description", "Channel selects both the Orb's waveform and its band energies (Left, Right, or Center). Selected bands use that channel's energy. With no bands selected, the Orb uses its channel's full-spectrum energy.");
   const searchLabel = make("label", "picker-search", "Find a band");
   const search = make("input");
   search.type = "search";

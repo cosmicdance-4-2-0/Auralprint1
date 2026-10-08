@@ -1,0 +1,162 @@
+{
+  "version": "v0.1.15m.i.b",
+  "baseline": true,
+  "method": "Native generated Visualizers UI; controlled window.confirm interception; source live runtime plus unchanged standalone public Share transport.",
+  "rows": [
+    {
+      "standalone": false,
+      "cancel": {
+        "text": "Remove Spectral Ring (spectral-ring)? This cannot be undone.",
+        "ids": [
+          "spectral-ring",
+          "ORB1"
+        ],
+        "focus": {
+          "action": "remove",
+          "id": "spectral-ring",
+          "control": ""
+        },
+        "live": {
+          "ids": [
+            "spectral-ring",
+            "ORB1"
+          ],
+          "ringSurvived": true,
+          "survivorSame": true,
+          "disposed": []
+        }
+      },
+      "accepted": {
+        "text": "Remove Spectral Ring (spectral-ring)? This cannot be undone.",
+        "ids": [
+          "ORB1"
+        ],
+        "focus": {
+          "action": "edit",
+          "id": "ORB1",
+          "control": ""
+        },
+        "live": {
+          "ids": [
+            "ORB1"
+          ],
+          "ringSurvived": true,
+          "survivorSame": true,
+          "disposed": [
+            [
+              "orb",
+              "spectral-ring"
+            ]
+          ]
+        }
+      },
+      "help": "Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.",
+      "channels": [
+        {
+          "chanId": "L",
+          "selections": [
+            {
+              "bands": [
+                0
+              ],
+              "energy": 0.9,
+              "waveform": [
+                0.75
+              ],
+              "full": 0.8
+            },
+            {
+              "bands": [
+                0,
+                1
+              ],
+              "energy": 0.8,
+              "waveform": [
+                0.75
+              ],
+              "full": 0.8
+            },
+            {
+              "bands": [],
+              "energy": null,
+              "waveform": [
+                0.75
+              ],
+              "full": 0.8
+            }
+          ]
+        },
+        {
+          "chanId": "R",
+          "selections": [
+            {
+              "bands": [
+                0
+              ],
+              "energy": 0.1,
+              "waveform": [
+                -0.5
+              ],
+              "full": 0.2
+            },
+            {
+              "bands": [
+                0,
+                1
+              ],
+              "energy": 0.2,
+              "waveform": [
+                -0.5
+              ],
+              "full": 0.2
+            },
+            {
+              "bands": [],
+              "energy": null,
+              "waveform": [
+                -0.5
+              ],
+              "full": 0.2
+            }
+          ]
+        },
+        {
+          "chanId": "C",
+          "selections": [
+            {
+              "bands": [
+                0
+              ],
+              "energy": 0.5,
+              "waveform": [
+                0.25
+              ],
+              "full": 0.6
+            },
+            {
+              "bands": [
+                0,
+                1
+              ],
+              "energy": 0.45,
+              "waveform": [
+                0.25
+              ],
+              "full": 0.6
+            },
+            {
+              "bands": [],
+              "energy": null,
+              "waveform": [
+                0.25
+              ],
+              "full": 0.6
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "browser": "151.0.7922.173"
+}
