@@ -6,6 +6,7 @@ docs/audits/remediations/115m-i-b-rc19/baseline-native-timed.json
 docs/audits/remediations/115m-i-b-rc19/baseline/native-capture-results.json
 docs/audits/remediations/115m-i-b-rc19/build.log
 docs/audits/remediations/115m-i-b-rc19/changed-files.txt
+docs/audits/remediations/115m-i-b-rc19/ci-implementation.json
 docs/audits/remediations/115m-i-b-rc19/focused-regressions.log
 docs/audits/remediations/115m-i-b-rc19/full-test.log
 docs/audits/remediations/115m-i-b-rc19/million-stress.log

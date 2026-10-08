@@ -233,9 +233,15 @@ Sequential local validation completed:
 - `git diff --check`: passed.
 - [Artifact verification](artifact.json): `auralprint_0.1.15m.i.b.html`, 400,289 bytes, correct version/schema/native-shutdown code; generated output and dependencies remain ignored/untracked.
 
-Hosted Ubuntu and Windows CI results are pending PR creation at this implementation
-commit; they will be checked and recorded before final handoff. Local validation
-is not a claim of hosted CI completion.
+[PR #41](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/41) remains open and
+unmerged. Implementation commit: `1d160c612653701f012fff2d93dd0ab5a0a36301`.
+[Hosted CI run 37831725322](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/37831725322)
+completed **SUCCESS**, with **Ubuntu and Windows both PASS** on that exact commit.
+Both jobs passed locked installation, tests, build, versioned artifact/untracked
+output verification, and whitespace checks. See [hosted job/step results](ci-implementation.json).
+This directly related evidence follow-up changes only this report, CI results,
+and the inventory. Its final commit checks are also verified before handoff; no
+production or test code changes follow the validated implementation.
 
 Optional native command (external Playwright/Chromium required, no added dependency):
 
