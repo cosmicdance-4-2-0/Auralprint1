@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.o");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.o\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.p");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.p\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -2333,7 +2333,9 @@ test("UI keeps queue panel recoverable across live source switches and audio pan
       assert.equal(state.ui.queuePanel.style.display, "block");
       state.ui.btnHideQueue.click();
       assert.equal(state.ui.queuePanel.style.display, "none");
-      state.ui.btnOpenQueue.click();
+      state.ui.btnOpenAudio.click();
+      state.ui.btnToggleQueue.click();
+      state.ui.btnHideAudio.click();
       assert.equal(state.ui.queuePanel.style.display, "block");
       assert.equal(state.ui.audioPanel.style.display, "none");
     });
@@ -2669,7 +2671,7 @@ test("global view toggle restores the prior panel selection and disclosure keys 
   await withUiWireHarnessState({}, ({ getElement, harness }) => {
     getElement("btnHideVisualizers").click();
     getElement("btnHideScene").click();
-    getElement("btnOpenQueue").click();
+    getElement("btnToggleQueue").click();
     getElement("btnTogglePanels").click();
     assert.equal(getElement("audioPanel").style.display, "none");
     assert.equal(getElement("queuePanel").style.display, "none");

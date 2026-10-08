@@ -28,6 +28,58 @@ function element(display = "block") {
   };
 }
 
+for (const scenario of [
+  { name: "Audio visible", audioDisplay: "grid", target: "btnToggleQueue" },
+  { name: "Audio hidden", audioDisplay: "none", target: "btnOpenAudio" },
+  { name: "Audio hidden with collapsed launcher", audioDisplay: "none", collapsed: true, target: "btnOpenAudio" },
+  { name: "Audio hidden attribute", audioDisplay: "grid", audioHidden: true, target: "btnOpenAudio" },
+  { name: "Audio visible without Queue toggle", audioDisplay: "grid", missingToggle: true, target: "btnOpenAudio" },
+  { name: "outside focus", audioDisplay: "none", collapsed: true, outside: true, target: "btnToggleWorkspaceLauncher" },
+]) {
+  test(`RC-13: Queue Hide preserves visible focus ownership — ${scenario.name}`, () => {
+    const previousDocument = globalThis.document;
+    const body = element();
+    globalThis.document = { body, activeElement: body, documentElement: { style: { setProperty() {} } } };
+    const ui = {
+      audioPanel: element(scenario.audioDisplay), queuePanel: element(),
+      openAudio: element("grid"), btnOpenAudio: element(),
+      btnToggleQueue: scenario.missingToggle ? null : element(), btnHideQueue: element(),
+      workspaceLauncher: element(), btnToggleWorkspaceLauncher: element(),
+      workspaceLauncherCollapsed: !!scenario.collapsed,
+    };
+    ui.audioPanel.hidden = !!scenario.audioHidden;
+    ui.queuePanel.contains = target => target === ui.queuePanel || target === ui.btnHideQueue;
+    const workspace = createWorkspaceUi({ ui });
+    try {
+      workspace.init();
+      (scenario.outside ? ui.btnToggleWorkspaceLauncher : ui.btnHideQueue).focus();
+      ui.btnHideQueue.dispatch("click");
+      assert.equal(workspace.isPanelVisible(ui.queuePanel), false);
+      assert.equal(ui.audioPanel.style.display, scenario.audioDisplay);
+      assert.equal(ui.audioPanel.hidden, !!scenario.audioHidden);
+      assert.equal(document.activeElement, ui[scenario.target]);
+      assert.notEqual(document.activeElement, body);
+      assert.equal(document.activeElement.hidden, false);
+      assert.notEqual(document.activeElement.style.display, "none");
+      assert.ok(!document.activeElement.disabled);
+      if (scenario.target === "btnToggleQueue") {
+        assert.equal(workspace.isPanelVisible(ui.audioPanel), true);
+      } else if (scenario.target === "btnOpenAudio") {
+        assert.notEqual(document.activeElement, ui.btnToggleQueue);
+        assert.equal(workspace.isPanelVisible(ui.openAudio), true);
+        assert.equal(ui.openAudio.getAttribute("aria-hidden"), "false");
+      }
+      assert.equal(ui.workspaceLauncher.dataset.collapsed, scenario.outside ? "true" : "false");
+      assert.equal(ui.btnToggleWorkspaceLauncher.getAttribute("aria-expanded"), scenario.outside ? "false" : "true");
+      if (scenario.target === "btnToggleQueue") {
+        workspace.showQueuePanel();
+        assert.equal(workspace.isPanelVisible(ui.queuePanel), true);
+        assert.equal(document.activeElement, ui.btnHideQueue);
+      }
+    } finally { globalThis.document = previousDocument; }
+  });
+}
+
 test("RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle", () => {
   const previousDocument = globalThis.document;
   globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
@@ -66,8 +118,8 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
   state.recording.hooksEnabled = true;
   const ui = {
     audioPanel: element("grid"), analysisPanel: element("none"), visualizersPanel: element("none"), scenePanel: element("none"), queuePanel: element(), recordPanel: element(),
-    openAudio: element("grid"), openAnalysis: element("grid"), openVisualizers: element("grid"), openScene: element("grid"), openQueue: element("grid"), openRecord: element("grid"),
-    btnOpenAudio: element(), btnOpenAnalysis: element(), btnOpenVisualizers: element(), btnOpenScene: element(), btnOpenQueue: element(), btnOpenRecord: element(),
+    openAudio: element("grid"), openAnalysis: element("grid"), openVisualizers: element("grid"), openScene: element("grid"), openRecord: element("grid"),
+    btnOpenAudio: element(), btnOpenAnalysis: element(), btnOpenVisualizers: element(), btnOpenScene: element(), btnOpenRecord: element(),
     btnHideAudio: element(), btnHideAnalysis: element(), btnHideVisualizers: element(), btnHideScene: element(), btnHideQueue: element(), btnHideRecord: element(),
     btnTogglePanels: element(), btnToggleWorkspaceLauncher: element(), workspaceLauncher: element(),
     workspaceLauncherCollapsed: true, recordingPanelVisible: true, recordingPanelRestoreAfterGlobalHide: false,

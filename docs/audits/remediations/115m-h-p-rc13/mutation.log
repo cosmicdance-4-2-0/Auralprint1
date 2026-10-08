@@ -1,0 +1,171 @@
+✔ RC-13: Queue Hide preserves visible focus ownership — Audio visible (3.866543ms)
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio hidden (1.989685ms)
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio hidden with collapsed launcher (0.480308ms)
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio hidden attribute (0.428922ms)
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio visible without Queue toggle (1.328123ms)
+✔ RC-13: Queue Hide preserves visible focus ownership — outside focus (0.209759ms)
+✔ RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle (2.019931ms)
+✔ workspace owns deterministic visibility, restore, focus, record, collapse, and idempotent wiring (1.363998ms)
+✔ Record restore remains eligible only while hooks are enabled (0.626116ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 5
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25.481891
+
+✖ failing tests:
+
+test at tests/workspace-ui.test.js:39:3
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio hidden (1.989685ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      addEventListener: [Function: addEventListener],
+  +   attributes: {},
+  -   attributes: {
+  -     'aria-label': 'Show audio source panel',
+  -     'aria-pressed': 'false'
+  -   },
+      classList: {
+        add: [Function: add],
+        contains: [Function: contains],
+        remove: [Function: remove],
+        toggle: [Function: toggle]
+  ...
+      },
+  -   title: 'Show audio source panel'
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/workspace-ui.test.js:60:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/workspace-ui.test.js:39:3
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio hidden with collapsed launcher (0.480308ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      addEventListener: [Function: addEventListener],
+  +   attributes: {},
+  -   attributes: {
+  -     'aria-label': 'Show audio source panel',
+  -     'aria-pressed': 'false'
+  -   },
+      classList: {
+        add: [Function: add],
+        contains: [Function: contains],
+        remove: [Function: remove],
+        toggle: [Function: toggle]
+  ...
+      },
+  -   title: 'Show audio source panel'
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/workspace-ui.test.js:60:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/workspace-ui.test.js:39:3
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio hidden attribute (0.428922ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      addEventListener: [Function: addEventListener],
+  +   attributes: {},
+  -   attributes: {
+  -     'aria-label': 'Show audio source panel',
+  -     'aria-pressed': 'false'
+  -   },
+      classList: {
+        add: [Function: add],
+        contains: [Function: contains],
+        remove: [Function: remove],
+        toggle: [Function: toggle]
+  ...
+      },
+  -   title: 'Show audio source panel'
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/workspace-ui.test.js:60:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/workspace-ui.test.js:39:3
+✖ RC-13: Queue Hide preserves visible focus ownership — Audio visible without Queue toggle (1.328123ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      addEventListener: [Function: addEventListener],
+  +   attributes: {},
+  -   attributes: {
+  -     'aria-label': 'Hide audio source panel',
+  -     'aria-pressed': 'true'
+  -   },
+      classList: {
+        add: [Function: add],
+        contains: [Function: contains],
+        remove: [Function: remove],
+        toggle: [Function: toggle]
+  ...
+      },
+  -   title: 'Hide audio source panel'
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/workspace-ui.test.js:60:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

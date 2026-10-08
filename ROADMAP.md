@@ -1,8 +1,8 @@
 # Auralprint development roadmap
 
-Updated: October 7, 2026. Development revision: `v0.1.15m.h.o` / Build 115. Preset schema: 10 (frozen for Build 115).
+Updated: October 7, 2026. Development revision: `v0.1.15m.h.p` / Build 115. Preset schema: 10 (frozen for Build 115).
 
-The immediate priority for **Visualizer Architecture + Orb Overhaul v1** is release-audit remediation. **115N — Release Candidate / final acceptance / canonization — remains withheld.** M.H completed status ownership, developer/test portability, repository hygiene, and documentation reconciliation. The release-readiness audit found blockers; M.H.A closed RC-01; M.H.B adds infrastructure-only CI/build validation. M.H.C closes RC-06; M.H.D closes RC-02 cancellation with Linux/Windows CI green. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; all other unresolved findings remain open, and remediation remains active. Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Stream stereo correctness is fixed and validated, and schema 10 is frozen for Build 115. Build 115 is not shipped/canonical; Build 116 Camera work remains blocked until acceptance.
+The accepted pre-pass revision is **v0.1.15m.h.o**, main at `5f0b3c0af4e818e6b6000f36e4b6b15d47aa8562`. [PR #35](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/35) merged RC-07 through RC-14 remediation with hosted Linux and Windows CI passing. Current development revision **v0.1.15m.h.p** corrects the additional RC-13 Queue focus-restoration edge found during post-merge developer review: Queue Hide returns to its toggle when Audio is visible and to the visible Audio workspace launcher when Audio is hidden. RC-01–RC-12 and RC-14 are CLOSED; RC-13 closes after this edge correction is accepted, completing RC-01 through RC-14 closure. **RC-15 remains OPEN P2**, requires explicit release disposition before 115N, and still blocks release-candidate promotion. **115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped. Preset schema remains 10.** Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Build 116 Camera remains blocked until Build 115 acceptance.
 
 This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
 
@@ -25,7 +25,7 @@ Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are p
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A closed RC-01; M.H.B establishes CI/build infrastructure only; M.H.C closes RC-06; M.H.D closes RC-02 cancellation; M.H.E closes RC-03 live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; stages 14–15 belong to 115N and remain withheld.
+Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A closed RC-01; M.H.B establishes CI/build infrastructure only; M.H.C closes RC-06; M.H.D closes RC-02 cancellation; M.H.E closes RC-03 live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; PR #35 merged RC-07–RC-14 remediation with hosted Linux/Windows CI green. 115M.H.P corrects the post-review RC-13 Queue focus edge; RC-01–RC-14 are closed after its acceptance. RC-15 remains OPEN P2 and requires release disposition before 115N; stages 14–15 belong to 115N and remain withheld.
 
 1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
 2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
@@ -47,7 +47,7 @@ Existing Node tests and a successful offline single-file build are useful regres
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-**Status: v0.1.15m.h.o corrects RC-14: terminate cancelled touch seek ownership, with local acceptance checks passing. RC-01 through RC-06 remain CLOSED. RC-07 through RC-14 pass local acceptance. RC-15 remains open; autonomous remediation stopped after Node/native Chromium measurements because aggregate/frame budgets and degradation policy require a product decision. No release-readiness PR was created. 115N promotion is withheld and Build 115 is not canonical. Schema 10 is frozen for Build 115. Settings owns Scene appearance/presets; one Visualizers workspace owns Spectral Ring and Orbs. Final acceptance/canonization remains pending.**
+The accepted pre-pass revision is **v0.1.15m.h.o**, main at `5f0b3c0af4e818e6b6000f36e4b6b15d47aa8562`. [PR #35](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/35) merged RC-07 through RC-14 remediation with hosted Linux and Windows CI passing. Current development revision **v0.1.15m.h.p** corrects the additional RC-13 Queue focus-restoration edge found during post-merge developer review: Queue Hide returns to its toggle when Audio is visible and to the visible Audio workspace launcher when Audio is hidden. RC-01–RC-12 and RC-14 are CLOSED; RC-13 closes after this edge correction is accepted, completing RC-01 through RC-14 closure. **RC-15 remains OPEN P2**, requires explicit release disposition before 115N, and still blocks release-candidate promotion. **115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped. Preset schema remains 10.**
 
 AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
 
@@ -85,11 +85,11 @@ Canonical developer/agent bootstrap is `npm ci`, `npm test`, then `npm run build
 
 Package installation may require network access even though the built application works offline. Use a disposable workspace-local npm cache if the default cache is unwritable; see [README bootstrap commands](README.md#developer-and-agent-bootstrap). Sandbox native-executable/child-process EPERM is an environment concern and must not be worked around in product source. No dependency, build-script, product-behavior, or schema change is part of M.H.B; schema remains 10.
 
-Browser/device acceptance remains separate from fast repository CI and still gates release readiness. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; all other unresolved findings remain open. **115N remains withheld.**
+Browser/device acceptance remains separate from fast repository CI and still gates release readiness. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; PR #35 merged RC-07–RC-14 remediation with hosted Linux/Windows CI green. RC-01–RC-14 are closed after acceptance of the 115M.H.P RC-13 edge correction; RC-15 remains OPEN P2 and requires release disposition before 115N. **115N remains WITHHELD.**
 
 ### Revision 115M.H.C — RC-06 retained export ownership
 
-RC-01 CLOSED. RC-06 CLOSED. All other release-audit findings remain open. **115N remains WITHHELD.** Schema remains exactly 10.
+At M.H.C: RC-01 CLOSED. RC-06 CLOSED. All other release-audit findings remained open; current closure status is recorded above. **115N remains WITHHELD.** Schema remains exactly 10.
 
 The last completed export survives new recording attempts and every failed acquisition, constructor, start, recorder-error, stop, or finalization path. Successful finalization snapshots the old URL by value, commits the new export metadata, then revokes the old URL exactly once. Reset retains the export; completed-export disposal still revokes/clears it. The unused premature-clear helper was removed locally; disposal remains its existing owner.
 
@@ -105,7 +105,7 @@ Validation: 12 focused RC-02 tests cover delayed resume/play, rejection, final r
 
 ### Revision 115M.H.E — RC-03 live attachment ownership
 
-RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED after local and hosted Linux/Windows CI evidence passed ([PR #31](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/31)). RC-04 and all other unresolved findings remain open. **115N remains WITHHELD.** Schema remains exactly 10.
+RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED after local and hosted Linux/Windows CI evidence passed ([PR #31](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/31)). At M.H.E, RC-04 and all other unresolved findings remained open; current closure status is recorded above. **115N remains WITHHELD.** Schema remains exactly 10.
 
 AudioEngine accepts an optional attachment guard and checks it after asynchronous context resume, immediately before teardown. Mic/Stream use the existing activationSeq token; a cancelled attachment stops only its acquired tracks, and a stale attachment exception cannot commit source errors or stream metadata. Canonical teardown retains its global unload. No persisted fields, recorder ownership changes, File-generation redesign, or playPause() changes are introduced.
 
@@ -113,7 +113,7 @@ Validation: 13 focused real-engine regressions cover both delayed-resume orderin
 
 ### Revision 115M.H.F — RC-04 Play/Clear transport ownership
 
-RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED. RC-04 CLOSED after focused/browser/mutation evidence and hosted Linux/Windows CI passed ([PR #32](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/32)). All other unresolved findings remain open. **115N remains WITHHELD.** Schema remains exactly 10.
+RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED. RC-04 CLOSED after focused/browser/mutation evidence and hosted Linux/Windows CI passed ([PR #32](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/32)). At M.H.F, all other unresolved findings remained open; current closure status is recorded above. **115N remains WITHHELD.** Schema remains exactly 10.
 
 Transport captures the intended media element by value, revalidates after context resume and after play completion, and returns quietly when Clear/replacement wins. Stale success/rejection cannot read or act on the replacement or commit canonical playback/errors. Identity is sufficient because each file load creates a fresh element and teardown detaches the old one. No generation/framework, UI, load-cancellation, live attachment, EOF, or recording-finalization change is introduced. [New evidence](docs/audits/remediations/115m-h-f-rc04/) preserves the original audit/evidence unchanged.
 
@@ -123,7 +123,11 @@ Validation: 13 focused regressions and both mutations pass; ten native Chromium 
 
 UI transport retains an owned EOF context (File, media element, repeat mode at EOF, existing load request ID) while recording finalizes. Canonical recording refresh consumes it once when the lock ends after complete or error. Ownership mismatch discards it; normal EOF remains immediate, including active recording across tracks. The shared policy uses existing `loadAndPlay()` cancellation machinery. RecorderEngine, AudioEngine, Queue, retained exports, and schema 10 remain unchanged.
 
-Validation: 18 focused regressions; both required mutations rejected; eight native Chromium scenarios cover both audit schedules, Repeat One/All, no-next, export failure, ordinary EOF, and recording continuity with no page errors. All 357 tests and the versioned build pass. RC-02 (12 Node/nine native), RC-04 (13 Node/ten native), and RC-06 (16 Node/native retention probe) remain green. [New evidence and full report](docs/audits/remediations/115m-h-g-rc05/README.md) preserves historical audit/evidence unchanged. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED after local and hosted Linux/Windows CI validation ([PR #33](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/33)). The source/transport lifecycle cluster is closed. All other audit findings remain unresolved. **115N remains WITHHELD.** Broader Build-117 lifecycle/performance hardening remains a separate future concern.
+Validation: 18 focused regressions; both required mutations rejected; eight native Chromium scenarios cover both audit schedules, Repeat One/All, no-next, export failure, ordinary EOF, and recording continuity with no page errors. All 357 tests and the versioned build pass. RC-02 (12 Node/nine native), RC-04 (13 Node/ten native), and RC-06 (16 Node/native retention probe) remain green. [New evidence and full report](docs/audits/remediations/115m-h-g-rc05/README.md) preserves historical audit/evidence unchanged. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED after local and hosted Linux/Windows CI validation ([PR #33](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/33)). The source/transport lifecycle cluster is closed. At M.H.G, all other audit findings remained unresolved; current closure status is recorded above. **115N remains WITHHELD.** Broader Build-117 lifecycle/performance hardening remains a separate future concern.
+
+### Revision 115M.H.P — RC-13 post-merge review correction
+
+PR #35 fixed the demonstrated RC-13 defects and merged with hosted Linux/Windows CI passing. Post-merge developer review found an additional focus-restoration edge when Queue remained visible while Audio was hidden. 115M.H.P closes it by restoring focus only to a visible owner through the existing panel-visibility seam: the Queue toggle when Audio is visible, otherwise the Audio workspace launcher. Collapsed-launcher recovery expands the launcher without opening Audio; outside focus is preserved. [New correction report](docs/audits/remediations/115m-h-p-rc13/README.md) keeps validation separate from unchanged historical reproduction/evidence. RC-01–RC-14 are closed after this correction is accepted. RC-15 remains OPEN P2, blocks release-candidate promotion, and requires explicit release disposition before 115N. 115N remains WITHHELD; Build 115 is NOT canonical / NOT shipped; schema remains 10.
 
 ### Known deferrals after 115M.H
 
@@ -132,7 +136,7 @@ Validation: 18 focused regressions; both required mutations rejected; eight nati
 | Resize / move / orientation visual smearing | Deferred to Build 116 simulation-space / Camera separation |
 | Orb editor ergonomics / high-Orb-count navigation | Architecture is correct and controls are complete; UX refinement deferred to Build 117 |
 | File / Queue UX refinement | Explicitly deferred from M.H to Build 117 UX hardening |
-| AUD-002 unbounded preset-controlled work / resource governance | Build 117 performance/resource hardening |
+| RC-15 / AUD-002 unbounded preset-controlled work / resource governance | OPEN P2 release blocker; explicit release disposition required before 115N; broader performance/resource hardening remains Build 117 |
 | AUD-006 source/load concurrency | RC-02–RC-05 complete; source/transport lifecycle cluster closed; broader lifecycle hardening remains Build 117 |
 | AUD-009 recorder retained-memory / backpressure | Build 117 |
 | AUD-012 per-frame allocation / UI refresh performance | Build 117, including channel-complete analysis cost |

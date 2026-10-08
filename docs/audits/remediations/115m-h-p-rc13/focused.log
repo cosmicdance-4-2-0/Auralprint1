@@ -1,0 +1,17 @@
+✔ RC-13: Queue Hide preserves visible focus ownership — Audio visible (2.142903ms)
+✔ RC-13: Queue Hide preserves visible focus ownership — Audio hidden (0.268814ms)
+✔ RC-13: Queue Hide preserves visible focus ownership — Audio hidden with collapsed launcher (0.161116ms)
+✔ RC-13: Queue Hide preserves visible focus ownership — Audio hidden attribute (0.286558ms)
+✔ RC-13: Queue Hide preserves visible focus ownership — Audio visible without Queue toggle (0.225394ms)
+✔ RC-13: Queue Hide preserves visible focus ownership — outside focus (0.169425ms)
+✔ RC-13: visible focus owns panel stacking and Queue Hide restores the real toggle (0.636038ms)
+✔ workspace owns deterministic visibility, restore, focus, record, collapse, and idempotent wiring (2.752709ms)
+✔ Record restore remains eligible only while hooks are enabled (0.508127ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16.915441

@@ -76,6 +76,33 @@ async function snapshot(page) {
     await page.locator('#btnClearQueue').focus(); await page.keyboard.press('Enter');
     assert.equal((await snapshot(page)).id, 'btnHideQueue');
     cases.push({ kind: 'clear-restores-hide-focus', focused: await snapshot(page) });
+    for (const collapsed of [false, true]) {
+      const edgePage = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+      edgePage.on('pageerror', e => errors.push(e.message));
+      await edgePage.route('http://rc13.test/**', r => r.fulfill({ contentType: 'text/html', body: html }));
+      await edgePage.goto('http://rc13.test/');
+      await edgePage.locator('#btnToggleQueue').click();
+      await edgePage.locator('#btnHideAudio').click();
+      if (collapsed) await edgePage.locator('#btnToggleWorkspaceLauncher').click();
+      assert.equal(await edgePage.locator('#queuePanel').isVisible(), true);
+      assert.equal(await edgePage.locator('#audioPanel').isVisible(), false);
+      assert.equal(await edgePage.locator('#workspaceLauncher').getAttribute('data-collapsed'), String(collapsed));
+      await edgePage.locator('#btnHideQueue').focus();
+      assert.equal((await snapshot(edgePage)).id, 'btnHideQueue');
+      await edgePage.keyboard.press('Enter');
+      const focused = await snapshot(edgePage);
+      const audioVisible = await edgePage.locator('#audioPanel').isVisible();
+      const queueVisible = await edgePage.locator('#queuePanel').isVisible();
+      const launcherCollapsed = await edgePage.locator('#workspaceLauncher').getAttribute('data-collapsed');
+      assert.equal(focused.id, 'btnOpenAudio');
+      assert.equal(focused.visibleFocus, true);
+      assert.equal(await edgePage.locator('#btnOpenAudio').isEnabled(), true);
+      assert.equal(audioVisible, false);
+      assert.equal(queueVisible, false);
+      assert.equal(launcherCollapsed, 'false');
+      cases.push({ kind: 'queue-hide-audio-hidden', initiallyCollapsed: collapsed, focused, audioVisible, queueVisible, launcherCollapsed });
+      await edgePage.close();
+    }
     assert.deepEqual(errors, []);
     const result = { version, browser: await browser.version(), cases, errors };
     if (process.env.AP_REPORT) fs.writeFileSync(process.env.AP_REPORT, JSON.stringify(result, null, 2) + '\n');

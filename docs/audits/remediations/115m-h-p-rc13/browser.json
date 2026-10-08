@@ -1,0 +1,177 @@
+{
+  "version": "v0.1.15m.h.p",
+  "browser": "151.0.7922.173",
+  "cases": [
+    {
+      "kind": "visible-panel-keyboard-ownership",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "focused": {
+        "id": "inpBandCeilingHz",
+        "tag": "INPUT",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "analysisPanel"
+        ],
+        "hitPanel": "analysisPanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "visible-panel-keyboard-ownership",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "focused": {
+        "id": "inpBandCeilingHz",
+        "tag": "INPUT",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "analysisPanel"
+        ],
+        "hitPanel": "analysisPanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "queue-hide-show-real-toggle",
+      "focused": {
+        "id": "btnHideQueue",
+        "tag": "BUTTON",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "queuePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "remove-middle-successor",
+      "focused": {
+        "id": "",
+        "tag": "BUTTON",
+        "className": "q-remove",
+        "rowText": "2C.wav×",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "queuePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "remove-last-predecessor",
+      "focused": {
+        "id": "",
+        "tag": "BUTTON",
+        "className": "q-remove",
+        "rowText": "1A.wav×",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "queuePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "empty-queue-hide-focus",
+      "focused": {
+        "id": "btnHideQueue",
+        "tag": "BUTTON",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "queuePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "activation-retains-row-focus",
+      "focused": {
+        "id": "",
+        "tag": "DIV",
+        "className": "queue-item active",
+        "rowText": "2B.wav×",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "queuePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "refresh-preserves-outside-focus",
+      "focused": {
+        "id": "btnHideScene",
+        "tag": "BUTTON",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "scenePanel"
+        ],
+        "hitPanel": "scenePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "clear-restores-hide-focus",
+      "focused": {
+        "id": "btnHideQueue",
+        "tag": "BUTTON",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "queuePanel",
+        "visibleFocus": true
+      }
+    },
+    {
+      "kind": "queue-hide-audio-hidden",
+      "initiallyCollapsed": false,
+      "focused": {
+        "id": "btnOpenAudio",
+        "tag": "BUTTON",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "",
+        "visibleFocus": true
+      },
+      "audioVisible": false,
+      "queueVisible": false,
+      "launcherCollapsed": "false"
+    },
+    {
+      "kind": "queue-hide-audio-hidden",
+      "initiallyCollapsed": true,
+      "focused": {
+        "id": "btnOpenAudio",
+        "tag": "BUTTON",
+        "className": "",
+        "rowText": "",
+        "frontPanels": [
+          "queuePanel"
+        ],
+        "hitPanel": "",
+        "visibleFocus": true
+      },
+      "audioVisible": false,
+      "queueVisible": false,
+      "launcherCollapsed": "false"
+    }
+  ],
+  "errors": []
+}
