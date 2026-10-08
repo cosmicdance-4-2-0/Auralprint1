@@ -19,7 +19,10 @@ const rgb = { r: .2, g: .4, b: .6 };
 const particles = trail => Array.from(trail.particles);
 function def(id, rate = 240, ttl = 600) {
   const result = structuredClone(CONFIG.defaults.orbs[0]);
+  // These unchanged governance assertions exercise deliberately dense zero spacing.
+  // The spacing-default path is covered separately in rc15-spacing.test.js.
   result.id = id; result.particles.emitPerSecond = rate; result.particles.ttlSec = ttl;
+  result.particles.minPlacementDistancePx = 0;
   return result;
 }
 function scene(count, particlePolicy, rate = 240) {

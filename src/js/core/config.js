@@ -6,7 +6,7 @@ const SIMULATION_MAX_DELTA_TIME_SEC = 1 / 30;
 const DEFAULT_ORB_BEHAVIOR = {
   motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
   response: { minRadiusFrac: 0.01, maxRadiusFrac: 0.80, waveformRadialDisplaceFrac: 0.10 },
-  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0 },
+  particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0, minPlacementDistancePx: 0.5 },
   trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand" },
 };
 
@@ -481,6 +481,7 @@ bands: {
       sizeMinPx: { min: 0.5, max: 6, step: 0.1 },
       sizeToMinSec: { min: 0.1, max: 120, step: 0.1 },
       ttlSec: { min: 0.1, max: 600, step: 0.1 },
+      minPlacementDistancePx: { min: 0, max: 10, step: 0.1 },
     },
 
     motion: {

@@ -1,4 +1,5 @@
 import { CONFIG } from "../core/config.js";
+import { normalizeMinPlacementDistancePx } from "../core/preferences.js";
 import { ParticleGovernor } from "./particle-governor.js";
 import { ParticleList } from "./particle-list.js";
 
@@ -55,7 +56,7 @@ class TrailSystem {
     return true;
   }
 
-  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings) {
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings, dpr = 1) {
     if (this.standalone) this.governor.beginFrame();
     const g = this.governor;
     const ttl = Math.max(0.0001, particleSettings.ttlSec);
@@ -77,7 +78,27 @@ class TrailSystem {
     const whole = Number.isFinite(total) ? Math.floor(total) : Number.MAX_SAFE_INTEGER;
     this.emitAccumulator = Number.isFinite(total) ? total % 1 : 0;
     this.pendingEmissions = Number.isFinite(nowSec) && g.frameActive ? Math.min(whole, maximum) : 0;
+    g.stats.requestedDemand = Math.min(Number.MAX_SAFE_INTEGER, g.stats.requestedDemand + whole);
     g.addDropped(whole - this.pendingEmissions);
+    const spacingPx = normalizeMinPlacementDistancePx(particleSettings.minPlacementDistancePx);
+    if (spacingPx > 0 && this.pendingEmissions > 0) {
+      // One sampled position per callback: extra whole opportunities are redundant.
+      // Read only this Orb's current retained tail, after TTL retirement. No cache
+      // survives reset/eviction, and proximity never deletes historical particles.
+      const last = this.particles.tail?.particle;
+      const threshold = spacingPx * (Number.isFinite(dpr) && dpr > 0 ? dpr : 1);
+      const thresholdSquared = threshold * threshold;
+      let eligible = true;
+      if (last) {
+        const dx = emitterXSim - last.xSim, dy = emitterYSim - last.ySim;
+        g.stats.placementComparisons++;
+        eligible = dx * dx + dy * dy >= thresholdSquared;
+      }
+      const candidate = eligible ? 1 : 0;
+      g.stats.spatiallyRejectedDemand = Math.min(Number.MAX_SAFE_INTEGER,
+        g.stats.spatiallyRejectedDemand + this.pendingEmissions - candidate);
+      this.pendingEmissions = candidate;
+    }
     this.emission.xSim = emitterXSim; this.emission.ySim = emitterYSim;
     this.emission.nowSec = nowSec; this.emission.rgbStart = rgbStart;
     if (this.standalone) g.finishFrame();

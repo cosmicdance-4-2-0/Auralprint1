@@ -15,10 +15,10 @@ import { ColorPolicy } from '../src/js/render/color-policy.js';
 
 const cap = CONFIG.limits.orbs.maxCount;
 const color = { r:.2,g:.4,b:.6 };
-const defs = count => normalizeOrbCollection(Array.from({length:count},(_,i)=>({id:`ORB${i}`})));
+const defs = (count, spacing = .5) => normalizeOrbCollection(Array.from({length:count},(_,i)=>({id:`ORB${i}`,particles:{minPlacementDistancePx:spacing}})));
 const overLimit = error => error instanceof RangeError && error.code === 'orb-limit-exceeded';
-function scene(count) {
-  const orbs=defs(count).map(d=>new Orb(d)), v=createVisualizerRuntime();v.rebuild(orbs);
+function scene(count, spacing = .5) {
+  const orbs=defs(count, spacing).map(d=>new Orb(d)), v=createVisualizerRuntime();v.rebuild(orbs);
   const context={dtSec:1/60,nowSec:0,simPaused:false,analysisFrame:createAnalysisFrame()};
   return {orbs,v,context};
 }
@@ -187,7 +187,8 @@ test('RC-15 phase 3: zero-particle ceiling scene still updates all Orbs and curr
 });
 
 test('RC-15 phase 3: saturated churn/reorder/reset/replacement leaves no stale heap, trail or allocation ownership',()=>{
-  const restore=savedEnvironment(),s=scene(256);
+  // Saturated retention/lifecycle probe deliberately disables placement filtering.
+  const restore=savedEnvironment(),s=scene(256,0);
   try{
     let removedNodes=[];
     for(let cycle=0;cycle<8;cycle++){
@@ -195,7 +196,7 @@ test('RC-15 phase 3: saturated churn/reorder/reset/replacement leaves no stale h
       const g=s.orbs[0].trail.governor;assert.equal(g.heap.length,16384);
       const survivors=s.orbs.slice(1).reverse(),node=survivors[0].trail.particles.head;
       const removed=s.orbs[0];for(let n=removed.trail.particles.head;n;n=n.next)removedNodes.push(n);
-      s.orbs=[...survivors,new Orb(defs(1)[0])];s.orbs.at(-1).id=`NEW-${cycle}`;s.v.reconcile(s.orbs);
+      s.orbs=[...survivors,new Orb(defs(1,0)[0])];s.orbs.at(-1).id=`NEW-${cycle}`;s.v.reconcile(s.orbs);
       assert.equal(s.orbs[0].trail.particles.head,node);assert.equal(removed.trail.particles.length,0);assert.notEqual(removed.trail.governor,g);
       assert.equal(g.heap.length,s.orbs.reduce((n,o)=>n+o.trail.particles.length,0));
       const queue=[];for(let t=g.nextPriority;t;t=t.priorityNext){assert.ok(!queue.includes(t));queue.push(t);}
@@ -203,7 +204,7 @@ test('RC-15 phase 3: saturated churn/reorder/reset/replacement leaves no stale h
       for(const n of g.heap)assert.equal(g.heap[n.heapIndex],n);
       s.v.reset(cycle%2?'track':'visuals');assert.equal(g.heap.length,0);assert.equal(g.sequence,0);
       assert.ok(s.orbs.every(o=>o.trail.particles.length===0&&o.trail.emitAccumulator===0));
-      s.orbs=defs(256).map(d=>new Orb(d));s.v.rebuild(s.orbs);assert.equal(g.trails.length,256);assert.equal(g.heap.length,0);
+      s.orbs=defs(256,0).map(d=>new Orb(d));s.v.rebuild(s.orbs);assert.equal(g.trails.length,256);assert.equal(g.heap.length,0);
       assert.ok(removedNodes.every(n=>n.trail===null&&n.prev===null&&n.next===null&&n.heapIndex===-1));
     }
     s.v.dispose();assert.equal(s.v.getVisualizers().length,0);assert.equal(s.v.getParticleStats().activeParticles,0);
@@ -225,7 +226,8 @@ test('RC-15 phase 3: governed preset round-trip keeps schema 10 and omits live s
 
 test('RC-15 phase 3: replaceable Orb lifecycle adapters share governance without depending on extra adapter metadata',()=>{
   const restore=savedEnvironment();
-  const orbs=defs(256).map(d=>new Orb(d));
+  // Adapter governance probe deliberately requests dense emissions.
+  const orbs=defs(256,0).map(d=>new Orb(d));
   const v=createVisualizerRuntime({createOrb:orb=>({id:orb.id,type:'orb',isVisible:()=>true,
     update:context=>orb.step(context.dtSec,context.nowSec,null,null,0),render:(renderer,c)=>renderer.drawOrb(orb,c.nowSec,0),reset:()=>orb.resetTrail(),dispose(){}})});
   try{

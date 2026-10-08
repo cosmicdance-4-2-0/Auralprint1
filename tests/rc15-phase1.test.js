@@ -18,9 +18,9 @@ const timingCases = [
   ...[-1, 0, NaN, Infinity, -Infinity, undefined, null, "120", {}, []].map(value => [value, ceiling]),
 ];
 
-test("RC-15 phase 1: emitted particles at identical and nearby coordinates coexist until real-time TTL", () => {
+test("RC-15 phase 1: emitted particles at identical and nearby coordinates coexist until real-time TTL with spacing disabled", () => {
   const trail = new TrailSystem();
-  const settings = { ...CONFIG.defaults.orbs[0].particles, ttlSec: 1 };
+  const settings = { ...CONFIG.defaults.orbs[0].particles, ttlSec: 1, minPlacementDistancePx: 0 };
   for (const [x, y, now] of [[10, 20, 0], [10, 20, .25], [10.1, 20.1, .5]]) {
     trail.updateAndEmit(1 / 60, now, x, y, rgb, settings);
   }
@@ -62,7 +62,7 @@ test("RC-15 phase 1: development schema-10 overlap input decodes, strips, and pr
   const fallback = { ...CONFIG.defaults.orbs[0], particles: dirty.orbs[0].particles };
   for (const orb of [...CONFIG.defaults.orbs, ...normalizeOrbCollection(dirty.orbs), normalizeOrbDef({}, fallback)]) {
     assert.equal("overlapRadiusPx" in orb.particles, false);
-    assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec"]);
+    assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistancePx"]);
   }
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
@@ -147,7 +147,7 @@ test("RC-15 phase 1: per-Orb burst guard is independent of imported timing and b
       runtime.settings = { timing: { maxDeltaTimeSec } };
       for (const rate of [240, 1000, 1e6, Number.MAX_VALUE]) {
         const trail = new TrailSystem();
-        const settings = { ...CONFIG.defaults.orbs[0].particles, emitPerSecond: rate };
+        const settings = { ...CONFIG.defaults.orbs[0].particles, emitPerSecond: rate, minPlacementDistancePx: 0 };
         trail.updateAndEmit(120, 0, 0, 0, rgb, settings);
         assert.equal(trail.particles.length, Math.ceil(Math.min(rate, CONFIG.limits.particles.emitPerSecond.max) * ceiling) + 2);
       }

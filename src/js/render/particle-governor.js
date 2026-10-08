@@ -17,7 +17,8 @@ class ParticleGovernor {
     this.priorityTail = null;
     this.sequence = 0;
     this.frameActive = false;
-    this.stats = { emissions: 0, droppedDemand: 0, expired: 0, evicted: 0, expiryVisits: 0, schedulingVisits: 0, heapComparisons: 0 };
+    this.stats = { emissions: 0, requestedDemand: 0, spatiallyRejectedDemand: 0, placementComparisons: 0,
+      droppedDemand: 0, expired: 0, evicted: 0, expiryVisits: 0, schedulingVisits: 0, heapComparisons: 0 };
   }
 
   get activeParticles() { return this.heap.length; }

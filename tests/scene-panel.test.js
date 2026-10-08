@@ -118,7 +118,7 @@ test("Scene controls mutate only historical schema-10 fields", () => {
   finally { globalThis.document = oldDocument; }
 });
 
-const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL"];
+const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL", "rngMinPlacementDistance"];
 const RING_CONTROL_IDS = ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"];
 
 test("Visualizers contains one inventory, Ring editor, Orb editor host, management and all 13 bulk fields", () => {

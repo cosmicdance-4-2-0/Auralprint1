@@ -87,7 +87,7 @@ class Orb {
       globalDominantBandIndex,
       selectedDominantBandIndex,
     );
-    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles);
+    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles, state.dpr);
   }
 }
 

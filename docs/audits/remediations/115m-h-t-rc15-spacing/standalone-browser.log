@@ -1,0 +1,17 @@
+{
+  "version": "v0.1.15m.h.t",
+  "browser": "151.0.7922.173",
+  "verified": [
+    "standalone boot with external requests blocked",
+    "DPR 1 and 2",
+    "keyboard range edits to zero",
+    "pixel accessibility value",
+    "mixed Bulk state",
+    "Bulk edit",
+    "duplication",
+    "surviving editor and input identity",
+    "schema-10 persistence",
+    "exact help text"
+  ],
+  "errors": []
+}

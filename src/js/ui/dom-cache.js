@@ -87,6 +87,8 @@ function primeDomCache() {
     ui.valSizeToMin = document.getElementById("valSizeToMin");
     ui.rngTTL = document.getElementById("rngTTL");
     ui.valTTL = document.getElementById("valTTL");
+    ui.rngMinPlacementDistance = document.getElementById("rngMinPlacementDistance");
+    ui.valMinPlacementDistance = document.getElementById("valMinPlacementDistance");
 
     ui.rngOmega = document.getElementById("rngOmega");
     ui.valOmega = document.getElementById("valOmega");
@@ -198,6 +200,7 @@ function primeDomCache() {
     bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
     bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
     bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
+    bindRange(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistancePx);
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);

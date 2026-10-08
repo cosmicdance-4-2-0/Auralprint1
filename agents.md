@@ -74,6 +74,11 @@ retires `particles.overlapRadiusPx` from schema 10 without incrementing it.
 Development-era schema-10 inputs containing this property remain accepted;
 normalization and encoding strip it. This exception adds no migration or schema
 11 and does not relax the frozen public contract after Build 115 ships.
+Revision v0.1.15m.h.t is an explicitly authorized final pre-release correction:
+schema 10 adds `particles.minPlacementDistancePx` (CSS pixels, default 0.5;
+0 disables placement filtering). Missing schema-2–10 fields receive that default;
+obsolete overlap fields remain discarded, never aliased. Neither exception
+permits changes to a published schema.
 Schema 9 historically had both Scene-node and later top-level forms; input
 migration recognizes both, with top-level values taking precedence. Abandoned
 Scene layout/editor semantics have no schema-10 equivalent and are discarded.
@@ -90,8 +95,8 @@ If you add/change any persisted field:
 2. `sanitizePreset()`
 3. `normalize*()` helpers (e.g., `normalizeOrbDef`)
 4. `encodePresetPayload()` and schema-contract tests
-5. `PRESET_SCHEMA_VERSION` (increment, except the explicitly authorized pre-release overlap retirement above)
-6. Migration handling for older schemas (preserve existing migrations for that exception)
+5. `PRESET_SCHEMA_VERSION` (increment, except the explicitly authorized pre-release corrections above)
+6. Migration handling for older schemas (preserve existing migrations and default missing spacing for those exceptions)
 
 Failure to update all = **silent data corruption risk**
 
@@ -182,7 +187,7 @@ id, chanId, bandIds, chirality, startAngleRad,
 hueOffsetDeg, colorSource, centerXFrac, centerYFrac,
 motion { angularSpeedRadPerSec },
 response { minRadiusFrac, maxRadiusFrac, waveformRadialDisplaceFrac },
-particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec },
+particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, minPlacementDistancePx },
 trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 ```
 
@@ -202,6 +207,13 @@ Rules:
 - Camera remains a downstream render/projection concern for Build 116.
 
 Orb particle safeguards are ephemeral and owned by each `VisualizerRuntime`, never presets. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
+
+Minimum placement distance compares only the same Orb's currently retained
+trail tail using squared distance scaled by active DPR. Nonzero spacing prepares
+at most one candidate per callback before shared scheduling, discards redundant
+whole opportunities, and retains fractional rate progress. Zero bypasses spacing
+and preserves dense emission semantics. Spatial suppression never deletes history
+or spends governor service priority; per-frame diagnostic counts are ephemeral.
 
 ### 4.4 Dynamic Orb Collection
 

@@ -1,0 +1,44 @@
+✔ spacing default: first emission, repeated position, below/exact/above threshold, and incremental motion (1.710008ms)
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.942556ms)
+✔ CSS spacing and production Orb DPR wiring at DPR 1 (0.699509ms)
+✔ CSS spacing and production Orb DPR wiring at DPR 2 (0.216217ms)
+✔ stationary trail becomes eligible after TTL expiry, eviction, or explicit reset without a coordinate cache (0.524674ms)
+✔ independent Orbs at identical locations admit independently and suppress before shared allocation (0.856526ms)
+✔ many high-rate stationary Orbs cannot consume fairness slots or starve moving eligible Orbs (1.53295ms)
+✔ rate below frame rate remains authoritative even after large movement; fractions survive spatial rejection (7.71115ms)
+✔ zero fully bypasses comparisons, preserves duplicate rate demand, and obeys both global ceilings (1.381912ms)
+✔ nonzero default still enforces the canonical aggregate ceilings with 1024 useful moving candidates (37.12271ms)
+✔ running spacing changes preserve particles and fractions, and paused runtime emits nothing (0.760681ms)
+✔ schema 10 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated (3.747291ms)
+✔ canonical creation, duplication, ID reconciliation, preset apply, track/visual reset, rebuild and disposal (2.085236ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.29779
+
+✖ failing tests:
+
+test at tests/rc15-spacing.test.js:59:1
+✖ spacing uses squared two-dimensional distance and only the most recent retained position (0.942556ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-spacing.test.js:63:63)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

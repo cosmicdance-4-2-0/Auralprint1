@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.s");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.s\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.h.t");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.h\.t\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -3397,6 +3397,7 @@ const MG_BULK_FIELDS = [
   ["rngSizeMin", "valSizeMin", "particles", "sizeMinPx", "input", 1, 2],
   ["rngSizeToMin", "valSizeToMin", "particles", "sizeToMinSec", "input", 2, 4],
   ["rngTTL", "valTTL", "particles", "ttlSec", "input", 10, 12],
+  ["rngMinPlacementDistance", "valMinPlacementDistance", "particles", "minPlacementDistancePx", "input", 0, 2],
 ];
 
 for (const [controlId, outputId, group, field, event, first, second] of MG_BULK_FIELDS) {
@@ -3526,6 +3527,27 @@ test("M.C relocated Orb roots, disclosure, picker, focus and scroll survive norm
     assert.equal(host.children[0], root); assert.equal(document.activeElement, control);
     assert.equal(root.open, true); assert.equal(motion.open, true); assert.equal(picker.open, true);
     assert.equal(state.ui.visualizersPanel.scrollTop, 432);
+  });
+});
+
+test("spacing individual live edit retains Orb phase, particles, editor focus, and survives unrelated collection changes", async (t) => {
+  await withSettingsActionHarness(t, () => {
+    hostVisualizerEditors(); UI.refreshAllUiText();
+    const orb=state.orbs[0],id=orb.id,root=state.ui.orbEditorList.children[0];
+    orb.angleRad=2.5; orb.trail.emitAt(3,4,0,{r:1,g:0,b:0}); orb.trail.emitAccumulator=.37;
+    const tail=orb.trail.particles.tail;
+    const control=root.querySelectorAll("input").find(node=>node.id?.endsWith("min-placement-distance"));
+    control.focus(); control.value="2.3"; control.dispatch("input");
+    for(const source of [preferences.orbs,runtime.settings.orbs,state.orbs])assert.equal(source.find(o=>o.id===id).particles.minPlacementDistancePx,2.3);
+    assert.equal(state.orbs.find(o=>o.id===id),orb); assert.equal(orb.angleRad,2.5);
+    assert.equal(orb.trail.particles.tail,tail); assert.equal(orb.trail.emitAccumulator,.37);
+    assert.equal(state.ui.orbEditorList.children[0],root); assert.equal(document.activeElement,control);
+    const commits=t.mock.method(UI,"refreshAllUiText");
+    control.value="0"; control.dispatch("input"); assert.equal(orb.particles.minPlacementDistancePx,0);
+    assert.ok(commits.mock.callCount()<=1,"a single input has one refresh path");
+    state.ui.btnVisualizersAddOrb.click();
+    assert.equal(state.ui.orbEditorList.children.find(node=>node.dataset.orbId===id),root);
+    assert.equal(orb.trail.particles.tail,tail); assert.equal(orb.angleRad,2.5);
   });
 });
 
