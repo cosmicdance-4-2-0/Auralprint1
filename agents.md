@@ -3,6 +3,8 @@
 **Purpose**
 This document defines the operating contract for autonomous or semi-autonomous agents working on the Auralprint codebase. It is not guidance; it is **policy**. Deviations must be explicit, justified, and versioned.
 
+[ROADMAP.md](ROADMAP.md) owns planning/acceptance; [Build 115 development history](docs/development/build-115.md) owns revision chronology and audit dispositions. Historical reports do not supersede the current contract.
+
 ---
 
 ## 0. Project Identity (Do not drift this)
@@ -190,7 +192,7 @@ Violation results in:
 - Build 115 establishes an explicit analysis-consumer interface. Downstream visual systems consume that representation instead of independently reading unrelated `AudioEngine`, analyser-node, and global band-state details.
 - When a stable analysis interface exists, visualizers MUST NOT reach into Web Audio internals.
 - Consumers may read producer-owned analysis arrays and buffers but MUST NOT mutate them.
-- Visualization-specific response and presentation state should ultimately belong to the visualizer instance that uses it. Schema 10 makes Orb motion, response, particles, and trace persistent Orb-owned state; color ownership remains a later Build 115 stage.
+- Visualization-specific response and presentation state should ultimately belong to the visualizer instance that uses it. Schema 10 makes Orb motion, response, particles, and trace persistent Orb-owned state. Shared color policy belongs to Scene Appearance; Orb source/hue and trace-mode overrides remain local (Sections 5.5–5.6).
 
 ### 4.1 Band System
 
@@ -492,8 +494,6 @@ When in doubt:
 
 ---
 
-**End of Contract**
-
 ## 5.5 Spectral Ring Ownership (Build 115K)
 
 - Spectral Ring is a first-class singleton `VisualizerRuntime` participant; its runtime ID and type are `spectral-ring`.
@@ -514,3 +514,5 @@ When in doubt:
 - Orb hue offset affects only that Orb's palette-derived colors. Trace color mode remains Orb-local.
 - Scene fixed particle color supplies current Orb/trace fixed modes and the last-particle fallback.
 - Every color setting has exactly one writable UI owner.
+
+**End of Contract**

@@ -1,28 +1,38 @@
 # Auralprint Roadmap (Builds 110 → 120)
 
-This repo tracks **Auralprint** an offline-capable audio analysis suite.(“analyzer cosplaying as a visualizer”).
+**Auralprint is an offline-capable audio-analysis system whose visualization expresses its analysis.** It combines file playback and live input analysis with configurable spectral inspection, visualizers, and recording.
 
-The active development order, capability inventory, acceptance evidence, and known deferrals are in [ROADMAP.md](ROADMAP.md). The accepted pre-pass revision is **v0.1.15m.h.o**, main at `5f0b3c0af4e818e6b6000f36e4b6b15d47aa8562`. [PR #35](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/35) merged RC-07 through RC-14 remediation with hosted Linux and Windows CI passing. Current development revision **v0.1.15m.h.p** corrects the additional RC-13 Queue focus-restoration edge found during post-merge developer review: Queue Hide returns to its toggle when Audio is visible and to the visible Audio workspace launcher when Audio is hidden. RC-01–RC-12 and RC-14 are CLOSED; RC-13 closes after this edge correction is accepted, completing RC-01 through RC-14 closure. **RC-15 remains OPEN P2**, requires explicit release disposition before 115N, and still blocks release-candidate promotion. **115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped. Preset schema remains 10.** M.H completed the pre-RC closure pass for Build 115, **Visualizer Architecture + Orb Overhaul v1**. Revisions through 115M.G are complete, including stable Orb editor reconciliation, Scene/preset consolidation, validated Stream stereo correctness, schema-10 closure, and unified Visualizers editing. Visualizers owns Spectral Ring and all 23 per-Orb controls plus 13 Bulk Edit fields in one workspace. Settings owns shared Scene appearance and presets; Orbs retain local source/hue and trace-mode overrides. Spectral Ring consumes the shared palette, and Analysis uses it as a diagnostic legend. Targeted inherited dominant remains channel/target-aware while explicit dominant remains global combined-C. Schema 10 is frozen for Build 115. **115N — Release Candidate / final acceptance / canonization — remains withheld**; Build 115 is not shipped/canonical, and Camera remains Build 116 after acceptance.
+**Release 3 / Build 113 (`v0.1.13`) remains the canonical public shipped release.** Build 114 (`v0.1.14`) is an internally shipped milestone. Current development is **Build 115, `v0.1.15m.i.e`**, preset schema **10**. RC-01 through RC-22 have completed corrective review and merge at the accepted baseline; **115N final acceptance remains WITHHELD**. Build 115 is unshipped and noncanonical.
 
-To try a development revision, read the canonical root `version`, run `npm ci`, `npm test`, then `npm run build` sequentially, and open `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15m.h.p.html`). Start with **Load audio**. **Audio** owns source/playback, **Analysis** owns analysis configuration and diagnostics, **Visualizers** owns inventory, Spectral Ring presentation, complete per-Orb editing, and Bulk Edit All Orbs; **Settings** owns shared Scene appearance/color policy and presets, and **Record** owns capture. Preference feedback stays with its owning panel; generic/internal preference synchronization is silent. **Queue** works independently of the Audio panel. **View** hides/restores the current panel layout; **H** does the same when a form control is not focused.
+See [ROADMAP.md](ROADMAP.md) for current capabilities, dependencies, deferrals, and acceptance gates; [Build 115 development history](docs/development/build-115.md) for engineering decisions and the [current audit disposition index](docs/development/build-115.md#audit-disposition-index); and the [canonical changelog](docs/Canon/changelog.md) for shipped-build differences. The [release-delta draft](docs/development/build-115-release-delta.md) prepares both public and internal comparisons for human review without publishing release notes.
 
-Node/npm and Python are the build toolchain; the assembler tries `PYTHON`, `python`, `python3`, then `py -3` on Windows. Scene template tests inspect structure in JavaScript without Python or a DOM dependency. `package-lock.json` is canonical; dependencies and generated `node_modules/`, `.build/`, `build/`, and `dist/` directories are untracked and ignored. The optional `node scripts/validate-stream-stereo.cjs` diagnostic requires a Playwright-enabled developer environment; Playwright is not a project dependency and is not required by tests/build. It uses Playwright's normal browser resolution unless `--chromium=<path>` is supplied. Run it after building; `--report=<path>` saves evidence and `--generator=<path>` optionally attempts native display capture.
+To try development, build from the canonical root `version` using the bootstrap below. Start with **Load audio** in File mode, or choose Mic/Stream where the browser supports capture. **Audio** owns source/playback; **Queue** manages files independently of Audio panel visibility; **Analysis** owns analysis configuration and diagnostics; **Visualizers** owns the singleton Spectral Ring, Orb management/editing, and Bulk Edit All Orbs; **Settings** owns shared Scene appearance, particle resources, and presets; **Record** owns capture. Feedback appears in its owning panel. **View**, or **H** outside form controls, hides/restores the current panel layout; **Space** outside form controls pauses visual motion/emission while analysis and particle aging continue.
 
 ## Developer and agent bootstrap
 
-Use Node **24** (the release audit used 24.19.0 / npm 11.9.0) and Python **3.12** (the audit used 3.12.14). From the repository root, run sequentially:
+Use Node **24** and Python **3.12**. From the repository root, run sequentially:
 
 ```sh
 npm ci
 npm test
 npm run build
+python scripts/verify_distribution.py
 ```
 
-`npm ci` installs from `package-lock.json`; no global esbuild or committed `node_modules` is required. Installation requires registry access unless a complete npm cache is independently available. The built application is offline-capable; dependency installation is not promised to work offline. If an agent's default npm cache is unwritable, use `npm ci --cache ./.npm-cache` instead, then remove that disposable cache after validation. `--offline` and environment-specific shared caches are not the canonical bootstrap. A sandbox native-executable/child-process EPERM requires an environment fix, not an application or dependency change.
+The supported install/test/build sequence uses `package-lock.json`; the final Python command additionally verifies both generated distribution contracts. Tests and build must stay sequential because a test temporarily renames build directories.
 
-[GitHub Actions CI](.github/workflows/ci.yml) now validates clean lockfile installation, Node tests, Python single-file assembly, and the final build on Linux and Windows for pull requests and pushes to `main`. It explicitly provisions Node 24 and Python 3.12, uses setup-node's npm package cache, and never caches `node_modules`. CI verifies the non-empty versioned HTML with its version marker, `git diff --check`, and that generated dependency/build directories remain untracked. Tests and build must stay sequential because tests temporarily rename build directories.
+`npm run build` generates:
 
-Browser/device acceptance remains separate; Playwright and browsers are not required by normal CI/test/build. CI does not prove release readiness. PR #35 passed hosted Linux/Windows CI and merged RC-07–RC-14 remediation. RC-01–RC-14 are closed after acceptance of this RC-13 edge correction; RC-15 remains OPEN P2 and blocks release-candidate promotion. **115N remains WITHHELD.**
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html` (currently `dist/auralprint_0.1.15m.i.e.html`), with embedded application JavaScript, CSS, and SVG favicon. It needs no adjacent application assets.
+- **Hosted:** `dist/hosted/index.html`, six supplied icon files, and `site.webmanifest`. Deploy the complete `dist/hosted/` directory at a root or subdirectory, with correct server MIME types. All metadata URLs are package-relative; both editions use the same application bundles and version.
+
+The portable build is intended for offline execution. Actual direct `file://` boot/playback remains an independent acceptance gate: the automated Chromium environment blocked navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`. Portable HTTP and hosted root/subdirectory behavior have [recorded Chromium evidence](docs/audits/remediations/115m-i-d-rc20/README.md#native-browser-and-request-evidence). Hosted metadata does not establish offline caching or installability; no service worker is provided.
+
+`npm ci` may require registry access; installation is not promised to work offline. No global esbuild or committed `node_modules` is needed. If the default npm cache is unwritable, use `npm ci --cache ./.npm-cache`, then remove that disposable cache. Native-executable/child-process EPERM requires an environment fix. The assembler tries `PYTHON`, `python`, `python3`, then `py -3` on Windows. Dependencies and generated `node_modules/`, `.build/`, `build/`, and `dist/` remain ignored and untracked.
+
+[GitHub Actions CI](.github/workflows/ci.yml) provisions Node 24/Python 3.12 and validates locked installation, tests, both distributions, packaging contracts, generated-output tracking, and whitespace on Linux and Windows. It caches npm packages, never `node_modules`. Browser tooling is optional and outside project dependencies; [historical diagnostic instructions](docs/development/build-115.md#diagnostics-and-evidence) link to the owning reports and scripts. `npm run watch` regenerates both editions for JS/CSS edits; branding, template, or version-only changes require a rebuild or restart.
+
+**CI success does not complete browser/device or release acceptance. 115N remains WITHHELD.**
 
 ## Versioning and what the numbers mean
 
@@ -52,7 +62,7 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 | 112 | v0.1.12 | — | ✅ Shipped (Internal) | Scrubber + Playlist/Queue |
 | 113 | v0.1.13 | R3 | ✅ Shipped (canonical) | Recording / Capture + band distribution modes |
 | 114 | v0.1.14 | — | ✅ Shipped (Internal) | Live input sources (mic/tab/stream) |
-| 115 | v0.1.15 (`v0.1.15m.h.p` development revision) | — | RC-01–RC-14 closed after RC-13 edge acceptance; RC-15 OPEN P2; 115N WITHHELD | Visualizer Architecture + Orb Overhaul v1 |
+| 115 | v0.1.15 (`v0.1.15m.i.e` development revision) | — | Implemented; corrective audit review/merge complete; 115N WITHHELD; unshipped | Visualizer Architecture + Orb Overhaul v1 |
 | 116 | v0.1.16 | R4 | Planned | Camera controls (render ≠ sim) |
 | 117 | v0.1.17 | — | Planned | UX polish + performance hardening |
 | 118 | v0.1.18 | — | Planned | Richer spectral selection |
@@ -145,21 +155,27 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
 
 ## Build 115 — v0.1.15: Visualizer Architecture + Orb Overhaul v1
 
-**Staged status:** revisions through 115M.G are complete; 115M.H closes pre-RC hardening with explicit status ownership, portable tests/diagnostic invocation, repository hygiene, and reconciled documentation. M.H.A closed RC-01; M.H.B adds CI/build infrastructure only. M.H.C closed RC-06; M.H.D closed RC-02 cancellation with Linux/Windows CI green; M.H.E closed RC-03, M.H.F closed RC-04, and M.H.G closed RC-05 with hosted Linux/Windows CI green; PR #35 merged RC-07–RC-14 remediation with hosted Linux/Windows CI green; 115M.H.P corrects the post-review RC-13 edge; RC-01–RC-14 are closed after its acceptance; RC-15 remains OPEN P2 and requires release disposition before 115N; 115N Release Candidate / final acceptance / canonization remains withheld. Settings owns shared Scene appearance/color policy while persistence intentionally remains in schema-10 `visuals.*` and `bands.*` fields; no persisted `scene` object exists. Orbs own local color source/hue and trace color mode. Spectral Ring and Analysis consume the shared palette without independent color state. Schema 10 is frozen for Build 115, and Camera remains Build 116 after acceptance.
-
-**Goal:** establish a clean analysis-consumer boundary and make Orbs first-class visualizers before camera work begins.
+**Goal:** establish an explicit analysis-consumer boundary and make Orbs and the Spectral Ring first-class, independently managed visualizers. This prepares the application for Build 116 Camera work without adding Camera functionality.
 
 **Scope**
-- One Visualizers workspace owns the Spectral Ring singleton and zero/one/N stable-ID Orb editors, collection management, and Bulk Edit All Orbs.
-- Per-Orb channel, spectral targeting, chirality, degree-presented designed phase, hue offset, color source, center, motion, response, particle, and trace controls exist.
-- The AnalysisFrame boundary and shared runtime lifecycle for Spectral Ring and Orbs are complete; ID-aware runtime reconciliation and user-facing add/edit/remove/duplicate operations are complete.
-- Motion, radius response, particle, trace, source, position, and color settings are schema-10 Orb-owned and individually editable; optional Bulk Edit controls apply one field to all Orbs while preserving truthful mixed states.
-- Spectral Ring is a singleton VisualizerRuntime participant configured in Visualizers. It uses combined C spectrum/waveform data; free-run resets to phase zero, while explicit Orb-lock follows the first Orb when present. Line alpha and width are editable.
 
-**DoD**
-- Complete the staged Build 115 plan in `ROADMAP.md`, including browser/media/accessibility/performance acceptance.
-- Preserve preset compatibility and observable audio/visual behavior at each architectural seam.
-- Keep Build 116 Camera work blocked until Build 115 is complete.
+- AnalysisFrame exposes producer-owned L/R/C waveform, energy, spectrum, and metadata to consumers, separating analysis from visualization. Analysis has an Orb-independent workspace for FFT, gain, smoothing, band definition, and diagnostics.
+- VisualizerRuntime manages composition and update/render/reset/disposal through one lifecycle. The Spectral Ring is a singleton with its sole presentation editor in Visualizers; it consumes combined C data and retains configuration under `bands.overlay`.
+- A zero/one/N Orb collection uses stable IDs. Add/Edit/Duplicate/Remove preserve surviving runtime history. Each Orb owns its channel/targets, position, designed phase, motion, response, particles, trace, and local color overrides. All applicable fields have per-Orb controls; Bulk Edit applies shared behavior fields and reports mixed values.
+- Orb spectral targeting uses the selected L/R/C channel; empty targets use full-channel energy. Designed phase edits preserve live phase until Reset Visuals. Orb-locked Ring uses the current first Orb; free-run Ring resets independently. Visual pause freezes motion/emission while analysis and real particle age continue.
+- Settings owns shared Scene background, fixed color, default Orb color policy, and palette. Ring and Analysis consume the palette; no persisted Scene object or independent Ring palette is introduced.
+- Schema-10 configuration/presets support legacy schemas 2–9, including both schema-9 layouts. Presets exclude session state. Approved pre-release corrections strip obsolete overlap fields and persist placement distance and selected particle budgets.
+- Shared particle emission/retention budgets, oldest-first retirement, per-Orb placement distance, and Orb admission limits govern resource use. Defaults are operational safeguards; expert settings and the maximum Orb count are not performance guarantees.
+- Existing file/queue/scrubber, Mic/Stream, and recorder integration retain subsystem ownership. Builds produce both a portable versioned HTML and a relocatable hosted package.
+
+**Definition of Done**
+
+- Preserve preset compatibility/schema discipline and stable analysis, visualizer, audio/source, and recorder ownership.
+- Verify browser/audio/visualizer regressions, accessible and recoverable interactions, real-media/device workflows, and resource limits with representative performance evidence.
+- Verify both distributions, including direct portable launch in a permitted browser environment and hosted root/subdirectory operation.
+- Complete independent [115N final acceptance and canonization gates](ROADMAP.md#build-115n-acceptance-gates). Implementation and passing CI alone do not satisfy this milestone.
+
+**Status:** implemented through release-preparation revisions; RC-01–RC-22 corrective review and merge are complete at the accepted baseline. **115N remains WITHHELD; Build 115 is unshipped and noncanonical.** See [development history and current audit dispositions](docs/development/build-115.md) for evidence and residual limitations.
 
 ---
 
@@ -246,29 +262,3 @@ The project uses intermediate builds (e.g., 112, 114–120) as structured milest
   - accept older schemas via migrations
 - Runtime-only state (playlist, recording session, live input permissions):
   - never stored in presets unless explicitly designed
-
-### Revision 115M.H.E — RC-03 live attachment ownership
-
-Mic and Stream supply their existing activation-token guard to AudioEngine. Attachment revalidates ownership after context resume and before graph replacement. Cancelled attachment releases only its acquired tracks; stale attachment failures resolve as cancellation before source-state/error commits. Explicit current-source teardown still unloads normally. File loading, playPause(), RecorderEngine, UI, dependencies, and preset schema 10 are unchanged. At M.H.E, RC-04 remained open; current closure status is recorded above. 115N remains WITHHELD.
-
-Validation: 13 real-engine ownership regressions, both required mutations rejected, six native Chromium scenarios with generated MediaStreams, all nine native RC-02 protection scenarios, full tests, and the single-file build pass. RC-03 CLOSED after hosted Linux/Windows CI passed ([PR #31](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/31)). [New evidence](docs/audits/remediations/115m-h-e-rc03/) is separate from the unchanged historical audit. The optional `node scripts/validate-live-source-ownership.cjs` probe uses `RC03_PLAYWRIGHT_MODULE`, `RC03_CHROMIUM_PATH`, and `RC03_REPORT` to select developer tooling/output; Playwright remains outside project dependencies.
-
-### Revision 115M.H.F — RC-04 Play/Clear transport ownership
-
-`playPause()` captures its starting media element and revalidates that exact identity after context resume and play-promise completion. Lost ownership returns quietly before playback/error state commits or any replacement-element action. Every file load allocates a new element, so no transport generation is needed. Current play failures and synchronous Pause retain their existing semantics. UI, live-source/load generations, recording, dependencies, CI, and preset schema 10 are unchanged.
-
-RC-01, RC-06, RC-02, and RC-03 remain CLOSED. RC-04 is CLOSED after focused/browser/mutation evidence and hosted Linux/Windows CI passed ([PR #32](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/32)); at M.H.F, all other unresolved findings remained open; current closure status is recorded above. **115N remains WITHHELD.** [New evidence](docs/audits/remediations/115m-h-f-rc04/) remains separate from the unchanged historical audit. The optional `node scripts/validate-transport-ownership.cjs` probe uses `RC04_PLAYWRIGHT_MODULE`, `RC04_CHROMIUM_PATH`, and `RC04_REPORT`; Playwright remains outside project dependencies.
-
-Validation: 13 focused ownership regressions, both required mutations rejected, ten native Chromium RC-04 scenarios with no page errors/stale commits, RC-02 protection (12 Node tests/nine browser scenarios), RC-03 protection (46 source/graph tests/six browser scenarios), all 339 tests, single-file build, and Linux/Windows CI pass.
-
-### Revision 115M.H.G — RC-05 deferred EOF during recording finalization
-
-Natural EOF during the temporary finalization lock now retains its File, media element, repeat mode at EOF, and existing load request identity in UI transport. Canonical recording-state refresh consumes it once after either completion or error, validates its owner, and invokes the same Queue/repeat policy as ordinary EOF through `loadAndPlay()`. Reset, source switches, and replacement loads clear pending ownership. RecorderEngine, AudioEngine, Queue, export ownership, and schema 10 are unchanged.
-
-Validation: 18 focused regressions, both required mutations rejected, eight native Chromium scenarios (including both historical audit schedules, Repeat One/All, no-next, and export failure), all 357 tests, and the versioned single-file build pass. RC-02 (12 Node/nine browser), RC-04 (13 Node/ten browser), and RC-06 (16 Node/native export retention) protection remain green. Historical audit/evidence remains unchanged. [New evidence and full report](docs/audits/remediations/115m-h-g-rc05/README.md). The optional `node scripts/validate-finalizing-eof.cjs` probe accepts `RC05_PLAYWRIGHT_MODULE`, `RC05_CHROMIUM_PATH`, and `RC05_REPORT`; Playwright remains outside project dependencies.
-
-RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED after local and hosted Linux/Windows CI validation ([PR #33](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/33)). The source/transport lifecycle cluster is closed. At M.H.G, all other audit findings remained unresolved; current closure status is recorded above. **115N remains WITHHELD.** Broader Build-117 lifecycle/performance hardening remains future work.
-
-### Revision 115M.H.P — RC-13 Queue focus-restoration review edge
-
-PR #35 fixed the demonstrated RC-13 defects. Post-merge developer review identified an additional edge when Queue remained visible while Audio was hidden. 115M.H.P closes that edge by restoring focus only to a visible owner: `btnToggleQueue` with visible Audio, otherwise `btnOpenAudio`, expanding the launcher if required while leaving Audio hidden. Outside focus is preserved. [RC-13 review correction report](docs/audits/remediations/115m-h-p-rc13/README.md) records focused, native-browser, and mutation validation separately from the original PR #35 evidence. Schema remains 10; RC-15 remains OPEN P2 and requires release disposition before 115N.

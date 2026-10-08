@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from assemble_single_file import HEAD_MARKER, CSS_MARKER, JS_MARKER, VERSION_MARKER, assemble, main
 from distribution import Document, ICONS, load_branding, parse_manifest, validate_html, verify_distribution
 
-VERSION = "v0.1.15m.i.d"
+VERSION = "v0.1.15m.i.e"
 CSS = "body { color: red; }\n"
 JS = 'console.log("one shared application");\n'
 

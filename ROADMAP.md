@@ -1,149 +1,99 @@
 # Auralprint development roadmap
 
-Updated: October 7, 2026. Development revision: `v0.1.15m.h.p` / Build 115. Preset schema: 10 (frozen for Build 115).
+Updated: October 8, 2026. Development revision: **`v0.1.15m.i.e` / Build 115**. Preset schema: **10**, with approved pre-release exceptions in [agents.md](agents.md#21-schema-discipline); frozen on shipment.
 
-The accepted pre-pass revision is **v0.1.15m.h.o**, main at `5f0b3c0af4e818e6b6000f36e4b6b15d47aa8562`. [PR #35](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/35) merged RC-07 through RC-14 remediation with hosted Linux and Windows CI passing. Current development revision **v0.1.15m.h.p** corrects the additional RC-13 Queue focus-restoration edge found during post-merge developer review: Queue Hide returns to its toggle when Audio is visible and to the visible Audio workspace launcher when Audio is hidden. RC-01–RC-12 and RC-14 are CLOSED; RC-13 closes after this edge correction is accepted, completing RC-01 through RC-14 closure. **RC-15 remains OPEN P2**, requires explicit release disposition before 115N, and still blocks release-candidate promotion. **115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped. Preset schema remains 10.** Analysis has a dedicated Orb-independent workspace; Visualizers owns Spectral Ring and all Orb editing; Settings owns shared Scene appearance and presets. Build 116 Camera remains blocked until Build 115 acceptance.
+**RC-01 through RC-22 have completed corrective review and merge at accepted main `a198b14b087da6b855041c3a23acb550a156ff4e`. 115N final acceptance remains WITHHELD. Build 115 is unshipped and noncanonical.** Corrective closure does not establish complete browser, media, accessibility, artistic, or hardware acceptance. The [current audit disposition index](docs/development/build-115.md#audit-disposition-index) records accepted corrections and residual limitations; earlier audit snapshots remain immutable.
 
-This roadmap directs development; `agents.md` defines the architecture and change contract. Release 3 / Build 113 remains the documented canonical public release. Build 114 and Build 115 are internal milestones. A development milestone is not a public release claim.
+This document owns the current plan and acceptance criteria. [Development history](docs/development/build-115.md) owns chronology; [agents.md](agents.md) owns engineering policy. **Release 3 / Build 113 is the canonical public shipped release. Build 114 is internally shipped.** The [internal release-delta draft](docs/development/build-115-release-delta.md) compares both baselines without choosing a public release number or changelog baseline. Build 116 Camera remains dependent on Build 115 acceptance.
 
 ## Current capability inventory
 
-The following capabilities are present in the current source. Passing unit tests establish their covered behavior; they do not substitute for browser, device, permission, or media testing.
+Capabilities below are implemented in source. Covered automated behavior and recorded Chromium probes do not substitute for wider acceptance.
 
-| Area | Implemented | Current usability gap |
+| Area | Implemented | Acceptance / future work |
 | --- | --- | --- |
-| Playback and queue | Multi-file loading, drag and drop, queue navigation, removal, clear, shuffle, repeat, decoded waveform seeking | Queue access and transport must remain discoverable when panels are hidden or the viewport is narrow |
-| Audio sources | File, microphone, and shared stream source manager; supported/unsupported/requesting/error states; teardown on source change | Source controls and file-only restrictions need understandable labels and coherent recovery paths |
-| Analysis | L/R/C analysis, canonical 256-band default, linear/log/mel/bark/ERB distribution, Nyquist-aware ceiling | Technical controls need grouping and explanations; avoid exposing another wall of controls |
-| Orbs | All 23 schema-10 per-Orb controls and 13 Bulk Edit fields in Visualizers, including chooser-backed targeting and degree-presented designed Phase Offset | High-Orb-count navigation and editor ergonomics are deferred to Build 117 |
-| Visuals | Spectral Ring and Orbs share Visualizers; Settings owns Scene appearance, shared color/palette and presets; Reset Visuals | Long-panel ergonomics need Build 117 refinement; resize/move/orientation smearing belongs to Build 116 |
-| Capture | Recording panel, canvas video and optional source audio, negotiated formats, target frame rate, latest-export download | Capture actions and availability must remain visible and truthful across file/live/recording states |
-| Presets | URL configuration serialization; schema 10 complete Orb fields; accepted legacy schemas and migrations | No dedicated preset-file import/export workflow yet |
-| Workspace | Panel show/hide controls, unified launcher, launcher collapse, global panel visibility shortcut | Launchers need visible names; long panels and queue recovery need improvement |
+| Playback and queue | Multi-file picker/drop, navigation, remove/clear, shuffle/repeat, decoded waveform seek; cancelled work cannot restore cleared transport | Real-media/browser/physical-touch evidence; broader Queue UX in Build 117 |
+| Audio sources | File/Mic/Stream manager, explicit support/permission/error states, ownership-scoped cancellation and teardown, source-aware recording | Physical hardware and native capture/permission dialogs in 115N |
+| Analysis | Orb-independent workspace, reusable AnalysisFrame, L/R/C channel spectra, 256-band default, five distributions, Nyquist-aware floor/ceiling and diagnostics | Measure channel-complete analysis on constrained hardware; richer tooling in Build 118 |
+| Orbs | Zero/one/N stable-ID collection, independent motion/response/particles/trace/source/position/color, complete controls and mixed-aware Bulk Edit | High-count editing ergonomics in Build 117; operational ceiling is not a frame-rate guarantee |
+| Visuals and color | Singleton Spectral Ring and Orbs in Visualizers; shared Scene appearance in Settings; designed/reset/pause semantics | Artistic acceptance and resize/orientation coverage; simulation/projection separation in Build 116 |
+| Particle resources | Settings-owned emission/retention budgets and diagnostics; per-Orb minimum placement distance; fairness, oldest retirement and bounded emission time | Heavy Canvas/UI and large synchronous retirement costs require measured 115N disposition; broader optimization in Build 117 |
+| Capture | Canvas video plus optional active-source audio, format negotiation, target FPS, retained latest export, terminal disposal with track ownership | Exported audio fidelity/external players, downloads, long duration and devices in 115N |
+| Presets | Pure schema-10 codec, URL transport, schemas 2–9 migration including both schema-9 forms, configuration-only persistence | File import/export remains Build 119 |
+| Workspace | Independent panels, unified launcher, collapse/global hide/restore, visible focus ownership and Queue focus recovery | Wider keyboard/accessibility/mobile acceptance; long-panel refinements in Build 117 |
+| Distribution | Versioned self-contained portable HTML and relocatable hosted package from shared JS/CSS | Direct `file://` launch remains blocked/unverified in current Chromium environment; no hosted caching/installability claim |
 
-Camera pan/zoom/rotation, richer band tools, preset-file workflows, and 3D are planned. A separate scene/compositor architecture is not a prerequisite for finishing the current interface.
+Camera, richer frequency/band tools, preset-file workflows, and 3D remain planned. A separate Scene/compositor architecture is not a prerequisite for the current interface.
 
 ## Build 115 staged delivery plan
 
-Build 115 proceeds in this order. Stages 1–13 and revisions through 115M.G are complete. 115M.H completed the small pre-RC hardening pass, but audit remediation remains active. M.H.A closed RC-01; M.H.B establishes CI/build infrastructure only; M.H.C closes RC-06; M.H.D closes RC-02 cancellation; M.H.E closes RC-03 live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; PR #35 merged RC-07–RC-14 remediation with hosted Linux/Windows CI green. 115M.H.P corrects the post-review RC-13 Queue focus edge; RC-01–RC-14 are closed after its acceptance. RC-15 remains OPEN P2 and requires release disposition before 115N; stages 14–15 belong to 115N and remain withheld.
+Stages 1–13 are complete. Subsequent audit corrections and distribution preparation are accepted through 115M.I.D; 115M.I.E reconciles documentation for review. The [development record](docs/development/build-115.md) contains revision details. Stages 14–15 remain withheld.
 
-1. **Revised Build 115 canon** — document the real scope and current state. *(115A complete)*
-2. **AnalysisFrame boundary** — expose analysis data through a stable consumer seam without changing behavior. *(115B complete)*
-3. **Visualizer lifecycle** — current Band Overlay and Orb instances share the runtime lifecycle. *(115C complete)*
-4. **Per-Orb ownership** — move the remaining applicable visual/simulation settings out of global ownership. *(115D complete)*
-5. **Dynamic Orb runtime** — support zero/one/N definitions, stable IDs, model operations, and incremental reconciliation. *(115E complete)*
-6. **UI decomposition** — split only the UI seams needed for dynamic visualizers. *(115F complete)*
-7. **Visualizers panel** — establish a runtime-backed inventory and navigation home for visualizer instances. *(115G complete)*
-8. **Dynamic Orb management UI** — add, edit, remove, and duplicate Orb instances with generated ID-aware cards. *(115H complete)*
-9. **Complete per-Orb controls** — expose every schema-10 Orb-owned setting, including designed Phase Offset. *(115I complete)*
-10. **Dedicated Analysis panel** — separate analysis configuration from visualization configuration. *(115J/J.A complete)*
-11. **Band Overlay → Spectral Ring promotion** — promote the existing rendering feature after lifecycle support exists. *(115K complete)*
-12. **Explicit color ownership** — clarify and implement visualizer/color-policy boundaries. *(115L complete)*
-13. **Preset/lifecycle hardening** — persist only deliberately designed configuration with migrations. *(115M.A–M.G complete; M.H final pre-RC closure complete)*
-14. **Final acceptance** — complete browser, real-media, accessibility, and constrained-hardware performance validation. *(115N withheld pending audit remediation)*
-15. **Canonization** — mark Build 115 complete only after every applicable gate has evidence. *(115N after acceptance)*
-
-Existing Node tests and a successful offline single-file build are useful regression evidence. They are **not Build 115 completion evidence** and do not replace browser, media, accessibility, or performance validation.
+1. **Revised Build 115 canon** — real scope and state. *(115A complete)*
+2. **AnalysisFrame boundary** — data-only consumer seam. *(115B complete)*
+3. **Visualizer lifecycle** — Ring/Orb runtime participation. *(115C complete)*
+4. **Per-Orb ownership** — applicable visual/simulation settings. *(115D complete)*
+5. **Dynamic Orb runtime** — zero/one/N, stable IDs and incremental reconciliation. *(115E complete)*
+6. **UI decomposition** — workspace and editor seams. *(115F complete)*
+7. **Visualizers panel** — runtime-backed inventory. *(115G complete)*
+8. **Dynamic Orb management UI** — generated ID-aware Add/Edit/Remove/Duplicate. *(115H complete)*
+9. **Complete per-Orb controls** — schema-10 ownership including designed phase. *(115I complete)*
+10. **Dedicated Analysis panel** — configuration/diagnostics separate from visualization; channel-complete spectra. *(115J/J.A complete)*
+11. **Spectral Ring promotion** — singleton lifecycle and sole presentation editor. *(115K complete)*
+12. **Explicit color ownership** — Scene policy and Orb overrides. *(115L complete)*
+13. **Preset/lifecycle hardening** — codec/migration, ownership and UI consolidation; subsequent corrective audit review/merge and packaging complete. *(115M complete through I.D; I.E documentation review)*
+14. **Final acceptance** — browser, real-media/device, accessibility, artistic and constrained-hardware evidence. *(115N WITHHELD)*
+15. **Canonization** — approved release comparison, artifacts and explicit human shipment approval. *(115N only after acceptance)*
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-The accepted pre-pass revision is **v0.1.15m.h.o**, main at `5f0b3c0af4e818e6b6000f36e4b6b15d47aa8562`. [PR #35](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/35) merged RC-07 through RC-14 remediation with hosted Linux and Windows CI passing. Current development revision **v0.1.15m.h.p** corrects the additional RC-13 Queue focus-restoration edge found during post-merge developer review: Queue Hide returns to its toggle when Audio is visible and to the visible Audio workspace launcher when Audio is hidden. RC-01–RC-12 and RC-14 are CLOSED; RC-13 closes after this edge correction is accepted, completing RC-01 through RC-14 closure. **RC-15 remains OPEN P2**, requires explicit release disposition before 115N, and still blocks release-candidate promotion. **115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped. Preset schema remains 10.**
+Data flows `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Renderer → Canvas`. Camera/projection is a future downstream stage in Build 116. Visualizers consume producer-owned analysis without Web Audio access or mutation.
 
-AnalysisFrame gives visual consumers an explicit data-only view. `VisualizerRuntime` now owns an ordered collection using `id`, `type`, `isVisible()`, `update()`, `render()`, `reset(reason)`, and `dispose()`: the singleton Spectral Ring participates first, followed by adapters around each current Orb. Persistence is schema 10: every Orb owns motion, response, particles, and trace, while schema 2–9 globals migrate into independent Orb copies. Dynamic Orb model/runtime management is exposed through the Visualizers panel and 115K promotes the user-facing/runtime identity to Spectral Ring while retaining `bands.overlay` persistence. Build 116 remains blocked.
+Analysis owns extraction, band definitions, metadata and diagnostics independently of Orb count. VisualizerRuntime owns lifecycle/composition; Orbs update before the dependent Ring, while rendering keeps Ring first and Orbs in preference order. Per-Orb settings and stable identity survive reconciliation; runtime phase/trails/UI/session state are not presets.
 
-The Visualizers panel offers Add/Edit/Duplicate/Remove through canonical runtime operations and generates one stable-ID editor card for every current Orb in that same workspace. The separate Orbs workspace is retired. Zero Orbs is valid and Spectral Ring remains a singleton. All 23 per-Orb controls and 13 Bulk Edit fields remain available; Bulk Edit reports mixed values truthfully. Settings owns Scene color/palette and preset controls. Audio, Analysis, Visualizer editing, and Scene preference feedback each use their own status lane; generic/internal preference synchronization is silent.
-
-Revision 115I completed per-Orb control exposure. Phase Offset presents `startAngleRad` in degrees as designed phase, does not live-teleport a running Orb, and is applied by Reset Visuals. Nested controls commit by stable ID. Subsequent 115J Analysis, 115K Spectral Ring promotion, and 115L color ownership are complete; Camera remains Build 116.
-
-Revision 115I.A tactically hardens that accepted editor: generated select readouts follow their synchronized values, Orb-editor invalidation reads only `runtime.settings`, per-Orb commits perform one runtime Orb synchronization, and Phase Offset exposes degree-based accessible value text. Current version metadata is aligned and schema remains 10.
-
-Revision 115H.A guards the generated Orb editor by settings and BandBank edge references so unchanged animation frames do no controller, reorder, or open-picker row synchronization. Targeted Orbs inheriting the global dominant policy now use the strongest band in their selected target; explicit Orb Dominant Band remains tied to the global full-spectrum dominant band. Schema remains 10.
-
-Revision 115F.A tactically hardened the accepted UI decomposition without changing architecture or schema. Revision 115G established the runtime-backed inventory; 115H added Orb collection management with generated editors. 115K moved Spectral Ring presentation into Visualizers, 115L retired Bands, and 115M.G consolidated the Orb editors into Visualizers.
-
-The intended data direction is `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Scene / Renderer → Camera → Canvas`. Visualizers consume analysis; they do not own or perform it. The Camera stage belongs to Build 116 and is not ready to begin.
+Visualizers owns collection management, complete Orb editors/Bulk Edit, and the singleton Ring editor. Settings owns Scene color/palette, particle resources and presets. Persistence deliberately remains at schema-10 `orbs`, `bands.overlay`, `visuals`, shared `bands` color paths, and root `particleSafety`; there is no persisted Scene object. See [README Build 115 scope](README.md#build-115--v0115-visualizer-architecture--orb-overhaul-v1) for the milestone overview and [policy](agents.md) for binding interfaces.
 
 ### Protected semantics and limits
 
-- L/R/C are first-class analysis channels. Orb `chanId` selects waveform, full-spectrum energy, and selected-band spectral energy; empty `bandIds` retains selected-channel full-spectrum behavior. Global spectrum and dominant remain the real combined C analysis.
-- Preset schema remains 10; 115E changes collection lifecycle behavior without adding persisted fields.
-- `state.bands` may remain producer state while the consumer boundary is extracted; visual state such as ring phase does not become analysis data.
-- Dynamic Orb management uses canonical runtime operations and generated stable-ID editor cards. Spectral Ring retains its singleton lifecycle and schema-10 `bands.overlay` persistence; its sole presentation editor shares Visualizers with the Orb editors. Camera behavior remains blocked; schema 10 is unchanged.
-- Track/source/recording ownership, immutable configuration, Nyquist-aware ceilings, and single-file output remain protected.
-
-Revision 115J established the dedicated Analysis workspace. It owns FFT size, smoothing, RMS gain, band distribution/floor/configured ceiling, metadata, dominant-band diagnostics, and energy inspection. It consumes `AnalysisFrame`, has no Orb or visualizer dependency, exposes no band-count editor, and retains preset schema 10. Subsequent 115K/115L completed presentation/color ownership; Camera remains blocked.
-
-Revision 115J.A established channel-complete spectral analysis. L/R/C reuse independent analyser FFT buffers and BandBank energy arrays while sharing one band definition. This intentionally changed existing schema-10 targeted L/R rendering without migrating presets. Three frequency reads and three channel BandBank calculations per ready sample are accepted for analyzer correctness; Build 117 must measure and harden that cost on constrained hardware without demand-driven channel pruning. Schema remains 10; Spectral Ring promotion and Scene color ownership are complete.
+- Orb channel selects waveform, full-channel energy and selected-band energy. Empty targets use full-channel energy; nonempty targets average the selected channel's energies. Global spectrum/dominant remain real combined C. Inherited dominant color follows an Orb's target; explicit dominant remains global C.
+- Designed phase is canonical radians in `[0, TAU)`, displayed in degrees. Editing preserves live history; Reset Visuals applies design and clears trails; track reset clears trails without changing phase. Pause stops Orb/free Ring motion/emission while analysis and TTL aging continue.
+- Schema 10 retains approved unpublished-build corrections; future published-schema changes require increment/migration. Legacy support and immutable CONFIG → preferences → runtime.settings → state remain protected.
+- Selected particle budgets are enforced without hidden default ceilings. Zero emission preserves history; zero retention clears/rejects it. Nonzero spacing filters new same-Orb placements, never deletes nearby history. Emission work has an immutable 1/30 s ceiling; ordinary motion integrates visible elapsed time up to the 0.5 s discontinuity threshold.
+- The 4,096-Orb admission ceiling and expert particle maxima are operational bounds, not safe-device/FPS claims. Audio, source, recorder, Nyquist, and shared portable/hosted build ownership remain protected.
 
 ### Current regression evidence
 
-The Node suite and clean-install single-file build cover preset, source-lifecycle, recording, chooser, packaging, status ownership, and template structure. M.E Stream stereo correctness is fixed and locally validated; the optional browser diagnostic retains stereo/left-only/right-only/dual-mono, file-versus-stream graph, splitter, built-artifact status, and optional native-capture checks. This evidence does not complete the wider real-media, device/permission, recording-export, accessibility, or performance acceptance required by 115N. Validation commands remain sequential because a build and the build-directory test can interfere with each other.
+The [CI workflow](.github/workflows/ci.yml) checks sequential locked install/tests/build and both distribution contracts on Linux/Windows. [README bootstrap](README.md#developer-and-agent-bootstrap) documents commands/toolchains. The [audit disposition index](docs/development/build-115.md#audit-disposition-index) links accepted numerical, lifecycle, native Chromium and mutation evidence without duplicating historical logs. These checks protect implemented behavior; they do not complete 115N.
 
-### Revision 115M.H.B — CI/build baseline
+### Build 115N acceptance gates
 
-Canonical developer/agent bootstrap is `npm ci`, `npm test`, then `npm run build`, sequentially. GitHub Actions now validates a clean lockfile install/test/build on Linux and Windows for pull requests and pushes to `main`, explicitly provisioning Node 24 and Python 3.12. setup-node caches npm packages only; `node_modules/`, `.build/`, `build/`, and `dist/` remain ignored and untracked. CI checks the non-empty versioned single-file HTML, its version marker, generated-file tracking, and `git diff --check`.
+**WITHHELD.** Independent evidence and explicit human approval are still required for applicable scenarios:
 
-Package installation may require network access even though the built application works offline. Use a disposable workspace-local npm cache if the default cache is unwritable; see [README bootstrap commands](README.md#developer-and-agent-bootstrap). Sandbox native-executable/child-process EPERM is an environment concern and must not be worked around in product source. No dependency, build-script, product-behavior, or schema change is part of M.H.B; schema remains 10.
+- Firefox/Safari and mobile browsers, physical touch, responsive panel recovery, keyboard/focus and assistive technology.
+- Real compressed/media breadth, device sample rates/channel layouts, microphone hardware, OS display/system-audio permissions, cancellation and recovery.
+- Recording/download workflows, external-player exported audio fidelity, repeated and long-duration capture/resource retention.
+- Representative constrained-hardware analysis/rendering, high-count/editor costs, large retention trim/expiry and expert limits. Exact human presets require artistic slow-frame/trail/Trace acceptance; synthetic histories alone do not establish it.
+- Actual portable `file://` boot/playback with networking offline in an environment permitting navigation; complete hosted root/subdirectory validation and correct server MIME setup. Existing blocked navigation is not a successful gate or an application finding.
+- Maskable artwork review, final public-versus-internal comparison baseline and editorial approval of eventual shipped notes. [Release-delta draft](docs/development/build-115-release-delta.md) is preparation only.
+- Approved artifacts and explicit shipment/canonization decision. Passing CI, merged corrective PRs and this documentation revision do not authorize it.
 
-Browser/device acceptance remains separate from fast repository CI and still gates release readiness. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED; M.H.E closes live attachment ownership with Linux/Windows CI green; M.H.F closes RC-04 transport ownership with Linux/Windows CI green; M.H.G closes RC-05 deferred EOF with Linux/Windows CI green; PR #35 merged RC-07–RC-14 remediation with hosted Linux/Windows CI green. RC-01–RC-14 are closed after acceptance of the 115M.H.P RC-13 edge correction; RC-15 remains OPEN P2 and requires release disposition before 115N. **115N remains WITHHELD.**
+<a id="known-deferrals-after-115mh"></a>
 
-### Revision 115M.H.C — RC-06 retained export ownership
-
-At M.H.C: RC-01 CLOSED. RC-06 CLOSED. All other release-audit findings remained open; current closure status is recorded above. **115N remains WITHHELD.** Schema remains exactly 10.
-
-The last completed export survives new recording attempts and every failed acquisition, constructor, start, recorder-error, stop, or finalization path. Successful finalization snapshots the old URL by value, commits the new export metadata, then revokes the old URL exactly once. Reset retains the export; completed-export disposal still revokes/clears it. The unused premature-clear helper was removed locally; disposal remains its existing owner.
-
-Validation: 16 focused ownership regressions use real Blob URLs and exact create/revoke instrumentation, including partial-new-URL cleanup and repeated replacement. Both premature-clear and mutable-alias mutations fail those regressions. The unchanged historical native probe reproduced RC-06 on M.H.B with output written outside historical evidence. The new optional `node scripts/validate-recording-export.cjs` probe passed against the built M.H.C artifact in Chromium: A remained downloadable after failed acquisition and during B capture; successful B replaced A and revoked only A. Playwright is optional developer tooling; `RC06_PLAYWRIGHT_MODULE`, `RC06_CHROMIUM_PATH`, and `RC06_REPORT` can select tooling and save results. The original release audit/evidence remains unchanged. RC-02/03/04/05/19 and resource budgets are outside this revision.
-
-### Revision 115M.H.D — RC-02 File cancellation
-
-RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED after focused/browser/mutation evidence and hosted Linux/Windows CI passed ([PR #30](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/30)). At M.H.D, RC-03 onward remained unresolved except RC-06; see M.H.E below. **115N remains WITHHELD.** Schema remains exactly 10.
-
-Clear and final queue removal invalidate the permitted file-load request before source teardown/reset. Picker and canvas drop share synchronous batch enqueueing before first activation; cancelled continuations cannot enqueue remaining files. Existing AudioEngine request checks and aborted media listeners suppress stale success/failure/event commits. Recorder notifications remain intact; AudioEngine, InputSourceManager, Mic/Stream attachment, playPause(), and MIME filtering are unchanged.
-
-Validation: 12 focused RC-02 tests cover delayed resume/play, rejection, final removal, stale media callbacks, picker/drop cancellation, ordinary single/multi-file load, append, and new work after cancellation. Removing invalidation fails resume/play regressions; restoring sequential ingestion resurrects B in both entry points. The optional `node scripts/validate-file-cancellation.cjs` probe passes nine native Chromium scenarios against the unmodified built HTML, including both final-removal boundaries and resource release ([new browser evidence](docs/audits/remediations/115m-h-d-rc02/browser.json)). The same probe fails all seven cancellation scenarios on the M.H.C artifact; positive controls pass. The unchanged historical probe can snapshot idle before native resume finishes, so new evidence waits for event-handler settlement. `RC02_PLAYWRIGHT_MODULE`, `RC02_CHROMIUM_PATH`, `RC02_ARTIFACT`, and `RC02_REPORT` select optional tooling/artifacts/evidence. Historical audit/evidence remains unchanged. RC-03/RC-04 and all unrelated defects remain outside this revision.
-
-### Revision 115M.H.E — RC-03 live attachment ownership
-
-RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED after local and hosted Linux/Windows CI evidence passed ([PR #31](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/31)). At M.H.E, RC-04 and all other unresolved findings remained open; current closure status is recorded above. **115N remains WITHHELD.** Schema remains exactly 10.
-
-AudioEngine accepts an optional attachment guard and checks it after asynchronous context resume, immediately before teardown. Mic/Stream use the existing activationSeq token; a cancelled attachment stops only its acquired tracks, and a stale attachment exception cannot commit source errors or stream metadata. Canonical teardown retains its global unload. No persisted fields, recorder ownership changes, File-generation redesign, or playPause() changes are introduced.
-
-Validation: 13 focused real-engine regressions cover both delayed-resume orderings, both stale errors, normal Mic/Stream, both ordinary switches, explicit/pending File-mode teardown, current failures, running-context cancellation, exact upstream identity, and passive recorder-tap continuity. Both required mutations fail the audited Mic→Stream regression; correct implementation is restored. Six native Chromium scenarios use real generated MediaStreams and settle the old activation before checking source state, winning/losing tracks, exact upstream, graph readiness, and teardown. RC-02's 12 Node regressions and nine native built-artifact scenarios remain green; full tests/build pass. [New evidence](docs/audits/remediations/115m-h-e-rc03/) preserves the historical audit unchanged. Native devices/permission dialogs and RC-04 are outside this revision.
-
-### Revision 115M.H.F — RC-04 Play/Clear transport ownership
-
-RC-01 CLOSED. RC-06 CLOSED. RC-02 CLOSED. RC-03 CLOSED. RC-04 CLOSED after focused/browser/mutation evidence and hosted Linux/Windows CI passed ([PR #32](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/32)). At M.H.F, all other unresolved findings remained open; current closure status is recorded above. **115N remains WITHHELD.** Schema remains exactly 10.
-
-Transport captures the intended media element by value, revalidates after context resume and after play completion, and returns quietly when Clear/replacement wins. Stale success/rejection cannot read or act on the replacement or commit canonical playback/errors. Identity is sufficient because each file load creates a fresh element and teardown detaches the old one. No generation/framework, UI, load-cancellation, live attachment, EOF, or recording-finalization change is introduced. [New evidence](docs/audits/remediations/115m-h-f-rc04/) preserves the original audit/evidence unchanged.
-
-Validation: 13 focused regressions and both mutations pass; ten native Chromium RC-04 scenarios produce no page errors or stale commits. RC-02 (12 Node/nine native scenarios) and RC-03 (46 source/graph tests/six native scenarios) remain green. Full tests: 339 pass; versioned single-file build and hosted Linux/Windows CI pass.
-
-### Revision 115M.H.G — RC-05 deferred EOF during recording finalization
-
-UI transport retains an owned EOF context (File, media element, repeat mode at EOF, existing load request ID) while recording finalizes. Canonical recording refresh consumes it once when the lock ends after complete or error. Ownership mismatch discards it; normal EOF remains immediate, including active recording across tracks. The shared policy uses existing `loadAndPlay()` cancellation machinery. RecorderEngine, AudioEngine, Queue, retained exports, and schema 10 remain unchanged.
-
-Validation: 18 focused regressions; both required mutations rejected; eight native Chromium scenarios cover both audit schedules, Repeat One/All, no-next, export failure, ordinary EOF, and recording continuity with no page errors. All 357 tests and the versioned build pass. RC-02 (12 Node/nine native), RC-04 (13 Node/ten native), and RC-06 (16 Node/native retention probe) remain green. [New evidence and full report](docs/audits/remediations/115m-h-g-rc05/README.md) preserves historical audit/evidence unchanged. RC-01, RC-02, RC-03, RC-04, RC-05, and RC-06 are CLOSED after local and hosted Linux/Windows CI validation ([PR #33](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/33)). The source/transport lifecycle cluster is closed. At M.H.G, all other audit findings remained unresolved; current closure status is recorded above. **115N remains WITHHELD.** Broader Build-117 lifecycle/performance hardening remains a separate future concern.
-
-### Revision 115M.H.P — RC-13 post-merge review correction
-
-PR #35 fixed the demonstrated RC-13 defects and merged with hosted Linux/Windows CI passing. Post-merge developer review found an additional focus-restoration edge when Queue remained visible while Audio was hidden. 115M.H.P closes it by restoring focus only to a visible owner through the existing panel-visibility seam: the Queue toggle when Audio is visible, otherwise the Audio workspace launcher. Collapsed-launcher recovery expands the launcher without opening Audio; outside focus is preserved. [New correction report](docs/audits/remediations/115m-h-p-rc13/README.md) keeps validation separate from unchanged historical reproduction/evidence. RC-01–RC-14 are closed after this correction is accepted. RC-15 remains OPEN P2, blocks release-candidate promotion, and requires explicit release disposition before 115N. 115N remains WITHHELD; Build 115 is NOT canonical / NOT shipped; schema remains 10.
-
-### Known deferrals after 115M.H
+### Known deferrals
 
 | Remaining issue | Status / future home |
 | --- | --- |
-| Resize / move / orientation visual smearing | Deferred to Build 116 simulation-space / Camera separation |
-| Orb editor ergonomics / high-Orb-count navigation | Architecture is correct and controls are complete; UX refinement deferred to Build 117 |
-| File / Queue UX refinement | Explicitly deferred from M.H to Build 117 UX hardening |
-| RC-15 / AUD-002 unbounded preset-controlled work / resource governance | OPEN P2 release blocker; explicit release disposition required before 115N; broader performance/resource hardening remains Build 117 |
-| AUD-006 source/load concurrency | RC-02–RC-05 complete; source/transport lifecycle cluster closed; broader lifecycle hardening remains Build 117 |
-| AUD-009 recorder retained-memory / backpressure | Build 117 |
-| AUD-012 per-frame allocation / UI refresh performance | Build 117, including channel-complete analysis cost |
-| AUD-004 adjacent positive-width FFT-bin overlap | Intentional current behavior; Build 118 spectral partition work |
-| AUD-013 duplicate legacy band-name migration ambiguity | Build 118 |
+| Resize / move / orientation visual smearing | Build 116 simulation-space / Camera separation |
+| Orb editor ergonomics / high-count navigation and long panels | Build 117 UX refinement |
+| File / Queue UX refinement | Build 117, retaining accepted focus/cancellation corrections |
+| Broader constrained-hardware performance / resource hardening | Build 117; RC-15 corrective work is closed by accepted review/merge, while applicable 115N performance/artistic evidence remains required |
+| Broader source/load lifecycle hardening (AUD-006) | Build 117; demonstrated RC-02–RC-05 concurrency/EOF defects are closed |
+| Recorder retained-memory / backpressure (AUD-009) | Build 117; terminal disposal correction does not bound long recordings |
+| Remaining allocations / hidden UI refresh / channel-complete analysis cost (AUD-012) | Build 117; direct Trace suffix traversal and demonstrated quadratic editor/tooltip work have already been corrected |
+| Adjacent positive-width FFT-bin overlap (AUD-004) | Intentional current behavior; Build 118 spectral partition work, separate from corrected coordinate scaling |
+| Duplicate legacy band-name migration ambiguity (AUD-013) | Build 118 |
 
-Accepted/fixed items are excluded from that ledger: AUD-001, AUD-003, AUD-005, M.C editor jump, M.E Stream stereo correctness, M.F schema-10 closure, and M.G Visualizer ownership. M.H added no Queue UX, Orb-editor redesign, Camera, or new product features. Hosted CI is now implemented in M.H.B as infrastructure only.
+Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, visualizer ownership, RC-01–RC-22 and distribution metadata) are not open deferrals. Related future improvements retain their existing homes. No new functional assignment is created by documentation reconciliation.
 
 ## Build 116: camera controls, render separate from simulation
 
@@ -217,11 +167,3 @@ Acceptance gates:
 For each delivered milestone, record the implementation scope, test/build result, browser/device checks, preset compatibility result, and remaining limitations. Mark completion only when its acceptance gates have evidence. Keep the public release designation unchanged until an actual release is prepared.
 
 Prioritize fixes that make an existing capability understandable or recoverable. Defer new abstractions and feature expansion that do not resolve a demonstrated workflow problem.
-
-### Revision 115K — Spectral Ring promotion (complete)
-
-The historical Band Overlay is now the singleton `spectral-ring` VisualizerRuntime participant. Its complete presentation editor, including line alpha and line width, lives in Visualizers; persistence intentionally remains schema-10 `bands.overlay`. It consumes combined C spectrum and waveform data. Free-run reset is independent of Orbs; explicit Orb-lock follows the first Orb when present and safely holds with zero Orbs. Bands temporarily retains shared color/palette controls for the 115L ownership audit. Camera remains blocked.
-
-### Revision 115L — explicit Scene-level color ownership (complete)
-
-The transitional Bands workspace was replaced by Scene (now labeled Settings). Scene owns background, fixed particle color, the default Orb particle policy, and the shared band palette, while persistence intentionally stays at schema-10 `visuals.*` and `bands.*` paths. Orbs own their local `colorSource`, hue offset, and trace color mode. Spectral Ring consumes the shared palette, and Analysis uses it as its diagnostic legend. Inherited dominant is target/channel-aware for targeted Orbs; explicit Orb and trace dominant remain global combined-C. No persisted Scene object or per-visualizer palette was introduced. 115M hardening is complete through final M.H closure; 115N is next, Camera remains Build 116, and Builds 117/118 retain their performance/band-expansion scopes.
