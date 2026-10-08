@@ -353,6 +353,7 @@ Avoid:
 - Orb editor nested controls commit by persistent Orb ID and per-Orb edits preserve unrelated runtime history. `startAngleRad` is designed phase configuration, distinct from ephemeral `angleRad`: the UI presents degrees while persistence/runtime use radians, edits do not live-teleport, and visual reset applies the designed phase.
 - Removing the last Orb is valid; UI must not implicitly fabricate an Orb. Generated DOM identifiers must be independent of untrusted persistent Orb IDs.
 - Visualizer inventory order follows `VisualizerRuntime`; display numbering communicates composition position and never replaces persistent identity.
+- Combined visualizer inventory lookups use type plus persistent ID. Orb IDs are opaque accepted strings; `spectral-ring` is valid for an Orb. Destructive confirmation must name the actual target, and a missing target must not confirm or remove another type with the same ID.
 - Visualizer UI must not fabricate runtime instances. Writable configuration retains one UI owner inside Visualizers; Edit opens/focuses the existing Ring or persistent-ID Orb editor without navigating to another workspace.
 - Visualizers inventory refresh must not rebuild dynamic DOM when both the settings and runtime collection references are unchanged.
 - Dynamic Orb editor refresh must not perform DOM or picker synchronization when both settings and BandBank definitions are unchanged.

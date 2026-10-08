@@ -1,0 +1,203 @@
+TAP version 13
+# Subtest: RC-21: one-band, multi-band and empty targeting keep the selected channel's waveform and energy
+ok 1 - RC-21: one-band, multi-band and empty targeting keep the selected channel's waveform and energy
+  ---
+  duration_ms: 6.112766
+  type: 'test'
+  ...
+# [{"chanId":"L","bandIds":[0],"selected":0.9,"full":0.8,"waveform":0.75},{"chanId":"L","bandIds":[0,1],"selected":0.8,"full":0.8,"waveform":0.75},{"chanId":"L","bandIds":[],"selected":null,"full":0.8,"waveform":0.75},{"chanId":"R","bandIds":[0],"selected":0.1,"full":0.2,"waveform":-0.5},{"chanId":"R","bandIds":[0,1],"selected":0.2,"full":0.2,"waveform":-0.5},{"chanId":"R","bandIds":[],"selected":null,"full":0.2,"waveform":-0.5},{"chanId":"C","bandIds":[0],"selected":0.5,"full":0.6,"waveform":0.25},{"chanId":"C","bandIds":[0,1],"selected":0.45,"full":0.6,"waveform":0.25},{"chanId":"C","bandIds":[],"selected":null,"full":0.6,"waveform":0.25}]
+# Subtest: RC-21: actual rendered help explains channel ownership and band/empty targeting
+not ok 2 - RC-21: actual rendered help explains channel ownership and band/empty targeting
+  ---
+  duration_ms: 8.663472
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc21-band-picker-help.test.js:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /channel.*both.*waveform.*band energ/i. Input:
+
+    'Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc21-band-picker-help.test.js:59:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor
+not ok 3 - RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor
+  ---
+  duration_ms: 5.887957
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc22-orb-removal.test.js:47:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      [
+        {
+    +     displayName: 'Spectral Ring',
+    -     displayName: 'Orb 1',
+          id: 'spectral-ring'
+        }
+      ]
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      id: 'spectral-ring'
+      displayName: 'Orb 1'
+  actual:
+    0:
+      id: 'spectral-ring'
+      displayName: 'Spectral Ring'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:59:10
+    scene (file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:34:12)
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:47:119)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: RC-22: reorder numbers and middle/end/empty nearest-survivor focus follow current runtime order
+ok 4 - RC-22: reorder numbers and middle/end/empty nearest-survivor focus follow current runtime order
+  ---
+  duration_ms: 2.518247
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "spectral-ring" remains safe and removable
+not ok 5 - RC-22: accepted opaque ID "spectral-ring" remains safe and removable
+  ---
+  duration_ms: 1.127379
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc22-orb-removal.test.js:94:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      [
+        {
+    +     displayName: 'Spectral Ring',
+    -     displayName: 'Orb 1',
+          id: 'spectral-ring'
+        }
+      ]
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      id: 'spectral-ring'
+      displayName: 'Orb 1'
+  actual:
+    0:
+      id: 'spectral-ring'
+      displayName: 'Spectral Ring'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:98:12
+    scene (file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:34:12)
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:94:92)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RC-22: accepted opaque ID "ORB0" remains safe and removable
+ok 6 - RC-22: accepted opaque ID "ORB0" remains safe and removable
+  ---
+  duration_ms: 1.179328
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "ORB123" remains safe and removable
+ok 7 - RC-22: accepted opaque ID "ORB123" remains safe and removable
+  ---
+  duration_ms: 0.810763
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "custom string" remains safe and removable
+ok 8 - RC-22: accepted opaque ID "custom string" remains safe and removable
+  ---
+  duration_ms: 0.688398
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "custom![]\#\\"<>&" remains safe and removable
+ok 9 - RC-22: accepted opaque ID "custom![]\#\\"<>&" remains safe and removable
+  ---
+  duration_ms: 2.840021
+  type: 'test'
+  ...
+# Subtest: RC-22: stale missing target cannot confirm or remove a matching Ring
+not ok 10 - RC-22: stale missing target cannot confirm or remove a matching Ring
+  ---
+  duration_ms: 1.013187
+  type: 'test'
+  location: '/workspace/Auralprint1/tests/rc22-orb-removal.test.js:105:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+    + [
+    +   {
+    +     displayName: 'Spectral Ring',
+    +     id: 'spectral-ring'
+    +   }
+    + ]
+    - []
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      id: 'spectral-ring'
+      displayName: 'Spectral Ring'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:110:10
+    scene (file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:34:12)
+    TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc22-orb-removal.test.js:105:84)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RC-22: failed removal keeps focus, settings and list; refresh/init do not duplicate listeners
+ok 11 - RC-22: failed removal keeps focus, settings and list; refresh/init do not duplicate listeners
+  ---
+  duration_ms: 0.651012
+  type: 'test'
+  ...
+# Subtest: RC-22: generated Edit/Add/Duplicate actions retain stable IDs, numbering and focus
+ok 12 - RC-22: generated Edit/Add/Duplicate actions retain stable IDs, numbering and focus
+  ---
+  duration_ms: 5.209935
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 8
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 207.132997

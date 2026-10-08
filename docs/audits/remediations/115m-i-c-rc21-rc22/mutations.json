@@ -1,0 +1,56 @@
+[
+  {
+    "name": "original-help",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 1
+  },
+  {
+    "name": "always-center-targeting",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 2
+  },
+  {
+    "name": "original-id-only-lookup",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 3
+  },
+  {
+    "name": "suppressed-confirmation",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 8
+  },
+  {
+    "name": "broken-cancel",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 1
+  },
+  {
+    "name": "wrong-orb-removal",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 3
+  },
+  {
+    "name": "ring-disposed-on-delete",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 1
+  },
+  {
+    "name": "broken-survivor-focus",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 2
+  },
+  {
+    "name": "missing-orb-falls-through",
+    "killed": true,
+    "exitCode": 1,
+    "failures": 1
+  }
+]

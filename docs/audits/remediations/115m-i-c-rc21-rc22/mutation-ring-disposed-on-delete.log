@@ -1,0 +1,129 @@
+TAP version 13
+# Subtest: RC-21: one-band, multi-band and empty targeting keep the selected channel's waveform and energy
+ok 1 - RC-21: one-band, multi-band and empty targeting keep the selected channel's waveform and energy
+  ---
+  duration_ms: 3.47996
+  type: 'test'
+  ...
+# [{"chanId":"L","bandIds":[0],"selected":0.9,"full":0.8,"waveform":0.75},{"chanId":"L","bandIds":[0,1],"selected":0.8,"full":0.8,"waveform":0.75},{"chanId":"L","bandIds":[],"selected":null,"full":0.8,"waveform":0.75},{"chanId":"R","bandIds":[0],"selected":0.1,"full":0.2,"waveform":-0.5},{"chanId":"R","bandIds":[0,1],"selected":0.2,"full":0.2,"waveform":-0.5},{"chanId":"R","bandIds":[],"selected":null,"full":0.2,"waveform":-0.5},{"chanId":"C","bandIds":[0],"selected":0.5,"full":0.6,"waveform":0.25},{"chanId":"C","bandIds":[0,1],"selected":0.45,"full":0.6,"waveform":0.25},{"chanId":"C","bandIds":[],"selected":null,"full":0.6,"waveform":0.25}]
+# Subtest: RC-21: actual rendered help explains channel ownership and band/empty targeting
+ok 2 - RC-21: actual rendered help explains channel ownership and band/empty targeting
+  ---
+  duration_ms: 5.849204
+  type: 'test'
+  ...
+# Channel selects both the Orb's waveform and its band energies (Left, Right, or Center). Selected bands use that channel's energy. With no bands selected, the Orb uses its channel's full-spectrum energy.
+# Subtest: RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor
+not ok 3 - RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor
+  ---
+  duration_ms: 6.616001
+  type: 'test'
+  location: '/tmp/rc21-22-mutation-gIdX5e/tests/rc22-orb-removal.test.js:47:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      [
+        [
+    +     'spectral-ring',
+    +     'spectral-ring'
+    +   ],
+    +   [
+          'orb',
+          'spectral-ring'
+        ]
+      ]
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 'orb'
+      1: 'spectral-ring'
+  actual:
+    0:
+      0: 'spectral-ring'
+      1: 'spectral-ring'
+    1:
+      0: 'orb'
+      1: 'spectral-ring'
+    2:
+      0: 'spectral-ring'
+      1: 'spectral-ring'
+    3:
+      0: 'orb'
+      1: 'ORB1'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///tmp/rc21-22-mutation-gIdX5e/tests/rc22-orb-removal.test.js:72:10
+    scene (file:///tmp/rc21-22-mutation-gIdX5e/tests/rc22-orb-removal.test.js:34:12)
+    TestContext.<anonymous> (file:///tmp/rc21-22-mutation-gIdX5e/tests/rc22-orb-removal.test.js:47:119)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: RC-22: reorder numbers and middle/end/empty nearest-survivor focus follow current runtime order
+ok 4 - RC-22: reorder numbers and middle/end/empty nearest-survivor focus follow current runtime order
+  ---
+  duration_ms: 2.131175
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "spectral-ring" remains safe and removable
+ok 5 - RC-22: accepted opaque ID "spectral-ring" remains safe and removable
+  ---
+  duration_ms: 1.403918
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "ORB0" remains safe and removable
+ok 6 - RC-22: accepted opaque ID "ORB0" remains safe and removable
+  ---
+  duration_ms: 0.624342
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "ORB123" remains safe and removable
+ok 7 - RC-22: accepted opaque ID "ORB123" remains safe and removable
+  ---
+  duration_ms: 0.779697
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "custom string" remains safe and removable
+ok 8 - RC-22: accepted opaque ID "custom string" remains safe and removable
+  ---
+  duration_ms: 0.674187
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "custom![]\#\\"<>&" remains safe and removable
+ok 9 - RC-22: accepted opaque ID "custom![]\#\\"<>&" remains safe and removable
+  ---
+  duration_ms: 0.846857
+  type: 'test'
+  ...
+# Subtest: RC-22: stale missing target cannot confirm or remove a matching Ring
+ok 10 - RC-22: stale missing target cannot confirm or remove a matching Ring
+  ---
+  duration_ms: 0.973088
+  type: 'test'
+  ...
+# Subtest: RC-22: failed removal keeps focus, settings and list; refresh/init do not duplicate listeners
+ok 11 - RC-22: failed removal keeps focus, settings and list; refresh/init do not duplicate listeners
+  ---
+  duration_ms: 0.634918
+  type: 'test'
+  ...
+# Subtest: RC-22: generated Edit/Add/Duplicate actions retain stable IDs, numbering and focus
+ok 12 - RC-22: generated Edit/Add/Duplicate actions retain stable IDs, numbering and focus
+  ---
+  duration_ms: 2.52587
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 161.285409

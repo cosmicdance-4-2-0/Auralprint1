@@ -1,0 +1,268 @@
+{
+  "version": "v0.1.15m.i.c",
+  "baseline": false,
+  "method": "Native generated Visualizers UI; controlled window.confirm interception; source live runtime plus unchanged standalone public Share transport.",
+  "rows": [
+    {
+      "standalone": false,
+      "cancel": {
+        "text": "Remove Orb 1 (spectral-ring)? This cannot be undone.",
+        "ids": [
+          "spectral-ring",
+          "ORB1"
+        ],
+        "focus": {
+          "action": "remove",
+          "id": "spectral-ring",
+          "control": ""
+        },
+        "live": {
+          "ids": [
+            "spectral-ring",
+            "ORB1"
+          ],
+          "ringSurvived": true,
+          "survivorSame": true,
+          "disposed": []
+        }
+      },
+      "accepted": {
+        "text": "Remove Orb 1 (spectral-ring)? This cannot be undone.",
+        "ids": [
+          "ORB1"
+        ],
+        "focus": {
+          "action": "edit",
+          "id": "ORB1",
+          "control": ""
+        },
+        "live": {
+          "ids": [
+            "ORB1"
+          ],
+          "ringSurvived": true,
+          "survivorSame": true,
+          "disposed": [
+            [
+              "orb",
+              "spectral-ring"
+            ]
+          ]
+        }
+      },
+      "help": "Channel selects both the Orb's waveform and its band energies (Left, Right, or Center). Selected bands use that channel's energy. With no bands selected, the Orb uses its channel's full-spectrum energy.",
+      "channels": [
+        {
+          "chanId": "L",
+          "selections": [
+            {
+              "bands": [
+                0
+              ],
+              "energy": 0.9,
+              "waveform": [
+                0.75
+              ],
+              "full": 0.8
+            },
+            {
+              "bands": [
+                0,
+                1
+              ],
+              "energy": 0.8,
+              "waveform": [
+                0.75
+              ],
+              "full": 0.8
+            },
+            {
+              "bands": [],
+              "energy": null,
+              "waveform": [
+                0.75
+              ],
+              "full": 0.8
+            }
+          ]
+        },
+        {
+          "chanId": "R",
+          "selections": [
+            {
+              "bands": [
+                0
+              ],
+              "energy": 0.1,
+              "waveform": [
+                -0.5
+              ],
+              "full": 0.2
+            },
+            {
+              "bands": [
+                0,
+                1
+              ],
+              "energy": 0.2,
+              "waveform": [
+                -0.5
+              ],
+              "full": 0.2
+            },
+            {
+              "bands": [],
+              "energy": null,
+              "waveform": [
+                -0.5
+              ],
+              "full": 0.2
+            }
+          ]
+        },
+        {
+          "chanId": "C",
+          "selections": [
+            {
+              "bands": [
+                0
+              ],
+              "energy": 0.5,
+              "waveform": [
+                0.25
+              ],
+              "full": 0.6
+            },
+            {
+              "bands": [
+                0,
+                1
+              ],
+              "energy": 0.45,
+              "waveform": [
+                0.25
+              ],
+              "full": 0.6
+            },
+            {
+              "bands": [],
+              "energy": null,
+              "waveform": [
+                0.25
+              ],
+              "full": 0.6
+            }
+          ]
+        }
+      ],
+      "picker": {
+        "selected": [
+          0,
+          1
+        ],
+        "cleared": [],
+        "channel": "L"
+      },
+      "addDuplicate": {
+        "ids": [
+          "ORB1",
+          "ORB2",
+          "ORB3"
+        ],
+        "focus": {
+          "action": "edit",
+          "id": "ORB3",
+          "control": ""
+        }
+      },
+      "reorder": {
+        "ids": [
+          "ORB3",
+          "ORB1"
+        ],
+        "focus": {
+          "action": "edit",
+          "id": "ORB1",
+          "control": ""
+        }
+      },
+      "missingTarget": {
+        "confirmations": [],
+        "live": {
+          "ids": [],
+          "ringSurvived": true,
+          "survivorSame": false,
+          "disposed": [
+            [
+              "orb",
+              "spectral-ring"
+            ]
+          ]
+        }
+      },
+      "opaqueEmpty": {
+        "ids": [],
+        "focus": {
+          "control": "btnVisualizersAddOrb"
+        },
+        "ringRowSurvives": true
+      }
+    },
+    {
+      "standalone": true,
+      "cancel": {
+        "text": "Remove Orb 1 (spectral-ring)? This cannot be undone.",
+        "ids": [
+          "spectral-ring",
+          "ORB1"
+        ],
+        "focus": {
+          "action": "remove",
+          "id": "spectral-ring",
+          "control": ""
+        }
+      },
+      "accepted": {
+        "text": "Remove Orb 1 (spectral-ring)? This cannot be undone.",
+        "ids": [
+          "ORB1"
+        ],
+        "focus": {
+          "action": "edit",
+          "id": "ORB1",
+          "control": ""
+        }
+      },
+      "help": "Channel selects both the Orb's waveform and its band energies (Left, Right, or Center). Selected bands use that channel's energy. With no bands selected, the Orb uses its channel's full-spectrum energy.",
+      "picker": {
+        "selected": [
+          0,
+          1
+        ],
+        "cleared": [],
+        "channel": "L"
+      },
+      "addDuplicate": {
+        "ids": [
+          "ORB1",
+          "ORB2",
+          "ORB3"
+        ],
+        "focus": {
+          "action": "edit",
+          "id": "ORB3",
+          "control": ""
+        }
+      },
+      "opaqueEmpty": {
+        "ids": [],
+        "focus": {
+          "control": "btnVisualizersAddOrb"
+        },
+        "ringRowSurvives": true
+      }
+    }
+  ],
+  "pageErrors": [],
+  "browser": "151.0.7922.173"
+}

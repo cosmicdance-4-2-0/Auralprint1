@@ -117,7 +117,7 @@ function createVisualizersPanelUi({
     if (button.dataset.action === "duplicate") { const created = duplicateOrb(id); if (created?.id) { forceRefresh(); focusEdit(created.id); } return; }
     if (button.dataset.action === "remove") {
       const items = createVisualizerInventory(getVisualizers() || []); const index = items.filter((item) => item.type === "orb").findIndex((item) => item.id === id);
-      const item = items.find((entry) => entry.id === id); if (!item || !confirmRemoveOrb({ id, displayName: item.displayName })) return;
+      const item = items.find((entry) => entry.type === "orb" && entry.id === id); if (!item || !confirmRemoveOrb({ id, displayName: item.displayName })) return;
       if (!removeOrb(id)) return; forceRefresh();
       const survivors = createVisualizerInventory(getVisualizers() || []).filter((entry) => entry.type === "orb");
       const focus = survivors[index] || survivors[index - 1]; if (focus) focusEdit(focus.id); else ui.btnVisualizersAddOrb?.focus();

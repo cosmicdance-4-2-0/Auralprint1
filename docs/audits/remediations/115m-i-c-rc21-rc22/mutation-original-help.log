@@ -1,0 +1,104 @@
+TAP version 13
+# Subtest: RC-21: one-band, multi-band and empty targeting keep the selected channel's waveform and energy
+ok 1 - RC-21: one-band, multi-band and empty targeting keep the selected channel's waveform and energy
+  ---
+  duration_ms: 3.837569
+  type: 'test'
+  ...
+# [{"chanId":"L","bandIds":[0],"selected":0.9,"full":0.8,"waveform":0.75},{"chanId":"L","bandIds":[0,1],"selected":0.8,"full":0.8,"waveform":0.75},{"chanId":"L","bandIds":[],"selected":null,"full":0.8,"waveform":0.75},{"chanId":"R","bandIds":[0],"selected":0.1,"full":0.2,"waveform":-0.5},{"chanId":"R","bandIds":[0,1],"selected":0.2,"full":0.2,"waveform":-0.5},{"chanId":"R","bandIds":[],"selected":null,"full":0.2,"waveform":-0.5},{"chanId":"C","bandIds":[0],"selected":0.5,"full":0.6,"waveform":0.25},{"chanId":"C","bandIds":[0,1],"selected":0.45,"full":0.6,"waveform":0.25},{"chanId":"C","bandIds":[],"selected":null,"full":0.6,"waveform":0.25}]
+# Subtest: RC-21: actual rendered help explains channel ownership and band/empty targeting
+not ok 2 - RC-21: actual rendered help explains channel ownership and band/empty targeting
+  ---
+  duration_ms: 6.349268
+  type: 'test'
+  location: '/tmp/rc21-22-mutation-1pBCdc/tests/rc21-band-picker-help.test.js:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /channel.*both.*waveform.*band energ/i. Input:
+
+    'Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Selected bands use the combined spectrum. Channel controls the waveform. With no explicit targets, the orb uses its channel’s full-spectrum energy.'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/rc21-22-mutation-1pBCdc/tests/rc21-band-picker-help.test.js:59:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor
+ok 3 - RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor
+  ---
+  duration_ms: 6.232973
+  type: 'test'
+  ...
+# {"confirmation":"Remove Orb 1 (spectral-ring)? This cannot be undone.","persisted":["ORB1"],"ringSurvived":true,"focus":{"action":"edit","orbId":"ORB1"}}
+# Subtest: RC-22: reorder numbers and middle/end/empty nearest-survivor focus follow current runtime order
+ok 4 - RC-22: reorder numbers and middle/end/empty nearest-survivor focus follow current runtime order
+  ---
+  duration_ms: 2.205277
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "spectral-ring" remains safe and removable
+ok 5 - RC-22: accepted opaque ID "spectral-ring" remains safe and removable
+  ---
+  duration_ms: 0.801419
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "ORB0" remains safe and removable
+ok 6 - RC-22: accepted opaque ID "ORB0" remains safe and removable
+  ---
+  duration_ms: 1.183786
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "ORB123" remains safe and removable
+ok 7 - RC-22: accepted opaque ID "ORB123" remains safe and removable
+  ---
+  duration_ms: 0.882761
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "custom string" remains safe and removable
+ok 8 - RC-22: accepted opaque ID "custom string" remains safe and removable
+  ---
+  duration_ms: 0.564652
+  type: 'test'
+  ...
+# Subtest: RC-22: accepted opaque ID "custom![]\#\\"<>&" remains safe and removable
+ok 9 - RC-22: accepted opaque ID "custom![]\#\\"<>&" remains safe and removable
+  ---
+  duration_ms: 0.60318
+  type: 'test'
+  ...
+# Subtest: RC-22: stale missing target cannot confirm or remove a matching Ring
+ok 10 - RC-22: stale missing target cannot confirm or remove a matching Ring
+  ---
+  duration_ms: 0.770482
+  type: 'test'
+  ...
+# Subtest: RC-22: failed removal keeps focus, settings and list; refresh/init do not duplicate listeners
+ok 11 - RC-22: failed removal keeps focus, settings and list; refresh/init do not duplicate listeners
+  ---
+  duration_ms: 0.644943
+  type: 'test'
+  ...
+# Subtest: RC-22: generated Edit/Add/Duplicate actions retain stable IDs, numbering and focus
+ok 12 - RC-22: generated Edit/Add/Duplicate actions retain stable IDs, numbering and focus
+  ---
+  duration_ms: 5.795954
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 173.510856

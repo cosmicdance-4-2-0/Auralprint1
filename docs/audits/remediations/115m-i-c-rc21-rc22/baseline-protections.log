@@ -1,0 +1,578 @@
+TAP version 13
+# Subtest: RC-16: zero
+ok 1 - RC-16: zero
+  ---
+  duration_ms: 1.530749
+  type: 'test'
+  ...
+# Subtest: RC-16: highest
+ok 2 - RC-16: highest
+  ---
+  duration_ms: 0.162525
+  type: 'test'
+  ...
+# Subtest: RC-16: interior
+ok 3 - RC-16: interior
+  ---
+  duration_ms: 0.097647
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 0
+ok 4 - RC-16: invalid type/value 0
+  ---
+  duration_ms: 0.090606
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 1
+ok 5 - RC-16: invalid type/value 1
+  ---
+  duration_ms: 0.157628
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 2
+ok 6 - RC-16: invalid type/value 2
+  ---
+  duration_ms: 0.06656
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 3
+ok 7 - RC-16: invalid type/value 3
+  ---
+  duration_ms: 0.079049
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 4
+ok 8 - RC-16: invalid type/value 4
+  ---
+  duration_ms: 0.086521
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 5
+ok 9 - RC-16: invalid type/value 5
+  ---
+  duration_ms: 3.397043
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 6
+ok 10 - RC-16: invalid type/value 6
+  ---
+  duration_ms: 0.181164
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 7
+ok 11 - RC-16: invalid type/value 7
+  ---
+  duration_ms: 0.080281
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 8
+ok 12 - RC-16: invalid type/value 8
+  ---
+  duration_ms: 0.095935
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 9
+ok 13 - RC-16: invalid type/value 9
+  ---
+  duration_ms: 0.044617
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 10
+ok 14 - RC-16: invalid type/value 10
+  ---
+  duration_ms: 0.073451
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 11
+ok 15 - RC-16: invalid type/value 11
+  ---
+  duration_ms: 0.070015
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 12
+ok 16 - RC-16: invalid type/value 12
+  ---
+  duration_ms: 0.061873
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 13
+ok 17 - RC-16: invalid type/value 13
+  ---
+  duration_ms: 0.088393
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 14
+ok 18 - RC-16: invalid type/value 14
+  ---
+  duration_ms: 0.050607
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 15
+ok 19 - RC-16: invalid type/value 15
+  ---
+  duration_ms: 0.170747
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 16
+ok 20 - RC-16: invalid type/value 16
+  ---
+  duration_ms: 0.04623
+  type: 'test'
+  ...
+# Subtest: RC-16: invalid type/value 17
+ok 21 - RC-16: invalid type/value 17
+  ---
+  duration_ms: 0.031488
+  type: 'test'
+  ...
+# Subtest: RC-16: stable first occurrences, fresh arrays, empty/all-invalid collections and legacy names
+ok 22 - RC-16: stable first occurrences, fresh arrays, empty/all-invalid collections and legacy names
+  ---
+  duration_ms: 0.803592
+  type: 'test'
+  ...
+# Subtest: RC-16: independent Orb normalization and duplication retain configuration and ordering
+ok 23 - RC-16: independent Orb normalization and duplication retain configuration and ordering
+  ---
+  duration_ms: 0.471832
+  type: 'test'
+  ...
+# Subtest: RC-16: validated human text remains an explicit numbers-only model boundary
+ok 24 - RC-16: validated human text remains an explicit numbers-only model boundary
+  ---
+  duration_ms: 0.360423
+  type: 'test'
+  ...
+# Subtest: RC-16: schemas 2–10 discard entries without losing scenes or reviving aliases
+ok 25 - RC-16: schemas 2–10 discard entries without losing scenes or reviving aliases
+  ---
+  duration_ms: 5.170387
+  type: 'test'
+  ...
+# Subtest: RC-16: inspected historical fixtures keep all expected values, including both schema-9 forms
+ok 26 - RC-16: inspected historical fixtures keep all expected values, including both schema-9 forms
+  ---
+  duration_ms: 3.444845
+  type: 'test'
+  ...
+# Subtest: RC-16: original URL import and actual Orb.step radius now match the empty control
+ok 27 - RC-16: original URL import and actual Orb.step radius now match the empty control
+  ---
+  duration_ms: 1.955098
+  type: 'test'
+  ...
+# Original malformed URL radius: 721 px; empty control: 721 px; explicit silent Band 0: 10 px.
+# Subtest: RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy, waveform and radius
+ok 28 - RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy, waveform and radius
+  ---
+  duration_ms: 1.911803
+  type: 'test'
+  ...
+# [{"chanId":"L","fullRadius":721,"selectedRadius":299.6666666666667,"band0Radius":89},{"chanId":"R","fullRadius":247,"selectedRadius":326,"band0Radius":168},{"chanId":"C","fullRadius":484,"selectedRadius":405.0000000000001,"band0Radius":247}]
+# Subtest: RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors
+ok 29 - RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors
+  ---
+  duration_ms: 7.37412
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: zero
+ok 30 - RC-17 normalization: zero
+  ---
+  duration_ms: 2.644238
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: negative zero
+ok 31 - RC-17 normalization: negative zero
+  ---
+  duration_ms: 0.135915
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: quarter
+ok 32 - RC-17 normalization: quarter
+  ---
+  duration_ms: 0.17934
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: half
+ok 33 - RC-17 normalization: half
+  ---
+  duration_ms: 0.149465
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: three quarters
+ok 34 - RC-17 normalization: three quarters
+  ---
+  duration_ms: 0.124758
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: TAU
+ok 35 - RC-17 normalization: TAU
+  ---
+  duration_ms: 0.111428
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: 2TAU
+ok 36 - RC-17 normalization: 2TAU
+  ---
+  duration_ms: 0.110697
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: -TAU
+ok 37 - RC-17 normalization: -TAU
+  ---
+  duration_ms: 0.397089
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: -2TAU
+ok 38 - RC-17 normalization: -2TAU
+  ---
+  duration_ms: 0.124738
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: 450 degrees
+ok 39 - RC-17 normalization: 450 degrees
+  ---
+  duration_ms: 0.203778
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: negative quarter
+ok 40 - RC-17 normalization: negative quarter
+  ---
+  duration_ms: 0.171369
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: many turns positive
+ok 41 - RC-17 normalization: many turns positive
+  ---
+  duration_ms: 0.085449
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: many turns negative
+ok 42 - RC-17 normalization: many turns negative
+  ---
+  duration_ms: 0.065178
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: canonical inputs retain exact bits, without degree quantization or boundary snapping
+ok 43 - RC-17 normalization: canonical inputs retain exact bits, without degree quantization or boundary snapping
+  ---
+  duration_ms: 2.085024
+  type: 'test'
+  ...
+# Subtest: RC-17 normalization: invalid types/nonfinite numbers use only a finite normalized fallback
+ok 44 - RC-17 normalization: invalid types/nonfinite numbers use only a finite normalized fallback
+  ---
+  duration_ms: 0.25218
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 2 applies the same phase boundary
+ok 45 - RC-17 presets: schema 2 applies the same phase boundary
+  ---
+  duration_ms: 1.42511
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 3 applies the same phase boundary
+ok 46 - RC-17 presets: schema 3 applies the same phase boundary
+  ---
+  duration_ms: 0.464551
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 4 applies the same phase boundary
+ok 47 - RC-17 presets: schema 4 applies the same phase boundary
+  ---
+  duration_ms: 0.30476
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 5 applies the same phase boundary
+ok 48 - RC-17 presets: schema 5 applies the same phase boundary
+  ---
+  duration_ms: 0.330348
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 6 applies the same phase boundary
+ok 49 - RC-17 presets: schema 6 applies the same phase boundary
+  ---
+  duration_ms: 0.298119
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 7 applies the same phase boundary
+ok 50 - RC-17 presets: schema 7 applies the same phase boundary
+  ---
+  duration_ms: 1.066528
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 8 applies the same phase boundary
+ok 51 - RC-17 presets: schema 8 applies the same phase boundary
+  ---
+  duration_ms: 0.313062
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 9 applies the same phase boundary
+ok 52 - RC-17 presets: schema 9 applies the same phase boundary
+  ---
+  duration_ms: 0.407465
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: schema 10 applies the same phase boundary
+ok 53 - RC-17 presets: schema 10 applies the same phase boundary
+  ---
+  duration_ms: 0.316738
+  type: 'test'
+  ...
+# Subtest: RC-17 presets: historical fixtures and both schema-9 formats retain unrelated canonical settings
+ok 54 - RC-17 presets: historical fixtures and both schema-9 formats retain unrelated canonical settings
+  ---
+  duration_ms: 2.596686
+  type: 'test'
+  ...
+# Subtest: RC-17 collection: defaults, creation and independent duplication use canonical designed phase
+ok 55 - RC-17 collection: defaults, creation and independent duplication use canonical designed phase
+  ---
+  duration_ms: 0.377008
+  type: 'test'
+  ...
+# Subtest: RC-17 URL/replacement: import/export preserve precise phase, canonical shape and independent runtime history
+ok 56 - RC-17 URL/replacement: import/export preserve precise phase, canonical shape and independent runtime history
+  ---
+  duration_ms: 2.624748
+  type: 'test'
+  ...
+# Subtest: RC-17 geometry: equivalent phases produce actual matching coordinates, waveform sampling and phase color
+ok 57 - RC-17 geometry: equivalent phases produce actual matching coordinates, waveform sampling and phase color
+  ---
+  duration_ms: 240.847695
+  type: 'test'
+  ...
+# Subtest: RC-17 lifecycle: moving edit and orb Ring preserve history until explicit visual reset
+ok 58 - RC-17 lifecycle: moving edit and orb Ring preserve history until explicit visual reset
+  ---
+  duration_ms: 1.487213
+  type: 'test'
+  ...
+# Subtest: RC-17 lifecycle: moving edit and free Ring preserve history until explicit visual reset
+ok 59 - RC-17 lifecycle: moving edit and free Ring preserve history until explicit visual reset
+  ---
+  duration_ms: 0.472132
+  type: 'test'
+  ...
+# Subtest: RC-17 UI: generated controls reflect imported canonical design, fractional values and shared display/ARIA
+ok 60 - RC-17 UI: generated controls reflect imported canonical design, fractional values and shared display/ARIA
+  ---
+  duration_ms: 5.917392
+  type: 'test'
+  ...
+# Subtest: RC-17 UI: native endpoint input resynchronizes in the same commit, stable IDs/focus/listeners survive reorder and replacement
+ok 61 - RC-17 UI: native endpoint input resynchronizes in the same commit, stable IDs/focus/listeners survive reorder and replacement
+  ---
+  duration_ms: 4.882241
+  type: 'test'
+  ...
+# Subtest: RC-17 UI: Arrow keys move one degree while preserving imported fractions and synchronizing endpoint zero
+ok 62 - RC-17 UI: Arrow keys move one degree while preserving imported fractions and synchronizing endpoint zero
+  ---
+  duration_ms: 2.382342
+  type: 'test'
+  ...
+# Subtest: RC-18: production Space/callback freezes free Ring and Orb while analysis continues
+ok 63 - RC-18: production Space/callback freezes free Ring and Orb while analysis continues
+  ---
+  duration_ms: 4.377861
+  type: 'test'
+  ...
+# {"phaseMode":"free","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+# Subtest: RC-18: production Space/callback freezes orb Ring and Orb while analysis continues
+ok 64 - RC-18: production Space/callback freezes orb Ring and Orb while analysis continues
+  ---
+  duration_ms: 1.698371
+  type: 'test'
+  ...
+# {"phaseMode":"orb","pausedOrb":1.2000000000000002,"pausedRing":1.2000000000000002,"samplesDuringPause":100,"resumedOrb":1.4000000000000004,"resumedRing":1.4000000000000004}
+# Subtest: RC-19: uninitialized and idle disposal are safe and acquire no resources
+ok 65 - RC-19: uninitialized and idle disposal are safe and acquire no resources
+  ---
+  duration_ms: 6.29436
+  type: 'test'
+  ...
+# Subtest: RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+ok 66 - RC-19: active disposal stops native encoding once (queued events) and preserves live owner
+  ---
+  duration_ms: 6.156884
+  type: 'test'
+  ...
+# Subtest: RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+ok 67 - RC-19: active disposal stops native encoding once (synchronous events) and preserves live owner
+  ---
+  duration_ms: 4.139191
+  type: 'test'
+  ...
+# Subtest: RC-19: normal Stop then disposal fences queued completion without double native stop
+ok 68 - RC-19: normal Stop then disposal fences queued completion without double native stop
+  ---
+  duration_ms: 3.33621
+  type: 'test'
+  ...
+# Subtest: RC-19: inactive backend is not stopped unnecessarily
+ok 69 - RC-19: inactive backend is not stopped unnecessarily
+  ---
+  duration_ms: 2.212656
+  type: 'test'
+  ...
+# [RecorderEngine] dispose-stop-failed Error: stop refused
+#     at NativeRecorder.stop (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:72:15)
+#     at Object.dispose (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1374:63)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:232:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] dispose-stop-failed Error: stop refused
+#     at NativeRecorder.stop (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:72:15)
+#     at Object.dispose (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1374:63)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:232:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] recorder-handler-release-failed Error: cannot detach ondataavailable
+#     at NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+#     at releaseMediaRecorderInstance (file:///tmp/rc19-N5wXae/recorder-engine.mjs:520:31)
+#     at releaseActiveSession (file:///tmp/rc19-N5wXae/recorder-engine.mjs:531:30)
+#     at Object.dispose (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] recorder-handler-release-failed Error: cannot detach onstop
+#     at NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+#     at releaseMediaRecorderInstance (file:///tmp/rc19-N5wXae/recorder-engine.mjs:520:31)
+#     at releaseActiveSession (file:///tmp/rc19-N5wXae/recorder-engine.mjs:531:30)
+#     at Object.dispose (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] recorder-handler-release-failed Error: cannot detach onerror
+#     at NativeRecorder.set (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:60:63)
+#     at releaseMediaRecorderInstance (file:///tmp/rc19-N5wXae/recorder-engine.mjs:520:31)
+#     at releaseActiveSession (file:///tmp/rc19-N5wXae/recorder-engine.mjs:531:30)
+#     at Object.dispose (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:249:27)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] audio-stream-release-failed Error: owner cleanup refused
+#     at Object.releaseStream (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:138:80)
+#     at releaseAudioStream (file:///tmp/rc19-N5wXae/recorder-engine.mjs:661:22)
+#     at releaseMergedStream (file:///tmp/rc19-N5wXae/recorder-engine.mjs:887:12)
+#     at releaseActiveSession (file:///tmp/rc19-N5wXae/recorder-engine.mjs:533:29)
+#     at Object.dispose (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1387:22)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:260:25)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# [RecorderEngine] media-recorder-create-failed Error: MediaRecorder could not be created: constructor refused
+#     at createRecorderError (file:///tmp/rc19-N5wXae/recorder-engine.mjs:297:17)
+#     at Object.start (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1187:15)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'media-recorder-create-failed',
+#   cause: Error: constructor refused
+#       at new NativeRecorder (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:54:37)
+#       at Object.start (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1185:33)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#       at async Test.run (node:internal/test_runner/test:1389:7)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# }
+# [RecorderEngine] media-recorder-start-failed Error: MediaRecorder could not start: start refused
+#     at createRecorderError (file:///tmp/rc19-N5wXae/recorder-engine.mjs:297:17)
+#     at Object.start (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1220:15)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+#   recordingCode: 'media-recorder-start-failed',
+#   cause: Error: start refused
+#       at NativeRecorder.start (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:65:39)
+#       at Object.start (file:///tmp/rc19-N5wXae/recorder-engine.mjs:1218:31)
+#       at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:282:25)
+#       at async Test.run (node:internal/test_runner/test:1389:7)
+#       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# }
+# [RecorderEngine] recorder-error Error: native fatal error
+#     at NativeRecorder.error (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:86:31)
+#     at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc19-recorder-disposal.test.js:290:115)
+#     at async Test.run (node:internal/test_runner/test:1389:7)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+# Subtest: RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+ok 70 - RC-19: explicit reinit creates a clean session immune to old callbacks and queued timers
+  ---
+  duration_ms: 30.238151
+  type: 'test'
+  ...
+# Subtest: RC-19: native stop exception reports failure with actual recording state and still cleans up
+ok 71 - RC-19: native stop exception reports failure with actual recording state and still cleans up
+  ---
+  duration_ms: 3.054295
+  type: 'test'
+  ...
+# Subtest: RC-19: native stop exception reports failure with actual inactive state and still cleans up
+ok 72 - RC-19: native stop exception reports failure with actual inactive state and still cleans up
+  ---
+  duration_ms: 1.957382
+  type: 'test'
+  ...
+# Subtest: RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+ok 73 - RC-19: exceptional ondataavailable detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 2.026074
+  type: 'test'
+  ...
+# Subtest: RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+ok 74 - RC-19: exceptional onstop detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 1.807275
+  type: 'test'
+  ...
+# Subtest: RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+ok 75 - RC-19: exceptional onerror detachment still fences callbacks and releases remaining ownership
+  ---
+  duration_ms: 1.781456
+  type: 'test'
+  ...
+# Subtest: RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+ok 76 - RC-19: throwing audio-owner cleanup never falls back to stopping shared upstream tracks
+  ---
+  duration_ms: 2.549915
+  type: 'test'
+  ...
+# Subtest: RC-19: file playback tap is released by AudioEngine without disturbing playback or analysis
+ok 77 - RC-19: file playback tap is released by AudioEngine without disturbing playback or analysis
+  ---
+  duration_ms: 3.009237
+  type: 'test'
+  ...
+# Subtest: RC-19: failed capture acquisition/start then disposal creates no export or native stop
+ok 78 - RC-19: failed capture acquisition/start then disposal creates no export or native stop
+  ---
+  duration_ms: 1.937171
+  type: 'test'
+  ...
+# Subtest: RC-19: failed constructor acquisition/start then disposal creates no export or native stop
+ok 79 - RC-19: failed constructor acquisition/start then disposal creates no export or native stop
+  ---
+  duration_ms: 2.152335
+  type: 'test'
+  ...
+# Subtest: RC-19: failed start acquisition/start then disposal creates no export or native stop
+ok 80 - RC-19: failed start acquisition/start then disposal creates no export or native stop
+  ---
+  duration_ms: 2.615603
+  type: 'test'
+  ...
+# Subtest: RC-19: native error then dispose is terminal and cannot resurrect an export
+ok 81 - RC-19: native error then dispose is terminal and cannot resurrect an export
+  ---
+  duration_ms: 1.689787
+  type: 'test'
+  ...
+1..81
+# tests 81
+# suites 0
+# pass 81
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 686.202689
