@@ -1,6 +1,6 @@
 # 115M.H.N — RC-13 preserve visible panel and queue keyboard focus ownership
 
-RC-13 CLOSED by local acceptance evidence. Version `v0.1.15m.h.n`.
+Original RC-13 remediation: local acceptance evidence for `v0.1.15m.h.n`; merged in [PR #35](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/35) with hosted Linux/Windows CI passing.
 
 Root causes: workspace stacking reacted only to pointerdown; Queue Hide restored an absent btnOpenQueue; queue refresh recreated focused row DOM without restoration.
 
@@ -15,4 +15,6 @@ Mutation: remove focusin stacking, remove actual-toggle fallback, and remove que
 
 Acceptance: intended-behavior regressions and focused tests PASS; full `npm test` PASS including protected RC-01–RC-06; production build PASS; `git diff --check` PASS; schema exactly 10. Generated untracked artifact `dist/auralprint_0.1.15m.h.n.html` has matching version metadata. Adjacent logs record reproduction, regression, mutation and final checks.
 
-Historical audit/evidence are unchanged. RC-01–RC-06 were CLOSED before this mission. RC-07–RC-13 are locally CLOSED. Remaining mission findings are OPEN. RC-16–RC-22 are untouched. Preset schema remains 10. 115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped. Hosted Linux/Windows CI is reserved for the final PR if all blockers close.
+Post-merge status: PR #35 fixed the demonstrated RC-13 defects and merged RC-07–RC-14 remediation with hosted Linux/Windows CI passing. Post-merge developer review identified an additional focus-restoration edge when Queue remained visible while Audio was hidden: the actual Queue toggle belongs to the hidden Audio panel. [115M.H.P](../115m-h-p-rc13/README.md) closes that edge by restoring focus only to a visible owner, without opening Audio. The original reproduction and PR #35 evidence above remain unchanged.
+
+RC-01–RC-12 and RC-14 are CLOSED; RC-13 closes after acceptance of this review correction, completing RC-01–RC-14 closure. RC-15 remains OPEN P2, blocks release-candidate promotion, and requires explicit release disposition before 115N. Historical audit/evidence are unchanged. Preset schema remains 10. 115N remains WITHHELD. Build 115 is NOT canonical / NOT shipped.
