@@ -1,0 +1,64 @@
+{
+  "phase1-small-memory": {
+    "count": 2,
+    "frames": 360,
+    "simulationMs": 7.6750570000000025,
+    "retained": 2880,
+    "calls": {
+      "fillRect": 1,
+      "save": 2,
+      "beginPath": 2882,
+      "moveTo": 2,
+      "lineTo": 20,
+      "stroke": 2,
+      "restore": 2,
+      "arc": 2880,
+      "fill": 2880
+    },
+    "renderingMs": 4.174685999999994,
+    "initialHeapBytes": 4280552,
+    "heapUsedBytes": 4971624,
+    "heapDeltaBytes": 691072,
+    "gcAvailable": true,
+    "lastUpdate": {
+      "ms": 0.006308999999994569,
+      "emissions": 8,
+      "expiryVisits": 2872
+    }
+  },
+  "governed-small-memory": {
+    "version": "v0.1.15m.h.r",
+    "nodeVersion": "v24.19.0",
+    "count": 2,
+    "frames": 360,
+    "simulationMs": 11.411980999999997,
+    "retained": 2880,
+    "calls": {
+      "fillRect": 1,
+      "save": 2,
+      "beginPath": 2882,
+      "moveTo": 2,
+      "lineTo": 20,
+      "stroke": 2,
+      "restore": 2,
+      "arc": 2880,
+      "fill": 2880
+    },
+    "renderingMs": 4.784732999999996,
+    "initialHeapBytes": 4719640,
+    "heapUsedBytes": 5716984,
+    "heapDeltaBytes": 997344,
+    "gcAvailable": true,
+    "lastUpdate": {
+      "ms": 0.018307000000000073,
+      "emissions": 8,
+      "expiryVisits": 2872,
+      "droppedDemand": 0,
+      "expired": 0,
+      "evicted": 0,
+      "schedulingVisits": 10,
+      "heapComparisons": 8,
+      "activeParticles": 2880
+    }
+  }
+}

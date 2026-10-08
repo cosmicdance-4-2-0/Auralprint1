@@ -5,13 +5,14 @@ const fs = require('node:fs');
 const http = require('node:http');
 (async () => {
   const { CONFIG } = await import('../src/js/core/config.js');
+  const version = fs.readFileSync('version', 'utf8').trim();
   const prefs = structuredClone(CONFIG.defaults);
   prefs.timing.maxDeltaTimeSec = 120;
   prefs.orbs.forEach(orb => { orb.particles.overlapRadiusPx = 10; });
   const hash = '#p=' + Buffer.from(JSON.stringify({ schema: 10, prefs })).toString('base64url');
   const server = http.createServer((req, res) => {
     if (req.url.startsWith('/favicon.ico')) { res.writeHead(204); res.end(); return; }
-    res.setHeader('Content-Type','text/html'); res.end(fs.readFileSync('dist/auralprint_0.1.15m.h.q.html'));
+    res.setHeader('Content-Type','text/html'); res.end(fs.readFileSync(`dist/auralprint_${version.slice(1)}.html`));
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const origin = `http://127.0.0.1:${server.address().port}`;
@@ -26,7 +27,7 @@ const http = require('node:http');
     await page.route('**/*', route => route.request().url().startsWith(origin) ? route.continue() : route.abort());
     await page.goto(origin + '/' + hash);
     await page.waitForFunction(() => document.querySelectorAll('.orb-editor-card').length === 2);
-    assert.match(await page.title(), /v0\.1\.15m\.h\.q/);
+    assert.ok((await page.title()).includes(version));
     const result = await page.evaluate(() => {
       const absent = !document.querySelector('#rngOverlap, #valOverlap, [id*="overlap"], [for*="overlap"]');
       const edit = document.querySelector('[id$="-emit-rate"]');
@@ -47,7 +48,7 @@ const http = require('node:http');
     assert.ok(result.canvasWidth > 0);
     assert.deepEqual(errors, []);
     assert.equal(requests.filter(url => !url.startsWith(origin)).length, 0);
-    const report = { version:'v0.1.15m.h.q', browser:await browser.version(),
+    const report = { version, browser:await browser.version(),
       verified:['single-file boot on localhost with external requests blocked','schema-10 obsolete overlap import','120-second timing sanitation','no overlap DOM controls/labels','per-Orb emission edit','Bulk lifetime edit','encoded schema remains 10','encoded overlap omitted','canvas initialized','no external asset requests'],
       errors, result };
     if (process.env.AP_REPORT) fs.writeFileSync(process.env.AP_REPORT, JSON.stringify(report,null,2)+'\n');

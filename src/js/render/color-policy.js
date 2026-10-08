@@ -39,7 +39,7 @@ const ColorPolicy = (() => {
     if (lineColorMode === "dominantBand") return bandRgb01(dominantBandIndex);
 
     if (lineColorMode === "lastParticle") {
-      const last = particles && particles.length ? particles[particles.length - 1] : null;
+      const last = particles && particles.length ? particles.at(-1) : null;
       if (last && last.rgbStart) return last.rgbStart;
       return hexToRgb01(s.visuals.particleColor);
     }

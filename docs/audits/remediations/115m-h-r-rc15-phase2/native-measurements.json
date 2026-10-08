@@ -1,0 +1,406 @@
+{
+  "version": "v0.1.15m.h.r",
+  "browser": "151.0.7922.173",
+  "results": {
+    "admission": {
+      "requestedOrbs": 4096,
+      "acceptedOrbs": 4096,
+      "sanitationMs": 94.5
+    },
+    "admittedTiming": [
+      {
+        "requested": 0.03333333333333333,
+        "accepted": 0.03333333333333333
+      },
+      {
+        "requested": 120,
+        "accepted": 0.03333333333333333
+      },
+      {
+        "requested": 1000000,
+        "accepted": 0.03333333333333333
+      },
+      {
+        "requested": 1.7976931348623157e+308,
+        "accepted": 0.03333333333333333
+      }
+    ],
+    "curves": [
+      {
+        "count": 2,
+        "warmFrames": 360,
+        "warmMs": 36.700000000186265,
+        "particles": 2880,
+        "updates": [
+          {
+            "ms": 0.5,
+            "emits": 8,
+            "emissions": 8,
+            "droppedDemand": 0,
+            "expired": 8,
+            "evicted": 0,
+            "expiryVisits": 2880,
+            "schedulingVisits": 10,
+            "heapComparisons": 171,
+            "activeParticles": 2880
+          },
+          {
+            "ms": 0.3000000002793968,
+            "emits": 8,
+            "emissions": 8,
+            "droppedDemand": 0,
+            "expired": 8,
+            "evicted": 0,
+            "expiryVisits": 2880,
+            "schedulingVisits": 10,
+            "heapComparisons": 167,
+            "activeParticles": 2880
+          },
+          {
+            "ms": 0.19999999972060323,
+            "emits": 8,
+            "emissions": 8,
+            "droppedDemand": 0,
+            "expired": 8,
+            "evicted": 0,
+            "expiryVisits": 2880,
+            "schedulingVisits": 10,
+            "heapComparisons": 167,
+            "activeParticles": 2880
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 2,
+          "beginPath": 2882,
+          "moveTo": 2,
+          "lineTo": 20,
+          "stroke": 2,
+          "restore": 2,
+          "arc": 2880,
+          "fill": 2880
+        },
+        "instrumentedRenderMs": 8.100000000093132,
+        "nativeRenderSubmissionMs": [
+          6.800000000279397,
+          4.699999999720603,
+          3.1000000000931323
+        ]
+      },
+      {
+        "count": 8,
+        "warmFrames": 360,
+        "warmMs": 34.10000000009313,
+        "particles": 11520,
+        "updates": [
+          {
+            "ms": 0.20000000018626451,
+            "emits": 32,
+            "emissions": 32,
+            "droppedDemand": 0,
+            "expired": 32,
+            "evicted": 0,
+            "expiryVisits": 11520,
+            "schedulingVisits": 40,
+            "heapComparisons": 741,
+            "activeParticles": 11520
+          },
+          {
+            "ms": 0.09999999962747097,
+            "emits": 32,
+            "emissions": 32,
+            "droppedDemand": 0,
+            "expired": 32,
+            "evicted": 0,
+            "expiryVisits": 11520,
+            "schedulingVisits": 40,
+            "heapComparisons": 743,
+            "activeParticles": 11520
+          },
+          {
+            "ms": 0.20000000018626451,
+            "emits": 32,
+            "emissions": 32,
+            "droppedDemand": 0,
+            "expired": 32,
+            "evicted": 0,
+            "expiryVisits": 11520,
+            "schedulingVisits": 40,
+            "heapComparisons": 731,
+            "activeParticles": 11520
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 8,
+          "beginPath": 11528,
+          "moveTo": 8,
+          "lineTo": 80,
+          "stroke": 8,
+          "restore": 8,
+          "arc": 11520,
+          "fill": 11520
+        },
+        "instrumentedRenderMs": 38.700000000186265,
+        "nativeRenderSubmissionMs": [
+          14.699999999720603,
+          14.800000000279397,
+          9.5
+        ]
+      },
+      {
+        "count": 16,
+        "warmFrames": 360,
+        "warmMs": 64.90000000037253,
+        "particles": 16384,
+        "updates": [
+          {
+            "ms": 0.19999999972060323,
+            "emits": 64,
+            "emissions": 64,
+            "droppedDemand": 0,
+            "expired": 0,
+            "evicted": 64,
+            "expiryVisits": 16384,
+            "schedulingVisits": 80,
+            "heapComparisons": 1728,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.20000000018626451,
+            "emits": 64,
+            "emissions": 64,
+            "droppedDemand": 0,
+            "expired": 0,
+            "evicted": 64,
+            "expiryVisits": 16384,
+            "schedulingVisits": 80,
+            "heapComparisons": 1728,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.2999999998137355,
+            "emits": 64,
+            "emissions": 64,
+            "droppedDemand": 0,
+            "expired": 0,
+            "evicted": 64,
+            "expiryVisits": 16384,
+            "schedulingVisits": 80,
+            "heapComparisons": 1728,
+            "activeParticles": 16384
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 16,
+          "beginPath": 16400,
+          "moveTo": 16,
+          "lineTo": 160,
+          "stroke": 16,
+          "restore": 16,
+          "arc": 16384,
+          "fill": 16384
+        },
+        "instrumentedRenderMs": 6.399999999906868,
+        "nativeRenderSubmissionMs": [
+          8.300000000279397,
+          7.600000000093132,
+          7.399999999906868
+        ]
+      },
+      {
+        "count": 64,
+        "warmFrames": 360,
+        "warmMs": 98,
+        "particles": 16384,
+        "updates": [
+          {
+            "ms": 0.19999999972060323,
+            "emits": 256,
+            "emissions": 256,
+            "droppedDemand": 0,
+            "expired": 0,
+            "evicted": 256,
+            "expiryVisits": 16384,
+            "schedulingVisits": 320,
+            "heapComparisons": 6912,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.20000000018626451,
+            "emits": 256,
+            "emissions": 256,
+            "droppedDemand": 0,
+            "expired": 0,
+            "evicted": 256,
+            "expiryVisits": 16384,
+            "schedulingVisits": 320,
+            "heapComparisons": 6912,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.19999999972060323,
+            "emits": 256,
+            "emissions": 256,
+            "droppedDemand": 0,
+            "expired": 0,
+            "evicted": 256,
+            "expiryVisits": 16384,
+            "schedulingVisits": 320,
+            "heapComparisons": 6912,
+            "activeParticles": 16384
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 64,
+          "beginPath": 16448,
+          "moveTo": 64,
+          "lineTo": 640,
+          "stroke": 64,
+          "restore": 64,
+          "arc": 16384,
+          "fill": 16384
+        },
+        "instrumentedRenderMs": 6.5,
+        "nativeRenderSubmissionMs": [
+          11.200000000186265,
+          6.2999999998137355,
+          6.399999999906868
+        ]
+      },
+      {
+        "count": 256,
+        "warmFrames": 360,
+        "warmMs": 149,
+        "particles": 16384,
+        "updates": [
+          {
+            "ms": 0.3000000002793968,
+            "emits": 512,
+            "emissions": 512,
+            "droppedDemand": 512,
+            "expired": 0,
+            "evicted": 512,
+            "expiryVisits": 16384,
+            "schedulingVisits": 768,
+            "heapComparisons": 13824,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.39999999990686774,
+            "emits": 512,
+            "emissions": 512,
+            "droppedDemand": 512,
+            "expired": 0,
+            "evicted": 512,
+            "expiryVisits": 16384,
+            "schedulingVisits": 768,
+            "heapComparisons": 13824,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.2999999998137355,
+            "emits": 512,
+            "emissions": 512,
+            "droppedDemand": 512,
+            "expired": 0,
+            "evicted": 512,
+            "expiryVisits": 16384,
+            "schedulingVisits": 768,
+            "heapComparisons": 13824,
+            "activeParticles": 16384
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 256,
+          "beginPath": 16640,
+          "moveTo": 256,
+          "lineTo": 2560,
+          "stroke": 256,
+          "restore": 256,
+          "arc": 16384,
+          "fill": 16384
+        },
+        "instrumentedRenderMs": 6.100000000093132,
+        "nativeRenderSubmissionMs": [
+          11.5,
+          8.399999999906868,
+          9.300000000279397
+        ]
+      },
+      {
+        "count": 4096,
+        "warmFrames": 360,
+        "warmMs": 476.60000000009313,
+        "particles": 16384,
+        "updates": [
+          {
+            "ms": 1.1000000000931323,
+            "emits": 512,
+            "emissions": 512,
+            "droppedDemand": 15872,
+            "expired": 0,
+            "evicted": 512,
+            "expiryVisits": 16384,
+            "schedulingVisits": 4608,
+            "heapComparisons": 13824,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 1.2000000001862645,
+            "emits": 512,
+            "emissions": 512,
+            "droppedDemand": 15872,
+            "expired": 0,
+            "evicted": 512,
+            "expiryVisits": 16384,
+            "schedulingVisits": 4608,
+            "heapComparisons": 13824,
+            "activeParticles": 16384
+          },
+          {
+            "ms": 0.8999999999068677,
+            "emits": 512,
+            "emissions": 512,
+            "droppedDemand": 15872,
+            "expired": 0,
+            "evicted": 512,
+            "expiryVisits": 16384,
+            "schedulingVisits": 4608,
+            "heapComparisons": 13824,
+            "activeParticles": 16384
+          }
+        ],
+        "drawCalls": {
+          "fillRect": 1,
+          "save": 4096,
+          "beginPath": 20480,
+          "moveTo": 4096,
+          "lineTo": 12288,
+          "stroke": 4096,
+          "restore": 4096,
+          "arc": 16384,
+          "fill": 16384
+        },
+        "instrumentedRenderMs": 9.300000000279397,
+        "nativeRenderSubmissionMs": [
+          16.699999999720603,
+          19.800000000279397,
+          17.299999999813735
+        ]
+      }
+    ],
+    "burst": {
+      "acceptedMaxDeltaTimeSec": 0.03333333333333333,
+      "acceptedTtlSec": 600,
+      "emits": 8,
+      "elapsedMs": 0.2999999998137355,
+      "retainedParticles": 1448
+    },
+    "caveat": "Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. Initial CONFIG emission/retention thresholds are engineering safeguards, not a real-time performance guarantee. Orb motion, targeting, trace and Canvas submission work remain ungoverned."
+  },
+  "errors": []
+}

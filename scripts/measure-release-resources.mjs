@@ -1,4 +1,4 @@
-// Optional RC-15 investigation against current production behavior; no aggregate budget is selected.
+// Optional RC-15 investigation against current production behavior; emission/retention budgets are enforced; rendering/admission remain ungoverned.
 import { CONFIG } from '../src/js/core/config.js';
 import { simulationDeltaSec } from '../src/js/core/timing.js';
 import { runtime } from '../src/js/core/preferences.js';
@@ -12,7 +12,7 @@ import { Renderer } from '../src/js/render/renderer.js';
 import { Orb } from '../src/js/render/orb.js';
 const check = (value, message) => { if (!value) throw new Error(message); };
 
-export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeContext = null } = {}) {
+export function measureReleaseResources({ counts = [2, 8, 16, 64, 256, 4096], warmFrames = 360, nativeContext = null } = {}) {
   state.widthPx = state.heightPx = 1000; state.dpr = 1;
   const largeStart = performance.now();
   const large = sanitizePreset({ schema: 10, prefs: { orbs: Array.from({ length: 4096 }, (_, i) => ({ ...structuredClone(CONFIG.defaults.orbs[0]), id: `SAFE-${i}` })) } });
@@ -28,19 +28,18 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeCo
     const frame = updateAnalysisFrame(createAnalysisFrame(), { ready: true, monoLike: false, bands: Object.fromEntries(['L', 'R', 'C'].map(id => [id, { timeDomain: waveform, rms: 1, energy01: 1 }])) }, state.bands);
     const context = { dtSec: 1 / 60, nowSec: 0, simPaused: false, analysisFrame: frame };
     const warmStart = performance.now();
-    for (let i = 0; i < 360; i++) { context.nowSec = i / 60; visualizers.update(context); }
+    for (let i = 0; i < warmFrames; i++) { context.nowSec = i / 60; visualizers.update(context); }
     const warmMs = performance.now() - warmStart;
-    let emits = 0, expiryVisits = 0;
+    let emits = 0;
     for (const orb of state.orbs) {
-      const originalEmit = orb.trail.emitAt, originalUpdate = orb.trail.updateAndEmit;
-      orb.trail.emitAt = function (...args) { emits++; return originalEmit.apply(this, args); };
-      orb.trail.updateAndEmit = function (...args) { expiryVisits += this.particles.length; return originalUpdate.apply(this, args); };
+      const originalEmit = orb.trail.emitAt;
+      orb.trail.emitAt = function (...args) { const result = originalEmit.apply(this, args); if (result !== false) emits++; return result; };
     }
     const updates = [];
     for (let i = 0; i < 3; i++) {
-      emits = expiryVisits = 0; context.nowSec = 6 + i / 60;
+      emits = 0; context.nowSec = warmFrames / 60 + i / 60;
       const start = performance.now(); visualizers.update(context);
-      updates.push({ ms: performance.now() - start, emits, expiryVisits });
+      updates.push({ ms: performance.now() - start, emits, ...visualizers.getParticleStats() });
     }
     const particles = state.orbs.reduce((n, orb) => n + orb.trail.particles.length, 0);
     const drawCalls = {};
@@ -52,7 +51,8 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeCo
       state.ctx = nativeContext;
       for (let i = 0; i < 3; i++) { const start = performance.now(); visualizers.render(Renderer, context); nativeRenderSubmissionMs.push(performance.now() - start); }
     }
-    curves.push({ count, warmMs, particles, updates, drawCalls, instrumentedRenderMs, nativeRenderSubmissionMs });
+    curves.push({ count, warmFrames, warmMs, particles, updates, drawCalls, instrumentedRenderMs, nativeRenderSubmissionMs });
+    visualizers.dispose();
   }
   const burstPrefs = sanitizePreset({ schema: 10, prefs: { timing: { maxDeltaTimeSec: 120 }, orbs: [{ ...structuredClone(CONFIG.defaults.orbs[0]), id: 'BURST', particles: { ...CONFIG.defaults.orbs[0].particles, ttlSec: 600 } }] } });
   runtime.settings = burstPrefs;
@@ -64,8 +64,8 @@ export function measureReleaseResources({ counts = [2, 8, 16, 64, 256], nativeCo
   const burstStart = performance.now(); burstOrb.step(simulationDeltaSec(120, burstPrefs.timing.maxDeltaTimeSec), 126, band, null, 0);
   const burst = { acceptedMaxDeltaTimeSec: burstPrefs.timing.maxDeltaTimeSec, acceptedTtlSec: burstPrefs.orbs[0].particles.ttlSec, emits, elapsedMs: performance.now() - burstStart, retainedParticles: burstOrb.trail.particles.length };
   check(burst.acceptedMaxDeltaTimeSec === CONFIG.limits.timing.maxDeltaTimeSec && emits === 8, 'simulation timestep protection failed');
-  check(curves.find(x => x.count === 256)?.particles > 50000, 'aggregate case no longer reproduces');
-  return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. No budget is selected.' };
+  check(curves.every(x => x.particles <= CONFIG.limits.particleSafety.maxActiveParticles && x.updates.every(u => u.emits <= CONFIG.limits.particleSafety.maxEmissionsPerFrame)), 'aggregate safety boundary failed');
+  return { admission, admittedTiming, curves, burst, caveat: 'Synthetic full-energy analysis; counters execute production loops. Instrumented Canvas timings include instrumentation. Native Canvas measurements cover JS command submission, not end-to-end GPU completion or universal FPS. Initial CONFIG emission/retention thresholds are engineering safeguards, not a real-time performance guarantee. Orb motion, targeting, trace and Canvas submission work remain ungoverned.' };
 }
 
 if (typeof window === 'undefined') {

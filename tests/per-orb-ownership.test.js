@@ -89,7 +89,9 @@ test("runtime Orbs use independent motion, response, waveform, and particle sett
   a.step(.1, 1, band, .5, 0); b.step(.1, 1, band, .5, 0);
   assert.notEqual(a.angleRad, b.angleRad); assert.notEqual(a.baseRadiusPx, b.baseRadiusPx);
   assert.equal(a.radialDispPx, 0); assert.notEqual(b.radialDispPx, 0);
-  assert.ok(b.trail.emitAccumulator > a.trail.emitAccumulator);
+  assert.ok(b.trail.particles.length > a.trail.particles.length);
+  assert.equal(a.trail.emitAccumulator, 0);
+  assert.equal(b.trail.emitAccumulator, 0, "refused whole demand is discarded");
   runtime.settings = oldSettings; state.widthPx = oldWidth; state.heightPx = oldHeight;
 });
 

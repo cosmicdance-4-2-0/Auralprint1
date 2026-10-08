@@ -25,11 +25,11 @@ test("RC-15 phase 1: emitted particles at identical and nearby coordinates coexi
     trail.updateAndEmit(1 / 60, now, x, y, rgb, settings);
   }
   assert.equal(trail.particles.length, 12);
-  assert.deepEqual(trail.particles.map(p => [p.xSim, p.ySim, p.bornSec]),
+  assert.deepEqual(Array.from(trail.particles).map(p => [p.xSim, p.ySim, p.bornSec]),
     [[10,20,0], [10,20,.25], [10.1,20.1,.5]].flatMap(p => Array.from({length: 4}, () => p)));
   trail.updateAndEmit(0, 1, 0, 0, rgb, settings);
   assert.equal(trail.particles.length, 8);
-  assert.ok(trail.particles.every(p => p.bornSec > 0));
+  assert.ok(Array.from(trail.particles).every(p => p.bornSec > 0));
   trail.updateAndEmit(0, 1.5, 0, 0, rgb, settings);
   assert.equal(trail.particles.length, 0);
 });
@@ -40,7 +40,7 @@ test("RC-15 phase 1: trail reset clears retained particles and fractional emissi
   assert.equal(trail.particles.length, 1);
   assert.equal(trail.emitAccumulator, .5);
   trail.reset();
-  assert.deepEqual(trail.particles, []);
+  assert.deepEqual(Array.from(trail.particles), []);
   assert.equal(trail.emitAccumulator, 0);
   trail.updateAndEmit(.5 / settings.emitPerSecond, 1, 2, 3, rgb, settings);
   assert.equal(trail.particles.length, 0);

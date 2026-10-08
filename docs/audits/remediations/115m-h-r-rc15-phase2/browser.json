@@ -1,0 +1,178 @@
+{
+  "version": "v0.1.15m.h.r",
+  "browser": "151.0.7922.173",
+  "verified": [
+    "single-file boot on localhost with external requests blocked",
+    "schema-10 obsolete overlap import",
+    "120-second timing sanitation",
+    "no overlap DOM controls/labels",
+    "per-Orb emission edit",
+    "Bulk lifetime edit",
+    "encoded schema remains 10",
+    "encoded overlap omitted",
+    "canvas initialized",
+    "no external asset requests"
+  ],
+  "errors": [],
+  "result": {
+    "absent": true,
+    "encoded": {
+      "schema": 10,
+      "prefs": {
+        "visuals": {
+          "backgroundColor": "#000000",
+          "particleColor": "#ffffff"
+        },
+        "audio": {
+          "fftSize": 8192,
+          "smoothingTimeConstant": 0.1,
+          "rmsGain": 1,
+          "repeatMode": "none",
+          "muted": false,
+          "volume": 1
+        },
+        "orbs": [
+          {
+            "id": "ORB0",
+            "chanId": "R",
+            "bandIds": [],
+            "chirality": -1,
+            "startAngleRad": 0,
+            "hueOffsetDeg": 0,
+            "colorSource": "inherit",
+            "centerXFrac": 0,
+            "centerYFrac": 0,
+            "motion": {
+              "angularSpeedRadPerSec": 1.5707963267948966
+            },
+            "response": {
+              "minRadiusFrac": 0.01,
+              "maxRadiusFrac": 0.8,
+              "waveformRadialDisplaceFrac": 0.1
+            },
+            "particles": {
+              "emitPerSecond": 300,
+              "sizeMaxPx": 8,
+              "sizeMinPx": 1,
+              "sizeToMinSec": 3,
+              "ttlSec": 10
+            },
+            "trace": {
+              "lines": true,
+              "numLines": 10,
+              "lineAlpha": 0.35,
+              "lineWidthPx": 2,
+              "lineColorMode": "dominantBand"
+            }
+          },
+          {
+            "id": "ORB1",
+            "chanId": "L",
+            "bandIds": [],
+            "chirality": -1,
+            "startAngleRad": 3.141592653589793,
+            "hueOffsetDeg": 0,
+            "colorSource": "inherit",
+            "centerXFrac": 0,
+            "centerYFrac": 0,
+            "motion": {
+              "angularSpeedRadPerSec": 1.5707963267948966
+            },
+            "response": {
+              "minRadiusFrac": 0.01,
+              "maxRadiusFrac": 0.8,
+              "waveformRadialDisplaceFrac": 0.1
+            },
+            "particles": {
+              "emitPerSecond": 240,
+              "sizeMaxPx": 8,
+              "sizeMinPx": 1,
+              "sizeToMinSec": 3,
+              "ttlSec": 10
+            },
+            "trace": {
+              "lines": true,
+              "numLines": 10,
+              "lineAlpha": 0.35,
+              "lineWidthPx": 2,
+              "lineColorMode": "dominantBand"
+            }
+          }
+        ],
+        "bands": {
+          "count": 256,
+          "floorHz": 20,
+          "ceilingHz": 22500,
+          "distributionMode": "erb",
+          "overlay": {
+            "enabled": false,
+            "connectAdjacent": true,
+            "alpha": 0.65,
+            "pointSizePx": 3,
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.18,
+            "lineAlpha": 0.35,
+            "lineWidthPx": 1,
+            "phaseMode": "free",
+            "ringSpeedRadPerSec": 0
+          },
+          "rainbow": {
+            "hueOffsetDeg": 0,
+            "saturation": 0.9,
+            "value": 1
+          },
+          "particleColorSource": "dominant"
+        },
+        "timing": {
+          "maxDeltaTimeSec": 0.03333333333333333
+        }
+      }
+    },
+    "canvasWidth": 1280,
+    "controls": [
+      "",
+      "",
+      "",
+      "orb-editor-1-bands",
+      "orb-editor-1-center-x",
+      "orb-editor-1-center-y",
+      "orb-editor-1-phase-offset",
+      "orb-editor-1-angular-speed",
+      "orb-editor-1-min-radius",
+      "orb-editor-1-max-radius",
+      "orb-editor-1-waveform-displacement",
+      "orb-editor-1-emit-rate",
+      "orb-editor-1-size-min",
+      "orb-editor-1-size-max",
+      "orb-editor-1-size-decay",
+      "orb-editor-1-lifetime",
+      "orb-editor-1-lines",
+      "orb-editor-1-line-count",
+      "orb-editor-1-line-alpha",
+      "orb-editor-1-line-width",
+      "orb-editor-1-hue",
+      "",
+      "",
+      "",
+      "orb-editor-2-bands",
+      "orb-editor-2-center-x",
+      "orb-editor-2-center-y",
+      "orb-editor-2-phase-offset",
+      "orb-editor-2-angular-speed",
+      "orb-editor-2-min-radius",
+      "orb-editor-2-max-radius",
+      "orb-editor-2-waveform-displacement",
+      "orb-editor-2-emit-rate",
+      "orb-editor-2-size-min",
+      "orb-editor-2-size-max",
+      "orb-editor-2-size-decay",
+      "orb-editor-2-lifetime",
+      "orb-editor-2-lines",
+      "orb-editor-2-line-count",
+      "orb-editor-2-line-alpha",
+      "orb-editor-2-line-width",
+      "orb-editor-2-hue"
+    ]
+  }
+}

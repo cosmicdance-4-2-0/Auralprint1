@@ -63,8 +63,7 @@ const Renderer = (() => {
     const ttl = Math.max(0.0001, particleSettings.ttlSec);
     const fadeSec = Math.max(0.0001, ttl - toMin);
 
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
+    for (const p of particles) {
       const age = nowSec - p.bornSec;
 
       let size = sizeMin;

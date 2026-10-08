@@ -1,3 +1,4 @@
+import { ParticleGovernor } from "./particle-governor.js";
 import { TAU } from "../core/constants.js";
 import { runtime, normalizeOrbChannelId } from "../core/preferences.js";
 import { state } from "../core/state.js";
@@ -101,13 +102,25 @@ function createOrbVisualizer(orb) {
 function createVisualizerRuntime({
   createSpectralRing = createSpectralRingVisualizer,
   createOrb = createOrbVisualizer,
+  particlePolicy,
 } = {}) {
   let visualizers = [];
+  const particleGovernor = new ParticleGovernor(particlePolicy);
+  const syncParticleTrails = () => particleGovernor.setTrails(visualizers
+    .filter(v => v.type === "orb" && v.orb?.trail?.governor === particleGovernor)
+    .map(v => v.orb.trail));
+
+  function createOrbParticipant(orb) {
+    orb.trail?.setGovernor?.(particleGovernor);
+    return createOrb(orb);
+  }
 
   function rebuild(orbs = state.orbs) {
-    dispose();
+    // Replacing adapters need not reset surviving Orb-owned particle history.
+    for (const visualizer of visualizers) visualizer.dispose();
     visualizers = [createSpectralRing()];
-    for (const orb of orbs) visualizers.push(createOrb(orb));
+    for (const orb of orbs) visualizers.push(createOrbParticipant(orb));
+    syncParticleTrails();
     return visualizers;
   }
 
@@ -125,21 +138,24 @@ function createVisualizerRuntime({
         existing.delete(orb.id);
       } else {
         if (retained) retained.dispose();
-        next.push(createOrb(orb));
+        next.push(createOrbParticipant(orb));
         existing.delete(orb.id);
       }
     }
     for (const removed of existing.values()) removed.dispose();
     visualizers = next;
+    syncParticleTrails();
     return visualizers;
   }
 
   function update(frameContext) {
+    particleGovernor.beginFrame();
     // Orb-locked Ring phase depends on current-frame Orb simulation.
     // Update dependency order is separate from render/composition order.
     for (const visualizer of visualizers) {
       if (visualizer.type !== "spectral-ring") visualizer.update(frameContext);
     }
+    particleGovernor.finishFrame();
     for (const visualizer of visualizers) {
       if (visualizer.type === "spectral-ring") visualizer.update(frameContext);
     }
@@ -159,13 +175,14 @@ function createVisualizerRuntime({
   function dispose() {
     for (const visualizer of visualizers) visualizer.dispose();
     visualizers = [];
+    particleGovernor.dispose();
   }
 
   function getVisualizers() {
     return visualizers;
   }
 
-  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers };
+  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers, getParticleStats: () => particleGovernor.getStats() };
 }
 
 const VisualizerRuntime = createVisualizerRuntime();

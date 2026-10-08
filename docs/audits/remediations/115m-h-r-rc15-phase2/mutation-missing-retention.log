@@ -1,0 +1,32 @@
+✖ RC-15 phase 2: exact retention boundaries and same-timestamp oldest ordering retire before insertion (6.055709ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 32.59776
+
+✖ failing tests:
+
+test at tests/rc15-phase2.test.js:209:1
+✖ RC-15 phase 2: exact retention boundaries and same-timestamp oldest ordering retire before insertion (6.055709ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert.ok(a.particles.length + b.particles.length < 4)
+
+      at b.particles.append (file:///workspace/Auralprint1/tests/rc15-phase2.test.js:217:41)
+      at TrailSystem.emitAt (file:///workspace/Auralprint1/src/js/render/trail-system.js:54:20)
+      at TestContext.<anonymous> (file:///workspace/Auralprint1/tests/rc15-phase2.test.js:218:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
