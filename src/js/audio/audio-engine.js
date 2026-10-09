@@ -50,7 +50,8 @@ const AudioEngine = (() => {
     revokeObjectUrl(objectUrl);
   }
 
-  function describePlaybackError(err) {
+  function describePlaybackError(err, { contextFailure = false } = {}) {
+    if (contextFailure) return `Playback failed: AudioContext could not start: ${err?.message || err?.name || "unknown error"}`;
     if (!err) return "Playback failed.";
     if (err.name === "NotSupportedError") return "Playback failed: unsupported or unreadable audio file.";
     if (err.name === "AbortError") return "Playback was interrupted before start.";
@@ -298,8 +299,20 @@ const AudioEngine = (() => {
       return AudioEngine._isLoadRequestCurrent(requestId);
     };
 
-    const ctx = ensureContext();
-    if (ctx.state === "suspended") await ctx.resume();
+    if (!isCurrentRequest()) return false;
+    try {
+      const ctx = ensureContext();
+      if (ctx.state === "closed") throw new Error("AudioContext is closed. Reload to restore audio.");
+      if (ctx.state === "suspended") await ctx.resume();
+    } catch (err) {
+      // Startup has not allocated a candidate. Only the current File may fail.
+      if (!isCurrentRequest()) return false;
+      state.audio.isLoaded = false;
+      state.audio.filename = "";
+      state.audio.isPlaying = false;
+      state.audio.transportError = describePlaybackError(err, { contextFailure: true });
+      return false;
+    }
 
     if (!isCurrentRequest()) return false;
 
@@ -407,13 +420,23 @@ const AudioEngine = (() => {
   async function playPause() {
     const target = mediaEl;
     if (!target) return;
-    const ctx = ensureContext();
-    if (ctx.state === "suspended") await ctx.resume();
+    try {
+      const ctx = ensureContext();
+      if (ctx.state === "closed") throw new Error("AudioContext is closed. Reload to restore audio.");
+      if (ctx.state === "suspended") await ctx.resume();
+    } catch (err) {
+      if (mediaEl !== target) return;
+      // Resume failure does not invalidate the loaded File/session or graph.
+      state.audio.isPlaying = !target.paused;
+      state.audio.transportError = describePlaybackError(err, { contextFailure: true });
+      return;
+    }
     // Clear/replacement owns teardown; superseded transport work stays silent.
     if (mediaEl !== target) return;
 
     if (target.paused) {
-      const err = await target.play().then(() => null).catch((e) => e);
+      let err = null;
+      try { await target.play(); } catch (e) { err = e; }
       if (mediaEl !== target) return;
       if (err) {
         state.audio.isPlaying = false;

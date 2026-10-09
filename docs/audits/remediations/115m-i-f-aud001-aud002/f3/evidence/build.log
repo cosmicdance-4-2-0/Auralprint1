@@ -1,0 +1,12 @@
+
+> build
+> node scripts/build.mjs
+
+
+  .build/auralprint.css  25.3kb
+
+⚡ Done in 11ms
+
+  .build/auralprint.js  346.6kb
+
+⚡ Done in 27ms

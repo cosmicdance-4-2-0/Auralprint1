@@ -1,0 +1,182 @@
+{
+  "phase": "F.3",
+  "root": "/workspace/Auralprint1",
+  "node": "v24.19.0",
+  "controls": [
+    {
+      "name": "constructor-settlement-bypassed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "// Startup has not allocated a candidate. Only the current File may fail.\n      if (!isCurrentRequest()) return false;",
+        "after": "if (err.name === \"NotSupportedError\") throw err;\n      // Startup has not allocated a candidate. Only the current File may fail.\n      if (!isCurrentRequest()) return false;"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=engine constructor failure is a controlled",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: engine constructor failure is a controlled false outcome before media allocation\nnot ok 1 - AUD-002: engine constructor failure is a controlled false outcome before media allocation\n  ---\n  duration_ms: 4.994887\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-ui1srmlw/tests/file-activation-ownership.test.js:228:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Got unwanted rejection.\n    Actual message: \"constructor refused\"\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  actual:\n  error: 'constructor refused'\n  stack: |-\n    new AudioContext (file:///tmp/auralprint-f3-control-ui1srmlw/tests/file-activation-ownership.test.js:31:58)\n    ensureContext (file:///tmp/auralprint-f3-control-ui1srmlw/src/js/audio/audio-engine.js?aud001=0:68:39)\n    Object.loadFile (file:///tmp/auralprint-f3-control-ui1srmlw/src/js/audio/audio-engine.js?aud001=0:304:19)\n    file:///tmp/auralprint-f3-control-ui1srmlw/tests/file-activation-ownership.test.js:231:68\n    waitForActual (node:assert:632:21)\n    strict.doesNotReject (node:assert:789:39)\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-ui1srmlw/tests/file-activation-ownership.test.js:231:16)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  operator: 'doesNotReject'\n  stack: |-\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-ui1srmlw/tests/file-activation-ownership.test.js:231:3)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 178.16445\n"
+    },
+    {
+      "name": "initial-resume-settlement-bypassed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "// Startup has not allocated a candidate. Only the current File may fail.\n      if (!isCurrentRequest()) return false;",
+        "after": "if (err.name !== \"NotSupportedError\") throw err;\n      // Startup has not allocated a candidate. Only the current File may fail.\n      if (!isCurrentRequest()) return false;"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=engine initial resume failure is a controlled",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: engine initial resume failure is a controlled false outcome\nnot ok 1 - AUD-002: engine initial resume failure is a controlled false outcome\n  ---\n  duration_ms: 6.680395\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-4_seygck/tests/file-activation-ownership.test.js:237:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Got unwanted rejection.\n    Actual message: \"initial resume refused\"\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  actual:\n  error: 'initial resume refused'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-4_seygck/tests/file-activation-ownership.test.js:240:43)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  operator: 'doesNotReject'\n  stack: |-\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-4_seygck/tests/file-activation-ownership.test.js:242:3)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 200.908827\n"
+    },
+    {
+      "name": "file-error-authorization-removed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "// Startup has not allocated a candidate. Only the current File may fail.\n      if (!isCurrentRequest()) return false;",
+        "after": "// Startup error writes without current request authorization."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=obsolete initial resume reject after file",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: obsolete initial resume reject after file settles without writes or resources\nnot ok 1 - AUD-002: obsolete initial resume reject after file settles without writes or resources\n  ---\n  duration_ms: 8.319435\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-dpolw8gy/tests/file-activation-ownership.test.js:202:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback failed: AudioContext could not start: obsolete resume refused'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    1:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback failed: AudioContext could not start: obsolete resume refused'\n    4:\n      key: 'source'\n      field: 'status'\n      value: 'stopping'\n    5:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    6:\n      key: 'source'\n      field: 'kind'\n      value: 'none'\n    7:\n      key: 'source'\n      field: 'status'\n      value: 'idle'\n    8:\n      key: 'source'\n      field: 'label'\n      value: ''\n    9:\n      key: 'source'\n      field: 'sessionActive'\n      value: false\n    10:\n      key: 'source'\n      field: 'errorCode'\n      value: ''\n    11:\n      key: 'source'\n      field: 'errorMessage'\n      value: ''\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-dpolw8gy/tests/file-activation-ownership.test.js:217:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 116.389737\n"
+    },
+    {
+      "name": "obsolete-initial-rejection-escapes-engine",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "// Startup has not allocated a candidate. Only the current File may fail.\n      if (!isCurrentRequest()) return false;",
+        "after": "// Startup\n      if (!isCurrentRequest()) throw err;"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=direct engine obsolete initial rejection",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: direct engine obsolete initial rejection returns false without escaping\nnot ok 1 - AUD-002: direct engine obsolete initial rejection returns false without escaping\n  ---\n  duration_ms: 6.510624\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-uh_eu_zl/tests/file-activation-ownership.test.js:274:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Got unwanted rejection.\n    Actual message: \"obsolete initial resume refused\"\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  actual:\n  error: 'obsolete initial resume refused'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-uh_eu_zl/tests/file-activation-ownership.test.js:280:15)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  operator: 'doesNotReject'\n  stack: |-\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-uh_eu_zl/tests/file-activation-ownership.test.js:282:3)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 92.989678\n"
+    },
+    {
+      "name": "current-play-error-projection-removed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "// Resume failure does not invalidate the loaded File/session or graph.\n      state.audio.isPlaying = !target.paused;\n      state.audio.transportError = describePlaybackError(err, { contextFailure: true });",
+        "after": "// Resume failure\n      state.audio.isPlaying = !target.paused;\n      state.audio.transportError = \"\";"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=current Play resume failure retains File",
+        "tests/transport-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: current Play resume failure retains File/media/session and retry clears its error\nnot ok 1 - AUD-002: current Play resume failure retains File/media/session and retry clears its error\n  ---\n  duration_ms: 6.124223\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-vwo_egwj/tests/transport-ownership.test.js:219:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + ''\n    - 'Playback failed: AudioContext could not start: current context resume refused'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'Playback failed: AudioContext could not start: current context resume refused'\n  actual: ''\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-vwo_egwj/tests/transport-ownership.test.js:228:10)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 79.153135\n"
+    },
+    {
+      "name": "obsolete-play-rejection-escapes",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (mediaEl !== target) return;\n      // Resume failure",
+        "after": "if (mediaEl !== target) throw err;\n      // Resume failure"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=obsolete Play resume rejects after clear",
+        "tests/transport-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: obsolete Play resume rejects after clear without reads or writes\nnot ok 1 - AUD-002: obsolete Play resume rejects after clear without reads or writes\n  ---\n  duration_ms: 6.299883\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-5ale22a3/tests/transport-ownership.test.js:237:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Got unwanted rejection: obsolete rejection must be contained\n    Actual message: \"obsolete resume refused\"\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  actual:\n  error: 'obsolete resume refused'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-5ale22a3/tests/transport-ownership.test.js:245:17)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  operator: 'doesNotReject'\n  stack: |-\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-5ale22a3/tests/transport-ownership.test.js:246:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 72.089405\n"
+    },
+    {
+      "name": "ui-play-rejection-containment-bypassed",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "// Contain an unexpected engine rejection at this UI boundary without\n        // unloading a recoverable File or reporting an obsolete operation.",
+        "after": "throw err;"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=UI Play rejection boundary current",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: UI Play rejection boundary current is owned and contained\nnot ok 1 - AUD-002: UI Play rejection boundary current is owned and contained\n  ---\n  duration_ms: 148.58839\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:4388:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Got unwanted rejection.\n    Actual message: \"unexpected Play API rejection\"\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  actual:\n  error: 'unexpected Play API rejection'\n  stack: |-\n    file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:4403:26\n    async file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:4389:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  operator: 'doesNotReject'\n  stack: |-\n    async file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:4404:9\n    async file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-irxqc7zm/tests/targeted-audit.test.js:4389:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 300.970012\n"
+    },
+    {
+      "name": "file-failure-notification-duplicated",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "if (!ok) {\n        RecorderEngine.onTransportMutation(\"track-change-failed\", {",
+        "after": "if (!ok) {\n        RecorderEngine.onTransportMutation(\"track-change-failed\", { requestId, filename: file.name, error: state.audio.transportError });\n        RecorderEngine.onTransportMutation(\"track-change-failed\", {"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=UI picker current startup failure",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: UI picker current startup failure settles and notifies exactly once\nnot ok 1 - AUD-002: UI picker current startup failure settles and notifies exactly once\n  ---\n  duration_ms: 87.294348\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-6i05x9nw/tests/targeted-audit.test.js:4341:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    2 !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  actual: 2\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f3-control-6i05x9nw/tests/targeted-audit.test.js:4365:14\n    async file:///tmp/auralprint-f3-control-6i05x9nw/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f3-control-6i05x9nw/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f3-control-6i05x9nw/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f3-control-6i05x9nw/tests/targeted-audit.test.js:4343:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 328.994496\n"
+    },
+    {
+      "name": "manager-error-authorization-removed",
+      "file": "src/js/audio/input-source-manager.js",
+      "mutation": {
+        "before": "if (!isLoadRequestCurrent(requestId)) return false;\n      audioEngine.unload();",
+        "after": "audioEngine.unload();"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=manager contains obsolete engine rejection",
+        "tests/input-source-manager.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-002: manager contains obsolete engine rejection after clear without source/audio writes\nnot ok 1 - AUD-002: manager contains obsolete engine rejection after clear without source/audio writes\n  ---\n  duration_ms: 4.158842\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1065:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback failed: obsolete engine failure'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    1:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback failed: obsolete engine failure'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1090:41)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n# Subtest: AUD-002: manager contains obsolete engine rejection after file without source/audio writes\nnot ok 2 - AUD-002: manager contains obsolete engine rejection after file without source/audio writes\n  ---\n  duration_ms: 0.557674\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1065:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback failed: obsolete engine failure'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    1:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback failed: obsolete engine failure'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1090:41)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n# Subtest: AUD-002: manager contains obsolete engine rejection after mic without source/audio writes\nnot ok 3 - AUD-002: manager contains obsolete engine rejection after mic without source/audio writes\n  ---\n  duration_ms: 0.722747\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1065:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback failed: obsolete engine failure'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    1:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback failed: obsolete engine failure'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1090:41)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n# Subtest: AUD-002: manager contains obsolete engine rejection after stream without source/audio writes\nnot ok 4 - AUD-002: manager contains obsolete engine rejection after stream without source/audio writes\n  ---\n  duration_ms: 0.619264\n  type: 'test'\n  location: '/tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1065:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback failed: obsolete engine failure'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    1:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback failed: obsolete engine failure'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f3-control-ak7w69zq/tests/input-source-manager.test.js:1090:41)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 0\n# fail 4\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 178.435585\n"
+    }
+  ],
+  "summary": {
+    "controls": 9,
+    "meaningfulDetections": 9
+  }
+}

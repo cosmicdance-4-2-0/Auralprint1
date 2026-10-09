@@ -272,3 +272,22 @@ test("RC-06: completed-export disposal revokes and clears exactly once", async t
   RecorderEngine.dispose();
   assert.deepEqual(h.revoked, [previous.lastExportUrl]);
 });
+
+test("AUD-002 / RC-06: retained export survives File AudioContext startup failure", async t => {
+  const h = createHarness(t), previous = h.complete();
+  const { AudioEngine: engine } = await import("../src/js/audio/audio-engine.js?aud002-export");
+  const { createInputSourceManager } = await import("../src/js/audio/input-source-manager.js");
+  const oldSource = structuredClone(state.source);
+  globalThis.window.AudioContext = class { constructor() { throw new Error("AudioContext startup refused"); } };
+  const manager = createInputSourceManager({ audioEngine: engine });
+  try {
+    RecorderEngine.onTransportMutation("track-change-start", { requestId: 1, filename: "A.wav" });
+    const result = await manager.activateFile({ name: "A.wav" }, { requestId: 1 });
+    assert.equal(result.ok, false); assert.equal(state.source.status, "error");
+    RecorderEngine.onTransportMutation("track-change-failed", { requestId: 1, filename: "A.wav", error: result.errorMessage });
+    await assertRetained(h, previous);
+    assert.deepEqual(h.created, [previous.lastExportUrl]); assert.deepEqual(h.revoked, []);
+  } finally {
+    await manager.teardownActiveSource(); Object.assign(state.source, oldSource);
+  }
+});

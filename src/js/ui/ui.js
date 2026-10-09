@@ -1689,7 +1689,17 @@ const UI = (() => {
 
     ui.btnPlay.addEventListener("click", async () => {
       if (!isFileWorkflowMode(state.source)) return;
-      await AudioEngine.playPause();
+      const target = AudioEngine.getMediaEl();
+      try {
+        await AudioEngine.playPause();
+      } catch (err) {
+        // Contain an unexpected engine rejection at this UI boundary without
+        // unloading a recoverable File or reporting an obsolete operation.
+        if (!target || AudioEngine.getMediaEl() !== target) return;
+        state.audio.isPlaying = !target.paused;
+        state.audio.transportError = `Playback failed: ${err?.message || err?.name || "unknown error"}`;
+      }
+      if (!target || AudioEngine.getMediaEl() !== target) return;
       if (state.audio.transportError) audioStatusToast(state.audio.transportError, 6000);
     });
     ui.btnStop.addEventListener("click", () => {

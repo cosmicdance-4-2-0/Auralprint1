@@ -10,7 +10,7 @@ function deferred() {
   return { promise, resolve, reject };
 }
 
-async function harness(t) {
+async function harness(t, { constructorFailure = false } = {}) {
   const { AudioEngine: engine } = await import(`../src/js/audio/audio-engine.js?aud001=${engineId++}`);
   const previous = { window: globalThis.window, document: globalThis.document, URL: globalThis.URL,
     audio: state.audio, source: state.source };
@@ -18,6 +18,7 @@ async function harness(t) {
   state.source = createSourceState();
   const nodes = [], elements = [], revoked = [], resumeModes = [];
   let context, current = 1;
+  const faults = { constructorFailure, constructorCalls: 0 };
   const node = (extra = {}) => {
     const value = { connections: [], disconnects: 0,
       connect(to) { this.connections.push(to); },
@@ -25,7 +26,11 @@ async function harness(t) {
     nodes.push(value); return value;
   };
   class AudioContext {
-    constructor() { context = this; this.state = "suspended"; this.sampleRate = 48000; this.destination = node(); }
+    constructor() {
+      faults.constructorCalls++;
+      if (faults.constructorFailure) throw Object.assign(new Error("constructor refused"), { name: "NotSupportedError" });
+      context = this; this.state = "suspended"; this.sampleRate = 48000; this.destination = node();
+    }
     resume() {
       const mode = resumeModes.shift();
       if (mode === "skip") return Promise.resolve();
@@ -81,7 +86,8 @@ async function harness(t) {
     if (!first) resumeModes.push("skip");
     resumeModes.push(held); return held;
   }
-  return { engine, manager, elements, nodes, revoked, streams, load, observeWrites, holdSecondResume,
+  return { engine, manager, elements, nodes, revoked, streams, load, observeWrites, holdSecondResume, faults,
+    queueResume(mode) { resumeModes.push(mode); },
     select(id) { current = id; }, get context() { return context; } };
 }
 
@@ -157,4 +163,123 @@ test("AUD-001: current attachment and callbacks retain ordinary File behavior", 
   media.dispatchEvent(new Event("ended")); assert.equal(ended, 1); assert.equal(state.audio.isPlaying, false);
   media.dispatchEvent(new Event("error"));
   assert.equal(state.audio.isLoaded, false); assert.match(state.audio.transportError, /unsupported/);
+});
+
+for (const fault of ["constructor", "initial-resume", "attachment-resume"]) {
+  test(`AUD-002: current ${fault} failure settles once and permits valid retry`, async t => {
+    const h = await harness(t, { constructorFailure: fault === "constructor" });
+    let held;
+    if (fault !== "constructor") held = h.holdSecondResume(fault === "initial-resume");
+    const pending = h.load("A.wav");
+    if (held) { await held.entered.promise; held.reject(new Error("resume refused")); }
+    const result = await pending;
+    assert.equal(result.ok, false); assert.equal(result.errorCode, "file-activation-failed");
+    assert.ok(result.errorMessage);
+    assert.equal(state.source.kind, "file"); assert.equal(state.source.status, "error");
+    assert.equal(state.source.sessionActive, false);
+    assert.equal(state.source.streamMeta.hasAudio, false); assert.equal(state.source.streamMeta.hasVideo, false);
+    assert.equal(state.audio.isLoaded, false); assert.equal(state.audio.isPlaying, false);
+    assert.equal(state.audio.filename, ""); assert.ok(state.audio.transportError);
+    assert.equal(h.engine.getMediaEl(), null); assert.equal(h.engine.sample().ready, false);
+    if (fault !== "attachment-resume") {
+      assert.equal(h.elements.length, 0); assert.equal(h.revoked.length, 0, "startup allocated no media/URL");
+    } else {
+      assert.equal(h.elements.length, 1); assert.equal(h.elements[0].src, "");
+      assert.ok(h.elements[0].callbacks.every(x => x.signal.aborted));
+    }
+    const cached = h.context;
+    h.faults.constructorFailure = false;
+    h.select(2);
+    assert.equal((await h.load("A.wav", 2)).ok, true);
+    assert.equal(state.source.status, "active"); assert.equal(state.source.errorCode, "");
+    assert.equal(state.audio.filename, "A.wav"); assert.equal(state.audio.isLoaded, true);
+    assert.equal(state.audio.isPlaying, true); assert.equal(state.audio.transportError, "");
+    if (cached) assert.equal(h.context, cached, "resume retry reuses the existing context");
+  });
+}
+
+for (const winner of ["clear", "file", "mic", "stream"]) for (const outcome of ["resolve", "reject"]) {
+  test(`AUD-002: obsolete initial resume ${outcome} after ${winner} settles without writes or resources`, async t => {
+    const h = await harness(t), held = h.holdSecondResume(true);
+    const pending = h.load("obsolete.wav"); await held.entered.promise;
+    h.select(2);
+    if (winner === "clear") await h.manager.teardownActiveSource({ reason: "clear" });
+    else if (winner === "file") assert.equal((await h.load("winner.wav", 2)).ok, true);
+    else assert.equal((await (winner === "mic" ? h.manager.activateMic() : h.manager.activateStream())).ok, true);
+    state.audio.transportError = "winner-owned error";
+    const media = h.engine.getMediaEl(), calls = media ? { ...media.calls } : null;
+    const before = { audio: { ...state.audio }, source: structuredClone(state.source), resources: h.elements.length };
+    const disconnects = h.nodes.map(n => n.disconnects), revokes = [...h.revoked], writes = h.observeWrites();
+    if (outcome === "reject") held.reject(new Error("obsolete resume refused")); else held.resolve();
+    let result;
+    await assert.doesNotReject(async () => { result = await pending; }, "obsolete startup rejection must settle");
+    assert.equal(result, false);
+    assert.deepEqual(writes, []);
+    assert.deepEqual({ ...state.audio }, before.audio);
+    assert.deepEqual({ ...state.source }, before.source);
+    assert.equal(h.engine.getMediaEl(), media);
+    if (media) assert.deepEqual(media.calls, calls);
+    assert.equal(h.elements.length, before.resources, "obsolete startup cannot allocate a candidate");
+    assert.deepEqual(h.revoked, revokes); assert.deepEqual(h.nodes.map(n => n.disconnects), disconnects);
+    if (winner === "mic" || winner === "stream") for (const track of h.streams[winner].getTracks()) assert.equal(track.stops, 0);
+  });
+}
+
+test("AUD-002: engine constructor failure is a controlled false outcome before media allocation", async t => {
+  const h = await harness(t, { constructorFailure: true });
+  let result;
+  await assert.doesNotReject(async () => { result = await h.engine.loadFile({ name: "A.wav" }, 1); });
+  assert.equal(result, false); assert.equal(state.audio.isLoaded, false);
+  assert.match(state.audio.transportError, /AudioContext could not start: constructor refused/);
+  assert.equal(h.elements.length, 0); assert.equal(h.revoked.length, 0);
+});
+
+test("AUD-002: engine initial resume failure is a controlled false outcome", async t => {
+  const h = await harness(t), held = h.holdSecondResume(true);
+  const pending = h.engine.loadFile({ name: "A.wav" }, 1);
+  await held.entered.promise; held.reject(new Error("initial resume refused"));
+  let result;
+  await assert.doesNotReject(async () => { result = await pending; });
+  assert.equal(result, false); assert.equal(state.audio.isLoaded, false); assert.equal(state.audio.isPlaying, false);
+  assert.equal(state.audio.transportError, "Playback failed: AudioContext could not start: initial resume refused");
+  assert.equal(h.elements.length, 0); assert.equal(h.engine.getMediaEl(), null);
+});
+
+test("AUD-002: failure followed by different File retains only its new resources", async t => {
+  const h = await harness(t), held = h.holdSecondResume(true);
+  const pending = h.load("A.wav"); await held.entered.promise; held.reject(new Error("refused"));
+  assert.equal((await pending).ok, false);
+  h.select(2); assert.equal((await h.load("B.wav", 2)).ok, true);
+  assert.equal(state.audio.filename, "B.wav"); assert.equal(state.source.label, "B.wav");
+  assert.equal(h.elements.length, 1); assert.equal(h.engine.getMediaEl(), h.elements[0]);
+  assert.deepEqual(h.revoked, []);
+});
+
+test("AUD-002: already stale constructor request never starts context creation", async t => {
+  const h = await harness(t, { constructorFailure: true }); h.select(2);
+  const writes = h.observeWrites();
+  assert.equal(await h.engine.loadFile({ name: "obsolete.wav" }, 1), false);
+  assert.equal(h.faults.constructorCalls, 0); assert.deepEqual(writes, []);
+});
+
+test("AUD-002: closed cached context reports failure without pretending retry recreated it", async t => {
+  const h = await harness(t); assert.equal((await h.load("A.wav")).ok, true);
+  const cached = h.context; cached.state = "closed"; h.select(2);
+  assert.equal((await h.load("B.wav", 2)).ok, false);
+  assert.equal(state.source.status, "error"); assert.equal(state.audio.isLoaded, false);
+  assert.match(state.audio.transportError, /AudioContext is closed/);
+  assert.equal(h.context, cached); assert.equal(h.faults.constructorCalls, 1);
+});
+
+test("AUD-002: direct engine obsolete initial rejection returns false without escaping", async t => {
+  const h = await harness(t), held = h.holdSecondResume(true);
+  const pending = h.engine.loadFile({ name: "A.wav" }, 1);
+  await held.entered.promise; h.select(2);
+  assert.equal((await h.load("B.wav", 2)).ok, true);
+  const media = h.engine.getMediaEl(), writes = h.observeWrites();
+  held.reject(new Error("obsolete initial resume refused"));
+  let result;
+  await assert.doesNotReject(async () => { result = await pending; });
+  assert.equal(result, false); assert.deepEqual(writes, []);
+  assert.equal(h.engine.getMediaEl(), media); assert.equal(state.audio.filename, "B.wav");
 });

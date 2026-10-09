@@ -1,0 +1,15 @@
+{
+  "summary": {
+    "scenarios": 35,
+    "desiredFailures": 0,
+    "f2Failures": 0,
+    "f3Failures": 0,
+    "infrastructureFailure": true
+  },
+  "exitStatus": 1,
+  "infrastructureFailure": {
+    "message": "page.selectOption: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#selRepeat')\u001b[22m\n",
+    "stack": "page.selectOption: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#selRepeat')\u001b[22m\n\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f3/diagnostics/native.cjs:274:48)"
+  },
+  "resolution": "Use actual #btnRepeat button instead of nonexistent #selRepeat selector; no production change."
+}

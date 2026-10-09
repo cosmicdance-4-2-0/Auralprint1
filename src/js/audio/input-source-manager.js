@@ -464,7 +464,22 @@ function createInputSourceManager(deps = {}) {
     resetStreamMeta(sourceState);
 
     const autoPlay = options && options.autoPlay === false ? false : true;
-    const ok = await audioEngine.loadFile(file, requestId, { autoPlay });
+    let ok;
+    try {
+      ok = await audioEngine.loadFile(file, requestId, { autoPlay });
+    } catch (err) {
+      // Native setup/Play can throw as well as return a controlled engine failure.
+      // This fallback owns only the still-current attempt, never a newer session.
+      if (!isLoadRequestCurrent(requestId)) return false;
+      audioEngine.unload();
+      if (stateRef.audio) {
+        stateRef.audio.isLoaded = false;
+        stateRef.audio.filename = "";
+        stateRef.audio.isPlaying = false;
+        stateRef.audio.transportError = `Playback failed: ${err?.message || err?.name || "unknown error"}`;
+      }
+      ok = false;
+    }
 
     if (!isLoadRequestCurrent(requestId)) return false;
 

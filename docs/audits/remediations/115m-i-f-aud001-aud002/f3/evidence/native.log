@@ -1,0 +1,7 @@
+{
+  "scenarios": 45,
+  "desiredFailures": 0,
+  "f2Failures": 0,
+  "f3Failures": 0,
+  "infrastructureFailure": false
+}

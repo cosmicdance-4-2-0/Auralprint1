@@ -3627,6 +3627,11 @@ async function withRc02FileWorkflow(t, options, run) {
   const activations = [];
   const activationWaiters = [];
   const completionWaiters = [];
+  const failureWaiters = [];
+  function waitForFailures(count) {
+    if (mutations.filter(x => x.kind === "track-change-failed").length >= count) return Promise.resolve();
+    return new Promise(resolve => failureWaiters.push({ count, resolve }));
+  }
   function waitForCompletions(count) {
     if (mutations.filter(x => x.kind === "track-change-complete").length >= count) return Promise.resolve();
     return new Promise(resolve => completionWaiters.push({ count, resolve }));
@@ -3637,6 +3642,9 @@ async function withRc02FileWorkflow(t, options, run) {
   }
   t.mock.method(RecorderEngine, "onTransportMutation", (kind, details) => {
     mutations.push({ kind, details });
+    for (const waiter of failureWaiters) {
+      if (mutations.filter(x => x.kind === "track-change-failed").length >= waiter.count) waiter.resolve();
+    }
     for (const waiter of completionWaiters) {
       if (mutations.filter(x => x.kind === "track-change-complete").length >= waiter.count) waiter.resolve();
     }
@@ -3657,7 +3665,8 @@ async function withRc02FileWorkflow(t, options, run) {
       audioState: { isLoaded: false, isPlaying: false, filename: "", transportError: "" },
       recordingState: { phase: "idle" },
       queueVisible: true,
-    }, async ({ getElement }) => {
+    }, async ({ getElement, harness }) => {
+      const dispatchWindow = harness.dispatchWindow;
       const createElement = document.createElement;
       document.createElement = tag => tag === "audio" ? audio.createMediaElement() : createElement(tag);
       function ingest(names, entry = "picker") {
@@ -3667,7 +3676,7 @@ async function withRc02FileWorkflow(t, options, run) {
         return getElement("fileInput").dispatch("change");
       }
       try {
-        await run({ audio, ingest, getElement, mutations, scrubberLoads, activations, waitForActivations, waitForCompletions });
+        await run({ audio, ingest, getElement, mutations, scrubberLoads, activations, waitForActivations, waitForCompletions, waitForFailures, dispatchWindow });
       } finally {
         await InputSourceManager.teardownActiveSource({ reason: "rc02-test-cleanup" });
       }
@@ -4327,3 +4336,95 @@ for (const identity of ["same-name", "same-file"]) {
     });
   });
 }
+
+for (const path of ["picker", "drop", "next", "prev", "row", "shortcut-next", "shortcut-prev", "eof", "repeat-one", "remove-successor"]) {
+  test(`AUD-002: UI ${path} current startup failure settles and notifies exactly once`, async t => {
+    let fail = path === "picker" || path === "drop";
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true, contextState: fail ? "suspended" : "running",
+      onResume(ctx) { if (fail) return Promise.reject(new Error("UI startup refused")); ctx.state = "running"; return Promise.resolve(); },
+    }, async ({ ingest, getElement, dispatchWindow, mutations, waitForFailures, waitForCompletions, scrubberLoads }) => {
+      if (path === "picker" || path === "drop") await ingest(["A.wav", "B.wav"], path);
+      else {
+        await ingest(["A.wav", "B.wav"]);
+        if (path === "prev" || path === "shortcut-prev") await getElement("btnNext").dispatch("click");
+        fail = true; audioEngineHarnessContext.state = "suspended";
+        if (path === "next" || path === "prev") await getElement(path === "next" ? "btnNext" : "btnPrev").dispatch("click");
+        else if (path === "row") await getElement("queueList").children[1].dispatch("click");
+        else if (path === "shortcut-next" || path === "shortcut-prev") dispatchWindow("keydown", { code: path === "shortcut-next" ? "KeyN" : "KeyP", target: state.canvas });
+        else if (path === "remove-successor") await getElement("queueList").children[0].children[2].dispatch("click");
+        else {
+          const repeat = preferences.audio.repeatMode;
+          preferences.audio.repeatMode = path === "repeat-one" ? "one" : "none";
+          AudioEngine.getMediaEl().dispatch("ended");
+          preferences.audio.repeatMode = repeat;
+        }
+      }
+      await waitForFailures(1);
+      const failures = mutations.filter(x => x.kind === "track-change-failed");
+      assert.equal(failures.length, 1);
+      assert.equal(failures[0].details.filename, Queue.current().name);
+      assert.equal(state.source.status, "error"); assert.equal(state.source.sessionActive, false);
+      assert.equal(state.source.errorCode, "file-activation-failed"); assert.match(state.source.errorMessage, /UI startup refused/);
+      assert.equal(state.audio.isLoaded, false); assert.equal(state.audio.isPlaying, false);
+      assert.equal(AudioEngine.getMediaEl(), null);
+      assert.ok(!mutations.some(x => x.kind === "track-change-complete" && x.details.requestId === failures[0].details.requestId));
+      const loads = scrubberLoads.length;
+      UI.refreshAllUiText(); UI.refreshAllUiText();
+      assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+      assert.equal(scrubberLoads.length, loads, "failure does not start a waveform decode");
+      assert.match(state.ui.audioStatus.textContent, /UI startup refused/);
+      fail = false;
+      const completions = mutations.filter(x => x.kind === "track-change-complete").length;
+      await getElement("queueList").children[Queue.currentIndex].dispatch("click");
+      await waitForCompletions(completions + 1);
+      assert.equal(state.source.status, "active");
+      assert.equal(state.audio.transportError, "");
+    });
+  });
+}
+
+for (const action of ["current", "clear", "replacement"]) {
+  test(`AUD-002: UI Play rejection boundary ${action} is owned and contained`, async t => {
+    await withRc02FileWorkflow(t, { freshMediaElements: true }, async ({ ingest, getElement, waitForCompletions, mutations }) => {
+      await ingest(["A.wav", "B.wav"]);
+      await AudioEngine.playPause(); // A is loaded/paused before the injected failure.
+      const target = AudioEngine.getMediaEl(), entered = rc02Deferred(), rejection = rc02Deferred();
+      t.mock.method(AudioEngine, "playPause", () => { entered.resolve(); return rejection.promise; });
+      const pending = getElement("btnPlay").dispatch("click"); await entered.promise;
+      if (action === "clear") await getElement("btnClearQueue").dispatch("click");
+      else if (action === "replacement") {
+        await getElement("queueList").children[1].dispatch("click"); await waitForCompletions(2);
+        state.audio.transportError = "winner-owned error";
+      }
+      const audioState = state.audio, writes = [];
+      state.audio = new Proxy(audioState, { set(object, key, value) { writes.push({ key, value }); object[key] = value; return true; } });
+      try {
+        rejection.reject(new Error("unexpected Play API rejection"));
+        await assert.doesNotReject(async () => { await pending; });
+        if (action === "current") {
+          assert.equal(AudioEngine.getMediaEl(), target); assert.equal(state.audio.isLoaded, true);
+          assert.equal(state.source.status, "active"); assert.equal(state.audio.isPlaying, false);
+          assert.match(state.audio.transportError, /unexpected Play API rejection/);
+          UI.refreshAllUiText();
+          assert.match(state.ui.audioStatus.textContent, /unexpected Play API rejection/);
+        } else assert.deepEqual(writes, []);
+        assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 0, "Play failure is not a track-change failure");
+      } finally { state.audio = audioState; }
+    });
+  });
+}
+
+test("AUD-002: synchronous load-time native Play throw reaches structured UI failure", async t => {
+  await withRc02FileWorkflow(t, {
+    freshMediaElements: true,
+    onMediaElement(element) { element.play = () => { throw new Error("load native Play threw"); }; },
+  }, async ({ ingest, mutations, audio }) => {
+    await assert.doesNotReject(() => ingest(["A.wav"]));
+    assert.equal(state.source.status, "error"); assert.match(state.source.errorMessage, /load native Play threw/);
+    assert.equal(state.audio.isLoaded, false); assert.equal(AudioEngine.getMediaEl(), null);
+    assert.equal(audio.mediaElements[0].src, "");
+    assert.ok(audio.mediaElements[0].listeners.get("play").every(x => x.signal.aborted));
+    assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+  });
+});
