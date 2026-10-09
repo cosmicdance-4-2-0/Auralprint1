@@ -1,0 +1,276 @@
+{
+  "phase": "F.6",
+  "applicationSha": "158a782c4af0466bd09a9c11dc9f3db0dd6f780d",
+  "browser": "151.0.7922.173",
+  "portableSha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6",
+  "cases": [
+    {
+      "path": "/portable.html",
+      "passed": true,
+      "unchangedHtmlBytes": true,
+      "fault": "One initial native resume held during real selected-row removal",
+      "pending": {
+        "mediaCount": 1,
+        "status": "Loaded: A.wav"
+      },
+      "winning": {
+        "mediaCount": 2,
+        "bSrc": "blob:http://127.0.0.1:35295/d3cf80af-ebd0-42cd-927c-a28b2c55058f",
+        "bUrl": "blob:http://127.0.0.1:35295/d3cf80af-ebd0-42cd-927c-a28b2c55058f",
+        "aReleased": true,
+        "queueLength": 1,
+        "status": "Loaded: B.wav"
+      },
+      "terminal": {
+        "src": null,
+        "paused": true,
+        "aborted": true,
+        "revoked": true,
+        "sourceDisconnected": true,
+        "status": "Playback failed: unsupported or unreadable audio file.",
+        "errors": []
+      },
+      "assets": [
+        {
+          "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IklESVcgZmF2aWNvbiI+CiAgPHRpdGxlPklESVc8L3RpdGxlPgoKICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iaWRpd1N0cm9rZSIgeDE9IjEwIiB5MT0iMTAiIHgyPSIxMTgiIHkyPSIxMTgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjN0M1Q0ZGIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC42MCIgc3RvcC1jb2xvcj0iIzJGRTZDOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGRjdBNTkiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8IS0tIGRhcmsgYmFkZ2UgLS0+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIyNiIgZmlsbD0iIzA3MEExMiIvPgoKICA8IS0tIGNpcmNsZSAtLT4KICA8Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2lkaXdTdHJva2UpIiBzdHJva2Utd2lkdGg9IjUiLz4KCiAgPCEtLSB0cmlhbmdsZSAtLT4KICA8cGF0aCBkPSJNNjQgMjIgTDMwIDk0IEw5OCA5NCBaIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjaWRpd1N0cm9rZSkiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgoKICA8IS0tIGluZmluaXR5IC0tPgogIDxwYXRoIGQ9IgogICAgICBNIDM2IDY0CiAgICAgIEMgMzYgNDYsIDU0IDQ0LCA2NCA1OAogICAgICBDIDc0IDcyLCA5MiA3MiwgOTIgNTgKICAgICAgQyA5MiA0NCwgNzQgNDQsIDY0IDU4CiAgICAgIEMgNTQgNzIsIDM2IDgyLCAzNiA2NAogICAgIgogICAgZmlsbD0ibm9uZSIKICAgIHN0cm9rZT0idXJsKCNpZGl3U3Ryb2tlKSIKICAgIHN0cm9rZS13aWR0aD0iNyIKICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KCiAgPCEtLSBrbm90IGRvdCAtLT4KICA8Y2lyY2xlIGN4PSI2NCIgY3k9IjU4IiByPSIzIiBmaWxsPSJ1cmwoI2lkaXdTdHJva2UpIi8+Cjwvc3ZnPgo=",
+          "status": 200
+        }
+      ],
+      "exceptions": [],
+      "consoleErrors": []
+    },
+    {
+      "path": "/",
+      "passed": true,
+      "unchangedHtmlBytes": true,
+      "fault": "One initial native resume held during real selected-row removal",
+      "pending": {
+        "mediaCount": 1,
+        "status": "Loaded: A.wav"
+      },
+      "winning": {
+        "mediaCount": 2,
+        "bSrc": "blob:http://127.0.0.1:35295/e6fce5fa-e3ed-4c55-9f4c-cb11594ae3f8",
+        "bUrl": "blob:http://127.0.0.1:35295/e6fce5fa-e3ed-4c55-9f4c-cb11594ae3f8",
+        "aReleased": true,
+        "queueLength": 1,
+        "status": "Loaded: B.wav"
+      },
+      "terminal": {
+        "src": null,
+        "paused": true,
+        "aborted": true,
+        "revoked": true,
+        "sourceDisconnected": true,
+        "status": "Playback failed: unsupported or unreadable audio file.",
+        "errors": []
+      },
+      "assets": [
+        {
+          "url": "http://127.0.0.1:35295/favicon.ico",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/favicon-96x96.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/favicon.svg",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apple-touch-icon.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/site.webmanifest",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/index.html",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/web-app-manifest-192x192.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/web-app-manifest-512x512.png",
+          "status": 200
+        }
+      ],
+      "exceptions": [],
+      "consoleErrors": []
+    },
+    {
+      "path": "/apps/auralprint/",
+      "passed": true,
+      "unchangedHtmlBytes": true,
+      "fault": "One initial native resume held during real selected-row removal",
+      "pending": {
+        "mediaCount": 1,
+        "status": "Loaded: A.wav"
+      },
+      "winning": {
+        "mediaCount": 2,
+        "bSrc": "blob:http://127.0.0.1:35295/f3de1921-8111-497b-8ed4-fc0bf6976a49",
+        "bUrl": "blob:http://127.0.0.1:35295/f3de1921-8111-497b-8ed4-fc0bf6976a49",
+        "aReleased": true,
+        "queueLength": 1,
+        "status": "Loaded: B.wav"
+      },
+      "terminal": {
+        "src": null,
+        "paused": true,
+        "aborted": true,
+        "revoked": true,
+        "sourceDisconnected": true,
+        "status": "Playback failed: unsupported or unreadable audio file.",
+        "errors": []
+      },
+      "assets": [
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/favicon.ico",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/favicon-96x96.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/favicon.svg",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/apple-touch-icon.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/site.webmanifest",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/index.html",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/web-app-manifest-192x192.png",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:35295/apps/auralprint/web-app-manifest-512x512.png",
+          "status": 200
+        }
+      ],
+      "exceptions": [],
+      "consoleErrors": []
+    }
+  ],
+  "requests": [
+    {
+      "path": "/portable.html",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/favicon.svg",
+      "status": 200
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200
+    },
+    {
+      "path": "/apple-touch-icon.png",
+      "status": 200
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200
+    },
+    {
+      "path": "/favicon-96x96.png",
+      "status": 200
+    },
+    {
+      "path": "/favicon.svg",
+      "status": 200
+    },
+    {
+      "path": "/apple-touch-icon.png",
+      "status": 200
+    },
+    {
+      "path": "/site.webmanifest",
+      "status": 200
+    },
+    {
+      "path": "/index.html",
+      "status": 200
+    },
+    {
+      "path": "/web-app-manifest-192x192.png",
+      "status": 200
+    },
+    {
+      "path": "/web-app-manifest-512x512.png",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/favicon.svg",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/favicon.ico",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/apple-touch-icon.png",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/favicon.ico",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/favicon-96x96.png",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/favicon.svg",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/apple-touch-icon.png",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/site.webmanifest",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/index.html",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/web-app-manifest-192x192.png",
+      "status": 200
+    },
+    {
+      "path": "/apps/auralprint/web-app-manifest-512x512.png",
+      "status": 200
+    }
+  ],
+  "summary": {
+    "cases": 3,
+    "passed": 3,
+    "failed": 0
+  }
+}

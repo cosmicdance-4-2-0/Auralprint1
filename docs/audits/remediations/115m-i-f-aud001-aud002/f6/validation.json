@@ -1,0 +1,183 @@
+{
+  "phase": "F.6",
+  "applicationSha": "158a782c4af0466bd09a9c11dc9f3db0dd6f780d",
+  "applicationTree": "aa8c1b9e5be42804edf907694577b5d662c4ccaf",
+  "main": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "branch": "codex/115m-i-f-aud001-aud002",
+  "version": "v0.1.15m.i.f",
+  "presetSchema": 10,
+  "build115N": "WITHHELD",
+  "environment": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "esbuild": "0.25.12",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.173",
+    "mode": "Linux headless Chromium; native AudioContext/media/MediaRecorder; generated WAV; no physical permission requests"
+  },
+  "baseline": {
+    "pr": 46,
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "clean": true,
+    "expectedHead": "158a782c4af0466bd09a9c11dc9f3db0dd6f780d",
+    "acceptedAncestors": [
+      "5a65a0a6cc100849088a2bee2b0647949ddfbb76",
+      "0c188a06673b94ce124579ecd638ff890b161d32",
+      "b6a3aa7989cf5ed54fde5012781a1809edaef5b3",
+      "af13017c4950bfda82a0cecd5d350f2b2109fdca"
+    ],
+    "remoteTrackingReconciliation": "Local origin/main was stale at 3abce4a01b55e463e43dcbca1298f45fb3985157; read-only API confirmed accepted main, ancestry checked and only tracking ref advanced. Application HEAD/tree unchanged.",
+    "githubReleaseCollection": [],
+    "tagsApi": "Connector rejects /tags endpoint; no tag created; canonical files byte-identical"
+  },
+  "defaultSuite": {
+    "tests": 694,
+    "passed": 693,
+    "failed": 0,
+    "skipped": 1,
+    "exitStatus": 0
+  },
+  "sequentialValidation": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--offline",
+        "--cache",
+        "/workspace/auralprint-environment/npm-cache"
+      ],
+      "label": "npm-ci",
+      "exitStatus": 0,
+      "seconds": 0.56
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "label": "npm-test",
+      "exitStatus": 0,
+      "seconds": 7.18
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "label": "build",
+      "exitStatus": 0,
+      "seconds": 0.23
+    },
+    {
+      "command": [
+        "python",
+        "scripts/verify_distribution.py"
+      ],
+      "label": "distribution",
+      "exitStatus": 0,
+      "seconds": 0.05
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "label": "diff-check",
+      "exitStatus": 0,
+      "seconds": 0.0
+    }
+  ],
+  "existingNative": {
+    "scenarios": 45,
+    "originalContracts": 28,
+    "expandedAssertions": 54,
+    "passed": 54,
+    "failed": 0,
+    "infrastructureFailure": false
+  },
+  "f4CleanupRerun": {
+    "cases": 6,
+    "cleanupPass": 6,
+    "cleanupFail": 0,
+    "settlementAndRecoveryPass": 6
+  },
+  "f5CleanupRerun": {
+    "cases": 6,
+    "cleanupPass": 6,
+    "cleanupFail": 0,
+    "settlementAndRecoveryPass": 6
+  },
+  "f4IntegratedRerun": {
+    "cases": 18,
+    "passed": 17,
+    "failed": 0,
+    "infrastructureFailure": false,
+    "inconclusive": 1
+  },
+  "f5RecordingRerun": {
+    "cases": 2,
+    "passed": 2,
+    "failed": 0,
+    "infrastructureFailure": false,
+    "inconclusive": 0
+  },
+  "independent": {
+    "cases": 21,
+    "passed": 21,
+    "failed": 0
+  },
+  "distributionNative": {
+    "cases": 3,
+    "passed": 3,
+    "failed": 0
+  },
+  "decodedIndependentExports": {
+    "cases": 2,
+    "passed": 2,
+    "failed": 0
+  },
+  "negativeControls": {
+    "controls": 28,
+    "meaningfulDetections": 28,
+    "infrastructureFailure": false
+  },
+  "integrity": {
+    "originalFiles": 728,
+    "originalPhaseEvidenceFiles": 90,
+    "changedOriginalFiles": [],
+    "evidence": "evidence/integrity.json"
+  },
+  "artifacts": {
+    "dist/auralprint_0.1.15m.i.f.html": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6",
+    "dist/esbuild-metafile.json": "17ad25fecec5eefd6509de3df678bc82e15decff672b3eaa53cb81e4c29340fb",
+    "dist/hosted/apple-touch-icon.png": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc",
+    "dist/hosted/favicon-96x96.png": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817",
+    "dist/hosted/favicon.ico": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f",
+    "dist/hosted/favicon.svg": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16",
+    "dist/hosted/index.html": "f14b3a1e26eda39a0b428c8f3d508c9d078fa3c3f05916eb7b96d3e709dd2d14",
+    "dist/hosted/site.webmanifest": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495",
+    "dist/hosted/web-app-manifest-192x192.png": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991",
+    "dist/hosted/web-app-manifest-512x512.png": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+  },
+  "findings": {
+    "AUD-001": "CLOSE",
+    "AUD-002": "CLOSE",
+    "F4-CLEANUP-01": "CLOSE"
+  },
+  "unexpectedApplicationDefects": [],
+  "limitations": [
+    "Automated file:// navigation ERR_BLOCKED_BY_ADMINISTRATOR; developer desktop success is human evidence.",
+    "Firefox/WebKit absent; no installation.",
+    "No physical Mic/display/device audibility, broad hardware performance/accessibility/release acceptance.",
+    "Controlled graph/Play/callback faults establish exception safety, not natural occurrence rates or exhaustive API cleanup-primitive failure."
+  ],
+  "finalHeadCI": {
+    "status": "To verify after this evidence commit is published",
+    "recordLocation": "PR #46 metadata and final handoff; no pre-execution CI claim"
+  },
+  "recommendation": "Accept remediation lifecycle; human approval/merge review of PR #46; retain draft until human action; no automatic merge or release."
+}

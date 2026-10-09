@@ -1,0 +1,5286 @@
+{
+  "executionPhase": "F.6",
+  "applicationSha": "158a782c4af0466bd09a9c11dc9f3db0dd6f780d",
+  "historicalRunnerLabelsNotExecutionBaseline": true,
+  "runs": [
+    {
+      "runner": "f4/diagnostics/integrated.cjs",
+      "exitStatus": 0,
+      "summary": {
+        "cases": 18,
+        "passed": 17,
+        "failed": 0,
+        "infrastructureFailure": false,
+        "inconclusive": 1
+      },
+      "artifactSha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6",
+      "cases": [
+        {
+          "name": "unmodified distribution playback/removal /portable.html",
+          "passed": true,
+          "url": "http://127.0.0.1:39509/portable.html",
+          "status": "Loaded: B.wav",
+          "time": 0.191565,
+          "assets": [
+            {
+              "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IklESVcgZmF2aWNvbiI+CiAgPHRpdGxlPklESVc8L3RpdGxlPgoKICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iaWRpd1N0cm9rZSIgeDE9IjEwIiB5MT0iMTAiIHgyPSIxMTgiIHkyPSIxMTgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjN0M1Q0ZGIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC42MCIgc3RvcC1jb2xvcj0iIzJGRTZDOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGRjdBNTkiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8IS0tIGRhcmsgYmFkZ2UgLS0+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIyNiIgZmlsbD0iIzA3MEExMiIvPgoKICA8IS0tIGNpcmNsZSAtLT4KICA8Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2lkaXdTdHJva2UpIiBzdHJva2Utd2lkdGg9IjUiLz4KCiAgPCEtLSB0cmlhbmdsZSAtLT4KICA8cGF0aCBkPSJNNjQgMjIgTDMwIDk0IEw5OCA5NCBaIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjaWRpd1N0cm9rZSkiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgoKICA8IS0tIGluZmluaXR5IC0tPgogIDxwYXRoIGQ9IgogICAgICBNIDM2IDY0CiAgICAgIEMgMzYgNDYsIDU0IDQ0LCA2NCA1OAogICAgICBDIDc0IDcyLCA5MiA3MiwgOTIgNTgKICAgICAgQyA5MiA0NCwgNzQgNDQsIDY0IDU4CiAgICAgIEMgNTQgNzIsIDM2IDgyLCAzNiA2NAogICAgIgogICAgZmlsbD0ibm9uZSIKICAgIHN0cm9rZT0idXJsKCNpZGl3U3Ryb2tlKSIKICAgIHN0cm9rZS13aWR0aD0iNyIKICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KCiAgPCEtLSBrbm90IGRvdCAtLT4KICA8Y2lyY2xlIGN4PSI2NCIgY3k9IjU4IiByPSIzIiBmaWxsPSJ1cmwoI2lkaXdTdHJva2UpIi8+Cjwvc3ZnPgo=",
+              "status": 200
+            }
+          ]
+        },
+        {
+          "name": "unmodified distribution playback/removal /",
+          "passed": true,
+          "url": "http://127.0.0.1:39509/",
+          "status": "Loaded: B.wav",
+          "time": 0.24804,
+          "assets": [
+            {
+              "url": "http://127.0.0.1:39509/favicon.ico",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/favicon-96x96.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/favicon.svg",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apple-touch-icon.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/site.webmanifest",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/web-app-manifest-192x192.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/web-app-manifest-512x512.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/index.html",
+              "status": 200
+            }
+          ]
+        },
+        {
+          "name": "unmodified distribution playback/removal /apps/auralprint/",
+          "passed": true,
+          "url": "http://127.0.0.1:39509/apps/auralprint/",
+          "status": "Loaded: B.wav",
+          "time": 0.229297,
+          "assets": [
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/favicon.ico",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/favicon-96x96.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/favicon.svg",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/apple-touch-icon.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/site.webmanifest",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/web-app-manifest-192x192.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/web-app-manifest-512x512.png",
+              "status": 200
+            },
+            {
+              "url": "http://127.0.0.1:39509/apps/auralprint/index.html",
+              "status": 200
+            }
+          ]
+        },
+        {
+          "name": "unmodified distribution playback/removal file:///workspace/Auralprint1/dist/auralprint_0.1.15m.i.f.html",
+          "passed": null,
+          "disposition": "environment-blocked",
+          "error": "page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///workspace/Auralprint1/dist/auralprint_0.1.15m.i.f.html\nCall log:\n\u001b[2m  - navigating to \"file:///workspace/Auralprint1/dist/auralprint_0.1.15m.i.f.html\", waiting until \"load\"\u001b[22m\n"
+        },
+        {
+          "name": "unrelated removal 0 during pending B",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "B.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 2
+            },
+            "entries": [
+              {
+                "id": 11,
+                "file": 13,
+                "name": "B.wav"
+              },
+              {
+                "id": 14,
+                "file": 15,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 11,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 12,
+              "src": "blob:http://127.0.0.1:39509/c55851b8-44c0-4089-b2db-3c14a9a4014e",
+              "paused": false,
+              "time": 0.040635,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 16,
+              "output": 17,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 140.79999999701977
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "unrelated removal 2 during pending B",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 1,
+              "length": 2
+            },
+            "entries": [
+              {
+                "id": 13,
+                "file": 14,
+                "name": "A.wav"
+              },
+              {
+                "id": 11,
+                "file": 15,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 11,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 12,
+              "src": "blob:http://127.0.0.1:39509/f6e29304-eabc-4a3a-9b65-179cf072d99d",
+              "paused": false,
+              "time": 0.028319,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 16,
+              "output": 17,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 190.80000000074506
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "shuffle during pending B preserves entry",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "A.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 13,
+                "file": 14,
+                "name": "C.wav"
+              },
+              {
+                "id": 11,
+                "file": 15,
+                "name": "B.wav"
+              },
+              {
+                "id": 16,
+                "file": 17,
+                "name": "A.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 11,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 12,
+              "src": "blob:http://127.0.0.1:39509/884af7a7-6875-41f0-b1c9-64facfa96e86",
+              "paused": false,
+              "time": 0.01161,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 18,
+              "output": 19,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 108.5
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "out-of-order B/C resumes preserve C with zero stale writes",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 12,
+                "file": 13,
+                "name": "A.wav"
+              },
+              {
+                "id": 14,
+                "file": 15,
+                "name": "B.wav"
+              },
+              {
+                "id": 16,
+                "file": 17,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 16,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 11,
+              "src": "blob:http://127.0.0.1:39509/8d087eb7-5c1b-438c-9970-50ad6a59945f",
+              "paused": false,
+              "time": 0.089977,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 18,
+              "output": 19,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 223.5
+            },
+            "recorder": null,
+            "tracks": [],
+            "resources": [],
+            "urls": [],
+            "events": [],
+            "writes": [],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "obsolete initial rejection cannot erase newer C failure",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 11,
+                "file": 12,
+                "name": "A.wav"
+              },
+              {
+                "id": 13,
+                "file": 14,
+                "name": "B.wav"
+              },
+              {
+                "id": 15,
+                "file": 16,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 15,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: AudioContext could not start: F4 context resume refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: AudioContext could not start: F4 context resume refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 222.40000000223517
+            },
+            "recorder": null,
+            "tracks": [],
+            "resources": [],
+            "urls": [],
+            "events": [],
+            "writes": [],
+            "errors": [],
+            "ui": "Playback failed: AudioContext could not start: F4 context resume refused"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "obsolete attachment rejection cannot erase newer C failure",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 12,
+                "file": 13,
+                "name": "A.wav"
+              },
+              {
+                "id": 14,
+                "file": 15,
+                "name": "B.wav"
+              },
+              {
+                "id": 16,
+                "file": 17,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 16,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: AudioContext could not start: F4 context resume refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: AudioContext could not start: F4 context resume refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 98.5
+            },
+            "recorder": null,
+            "tracks": [],
+            "events": [],
+            "writes": [],
+            "errors": [],
+            "ui": "Playback failed: AudioContext could not start: F4 context resume refused"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "obsolete play rejection cannot erase newer C failure",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 11,
+                "file": 12,
+                "name": "A.wav"
+              },
+              {
+                "id": 13,
+                "file": 14,
+                "name": "B.wav"
+              },
+              {
+                "id": 15,
+                "file": 16,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 15,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: AudioContext could not start: F4 context resume refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: AudioContext could not start: F4 context resume refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 94.59999999776483
+            },
+            "recorder": null,
+            "tracks": [],
+            "resources": [],
+            "urls": [],
+            "events": [],
+            "writes": [],
+            "errors": [],
+            "ui": "Playback failed: AudioContext could not start: F4 context resume refused"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "loaded native Play reject preserves media and retries",
+          "before": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": false,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/c364dcc0-8a64-40da-99eb-58aface4bd75",
+              "paused": true,
+              "time": 0.050909,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 103.60000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Loaded: A.wav"
+          },
+          "failure": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": false,
+              "filename": "A.wav",
+              "transportError": "Playback failed: F4 native Play rejection"
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/c364dcc0-8a64-40da-99eb-58aface4bd75",
+              "paused": true,
+              "time": 0.050909,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 103.60000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Playback failed: F4 native Play rejection"
+          },
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/c364dcc0-8a64-40da-99eb-58aface4bd75",
+              "paused": false,
+              "time": 0.101587,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 103.60000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Playback failed: F4 native Play rejection"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "loaded native Play throw preserves media and retries",
+          "before": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": false,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/cdfb0b99-2e96-4714-8fc0-b21f5a51cc5e",
+              "paused": true,
+              "time": 0.049342,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 118.10000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Loaded: A.wav"
+          },
+          "failure": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": false,
+              "filename": "A.wav",
+              "transportError": "Playback failed: F4 native Play synchronous fault"
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/cdfb0b99-2e96-4714-8fc0-b21f5a51cc5e",
+              "paused": true,
+              "time": 0.049342,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 118.10000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Loaded: A.wav"
+          },
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/cdfb0b99-2e96-4714-8fc0-b21f5a51cc5e",
+              "paused": false,
+              "time": 0.057647,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 118.10000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Playback failed: F4 native Play synchronous fault"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "native recording across navigation/removal/pending cancellation/failure/recovery/retention/re-record/disposal",
+          "start": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "B.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "C.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "B.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/267bc78a-cde2-4a9f-88ac-ea21d8626bcb",
+              "paused": false,
+              "time": 0.949116,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": 10,
+              "tapConnected": 9,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1406.5,
+              "stoppedAtMs": null,
+              "elapsedMs": 1121,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "start",
+              "lastCode": "recorder-input-audio-video",
+              "lastMessage": "Recording audio + video.",
+              "lastUpdatedAtMs": 2527.5
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: A.wav"
+          },
+          "stale": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 7,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 41,
+              "src": "blob:http://127.0.0.1:39509/0e9dcaf0-ef18-4b3f-97bb-e6dc890b6120",
+              "paused": false,
+              "time": 0.098692,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 42,
+              "output": 43,
+              "tap": 10,
+              "tapConnected": 43,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1406.5,
+              "stoppedAtMs": null,
+              "elapsedMs": 1817,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-complete",
+              "lastCode": "track-change-complete",
+              "lastMessage": "Recording continues on the newly loaded track.",
+              "lastUpdatedAtMs": 3223.900000002235
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "resources": [],
+            "urls": [],
+            "events": [],
+            "writes": [],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "failed": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 8,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: AudioContext could not start: F4 context resume refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: AudioContext could not start: F4 context resume refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": 10,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1406.5,
+              "stoppedAtMs": null,
+              "elapsedMs": 1906,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-failed",
+              "lastCode": "track-change-failed",
+              "lastMessage": "Track change failed. Recording continues while no audio is currently loaded.",
+              "lastUpdatedAtMs": 3312.10000000149
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "urls": [],
+            "errors": [],
+            "ui": "Playback failed: AudioContext could not start: F4 context resume refused"
+          },
+          "recovered": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 9,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 51,
+              "src": "blob:http://127.0.0.1:39509/cdaf7ab4-6c9d-4859-891d-e84faca5026e",
+              "paused": false,
+              "time": 0.03483,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 52,
+              "output": 53,
+              "tap": 10,
+              "tapConnected": 53,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1406.5,
+              "stoppedAtMs": null,
+              "elapsedMs": 2027,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-complete",
+              "lastCode": "track-change-complete",
+              "lastMessage": "Recording continues on the newly loaded track.",
+              "lastUpdatedAtMs": 3433.10000000149
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "complete": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 9,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 51,
+              "src": "blob:http://127.0.0.1:39509/cdaf7ab4-6c9d-4859-891d-e84faca5026e",
+              "paused": false,
+              "time": 0.119002,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 52,
+              "output": 53,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1406.5,
+              "stoppedAtMs": 3507.800000000745,
+              "elapsedMs": 2101,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:39509/69d5bcb5-49ff-4b2c-b87a-0f043f614014",
+              "lastExportFileName": "auralprint-capture-20261009-093733.webm",
+              "lastExportByteSize": 92827,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 3531.900000002235
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "exportRead": {
+            "bytes": 92827,
+            "type": "video/webm",
+            "sha256": "e4a10016b913918d510fc2612d02ffba8e2c675e76d0b6f84635e6350e6af1a3"
+          },
+          "retained": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 10,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: AudioContext could not start: F4 context resume refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: AudioContext could not start: F4 context resume refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1406.5,
+              "stoppedAtMs": 3507.800000000745,
+              "elapsedMs": 2101,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:39509/69d5bcb5-49ff-4b2c-b87a-0f043f614014",
+              "lastExportFileName": "auralprint-capture-20261009-093733.webm",
+              "lastExportByteSize": 92827,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 3531.900000002235
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "second": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 11,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 61,
+              "src": "blob:http://127.0.0.1:39509/4706e670-5c44-4fd5-bfda-04bf12c5f178",
+              "paused": false,
+              "time": 1.126377,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 66,
+              "output": 63,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 3804.5,
+              "stoppedAtMs": 4842,
+              "elapsedMs": 1038,
+              "chunkCount": 2,
+              "lastExportUrl": "blob:http://127.0.0.1:39509/e65ac254-7ed4-47b1-849f-3ae2faec17a6",
+              "lastExportFileName": "auralprint-capture-20261009-093734.webm",
+              "lastExportByteSize": 65534,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 4846.60000000149
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              },
+              {
+                "id": 65,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 62,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "owned": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 11,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 61,
+              "src": "blob:http://127.0.0.1:39509/4706e670-5c44-4fd5-bfda-04bf12c5f178",
+              "paused": false,
+              "time": 2.078186,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 66,
+              "output": 63,
+              "tap": 67,
+              "tapConnected": 63,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 4901,
+              "stoppedAtMs": null,
+              "elapsedMs": 1052,
+              "chunkCount": 1,
+              "lastExportUrl": "blob:http://127.0.0.1:39509/e65ac254-7ed4-47b1-849f-3ae2faec17a6",
+              "lastExportFileName": "auralprint-capture-20261009-093734.webm",
+              "lastExportByteSize": 65534,
+              "lastAction": "start",
+              "lastCode": "recorder-input-audio-video",
+              "lastMessage": "Recording audio + video.",
+              "lastUpdatedAtMs": 5953.10000000149
+            },
+            "recorder": {
+              "id": 68,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              },
+              {
+                "id": 65,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 62,
+                "kind": "video",
+                "state": "ended"
+              },
+              {
+                "id": 69,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 70,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "C.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 6,
+                "file": 7,
+                "name": "C.wav"
+              }
+            ],
+            "request": {
+              "id": 11,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "C.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "C.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 61,
+              "src": "blob:http://127.0.0.1:39509/4706e670-5c44-4fd5-bfda-04bf12c5f178",
+              "paused": false,
+              "time": 2.159456,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 66,
+              "output": 63,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "disabled",
+              "supportProbeStatus": "not-started",
+              "isSupported": false,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [],
+              "selectedMimeType": null,
+              "resolvedMimeType": null,
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "dispose",
+              "lastCode": "disposed",
+              "lastMessage": "RecorderEngine has been disposed.",
+              "lastUpdatedAtMs": 6040.5
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              },
+              {
+                "id": 65,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 62,
+                "kind": "video",
+                "state": "ended"
+              },
+              {
+                "id": 69,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 70,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: C.wav"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "native recorder finalization locks controls and consumes natural EOF once",
+          "locked": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "short-A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "short-B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 2
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "short-A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "short-B.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "short-A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "short-A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/be0226c6-b97f-40e4-b67c-f4976dec329c",
+              "paused": false,
+              "time": 1.15229,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 6,
+              "output": 7,
+              "tap": 8,
+              "tapConnected": 7,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "finalizing",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1114.8999999985099,
+              "stoppedAtMs": 2187,
+              "elapsedMs": 1072,
+              "chunkCount": 2,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "stop",
+              "lastCode": "finalizing",
+              "lastMessage": "Finalizing recording export...",
+              "lastUpdatedAtMs": 2208.199999999255
+            },
+            "recorder": {
+              "id": 9,
+              "state": "inactive"
+            },
+            "tracks": [
+              {
+                "id": 10,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 11,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: short-A.wav"
+          },
+          "ended": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "short-A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "short-B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 2
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "short-A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "short-B.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "short-A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": false,
+              "filename": "short-A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:39509/be0226c6-b97f-40e4-b67c-f4976dec329c",
+              "paused": true,
+              "time": 2.5,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 6,
+              "output": 7,
+              "tap": 8,
+              "tapConnected": 7,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "finalizing",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1114.8999999985099,
+              "stoppedAtMs": 2187,
+              "elapsedMs": 1072,
+              "chunkCount": 2,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "stop",
+              "lastCode": "finalizing",
+              "lastMessage": "Finalizing recording export...",
+              "lastUpdatedAtMs": 2208.199999999255
+            },
+            "recorder": {
+              "id": 9,
+              "state": "inactive"
+            },
+            "tracks": [
+              {
+                "id": 10,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 11,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Track changes are unavailable while recording finalizes the current export."
+          },
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "short-A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "short-B.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 1,
+              "length": 2
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "short-A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "short-B.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "short-B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "short-B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 19,
+              "src": "blob:http://127.0.0.1:39509/24285056-fd4f-402f-aa26-8d707fb69a59",
+              "paused": false,
+              "time": 0.008707,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 20,
+              "output": 21,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1114.8999999985099,
+              "stoppedAtMs": 2187,
+              "elapsedMs": 1072,
+              "chunkCount": 2,
+              "lastExportUrl": "blob:http://127.0.0.1:39509/a043999f-df80-487b-8e1f-72cbb91664ab",
+              "lastExportFileName": "auralprint-capture-20261009-093740.webm",
+              "lastExportByteSize": 59940,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 3899
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 10,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 11,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: short-B.wav"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "native Mic recording stop/dispose preserve shared upstream; source teardown owns track stop",
+          "stopped": {
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "entries": [],
+            "request": null,
+            "source": {
+              "kind": "mic",
+              "status": "active",
+              "label": "MediaStreamAudioDestinationNode",
+              "permission": {
+                "mic": "granted",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "media": null,
+            "graph": {
+              "ready": true,
+              "source": 2,
+              "output": 3,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 492,
+              "stoppedAtMs": 1519,
+              "elapsedMs": 1027,
+              "chunkCount": 2,
+              "lastExportUrl": "blob:http://127.0.0.1:39509/eb427d4a-b2f2-42eb-a46e-f6961fb3c8e7",
+              "lastExportFileName": "auralprint-capture-20261009-093742.webm",
+              "lastExportByteSize": 111414,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 1565.800000000745
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 4,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 1,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Microphone live: MediaStreamAudioDestinationNode - Bands: mono-ish (L\u2248R) | Export ready"
+          },
+          "liveAfterStop": [
+            "live"
+          ],
+          "liveAfterDispose": [
+            "live"
+          ],
+          "upstreamAfterSourceTeardown": [
+            "ended"
+          ],
+          "snapshot": {
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "entries": [],
+            "request": null,
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "granted",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "disabled",
+              "supportProbeStatus": "not-started",
+              "isSupported": false,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [],
+              "selectedMimeType": null,
+              "resolvedMimeType": null,
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "dispose",
+              "lastCode": "disposed",
+              "lastMessage": "RecorderEngine has been disposed.",
+              "lastUpdatedAtMs": 2803
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 4,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 1,
+                "kind": "video",
+                "state": "ended"
+              },
+              {
+                "id": 4,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 5,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "File mode ready. Load audio files to begin analysis."
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "current failure releases resources: native-corrupt-media",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 11,
+                "file": 12,
+                "name": "corrupt.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 11,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 87.10000000149012
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Playback failed: unsupported or unreadable audio file."
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "current failure releases resources: graph-allocation",
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entries": [
+              {
+                "id": 3,
+                "file": 4,
+                "name": "A.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 3,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 allocation refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 allocation refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 57
+            },
+            "recorder": null,
+            "tracks": [],
+            "errors": [],
+            "ui": "Playback failed: audio source attachment failed: F4 allocation refused"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "runner": "f5/diagnostics/recording.cjs",
+      "exitStatus": 0,
+      "summary": {
+        "cases": 2,
+        "passed": 2,
+        "failed": 0,
+        "infrastructureFailure": false,
+        "inconclusive": 0
+      },
+      "artifactSha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6",
+      "cases": [
+        {
+          "name": "native recording across corrupt activation cleanup/reconnection/stop/export retention",
+          "fault": "corrupt",
+          "start": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:41523/91880c85-8a8e-47bc-8352-25d15f31fb49",
+              "paused": false,
+              "time": 1.039093,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": 10,
+              "tapConnected": 9,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1613.699999999255,
+              "stoppedAtMs": null,
+              "elapsedMs": 1019,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "start",
+              "lastCode": "recorder-input-audio-video",
+              "lastMessage": "Recording audio + video.",
+              "lastUpdatedAtMs": 2633.099999997765
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: A.wav"
+          },
+          "failed": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": 10,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1613.699999999255,
+              "stoppedAtMs": null,
+              "elapsedMs": 1155,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-failed",
+              "lastCode": "track-change-failed",
+              "lastMessage": "Track change failed. Recording continues while no audio is currently loaded.",
+              "lastUpdatedAtMs": 2768.39999999851
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Playback failed: unsupported or unreadable audio file."
+          },
+          "released": {
+            "splitter": false,
+            "sumNode": false,
+            "sumGainL": false,
+            "sumGainR": false,
+            "bands": 0,
+            "upstream": false,
+            "url": null,
+            "candidates": [
+              {
+                "id": 1,
+                "src": null,
+                "aborted": true
+              },
+              {
+                "id": 21,
+                "src": null,
+                "aborted": true
+              }
+            ]
+          },
+          "recovered": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 31,
+              "src": "blob:http://127.0.0.1:41523/fab45645-272c-4a53-b513-cda929b6ad91",
+              "paused": false,
+              "time": 0.040635,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 32,
+              "output": 33,
+              "tap": 10,
+              "tapConnected": 33,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1613.699999999255,
+              "stoppedAtMs": null,
+              "elapsedMs": 1192,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-complete",
+              "lastCode": "track-change-complete",
+              "lastMessage": "Recording continues on the newly loaded track.",
+              "lastUpdatedAtMs": 2805.800000000745
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "complete": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 31,
+              "src": "blob:http://127.0.0.1:41523/fab45645-272c-4a53-b513-cda929b6ad91",
+              "paused": false,
+              "time": 0.136963,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 32,
+              "output": 33,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1613.699999999255,
+              "stoppedAtMs": 2892.599999997765,
+              "elapsedMs": 1279,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:41523/90c6c220-8e4c-45ca-b3a7-ec9a30eda4e4",
+              "lastExportFileName": "auralprint-capture-20261009-093654.webm",
+              "lastExportByteSize": 73646,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 2914.199999999255
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "exportRead": {
+            "bytes": 73646,
+            "mime": "video/webm",
+            "sha256": "9f710548483c9c1b31300c0173d38c1f0eb6e91e56db313bbaef4f26598817b6"
+          },
+          "retained": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 4,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1613.699999999255,
+              "stoppedAtMs": 2892.599999997765,
+              "elapsedMs": 1279,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:41523/90c6c220-8e4c-45ca-b3a7-ec9a30eda4e4",
+              "lastExportFileName": "auralprint-capture-20261009-093654.webm",
+              "lastExportByteSize": 73646,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 2914.199999999255
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Playback failed: unsupported or unreadable audio file."
+          },
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 4,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1613.699999999255,
+              "stoppedAtMs": 2892.599999997765,
+              "elapsedMs": 1279,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:41523/90c6c220-8e4c-45ca-b3a7-ec9a30eda4e4",
+              "lastExportFileName": "auralprint-capture-20261009-093654.webm",
+              "lastExportByteSize": 73646,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 2914.199999999255
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Playback failed: unsupported or unreadable audio file."
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        },
+        {
+          "name": "native recording across allocation activation cleanup/reconnection/stop/export retention",
+          "fault": "allocation",
+          "start": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 0,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 1,
+              "entry": 2,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "A.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 1,
+              "src": "blob:http://127.0.0.1:41523/c5fb0a14-96cc-4548-a1ca-1e41106e5997",
+              "paused": false,
+              "time": 1.010068,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 8,
+              "output": 9,
+              "tap": 10,
+              "tapConnected": 9,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 2154.800000000745,
+              "stoppedAtMs": null,
+              "elapsedMs": 1027,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "start",
+              "lastCode": "recorder-input-audio-video",
+              "lastMessage": "Recording audio + video.",
+              "lastUpdatedAtMs": 3182.199999999255
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: A.wav"
+          },
+          "failed": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 2,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 allocation refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 allocation refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": 10,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 2154.800000000745,
+              "stoppedAtMs": null,
+              "elapsedMs": 1057,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-failed",
+              "lastCode": "track-change-failed",
+              "lastMessage": "Track change failed. Recording continues while no audio is currently loaded.",
+              "lastUpdatedAtMs": 3212
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Playback failed: audio source attachment failed: F4 allocation refused"
+          },
+          "released": {
+            "splitter": false,
+            "sumNode": false,
+            "sumGainL": false,
+            "sumGainR": false,
+            "bands": 0,
+            "upstream": false,
+            "url": null,
+            "candidates": [
+              {
+                "id": 1,
+                "src": null,
+                "aborted": true
+              },
+              {
+                "id": 21,
+                "src": null,
+                "aborted": true
+              }
+            ]
+          },
+          "recovered": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 23,
+              "src": "blob:http://127.0.0.1:41523/97387d65-fbf6-4545-8df3-39aadc803492",
+              "paused": false,
+              "time": 0.031927,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 24,
+              "output": 25,
+              "tap": 10,
+              "tapConnected": 25,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 2154.800000000745,
+              "stoppedAtMs": null,
+              "elapsedMs": 1145,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-complete",
+              "lastCode": "track-change-complete",
+              "lastMessage": "Recording continues on the newly loaded track.",
+              "lastUpdatedAtMs": 3299.599999997765
+            },
+            "recorder": {
+              "id": 11,
+              "state": "recording"
+            },
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "complete": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": false
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 2,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 3,
+              "entry": 6,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "B.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "B.wav",
+              "transportError": ""
+            },
+            "media": {
+              "id": 23,
+              "src": "blob:http://127.0.0.1:41523/97387d65-fbf6-4545-8df3-39aadc803492",
+              "paused": false,
+              "time": 0.10953,
+              "error": null
+            },
+            "graph": {
+              "ready": true,
+              "source": 24,
+              "output": 25,
+              "tap": null,
+              "tapConnected": null,
+              "abort": false
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 2154.800000000745,
+              "stoppedAtMs": 3386.5,
+              "elapsedMs": 1232,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:41523/07bd5440-497b-463d-8e45-a3200764aa9a",
+              "lastExportFileName": "auralprint-capture-20261009-093658.webm",
+              "lastExportByteSize": 75631,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 3410.199999999255
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Loaded: B.wav"
+          },
+          "exportRead": {
+            "bytes": 75631,
+            "mime": "video/webm",
+            "sha256": "0068223d859e57b87d522dc5f531fbcc0c57e9e7d8f6273358b113bf43cfd0f9"
+          },
+          "retained": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 4,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 allocation refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 allocation refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 2154.800000000745,
+              "stoppedAtMs": 3386.5,
+              "elapsedMs": 1232,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:41523/07bd5440-497b-463d-8e45-a3200764aa9a",
+              "lastExportFileName": "auralprint-capture-20261009-093658.webm",
+              "lastExportByteSize": 75631,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 3410.199999999255
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Playback failed: audio source attachment failed: F4 allocation refused"
+          },
+          "snapshot": {
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entries": [
+              {
+                "id": 2,
+                "file": 3,
+                "name": "A.wav"
+              },
+              {
+                "id": 4,
+                "file": 5,
+                "name": "failed.wav"
+              },
+              {
+                "id": 6,
+                "file": 7,
+                "name": "B.wav"
+              }
+            ],
+            "request": {
+              "id": 4,
+              "entry": 4,
+              "pending": false,
+              "autoPlay": true
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 allocation refused",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 allocation refused"
+            },
+            "media": null,
+            "graph": {
+              "ready": false,
+              "source": null,
+              "output": null,
+              "tap": null,
+              "tapConnected": null,
+              "abort": null
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "complete",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 2154.800000000745,
+              "stoppedAtMs": 3386.5,
+              "elapsedMs": 1232,
+              "chunkCount": 3,
+              "lastExportUrl": "blob:http://127.0.0.1:41523/07bd5440-497b-463d-8e45-a3200764aa9a",
+              "lastExportFileName": "auralprint-capture-20261009-093658.webm",
+              "lastExportByteSize": 75631,
+              "lastAction": "finalize",
+              "lastCode": "complete",
+              "lastMessage": "Recording export ready.",
+              "lastUpdatedAtMs": 3410.199999999255
+            },
+            "recorder": null,
+            "tracks": [
+              {
+                "id": 12,
+                "kind": "audio",
+                "state": "ended"
+              },
+              {
+                "id": 13,
+                "kind": "video",
+                "state": "ended"
+              }
+            ],
+            "errors": [],
+            "ui": "Playback failed: audio source attachment failed: F4 allocation refused"
+          },
+          "exceptions": [],
+          "consoleErrors": [],
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "crossBrowser": {
+    "firefox": {
+      "path": "/home/agent/.cache/ms-playwright/firefox-1538/firefox/firefox",
+      "available": false
+    },
+    "webkit": {
+      "path": "/home/agent/.cache/ms-playwright/webkit-2336/pw_run.sh",
+      "available": false
+    }
+  },
+  "priorRunnerExportProbes": [
+    {
+      "file": "f6-corrupt.webm",
+      "exitStatus": 0,
+      "bytes": 65202,
+      "sha256": "f52b10bb56023dbad09eba6622458e80d1eb43aa167605dc403529037846ae7c",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "38"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "19"
+        }
+      ],
+      "format": "matroska,webm"
+    },
+    {
+      "file": "f6-after-tap.webm",
+      "exitStatus": 0,
+      "bytes": 67411,
+      "sha256": "eae6990c1a165dae7be166af87aad7bf608a32a08463f3d36254f3178cd459bd",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "37"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "19"
+        }
+      ],
+      "format": "matroska,webm"
+    },
+    {
+      "file": "f4-export.webm",
+      "exitStatus": 0,
+      "bytes": 92827,
+      "sha256": "e4a10016b913918d510fc2612d02ffba8e2c675e76d0b6f84635e6350e6af1a3",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "50"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "25"
+        }
+      ],
+      "format": "matroska,webm"
+    },
+    {
+      "file": "corrupt.webm",
+      "exitStatus": 0,
+      "bytes": 73646,
+      "sha256": "9f710548483c9c1b31300c0173d38c1f0eb6e91e56db313bbaef4f26598817b6",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "35"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "19"
+        }
+      ],
+      "format": "matroska,webm"
+    },
+    {
+      "file": "allocation.webm",
+      "exitStatus": 0,
+      "bytes": 75631,
+      "sha256": "0068223d859e57b87d522dc5f531fbcc0c57e9e7d8f6273358b113bf43cfd0f9",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "34"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "17"
+        }
+      ],
+      "format": "matroska,webm"
+    }
+  ]
+}

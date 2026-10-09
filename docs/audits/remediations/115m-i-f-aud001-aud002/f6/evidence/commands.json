@@ -1,0 +1,171 @@
+[
+  {
+    "command": [
+      "npm",
+      "ci",
+      "--offline",
+      "--cache",
+      "/workspace/auralprint-environment/npm-cache"
+    ],
+    "label": "npm-ci",
+    "exitStatus": 0,
+    "seconds": 0.56
+  },
+  {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "label": "npm-test",
+    "exitStatus": 0,
+    "seconds": 7.18
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "label": "build",
+    "exitStatus": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": [
+      "python",
+      "scripts/verify_distribution.py"
+    ],
+    "label": "distribution",
+    "exitStatus": 0,
+    "seconds": 0.05
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "label": "diff-check",
+    "exitStatus": 0,
+    "seconds": 0.0
+  },
+  {
+    "label": "f4-cleanup",
+    "exitStatus": 0,
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f4/diagnostics/cleanup.cjs",
+      "--output",
+      "/workspace/work/f6/f4-cleanup.json"
+    ]
+  },
+  {
+    "label": "f5-cleanup",
+    "exitStatus": 0,
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f5/diagnostics/cleanup.cjs",
+      "--output",
+      "/workspace/work/f6/f5-cleanup.json"
+    ]
+  },
+  {
+    "label": "f5-recording",
+    "exitStatus": 0,
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f5/diagnostics/recording.cjs",
+      "--output",
+      "/workspace/work/f6/f5-recording.json",
+      "--export-dir",
+      "/workspace/work/f6"
+    ]
+  },
+  {
+    "label": "f4-integrated",
+    "exitStatus": 0,
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f4/diagnostics/integrated.cjs",
+      "--output",
+      "/workspace/work/f6/f4-integrated.json",
+      "--export",
+      "/workspace/work/f6/f4-export.webm"
+    ]
+  },
+  {
+    "phase": "f2",
+    "exitStatus": 0,
+    "command": [
+      "python",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/negative-controls.py",
+      "--output",
+      "/workspace/work/f6/f2-controls.json"
+    ]
+  },
+  {
+    "phase": "f3",
+    "exitStatus": 0,
+    "command": [
+      "python",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f3/diagnostics/negative-controls.py",
+      "--output",
+      "/workspace/work/f6/f3-controls.json"
+    ]
+  },
+  {
+    "phase": "f5",
+    "exitStatus": 0,
+    "command": [
+      "python",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f5/diagnostics/negative-controls.py",
+      "--output",
+      "/workspace/work/f6/f5-controls.json"
+    ]
+  },
+  {
+    "label": "original54-native",
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f3/diagnostics/native.cjs",
+      "--contracts",
+      "--output",
+      "/workspace/work/f6/existing-native.json"
+    ],
+    "exitStatus": 0
+  },
+  {
+    "label": "independent-final",
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f6/diagnostics/independent.cjs",
+      "--output",
+      "/workspace/work/f6/independent-results.json",
+      "--export-dir",
+      "/workspace/work/f6/latest-exports"
+    ],
+    "exitStatus": 0
+  },
+  {
+    "label": "distribution-native",
+    "command": [
+      "node",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f6/diagnostics/distribution.cjs",
+      "--output",
+      "/workspace/work/f6/distribution-results.json"
+    ],
+    "exitStatus": 0
+  },
+  {
+    "label": "decoded-exports",
+    "command": [
+      "python",
+      "docs/audits/remediations/115m-i-f-aud001-aud002/f6/diagnostics/export-probe.py",
+      "--output",
+      "/workspace/work/f6/independent-export-probes.json",
+      "/workspace/work/f6/latest-exports/f6-corrupt.webm",
+      "/workspace/work/f6/latest-exports/f6-after-tap.webm"
+    ],
+    "exitStatus": 0
+  }
+]
