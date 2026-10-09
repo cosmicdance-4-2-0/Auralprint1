@@ -1,0 +1,10 @@
+✔ workspace owns deterministic visibility, restore, focus, record, collapse, and idempotent wiring (2.249172ms)
+✔ Record restore remains eligible only while hooks are enabled (0.301826ms)
+ℹ tests 604
+ℹ suites 0
+ℹ pass 603
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 5986.646773
