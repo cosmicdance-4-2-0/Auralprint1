@@ -1,0 +1,265 @@
+{
+  "runs": [
+    {
+      "run": "integrated-first.json",
+      "summary": {
+        "cases": 14,
+        "passed": 13,
+        "failed": 1,
+        "infrastructureFailure": true
+      },
+      "infrastructureFailure": {
+        "message": "page.waitForFunction: Timeout 12000ms exceeded.",
+        "stack": "page.waitForFunction: Timeout 12000ms exceeded.\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f4/diagnostics/integrated.cjs:137:143)"
+      },
+      "interruptedState": {
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "short-B.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": false,
+          "filename": "short-B.wav",
+          "transportError": ""
+        },
+        "recording": {
+          "hooksEnabled": true,
+          "phase": "error",
+          "supportProbeStatus": "supported",
+          "isSupported": true,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm",
+            "video/mp4"
+          ],
+          "selectedMimeType": "video/webm;codecs=vp9,opus",
+          "resolvedMimeType": "video/webm;codecs=vp9,opus",
+          "startedAtMs": 410.2000000011176,
+          "stoppedAtMs": 457.7000000011176,
+          "elapsedMs": 48,
+          "chunkCount": 0,
+          "lastExportUrl": null,
+          "lastExportFileName": "",
+          "lastExportByteSize": 0,
+          "lastAction": "finalize",
+          "lastCode": "no-captured-chunks",
+          "lastMessage": "Recording finished without any captured data.",
+          "lastUpdatedAtMs": 1153.0999999996275
+        },
+        "tracks": [
+          {
+            "id": 10,
+            "kind": "audio",
+            "state": "ended"
+          },
+          {
+            "id": 11,
+            "kind": "video",
+            "state": "ended"
+          }
+        ],
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "short-A.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 1,
+              "filename": "short-A.wav"
+            }
+          },
+          {
+            "type": "data",
+            "bytes": 0
+          },
+          {
+            "type": "native-stop"
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 2,
+              "filename": "short-B.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 2,
+              "filename": "short-B.wav"
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "track-ended-no-next"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "fullTransientRunSha256": "7994ba0f8ad5afbe88487dedfe8f0794137db113558409751c9a932e804ab2c3"
+    },
+    {
+      "run": "integrated-final.json",
+      "summary": {
+        "cases": 15,
+        "passed": 14,
+        "failed": 0,
+        "infrastructureFailure": true,
+        "inconclusive": 1
+      },
+      "infrastructureFailure": {
+        "message": "page.waitForFunction: Timeout 12000ms exceeded.",
+        "stack": "page.waitForFunction: Timeout 12000ms exceeded.\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f4/diagnostics/integrated.cjs:144:297)"
+      },
+      "interruptedState": {
+        "source": {
+          "kind": "mic",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "granted",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "recording": {
+          "hooksEnabled": true,
+          "phase": "disabled",
+          "supportProbeStatus": "not-started",
+          "isSupported": false,
+          "includePlaybackAudio": true,
+          "targetFps": 30,
+          "availableMimeTypes": [],
+          "selectedMimeType": null,
+          "resolvedMimeType": null,
+          "startedAtMs": null,
+          "stoppedAtMs": null,
+          "elapsedMs": 0,
+          "chunkCount": 0,
+          "lastExportUrl": null,
+          "lastExportFileName": "",
+          "lastExportByteSize": 0,
+          "lastAction": "dispose",
+          "lastCode": "disposed",
+          "lastMessage": "RecorderEngine has been disposed.",
+          "lastUpdatedAtMs": 2447.2999999988824
+        },
+        "tracks": [
+          {
+            "id": 4,
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "id": 1,
+            "kind": "video",
+            "state": "ended"
+          },
+          {
+            "id": 4,
+            "kind": "audio",
+            "state": "live"
+          },
+          {
+            "id": 5,
+            "kind": "video",
+            "state": "ended"
+          }
+        ],
+        "events": [
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "switch-to-mic"
+            }
+          },
+          {
+            "type": "data",
+            "bytes": 146893
+          },
+          {
+            "type": "data",
+            "bytes": 13003
+          },
+          {
+            "type": "native-stop"
+          },
+          {
+            "type": "data",
+            "bytes": 189978
+          },
+          {
+            "type": "data",
+            "bytes": 21556
+          },
+          {
+            "type": "native-stop"
+          }
+        ],
+        "errors": []
+      },
+      "fullTransientRunSha256": "9541f30a8ad60fa81c35b602baec9d0bb10a00eb5b440d0269be679ac31188ce"
+    }
+  ],
+  "explanations": [
+    "First run stopped recorder after about 48 ms before any nonempty native chunk; app truthfully reported no-captured-chunks and still consumed deferred EOF. Harness incorrectly waited only for complete. Final successful case waits for a real nonempty chunk, uses a 2.5-second WAV and accepts either terminal phase before correctness assertions.",
+    "The file:// ERR_BLOCKED_BY_ADMINISTRATOR is an environment restriction; final result labels it inconclusive, never application failure.",
+    "Initial live-disposal extension clicked the still-disabled File button before UI refreshed. Native upstream ownership was preserved. Final run waits for the actual control to re-enable before clicking. No production change."
+  ],
+  "secondFullRun": {
+    "summary": {
+      "cases": 17,
+      "passed": 14,
+      "failed": 2,
+      "infrastructureFailure": false,
+      "inconclusive": 1
+    },
+    "fullTransientRunSha256": "c11cb4fd47834dc8ac3ac9ea433d55ab3e1d355d0348c2a3520901fac2f478c4",
+    "note": "Completed first independent matrix; two resource assertions failed and file policy blocked, no infrastructure failure. Final run adds native live ownership/export probe."
+  }
+}

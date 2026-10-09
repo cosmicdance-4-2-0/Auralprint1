@@ -1,0 +1,775 @@
+{
+  "acceptedBaseline": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "phase": "F.2",
+  "version": "v0.1.15m.i.f",
+  "browser": "151.0.7922.173",
+  "mode": "headless Chromium; native Web Audio and HTMLMediaElement; muted browser output",
+  "node": "v24.19.0",
+  "artifactSha256": "cd5fe1b34e7ee7edddc860da78494b28d8eb41f75ebd1966552b0cdb9857ea39",
+  "fixtures": [
+    {
+      "name": "A.wav",
+      "frequency": 440,
+      "bytes": 5292044,
+      "sha256": "259cfc5d6d337f45e47af87f5e3f8270ec081767593408d04d3802d4a6cfe215"
+    },
+    {
+      "name": "B.wav",
+      "frequency": 554,
+      "bytes": 5292044,
+      "sha256": "577ebcf36bdcf77a063120c5045efe16b4f5d7caefc70130acadc53f3825a67f"
+    },
+    {
+      "name": "C.wav",
+      "frequency": 659,
+      "bytes": 5292044,
+      "sha256": "113ffc485537b91013135758f982fe03934b071843477a243af7a7c79ce04fe6"
+    }
+  ],
+  "desiredAssertions": [
+    {
+      "name": "unmodified artifact plays valid WAV without exceptions",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending removal loads B and preserves autoplay",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "noncurrent removal leaves A authorized",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "final-remove cannot restore A",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "clear cannot restore A",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "loaded removal preserves playing intent",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "loaded removal preserves paused intent",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending replacement removal preserves requested autoplay despite old loaded metadata",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "duplicate-name/object removal creates successor request false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "duplicate-name/object removal creates successor request true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "current resume failure reaches observable terminal error without UI leak",
+      "passed": false,
+      "assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'requesting'\n- 'error'\n",
+      "actual": "requesting",
+      "expected": "error",
+      "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'requesting'\n- 'error'\n\n    at /workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:188:104\n    at check (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:134:11)\n    at desired (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:138:35)\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:188:5)",
+      "phase": "F.3"
+    },
+    {
+      "name": "constructor failure settles current source",
+      "passed": false,
+      "assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'requesting'\n- 'error'\n",
+      "actual": "requesting",
+      "expected": "error",
+      "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'requesting'\n- 'error'\n\n    at /workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:193:74\n    at check (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:134:11)\n    at desired (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:138:35)\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:193:5)",
+      "phase": "F.3"
+    },
+    {
+      "name": "failed Play retains media and projects recoverable error",
+      "passed": false,
+      "assertion": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(after.audio.transportError)\n",
+      "actual": "",
+      "expected": true,
+      "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(after.audio.transportError)\n\n    at /workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:198:221\n    at check (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:134:11)\n    at desired (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:138:35)\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:198:5)",
+      "phase": "F.3"
+    },
+    {
+      "name": "Play retry succeeds without reload",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "valid file retry recovers true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "valid file retry recovers false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "latest C survives stale initial resume false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "latest C survives stale initial resume true",
+      "passed": false,
+      "assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n",
+      "actual": 1,
+      "expected": 0,
+      "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at /workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:210:276\n    at check (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:134:11)\n    at desired (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:138:35)\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:210:7)",
+      "phase": "F.3"
+    },
+    {
+      "name": "removing stale A preserves pending B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "File cannot reclaim mic",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "File cannot reclaim stream",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending paused removal loads paused B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending removal at media play boundary selects playing B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "current attach rejection settles through existing guarded path",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "obsolete Play resume rejection stays silent after clear",
+      "passed": false,
+      "assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n",
+      "actual": 1,
+      "expected": 0,
+      "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at /workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:251:232\n    at check (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:134:11)\n    at desired (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:138:35)\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:251:7)",
+      "phase": "F.3"
+    },
+    {
+      "name": "obsolete Play resume rejection stays silent after replace",
+      "passed": false,
+      "assertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n",
+      "actual": 1,
+      "expected": 0,
+      "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at /workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:251:232\n    at check (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:134:11)\n    at desired (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:138:35)\n    at main (/workspace/Auralprint1/docs/audits/remediations/115m-i-f-aud001-aud002/f2/diagnostics/native.cjs:251:7)",
+      "phase": "F.3"
+    },
+    {
+      "name": "stale File attach cannot mutate winner false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "stale File attach cannot mutate winner true",
+      "passed": true,
+      "phase": "F.2"
+    }
+  ],
+  "summary": {
+    "scenarios": 28,
+    "desiredFailures": 6,
+    "f2Failures": 0,
+    "f3Failures": 6,
+    "infrastructureFailure": false
+  },
+  "exitStatus": 0,
+  "scenarioOutcomes": [
+    {
+      "name": "ordinary unmodified artifact playback",
+      "audio": null,
+      "source": {
+        "kind": null,
+        "status": null,
+        "label": null
+      },
+      "mediaId": null,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending A removed; B remains; initial load resume",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "noncurrent B removed while A pending",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "A.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "A.wav"
+      },
+      "mediaId": 3,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending final-remove",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": ""
+      },
+      "mediaId": null,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending clear",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": ""
+      },
+      "mediaId": null,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "loaded playing A removed",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 6,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "loaded paused A removed",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": false,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 6,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending autoplay B removed after loaded A teardown; C successor",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "C.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "C.wav"
+      },
+      "mediaId": 7,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "distinct Files with identical filenames",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "same.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "same.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "same File object enqueued twice (replayed file-input event)",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "same.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "same.wav"
+      },
+      "mediaId": 4,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "initial load resume rejects",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "requesting",
+        "label": "A.wav"
+      },
+      "mediaId": null,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ]
+    },
+    {
+      "name": "AudioContext constructor throws NotSupportedError",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "requesting",
+        "label": "A.wav"
+      },
+      "mediaId": null,
+      "pageErrors": [
+        {
+          "name": "NotSupportedError",
+          "message": "F.1 constructor unavailable"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "NotSupportedError",
+          "message": "F.1 constructor unavailable"
+        }
+      ]
+    },
+    {
+      "name": "resume rejects during Play",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": false,
+        "filename": "A.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "A.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ]
+    },
+    {
+      "name": "Play retry after rejection",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "A.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "A.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ]
+    },
+    {
+      "name": "valid retry after constructor failure",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "A.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "A.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [
+        {
+          "name": "NotSupportedError",
+          "message": "F.1 constructor unavailable"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "NotSupportedError",
+          "message": "F.1 constructor unavailable"
+        }
+      ]
+    },
+    {
+      "name": "valid retry after resume failure",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "A.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "A.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 resume refused"
+        }
+      ]
+    },
+    {
+      "name": "A superseded by B then C; old resume resolves",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "C.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "C.wav"
+      },
+      "mediaId": 7,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "A superseded by B then C; old resume rejects",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "C.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "C.wav"
+      },
+      "mediaId": 7,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ]
+    },
+    {
+      "name": "A removed after B selection already began",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending File replaced by mic; synthetic native stream",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "mic",
+        "status": "active",
+        "label": "MediaStreamAudioDestinationNode"
+      },
+      "mediaId": null,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending File replaced by stream; synthetic native stream",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "stream",
+        "status": "active",
+        "label": "MediaStreamAudioDestinationNode"
+      },
+      "mediaId": null,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending paused load removed (in-memory loadAndPlay hook)",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": false,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "pending A removed during load-time native play completion",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 6,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "current File attachSource resume rejects",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": "Playback failed: F.1 obsolete resume refused"
+      },
+      "source": {
+        "kind": "file",
+        "status": "error",
+        "label": "A.wav"
+      },
+      "mediaId": null,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "old Play resume rejects after clear",
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "none",
+        "status": "idle",
+        "label": ""
+      },
+      "mediaId": null,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ]
+    },
+    {
+      "name": "old Play resume rejects after replace",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [
+        {
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ],
+      "unhandledRejections": [
+        {
+          "type": "unhandledrejection",
+          "name": "InvalidStateError",
+          "message": "F.1 obsolete resume refused"
+        }
+      ]
+    },
+    {
+      "name": "stale File attach resume resolves after B wins",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [],
+      "unhandledRejections": []
+    },
+    {
+      "name": "stale File attach resume rejects after B wins",
+      "audio": {
+        "isLoaded": true,
+        "isPlaying": true,
+        "filename": "B.wav",
+        "transportError": ""
+      },
+      "source": {
+        "kind": "file",
+        "status": "active",
+        "label": "B.wav"
+      },
+      "mediaId": 5,
+      "pageErrors": [],
+      "unhandledRejections": []
+    }
+  ]
+}

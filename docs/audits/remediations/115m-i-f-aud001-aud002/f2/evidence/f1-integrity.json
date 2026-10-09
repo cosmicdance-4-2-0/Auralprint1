@@ -1,0 +1,62 @@
+{
+  "docs/audits/remediations/115m-i-f-aud001-aud002/README.md": {
+    "bytes": 14839,
+    "sha256": "c9dc9fcd5e94a557b5353d19c7315440c144b811da34fd5044e27651eb931a37"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/ownership-trace.md": {
+    "bytes": 13960,
+    "sha256": "9a524bee52dff9fe4305fc80058ac34bf75b3d9a82228511ff1d0035c20e81c1"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/regression-contracts.md": {
+    "bytes": 14062,
+    "sha256": "3fd92f8806c1b23e2708bb9c99de66400402f6d39cf6fbd434447bbcf514fef1"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/baseline-results.json": {
+    "bytes": 298153,
+    "sha256": "5d8958b7b5c2cf991c3e6a9eee99f7aabffbe5d9c3864979d6bc3da1f9c6c233"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/initial-npm-test-restriction.log": {
+    "bytes": 4267,
+    "sha256": "44926c43ba7111231a15127766786c6f84291ac75cb3fb9338bcf081441255ac"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/npm-test-discovery.log": {
+    "bytes": 312,
+    "sha256": "c8dcf11d4c70756a9629cb9bdf30b3baf758932cf53b4bf619b6aaece12b706e"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/verify-distribution.json": {
+    "bytes": 1252,
+    "sha256": "57610027d19a0b729617364b31bc549b9ea4b0769f951acd5a378bf13ca1c537"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/build.log": {
+    "bytes": 137,
+    "sha256": "e1147b3887255da63b14bcd07ca2fea0a3f21dafe5b520859c890feaf7a4587e"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/npm-ci.log": {
+    "bytes": 27,
+    "sha256": "4ac0fc14679d04c96b620cbf5d6d14af94fa89e3570b041c8f7e41ff65da9d7b"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/desired-contract.log": {
+    "bytes": 2598,
+    "sha256": "8175a30106cb56b2f151d1a84f6d8763f185627fec954e75e38f43ae424b7bee"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/desired-contract-results.json": {
+    "bytes": 13576,
+    "sha256": "c9f454148caca311f26f2599879059ab0eda8eb5bdd0098bebd8dc837f15af93"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/native-baseline.log": {
+    "bytes": 2598,
+    "sha256": "8175a30106cb56b2f151d1a84f6d8763f185627fec954e75e38f43ae424b7bee"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/initial-npm-ci-restriction.log": {
+    "bytes": 1862,
+    "sha256": "6616e99dc2fa4d93977281f882ef9fc4ed8dec343b5d24ed3ccd59492cb2c5f1"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/evidence/npm-test.log": {
+    "bytes": 79610,
+    "sha256": "06a8a8b78aa6edf96e50338f1a98caa071ba0781c10c50869655af1c247f7864"
+  },
+  "docs/audits/remediations/115m-i-f-aud001-aud002/diagnostics/native.cjs": {
+    "bytes": 28844,
+    "sha256": "9be8f644bf83a00eab28578303d705d2a7476e1b190b56ea3fa8759d0bb73058"
+  }
+}

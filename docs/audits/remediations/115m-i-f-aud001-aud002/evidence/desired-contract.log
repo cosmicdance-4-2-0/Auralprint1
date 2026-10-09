@@ -1,0 +1,79 @@
+{
+  "scenarios": 28,
+  "baselineFailures": 0,
+  "desiredFailures": 14,
+  "infrastructureFailure": false
+}
+DESIRED CONTRACT FAILED: pending removal loads B and preserves autoplay
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'A.wav' !== 'B.wav'
+
+DESIRED CONTRACT FAILED: pending replacement removal preserves requested autoplay despite old loaded metadata
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+DESIRED CONTRACT FAILED: duplicate-name/object removal creates successor request false
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(during.requestId > before.requestId)
+
+DESIRED CONTRACT FAILED: duplicate-name/object removal creates successor request true
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(during.requestId > before.requestId)
+
+DESIRED CONTRACT FAILED: current resume failure reaches observable terminal error without UI leak
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'requesting'
+- 'error'
+
+DESIRED CONTRACT FAILED: constructor failure settles current source
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'requesting'
+- 'error'
+
+DESIRED CONTRACT FAILED: failed Play retains media and projects recoverable error
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(after.audio.transportError)
+
+DESIRED CONTRACT FAILED: latest C survives stale initial resume true
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+DESIRED CONTRACT FAILED: pending paused removal loads paused B
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'A.wav' !== 'B.wav'
+
+DESIRED CONTRACT FAILED: pending removal at media play boundary selects playing B
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'A.wav' !== 'B.wav'
+
+DESIRED CONTRACT FAILED: obsolete Play resume rejection stays silent after clear
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+DESIRED CONTRACT FAILED: obsolete Play resume rejection stays silent after replace
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+DESIRED CONTRACT FAILED: stale File attach cannot mutate winner false
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+6 !== 5
+
+DESIRED CONTRACT FAILED: stale File attach cannot mutate winner true
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true

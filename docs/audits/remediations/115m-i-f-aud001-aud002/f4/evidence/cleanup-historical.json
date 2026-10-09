@@ -1,0 +1,2269 @@
+{
+  "artifactPath": "/workspace/work/f4/baseline-copy/dist/auralprint_0.1.15m.i.e.html",
+  "artifactSha256": "2075fd4d443fccf2bd2def64492e62342e69129407ebf46e3b033c3abcb18808",
+  "browser": "151.0.7922.173",
+  "cases": [
+    {
+      "fault": "corrupt",
+      "iteration": 1,
+      "cleanupPassed": false,
+      "assertion": {
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   error: 4,\n+   paused: false,\n+   src: 'blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79'\n+ }\n- null\n",
+        "actual": {
+          "src": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+          "paused": false,
+          "error": 4
+        },
+        "expected": null
+      },
+      "failed": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "corrupt.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "corrupt.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+          "paused": false,
+          "error": 4
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 0,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "retained": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "corrupt.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "corrupt.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+          "paused": false,
+          "error": 4
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 0,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "clear": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "media": null,
+        "resources": {
+          "sourceNode": false,
+          "outputGain": false,
+          "abort": null,
+          "objectUrl": null
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79"
+          }
+        ],
+        "disconnects": 4,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "recovery": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "retry.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "retry.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "retry.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/c1d15664-67df-4d7b-8818-9fb2ca5aefc5",
+          "paused": false,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/c27a17b8-693a-4eec-aa6e-c36e49cccf79"
+          },
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/c1d15664-67df-4d7b-8818-9fb2ca5aefc5",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/c1d15664-67df-4d7b-8818-9fb2ca5aefc5"
+          }
+        ],
+        "disconnects": 4,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "fault": "corrupt",
+      "iteration": 2,
+      "cleanupPassed": false,
+      "assertion": {
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   error: 4,\n+   paused: false,\n+   src: 'blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39'\n+ }\n- null\n",
+        "actual": {
+          "src": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+          "paused": false,
+          "error": 4
+        },
+        "expected": null
+      },
+      "failed": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "corrupt.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "corrupt.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+          "paused": false,
+          "error": 4
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 0,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "retained": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "corrupt.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "corrupt.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+          "paused": false,
+          "error": 4
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 0,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "clear": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "media": null,
+        "resources": {
+          "sourceNode": false,
+          "outputGain": false,
+          "abort": null,
+          "objectUrl": null
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39"
+          }
+        ],
+        "disconnects": 4,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "recovery": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "retry.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "retry.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "retry.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/df8c2527-cb7c-4b7c-8cfe-83372ad1b7ee",
+          "paused": false,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/3d12df9b-c6f2-4ef9-9a8f-c4e6b30f8d39"
+          },
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/df8c2527-cb7c-4b7c-8cfe-83372ad1b7ee",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/df8c2527-cb7c-4b7c-8cfe-83372ad1b7ee"
+          }
+        ],
+        "disconnects": 4,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "fault": "corrupt",
+      "iteration": 3,
+      "cleanupPassed": false,
+      "assertion": {
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   error: 4,\n+   paused: false,\n+   src: 'blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e'\n+ }\n- null\n",
+        "actual": {
+          "src": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+          "paused": false,
+          "error": 4
+        },
+        "expected": null
+      },
+      "failed": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "corrupt.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "corrupt.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+          "paused": false,
+          "error": 4
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 0,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "retained": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "corrupt.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "corrupt.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+          "paused": false,
+          "error": 4
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 0,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "clear": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "media": null,
+        "resources": {
+          "sourceNode": false,
+          "outputGain": false,
+          "abort": null,
+          "objectUrl": null
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e"
+          }
+        ],
+        "disconnects": 4,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "recovery": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "retry.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "retry.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "retry.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/0df2011d-66c4-4b5e-94ef-7fbbede98c99",
+          "paused": false,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e",
+            "size": 21
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/97c47644-6538-4f93-880f-2b98abaf921e"
+          },
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/0df2011d-66c4-4b5e-94ef-7fbbede98c99",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/0df2011d-66c4-4b5e-94ef-7fbbede98c99"
+          }
+        ],
+        "disconnects": 4,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "corrupt.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "fault": "allocation",
+      "iteration": 1,
+      "cleanupPassed": false,
+      "assertion": {
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   error: null,\n+   paused: true,\n+   src: null\n+ }\n- null\n",
+        "actual": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "expected": null
+      },
+      "failed": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "valid.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "valid.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": false,
+          "abort": false,
+          "objectUrl": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "retained": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "valid.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "valid.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": false,
+          "abort": false,
+          "objectUrl": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "clear": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "media": null,
+        "resources": {
+          "sourceNode": false,
+          "outputGain": false,
+          "abort": null,
+          "objectUrl": null
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+          }
+        ],
+        "disconnects": 1,
+        "pauses": 2,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "recovery": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "retry.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "retry.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "retry.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/3df2ae93-5a13-4994-853f-c4c5cbe851c6",
+          "paused": false,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/ca219f3f-df91-4d86-af50-7fbcab213d80"
+          },
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/3df2ae93-5a13-4994-853f-c4c5cbe851c6",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/3df2ae93-5a13-4994-853f-c4c5cbe851c6"
+          }
+        ],
+        "disconnects": 1,
+        "pauses": 2,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "fault": "allocation",
+      "iteration": 2,
+      "cleanupPassed": false,
+      "assertion": {
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   error: null,\n+   paused: true,\n+   src: null\n+ }\n- null\n",
+        "actual": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "expected": null
+      },
+      "failed": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "valid.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "valid.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": false,
+          "abort": false,
+          "objectUrl": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "retained": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "valid.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "valid.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": false,
+          "abort": false,
+          "objectUrl": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "clear": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "media": null,
+        "resources": {
+          "sourceNode": false,
+          "outputGain": false,
+          "abort": null,
+          "objectUrl": null
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+          }
+        ],
+        "disconnects": 1,
+        "pauses": 2,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "recovery": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "retry.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "retry.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "retry.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/c853a2ca-9992-4d29-a4e0-93d345a79298",
+          "paused": false,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/eb164827-9c60-42a6-9148-dbddfe29da9c"
+          },
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/c853a2ca-9992-4d29-a4e0-93d345a79298",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/c853a2ca-9992-4d29-a4e0-93d345a79298"
+          }
+        ],
+        "disconnects": 1,
+        "pauses": 2,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "errors": []
+    },
+    {
+      "fault": "allocation",
+      "iteration": 3,
+      "cleanupPassed": false,
+      "assertion": {
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ {\n+   error: null,\n+   paused: true,\n+   src: null\n+ }\n- null\n",
+        "actual": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "expected": null
+      },
+      "failed": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "valid.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "valid.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": false,
+          "abort": false,
+          "objectUrl": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "retained": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": "Playback failed: unsupported or unreadable audio file."
+        },
+        "source": {
+          "kind": "file",
+          "status": "error",
+          "label": "valid.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "file-activation-failed",
+          "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "valid.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": null,
+          "paused": true,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": false,
+          "abort": false,
+          "objectUrl": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+          }
+        ],
+        "disconnects": 0,
+        "pauses": 1,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          }
+        ],
+        "errors": []
+      },
+      "clear": {
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "media": null,
+        "resources": {
+          "sourceNode": false,
+          "outputGain": false,
+          "abort": null,
+          "objectUrl": null
+        },
+        "ready": false,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+          }
+        ],
+        "disconnects": 1,
+        "pauses": 2,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "recovery": {
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "retry.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "retry.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "retry.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "media": {
+          "src": "blob:http://127.0.0.1:39725/60b56c74-4ea8-4808-8e92-e20fc4b984e9",
+          "paused": false,
+          "error": null
+        },
+        "resources": {
+          "sourceNode": true,
+          "outputGain": true,
+          "abort": false,
+          "objectUrl": null
+        },
+        "ready": true,
+        "urls": [
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/9785fbc2-1f24-4d23-8b5c-a87a049e6809"
+          },
+          {
+            "type": "create",
+            "url": "blob:http://127.0.0.1:39725/60b56c74-4ea8-4808-8e92-e20fc4b984e9",
+            "size": 176444
+          },
+          {
+            "type": "revoke",
+            "url": "blob:http://127.0.0.1:39725/60b56c74-4ea8-4808-8e92-e20fc4b984e9"
+          }
+        ],
+        "disconnects": 1,
+        "pauses": 2,
+        "events": [
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav"
+            }
+          },
+          {
+            "type": "track-change-failed",
+            "details": {
+              "requestId": 1,
+              "filename": "valid.wav",
+              "error": "Playback failed: unsupported or unreadable audio file."
+            }
+          },
+          {
+            "type": "audio-unloaded",
+            "details": {
+              "reason": "queue-cleared"
+            }
+          },
+          {
+            "type": "track-change-start",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          },
+          {
+            "type": "track-change-complete",
+            "details": {
+              "requestId": 3,
+              "filename": "retry.wav"
+            }
+          }
+        ],
+        "errors": []
+      },
+      "errors": []
+    }
+  ],
+  "summary": {
+    "cases": 6,
+    "cleanupPass": 0,
+    "cleanupFail": 6,
+    "settlementAndRecoveryPass": 6
+  }
+}

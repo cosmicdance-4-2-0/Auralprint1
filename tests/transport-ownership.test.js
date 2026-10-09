@@ -30,9 +30,11 @@ async function harness(t) {
       return Promise.resolve();
     }
     createMediaElementSource() { return node(); }
+    createMediaStreamSource() { return node(); }
     createChannelSplitter() { return node(); }
     createGain() { return node({ gain: { value: 1 } }); }
-    createAnalyser() { return node({ fftSize: 2048, frequencyBinCount: 1024 }); }
+    createAnalyser() { return node({ fftSize: 2048, frequencyBinCount: 1024,
+      getFloatTimeDomainData(buffer) { buffer.fill(0); }, getFloatFrequencyData(buffer) { buffer.fill(-100); } }); }
   }
   class MediaElement extends EventTarget {
     constructor() {
@@ -85,7 +87,8 @@ async function harness(t) {
     });
     return writes;
   }
-  return { engine, load, holdResume, holdPlay, observeCommits,
+  return { engine, manager, load, holdResume, holdPlay, observeCommits,
+    get context() { return context; },
     async clear() {
       await manager.teardownActiveSource({ reason: "clear-queue" });
       // The UI Clear workflow owns these file metadata resets after unload.
@@ -211,4 +214,74 @@ test("RC-04: Play with no loaded element is a quiet no-op", async t => {
   await h.engine.playPause();
   assert.deepEqual(snapshot(), before);
   assert.deepEqual(writes, []);
+});
+
+test("AUD-002: current Play resume failure retains File/media/session and retry clears its error", async t => {
+  const h = await harness(t), target = await h.load("A.wav"), held = h.holdResume();
+  const source = structuredClone(state.source), calls = { ...target.calls };
+  const pending = h.engine.playPause(); await held.entered.promise;
+  held.reject(new Error("current context resume refused"));
+  await assert.doesNotReject(async () => { await pending; });
+  assert.equal(h.engine.getMediaEl(), target); assert.deepEqual(state.source, source);
+  assert.equal(state.audio.isLoaded, true); assert.equal(state.audio.filename, "A.wav");
+  assert.equal(state.audio.isPlaying, false); assert.equal(target._paused, true);
+  assert.equal(state.audio.transportError, "Playback failed: AudioContext could not start: current context resume refused");
+  assert.equal(target.calls.play, calls.play); assert.equal(target.calls.pause, calls.pause);
+  assert.equal(h.engine.sample().ready, true);
+  await h.engine.playPause();
+  assert.equal(h.engine.getMediaEl(), target); assert.equal(target.calls.play, calls.play + 1);
+  assert.equal(state.audio.isPlaying, true); assert.equal(state.audio.transportError, "");
+});
+
+for (const action of ["clear", "replacement"]) {
+  test(`AUD-002: obsolete Play resume rejects after ${action} without reads or writes`, async t => {
+    const h = await harness(t), target = await h.load("A.wav"), held = h.holdResume();
+    const pending = h.engine.playPause(); await held.entered.promise;
+    let replacement;
+    if (action === "clear") await h.clear(); else replacement = await h.load("B.wav", true);
+    state.audio.transportError = "winner-owned error";
+    const before = snapshot(), calls = { ...target.calls }, winnerCalls = replacement ? { ...replacement.calls } : null;
+    const writes = h.observeCommits();
+    held.reject(new Error("obsolete resume refused"));
+    await assert.doesNotReject(async () => { await pending; }, "obsolete rejection must be contained");
+    assert.deepEqual(snapshot(), before); assert.deepEqual(writes, []);
+    assert.deepEqual(target.calls, calls, "no obsolete paused read, play or pause");
+    if (replacement) assert.deepEqual(replacement.calls, winnerCalls);
+  });
+}
+
+for (const kind of ["mic", "stream"]) {
+  test(`AUD-002: obsolete Play resume rejects after File to ${kind} without touching winner`, async t => {
+    const h = await harness(t), target = await h.load("A.wav"), held = h.holdResume();
+    const pending = h.engine.playPause(); await held.entered.promise;
+    const track = Object.assign(new EventTarget(), { readyState: "live", stops: 0, stop() { this.stops++; } });
+    const stream = Object.assign(new EventTarget(), { getTracks() { return [track]; }, getAudioTracks() { return [track]; }, getVideoTracks() { return []; } });
+    // Existing manager seam represents the live owner's registered native stream.
+    assert.equal(h.manager.registerFutureStreamSession(kind, stream, { label: kind }).ok, true);
+    await h.engine.attachMediaStreamSource(stream, { kind });
+    const before = snapshot(), calls = { ...target.calls }, writes = h.observeCommits();
+    held.reject(new Error("obsolete resume refused"));
+    await assert.doesNotReject(async () => { await pending; });
+    assert.deepEqual(snapshot(), before); assert.deepEqual(writes, []); assert.deepEqual(target.calls, calls);
+    assert.equal(track.stops, 0); assert.equal(h.engine.getMediaEl(), null); assert.equal(h.engine.sample().ready, true);
+  });
+}
+
+test("AUD-002: synchronous current native Play throw is a recoverable media error", async t => {
+  const h = await harness(t), target = await h.load("A.wav");
+  t.mock.method(target, "play", () => { throw new Error("native Play threw"); });
+  await assert.doesNotReject(() => h.engine.playPause());
+  assert.equal(h.engine.getMediaEl(), target); assert.equal(state.audio.isLoaded, true);
+  assert.equal(state.audio.isPlaying, false); assert.match(state.audio.transportError, /native Play threw/);
+});
+
+test("AUD-002: Play retry after failed resume and File replacement acts only on replacement", async t => {
+  const h = await harness(t), old = await h.load("A.wav"), held = h.holdResume();
+  const pending = h.engine.playPause(); await held.entered.promise;
+  held.reject(new Error("resume refused")); await pending;
+  const replacement = await h.load("B.wav"), calls = { ...old.calls };
+  assert.equal(state.audio.transportError, "");
+  await h.engine.playPause();
+  assert.equal(h.engine.getMediaEl(), replacement); assert.equal(state.audio.filename, "B.wav");
+  assert.equal(state.audio.isPlaying, true); assert.deepEqual(old.calls, calls);
 });

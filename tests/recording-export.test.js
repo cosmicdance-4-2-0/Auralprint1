@@ -272,3 +272,66 @@ test("RC-06: completed-export disposal revokes and clears exactly once", async t
   RecorderEngine.dispose();
   assert.deepEqual(h.revoked, [previous.lastExportUrl]);
 });
+
+test("AUD-002 / RC-06: retained export survives File AudioContext startup failure", async t => {
+  const h = createHarness(t), previous = h.complete();
+  const { AudioEngine: engine } = await import("../src/js/audio/audio-engine.js?aud002-export");
+  const { createInputSourceManager } = await import("../src/js/audio/input-source-manager.js");
+  const oldSource = structuredClone(state.source);
+  globalThis.window.AudioContext = class { constructor() { throw new Error("AudioContext startup refused"); } };
+  const manager = createInputSourceManager({ audioEngine: engine });
+  try {
+    RecorderEngine.onTransportMutation("track-change-start", { requestId: 1, filename: "A.wav" });
+    const result = await manager.activateFile({ name: "A.wav" }, { requestId: 1 });
+    assert.equal(result.ok, false); assert.equal(state.source.status, "error");
+    RecorderEngine.onTransportMutation("track-change-failed", { requestId: 1, filename: "A.wav", error: result.errorMessage });
+    await assertRetained(h, previous);
+    assert.deepEqual(h.created, [previous.lastExportUrl]); assert.deepEqual(h.revoked, []);
+  } finally {
+    await manager.teardownActiveSource(); Object.assign(state.source, oldSource);
+  }
+});
+
+for (const fault of ["decoder", "graph"]) {
+  test(`F4-CLEANUP-01 / RC-06: retained export survives ${fault} File cleanup`, async t => {
+    const h = createHarness(t), previous = h.complete();
+    const { AudioEngine: engine } = await import(`../src/js/audio/audio-engine.js?cleanup-export=${fault}`);
+    const { createInputSourceManager } = await import("../src/js/audio/input-source-manager.js");
+    const oldSource = structuredClone(state.source), oldDocument = globalThis.document;
+    const nodes = [];
+    const node = extra => {
+      const n = { disconnects: 0, connect() {}, disconnect() { this.disconnects++; }, ...extra };
+      nodes.push(n); return n;
+    };
+    globalThis.window.AudioContext = class {
+      constructor() { this.state = "running"; this.sampleRate = 48000; this.destination = {}; }
+      createMediaElementSource() { return node(); }
+      createGain() { if (fault === "graph") throw new Error("graph allocation refused"); return node({ gain: { value: 1 } }); }
+      createChannelSplitter() { return node(); }
+      createAnalyser() { return node({ fftSize: 2048, frequencyBinCount: 1024 }); }
+    };
+    const media = Object.assign(new EventTarget(), {
+      paused: true, src: "", currentTime: 0, releases: 0,
+      play() { this.error = { code: 4 }; this.dispatchEvent(new Event("error")); return Promise.reject(Object.assign(new Error("decoder refused"), { name: "NotSupportedError" })); },
+      pause() { this.paused = true; this.releases++; },
+      removeAttribute() { this.src = ""; }, load() {},
+    });
+    globalThis.document = { createElement() { return media; } };
+    const manager = createInputSourceManager({ audioEngine: engine });
+    try {
+      const file = Object.assign(new Blob(["fixture"], { type: "audio/wav" }), { name: "failed.wav" });
+      RecorderEngine.onTransportMutation("track-change-start", { requestId: 1, filename: file.name });
+      const result = await manager.activateFile(file, { requestId: 1 });
+      assert.equal(result.ok, false); assert.equal(state.source.status, "error");
+      assert.equal(engine.getMediaEl(), null); assert.equal(engine.sample().ready, false);
+      assert.equal(media.src, ""); assert.equal(media.releases, 1);
+      assert.ok(nodes.every(n => n.disconnects === 1), "assert release before teardown");
+      assert.ok(state.audio.transportError); assert.equal(state.source.errorMessage, state.audio.transportError);
+      RecorderEngine.onTransportMutation("track-change-failed", { requestId: 1, filename: file.name, error: result.errorMessage });
+      await assertRetained(h, previous);
+      assert.equal(h.created.length, 2); assert.deepEqual(h.revoked, [h.created[1]]);
+    } finally {
+      await manager.teardownActiveSource(); Object.assign(state.source, oldSource); globalThis.document = oldDocument;
+    }
+  });
+}

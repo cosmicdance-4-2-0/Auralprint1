@@ -1,0 +1,3860 @@
+{
+  "executionPhase": "F.6",
+  "applicationSha": "158a782c4af0466bd09a9c11dc9f3db0dd6f780d",
+  "runs": [
+    {
+      "runner": "f4/diagnostics/cleanup.cjs",
+      "exitStatus": 0,
+      "artifactSha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6",
+      "summary": {
+        "cases": 6,
+        "cleanupPass": 6,
+        "cleanupFail": 0,
+        "settlementAndRecoveryPass": 6
+      },
+      "cases": [
+        {
+          "fault": "corrupt",
+          "iteration": 1,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "src": "blob:http://127.0.0.1:38525/25867647-a01b-4294-8a03-48f236a175c5",
+              "paused": false,
+              "error": null
+            },
+            "ready": true,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "corrupt",
+          "iteration": 2,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "src": "blob:http://127.0.0.1:38525/b2f409a2-b846-4ce4-98c7-3ed076b7f6d4",
+              "paused": false,
+              "error": null
+            },
+            "ready": true,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "corrupt",
+          "iteration": 3,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "src": "blob:http://127.0.0.1:38525/2d5b8227-2696-4e6e-831b-3588a712677e",
+              "paused": false,
+              "error": null
+            },
+            "ready": true,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "allocation",
+          "iteration": 1,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "src": "blob:http://127.0.0.1:38525/d61193bd-0039-4617-9f2e-3ac74e77d531",
+              "paused": false,
+              "error": null
+            },
+            "ready": true,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "allocation",
+          "iteration": 2,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "src": "blob:http://127.0.0.1:38525/65046591-c97b-4041-9e0a-d8703595c7a3",
+              "paused": false,
+              "error": null
+            },
+            "ready": true,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "allocation",
+          "iteration": 3,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F4 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "src": "blob:http://127.0.0.1:38525/ec6ba316-7904-48e5-a3a6-5dfbd5e38f9b",
+              "paused": false,
+              "error": null
+            },
+            "ready": true,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        }
+      ]
+    },
+    {
+      "runner": "f5/diagnostics/cleanup.cjs",
+      "exitStatus": 0,
+      "artifactSha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6",
+      "summary": {
+        "cases": 6,
+        "cleanupPass": 6,
+        "cleanupFail": 0,
+        "settlementAndRecoveryPass": 6
+      },
+      "cases": [
+        {
+          "fault": "corrupt",
+          "iteration": 1,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "id": 11,
+              "src": "blob:http://127.0.0.1:44975/5f23f63d-031d-4971-a8b6-b4324a8ce223",
+              "paused": false,
+              "error": null
+            },
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              },
+              {
+                "media": 11,
+                "src": "blob:http://127.0.0.1:44975/5f23f63d-031d-4971-a8b6-b4324a8ce223",
+                "paused": false,
+                "aborted": false
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              },
+              {
+                "kind": "source",
+                "id": 12,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 13,
+                "disconnects": 0
+              },
+              {
+                "kind": "splitter",
+                "id": 14,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 15,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 16,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 17,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 18,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 19,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 20,
+                "disconnects": 0
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": null
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              }
+            ],
+            "ready": true,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "corrupt",
+          "iteration": 2,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "id": 11,
+              "src": "blob:http://127.0.0.1:44975/7679f151-f656-4c57-8028-433a6109fbf9",
+              "paused": false,
+              "error": null
+            },
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              },
+              {
+                "media": 11,
+                "src": "blob:http://127.0.0.1:44975/7679f151-f656-4c57-8028-433a6109fbf9",
+                "paused": false,
+                "aborted": false
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              },
+              {
+                "kind": "source",
+                "id": 12,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 13,
+                "disconnects": 0
+              },
+              {
+                "kind": "splitter",
+                "id": 14,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 15,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 16,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 17,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 18,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 19,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 20,
+                "disconnects": 0
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": null
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              }
+            ],
+            "ready": true,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "corrupt",
+          "iteration": 3,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "corrupt.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "corrupt.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              }
+            ],
+            "ready": false,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "id": 11,
+              "src": "blob:http://127.0.0.1:44975/474feb74-5f5e-4749-b4b9-6f5f64d7441a",
+              "paused": false,
+              "error": null
+            },
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              },
+              {
+                "media": 11,
+                "src": "blob:http://127.0.0.1:44975/474feb74-5f5e-4749-b4b9-6f5f64d7441a",
+                "paused": false,
+                "aborted": false
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 3,
+                "disconnects": 1
+              },
+              {
+                "kind": "splitter",
+                "id": 4,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 6,
+                "disconnects": 1
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 8,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 9,
+                "disconnects": 1
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 1
+              },
+              {
+                "kind": "source",
+                "id": 12,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 13,
+                "disconnects": 0
+              },
+              {
+                "kind": "splitter",
+                "id": 14,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 15,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 16,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 17,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 18,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 19,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 20,
+                "disconnects": 0
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 1,
+                "source": 2,
+                "output": 3
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": null
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              },
+              {
+                "media": 11,
+                "source": 12,
+                "output": 13
+              }
+            ],
+            "ready": true,
+            "disconnects": 9,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "allocation",
+          "iteration": 1,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "id": 3,
+              "src": "blob:http://127.0.0.1:44975/734e67fb-1622-45f2-b1e1-60d73f3f0fe8",
+              "paused": false,
+              "error": null
+            },
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              },
+              {
+                "media": 3,
+                "src": "blob:http://127.0.0.1:44975/734e67fb-1622-45f2-b1e1-60d73f3f0fe8",
+                "paused": false,
+                "aborted": false
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "source",
+                "id": 4,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 0
+              },
+              {
+                "kind": "splitter",
+                "id": 6,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 8,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 9,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 11,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 12,
+                "disconnects": 0
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": null
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              }
+            ],
+            "ready": true,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "allocation",
+          "iteration": 2,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "id": 3,
+              "src": "blob:http://127.0.0.1:44975/bbb0e0d9-0d39-40b2-bb5b-73b387b67427",
+              "paused": false,
+              "error": null
+            },
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              },
+              {
+                "media": 3,
+                "src": "blob:http://127.0.0.1:44975/bbb0e0d9-0d39-40b2-bb5b-73b387b67427",
+                "paused": false,
+                "aborted": false
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "source",
+                "id": 4,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 0
+              },
+              {
+                "kind": "splitter",
+                "id": 6,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 8,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 9,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 11,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 12,
+                "disconnects": 0
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": null
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              }
+            ],
+            "ready": true,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        },
+        {
+          "fault": "allocation",
+          "iteration": 3,
+          "cleanupPassed": true,
+          "failed": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "retained": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "valid.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F5 controlled graph allocation failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "valid.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "clear": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "none",
+              "status": "idle",
+              "label": "",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [],
+              "cursor": -1,
+              "length": 0
+            },
+            "media": null,
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              }
+            ],
+            "ready": false,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "recovery": {
+            "audio": {
+              "isLoaded": true,
+              "isPlaying": true,
+              "filename": "retry.wav",
+              "transportError": ""
+            },
+            "source": {
+              "kind": "file",
+              "status": "active",
+              "label": "retry.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "",
+              "errorMessage": "",
+              "sessionActive": true,
+              "streamMeta": {
+                "hasAudio": true,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "retry.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "media": {
+              "id": 3,
+              "src": "blob:http://127.0.0.1:44975/a0c3e83e-4496-4c20-a94f-fb889e429355",
+              "paused": false,
+              "error": null
+            },
+            "candidates": [
+              {
+                "media": 1,
+                "src": null,
+                "paused": true,
+                "aborted": true
+              },
+              {
+                "media": 3,
+                "src": "blob:http://127.0.0.1:44975/a0c3e83e-4496-4c20-a94f-fb889e429355",
+                "paused": false,
+                "aborted": false
+              }
+            ],
+            "nodes": [
+              {
+                "kind": "source",
+                "id": 2,
+                "disconnects": 1
+              },
+              {
+                "kind": "source",
+                "id": 4,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 5,
+                "disconnects": 0
+              },
+              {
+                "kind": "splitter",
+                "id": 6,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 7,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 8,
+                "disconnects": 0
+              },
+              {
+                "kind": "gain",
+                "id": 9,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 10,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 11,
+                "disconnects": 0
+              },
+              {
+                "kind": "analyser",
+                "id": 12,
+                "disconnects": 0
+              }
+            ],
+            "transfers": [
+              {
+                "media": 1,
+                "source": 2,
+                "output": null
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": null
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              },
+              {
+                "media": 3,
+                "source": 4,
+                "output": 5
+              }
+            ],
+            "ready": true,
+            "disconnects": 1,
+            "pauses": 1,
+            "errors": []
+          },
+          "errors": []
+        }
+      ]
+    }
+  ]
+}

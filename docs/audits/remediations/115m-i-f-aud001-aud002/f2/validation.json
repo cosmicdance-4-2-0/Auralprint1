@@ -1,0 +1,216 @@
+{
+  "phase": "F.2",
+  "generatedAt": "2026-10-09T03:41:39.639555+00:00",
+  "acceptedImplementationBaseline": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "parentF1Commit": "5a65a0a6cc100849088a2bee2b0647949ddfbb76",
+  "branch": "codex/115m-i-f-aud001-aud002",
+  "pullRequest": 46,
+  "draft": true,
+  "version": "v0.1.15m.i.f",
+  "schema": 10,
+  "build115N": "WITHHELD",
+  "environment": {
+    "node": "v24.19.0",
+    "python": "3.12.14",
+    "esbuild": "0.25.12",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.173",
+    "browserMode": "headless Chromium; native Web Audio and HTMLMediaElement; muted browser output",
+    "dependencies": "unchanged lockfile; environment offline cache"
+  },
+  "checks": [
+    {
+      "command": "npm ci --offline --cache /workspace/auralprint-environment/npm-cache",
+      "exitStatus": 0,
+      "log": "evidence/npm-ci.log"
+    },
+    {
+      "command": "npm test",
+      "exitStatus": 0,
+      "tests": 628,
+      "passed": 627,
+      "failed": 0,
+      "skipped": 1,
+      "skip": "established opt-in production particle budget test",
+      "log": "evidence/npm-test.log"
+    },
+    {
+      "command": "npm run build",
+      "exitStatus": 0,
+      "editions": [
+        "portable",
+        "hosted"
+      ],
+      "log": "evidence/build.log"
+    },
+    {
+      "command": "python scripts/verify_distribution.py",
+      "exitStatus": 0,
+      "log": "evidence/distribution.log"
+    },
+    {
+      "command": "git diff --check",
+      "exitStatus": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "exitStatus": 0
+    }
+  ],
+  "focusedTests": {
+    "tests": 225,
+    "passed": 225,
+    "failed": 0,
+    "exitStatus": 0,
+    "log": "evidence/focused-tests.log",
+    "note": "Focused run preceded the final strengthening of URL-reference callbacks; full final suite exercised final bytes."
+  },
+  "native": {
+    "f2Mode": {
+      "exitStatus": 0,
+      "summary": {
+        "scenarios": 28,
+        "desiredFailures": 6,
+        "f2Failures": 0,
+        "f3Failures": 6,
+        "infrastructureFailure": false
+      },
+      "result": "evidence/f2-native-summary.json",
+      "log": "evidence/native-f2.log"
+    },
+    "fullDesiredMode": {
+      "exitStatus": 1,
+      "expectedRed": true,
+      "summary": {
+        "scenarios": 28,
+        "desiredFailures": 6,
+        "f2Failures": 0,
+        "f3Failures": 6,
+        "infrastructureFailure": false
+      },
+      "result": "evidence/native-results.json",
+      "log": "evidence/native-contracts.log"
+    },
+    "f2Assertions": 22,
+    "f2Passed": 22,
+    "f3Failures": [
+      "current resume failure reaches observable terminal error without UI leak",
+      "constructor failure settles current source",
+      "failed Play retains media and projects recoverable error",
+      "latest C survives stale initial resume true",
+      "obsolete Play resume rejection stays silent after clear",
+      "obsolete Play resume rejection stays silent after replace"
+    ],
+    "unexecuted": [
+      "real Mic/Stream permissions/devices",
+      "interactive/headful browser",
+      "separate hosted browser launch",
+      "native recorder/export integration and full F.4 acceptance"
+    ],
+    "unexpectedFailures": []
+  },
+  "negativeControls": {
+    "count": 9,
+    "meaningfulDetections": 9,
+    "infrastructureFailures": 0,
+    "exitStatus": 0,
+    "result": "evidence/negative-controls.json"
+  },
+  "integrity": {
+    "f1Files": 15,
+    "byteIdenticalAgainstAcceptedCommit": true,
+    "inventory": "evidence/f1-integrity.json",
+    "canonicalShippedArtifactsUnchanged": true,
+    "dependencyManifestsUnchanged": true,
+    "recorderImplementationUnchanged": true
+  },
+  "distribution": {
+    "auralprint_0.1.15m.i.f.html": {
+      "bytes": 403099,
+      "sha256": "cd5fe1b34e7ee7edddc860da78494b28d8eb41f75ebd1966552b0cdb9857ea39"
+    },
+    "hosted/apple-touch-icon.png": {
+      "bytes": 21085,
+      "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+    },
+    "hosted/favicon-96x96.png": {
+      "bytes": 9034,
+      "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817"
+    },
+    "hosted/favicon.ico": {
+      "bytes": 15086,
+      "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f"
+    },
+    "hosted/favicon.svg": {
+      "bytes": 1121,
+      "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16"
+    },
+    "hosted/index.html": {
+      "bytes": 401930,
+      "sha256": "363e6318e6155dc2a33cd543448a227f642455859ee0dc2153c9e7438b4c2b22"
+    },
+    "hosted/site.webmanifest": {
+      "bytes": 517,
+      "sha256": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495"
+    },
+    "hosted/web-app-manifest-192x192.png": {
+      "bytes": 22773,
+      "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991"
+    },
+    "hosted/web-app-manifest-512x512.png": {
+      "bytes": 105356,
+      "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+    }
+  },
+  "changedApplicationAndTestFiles": {
+    "src/js/audio/queue.js": {
+      "bytes": 4197,
+      "sha256": "cf1f8986e9fab1760b20924d122b4c186a53c293773bca22ec12d21a4ec04d5f"
+    },
+    "src/js/ui/ui.js": {
+      "bytes": 78005,
+      "sha256": "f778177eca09d354d81c733a9468ab0cbf3a257c200ac807e1b3f2ce29ad11e5"
+    },
+    "src/js/audio/input-source-manager.js": {
+      "bytes": 25828,
+      "sha256": "14bb18a52a39687b1f59d7ea0e987f2d521907efd110caac040b94b0de6278dd"
+    },
+    "src/js/audio/audio-engine.js": {
+      "bytes": 21365,
+      "sha256": "f1cebc190611f3f077691380d9e051fd8401e22f4372d0bed0e5c4e356049b16"
+    },
+    "src/js/core/constants.js": {
+      "bytes": 1088,
+      "sha256": "a37c4cf1dd307ae6b81c3ece49dbcc1f52317f0a5ad0fa2478da2c043bb32a2b"
+    },
+    "version": {
+      "bytes": 13,
+      "sha256": "acfe11e4f41ffbd0407f51ff07c492ade8ed417177ffc6b21cafda23dc7ee264"
+    },
+    "tests/targeted-audit.test.js": {
+      "bytes": 166087,
+      "sha256": "edba4fafc59a83c279af85e58060b22d0418f68d3a483c61cd74988198518fb0"
+    },
+    "tests/rc20_packaging.py": {
+      "bytes": 11497,
+      "sha256": "a9f946328df66d7bd92c432bab8afa6f21f848bcde8b2262633085636dabbfd2"
+    },
+    "tests/input-source-manager.test.js": {
+      "bytes": 39721,
+      "sha256": "c8002546d3359af6810b417679fcb8497ba1c4a89ac64b302d321c81acd43379"
+    },
+    "tests/file-activation-ownership.test.js": {
+      "bytes": 8835,
+      "sha256": "6f18bf11d0984ca53a96e04a19209667dbaed16dd2bf0fb492548ff6313b8cae"
+    },
+    "tests/queue-entry-ownership.test.js": {
+      "bytes": 2221,
+      "sha256": "519446f47c2cb84f0fb95bc1c94c66f86106bf08705a04748ee899ff2f1b35f8"
+    }
+  },
+  "disposition": {
+    "AUD-001": "implementation-corrected in demonstrated F.2 ownership cases; independent F.4 closure pending",
+    "AUD-002": "open; obsolete File attachment mutation corrected, six settlement/rejection contracts deferred to F.3",
+    "nextPhaseNotStarted": true
+  }
+}

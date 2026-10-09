@@ -1,0 +1,52 @@
+[
+  {
+    "label": "npm-ci",
+    "command": [
+      "npm",
+      "ci",
+      "--offline",
+      "--cache",
+      "/workspace/auralprint-environment/npm-cache"
+    ],
+    "exitStatus": 0,
+    "seconds": 0.5
+  },
+  {
+    "label": "npm-test",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exitStatus": 0,
+    "seconds": 7.07
+  },
+  {
+    "label": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exitStatus": 0,
+    "seconds": 0.22
+  },
+  {
+    "label": "distribution",
+    "command": [
+      "python",
+      "scripts/verify_distribution.py"
+    ],
+    "exitStatus": 0,
+    "seconds": 0.05
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitStatus": 0,
+    "seconds": 0.01
+  }
+]

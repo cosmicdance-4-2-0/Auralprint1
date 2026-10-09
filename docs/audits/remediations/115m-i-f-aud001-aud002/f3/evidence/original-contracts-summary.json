@@ -1,0 +1,181 @@
+{
+  "acceptedBaseline": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "phase": "F.3",
+  "startingF2": "0c188a06673b94ce124579ecd638ff890b161d32",
+  "version": "v0.1.15m.i.f",
+  "browser": "151.0.7922.173",
+  "mode": "headless Chromium; native Web Audio and HTMLMediaElement; muted browser output",
+  "node": "v24.19.0",
+  "artifactSha256": "a64bc33627928f9c1f9a1f82fa020ebfe4adb9418463831caa17d8531883f041",
+  "fixtures": [
+    {
+      "name": "A.wav",
+      "frequency": 440,
+      "bytes": 5292044,
+      "sha256": "259cfc5d6d337f45e47af87f5e3f8270ec081767593408d04d3802d4a6cfe215"
+    },
+    {
+      "name": "B.wav",
+      "frequency": 554,
+      "bytes": 5292044,
+      "sha256": "577ebcf36bdcf77a063120c5045efe16b4f5d7caefc70130acadc53f3825a67f"
+    },
+    {
+      "name": "C.wav",
+      "frequency": 659,
+      "bytes": 5292044,
+      "sha256": "113ffc485537b91013135758f982fe03934b071843477a243af7a7c79ce04fe6"
+    }
+  ],
+  "desiredAssertions": [
+    {
+      "name": "unmodified artifact plays valid WAV without exceptions",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending removal loads B and preserves autoplay",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "noncurrent removal leaves A authorized",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "final-remove cannot restore A",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "clear cannot restore A",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "loaded removal preserves playing intent",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "loaded removal preserves paused intent",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending replacement removal preserves requested autoplay despite old loaded metadata",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "duplicate-name/object removal creates successor request false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "duplicate-name/object removal creates successor request true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "current resume failure reaches observable terminal error without UI leak",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "constructor failure settles current source",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "failed Play retains media and projects recoverable error",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "Play retry succeeds without reload",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "valid file retry recovers true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "valid file retry recovers false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "latest C survives stale initial resume false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "latest C survives stale initial resume true",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "removing stale A preserves pending B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "File cannot reclaim mic",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "File cannot reclaim stream",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending paused removal loads paused B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending removal at media play boundary selects playing B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "current attach rejection settles through existing guarded path",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "obsolete Play resume rejection stays silent after clear",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "obsolete Play resume rejection stays silent after replace",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "stale File attach cannot mutate winner false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "stale File attach cannot mutate winner true",
+      "passed": true,
+      "phase": "F.2"
+    }
+  ],
+  "summary": {
+    "scenarios": 28,
+    "desiredFailures": 0,
+    "f2Failures": 0,
+    "f3Failures": 0,
+    "infrastructureFailure": false
+  },
+  "exitStatus": 0,
+  "note": "Initial corrected native run retained original 28 assertions; expanded run records all snapshots."
+}

@@ -22,8 +22,8 @@ import { paths } from "../scripts/build.mjs";
 import { prepareWatchBuild } from "../scripts/watch.mjs";
 
 test("development version metadata and schema remain aligned", () => {
-  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.i.e");
-  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.i\.e\s/);
+  assert.equal(readFileSync(new URL("../version", import.meta.url), "utf8").trim(), "v0.1.15m.i.f");
+  assert.match(readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8"), /Auralprint\s+0\.1\.15m\.i\.f\s/);
   assert.equal(PRESET_SCHEMA_VERSION, 10);
 });
 
@@ -317,7 +317,7 @@ async function withUiWireHarnessState({
 
 let audioEngineHarnessContext = null;
 
-function createAudioEngineHarness({ contextState = "running", onResume = null } = {}) {
+function createAudioEngineHarness({ contextState = "running", onResume = null, freshMediaElements = false, onMediaElement = null } = {}) {
   const previousWindow = globalThis.window;
   const previousDocument = globalThis.document;
   const previousURL = globalThis.URL;
@@ -354,7 +354,7 @@ function createAudioEngineHarness({ contextState = "running", onResume = null } 
     return node;
   }
 
-  const audioEl = {
+  function makeAudioElement() { return {
     preload: "",
     src: "",
     paused: true,
@@ -400,7 +400,16 @@ function createAudioEngineHarness({ contextState = "running", onResume = null } 
     load() {
       this.releaseCalls.load += 1;
     },
-  };
+  }; }
+  const audioEl = makeAudioElement();
+  const mediaElements = [];
+  function createMediaElement() {
+    const element = freshMediaElements ? makeAudioElement() : audioEl;
+    mediaElements.push(element);
+    if (onMediaElement) onMediaElement(element, mediaElements.length - 1);
+    return element;
+  }
+  let objectUrlCount = 0;
 
   class FakeAudioContext {
     constructor() {
@@ -454,12 +463,12 @@ function createAudioEngineHarness({ contextState = "running", onResume = null } 
   globalThis.document = {
     createElement(tag) {
       if (tag !== "audio") throw new Error(`Unexpected element request: ${tag}`);
-      return audioEl;
+      return createMediaElement();
     },
   };
   globalThis.URL = {
     createObjectURL() {
-      return "blob:test-audio";
+      return freshMediaElements ? `blob:test-audio-${++objectUrlCount}` : "blob:test-audio";
     },
     revokeObjectURL(url) {
       revokedUrls.push(url);
@@ -468,6 +477,8 @@ function createAudioEngineHarness({ contextState = "running", onResume = null } 
 
   return {
     audioEl,
+    createMediaElement,
+    mediaElements,
     connectionLog,
     analysers,
     get destinationNode() {
@@ -3614,8 +3625,29 @@ async function withRc02FileWorkflow(t, options, run) {
   const mutations = [];
   const scrubberLoads = [];
   const activations = [];
+  const activationWaiters = [];
+  const completionWaiters = [];
+  const failureWaiters = [];
+  function waitForFailures(count) {
+    if (mutations.filter(x => x.kind === "track-change-failed").length >= count) return Promise.resolve();
+    return new Promise(resolve => failureWaiters.push({ count, resolve }));
+  }
+  function waitForCompletions(count) {
+    if (mutations.filter(x => x.kind === "track-change-complete").length >= count) return Promise.resolve();
+    return new Promise(resolve => completionWaiters.push({ count, resolve }));
+  }
+  function waitForActivations(count) {
+    if (activations.length >= count) return Promise.resolve();
+    return new Promise(resolve => activationWaiters.push({ count, resolve }));
+  }
   t.mock.method(RecorderEngine, "onTransportMutation", (kind, details) => {
     mutations.push({ kind, details });
+    for (const waiter of failureWaiters) {
+      if (mutations.filter(x => x.kind === "track-change-failed").length >= waiter.count) waiter.resolve();
+    }
+    for (const waiter of completionWaiters) {
+      if (mutations.filter(x => x.kind === "track-change-complete").length >= waiter.count) waiter.resolve();
+    }
     return { ok: true };
   });
   t.mock.method(RecorderEngine, "getSupportStatus", () => ({ ok: true }));
@@ -3624,6 +3656,7 @@ async function withRc02FileWorkflow(t, options, run) {
   t.mock.method(InputSourceManager, "activateFile", async (...args) => {
     const result = await activateFile(...args);
     activations.push(result);
+    for (const waiter of activationWaiters) if (activations.length >= waiter.count) waiter.resolve();
     return result;
   });
   try {
@@ -3632,17 +3665,18 @@ async function withRc02FileWorkflow(t, options, run) {
       audioState: { isLoaded: false, isPlaying: false, filename: "", transportError: "" },
       recordingState: { phase: "idle" },
       queueVisible: true,
-    }, async ({ getElement }) => {
+    }, async ({ getElement, harness }) => {
+      const dispatchWindow = harness.dispatchWindow;
       const createElement = document.createElement;
-      document.createElement = tag => tag === "audio" ? audio.audioEl : createElement(tag);
+      document.createElement = tag => tag === "audio" ? audio.createMediaElement() : createElement(tag);
       function ingest(names, entry = "picker") {
-        const files = names.map(createNamedAudioFile);
+        const files = names.map(name => typeof name === "string" ? createNamedAudioFile(name) : name);
         if (entry === "drop") return state.canvas.dispatch("drop", { dataTransfer: { files } });
         getElement("fileInput").files = files;
         return getElement("fileInput").dispatch("change");
       }
       try {
-        await run({ audio, ingest, getElement, mutations, scrubberLoads, activations });
+        await run({ audio, ingest, getElement, mutations, scrubberLoads, activations, waitForActivations, waitForCompletions, waitForFailures, dispatchWindow });
       } finally {
         await InputSourceManager.teardownActiveSource({ reason: "rc02-test-cleanup" });
       }
@@ -4104,3 +4138,329 @@ test('RC-15 budgets: committed Settings edits synchronize without recreating gov
     state.ui.btnResetPrefs.click();assert.deepEqual(g.policy,CONFIG.defaults.particleSafety);assert.equal(state.ui.numMaxActiveParticles.value,'16384');assert.equal(state.ui.numMaxEmissionsPerFrame.value,'512');
   });
 });
+
+for (const identity of ["distinct", "same-name", "same-file"]) {
+  test(`AUD-001: pending selected removal authorizes only successor (${identity})`, async t => {
+    const entered = rc02Deferred(), resume = rc02Deferred();
+    let resumes = 0;
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true, contextState: "suspended",
+      onResume(ctx) {
+        if (++resumes === 1) { entered.resolve(); return resume.promise.then(() => { ctx.state = "running"; }); }
+        ctx.state = "running"; return Promise.resolve();
+      },
+    }, async ({ ingest, getElement, mutations, waitForActivations, waitForCompletions, audio }) => {
+      const a = createNamedAudioFile(identity === "distinct" ? "A.wav" : "same.wav");
+      const b = identity === "same-file" ? a : createNamedAudioFile(identity === "distinct" ? "B.wav" : "same.wav");
+      const pending = ingest([a, b]);
+      await entered.promise;
+      const oldEntry = Queue.currentEntry(), successor = Queue.entryAt(1);
+      assert.equal(AudioEngine.getMediaEl(), null, "A is genuinely pending before allocation");
+      assert.equal(state.audio.isLoaded, false);
+      await getElement("queueList").children[0].children[2].dispatch("click");
+      assert.equal(Queue.currentEntry(), successor);
+      assert.notEqual(Queue.currentEntry(), oldEntry);
+      assert.equal(mutations.filter(x => x.kind === "track-change-start").length, 2, "removal must synchronously authorize a successor request");
+      await waitForCompletions(1);
+      const winner = AudioEngine.getMediaEl();
+      assert.equal(winner, audio.mediaElements[0], "only the successor allocated media");
+      assert.equal(state.audio.isPlaying, true, "pending autoplay intent survives removal");
+      assert.equal(state.source.status, "active");
+      const notifications = mutations.length;
+      resume.resolve(); await pending;
+      assert.equal(AudioEngine.getMediaEl(), winner);
+      assert.equal(Queue.currentEntry(), successor);
+      assert.equal(mutations.length, notifications, "cancelled request emits no terminal notification");
+      assert.deepEqual(mutations.filter(x => x.kind === "track-change-complete").map(x => x.details.requestId), [mutations[1].details.requestId]);
+    });
+  });
+}
+
+for (const autoPlay of [true, false]) {
+  test(`AUD-001: pending replacement removal preserves requested autoplay ${autoPlay}`, async t => {
+    const entered = rc02Deferred(), resume = rc02Deferred();
+    let hold = false;
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true,
+      onResume(ctx) {
+        if (hold) { hold = false; entered.resolve(); return resume.promise.then(() => { ctx.state = "running"; }); }
+        ctx.state = "running"; return Promise.resolve();
+      },
+    }, async ({ ingest, getElement, waitForActivations }) => {
+      await ingest(["A.wav", "B.wav", "C.wav"]);
+      if (!autoPlay) await AudioEngine.playPause();
+      audioEngineHarnessContext.state = "suspended"; hold = true;
+      // Loaded A removal gives B the actual intent. B removal must use that
+      // pending request's intent, even though teardown makes isPlaying false.
+      await getElement("queueList").children[0].children[2].dispatch("click");
+      await entered.promise;
+      assert.equal(Queue.current().name, "B.wav");
+      assert.equal(state.audio.isPlaying, false);
+      await getElement("queueList").children[0].children[2].dispatch("click");
+      await waitForActivations(2);
+      const winner = AudioEngine.getMediaEl();
+      assert.equal(Queue.current().name, "C.wav");
+      assert.equal(state.audio.isPlaying, autoPlay);
+      resume.resolve(); await waitForActivations(3);
+      assert.equal(AudioEngine.getMediaEl(), winner);
+      assert.equal(state.audio.isPlaying, autoPlay);
+    });
+  });
+}
+
+for (const removedIndex of [0, 2]) {
+  test(`AUD-001: unrelated removal at ${removedIndex} preserves pending B entry and intent`, async t => {
+    const entered = rc02Deferred(), resume = rc02Deferred();
+    let hold = false;
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true,
+      onResume(ctx) {
+        if (hold) { hold = false; entered.resolve(); return resume.promise.then(() => { ctx.state = "running"; }); }
+        ctx.state = "running"; return Promise.resolve();
+      },
+    }, async ({ ingest, getElement, waitForActivations }) => {
+      await ingest(["A.wav", "B.wav", "C.wav"]);
+      audioEngineHarnessContext.state = "suspended"; hold = true;
+      await getElement("queueList").children[1].dispatch("click");
+      await entered.promise;
+      const selected = Queue.currentEntry();
+      await getElement("queueList").children[removedIndex].children[2].dispatch("click");
+      assert.equal(Queue.currentEntry(), selected);
+      resume.resolve(); await waitForActivations(2);
+      assert.equal(state.source.status, "active");
+      assert.equal(state.audio.filename, "B.wav");
+      assert.equal(state.audio.isPlaying, true);
+    });
+  });
+}
+
+test("AUD-001: A to B to C supersession authorizes only C", async t => {
+  const entered = rc02Deferred(), resume = rc02Deferred();
+  let resumes = 0;
+  await withRc02FileWorkflow(t, {
+    freshMediaElements: true, contextState: "suspended",
+    onResume(ctx) {
+      if (++resumes === 1) { entered.resolve(); return resume.promise.then(() => { ctx.state = "running"; }); }
+      ctx.state = "running"; return Promise.resolve();
+    },
+  }, async ({ ingest, getElement, waitForActivations, waitForCompletions, mutations }) => {
+    const pending = ingest(["A.wav", "B.wav", "C.wav"]);
+    await entered.promise;
+    await getElement("queueList").children[1].dispatch("click");
+    await getElement("queueList").children[2].dispatch("click");
+    await waitForCompletions(1);
+    assert.equal(state.audio.filename, "C.wav");
+    const winner = AudioEngine.getMediaEl(), notifications = mutations.length;
+    resume.resolve(); await pending;
+    assert.equal(AudioEngine.getMediaEl(), winner);
+    assert.equal(mutations.length, notifications);
+    assert.deepEqual(mutations.filter(x => x.kind === "track-change-complete").map(x => x.details.filename), ["C.wav"]);
+  });
+});
+
+for (const outcome of ["resolve", "reject"]) {
+  test(`AUD-001: removal during native media Play ${outcome} cannot complete removed A`, async t => {
+    const entered = rc02Deferred(), play = rc02Deferred();
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true,
+      onMediaElement(element, index) {
+        if (index === 0) element.play = () => {
+          element.paused = false; element.dispatch("play"); entered.resolve(); return play.promise;
+        };
+      },
+    }, async ({ ingest, getElement, waitForActivations, waitForCompletions, mutations, audio }) => {
+      const pending = ingest(["A.wav", "B.wav"]);
+      await entered.promise;
+      assert.equal(state.audio.isLoaded, false);
+      await getElement("queueList").children[0].children[2].dispatch("click");
+      await waitForCompletions(1);
+      const winner = AudioEngine.getMediaEl(), loser = audio.mediaElements[0];
+      assert.notEqual(winner, loser);
+      const notifications = mutations.length;
+      if (outcome === "resolve") play.resolve(); else play.reject(new Error("obsolete play"));
+      await pending;
+      assert.equal(AudioEngine.getMediaEl(), winner);
+      assert.equal(state.audio.filename, "B.wav");
+      assert.equal(state.audio.isPlaying, true);
+      assert.equal(mutations.length, notifications);
+      assert.equal(loser.src, "");
+      assert.equal(winner.src, "blob:test-audio-2");
+    });
+  });
+}
+
+test("AUD-001 / RC-05: deferred EOF cannot transfer to a duplicate File entry", async t => {
+  await withRc02FileWorkflow(t, { freshMediaElements: true }, async ({ ingest, mutations }) => {
+    const file = createNamedAudioFile("same.wav");
+    await ingest([file, file]);
+    const media = AudioEngine.getMediaEl(), first = Queue.currentEntry();
+    state.recording.phase = "finalizing";
+    AudioEngine._onTrackEnded();
+    Queue.goTo(1); // Internal cursor change: file, element and request ID unchanged.
+    assert.notEqual(Queue.currentEntry(), first);
+    assert.equal(Queue.current(), file);
+    assert.equal(AudioEngine.getMediaEl(), media);
+    const count = mutations.length;
+    state.recording.phase = "complete";
+    UI.refreshAllUiText(); UI.refreshAllUiText();
+    assert.equal(mutations.length, count, "entry mismatch discards the deferred event once");
+    assert.equal(AudioEngine.getMediaEl(), media);
+  });
+});
+
+for (const identity of ["same-name", "same-file"]) {
+  test(`AUD-001: request guard requires selected entry identity (${identity})`, async t => {
+    const entered = rc02Deferred(), resume = rc02Deferred();
+    let resumes = 0;
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true, contextState: "suspended",
+      onResume(ctx) {
+        if (++resumes === 1) { entered.resolve(); return resume.promise.then(() => { ctx.state = "running"; }); }
+        ctx.state = "running"; return Promise.resolve();
+      },
+    }, async ({ ingest, getElement, waitForCompletions, mutations }) => {
+      const file = createNamedAudioFile("same.wav");
+      const pending = ingest([file, identity === "same-file" ? file : createNamedAudioFile("same.wav")]);
+      await entered.promise;
+      const id = mutations[0].details.requestId;
+      assert.equal(AudioEngine._isLoadRequestCurrent(id), true);
+      // Direct Queue API instrumentation isolates the entry part of the guard;
+      // normal row selection also supersedes the numerical request ID.
+      Queue.goTo(1);
+      assert.equal(AudioEngine._isLoadRequestCurrent(id), false, "File/name equality cannot authorize a different entry");
+      await getElement("queueList").children[1].dispatch("click");
+      await waitForCompletions(1);
+      const winner = AudioEngine.getMediaEl();
+      resume.resolve(); await pending;
+      assert.equal(AudioEngine.getMediaEl(), winner);
+    });
+  });
+}
+
+for (const path of ["picker", "drop", "next", "prev", "row", "shortcut-next", "shortcut-prev", "eof", "repeat-one", "remove-successor"]) {
+  test(`AUD-002: UI ${path} current startup failure settles and notifies exactly once`, async t => {
+    let fail = path === "picker" || path === "drop";
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true, contextState: fail ? "suspended" : "running",
+      onResume(ctx) { if (fail) return Promise.reject(new Error("UI startup refused")); ctx.state = "running"; return Promise.resolve(); },
+    }, async ({ ingest, getElement, dispatchWindow, mutations, waitForFailures, waitForCompletions, scrubberLoads }) => {
+      if (path === "picker" || path === "drop") await ingest(["A.wav", "B.wav"], path);
+      else {
+        await ingest(["A.wav", "B.wav"]);
+        if (path === "prev" || path === "shortcut-prev") await getElement("btnNext").dispatch("click");
+        fail = true; audioEngineHarnessContext.state = "suspended";
+        if (path === "next" || path === "prev") await getElement(path === "next" ? "btnNext" : "btnPrev").dispatch("click");
+        else if (path === "row") await getElement("queueList").children[1].dispatch("click");
+        else if (path === "shortcut-next" || path === "shortcut-prev") dispatchWindow("keydown", { code: path === "shortcut-next" ? "KeyN" : "KeyP", target: state.canvas });
+        else if (path === "remove-successor") await getElement("queueList").children[0].children[2].dispatch("click");
+        else {
+          const repeat = preferences.audio.repeatMode;
+          preferences.audio.repeatMode = path === "repeat-one" ? "one" : "none";
+          AudioEngine.getMediaEl().dispatch("ended");
+          preferences.audio.repeatMode = repeat;
+        }
+      }
+      await waitForFailures(1);
+      const failures = mutations.filter(x => x.kind === "track-change-failed");
+      assert.equal(failures.length, 1);
+      assert.equal(failures[0].details.filename, Queue.current().name);
+      assert.equal(state.source.status, "error"); assert.equal(state.source.sessionActive, false);
+      assert.equal(state.source.errorCode, "file-activation-failed"); assert.match(state.source.errorMessage, /UI startup refused/);
+      assert.equal(state.audio.isLoaded, false); assert.equal(state.audio.isPlaying, false);
+      assert.equal(AudioEngine.getMediaEl(), null);
+      assert.ok(!mutations.some(x => x.kind === "track-change-complete" && x.details.requestId === failures[0].details.requestId));
+      const loads = scrubberLoads.length;
+      UI.refreshAllUiText(); UI.refreshAllUiText();
+      assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+      assert.equal(scrubberLoads.length, loads, "failure does not start a waveform decode");
+      assert.match(state.ui.audioStatus.textContent, /UI startup refused/);
+      fail = false;
+      const completions = mutations.filter(x => x.kind === "track-change-complete").length;
+      await getElement("queueList").children[Queue.currentIndex].dispatch("click");
+      await waitForCompletions(completions + 1);
+      assert.equal(state.source.status, "active");
+      assert.equal(state.audio.transportError, "");
+    });
+  });
+}
+
+for (const action of ["current", "clear", "replacement"]) {
+  test(`AUD-002: UI Play rejection boundary ${action} is owned and contained`, async t => {
+    await withRc02FileWorkflow(t, { freshMediaElements: true }, async ({ ingest, getElement, waitForCompletions, mutations }) => {
+      await ingest(["A.wav", "B.wav"]);
+      await AudioEngine.playPause(); // A is loaded/paused before the injected failure.
+      const target = AudioEngine.getMediaEl(), entered = rc02Deferred(), rejection = rc02Deferred();
+      t.mock.method(AudioEngine, "playPause", () => { entered.resolve(); return rejection.promise; });
+      const pending = getElement("btnPlay").dispatch("click"); await entered.promise;
+      if (action === "clear") await getElement("btnClearQueue").dispatch("click");
+      else if (action === "replacement") {
+        await getElement("queueList").children[1].dispatch("click"); await waitForCompletions(2);
+        state.audio.transportError = "winner-owned error";
+      }
+      const audioState = state.audio, writes = [];
+      state.audio = new Proxy(audioState, { set(object, key, value) { writes.push({ key, value }); object[key] = value; return true; } });
+      try {
+        rejection.reject(new Error("unexpected Play API rejection"));
+        await assert.doesNotReject(async () => { await pending; });
+        if (action === "current") {
+          assert.equal(AudioEngine.getMediaEl(), target); assert.equal(state.audio.isLoaded, true);
+          assert.equal(state.source.status, "active"); assert.equal(state.audio.isPlaying, false);
+          assert.match(state.audio.transportError, /unexpected Play API rejection/);
+          UI.refreshAllUiText();
+          assert.match(state.ui.audioStatus.textContent, /unexpected Play API rejection/);
+        } else assert.deepEqual(writes, []);
+        assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 0, "Play failure is not a track-change failure");
+      } finally { state.audio = audioState; }
+    });
+  });
+}
+
+test("AUD-002: synchronous load-time native Play throw reaches structured UI failure", async t => {
+  await withRc02FileWorkflow(t, {
+    freshMediaElements: true,
+    onMediaElement(element) { element.play = () => { throw new Error("load native Play threw"); }; },
+  }, async ({ ingest, mutations, audio }) => {
+    await assert.doesNotReject(() => ingest(["A.wav"]));
+    assert.equal(state.source.status, "error"); assert.match(state.source.errorMessage, /load native Play threw/);
+    assert.equal(state.audio.isLoaded, false); assert.equal(AudioEngine.getMediaEl(), null);
+    assert.equal(audio.mediaElements[0].src, "");
+    assert.ok(audio.mediaElements[0].listeners.get("play").every(x => x.signal.aborted));
+    assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+  });
+});
+
+for (const path of ["picker", "drop"]) {
+  test(`F4-CLEANUP-01: UI ${path} hard decoder failure cleans resources and notifies exactly once`, async t => {
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true,
+      onMediaElement(element, index) {
+        if (index !== 0) return;
+        element.play = () => {
+          element.error = { code: 4 };
+          element.dispatch("error");
+          return Promise.reject(Object.assign(new Error("native decoder failure"), { name: "NotSupportedError" }));
+        };
+      },
+    }, async ({ ingest, mutations, audio, getElement, scrubberLoads, waitForCompletions }) => {
+      await ingest(["corrupt.wav"], path);
+      const failed = audio.mediaElements[0];
+      assert.equal(AudioEngine.getMediaEl(), null, "observe before Clear or retry");
+      assert.equal(AudioEngine.sample().ready, false);
+      assert.equal(failed.src, ""); assert.equal(failed.releaseCalls.pause, 1);
+      assert.equal(failed.releaseCalls.load, 1);
+      assert.ok([...failed.listeners.values()].flat().every(x => x.signal.aborted));
+      assert.equal(state.source.status, "error"); assert.equal(state.source.sessionActive, false);
+      assert.equal(state.source.errorMessage, state.audio.transportError);
+      assert.match(state.audio.transportError, /unsupported or unreadable/);
+      assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+      assert.equal(mutations.filter(x => x.kind === "track-change-complete").length, 0);
+      assert.deepEqual(scrubberLoads, []); assert.equal(Queue.current().name, "corrupt.wav");
+      await getElement("queueList").children[0].dispatch("click");
+      await waitForCompletions(1);
+      assert.equal(state.source.status, "active"); assert.equal(state.audio.filename, "corrupt.wav");
+      assert.notEqual(AudioEngine.getMediaEl(), failed); assert.equal(state.audio.transportError, "");
+      assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+      assert.equal(mutations.filter(x => x.kind === "track-change-complete").length, 1);
+    });
+  });
+}

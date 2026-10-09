@@ -998,3 +998,98 @@ test("URL preset serialization excludes runtime source state", () => {
     globalThis.atob = previousAtob;
   }
 });
+
+for (const kind of ["mic", "stream"]) {
+  test(`AUD-001: stale File continuation after teardown cannot publish over newer ${kind}`, async () => {
+    let current = 1;
+    const live = createFakeMediaStream();
+    const h = createManagerHarness({
+      isLoadRequestCurrent: id => id === current,
+      mediaDevices: { async getUserMedia() { return live.stream; }, async getDisplayMedia() { return live.stream; } },
+    });
+    assert.equal((await h.manager.activateFile({ name: "loaded.wav" }, { requestId: 1 })).ok, true);
+    const writes = [];
+    h.stateRef.source = new Proxy(h.stateRef.source, {
+      set(object, key, value) { writes.push({ key, value }); object[key] = value; return true; },
+    });
+    const obsolete = h.manager.activateFile({ name: "obsolete.wav" }, { requestId: 1 });
+    // teardown has run synchronously, but activateFile has not resumed its await.
+    current = 2;
+    const winner = kind === "mic" ? h.manager.activateMic() : h.manager.activateStream();
+    const boundary = writes.length;
+    assert.equal(await obsolete, false);
+    assert.equal((await winner).ok, true);
+    assert.equal(h.calls.loadFile.length, 1, "obsolete engine work never starts");
+    assert.ok(!writes.slice(boundary).some(x => x.key === "kind" && x.value === "file"));
+    assert.ok(!writes.slice(boundary).some(x => x.key === "label" && x.value === "obsolete.wav"));
+    assert.equal(h.stateRef.source.kind, kind); assert.equal(h.stateRef.source.status, "active");
+    assert.equal(live.audioTrack.stopCount, 0);
+    const before = structuredClone({ ...h.stateRef.source });
+    const unloads = h.calls.unload, count = writes.length;
+    assert.equal(await h.manager.activateFile({ name: "already-stale.wav" }, { requestId: 1 }), false);
+    assert.equal(h.calls.unload, unloads, "stale entry guard cannot tear down the current owner");
+    assert.equal(writes.length, count);
+    assert.deepEqual({ ...h.stateRef.source }, before);
+    assert.equal(live.audioTrack.stopCount, 0);
+    await h.manager.teardownActiveSource();
+  });
+}
+
+for (const failure of ["throw", "reject"]) {
+  test(`AUD-002: manager settles current engine ${failure} into one source failure`, async () => {
+    let fail = true;
+    const h = createManagerHarness({ onLoadFile() {
+      if (fail) {
+        const error = new Error("native media setup refused");
+        if (failure === "throw") throw error;
+        return Promise.reject(error);
+      }
+      return true;
+    } });
+    Object.assign(h.stateRef.audio, { isLoaded: true, isPlaying: false, filename: "old metadata.wav", transportError: "old error" });
+    const result = await h.manager.activateFile({ name: "A.wav" }, { requestId: 1 });
+    assert.equal(result.ok, false); assert.equal(result.status, "error");
+    assert.equal(result.errorCode, "file-activation-failed");
+    assert.equal(result.errorMessage, "Playback failed: native media setup refused");
+    assert.equal(h.stateRef.source.status, "error"); assert.equal(h.stateRef.source.sessionActive, false);
+    assert.equal(h.stateRef.source.streamMeta.hasAudio, false);
+    assert.equal(h.stateRef.audio.isLoaded, false); assert.equal(h.stateRef.audio.isPlaying, false);
+    assert.equal(h.stateRef.audio.filename, ""); assert.equal(h.calls.unload, 1);
+    fail = false;
+    assert.equal((await h.manager.activateFile({ name: "B.wav" }, { requestId: 2 })).ok, true);
+    assert.equal(h.stateRef.source.status, "active"); assert.equal(h.stateRef.source.errorCode, "");
+  });
+}
+
+for (const winner of ["clear", "file", "mic", "stream"]) {
+  test(`AUD-002: manager contains obsolete engine rejection after ${winner} without source/audio writes`, async () => {
+    let reject, entered, current = 1;
+    const started = new Promise(resolve => { entered = resolve; });
+    const held = new Promise((_, no) => { reject = no; });
+    const live = createFakeMediaStream();
+    const h = createManagerHarness({
+      isLoadRequestCurrent: id => id === current,
+      onLoadFile({ file }) { if (file.name === "A.wav") { entered(); return held; } return true; },
+      mediaDevices: { async getUserMedia() { return live.stream; }, async getDisplayMedia() { return live.stream; } },
+    });
+    const pending = h.manager.activateFile({ name: "A.wav" }, { requestId: 1 });
+    await started; current = 2;
+    if (winner === "clear") await h.manager.teardownActiveSource();
+    else if (winner === "file") await h.manager.activateFile({ name: "B.wav" }, { requestId: 2 });
+    else await (winner === "mic" ? h.manager.activateMic() : h.manager.activateStream());
+    h.stateRef.audio.transportError = "winner audio error";
+    h.stateRef.source.errorMessage = "winner source error";
+    const before = structuredClone(h.stateRef), writes = [];
+    for (const key of ["audio", "source"]) h.stateRef[key] = new Proxy(h.stateRef[key], {
+      set(object, field, value) { writes.push({ key, field, value }); object[field] = value; return true; },
+    });
+    const unloads = h.calls.unload;
+    reject(new Error("obsolete engine failure"));
+    let result;
+    await assert.doesNotReject(async () => { result = await pending; });
+    assert.equal(result, false); assert.deepEqual(writes, []);
+    assert.deepEqual({ ...h.stateRef.audio }, before.audio); assert.deepEqual({ ...h.stateRef.source }, before.source);
+    assert.equal(h.calls.unload, unloads); assert.equal(live.audioTrack.stopCount, 0);
+    await h.manager.teardownActiveSource();
+  });
+}

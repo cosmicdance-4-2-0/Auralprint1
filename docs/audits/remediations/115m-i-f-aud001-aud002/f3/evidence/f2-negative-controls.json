@@ -1,0 +1,182 @@
+{
+  "phase": "F.2",
+  "root": "/workspace/Auralprint1",
+  "node": "v24.19.0",
+  "controls": [
+    {
+      "name": "pending-removal-not-authorized",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "const wasActive = ownsRequest && (wasPending || hasActiveFileSource(state.source, state.audio));",
+        "after": "const wasActive = ownsRequest && hasActiveFileSource(state.source, state.audio);"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=pending selected removal",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: pending selected removal authorizes only successor (distinct)\nnot ok 1 - AUD-001: pending selected removal authorizes only successor (distinct)\n  ---\n  duration_ms: 24.196401\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4143:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    removal must synchronously authorize a successor request\n    \n    1 !== 2\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 2\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4163:14\n    async file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4146:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n# Subtest: AUD-001: pending selected removal authorizes only successor (same-name)\nnot ok 2 - AUD-001: pending selected removal authorizes only successor (same-name)\n  ---\n  duration_ms: 2.806134\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4143:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    removal must synchronously authorize a successor request\n    \n    1 !== 2\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 2\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4163:14\n    async file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4146:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n# Subtest: AUD-001: pending selected removal authorizes only successor (same-file)\nnot ok 3 - AUD-001: pending selected removal authorizes only successor (same-file)\n  ---\n  duration_ms: 2.11994\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4143:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    removal must synchronously authorize a successor request\n    \n    1 !== 2\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 2\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4163:14\n    async file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-h4yddohm/tests/targeted-audit.test.js:4146:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 0\n# fail 3\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 156.10545\n"
+    },
+    {
+      "name": "pending-intent-from-observed-state",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "const wasPlaying = wasPending ? activeFileRequest.autoPlay : state.audio.isPlaying;",
+        "after": "const wasPlaying = state.audio.isPlaying;"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=pending replacement removal preserves requested autoplay true",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: pending replacement removal preserves requested autoplay true\nnot ok 1 - AUD-001: pending replacement removal preserves requested autoplay true\n  ---\n  duration_ms: 68.553604\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-b43ttilq/tests/targeted-audit.test.js:4180:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-b43ttilq/tests/targeted-audit.test.js:4203:14\n    async file:///tmp/auralprint-f2-control-b43ttilq/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-b43ttilq/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-b43ttilq/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-b43ttilq/tests/targeted-audit.test.js:4183:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 201.858339\n"
+    },
+    {
+      "name": "entry-authorization-by-filename",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "activeFileRequest.entry === Queue.currentEntry()",
+        "after": "activeFileRequest.entry.name === Queue.currentEntry()?.name"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=request guard requires selected entry identity",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: request guard requires selected entry identity (same-name)\nnot ok 1 - AUD-001: request guard requires selected entry identity (same-name)\n  ---\n  duration_ms: 33.6492\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:4312:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    File/name equality cannot authorize a different entry\n    \n    true !== false\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:4330:14\n    async file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:4315:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n# Subtest: AUD-001: request guard requires selected entry identity (same-file)\nnot ok 2 - AUD-001: request guard requires selected entry identity (same-file)\n  ---\n  duration_ms: 3.066959\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:4312:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    File/name equality cannot authorize a different entry\n    \n    true !== false\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:4330:14\n    async file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-usm336bq/tests/targeted-audit.test.js:4315:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 0\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 282.941067\n"
+    },
+    {
+      "name": "entry-authorization-by-file-reference",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "activeFileRequest.entry === Queue.currentEntry()",
+        "after": "activeFileRequest.entry.file === Queue.currentEntry()?.file"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=request guard requires selected entry identity",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: request guard requires selected entry identity (same-name)\nok 1 - AUD-001: request guard requires selected entry identity (same-name)\n  ---\n  duration_ms: 87.412622\n  type: 'test'\n  ...\n# Subtest: AUD-001: request guard requires selected entry identity (same-file)\nnot ok 2 - AUD-001: request guard requires selected entry identity (same-file)\n  ---\n  duration_ms: 10.200593\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-o2pau5cu/tests/targeted-audit.test.js:4312:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    File/name equality cannot authorize a different entry\n    \n    true !== false\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f2-control-o2pau5cu/tests/targeted-audit.test.js:4330:14\n    async file:///tmp/auralprint-f2-control-o2pau5cu/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f2-control-o2pau5cu/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f2-control-o2pau5cu/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f2-control-o2pau5cu/tests/targeted-audit.test.js:4315:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 1\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 351.730865\n"
+    },
+    {
+      "name": "file-attachment-without-owner-guard",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "}, { isCurrent: isCurrentRequest });",
+        "after": "});"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=stale second resume",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: stale second resume resolve cannot replace, play, disconnect or revoke winner\nnot ok 1 - AUD-001: stale second resume resolve cannot replace, play, disconnect or revoke winner\n  ---\n  duration_ms: 7.61844\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-y1__n6ez/tests/file-activation-ownership.test.js:95:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    authorized winner remains installed\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-y1__n6ez/tests/file-activation-ownership.test.js:114:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n# Subtest: AUD-001: stale second resume reject cannot replace, play, disconnect or revoke winner\nok 2 - AUD-001: stale second resume reject cannot replace, play, disconnect or revoke winner\n  ---\n  duration_ms: 8.660609\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 1\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 234.926975\n"
+    },
+    {
+      "name": "stale-attachment-error-commits-state",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "releaseCandidate();\n      if (!isCurrentRequest()) return false;",
+        "after": "releaseCandidate();"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=stale second resume reject",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: stale second resume reject cannot replace, play, disconnect or revoke winner\nnot ok 1 - AUD-001: stale second resume reject cannot replace, play, disconnect or revoke winner\n  ---\n  duration_ms: 9.351689\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-8twhhky9/tests/file-activation-ownership.test.js:95:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      {\n    +   filename: '',\n    +   isLoaded: false,\n    +   isPlaying: false,\n    +   transportError: 'Playback failed: obsolete attachment failed'\n    -   filename: 'B.wav',\n    -   isLoaded: true,\n    -   isPlaying: true,\n    -   transportError: ''\n      }\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    isLoaded: true\n    isPlaying: true\n    filename: 'B.wav'\n    transportError: ''\n  actual:\n    isLoaded: false\n    isPlaying: false\n    filename: ''\n    transportError: 'Playback failed: obsolete attachment failed'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-8twhhky9/tests/file-activation-ownership.test.js:115:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 123.27448\n"
+    },
+    {
+      "name": "declined-candidate-enters-native-play",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (!attached || !isCurrentMedia()) {",
+        "after": "if (attached && !isCurrentMedia()) {"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=stale second resume resolve",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: stale second resume resolve cannot replace, play, disconnect or revoke winner\nnot ok 1 - AUD-001: stale second resume resolve cannot replace, play, disconnect or revoke winner\n  ---\n  duration_ms: 6.989952\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-dh9b8c15/tests/file-activation-ownership.test.js:95:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    1 !== 0\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 0\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-dh9b8c15/tests/file-activation-ownership.test.js:118:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 122.531997\n"
+    },
+    {
+      "name": "candidate-callbacks-without-owner-guard",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (!isCurrentMedia()) return;",
+        "after": ""
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=stale second resume",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: stale second resume resolve cannot replace, play, disconnect or revoke winner\nnot ok 1 - AUD-001: stale second resume resolve cannot replace, play, disconnect or revoke winner\n  ---\n  duration_ms: 7.48334\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-6nmz6ukd/tests/file-activation-ownership.test.js:95:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    pending candidate events cannot make transient stale writes\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: true\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback error: unsupported or unreadable audio file.'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isPlaying'\n      value: true\n    1:\n      key: 'audio'\n      field: 'transportError'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    4:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    5:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    6:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    7:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback error: unsupported or unreadable audio file.'\n    8:\n      key: 'source'\n      field: 'status'\n      value: 'stopping'\n    9:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    10:\n      key: 'source'\n      field: 'kind'\n      value: 'none'\n    11:\n      key: 'source'\n      field: 'status'\n      value: 'idle'\n    12:\n      key: 'source'\n      field: 'label'\n      value: ''\n    13:\n      key: 'source'\n      field: 'sessionActive'\n      value: false\n    14:\n      key: 'source'\n      field: 'errorCode'\n      value: ''\n    15:\n      key: 'source'\n      field: 'errorMessage'\n      value: ''\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-6nmz6ukd/tests/file-activation-ownership.test.js:111:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n# Subtest: AUD-001: stale second resume reject cannot replace, play, disconnect or revoke winner\nnot ok 2 - AUD-001: stale second resume reject cannot replace, play, disconnect or revoke winner\n  ---\n  duration_ms: 3.467501\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-6nmz6ukd/tests/file-activation-ownership.test.js:95:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    pending candidate events cannot make transient stale writes\n    + actual - expected\n    \n    + [\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: true\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'isLoaded',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'filename',\n    +     key: 'audio',\n    +     value: ''\n    +   },\n    +   {\n    +     field: 'isPlaying',\n    +     key: 'audio',\n    +     value: false\n    +   },\n    +   {\n    +     field: 'transportError',\n    +     key: 'audio',\n    +     value: 'Playback error: unsupported or unreadable audio file.'\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      key: 'audio'\n      field: 'isPlaying'\n      value: true\n    1:\n      key: 'audio'\n      field: 'transportError'\n      value: ''\n    2:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    3:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    4:\n      key: 'audio'\n      field: 'isLoaded'\n      value: false\n    5:\n      key: 'audio'\n      field: 'filename'\n      value: ''\n    6:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    7:\n      key: 'audio'\n      field: 'transportError'\n      value: 'Playback error: unsupported or unreadable audio file.'\n    8:\n      key: 'source'\n      field: 'status'\n      value: 'stopping'\n    9:\n      key: 'audio'\n      field: 'isPlaying'\n      value: false\n    10:\n      key: 'source'\n      field: 'kind'\n      value: 'none'\n    11:\n      key: 'source'\n      field: 'status'\n      value: 'idle'\n    12:\n      key: 'source'\n      field: 'label'\n      value: ''\n    13:\n      key: 'source'\n      field: 'sessionActive'\n      value: false\n    14:\n      key: 'source'\n      field: 'errorCode'\n      value: ''\n    15:\n      key: 'source'\n      field: 'errorMessage'\n      value: ''\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-6nmz6ukd/tests/file-activation-ownership.test.js:111:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 0\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 101.649366\n"
+    },
+    {
+      "name": "manager-continuation-without-owner-guard",
+      "file": "src/js/audio/input-source-manager.js",
+      "mutation": {
+        "before": "if (!isLoadRequestCurrent(requestId)) return false;\n\n    const sourceState",
+        "after": "const sourceState"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=stale File continuation",
+        "tests/input-source-manager.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: AUD-001: stale File continuation after teardown cannot publish over newer mic\nnot ok 1 - AUD-001: stale File continuation after teardown cannot publish over newer mic\n  ---\n  duration_ms: 2.553461\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-5d75iqcy/tests/input-source-manager.test.js:1003:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    obsolete engine work never starts\n    \n    2 !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  actual: 2\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-5d75iqcy/tests/input-source-manager.test.js:1022:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n# Subtest: AUD-001: stale File continuation after teardown cannot publish over newer stream\nnot ok 2 - AUD-001: stale File continuation after teardown cannot publish over newer stream\n  ---\n  duration_ms: 0.558906\n  type: 'test'\n  location: '/tmp/auralprint-f2-control-5d75iqcy/tests/input-source-manager.test.js:1003:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    obsolete engine work never starts\n    \n    2 !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  actual: 2\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f2-control-5d75iqcy/tests/input-source-manager.test.js:1022:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 0\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 70.907689\n"
+    }
+  ],
+  "summary": {
+    "controls": 9,
+    "meaningfulDetections": 9
+  }
+}

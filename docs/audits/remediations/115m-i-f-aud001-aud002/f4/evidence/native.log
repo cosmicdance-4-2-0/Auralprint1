@@ -1,0 +1,18 @@
+distribution http://127.0.0.1:42939/portable.html PASS
+distribution http://127.0.0.1:42939/ PASS
+distribution http://127.0.0.1:42939/apps/auralprint/ PASS
+unrelated removal 0 during pending B PASS
+unrelated removal 2 during pending B PASS
+shuffle during pending B preserves entry PASS
+out-of-order B/C resumes preserve C with zero stale writes PASS
+obsolete initial rejection cannot erase newer C failure PASS
+obsolete attachment rejection cannot erase newer C failure PASS
+obsolete play rejection cannot erase newer C failure PASS
+loaded native Play reject preserves media and retries PASS
+loaded native Play throw preserves media and retries PASS
+native recording across navigation/removal/pending cancellation/failure/recovery/retention/re-record/disposal PASS
+native recorder finalization locks controls and consumes natural EOF once PASS
+native Mic recording stop/dispose preserve shared upstream; source teardown owns track stop PASS
+current failure releases resources: native-corrupt-media FAIL
+current failure releases resources: graph-allocation FAIL
+{"cases":18,"passed":15,"failed":2,"infrastructureFailure":false,"inconclusive":1}

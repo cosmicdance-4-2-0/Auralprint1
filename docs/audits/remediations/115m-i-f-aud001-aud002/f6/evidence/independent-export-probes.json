@@ -1,0 +1,368 @@
+{
+  "method": "Actual native WebM demux/decode; 80ms Fourier amplitude windows at generated 440/660Hz",
+  "cases": [
+    {
+      "file": "f6-corrupt.webm",
+      "bytes": 84072,
+      "sha256": "8e986fd6852407ae7ec66ccccedab6957bb46fb48258f3108c3f6f89088ee8b9",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "45"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "23"
+        }
+      ],
+      "decodedAudioSeconds": 1.38,
+      "windows": [
+        {
+          "startSeconds": 0.0,
+          "rms": 0.102787,
+          "amplitudes": {
+            "440": 0.09763516704642611,
+            "660": 0.00013892065327083698
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.08,
+          "rms": 0.108218,
+          "amplitudes": {
+            "440": 0.10871911726876574,
+            "660": 0.0018258166939630952
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.16,
+          "rms": 0.10793,
+          "amplitudes": {
+            "440": 0.10768399971031352,
+            "660": 0.0004041260510784862
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.24,
+          "rms": 0.108009,
+          "amplitudes": {
+            "440": 0.10843907158976185,
+            "660": 0.0022984867408571367
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.32,
+          "rms": 0.107688,
+          "amplitudes": {
+            "440": 0.10699553208547513,
+            "660": 0.0036343088915965745
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.4,
+          "rms": 0.107472,
+          "amplitudes": {
+            "440": 0.10717961366589218,
+            "660": 0.003603211210007808
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.48,
+          "rms": 0.108262,
+          "amplitudes": {
+            "440": 0.10870645440325961,
+            "660": 0.001805635247022579
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.56,
+          "rms": 0.107929,
+          "amplitudes": {
+            "440": 0.10768606591109443,
+            "660": 0.0004033864043152033
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.64,
+          "rms": 0.108009,
+          "amplitudes": {
+            "440": 0.10844618474715409,
+            "660": 0.0023028767117792407
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.72,
+          "rms": 0.10748,
+          "amplitudes": {
+            "440": 0.10701305677461743,
+            "660": 0.003614513218069834
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.8,
+          "rms": 0.107649,
+          "amplitudes": {
+            "440": 0.10717756008593421,
+            "660": 0.0036059564594075185
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.88,
+          "rms": 0.108266,
+          "amplitudes": {
+            "440": 0.10870801704316388,
+            "660": 0.0018105629256864274
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.96,
+          "rms": 0.107816,
+          "amplitudes": {
+            "440": 0.1076859598806297,
+            "660": 0.0004051089361897179
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 1.04,
+          "rms": 0.067108,
+          "amplitudes": {
+            "440": 0.023471230879215804,
+            "660": 0.017516087385083225
+          },
+          "dominantFixture": "transition/silence"
+        },
+        {
+          "startSeconds": 1.12,
+          "rms": 0.107779,
+          "amplitudes": {
+            "440": 0.001642654458306418,
+            "660": 0.10747379664870767
+          },
+          "dominantFixture": "B"
+        },
+        {
+          "startSeconds": 1.2,
+          "rms": 0.107806,
+          "amplitudes": {
+            "440": 0.0023001949104349607,
+            "660": 0.10771782581775477
+          },
+          "dominantFixture": "B"
+        },
+        {
+          "startSeconds": 1.28,
+          "rms": 0.107488,
+          "amplitudes": {
+            "440": 0.002297510907520054,
+            "660": 0.10724249472737733
+          },
+          "dominantFixture": "B"
+        }
+      ],
+      "bothFixturesCaptured": true,
+      "passed": true
+    },
+    {
+      "file": "f6-after-tap.webm",
+      "bytes": 86728,
+      "sha256": "3d90b2948f5035d3c340e29836a4a8c0ffaf6d1bbb636741a0acb28cd7dfbd84",
+      "streams": [
+        {
+          "codec_name": "vp9",
+          "codec_type": "video",
+          "sample_rate": null,
+          "channels": null,
+          "nb_read_packets": "43"
+        },
+        {
+          "codec_name": "opus",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "nb_read_packets": "23"
+        }
+      ],
+      "decodedAudioSeconds": 1.38,
+      "windows": [
+        {
+          "startSeconds": 0.0,
+          "rms": 0.103032,
+          "amplitudes": {
+            "440": 0.09800398516479594,
+            "660": 0.00047946162598141225
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.08,
+          "rms": 0.107974,
+          "amplitudes": {
+            "440": 0.10801920769891618,
+            "660": 0.0007863885698333733
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.16,
+          "rms": 0.107851,
+          "amplitudes": {
+            "440": 0.10826327317818771,
+            "660": 0.002557399768943738
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.24,
+          "rms": 0.107496,
+          "amplitudes": {
+            "440": 0.10697992753475932,
+            "660": 0.0036024319481828696
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.32,
+          "rms": 0.107584,
+          "amplitudes": {
+            "440": 0.10745670450559923,
+            "660": 0.0034375107542109055
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.4,
+          "rms": 0.108131,
+          "amplitudes": {
+            "440": 0.1085169360339165,
+            "660": 0.0016489772349290706
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.48,
+          "rms": 0.107849,
+          "amplitudes": {
+            "440": 0.10787503851694388,
+            "660": 0.0007986945874742969
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.56,
+          "rms": 0.10784,
+          "amplitudes": {
+            "440": 0.10825552596093264,
+            "660": 0.002559340308935765
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.64,
+          "rms": 0.107498,
+          "amplitudes": {
+            "440": 0.10698085127953168,
+            "660": 0.0036032335088892298
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.72,
+          "rms": 0.107585,
+          "amplitudes": {
+            "440": 0.10745641052631734,
+            "660": 0.003437471074982985
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.8,
+          "rms": 0.108135,
+          "amplitudes": {
+            "440": 0.10851696919028979,
+            "660": 0.0016494022503192815
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.88,
+          "rms": 0.107855,
+          "amplitudes": {
+            "440": 0.10787481590618049,
+            "660": 0.0007990294523218555
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 0.96,
+          "rms": 0.107841,
+          "amplitudes": {
+            "440": 0.10825551289561766,
+            "660": 0.0025594044122922645
+          },
+          "dominantFixture": "A"
+        },
+        {
+          "startSeconds": 1.04,
+          "rms": 0.094946,
+          "amplitudes": {
+            "440": 0.03403918388648662,
+            "660": 0.049565643755302286
+          },
+          "dominantFixture": "transition/silence"
+        },
+        {
+          "startSeconds": 1.12,
+          "rms": 0.10806,
+          "amplitudes": {
+            "440": 0.001458739722343426,
+            "660": 0.10812183468704442
+          },
+          "dominantFixture": "B"
+        },
+        {
+          "startSeconds": 1.2,
+          "rms": 0.107857,
+          "amplitudes": {
+            "440": 0.0015072359341315703,
+            "660": 0.10801412413736704
+          },
+          "dominantFixture": "B"
+        },
+        {
+          "startSeconds": 1.28,
+          "rms": 0.107804,
+          "amplitudes": {
+            "440": 0.0020692749808523554,
+            "660": 0.10752882262915316
+          },
+          "dominantFixture": "B"
+        }
+      ],
+      "bothFixturesCaptured": true,
+      "passed": true
+    }
+  ],
+  "summary": {
+    "cases": 2,
+    "passed": 2,
+    "failed": 0
+  }
+}

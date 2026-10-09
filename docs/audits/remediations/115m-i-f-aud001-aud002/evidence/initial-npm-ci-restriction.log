@@ -1,0 +1,43 @@
+npm error code 1
+npm error path /workspace/Auralprint1/node_modules/esbuild
+npm error command failed
+npm error command sh -c node install.js
+npm error node:internal/child_process:1160
+npm error     result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+npm error                    ^
+npm error
+npm error <ref *1> Error: spawnSync /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node EPERM
+npm error     at Object.spawnSync (node:internal/child_process:1160:20)
+npm error     at spawnSync (node:child_process:928:24)
+npm error     at Object.execFileSync (node:child_process:971:15)
+npm error     at validateBinaryVersion (/workspace/Auralprint1/node_modules/esbuild/install.js:102:28)
+npm error     at /workspace/Auralprint1/node_modules/esbuild/install.js:285:5 {
+npm error   errno: -1,
+npm error   code: 'EPERM',
+npm error   syscall: 'spawnSync /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node',
+npm error   path: '/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node',
+npm error   spawnargs: [
+npm error     '/workspace/Auralprint1/node_modules/esbuild/bin/esbuild',
+npm error     '--version'
+npm error   ],
+npm error   error: [Circular *1],
+npm error   status: 0,
+npm error   signal: null,
+npm error   output: [
+npm error     null,
+npm error     Buffer(8) [Uint8Array] [
+npm error       48, 46, 50, 53,
+npm error       46, 49, 50, 10
+npm error     ],
+npm error     Buffer(0) [Uint8Array] []
+npm error   ],
+npm error   pid: 1636,
+npm error   stdout: Buffer(8) [Uint8Array] [
+npm error     48, 46, 50, 53,
+npm error     46, 49, 50, 10
+npm error   ],
+npm error   stderr: Buffer(0) [Uint8Array] []
+npm error }
+npm error
+npm error Node.js v24.19.0
+npm error A complete log of this run can be found in: /workspace/auralprint-environment/npm-cache/_logs/2026-10-09T02_45_36_152Z-debug-0.log

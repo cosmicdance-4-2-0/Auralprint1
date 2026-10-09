@@ -1,0 +1,580 @@
+{
+  "runs": [
+    {
+      "run": "independent-initial",
+      "summary": {
+        "cases": 21,
+        "passed": 20,
+        "failed": 1
+      },
+      "failures": [
+        {
+          "name": "installed File native error callback releases once",
+          "assertion": {
+            "message": "The input did not match the regular expression /failed|error|unreadable|unsupported/i. Input:\n\n'Loaded: A.wav'\n",
+            "actual": "Loaded: A.wav",
+            "expected": {},
+            "code": "ERR_ASSERTION"
+          },
+          "snapshot": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback error: unsupported or unreadable audio file."
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "A.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-playback-error",
+              "errorMessage": "Playback error: unsupported or unreadable audio file.",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": true
+                }
+              ],
+              "cursor": 0,
+              "length": 1
+            },
+            "entry": 12,
+            "request": {
+              "id": 1,
+              "entry": 12,
+              "pending": false,
+              "autoPlay": true
+            },
+            "media": null,
+            "graph": {
+              "sourceNode": null,
+              "outputGain": null,
+              "splitter": null,
+              "sumNode": null,
+              "sumGainL": null,
+              "sumGainR": null,
+              "activeUpstream": null,
+              "mediaStream": null,
+              "mediaElAbort": null,
+              "recorderTapDestination": null,
+              "recorderTapConnectedOutputGain": null
+            },
+            "ready": false,
+            "bands": 0,
+            "objectUrl": null,
+            "candidates": [
+              {
+                "id": 11,
+                "src": null,
+                "paused": true,
+                "aborted": true,
+                "callbacks": [
+                  {
+                    "type": "loadeddata",
+                    "aborted": true
+                  },
+                  {
+                    "type": "error",
+                    "aborted": true
+                  },
+                  {
+                    "type": "play",
+                    "aborted": true
+                  },
+                  {
+                    "type": "pause",
+                    "aborted": true
+                  },
+                  {
+                    "type": "ended",
+                    "aborted": true
+                  }
+                ]
+              }
+            ],
+            "nodes": [
+              {
+                "id": 2,
+                "kind": "source",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 9,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 1,
+                "kind": "splitter",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 7,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 5,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 6,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 3,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 4,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 8,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              }
+            ],
+            "notifications": [
+              {
+                "type": "track-change-start",
+                "details": {
+                  "requestId": 1,
+                  "filename": "A.wav"
+                }
+              },
+              {
+                "type": "track-change-complete",
+                "details": {
+                  "requestId": 1,
+                  "filename": "A.wav"
+                }
+              }
+            ],
+            "errors": [],
+            "nativeErrors": [
+              {
+                "media": 11
+              }
+            ],
+            "recorder": null,
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "idle",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": null,
+              "stoppedAtMs": null,
+              "elapsedMs": 0,
+              "chunkCount": 0,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "init",
+              "lastCode": "recording-supported-webm",
+              "lastMessage": "Audio + video recording is available. Using WebM (video/webm;codecs=vp9,opus).",
+              "lastUpdatedAtMs": 50.5
+            },
+            "capturedTracks": [],
+            "upstreamTracks": [],
+            "uiError": "Loaded: A.wav"
+          }
+        }
+      ]
+    },
+    {
+      "run": "independent-frame-observation",
+      "summary": {
+        "cases": 21,
+        "passed": 20,
+        "failed": 1
+      },
+      "failures": [
+        {
+          "name": "native recorder survives after-tap cleanup and retains export",
+          "assertion": {
+            "message": "The input did not match the regular expression /failed|error|unreadable|unsupported/i. Input:\n\n'Loaded: A.wav'\n",
+            "actual": "Loaded: A.wav",
+            "expected": {},
+            "code": "ERR_ASSERTION"
+          },
+          "snapshot": {
+            "audio": {
+              "isLoaded": false,
+              "isPlaying": false,
+              "filename": "",
+              "transportError": "Playback failed: audio source attachment failed: F6 controlled after-tap failure"
+            },
+            "source": {
+              "kind": "file",
+              "status": "error",
+              "label": "failed.wav",
+              "permission": {
+                "mic": "unknown",
+                "stream": "unknown"
+              },
+              "support": {
+                "mic": true,
+                "stream": true
+              },
+              "errorCode": "file-activation-failed",
+              "errorMessage": "Playback failed: audio source attachment failed: F6 controlled after-tap failure",
+              "sessionActive": false,
+              "streamMeta": {
+                "hasAudio": false,
+                "hasVideo": false,
+                "audioChannelCount": null
+              }
+            },
+            "queue": {
+              "items": [
+                {
+                  "index": 0,
+                  "name": "A.wav",
+                  "active": false
+                },
+                {
+                  "index": 1,
+                  "name": "failed.wav",
+                  "active": true
+                },
+                {
+                  "index": 2,
+                  "name": "B.wav",
+                  "active": false
+                }
+              ],
+              "cursor": 1,
+              "length": 3
+            },
+            "entry": 29,
+            "request": {
+              "id": 2,
+              "entry": 29,
+              "pending": false,
+              "autoPlay": true
+            },
+            "media": null,
+            "graph": {
+              "sourceNode": null,
+              "outputGain": null,
+              "splitter": null,
+              "sumNode": null,
+              "sumGainL": null,
+              "sumGainR": null,
+              "activeUpstream": null,
+              "mediaStream": null,
+              "mediaElAbort": null,
+              "recorderTapDestination": 12,
+              "recorderTapConnectedOutputGain": null
+            },
+            "ready": false,
+            "bands": 0,
+            "objectUrl": null,
+            "candidates": [
+              {
+                "id": 11,
+                "src": null,
+                "paused": true,
+                "aborted": true,
+                "callbacks": [
+                  {
+                    "type": "loadeddata",
+                    "aborted": true
+                  },
+                  {
+                    "type": "error",
+                    "aborted": true
+                  },
+                  {
+                    "type": "play",
+                    "aborted": true
+                  },
+                  {
+                    "type": "pause",
+                    "aborted": true
+                  },
+                  {
+                    "type": "ended",
+                    "aborted": true
+                  }
+                ]
+              },
+              {
+                "id": 28,
+                "src": null,
+                "paused": true,
+                "aborted": true,
+                "callbacks": [
+                  {
+                    "type": "loadeddata",
+                    "aborted": true
+                  },
+                  {
+                    "type": "error",
+                    "aborted": true
+                  },
+                  {
+                    "type": "play",
+                    "aborted": true
+                  },
+                  {
+                    "type": "pause",
+                    "aborted": true
+                  },
+                  {
+                    "type": "ended",
+                    "aborted": true
+                  }
+                ]
+              }
+            ],
+            "nodes": [
+              {
+                "id": 2,
+                "kind": "source",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 9,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 1,
+                "kind": "splitter",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 7,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 5,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 6,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 3,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 4,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 8,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 12,
+                "kind": "tap",
+                "disconnectAll": 0,
+                "destinations": []
+              },
+              {
+                "id": 20,
+                "kind": "source",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 27,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 19,
+                "kind": "splitter",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 25,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 23,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 24,
+                "kind": "gain",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 21,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 22,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              },
+              {
+                "id": 26,
+                "kind": "analyser",
+                "disconnectAll": 1,
+                "destinations": []
+              }
+            ],
+            "notifications": [
+              {
+                "type": "track-change-start",
+                "details": {
+                  "requestId": 1,
+                  "filename": "A.wav"
+                }
+              },
+              {
+                "type": "track-change-complete",
+                "details": {
+                  "requestId": 1,
+                  "filename": "A.wav"
+                }
+              },
+              {
+                "type": "track-change-start",
+                "details": {
+                  "requestId": 2,
+                  "filename": "failed.wav"
+                }
+              },
+              {
+                "type": "track-change-failed",
+                "details": {
+                  "requestId": 2,
+                  "filename": "failed.wav",
+                  "error": "Playback failed: audio source attachment failed: F6 controlled after-tap failure"
+                }
+              }
+            ],
+            "errors": [],
+            "nativeErrors": [],
+            "failureBoundary": {
+              "code": "after-tap",
+              "media": 28,
+              "source": 20,
+              "output": 27,
+              "tapConnected": 27
+            },
+            "recorder": {
+              "id": 16,
+              "state": "recording"
+            },
+            "recording": {
+              "hooksEnabled": true,
+              "phase": "recording",
+              "supportProbeStatus": "supported",
+              "isSupported": true,
+              "includePlaybackAudio": true,
+              "targetFps": 30,
+              "availableMimeTypes": [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm",
+                "video/mp4"
+              ],
+              "selectedMimeType": "video/webm;codecs=vp9,opus",
+              "resolvedMimeType": "video/webm;codecs=vp9,opus",
+              "startedAtMs": 1058.1000000014901,
+              "stoppedAtMs": null,
+              "elapsedMs": 1067,
+              "chunkCount": 1,
+              "lastExportUrl": null,
+              "lastExportFileName": "",
+              "lastExportByteSize": 0,
+              "lastAction": "transport-track-change-failed",
+              "lastCode": "track-change-failed",
+              "lastMessage": "Track change failed. Recording continues while no audio is currently loaded.",
+              "lastUpdatedAtMs": 2124.60000000149
+            },
+            "capturedTracks": [
+              {
+                "id": 17,
+                "kind": "audio",
+                "state": "live"
+              },
+              {
+                "id": 18,
+                "kind": "video",
+                "state": "live"
+              }
+            ],
+            "upstreamTracks": [],
+            "uiError": "Playback failed: audio source attachment failed: F6 controlled after-tap failure"
+          }
+        }
+      ]
+    }
+  ],
+  "disposition": "Observation scheduling in the evidence-only runner, no production fix. Immediate resource/source assertions remain; UI error is separately required after native animation-frame projection. A post-commit error can also wait for the existing 2500ms Loaded toast to expire.",
+  "exportObservation": "An intermediate spectrum check reused a prior after-tap export because its new browser case stopped at the premature UI assertion. That prior fixture had A and B both at 440Hz; no inference about capture failure is valid. Final distinct-tone runs use a fresh export directory and both demux/decode assertions pass."
+}
