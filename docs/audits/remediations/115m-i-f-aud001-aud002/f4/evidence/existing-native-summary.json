@@ -1,0 +1,539 @@
+{
+  "acceptedBaseline": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "phase": "F.3",
+  "startingF2": "0c188a06673b94ce124579ecd638ff890b161d32",
+  "version": "v0.1.15m.i.f",
+  "browser": "151.0.7922.173",
+  "mode": "headless Chromium; native Web Audio and HTMLMediaElement; muted browser output",
+  "node": "v24.19.0",
+  "artifactSha256": "a64bc33627928f9c1f9a1f82fa020ebfe4adb9418463831caa17d8531883f041",
+  "fixtures": [
+    {
+      "name": "A.wav",
+      "frequency": 440,
+      "bytes": 5292044,
+      "sha256": "259cfc5d6d337f45e47af87f5e3f8270ec081767593408d04d3802d4a6cfe215"
+    },
+    {
+      "name": "B.wav",
+      "frequency": 554,
+      "bytes": 5292044,
+      "sha256": "577ebcf36bdcf77a063120c5045efe16b4f5d7caefc70130acadc53f3825a67f"
+    },
+    {
+      "name": "C.wav",
+      "frequency": 659,
+      "bytes": 5292044,
+      "sha256": "113ffc485537b91013135758f982fe03934b071843477a243af7a7c79ce04fe6"
+    }
+  ],
+  "desiredAssertions": [
+    {
+      "name": "unmodified artifact plays valid WAV without exceptions",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending removal loads B and preserves autoplay",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "noncurrent removal leaves A authorized",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "final-remove cannot restore A",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "clear cannot restore A",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "loaded removal preserves playing intent",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "loaded removal preserves paused intent",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending replacement removal preserves requested autoplay despite old loaded metadata",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "duplicate-name/object removal creates successor request false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "duplicate-name/object removal creates successor request true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "current resume failure reaches observable terminal error without UI leak",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "constructor failure settles current source",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "failed Play retains media and projects recoverable error",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "Play retry succeeds without reload",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "valid file retry recovers true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "valid file retry recovers false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "latest C survives stale initial resume false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "latest C survives stale initial resume true",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "removing stale A preserves pending B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "File cannot reclaim mic",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "File cannot reclaim stream",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending paused removal loads paused B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "pending removal at media play boundary selects playing B",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "current attach rejection settles through existing guarded path",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "obsolete Play resume rejection stays silent after clear",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "obsolete Play resume rejection stays silent after replace",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "stale File attach cannot mutate winner false",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "stale File attach cannot mutate winner true",
+      "passed": true,
+      "phase": "F.2"
+    },
+    {
+      "name": "F.3 actual UI drop failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI drop retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI next failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI next retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI prev failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI prev retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI row failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI row retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI shortcut-next failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI shortcut-next retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI shortcut-prev failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI shortcut-prev retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI eof failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI eof retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI repeat-one failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI repeat-one retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI remove-successor failure settles exactly once",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 actual UI remove-successor retry recovers",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 obsolete activation rejection preserves mic",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 obsolete play rejection preserves mic",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 obsolete activation rejection preserves stream",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 obsolete play rejection preserves stream",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 Clear contains obsolete initial failure without notification",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 UI Play API boundary current is contained truthfully",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 UI Play API boundary replacement is contained truthfully",
+      "passed": true,
+      "phase": "F.3"
+    },
+    {
+      "name": "F.3 closed context reports unavailable playback without silent recreation",
+      "passed": true,
+      "phase": "F.3"
+    }
+  ],
+  "summary": {
+    "scenarios": 45,
+    "desiredFailures": 0,
+    "f2Failures": 0,
+    "f3Failures": 0,
+    "infrastructureFailure": false
+  },
+  "runnerExitStatus": 0,
+  "scenarios": [
+    {
+      "name": "ordinary unmodified artifact playback",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending A removed; B remains; initial load resume",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "noncurrent B removed while A pending",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending final-remove",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending clear",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "loaded playing A removed",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "loaded paused A removed",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending autoplay B removed after loaded A teardown; C successor",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "distinct Files with identical filenames",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "same File object enqueued twice (replayed file-input event)",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "initial load resume rejects",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "AudioContext constructor throws NotSupportedError",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "resume rejects during Play",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "Play retry after rejection",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "valid retry after constructor failure",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "valid retry after resume failure",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "A superseded by B then C; old resume resolves",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "A superseded by B then C; old resume rejects",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "A removed after B selection already began",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending File replaced by mic; synthetic native stream",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending File replaced by stream; synthetic native stream",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending paused load removed (in-memory loadAndPlay hook)",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pending A removed during load-time native play completion",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "current File attachSource resume rejects",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "old Play resume rejects after clear",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "old Play resume rejects after replace",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "stale File attach resume resolves after B wins",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "stale File attach resume rejects after B wins",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI drop failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI next failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI prev failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI row failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI shortcut-next failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI shortcut-prev failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI eof failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI repeat-one failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 actual UI remove-successor failure and selected File retry",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 obsolete activation rejection after mic",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 obsolete play rejection after mic",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 obsolete activation rejection after stream",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 obsolete play rejection after stream",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 initial resume rejection after Clear",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 UI Play API rejection current",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 UI Play API rejection replacement",
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "F.3 closed context (external in-memory native close only)",
+      "pageErrors": [],
+      "consoleErrors": []
+    }
+  ],
+  "fullTransientRunSha256": "556b69736fa5f63332cf94505a21c34b1ac60930d1789e2b67921d9765e95f1d",
+  "note": "Fresh F.4 execution of immutable F.3 runner; avoid duplicating prior 45-scenario snapshots. Full assertion results and current artifact hash retained."
+}

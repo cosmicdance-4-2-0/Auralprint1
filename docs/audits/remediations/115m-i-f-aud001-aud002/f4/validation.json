@@ -1,0 +1,224 @@
+{
+  "phase": "F.4",
+  "recordedAtUtc": "2026-10-09T05:45:35.929316+00:00",
+  "auditedCommit": "b6a3aa7989cf5ed54fde5012781a1809edaef5b3",
+  "auditedTree": "f83e063a8c4cdf98acfffb8b195c635e6045e84d",
+  "acceptedF1": "5a65a0a6cc100849088a2bee2b0647949ddfbb76",
+  "acceptedF2": "0c188a06673b94ce124579ecd638ff890b161d32",
+  "main": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "branch": "codex/115m-i-f-aud001-aud002",
+  "pr": 46,
+  "prDraft": true,
+  "version": "v0.1.15m.i.f",
+  "presetSchema": 10,
+  "build115N": "WITHHELD",
+  "dispositions": {
+    "AUD-001": "CLOSE",
+    "AUD-002": "REOPEN"
+  },
+  "overallAcceptance": "FAILED",
+  "recommendation": "HOLD draft PR; authorize narrow current failed-activation resource cleanup and regressions separately; do not merge this correction as complete.",
+  "environment": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "esbuild": "0.25.12",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.173",
+    "nativeMode": "headless Chromium native media/AudioContext/MediaRecorder, muted output",
+    "crossBrowser": {
+      "firefox": {
+        "path": "/home/agent/.cache/ms-playwright/firefox-1538/firefox/firefox",
+        "available": false
+      },
+      "webkit": {
+        "path": "/home/agent/.cache/ms-playwright/webkit-2336/pw_run.sh",
+        "available": false
+      }
+    },
+    "realDevicesOrPhysicalAudio": false
+  },
+  "sequentialValidation": {
+    "commands": [
+      {
+        "label": "npm-ci",
+        "command": [
+          "npm",
+          "ci",
+          "--offline",
+          "--cache",
+          "/workspace/auralprint-environment/npm-cache"
+        ],
+        "exitStatus": 0
+      },
+      {
+        "label": "npm-test",
+        "command": [
+          "npm",
+          "test"
+        ],
+        "exitStatus": 0
+      },
+      {
+        "label": "build",
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exitStatus": 0
+      },
+      {
+        "label": "distribution",
+        "command": [
+          "python",
+          "scripts/verify_distribution.py"
+        ],
+        "exitStatus": 0
+      },
+      {
+        "label": "diff-check",
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exitStatus": 0
+      }
+    ],
+    "tests": 673,
+    "passed": 672,
+    "failed": 0,
+    "skipped": 1,
+    "skip": "Established opt-in particle-budget benchmark"
+  },
+  "existingNative": {
+    "scenarios": 45,
+    "desiredAssertions": 54,
+    "passed": 54,
+    "failed": 0,
+    "original28Passed": 28,
+    "exitStatus": 0,
+    "infrastructureFailure": false
+  },
+  "negativeControls": {
+    "F2": {
+      "controls": 9,
+      "meaningfulDetections": 9
+    },
+    "F3": {
+      "controls": 9,
+      "meaningfulDetections": 9
+    },
+    "runnerExitStatuses": [
+      0,
+      0
+    ]
+  },
+  "independentNative": {
+    "cases": 18,
+    "passed": 15,
+    "failed": 2,
+    "infrastructureFailure": false,
+    "inconclusive": 1
+  },
+  "failureConfirmation": {
+    "current": {
+      "cases": 6,
+      "cleanupPass": 0,
+      "cleanupFail": 6,
+      "settlementAndRecoveryPass": 6
+    },
+    "historical": {
+      "cases": 6,
+      "cleanupPass": 0,
+      "cleanupFail": 6,
+      "settlementAndRecoveryPass": 6
+    },
+    "currentExitStatus": 1,
+    "historicalExitStatus": 1,
+    "historicalCommit": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+    "relationship": "Both current-failure cleanup gaps predate F.2/F.3; original six deferred contracts are corrected."
+  },
+  "newlyDemonstratedGap": {
+    "id": "F4-CLEANUP-01",
+    "severity": "Medium acceptance blocker; bounded retained ownership, not proven unbounded leak",
+    "confidence": "High for native decoder retention and controlled partial-graph branch; natural graph-allocation failure frequency unmeasured",
+    "source": "AudioEngine.loadFile attachment catch/hardFailure paths; InputSourceManager.activateFile controlled-false continuation",
+    "requiredInvariant": "III: current failed activation releases locally owned resources",
+    "recovery": "Clear and valid load pass in all six current/historical probes"
+  },
+  "nativeRecorder": {
+    "threeIntegratedCasesPassed": true,
+    "configuredPolicy": "Native canvas + audio, 30 fps, preferred WebM VP9/Opus; no policy change",
+    "finalization": "Actual native stop/data delivery, held onstop application callback; natural EOF once and Queue locks preserved",
+    "sharedTracks": "Synthetic native Mic upstream survives recorder Stop/dispose; source teardown ends it",
+    "exportProbe": "evidence/native-export-probe.json"
+  },
+  "distribution": {
+    "auralprint_0.1.15m.i.f.html": {
+      "bytes": 404956,
+      "sha256": "a64bc33627928f9c1f9a1f82fa020ebfe4adb9418463831caa17d8531883f041"
+    },
+    "hosted/apple-touch-icon.png": {
+      "bytes": 21085,
+      "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+    },
+    "hosted/favicon-96x96.png": {
+      "bytes": 9034,
+      "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817"
+    },
+    "hosted/favicon.ico": {
+      "bytes": 15086,
+      "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f"
+    },
+    "hosted/favicon.svg": {
+      "bytes": 1121,
+      "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16"
+    },
+    "hosted/index.html": {
+      "bytes": 403787,
+      "sha256": "7202568e9ffc7d40331f39e39450d8e4d35d2c86476c934c578ff38fd12af436"
+    },
+    "hosted/site.webmanifest": {
+      "bytes": 517,
+      "sha256": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495"
+    },
+    "hosted/web-app-manifest-192x192.png": {
+      "bytes": 22773,
+      "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991"
+    },
+    "hosted/web-app-manifest-512x512.png": {
+      "bytes": 105356,
+      "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+    }
+  },
+  "portableAndHostedRuntime": "HTTP portable, hosted root and hosted nested playback/removal and asset fetch passed",
+  "fileNavigation": {
+    "disposition": "INCONCLUSIVE",
+    "error": "ERR_BLOCKED_BY_ADMINISTRATOR",
+    "humanEvidence": "Developer reports successful desktop file:// use; not independently executed here"
+  },
+  "integrity": {
+    "existingTrackedFiles": 689,
+    "changedExistingTrackedFiles": 0,
+    "priorPhaseFiles": 51,
+    "priorEvidenceByteIdentical": true
+  },
+  "finalHeadCI": {
+    "status": "To be verified after evidence commit publication; final PR metadata and handoff record actual results",
+    "preCommitSuccessClaim": false
+  },
+  "build115NOutstanding": [
+    "Other AUD findings",
+    "Accessibility acceptance",
+    "Real-world hardware/browser compatibility",
+    "Performance/resource policy",
+    "Final release document approval"
+  ],
+  "unexecuted": [
+    "Firefox/WebKit engines unavailable; no downloads",
+    "Real Mic/display permissions and physical audibility",
+    "Long recordings/large-file stress",
+    "All possible native callback orders; exhaustive proof is not claimed"
+  ]
+}
