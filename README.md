@@ -1,4 +1,4 @@
-# Auralprint Roadmap (Builds 110 → 120)
+# Auralprint
 
 **Auralprint is an offline-capable audio-analysis system whose visualization expresses its analysis.** It combines file playback and live input analysis with configurable spectral inspection, visualizers, and recording.
 
