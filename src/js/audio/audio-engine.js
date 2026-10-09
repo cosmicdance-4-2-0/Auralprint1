@@ -59,7 +59,10 @@ const AudioEngine = (() => {
   }
 
   function describeUpstreamError(descriptor, err) {
-    if (descriptor && descriptor.kind === "file") return describePlaybackError(err);
+    if (descriptor && descriptor.kind === "file") {
+      if (err?.name === "AbortError") return describePlaybackError(err);
+      return `Playback failed: audio source attachment failed: ${err?.message || err?.name || "unknown error"}`;
+    }
     if (!err) return "Source activation failed.";
     return `Source activation failed: ${err.message || err.name || "unknown error"}`;
   }
@@ -139,7 +142,12 @@ const AudioEngine = (() => {
     try { if (sourceNode) sourceNode.disconnect(); } catch {}
     try { if (splitter) splitter.disconnect(); } catch {}
     try { if (sumNode) sumNode.disconnect(); } catch {}
+    try { if (sumGainL) sumGainL.disconnect(); } catch {}
+    try { if (sumGainR) sumGainR.disconnect(); } catch {}
     try { if (outputGain) outputGain.disconnect(); } catch {}
+    for (const band of bands.values()) {
+      try { band.analyser.disconnect(); } catch {}
+    }
 
     bands.clear();
     sourceNode = null;
@@ -170,13 +178,19 @@ const AudioEngine = (() => {
   function makeAnalyserBand(id, label) {
     const ctx = ensureContext();
     const a = ctx.createAnalyser();
-    a.fftSize = runtime.settings.audio.fftSize;
-    a.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
+    try {
+      a.fftSize = runtime.settings.audio.fftSize;
+      a.smoothingTimeConstant = runtime.settings.audio.smoothingTimeConstant;
 
-    const timeDomain = new Float32Array(a.fftSize);
-    const freqDb = new Float32Array(a.frequencyBinCount);
+      const timeDomain = new Float32Array(a.fftSize);
+      const freqDb = new Float32Array(a.frequencyBinCount);
 
-    return { id, label, analyser: a, timeDomain, freqDb, rms: 0, energy01: 0 };
+      return { id, label, analyser: a, timeDomain, freqDb, rms: 0, energy01: 0 };
+    } catch (err) {
+      // This analyser has not yet entered the engine-owned band map.
+      try { a.disconnect(); } catch {}
+      throw err;
+    }
   }
 
   function applyPlaybackSettingsLive() {
@@ -209,11 +223,10 @@ const AudioEngine = (() => {
     sumGainR.gain.value = 0.5;
 
     const bandL = makeAnalyserBand("L", "Left");
-    const bandR = makeAnalyserBand("R", "Right");
-    const bandC = makeAnalyserBand("C", "Center");
-
     bands.set("L", bandL);
+    const bandR = makeAnalyserBand("R", "Right");
     bands.set("R", bandR);
+    const bandC = makeAnalyserBand("C", "Center");
     bands.set("C", bandC);
 
     sourceNode.connect(splitter);
@@ -327,6 +340,12 @@ const AudioEngine = (() => {
     const playbackErrorMessage = "Playback error: unsupported or unreadable audio file.";
     const isCurrentMedia = () => isCurrentRequest() && mediaEl === nextMediaEl && !nextAbort.signal.aborted;
     const releaseCandidate = () => {
+      // Attachment can transfer ownership before graph construction fails.
+      // Only this request's installed media may release the engine graph.
+      if (isCurrentRequest() && mediaEl === nextMediaEl) {
+        teardown();
+        return;
+      }
       if (nextAbort.signal.aborted) return; // Active teardown already released it.
       nextAbort.abort();
       releaseMediaElement(nextMediaEl, url);
@@ -413,6 +432,10 @@ const AudioEngine = (() => {
       ? (playErr ? describePlaybackError(playErr) : (state.audio.transportError || "Playback failed: unsupported or unreadable audio file."))
       : (playErr ? describePlaybackError(playErr) : "");
     state.audio.isPlaying = !hardFailure && autoPlay && !nextMediaEl.paused;
+
+    // A failed activation has no valid session to retain. Recoverable Play
+    // errors on an already loaded File follow playPause(), not this branch.
+    if (hardFailure) releaseCandidate();
 
     return !hardFailure;
   }

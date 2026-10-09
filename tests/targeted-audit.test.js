@@ -4428,3 +4428,39 @@ test("AUD-002: synchronous load-time native Play throw reaches structured UI fai
     assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
   });
 });
+
+for (const path of ["picker", "drop"]) {
+  test(`F4-CLEANUP-01: UI ${path} hard decoder failure cleans resources and notifies exactly once`, async t => {
+    await withRc02FileWorkflow(t, {
+      freshMediaElements: true,
+      onMediaElement(element, index) {
+        if (index !== 0) return;
+        element.play = () => {
+          element.error = { code: 4 };
+          element.dispatch("error");
+          return Promise.reject(Object.assign(new Error("native decoder failure"), { name: "NotSupportedError" }));
+        };
+      },
+    }, async ({ ingest, mutations, audio, getElement, scrubberLoads, waitForCompletions }) => {
+      await ingest(["corrupt.wav"], path);
+      const failed = audio.mediaElements[0];
+      assert.equal(AudioEngine.getMediaEl(), null, "observe before Clear or retry");
+      assert.equal(AudioEngine.sample().ready, false);
+      assert.equal(failed.src, ""); assert.equal(failed.releaseCalls.pause, 1);
+      assert.equal(failed.releaseCalls.load, 1);
+      assert.ok([...failed.listeners.values()].flat().every(x => x.signal.aborted));
+      assert.equal(state.source.status, "error"); assert.equal(state.source.sessionActive, false);
+      assert.equal(state.source.errorMessage, state.audio.transportError);
+      assert.match(state.audio.transportError, /unsupported or unreadable/);
+      assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+      assert.equal(mutations.filter(x => x.kind === "track-change-complete").length, 0);
+      assert.deepEqual(scrubberLoads, []); assert.equal(Queue.current().name, "corrupt.wav");
+      await getElement("queueList").children[0].dispatch("click");
+      await waitForCompletions(1);
+      assert.equal(state.source.status, "active"); assert.equal(state.audio.filename, "corrupt.wav");
+      assert.notEqual(AudioEngine.getMediaEl(), failed); assert.equal(state.audio.transportError, "");
+      assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
+      assert.equal(mutations.filter(x => x.kind === "track-change-complete").length, 1);
+    });
+  });
+}

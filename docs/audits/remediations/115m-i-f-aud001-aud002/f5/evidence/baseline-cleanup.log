@@ -1,0 +1,6 @@
+corrupt 1 cleanup false clear/recovery PASS
+corrupt 2 cleanup false clear/recovery PASS
+corrupt 3 cleanup false clear/recovery PASS
+allocation 1 cleanup false clear/recovery PASS
+allocation 2 cleanup false clear/recovery PASS
+allocation 3 cleanup false clear/recovery PASS

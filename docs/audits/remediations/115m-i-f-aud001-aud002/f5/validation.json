@@ -1,0 +1,212 @@
+{
+  "phase": "F.5",
+  "recordedAtUtc": "2026-10-09T08:51:16.314110+00:00",
+  "startingCommit": "af13017c4950bfda82a0cecd5d350f2b2109fdca",
+  "startingTree": "684bc69deac4a17fe35827905129ef63fa7fe6de",
+  "auditedImplementation": "b6a3aa7989cf5ed54fde5012781a1809edaef5b3",
+  "branch": "codex/115m-i-f-aud001-aud002",
+  "pr": 46,
+  "prDraft": true,
+  "main": "0717e6c82ea5e4a9c08a2650e00730f4d698b3b5",
+  "version": "v0.1.15m.i.f",
+  "presetSchema": 10,
+  "build115N": "WITHHELD",
+  "finding": "F4-CLEANUP-01",
+  "acceptance": "F.5 implementation verified; independent F.6 acceptance remains required; no finding closed",
+  "environment": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "esbuild": "0.25.12",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.173",
+    "mode": "Headless Chromium native media, Web Audio and configured MediaRecorder; output muted; generated WAV"
+  },
+  "baselineReproduction": {
+    "runner": "Immutable f4/diagnostics/cleanup.cjs",
+    "exitStatus": 1,
+    "summary": {
+      "cases": 6,
+      "cleanupPass": 0,
+      "cleanupFail": 6,
+      "settlementAndRecoveryPass": 6
+    }
+  },
+  "cleanup": {
+    "exitStatus": 0,
+    "summary": {
+      "cases": 6,
+      "cleanupPass": 6,
+      "cleanupFail": 0,
+      "settlementAndRecoveryPass": 6
+    },
+    "observationPoint": "Before Clear, retry, stop or page disposal"
+  },
+  "nativeRecording": {
+    "exitStatus": 0,
+    "summary": {
+      "cases": 2,
+      "passed": 2,
+      "failed": 0,
+      "infrastructureFailure": false,
+      "inconclusive": 0
+    },
+    "realMediaRecorder": true,
+    "validExports": [
+      "VP9+Opus / 36 video+19 audio packets",
+      "VP9+Opus / 35 video+18 audio packets"
+    ]
+  },
+  "existingNative": {
+    "exitStatus": 0,
+    "scenarios": 45,
+    "assertions": 54,
+    "passed": 54,
+    "original28Passed": 28,
+    "failed": 0,
+    "infrastructureFailure": false,
+    "artifactSha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6"
+  },
+  "negativeControls": {
+    "f2": {
+      "controls": 9,
+      "meaningfulDetections": 9
+    },
+    "f3": {
+      "controls": 9,
+      "meaningfulDetections": 9
+    },
+    "f5": {
+      "controls": 10,
+      "meaningfulDetections": 10
+    }
+  },
+  "permanentRegressionsAdded": 21,
+  "defaultSuite": {
+    "tests": 694,
+    "passed": 693,
+    "failed": 0,
+    "skipped": 1,
+    "skip": "Established opt-in particle-budget benchmark"
+  },
+  "sequentialCommands": [
+    {
+      "label": "npm-ci",
+      "command": [
+        "npm",
+        "ci",
+        "--offline",
+        "--cache",
+        "/workspace/auralprint-environment/npm-cache"
+      ],
+      "exitStatus": 0,
+      "seconds": 0.5
+    },
+    {
+      "label": "npm-test",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exitStatus": 0,
+      "seconds": 7.07
+    },
+    {
+      "label": "build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exitStatus": 0,
+      "seconds": 0.22
+    },
+    {
+      "label": "distribution",
+      "command": [
+        "python",
+        "scripts/verify_distribution.py"
+      ],
+      "exitStatus": 0,
+      "seconds": 0.05
+    },
+    {
+      "label": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitStatus": 0,
+      "seconds": 0.01
+    }
+  ],
+  "distribution": {
+    "auralprint_0.1.15m.i.e.html": {
+      "bytes": 401173,
+      "sha256": "2075fd4d443fccf2bd2def64492e62342e69129407ebf46e3b033c3abcb18808"
+    },
+    "auralprint_0.1.15m.i.f.html": {
+      "bytes": 405707,
+      "sha256": "c085effc684f3fb277fee21f2bb573a8f4b80b4864fc807444b2e068764a66e6"
+    },
+    "esbuild-metafile.json": {
+      "bytes": 33770,
+      "sha256": "881c6e49910fe054175be28203184d71a7965ec5dc77f7fd80be98884e341d31"
+    },
+    "hosted/apple-touch-icon.png": {
+      "bytes": 21085,
+      "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+    },
+    "hosted/favicon-96x96.png": {
+      "bytes": 9034,
+      "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817"
+    },
+    "hosted/favicon.ico": {
+      "bytes": 15086,
+      "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f"
+    },
+    "hosted/favicon.svg": {
+      "bytes": 1121,
+      "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16"
+    },
+    "hosted/index.html": {
+      "bytes": 404538,
+      "sha256": "f14b3a1e26eda39a0b428c8f3d508c9d078fa3c3f05916eb7b96d3e709dd2d14"
+    },
+    "hosted/site.webmanifest": {
+      "bytes": 517,
+      "sha256": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495"
+    },
+    "hosted/web-app-manifest-192x192.png": {
+      "bytes": 22773,
+      "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991"
+    },
+    "hosted/web-app-manifest-512x512.png": {
+      "bytes": 105356,
+      "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+    }
+  },
+  "integrity": {
+    "startingCommit": "af13017c4950bfda82a0cecd5d350f2b2109fdca",
+    "existingTrackedFiles": 708,
+    "changedExistingTrackedFiles": [
+      "src/js/audio/audio-engine.js",
+      "tests/file-activation-ownership.test.js",
+      "tests/recording-export.test.js",
+      "tests/targeted-audit.test.js"
+    ],
+    "priorPhaseFileCount": 70,
+    "priorEvidenceByteIdentical": true
+  },
+  "finalHeadCI": {
+    "status": "Verify after separate F.5 commit is published; actual final-head results belong in PR metadata and handoff",
+    "preCommitSuccessClaim": false
+  },
+  "limitations": [
+    "No Firefox/WebKit engines installed; no downloads",
+    "No real microphone/display permissions or physical audibility coverage",
+    "Native graph refusal is controlled createGain fault, not naturally observed allocation failure",
+    "Short native recordings only; no long-session stress",
+    "F.6 independent acceptance and Build 115N release decision remain outstanding"
+  ]
+}

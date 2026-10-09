@@ -1,0 +1,3 @@
+native recording across corrupt activation cleanup/reconnection/stop/export retention PASS
+native recording across allocation activation cleanup/reconnection/stop/export retention PASS
+{"cases":2,"passed":2,"failed":0,"infrastructureFailure":false,"inconclusive":0}

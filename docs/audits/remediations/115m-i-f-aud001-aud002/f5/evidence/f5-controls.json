@@ -1,0 +1,201 @@
+{
+  "phase": "F.5",
+  "root": "/workspace/Auralprint1",
+  "node": "v24.19.0",
+  "controls": [
+    {
+      "name": "hard-decoder-cleanup-removed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (hardFailure) releaseCandidate();",
+        "after": "// Failed installed media retained."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=hard decoder native-error-before-rejection",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: hard decoder native-error-before-rejection cleans installed owner before any recovery\nnot ok 1 - F4-CLEANUP-01: hard decoder native-error-before-rejection cleans installed owner before any recovery\n  ---\n  duration_ms: 17.797975\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-p2vbq1kq/tests/file-activation-ownership.test.js:366:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    failed media is not installed\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    assertFailedResourcesReleased (file:///tmp/auralprint-f5-control-p2vbq1kq/tests/file-activation-ownership.test.js:311:10)\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-p2vbq1kq/tests/file-activation-ownership.test.js:383:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 88.924413\n"
+    },
+    {
+      "name": "post-transfer-cleanup-removed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (isCurrentRequest() && mediaEl === nextMediaEl) {\n        teardown();\n        return;\n      }",
+        "after": "// Only local candidate release remains."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=first-gain attachment failure",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: first-gain attachment failure releases all owned nodes before retry\nnot ok 1 - F4-CLEANUP-01: first-gain attachment failure releases all owned nodes before retry\n  ---\n  duration_ms: 13.438903\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-03dpiwcq/tests/file-activation-ownership.test.js:334:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    failed media is not installed\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    assertFailedResourcesReleased (file:///tmp/auralprint-f5-control-03dpiwcq/tests/file-activation-ownership.test.js:311:10)\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-03dpiwcq/tests/file-activation-ownership.test.js:351:35)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 112.617617\n"
+    },
+    {
+      "name": "current-owner-cleanup-guard-removed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (isCurrentRequest() && mediaEl === nextMediaEl) {",
+        "after": "if (true) {"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=engine media identity protects direct API replacement",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: engine media identity protects direct API replacement without a UI request ID\nnot ok 1 - F4-CLEANUP-01: engine media identity protects direct API replacement without a UI request ID\n  ---\n  duration_ms: 21.215831\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-kbegain4/tests/file-activation-ownership.test.js:471:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-kbegain4/tests/file-activation-ownership.test.js:482:10)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 134.336736\n"
+    },
+    {
+      "name": "obsolete-completion-unloads-winner",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (!isCurrentRequest() || mediaEl !== nextMediaEl) {\n      releaseCandidate();",
+        "after": "if (!isCurrentRequest() || mediaEl !== nextMediaEl) {\n      teardown();\n      releaseCandidate();"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=obsolete hard failure cannot clean or rewrite file owner",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: obsolete hard failure cannot clean or rewrite file owner\nnot ok 1 - F4-CLEANUP-01: obsolete hard failure cannot clean or rewrite file owner\n  ---\n  duration_ms: 16.825192\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-sb5exoc1/tests/file-activation-ownership.test.js:410:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-sb5exoc1/tests/file-activation-ownership.test.js:431:12)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 104.80467\n"
+    },
+    {
+      "name": "partial-source-reference-retained",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "    sourceNode = null;",
+        "after": "    // Failed source node reference retained."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=first-gain attachment failure",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: first-gain attachment failure releases all owned nodes before retry\nnot ok 1 - F4-CLEANUP-01: first-gain attachment failure releases all owned nodes before retry\n  ---\n  duration_ms: 14.108025\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-3q4mxof3/tests/file-activation-ownership.test.js:334:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    sourceNode reference released\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    assertFailedResourcesReleased (file:///tmp/auralprint-f5-control-3q4mxof3/tests/file-activation-ownership.test.js:315:12)\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-3q4mxof3/tests/file-activation-ownership.test.js:351:35)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 103.953479\n"
+    },
+    {
+      "name": "current-error-erased-by-cleanup",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "if (hardFailure) releaseCandidate();",
+        "after": "if (hardFailure) { releaseCandidate(); state.audio.transportError = \"\"; }"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=hard decoder native-error-before-rejection",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: hard decoder native-error-before-rejection cleans installed owner before any recovery\nnot ok 1 - F4-CLEANUP-01: hard decoder native-error-before-rejection cleans installed owner before any recovery\n  ---\n  duration_ms: 14.478108\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-gnic6_jk/tests/file-activation-ownership.test.js:366:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'Playback failed.'\n    - ''\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: ''\n  actual: 'Playback failed.'\n  operator: 'strictEqual'\n  stack: |-\n    assertFailedResourcesReleased (file:///tmp/auralprint-f5-control-gnic6_jk/tests/file-activation-ownership.test.js:328:48)\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-gnic6_jk/tests/file-activation-ownership.test.js:383:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 101.706498\n"
+    },
+    {
+      "name": "file-failure-notification-duplicated",
+      "file": "src/js/ui/ui.js",
+      "mutation": {
+        "before": "if (!ok) {\n        RecorderEngine.onTransportMutation(\"track-change-failed\", {",
+        "after": "if (!ok) {\n        RecorderEngine.onTransportMutation(\"track-change-failed\", {requestId});\n        RecorderEngine.onTransportMutation(\"track-change-failed\", {"
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=UI picker hard decoder failure",
+        "tests/targeted-audit.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: UI picker hard decoder failure cleans resources and notifies exactly once\nnot ok 1 - F4-CLEANUP-01: UI picker hard decoder failure cleans resources and notifies exactly once\n  ---\n  duration_ms: 39.024\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-pa0x1u7d/tests/targeted-audit.test.js:4433:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    2 !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  actual: 2\n  operator: 'strictEqual'\n  stack: |-\n    file:///tmp/auralprint-f5-control-pa0x1u7d/tests/targeted-audit.test.js:4455:14\n    async file:///tmp/auralprint-f5-control-pa0x1u7d/tests/targeted-audit.test.js:3679:9\n    async withUiWireHarnessState (file:///tmp/auralprint-f5-control-pa0x1u7d/tests/targeted-audit.test.js:304:12)\n    async withRc02FileWorkflow (file:///tmp/auralprint-f5-control-pa0x1u7d/tests/targeted-audit.test.js:3663:5)\n    async TestContext.<anonymous> (file:///tmp/auralprint-f5-control-pa0x1u7d/tests/targeted-audit.test.js:4434:5)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 160.683433\n"
+    },
+    {
+      "name": "recoverable-play-forced-teardown",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "// Resume failure does not invalidate the loaded File/session or graph.",
+        "after": "teardown(); // Recoverable File wrongly released."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=recoverable loaded Play resume failure retains identity",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: recoverable loaded Play resume failure retains identity, graph and position\nnot ok 1 - F4-CLEANUP-01: recoverable loaded Play resume failure retains identity, graph and position\n  ---\n  duration_ms: 14.135081\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-mybx93gm/tests/file-activation-ownership.test.js:457:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-mybx93gm/tests/file-activation-ownership.test.js:463:10)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 89.256803\n"
+    },
+    {
+      "name": "partial-analysis-nodes-not-disconnected",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "try { if (sumGainL) sumGainL.disconnect(); } catch {}",
+        "after": "// Partial sumGainL left connected."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=partial-gains attachment failure",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: partial-gains attachment failure releases all owned nodes before retry\nnot ok 1 - F4-CLEANUP-01: partial-gains attachment failure releases all owned nodes before retry\n  ---\n  duration_ms: 15.927818\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-u3igfctc/tests/file-activation-ownership.test.js:334:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    allocated gain disconnected once\n    \n    0 !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  actual: 0\n  operator: 'strictEqual'\n  stack: |-\n    assertFailedResourcesReleased (file:///tmp/auralprint-f5-control-u3igfctc/tests/file-activation-ownership.test.js:323:12)\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-u3igfctc/tests/file-activation-ownership.test.js:351:35)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 99.384831\n"
+    },
+    {
+      "name": "local-analyser-setup-cleanup-removed",
+      "file": "src/js/audio/audio-engine.js",
+      "mutation": {
+        "before": "try { a.disconnect(); } catch {}",
+        "after": "// Uninstalled analyser left unreleased."
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=analyser-setup attachment failure",
+        "tests/file-activation-ownership.test.js"
+      ],
+      "exitStatus": 1,
+      "detectedByAssertion": true,
+      "infrastructureFailure": false,
+      "log": "TAP version 13\n# Subtest: F4-CLEANUP-01: analyser-setup attachment failure releases all owned nodes before retry\nnot ok 1 - F4-CLEANUP-01: analyser-setup attachment failure releases all owned nodes before retry\n  ---\n  duration_ms: 16.115731\n  type: 'test'\n  location: '/tmp/auralprint-f5-control-64wfs7jt/tests/file-activation-ownership.test.js:334:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    allocated analyser disconnected once\n    \n    0 !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  actual: 0\n  operator: 'strictEqual'\n  stack: |-\n    assertFailedResourcesReleased (file:///tmp/auralprint-f5-control-64wfs7jt/tests/file-activation-ownership.test.js:323:12)\n    TestContext.<anonymous> (file:///tmp/auralprint-f5-control-64wfs7jt/tests/file-activation-ownership.test.js:351:35)\n    async Test.run (node:internal/test_runner/test:1389:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 94.416552\n"
+    }
+  ],
+  "summary": {
+    "controls": 10,
+    "meaningfulDetections": 10
+  }
+}
