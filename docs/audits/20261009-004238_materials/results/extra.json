@@ -1,0 +1,102 @@
+[
+  {
+    "name": "resume rejected",
+    "result": {
+      "source": {
+        "kind": "file",
+        "status": "requesting",
+        "label": "failure.wav",
+        "permission": {
+          "mic": "unknown",
+          "stream": "unknown"
+        },
+        "support": {
+          "mic": true,
+          "stream": true
+        },
+        "errorCode": "",
+        "errorMessage": "",
+        "sessionActive": false,
+        "streamMeta": {
+          "hasAudio": false,
+          "hasVideo": false,
+          "audioChannelCount": null
+        }
+      },
+      "audio": {
+        "isLoaded": false,
+        "isPlaying": false,
+        "filename": "",
+        "transportError": ""
+      },
+      "queue": {
+        "items": [
+          {
+            "index": 0,
+            "name": "failure.wav",
+            "active": true
+          }
+        ],
+        "cursor": 0,
+        "length": 1
+      },
+      "status": "File mode ready. Select a queued file or load audio files."
+    },
+    "errors": [
+      "diagnostic resume refusal"
+    ]
+  },
+  {
+    "name": "synthetic live stereo and recorder ownership",
+    "result": {
+      "L": 441.4306640625,
+      "R": 877.47802734375,
+      "C": 441.4306640625,
+      "monoLike": false,
+      "startOk": true,
+      "phase": "complete",
+      "bytes": 197760,
+      "before": "live",
+      "after": "live"
+    },
+    "errors": []
+  },
+  {
+    "name": "fractional persisted non-phase range",
+    "result": {
+      "canonicalSpeed": 0.123456,
+      "thumbSpeed": "0.12",
+      "canonicalLines": 15.5,
+      "thumbLines": "20"
+    }
+  },
+  {
+    "name": "recorder reset error remains",
+    "result": {
+      "before": "error",
+      "after": "error",
+      "resetCode": "render-capture-unavailable",
+      "lastMessage": "Canvas capture did not provide a video stream."
+    }
+  },
+  {
+    "name": "idle UI scale synthetic batches",
+    "result": [
+      {
+        "orbs": 2,
+        "controls": 140,
+        "refresh30Ms": 7.2999999999883585
+      },
+      {
+        "orbs": 16,
+        "controls": 574,
+        "refresh30Ms": 13.900000000023283
+      },
+      {
+        "orbs": 64,
+        "controls": 2062,
+        "refresh30Ms": 30.5
+      }
+    ]
+  }
+]

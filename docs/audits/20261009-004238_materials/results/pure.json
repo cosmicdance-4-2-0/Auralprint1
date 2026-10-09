@@ -1,0 +1,50 @@
+[
+  {
+    "floor": 20,
+    "nonFiniteEdges": 0,
+    "zeroEnergies": 0,
+    "firstEdges": [
+      0,
+      20,
+      20.560913555188172,
+      21.13755831119604,
+      21.730375460212557
+    ]
+  },
+  {
+    "floor": 1e-307,
+    "nonFiniteEdges": 0,
+    "zeroEnergies": 253,
+    "firstEdges": [
+      0,
+      1e-307,
+      22500,
+      22500,
+      22500
+    ]
+  },
+  {
+    "floor": 5e-324,
+    "nonFiniteEdges": 0,
+    "zeroEnergies": 253,
+    "firstEdges": [
+      0,
+      5e-324,
+      22500,
+      22500,
+      22500
+    ]
+  },
+  {
+    "name": "default ceiling on 44.1 kHz",
+    "topRange": "22.1 kHz–22.1 kHz",
+    "topEnergy": 0
+  },
+  {
+    "name": "count 3 targets 255",
+    "target": [
+      255
+    ],
+    "energy": 0
+  }
+]

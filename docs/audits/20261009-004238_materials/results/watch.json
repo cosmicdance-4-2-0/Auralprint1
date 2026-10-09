@@ -1,0 +1,7 @@
+{
+  "templateChangeTriggeredBuild": false,
+  "jsRebuildUsesChangedTemplate": true,
+  "newVersionArtifactCreated": false,
+  "oldArtifactVersionRetained": true,
+  "log": "[watch] build finished, watching for changes...\n[watch] build finished, watching for changes...\n[watch] build started (change: \"src/js/main.js\")\n[watch] build finished\n"
+}
