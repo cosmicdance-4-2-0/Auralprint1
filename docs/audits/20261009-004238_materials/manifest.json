@@ -1,0 +1,72 @@
+{
+  "audited_commit": "f5bbf2a25ffbf8b122e81bd9f54e3639a53a6243",
+  "audited_version": "v0.1.15m.i.c",
+  "report_generated_at": "2026-10-09T00:42:38Z",
+  "files": [
+    {
+      "path": "docs/20261009-004238_project-audit.md",
+      "bytes": 94537,
+      "sha256": "f703d85e56d49268200fde779cf95a61493f2f105fc0789a921ca60a74ce2a5d"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/README.md",
+      "bytes": 6100,
+      "sha256": "e6cba059df0ca439e716cf5a41393ca6ae908a6f0e38a1420db8e348c37e436a"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/original-diagnostics/extra.cjs",
+      "bytes": 5236,
+      "sha256": "90e1005856c6721ac662ec6822f0b8fa112d1083305ad9a12fbc3c9166bac04f"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/original-diagnostics/native.cjs",
+      "bytes": 6550,
+      "sha256": "1006d15a44baad8705f4d85a30120cff581f2c0b03de2c0e93595b0f3a9fd727"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/original-diagnostics/pure.mjs",
+      "bytes": 1988,
+      "sha256": "fdfde6e6d3af4f4d9e3d260bfa749662b995d11b1eceb015a4a207df287d197f"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/original-diagnostics/watch.cjs",
+      "bytes": 2013,
+      "sha256": "fd92b47123433ce87f71d3a7aac002c883b4b09376145b95697d9da9696007cb"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/build.log",
+      "bytes": 137,
+      "sha256": "64b4ff929f71697c248d198c630ccfaf8e8744b6a0da17b975eadbbd2d11e51e"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/extra.json",
+      "bytes": 2193,
+      "sha256": "187b60ff98313e951c59c17b8f9b20396ddba6043a5c1827e43a081f1d49ea51"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/native.json",
+      "bytes": 5555,
+      "sha256": "d26704535c73d04d02ad97898ffd30cb6c9e10923a6bfcc3246084e43f92f2b3"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/npm-ci.log",
+      "bytes": 27,
+      "sha256": "151b12f980a3385146979f5861537502e289e3594a7c92f194ba481ef22ccafc"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/npm-test-installed.log",
+      "bytes": 2180,
+      "sha256": "e8f0bfdbfd07d63b9cbea330f644b8f09f51baf091c82a23928ed94f60cd6452"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/pure.json",
+      "bytes": 735,
+      "sha256": "5f63b6775ea28e890c2725a32648b496c1fc8e0e760a1b7d7c7781718bc1fabc"
+    },
+    {
+      "path": "docs/audits/20261009-004238_materials/results/watch.json",
+      "bytes": 346,
+      "sha256": "d2040fab8b3a0b30291b679e9db4489dee434fba7ff2a84a6be0805fdf9de7ee"
+    }
+  ]
+}

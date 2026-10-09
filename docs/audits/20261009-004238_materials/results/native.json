@@ -1,0 +1,240 @@
+{
+  "version": "v0.1.15m.i.c",
+  "browser": "151.0.7922.173",
+  "scenarios": [
+    {
+      "name": "unmodified built artifact playback and native recording",
+      "status": "Latest export ready",
+      "exportMeta": "Latest export: auralprint-capture-20261009-002857.webm (98226 bytes)",
+      "errors": [],
+      "requestedAssets": [
+        "/",
+        "/favicon.svg",
+        "/favicon-96x96.png",
+        "/apple-touch-icon.png"
+      ]
+    },
+    {
+      "name": "remove pending current while successor remains",
+      "before": {
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "surviving-B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "requesting",
+          "label": "removed-A.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        }
+      },
+      "after": {
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "surviving-B.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "audio": {
+          "isLoaded": true,
+          "isPlaying": true,
+          "filename": "removed-A.wav",
+          "transportError": ""
+        },
+        "source": {
+          "kind": "file",
+          "status": "active",
+          "label": "removed-A.wav",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "src": "blob:http://localhost/b2e8f146-b25f-4a7d-b931-3c75b9f9fc01"
+      },
+      "errors": []
+    },
+    {
+      "name": "idle UI attribute writes",
+      "result": {
+        "refreshes": 60,
+        "ms": 12.39999999999418,
+        "mutations": 7260,
+        "titles": 5340,
+        "aria": 1020
+      },
+      "errors": []
+    },
+    {
+      "name": "non-default band count picker",
+      "result": {
+        "activeCount": 3,
+        "knownNames": 256,
+        "band255Range": "n/a",
+        "editorBandLimit": "Comma-separated band indices (0–255). Empty = full spectrum energy.\nBand indices: full spectrum",
+        "bankEdges": [
+          0,
+          20,
+          22500
+        ]
+      }
+    },
+    {
+      "name": "focus lost after unrelated settings update",
+      "result": {
+        "before": "edit",
+        "after": "BODY",
+        "oldNodeConnected": false
+      }
+    },
+    {
+      "name": "mobile panel layout",
+      "result": [
+        {
+          "id": "audioPanel",
+          "display": "grid",
+          "rect": {
+            "x": 10,
+            "y": 404.5,
+            "width": 355,
+            "height": 194.5,
+            "top": 404.5,
+            "right": 365,
+            "bottom": 599,
+            "left": 10
+          }
+        },
+        {
+          "id": "queuePanel",
+          "display": "none",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "id": "visualizersPanel",
+          "display": "none",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "id": "analysisPanel",
+          "display": "none",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "id": "scenePanel",
+          "display": "none",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "id": "recordPanel",
+          "display": "none",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "id": "workspaceLauncher",
+          "display": "grid",
+          "rect": {
+            "x": 11.2578125,
+            "y": 607,
+            "width": 352.484375,
+            "height": 50,
+            "top": 607,
+            "right": 363.7421875,
+            "bottom": 657,
+            "left": 11.2578125
+          }
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
