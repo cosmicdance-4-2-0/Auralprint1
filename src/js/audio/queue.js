@@ -71,6 +71,11 @@ const Queue = (() => {
     return _items[_cursor].file;
   }
 
+  // Runtime-only opaque identity handles. Each add() creates a distinct entry,
+  // even for the same File. Callers must not mutate or serialize these objects.
+  function entryAt(index) { return _items[index] || null; }
+  function currentEntry() { return entryAt(_cursor); }
+
   function canNext() { return _items.length > 0 && _cursor < _items.length - 1; }
   function canPrev() { return _items.length > 0 && _cursor > 0; }
 
@@ -98,7 +103,7 @@ const Queue = (() => {
     };
   }
 
-  return { add, remove, clear, goTo, next, prev, current, canNext, canPrev, shuffle, snapshot,
+  return { add, remove, clear, goTo, next, prev, current, entryAt, currentEntry, canNext, canPrev, shuffle, snapshot,
     get length() { return _items.length; },
     get currentIndex() { return _cursor; },
     // Direct cursor write — used when add() triggers the first auto-play.

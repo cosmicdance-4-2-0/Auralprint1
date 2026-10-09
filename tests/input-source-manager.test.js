@@ -998,3 +998,39 @@ test("URL preset serialization excludes runtime source state", () => {
     globalThis.atob = previousAtob;
   }
 });
+
+for (const kind of ["mic", "stream"]) {
+  test(`AUD-001: stale File continuation after teardown cannot publish over newer ${kind}`, async () => {
+    let current = 1;
+    const live = createFakeMediaStream();
+    const h = createManagerHarness({
+      isLoadRequestCurrent: id => id === current,
+      mediaDevices: { async getUserMedia() { return live.stream; }, async getDisplayMedia() { return live.stream; } },
+    });
+    assert.equal((await h.manager.activateFile({ name: "loaded.wav" }, { requestId: 1 })).ok, true);
+    const writes = [];
+    h.stateRef.source = new Proxy(h.stateRef.source, {
+      set(object, key, value) { writes.push({ key, value }); object[key] = value; return true; },
+    });
+    const obsolete = h.manager.activateFile({ name: "obsolete.wav" }, { requestId: 1 });
+    // teardown has run synchronously, but activateFile has not resumed its await.
+    current = 2;
+    const winner = kind === "mic" ? h.manager.activateMic() : h.manager.activateStream();
+    const boundary = writes.length;
+    assert.equal(await obsolete, false);
+    assert.equal((await winner).ok, true);
+    assert.equal(h.calls.loadFile.length, 1, "obsolete engine work never starts");
+    assert.ok(!writes.slice(boundary).some(x => x.key === "kind" && x.value === "file"));
+    assert.ok(!writes.slice(boundary).some(x => x.key === "label" && x.value === "obsolete.wav"));
+    assert.equal(h.stateRef.source.kind, kind); assert.equal(h.stateRef.source.status, "active");
+    assert.equal(live.audioTrack.stopCount, 0);
+    const before = structuredClone({ ...h.stateRef.source });
+    const unloads = h.calls.unload, count = writes.length;
+    assert.equal(await h.manager.activateFile({ name: "already-stale.wav" }, { requestId: 1 }), false);
+    assert.equal(h.calls.unload, unloads, "stale entry guard cannot tear down the current owner");
+    assert.equal(writes.length, count);
+    assert.deepEqual({ ...h.stateRef.source }, before);
+    assert.equal(live.audioTrack.stopCount, 0);
+    await h.manager.teardownActiveSource();
+  });
+}

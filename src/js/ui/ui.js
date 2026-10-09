@@ -1275,10 +1275,19 @@ const UI = (() => {
        DoD: no trail bleed between tracks; scrubber never shows stale waveform.
        ------------------------------------------------------------------------- */
     let activeLoadRequestId = 0;
+    // File intent belongs to this request and Queue entry, never to a preset.
+    let activeFileRequest = null;
     let pendingTrackEnd = null;
+
+    function isCurrentFileRequest(requestId) {
+      return requestId === activeLoadRequestId
+        && activeFileRequest?.requestId === requestId
+        && activeFileRequest.entry === Queue.currentEntry();
+    }
 
     function invalidatePendingTrackLoads() {
       pendingTrackEnd = null;
+      activeFileRequest = null;
       activeLoadRequestId += 1;
     }
 
@@ -1360,8 +1369,12 @@ const UI = (() => {
 
     async function loadAndPlay(file, opts = {}) {
       if (!file) return false;
+      const entry = Queue.currentEntry();
+      if (!entry || entry.file !== file) return false;
       pendingTrackEnd = null;
       const requestId = ++activeLoadRequestId;
+      const request = { requestId, entry, autoPlay: opts?.autoPlay !== false, pending: true };
+      activeFileRequest = request;
       state.audio.transportError = "";
       RecorderEngine.onTransportMutation("track-change-start", {
         requestId,
@@ -1370,11 +1383,16 @@ const UI = (() => {
       // Hard reset visual state immediately on every track switch so no stale
       // waveform/playhead, trail particles, or dominant band state can persist.
       resetTrackVisualState();
-      const activation = await InputSourceManager.activateFile(file, {
-        requestId,
-        autoPlay: opts && opts.autoPlay === false ? false : true,
-      });
-      if (requestId !== activeLoadRequestId) return false;
+      let activation;
+      try {
+        activation = await InputSourceManager.activateFile(file, {
+          requestId,
+          autoPlay: request.autoPlay,
+        });
+      } finally {
+        request.pending = false;
+      }
+      if (!isCurrentFileRequest(requestId)) return false;
       const ok = !!(activation && activation.ok);
       if (!ok) {
         RecorderEngine.onTransportMutation("track-change-failed", {
@@ -1402,7 +1420,7 @@ const UI = (() => {
        Single source of truth for queue-aware repeat behavior on natural track end.
        The hook survives teardown() intentionally — registered once at boot,
        must persist across track loads. Documented in 111c/111d. */
-    AudioEngine._isLoadRequestCurrent = (requestId) => requestId === activeLoadRequestId;
+    AudioEngine._isLoadRequestCurrent = isCurrentFileRequest;
 
     function enqueueFileBatch(files) {
       const wasEmpty = Queue.length === 0;
@@ -1453,6 +1471,7 @@ const UI = (() => {
       pendingTrackEnd = null;
       if (!isFileWorkflowMode()
         || !pending.file || Queue.current() !== pending.file
+        || Queue.currentEntry() !== pending.entry
         || !pending.mediaEl || AudioEngine.getMediaEl() !== pending.mediaEl
         || activeLoadRequestId !== pending.requestId) return;
       applyTrackEndedPolicy(pending);
@@ -1461,6 +1480,7 @@ const UI = (() => {
     AudioEngine._onTrackEnded = () => {
       const context = {
         file: Queue.current(),
+        entry: Queue.currentEntry(),
         mediaEl: AudioEngine.getMediaEl(),
         repeatMode: preferences.audio.repeatMode,
         requestId: activeLoadRequestId,
@@ -1542,8 +1562,13 @@ const UI = (() => {
         removeBtn.addEventListener("click", (e) => {
           if (isQueueInteractionBlocked()) return;
           e.stopPropagation(); // prevent row click-to-jump
-          const wasActive = hasActiveFileSource(state.source, state.audio) && Queue.currentIndex === item.index;
-          const wasPlaying = state.audio.isPlaying;
+          const removedEntry = Queue.entryAt(item.index);
+          const ownsRequest = activeFileRequest?.entry === removedEntry
+            && isCurrentFileRequest(activeFileRequest.requestId);
+          const wasPending = ownsRequest && activeFileRequest.pending;
+          const wasActive = ownsRequest && (wasPending || hasActiveFileSource(state.source, state.audio));
+          const wasPlaying = wasPending ? activeFileRequest.autoPlay : state.audio.isPlaying;
+          if (wasActive) invalidatePendingTrackLoads();
           const nextFile = Queue.remove(item.index);
           if (wasActive && nextFile) {
             // Removed active track. Successor is loaded preserving prior play/pause intent.

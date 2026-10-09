@@ -1,0 +1,40 @@
+{
+  "scenarios": 28,
+  "desiredFailures": 6,
+  "f2Failures": 0,
+  "f3Failures": 6,
+  "infrastructureFailure": false
+}
+DESIRED CONTRACT FAILED: current resume failure reaches observable terminal error without UI leak
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'requesting'
+- 'error'
+
+DESIRED CONTRACT FAILED: constructor failure settles current source
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'requesting'
+- 'error'
+
+DESIRED CONTRACT FAILED: failed Play retains media and projects recoverable error
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(after.audio.transportError)
+
+DESIRED CONTRACT FAILED: latest C survives stale initial resume true
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+DESIRED CONTRACT FAILED: obsolete Play resume rejection stays silent after clear
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+DESIRED CONTRACT FAILED: obsolete Play resume rejection stays silent after replace
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0

@@ -1,0 +1,38 @@
+{
+  "auralprint_0.1.15m.i.f.html": {
+    "bytes": 403099,
+    "sha256": "cd5fe1b34e7ee7edddc860da78494b28d8eb41f75ebd1966552b0cdb9857ea39"
+  },
+  "hosted/apple-touch-icon.png": {
+    "bytes": 21085,
+    "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+  },
+  "hosted/favicon-96x96.png": {
+    "bytes": 9034,
+    "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817"
+  },
+  "hosted/favicon.ico": {
+    "bytes": 15086,
+    "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f"
+  },
+  "hosted/favicon.svg": {
+    "bytes": 1121,
+    "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16"
+  },
+  "hosted/index.html": {
+    "bytes": 401930,
+    "sha256": "363e6318e6155dc2a33cd543448a227f642455859ee0dc2153c9e7438b4c2b22"
+  },
+  "hosted/site.webmanifest": {
+    "bytes": 517,
+    "sha256": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495"
+  },
+  "hosted/web-app-manifest-192x192.png": {
+    "bytes": 22773,
+    "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991"
+  },
+  "hosted/web-app-manifest-512x512.png": {
+    "bytes": 105356,
+    "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+  }
+}

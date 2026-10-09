@@ -437,6 +437,8 @@ function createInputSourceManager(deps = {}) {
   }
 
   async function activateFile(file, options = {}) {
+    const requestId = Object.prototype.hasOwnProperty.call(options, "requestId") ? options.requestId : null;
+    if (!isLoadRequestCurrent(requestId)) return false;
     if (!file) {
       return commitFailure("file", {
         status: "error",
@@ -449,6 +451,10 @@ function createInputSourceManager(deps = {}) {
       await teardownActiveSource({ reason: "switch-to-file" });
     }
 
+    // The UI may have selected a successor or acquired a live source while
+    // teardown yielded. Obsolete File work cannot publish or start engine work.
+    if (!isLoadRequestCurrent(requestId)) return false;
+
     const sourceState = ensureSourceState();
     sourceState.kind = "file";
     sourceState.status = "requesting";
@@ -457,7 +463,6 @@ function createInputSourceManager(deps = {}) {
     clearError(sourceState);
     resetStreamMeta(sourceState);
 
-    const requestId = Object.prototype.hasOwnProperty.call(options, "requestId") ? options.requestId : null;
     const autoPlay = options && options.autoPlay === false ? false : true;
     const ok = await audioEngine.loadFile(file, requestId, { autoPlay });
 

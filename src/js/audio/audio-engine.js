@@ -312,14 +312,21 @@ const AudioEngine = (() => {
     const url = URL.createObjectURL(file);
     nextMediaEl.src = url;
     const playbackErrorMessage = "Playback error: unsupported or unreadable audio file.";
+    const isCurrentMedia = () => isCurrentRequest() && mediaEl === nextMediaEl && !nextAbort.signal.aborted;
+    const releaseCandidate = () => {
+      if (nextAbort.signal.aborted) return; // Active teardown already released it.
+      nextAbort.abort();
+      releaseMediaElement(nextMediaEl, url);
+    };
 
     nextMediaEl.addEventListener("loadeddata", () => {
-      if (mediaObjectUrl === url) mediaObjectUrl = null;
+      if (isCurrentMedia() && mediaObjectUrl === url) mediaObjectUrl = null;
       revokeObjectUrl(url);
     }, { once: true, ...sig });
     nextMediaEl.addEventListener("error", () => {
-      if (mediaObjectUrl === url) mediaObjectUrl = null;
+      if (isCurrentMedia() && mediaObjectUrl === url) mediaObjectUrl = null;
       revokeObjectUrl(url);
+      if (!isCurrentMedia()) return;
       state.audio.isLoaded = false;
       state.audio.filename = "";
       state.audio.isPlaying = false;
@@ -336,13 +343,16 @@ const AudioEngine = (() => {
     }, { once: true, ...sig });
 
     nextMediaEl.addEventListener("play", () => {
+      if (!isCurrentMedia()) return;
       state.audio.isPlaying = true;
       state.audio.transportError = "";
     }, sig);
     nextMediaEl.addEventListener("pause", () => {
+      if (!isCurrentMedia()) return;
       state.audio.isPlaying = false;
     }, sig);
     nextMediaEl.addEventListener("ended", () => {
+      if (!isCurrentMedia()) return;
       state.audio.isPlaying = false;
       if (typeof AudioEngine._onTrackEnded === "function") {
         AudioEngine._onTrackEnded();
@@ -350,7 +360,7 @@ const AudioEngine = (() => {
     }, sig);
 
     try {
-      await attachSource({
+      const attached = await attachSource({
         kind: "file",
         sourceType: "media-element",
         label: file && file.name ? file.name : "",
@@ -358,9 +368,14 @@ const AudioEngine = (() => {
         mediaEl: nextMediaEl,
         abortController: nextAbort,
         objectUrl: url,
-      });
+      }, { isCurrent: isCurrentRequest });
+      if (!attached || !isCurrentMedia()) {
+        releaseCandidate();
+        return false;
+      }
     } catch (err) {
-      releaseMediaElement(nextMediaEl, url);
+      releaseCandidate();
+      if (!isCurrentRequest()) return false;
       state.audio.isLoaded = false;
       state.audio.filename = "";
       state.audio.isPlaying = false;
@@ -374,7 +389,7 @@ const AudioEngine = (() => {
     }
 
     if (!isCurrentRequest() || mediaEl !== nextMediaEl) {
-      releaseMediaElement(nextMediaEl, url);
+      releaseCandidate();
       return false;
     }
 
