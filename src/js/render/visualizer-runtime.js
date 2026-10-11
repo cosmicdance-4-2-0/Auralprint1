@@ -2,6 +2,8 @@ import { ParticleGovernor } from "./particle-governor.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
 import { assertRuntimeOrbAdmission } from "../core/orb-admission.js";
 import { TAU } from "../core/constants.js";
+import { CONFIG } from "../core/config.js";
+import { computeOrbSpeedOffset } from "./temporal-modulation.js";
 import { runtime, normalizeOrbChannelId } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { clamp } from "../core/utils.js";
@@ -78,7 +80,7 @@ function createOrbVisualizer(orb) {
     type: "orb",
     orb,
     isVisible() { return true; },
-    update({ dtSec, motionDtSec = dtSec, nowSec, simPaused, analysisFrame }) {
+    update({ dtSec, motionDtSec = dtSec, nowSec, simPaused, analysisFrame, temporalFrame = null }) {
       if (simPaused) {
         // Pause motion/emission, while real-time lifetime retirement continues.
         orb.trail?.expireParticles?.(nowSec, orb.particles?.ttlSec);
@@ -93,6 +95,7 @@ function createOrbVisualizer(orb) {
         analysisFrame.spectrum.dominantIndex,
         selection ? selection.selectedDominantBandIndex : null,
         motionDtSec,
+        computeOrbSpeedOffset(orb, temporalFrame, CONFIG.experimental.temporalAudio),
       );
     },
     render(renderer, frameContext) {

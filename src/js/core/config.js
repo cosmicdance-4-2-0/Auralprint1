@@ -292,6 +292,20 @@ const CONFIG = deepFreeze({
   "Eternal Resonance"
   ],
 
+  experimental: {
+    // Prototype-only, developer-editable switch; not serialized in presets.
+    temporalAudio: {
+      enabled: false,
+      envelopeAttackSec: 0.02,
+      envelopeReleaseSec: 0.20,
+      fluxNormalizationSec: 0.05,
+      targetOrbId: "ORB0",
+      sourceChannel: "C",
+      sourceFeature: "flux01",
+      maxSpeedOffsetRadPerSec: 1.0,
+    },
+  },
+
   ui: {
     panelBackgroundRgba: "rgba(17,25,30,0.96)",
     panelBlurPx: 6,

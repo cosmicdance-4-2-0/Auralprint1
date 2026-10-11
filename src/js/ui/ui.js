@@ -7,6 +7,7 @@ import { UrlPreset } from "../presets/url-preset.js";
 import { BandBankController } from "../audio/band-bank-controller.js";
 import { Queue } from "../audio/queue.js";
 import { AudioEngine } from "../audio/audio-engine.js";
+import { TemporalFeatures } from "../audio/temporal-features.js";
 import { Scrubber } from "../audio/scrubber.js";
 import { InputSourceManager } from "../audio/input-source-manager.js";
 import { ColorPolicy } from "../render/color-policy.js";
@@ -1188,6 +1189,7 @@ const UI = (() => {
   }
 
   function resetTrackVisualState() {
+    TemporalFeatures.reset();
     Scrubber.reset();
     resetVisualizers("track");
     for (const channel of Object.values(state.bands.channels)) channel.energies01.fill(0);

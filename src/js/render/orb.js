@@ -1,5 +1,6 @@
 import { clamp } from "../core/utils.js";
 import { TAU } from "../core/constants.js";
+import { CONFIG } from "../core/config.js";
 import { normalizeOrbChannelId, sanitizeOrbBandIds } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { TrailSystem } from "./trail-system.js";
@@ -53,8 +54,12 @@ class Orb {
 
   // Legacy direct callers omit motionDtSec and retain their supplied delta.
   // The application frame loop supplies independently bounded emission/motion.
-  step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null, motionDtSec = dtSec) {
-    this.angleRad += this.chirality * this.motion.angularSpeedRadPerSec * motionDtSec;
+  step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null, motionDtSec = dtSec, angularSpeedOffsetRadPerSec = 0) {
+    const baseSpeed = this.motion.angularSpeedRadPerSec;
+    const effectiveSpeed = Number.isFinite(angularSpeedOffsetRadPerSec) && angularSpeedOffsetRadPerSec > 0
+      ? Math.min(CONFIG.limits.motion.angularSpeedRadPerSec.max, baseSpeed + angularSpeedOffsetRadPerSec)
+      : baseSpeed;
+    this.angleRad += this.chirality * effectiveSpeed * motionDtSec;
     this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
 
     const minDim = Math.min(state.widthPx, state.heightPx);
