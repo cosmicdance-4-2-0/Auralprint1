@@ -1,0 +1,7 @@
+#signalLab .lab-target {display:grid;grid-template-columns: 1fr 1fr 1fr;gap:8px;margin:8px 0}
+#signalLab label{font-size:12px;display:flex;flex-direction:column;gap:4px}
+#signalLab input,#signalLab select{min-width:0;width:100%;box-sizing:border-box}
+#labPlot{display:block;width:100%;height:112px;background:rgba(0,0,0,.45);border-radius:6px}
+#labReadout{font-size:12px;margin:8px 0;font-variant-numeric:tabular-nums}
+#signalLab .lab-legend{font-size:11px;margin-top:5px;opacity:.8}
+@media(max-width:470px){#signalLab .lab-target{grid-template-columns:1fr 1fr}#signalLab .lab-target label:first-child{grid-column:span 2}}
