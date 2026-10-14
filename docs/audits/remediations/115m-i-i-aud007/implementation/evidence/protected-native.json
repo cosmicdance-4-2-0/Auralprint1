@@ -1,0 +1,5519 @@
+{
+  "f": {
+    "actualArtifactVersion": "v0.1.15m.i.i",
+    "actualArtifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+    "browser": "151.0.7922.173",
+    "passed": 21,
+    "total": 21,
+    "rawResultSha256": "58e316153f84c8f2c219dd9b940719fe81e185f304f91c6637c05d330888ff39",
+    "cases": [
+      {
+        "name": "terminal cleanup at corrupt",
+        "passed": true,
+        "boundary": "corrupt",
+        "primaryFaultInjected": false,
+        "terminal": {
+          "serializedBytes": 5378,
+          "sha256OfCanonicalJson": "d7caa6f37235a6213b30819cfc74266b0c32c759bf90f3dc50d9a72698843ac3",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: unsupported or unreadable audio file.",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "corrupt.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "corrupt.wav",
+                "error": "Playback failed: unsupported or unreadable audio file."
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 22,
+            "src": "blob:http://127.0.0.1:33221/bcd9b761-7d88-439a-b52f-4f3a880d01cf",
+            "time": 0.138406,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "recovery.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at before-transfer",
+        "passed": true,
+        "boundary": "before-transfer",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 3826,
+          "sha256OfCanonicalJson": "2dd7ddbfe19c282690844af1bad08cf7964323b262afd44df0320b31616ebb38",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled before-transfer failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled before-transfer failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 13,
+            "src": "blob:http://127.0.0.1:33221/966b9de2-71e6-4fdc-a350-564dd42db657",
+            "time": 0.089977,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at gain-first",
+        "passed": true,
+        "boundary": "gain-first",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 3882,
+          "sha256OfCanonicalJson": "82b59fee78011f24fdb5e7fe4350a1fb86b3b41b083731027647bcbdf7d9eded",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled gain-first failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled gain-first failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 14,
+            "src": "blob:http://127.0.0.1:33221/80a3861b-edaf-4461-a650-18a7a5aa355a",
+            "time": 0.075905,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at splitter",
+        "passed": true,
+        "boundary": "splitter",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 3987,
+          "sha256OfCanonicalJson": "47a7fc24b4275b0088fcfb45be90638e032b1757f72ae4236e2fb38491f3ae0b",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled splitter failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled splitter failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 15,
+            "src": "blob:http://127.0.0.1:33221/6465c83f-0a6c-490a-a9ae-bb4d5cb81683",
+            "time": 0.101587,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at gain-partial",
+        "passed": true,
+        "boundary": "gain-partial",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 4331,
+          "sha256OfCanonicalJson": "e07b25847edfb29cee992388883228794d57ae7ecdf5e35a1687eaa052f138b2",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled gain-partial failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled gain-partial failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 18,
+            "src": "blob:http://127.0.0.1:33221/5a5e9544-3501-45f9-87e0-2715c0352d50",
+            "time": 0.098685,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at analyser-first",
+        "passed": true,
+        "boundary": "analyser-first",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 4469,
+          "sha256OfCanonicalJson": "48c92cf42772288feaddcabd02ee320b6efb84ab2184461f4f58f9bfc0add739",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled analyser-first failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled analyser-first failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 19,
+            "src": "blob:http://127.0.0.1:33221/ca260df8-5db5-4f13-a50d-a78fec5a87a4",
+            "time": 0.060952,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at analyser-partial",
+        "passed": true,
+        "boundary": "analyser-partial",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 4698,
+          "sha256OfCanonicalJson": "87348652778962ee7e24283fe20d9a892b08c4f0054ce98376fbc21a85943afd",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled analyser-partial failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled analyser-partial failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 21,
+            "src": "blob:http://127.0.0.1:33221/dd6c0b07-deac-4b53-bded-275f601b7d56",
+            "time": 0.040635,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at analyser-config",
+        "passed": true,
+        "boundary": "analyser-config",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 4589,
+          "sha256OfCanonicalJson": "5982f721741da2294a8a353d396d85b89aa3f8146768cbd22b9533e4671b21ea",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled analyser-config failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled analyser-config failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 20,
+            "src": "blob:http://127.0.0.1:33221/63e27ac0-0c6c-46eb-89d9-807241cacc3d",
+            "time": 0.040635,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at partial-connect",
+        "passed": true,
+        "boundary": "partial-connect",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 4950,
+          "sha256OfCanonicalJson": "e06b1fe2f3255e70f61e42063a4451e69f28b32ab6af071a4249565367cefc1c",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled partial-connect failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled partial-connect failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 22,
+            "src": "blob:http://127.0.0.1:33221/488bc342-fa1e-4162-aca3-0e001a600e8e",
+            "time": 0.130612,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "terminal cleanup at after-tap",
+        "passed": true,
+        "boundary": "after-tap",
+        "primaryFaultInjected": true,
+        "terminal": {
+          "serializedBytes": 5219,
+          "sha256OfCanonicalJson": "1981005162963390edc9e1bc09e1e576a4485c0df54a6dfde0d2e323aae968ca",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled after-tap failure",
+        "queuedCallbacks": {
+          "writes": [],
+          "notifications": [
+            {
+              "type": "track-change-start",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav"
+              }
+            },
+            {
+              "type": "track-change-failed",
+              "details": {
+                "requestId": 1,
+                "filename": "valid.wav",
+                "error": "Playback failed: audio source attachment failed: F6 controlled after-tap failure"
+              }
+            }
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 22,
+            "src": "blob:http://127.0.0.1:33221/593e33b8-976e-451a-988e-71f9f0f99969",
+            "time": 0.060952,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "valid.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          },
+          "ready": true
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "installed File native error callback releases once",
+        "passed": true,
+        "before": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/374aa4ea-ea10-411e-849a-84306872c339",
+            "time": 0.040635,
+            "paused": false
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "A.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          }
+        },
+        "terminal": {
+          "serializedBytes": 5859,
+          "sha256OfCanonicalJson": "b26bc823f7de322d1137ea380bd1757146550fa2e997ddf4898a806311b64b80",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "File mode ready. Last file error: Playback error: unsupported or unreadable audio file.",
+        "callbackInjection": "Synthetic error event on a committed native element; then captured queued callbacks",
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "obsolete Play completion and callbacks after file",
+        "passed": true,
+        "winner": "file",
+        "nativePlayPromiseHeld": true,
+        "pending": {
+          "request": {
+            "id": 2,
+            "entry": 22,
+            "pending": true,
+            "autoPlay": true
+          },
+          "media": {
+            "id": 21,
+            "src": "blob:http://127.0.0.1:33221/d27c5c9a-f7a8-4d65-adf5-72d6f377d3b5",
+            "time": 0.049342,
+            "paused": false
+          }
+        },
+        "before": {
+          "serializedBytes": 10893,
+          "sha256OfCanonicalJson": "10b942886691351f9d9b718efaaba084a50ac792d632651ec5f40b21751bd6b0",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "after": {
+          "serializedBytes": 4458,
+          "sha256OfCanonicalJson": "9a958a066634329d3e72acdd0e7a499df19339abdc9a9f46b167f5082c9aad35",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "obsolete Play completion and callbacks after failed-file",
+        "passed": true,
+        "winner": "failed-file",
+        "nativePlayPromiseHeld": true,
+        "pending": {
+          "request": {
+            "id": 2,
+            "entry": 22,
+            "pending": true,
+            "autoPlay": true
+          },
+          "media": {
+            "id": 21,
+            "src": "blob:http://127.0.0.1:33221/84f27a97-916c-4e67-8393-85b35b9a0963",
+            "time": 0.029025,
+            "paused": false
+          }
+        },
+        "before": {
+          "serializedBytes": 10333,
+          "sha256OfCanonicalJson": "55bfe47be18f45c64de6adf902abd8d81750daa56d3d56622b82ed387b2739ef",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "after": {
+          "serializedBytes": 4137,
+          "sha256OfCanonicalJson": "59e69c1249499fc55b3947c11c7779dc7e1d2bc506231d94b54773e779f8d544",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "obsolete Play completion and callbacks after clear",
+        "passed": true,
+        "winner": "clear",
+        "nativePlayPromiseHeld": true,
+        "pending": {
+          "request": {
+            "id": 2,
+            "entry": 22,
+            "pending": true,
+            "autoPlay": true
+          },
+          "media": {
+            "id": 21,
+            "src": "blob:http://127.0.0.1:33221/30d9279c-67c7-4c93-af40-ca4fb6ad9863",
+            "time": 0.017415,
+            "paused": false
+          }
+        },
+        "before": {
+          "serializedBytes": 8243,
+          "sha256OfCanonicalJson": "8e75ae36970d2b5870407e3e6b8b1af6f144f050bc51d144411c13c06acd0f1a",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "after": {
+          "serializedBytes": 3360,
+          "sha256OfCanonicalJson": "f26ec3a625894a824e7cbf574479044b1f98ba73cdc4991d30386128861cd0d9",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "obsolete Play completion and callbacks after mic",
+        "passed": true,
+        "winner": "mic",
+        "nativePlayPromiseHeld": true,
+        "pending": {
+          "request": {
+            "id": 2,
+            "entry": 22,
+            "pending": true,
+            "autoPlay": true
+          },
+          "media": {
+            "id": 21,
+            "src": "blob:http://127.0.0.1:33221/bdd50ebe-1a08-4fe6-b76e-174fe0fdc594",
+            "time": 0.029025,
+            "paused": false
+          }
+        },
+        "before": {
+          "serializedBytes": 10095,
+          "sha256OfCanonicalJson": "699f0726ef5cfa62312ebd0700450649ec9596122fea079148b23e204c661abd",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "after": {
+          "serializedBytes": 4118,
+          "sha256OfCanonicalJson": "384830bc41eeeea5d31de6a0ddf5ca0baf3497b6886eed7f1ce9335174017300",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "obsolete Play completion and callbacks after stream",
+        "passed": true,
+        "winner": "stream",
+        "nativePlayPromiseHeld": true,
+        "pending": {
+          "request": {
+            "id": 2,
+            "entry": 22,
+            "pending": true,
+            "autoPlay": true
+          },
+          "media": {
+            "id": 21,
+            "src": "blob:http://127.0.0.1:33221/6383d651-1736-4beb-ab4d-7b82d7206938",
+            "time": 0.019405,
+            "paused": false
+          }
+        },
+        "before": {
+          "serializedBytes": 10131,
+          "sha256OfCanonicalJson": "57891432aea0bd1a05b5cc2f0821b771efbf81aed92cf84fbf4cb9f1c25f4893",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "after": {
+          "serializedBytes": 4142,
+          "sha256OfCanonicalJson": "ae4be6c07388185e510bd3cfc810a03b297b2a8189a928b0f2821efa7af8a206",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "recoverable loaded Play resume",
+        "passed": true,
+        "mode": "resume",
+        "before": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/c168f2f0-81d6-43ef-97e1-8ad2478d1413",
+            "time": 0.4,
+            "paused": true
+          },
+          "graph": {
+            "sourceNode": 2,
+            "outputGain": 9,
+            "splitter": 1,
+            "sumNode": 7,
+            "sumGainL": 5,
+            "sumGainR": 6,
+            "activeUpstream": 13,
+            "mediaStream": null,
+            "mediaElAbort": 14,
+            "recorderTapDestination": null,
+            "recorderTapConnectedOutputGain": null
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "A.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          }
+        },
+        "failure": {
+          "serializedBytes": 4807,
+          "sha256OfCanonicalJson": "9647fe4d07586ddee74bc798ce94085af6822d4aef608515a9a327ae9a9966c1",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/c168f2f0-81d6-43ef-97e1-8ad2478d1413",
+            "time": 0.416743,
+            "paused": false
+          },
+          "audio": {
+            "isLoaded": true,
+            "isPlaying": true,
+            "filename": "A.wav",
+            "transportError": ""
+          }
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "recoverable loaded Play reject",
+        "passed": true,
+        "mode": "reject",
+        "before": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/794f3657-5441-44a6-91d4-2f9820aae6b7",
+            "time": 0.4,
+            "paused": true
+          },
+          "graph": {
+            "sourceNode": 2,
+            "outputGain": 9,
+            "splitter": 1,
+            "sumNode": 7,
+            "sumGainL": 5,
+            "sumGainR": 6,
+            "activeUpstream": 13,
+            "mediaStream": null,
+            "mediaElAbort": 14,
+            "recorderTapDestination": null,
+            "recorderTapConnectedOutputGain": null
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "A.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          }
+        },
+        "failure": {
+          "serializedBytes": 4759,
+          "sha256OfCanonicalJson": "29a7008307315915e9d144ac50cea9fdd57081af026f6579d9775511493a0bbf",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/794f3657-5441-44a6-91d4-2f9820aae6b7",
+            "time": 0.45805,
+            "paused": false
+          },
+          "audio": {
+            "isLoaded": true,
+            "isPlaying": true,
+            "filename": "A.wav",
+            "transportError": ""
+          }
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "recoverable loaded Play throw",
+        "passed": true,
+        "mode": "throw",
+        "before": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/fa2f0c5d-49c1-473a-b100-eae23baf8f5a",
+            "time": 0.4,
+            "paused": true
+          },
+          "graph": {
+            "sourceNode": 2,
+            "outputGain": 9,
+            "splitter": 1,
+            "sumNode": 7,
+            "sumGainL": 5,
+            "sumGainR": 6,
+            "activeUpstream": 13,
+            "mediaStream": null,
+            "mediaElAbort": 14,
+            "recorderTapDestination": null,
+            "recorderTapConnectedOutputGain": null
+          },
+          "source": {
+            "kind": "file",
+            "status": "active",
+            "label": "A.wav",
+            "permission": {
+              "mic": "unknown",
+              "stream": "unknown"
+            },
+            "support": {
+              "mic": true,
+              "stream": true
+            },
+            "errorCode": "",
+            "errorMessage": "",
+            "sessionActive": true,
+            "streamMeta": {
+              "hasAudio": true,
+              "hasVideo": false,
+              "audioChannelCount": null
+            }
+          }
+        },
+        "failure": {
+          "serializedBytes": 4795,
+          "sha256OfCanonicalJson": "f3b8e3e872903986a5ea366ae5586c932bc07b2197a06aee61a96bf202b6256a",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "retry": {
+          "media": {
+            "id": 11,
+            "src": "blob:http://127.0.0.1:33221/fa2f0c5d-49c1-473a-b100-eae23baf8f5a",
+            "time": 0.408707,
+            "paused": false
+          },
+          "audio": {
+            "isLoaded": true,
+            "isPlaying": true,
+            "filename": "A.wav",
+            "transportError": ""
+          }
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "native recorder survives corrupt cleanup and retains export",
+        "passed": true,
+        "fault": "corrupt",
+        "start": {
+          "serializedBytes": 4655,
+          "sha256OfCanonicalJson": "259300a26f9ba9a4e75f6f923eb0b40ef4c4a6236d112ed3b129412b0a142655",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "terminal": {
+          "serializedBytes": 9318,
+          "sha256OfCanonicalJson": "00ad04e3be15faa874ebba5c0cbaaec36894af09ec0288a8e9324dea2a75981f",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: unsupported or unreadable audio file.",
+        "recovered": {
+          "media": {
+            "id": 39,
+            "src": "blob:http://127.0.0.1:33221/88790c57-d47b-4867-b36e-29557b6902ca",
+            "time": 0.049342,
+            "paused": false
+          },
+          "graph": {
+            "sourceNode": 31,
+            "outputGain": 38,
+            "splitter": 30,
+            "sumNode": 36,
+            "sumGainL": 34,
+            "sumGainR": 35,
+            "activeUpstream": 41,
+            "mediaStream": null,
+            "mediaElAbort": 42,
+            "recorderTapDestination": 12,
+            "recorderTapConnectedOutputGain": 38
+          },
+          "ready": true,
+          "recorder": {
+            "id": 16,
+            "state": "recording"
+          }
+        },
+        "complete": {
+          "serializedBytes": 12636,
+          "sha256OfCanonicalJson": "244ba39d9914832431ee2d1866bef5c36b53565ba95246b1316620fad4515699",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "retained": {
+          "recording": {
+            "hooksEnabled": true,
+            "phase": "complete",
+            "supportProbeStatus": "supported",
+            "isSupported": true,
+            "includePlaybackAudio": true,
+            "targetFps": 30,
+            "availableMimeTypes": [
+              "video/webm;codecs=vp9,opus",
+              "video/webm;codecs=vp8,opus",
+              "video/webm",
+              "video/mp4"
+            ],
+            "selectedMimeType": "video/webm;codecs=vp9,opus",
+            "resolvedMimeType": "video/webm;codecs=vp9,opus",
+            "startedAtMs": 1613,
+            "stoppedAtMs": 3347.10000000149,
+            "elapsedMs": 1734,
+            "chunkCount": 3,
+            "lastExportUrl": "blob:http://127.0.0.1:33221/8ec18a14-69df-4074-ac4f-776f61fd1940",
+            "lastExportFileName": "auralprint-capture-20261014-014920.webm",
+            "lastExportByteSize": 71755,
+            "lastAction": "finalize",
+            "lastCode": "complete",
+            "lastMessage": "Recording export ready.",
+            "lastUpdatedAtMs": 3370.10000000149
+          },
+          "audio": {
+            "isLoaded": false,
+            "isPlaying": false,
+            "filename": "",
+            "transportError": "Playback failed: unsupported or unreadable audio file."
+          }
+        },
+        "exported": {
+          "bytes": 71755,
+          "type": "video/webm",
+          "sha256": "033688aaa5a16e34bb04fbf2246514cbc2bfd17f59746bfa91dbf2e4eeb085b5"
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "native recorder survives after-tap cleanup and retains export",
+        "passed": true,
+        "fault": "after-tap",
+        "start": {
+          "serializedBytes": 4668,
+          "sha256OfCanonicalJson": "8bb85b7e195aee3e617e8117d77c69a6f0385b8f00c06593d0da2c83189187dc",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "terminal": {
+          "serializedBytes": 9165,
+          "sha256OfCanonicalJson": "34fe0a1868d9319b669f6d0ca98fa481dcd9903456d995831bc5ec6a8a1c3226",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "projectedUiError": "Playback failed: audio source attachment failed: F6 controlled after-tap failure",
+        "recovered": {
+          "media": {
+            "id": 39,
+            "src": "blob:http://127.0.0.1:33221/c284b609-dd15-474c-885f-42c001b53e4a",
+            "time": 0.040149,
+            "paused": false
+          },
+          "graph": {
+            "sourceNode": 31,
+            "outputGain": 38,
+            "splitter": 30,
+            "sumNode": 36,
+            "sumGainL": 34,
+            "sumGainR": 35,
+            "activeUpstream": 41,
+            "mediaStream": null,
+            "mediaElAbort": 42,
+            "recorderTapDestination": 12,
+            "recorderTapConnectedOutputGain": 38
+          },
+          "ready": true,
+          "recorder": {
+            "id": 16,
+            "state": "recording"
+          }
+        },
+        "complete": {
+          "serializedBytes": 12411,
+          "sha256OfCanonicalJson": "3b5fff25d5a98834fece1b7eed32cc1fd0f2b4a314e0a7cc6a79087b76acd3d4",
+          "keys": [
+            "audio",
+            "source",
+            "queue",
+            "entry",
+            "request",
+            "media",
+            "graph",
+            "ready",
+            "bands",
+            "objectUrl",
+            "candidates",
+            "nodes",
+            "urls",
+            "operations",
+            "writes",
+            "notifications",
+            "errors",
+            "nativeErrors",
+            "failureBoundary",
+            "recorder",
+            "recording",
+            "capturedTracks",
+            "upstreamTracks",
+            "uiError"
+          ]
+        },
+        "retained": {
+          "recording": {
+            "hooksEnabled": true,
+            "phase": "complete",
+            "supportProbeStatus": "supported",
+            "isSupported": true,
+            "includePlaybackAudio": true,
+            "targetFps": 30,
+            "availableMimeTypes": [
+              "video/webm;codecs=vp9,opus",
+              "video/webm;codecs=vp8,opus",
+              "video/webm",
+              "video/mp4"
+            ],
+            "selectedMimeType": "video/webm;codecs=vp9,opus",
+            "resolvedMimeType": "video/webm;codecs=vp9,opus",
+            "startedAtMs": 1980.800000000745,
+            "stoppedAtMs": 3571.5,
+            "elapsedMs": 1591,
+            "chunkCount": 3,
+            "lastExportUrl": "blob:http://127.0.0.1:33221/26341f94-adc3-4122-bf67-e6fca06c679c",
+            "lastExportFileName": "auralprint-capture-20261014-014924.webm",
+            "lastExportByteSize": 69629,
+            "lastAction": "finalize",
+            "lastCode": "complete",
+            "lastMessage": "Recording export ready.",
+            "lastUpdatedAtMs": 3582.300000000745
+          },
+          "audio": {
+            "isLoaded": false,
+            "isPlaying": false,
+            "filename": "",
+            "transportError": "Playback failed: audio source attachment failed: F6 controlled after-tap failure"
+          }
+        },
+        "exported": {
+          "bytes": 69629,
+          "type": "video/webm",
+          "sha256": "72c199e305db7a4a7bb6eee982a090d5aeeb24c3e950ba442a2dbf1e9384b977"
+        },
+        "exceptions": [],
+        "consoleErrors": []
+      }
+    ],
+    "format": "Large observations represented by byte count/digest/keys. Original diagnostic provenance labels describe that script, not this target artifact."
+  },
+  "g": {
+    "actualArtifactVersion": "v0.1.15m.i.i",
+    "actualArtifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+    "browser": "151.0.7922.173",
+    "passed": 13,
+    "total": 13,
+    "rawResultSha256": "d6ec85c1ac3be4fbe05d3c1f0290b076eb7549524971ecb4cbf461b077ba2aed",
+    "cases": [
+      {
+        "name": "A: extreme-log 3-band mixed inactive targets, actual FFT extraction and Orb response",
+        "passed": true,
+        "data": {
+          "geometry": {
+            "low": [
+              0,
+              5e-324,
+              22500
+            ],
+            "high": [
+              5e-324,
+              22500
+            ],
+            "summary": "1 active target \u00b7 1 inactive target (255). Raise the band count to reactivate.",
+            "choices": 3
+          },
+          "responses": [
+            {
+              "channel": "L",
+              "selected": 0.7,
+              "dominant": 0,
+              "radius": 563
+            },
+            {
+              "channel": "R",
+              "selected": 0.2,
+              "dominant": 0,
+              "radius": 168
+            },
+            {
+              "channel": "C",
+              "selected": 0.55,
+              "dominant": 0,
+              "radius": 444.50000000000006
+            }
+          ]
+        }
+      },
+      {
+        "name": "B: precision/count reactivation with stable editor and exact action focus",
+        "passed": true,
+        "data": {
+          "canonical": 0.123456,
+          "lines": 16,
+          "transitions": [
+            {
+              "count": 32,
+              "active": [
+                5
+              ],
+              "energy": 0.9,
+              "dominant": 5,
+              "stability": {
+                "root": true,
+                "control": true,
+                "focus": true,
+                "connected": true,
+                "value": 0.123456,
+                "open": true
+              }
+            },
+            {
+              "count": 3,
+              "active": [],
+              "energy": 0,
+              "dominant": null,
+              "stability": {
+                "root": true,
+                "control": true,
+                "focus": true,
+                "connected": true,
+                "value": 0.123456,
+                "open": true
+              }
+            },
+            {
+              "count": 256,
+              "active": [
+                5,
+                100,
+                255
+              ],
+              "energy": 0.6,
+              "dominant": 5,
+              "stability": {
+                "root": true,
+                "control": true,
+                "focus": true,
+                "connected": true,
+                "value": 0.123456,
+                "open": true
+              }
+            }
+          ],
+          "actionFocus": {
+            "same": true,
+            "connected": true,
+            "sameRow": true,
+            "action": "duplicate",
+            "id": "A"
+          }
+        }
+      },
+      {
+        "name": "D: mixed Bulk edits, inventory reorder/count changes and stable logical focus",
+        "passed": true,
+        "data": {
+          "order": [
+            "A",
+            "B",
+            "spectral-ring"
+          ],
+          "speeds": [
+            0.123456,
+            0.234567,
+            0.345678
+          ],
+          "targets": [
+            [
+              5,
+              100,
+              255
+            ],
+            [
+              255
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "bulkTtl": [
+            35.123456,
+            35.123456,
+            35.123456
+          ],
+          "focus": {
+            "same": true,
+            "connected": true,
+            "sameRow": true,
+            "action": "remove",
+            "id": "spectral-ring"
+          }
+        }
+      },
+      {
+        "name": "E: idle refresh performs no inventory/editor reconstruction, listener growth or preference writes",
+        "passed": true,
+        "data": {
+          "iterations": 2000,
+          "elapsedMs": 31.300000000745058,
+          "presentationMutationRecords": 0,
+          "detachedStructural": 0,
+          "allIdentitiesConnected": true,
+          "preferencesUnchanged": true,
+          "sameSettings": true,
+          "sameCollection": true,
+          "focus": true,
+          "duplicateDelta": 1
+        }
+      },
+      {
+        "name": "independent target domains, L/R/C and first-active ties across both transition sequences",
+        "passed": true,
+        "data": {
+          "samples": 105,
+          "examples": [
+            {
+              "ids": [],
+              "count": 3,
+              "channel": "R",
+              "energy": null,
+              "dominant": null
+            },
+            {
+              "ids": [],
+              "count": 3,
+              "channel": "R",
+              "energy": null,
+              "dominant": null
+            },
+            {
+              "ids": [],
+              "count": 3,
+              "channel": "R",
+              "energy": null,
+              "dominant": null
+            },
+            {
+              "ids": [
+                255
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0,
+              "dominant": null
+            },
+            {
+              "ids": [
+                255
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0,
+              "dominant": null
+            },
+            {
+              "ids": [
+                255
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0,
+              "dominant": null
+            },
+            {
+              "ids": [
+                0,
+                255
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0.06666666666666667,
+              "dominant": 0
+            },
+            {
+              "ids": [
+                0,
+                255
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0.06666666666666667,
+              "dominant": 0
+            },
+            {
+              "ids": [
+                0,
+                255
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0.06666666666666667,
+              "dominant": 0
+            },
+            {
+              "ids": [
+                0,
+                2
+              ],
+              "count": 3,
+              "channel": "R",
+              "energy": 0.13333333333333333,
+              "dominant": 2
+            }
+          ],
+          "firstActiveTie": 2
+        }
+      },
+      {
+        "name": "independent geometry matrix: real controller/bank/extraction and Nyquist",
+        "passed": true,
+        "data": {
+          "serializedBytes": 1941,
+          "sha256OfCanonicalJson": "825fd9c3b188c352bcd99ff4e9d8d6b2b32eab423b603750bebd991e712aeb58",
+          "keys": [
+            "logMatrices",
+            "nyquistNonLogModes",
+            "nyquistCap"
+          ]
+        }
+      },
+      {
+        "name": "native action identity, type collision, cancellation, remove fallback and action dispatch",
+        "passed": true,
+        "data": {
+          "actions": [
+            {
+              "action": "edit",
+              "retained": {
+                "same": true,
+                "connected": true,
+                "sameRow": true,
+                "action": "edit",
+                "id": "spectral-ring"
+              }
+            },
+            {
+              "action": "duplicate",
+              "retained": {
+                "same": true,
+                "connected": true,
+                "sameRow": true,
+                "action": "duplicate",
+                "id": "spectral-ring"
+              }
+            },
+            {
+              "action": "remove",
+              "retained": {
+                "same": true,
+                "connected": true,
+                "sameRow": true,
+                "action": "remove",
+                "id": "spectral-ring"
+              }
+            },
+            {
+              "action": "edit-ring",
+              "retained": {
+                "same": true,
+                "connected": true,
+                "sameRow": true,
+                "action": "edit-ring",
+                "id": null
+              }
+            }
+          ],
+          "collisionTypeSafe": true,
+          "cancelledRemoveUnchanged": true,
+          "duplicateId": "ORB0",
+          "nearestSurvivor": "ORB0",
+          "unrelatedRemovalFocus": true,
+          "addedId": "ORB0"
+        }
+      },
+      {
+        "name": "native numeric keyboard boundaries, modified combinations and exactly one commit",
+        "passed": true,
+        "data": {
+          "speedKeys": [
+            {
+              "key": "ArrowRight",
+              "native": 0.133456,
+              "canonical": 0.133456,
+              "inputCount": 1,
+              "focus": true,
+              "last": {
+                "key": "ArrowRight",
+                "ctrl": false,
+                "shift": false,
+                "prevented": true
+              },
+              "other": 0.234567
+            },
+            {
+              "key": "Home",
+              "native": 0.01,
+              "canonical": 0.01,
+              "inputCount": 2,
+              "focus": true,
+              "last": {
+                "key": "Home",
+                "ctrl": false,
+                "shift": false,
+                "prevented": false
+              },
+              "other": 0.234567
+            },
+            {
+              "key": "End",
+              "native": 3,
+              "canonical": 3,
+              "inputCount": 3,
+              "focus": true,
+              "last": {
+                "key": "End",
+                "ctrl": false,
+                "shift": false,
+                "prevented": false
+              },
+              "other": 0.234567
+            },
+            {
+              "key": "Control+ArrowLeft",
+              "native": 2.9701,
+              "canonical": 2.9701,
+              "inputCount": 4,
+              "focus": true,
+              "last": {
+                "key": "ArrowLeft",
+                "ctrl": true,
+                "shift": false,
+                "prevented": false
+              },
+              "other": 0.234567
+            },
+            {
+              "key": "Shift+ArrowLeft",
+              "native": 2.9601,
+              "canonical": 2.9601,
+              "inputCount": 5,
+              "focus": true,
+              "last": {
+                "key": "ArrowLeft",
+                "ctrl": false,
+                "shift": true,
+                "prevented": true
+              },
+              "other": 0.234567
+            }
+          ],
+          "modifiedNativeReference": "2.99",
+          "integralCounts": [
+            11,
+            15,
+            16,
+            39
+          ],
+          "tenLineIncrement": 49,
+          "home": 10,
+          "end": 1000
+        }
+      },
+      {
+        "name": "independent inactive picker/exact drafts, focused count transition and explicit full spectrum",
+        "passed": true,
+        "data": {
+          "checkboxPreserved": [
+            255,
+            0
+          ],
+          "rangePreserved": [
+            1,
+            2,
+            255
+          ],
+          "invalidDraft": "0, 256, invalid",
+          "countTransitionFocus": true,
+          "fullSpectrum": []
+        }
+      },
+      {
+        "name": "independent native/canonical/rendered integral count in combined reduced-bank scene",
+        "passed": true,
+        "data": [
+          {
+            "imported": 15.5,
+            "canonical": 16,
+            "runtime": 16,
+            "native": 16,
+            "step": "1",
+            "readout": "16",
+            "rendered": 16
+          },
+          {
+            "imported": 11,
+            "canonical": 11,
+            "runtime": 11,
+            "native": 11,
+            "step": "1",
+            "readout": "11",
+            "rendered": 11
+          },
+          {
+            "imported": 15,
+            "canonical": 15,
+            "runtime": 15,
+            "native": 15,
+            "step": "1",
+            "readout": "15",
+            "rendered": 15
+          },
+          {
+            "imported": 16,
+            "canonical": 16,
+            "runtime": 16,
+            "native": 16,
+            "step": "1",
+            "readout": "16",
+            "rendered": 16
+          },
+          {
+            "imported": 39,
+            "canonical": 39,
+            "runtime": 39,
+            "native": 39,
+            "step": "1",
+            "readout": "39",
+            "rendered": 39
+          }
+        ]
+      },
+      {
+        "name": "C: precise focused editor during delayed actual File completion, source/AnalysisFrame readiness and interactive shortcut suppression",
+        "passed": true,
+        "data": {
+          "serializedBytes": 1280,
+          "sha256OfCanonicalJson": "bac1686a30ef932316507b0582e3d6e298bb46ed9482bb6d0ddc231f24215cbc",
+          "keys": [
+            "before",
+            "after"
+          ]
+        }
+      },
+      {
+        "name": "uninstrumented hosted smoke /hosted/",
+        "passed": true,
+        "data": {
+          "native": "0.123456",
+          "resources": {
+            "manifest": 200,
+            "url": "http://127.0.0.1:44199/hosted/site.webmanifest",
+            "icons": [
+              {
+                "url": "/hosted/web-app-manifest-192x192.png",
+                "status": 200,
+                "bytes": 22773
+              },
+              {
+                "url": "/hosted/web-app-manifest-512x512.png",
+                "status": 200,
+                "bytes": 105356
+              }
+            ],
+            "instrumented": false
+          },
+          "shareReload": true
+        }
+      },
+      {
+        "name": "uninstrumented hosted smoke /nested/auralprint/",
+        "passed": true,
+        "data": {
+          "native": "0.123456",
+          "resources": {
+            "manifest": 200,
+            "url": "http://127.0.0.1:44199/nested/auralprint/site.webmanifest",
+            "icons": [
+              {
+                "url": "/nested/auralprint/web-app-manifest-192x192.png",
+                "status": 200,
+                "bytes": 22773
+              },
+              {
+                "url": "/nested/auralprint/web-app-manifest-512x512.png",
+                "status": 200,
+                "bytes": 105356
+              }
+            ],
+            "instrumented": false
+          },
+          "shareReload": true
+        }
+      }
+    ],
+    "format": "Large observations represented by byte count/digest/keys. Original diagnostic provenance labels describe that script, not this target artifact."
+  },
+  "g1": {
+    "actualArtifactVersion": "v0.1.15m.i.i",
+    "actualArtifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+    "browser": "151.0.7922.173",
+    "passed": 38,
+    "total": 38,
+    "rawResultSha256": "3f3e4b36e3be9f9c010dfc453c594f5d2c67183cfc3a5fba38edd625b98f2f3a",
+    "cases": [
+      {
+        "name": "edit: unrelated volume via production input handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit: unrelated mute via production change handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit: native H shortcut suppression",
+        "passed": true,
+        "visibleBefore": true,
+        "visibleAfter": true
+      },
+      {
+        "name": "duplicate: unrelated volume via production input handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "duplicate",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: unrelated mute via production change handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "duplicate",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: native H shortcut suppression",
+        "passed": true,
+        "visibleBefore": true,
+        "visibleAfter": true
+      },
+      {
+        "name": "remove: unrelated volume via production input handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "remove",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "remove: unrelated mute via production change handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "remove",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "remove: native H shortcut suppression",
+        "passed": true,
+        "visibleBefore": true,
+        "visibleAfter": true
+      },
+      {
+        "name": "edit-ring: unrelated volume via production input handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit-ring",
+          "id": "spectral-ring"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit-ring",
+            "id": null
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "spectral-ring",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit-ring: unrelated mute via production change handler",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit-ring",
+          "id": "spectral-ring"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit-ring",
+            "id": null
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "spectral-ring",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit-ring: native H shortcut suppression",
+        "passed": true,
+        "visibleBefore": true,
+        "visibleAfter": true
+      },
+      {
+        "name": "edit: delayed real File activation completion",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit: native transport/launcher keys suppressed after File completion",
+        "passed": true,
+        "evidence": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: delayed real File activation completion",
+        "before": {
+          "tag": "BUTTON",
+          "action": "duplicate",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: native transport/launcher keys suppressed after File completion",
+        "passed": true,
+        "evidence": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "remove: delayed real File activation completion",
+        "before": {
+          "tag": "BUTTON",
+          "action": "remove",
+          "id": "ORB0"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "remove: native transport/launcher keys suppressed after File completion",
+        "passed": true,
+        "evidence": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "edit-ring: delayed real File activation completion",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit-ring",
+          "id": "spectral-ring"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit-ring",
+            "id": null
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "spectral-ring",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit-ring: native transport/launcher keys suppressed after File completion",
+        "passed": true,
+        "evidence": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit-ring",
+            "id": null
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "spectral-ring",
+          "actionAvailable": true
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "edit: native focused Orb reorder via schema-10 preset",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "edit: reordered numbering and accessible name",
+        "passed": true,
+        "evidence": {
+          "rowIndex": 1,
+          "name": "Orb 1",
+          "label": "Edit Orb 1, ORB1"
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "edit: summary-only update retains native node/focus",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: native focused Orb reorder via schema-10 preset",
+        "before": {
+          "tag": "BUTTON",
+          "action": "duplicate",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: reordered numbering and accessible name",
+        "passed": true,
+        "evidence": {
+          "rowIndex": 1,
+          "name": "Orb 1",
+          "label": "Duplicate Orb 1, ORB1"
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "duplicate: summary-only update retains native node/focus",
+        "before": {
+          "tag": "BUTTON",
+          "action": "duplicate",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "remove: native focused Orb reorder via schema-10 preset",
+        "before": {
+          "tag": "BUTTON",
+          "action": "remove",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "remove: reordered numbering and accessible name",
+        "passed": true,
+        "evidence": {
+          "rowIndex": 1,
+          "name": "Orb 1",
+          "label": "Remove Orb 1, ORB1"
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "remove: summary-only update retains native node/focus",
+        "before": {
+          "tag": "BUTTON",
+          "action": "remove",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "Ring visibility updates without native focus loss",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit-ring",
+          "id": "spectral-ring"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit-ring",
+            "id": null
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "spectral-ring",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "Ring truthful hidden status and Enter edit activation",
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "native Enter Add then Space Duplicate focus the new Edit actions",
+        "passed": true,
+        "evidence": {
+          "added": {
+            "action": "edit",
+            "orbId": "ORB2"
+          },
+          "copy": {
+            "action": "edit",
+            "orbId": "ORB3"
+          },
+          "edited": {
+            "id": "ORB3",
+            "tag": "SUMMARY"
+          }
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "cancelled native Remove leaves exact focus and collection",
+        "passed": true,
+        "evidence": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "remove",
+            "id": "ORB0"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB0",
+          "actionAvailable": true
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "native focused Remove uses nearest Orb Edit then final removal Add fallback",
+        "passed": true,
+        "evidence": {
+          "nearest": {
+            "action": "edit",
+            "orbId": "ORB1"
+          },
+          "finalFocus": "btnVisualizersAddOrb"
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "removing another Orb preserves native focused survivor Duplicate",
+        "before": {
+          "tag": "BUTTON",
+          "action": "duplicate",
+          "id": "ORB1"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "duplicate",
+            "id": "ORB1"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "ORB1",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "native external focus stays external during inventory updates",
+        "passed": true,
+        "evidence": {
+          "activeId": "rngVol"
+        },
+        "pageErrors": []
+      },
+      {
+        "name": "native Orb ID spectral-ring survives independently",
+        "before": {
+          "tag": "BUTTON",
+          "action": "edit",
+          "id": "spectral-ring"
+        },
+        "after": {
+          "active": {
+            "tag": "BUTTON",
+            "action": "edit",
+            "id": "spectral-ring"
+          },
+          "sameFocus": true,
+          "connected": true,
+          "sameRow": true,
+          "sameNode": true,
+          "stableId": "spectral-ring",
+          "actionAvailable": true
+        },
+        "passed": true,
+        "pageErrors": []
+      },
+      {
+        "name": "type-safe native collision Edit/Remove dispatch leaves Ring",
+        "passed": true,
+        "pageErrors": []
+      }
+    ],
+    "format": "Large observations represented by byte count/digest/keys. Original diagnostic provenance labels describe that script, not this target artifact."
+  },
+  "g2": {
+    "actualArtifactVersion": "v0.1.15m.i.i",
+    "actualArtifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+    "browser": "151.0.7922.173",
+    "passed": 31,
+    "total": 31,
+    "rawResultSha256": "ba108fb8167abc462dea604a329eb0f65211cdf7345f6c5ea820d809639841be",
+    "cases": [
+      {
+        "name": "count 3, targets [255]: production picker and persistence",
+        "passed": true,
+        "data": {
+          "ui": {
+            "summary": "0 active targets \u00b7 1 inactive target (255). Raise the band count to reactivate.",
+            "bank": "ERB distribution \u00b7 3 active bands \u00b7 configured ranges; connect audio for the active frequency limit",
+            "activeChoices": {
+              "count": 3,
+              "first": 0,
+              "last": 2
+            },
+            "shown": 3,
+            "rangeMax": "2",
+            "exactHelp": "Authored indices 0\u2013255; active indices 0\u20132. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.",
+            "band255": null
+          },
+          "persisted": [
+            255
+          ]
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [255], L: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "L",
+          "bandIds": [
+            255
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0,
+          "dominant": null,
+          "radius": 10,
+          "displacement": 0.75,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.8,
+          "waveform": 0.75,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [255], R: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "R",
+          "bandIds": [
+            255
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0,
+          "dominant": null,
+          "radius": 10,
+          "displacement": -0.5,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.2,
+          "waveform": -0.5,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [255], C: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "C",
+          "bandIds": [
+            255
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0,
+          "dominant": null,
+          "radius": 10,
+          "displacement": 0.25,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.6,
+          "waveform": 0.25,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, targets [0,255]: production picker and persistence",
+        "passed": true,
+        "data": {
+          "ui": {
+            "summary": "1 active target \u00b7 1 inactive target (255). Raise the band count to reactivate.",
+            "bank": "ERB distribution \u00b7 3 active bands \u00b7 configured ranges; connect audio for the active frequency limit",
+            "activeChoices": {
+              "count": 3,
+              "first": 0,
+              "last": 2
+            },
+            "shown": 3,
+            "rangeMax": "2",
+            "exactHelp": "Authored indices 0\u2013255; active indices 0\u20132. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.",
+            "band255": null
+          },
+          "persisted": [
+            0,
+            255
+          ]
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [0,255], L: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "L",
+          "bandIds": [
+            0,
+            255
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0.9,
+          "dominant": 0,
+          "radius": 721,
+          "displacement": 54.075,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.8,
+          "waveform": 0.75,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [0,255], R: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "R",
+          "bandIds": [
+            0,
+            255
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0.1,
+          "dominant": 0,
+          "radius": 89,
+          "displacement": -4.45,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.2,
+          "waveform": -0.5,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [0,255], C: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "C",
+          "bandIds": [
+            0,
+            255
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0.5,
+          "dominant": 0,
+          "radius": 405,
+          "displacement": 10.125,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.6,
+          "waveform": 0.25,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, targets [0,2]: production picker and persistence",
+        "passed": true,
+        "data": {
+          "ui": {
+            "summary": "2 active targets \u00b7 0 inactive targets",
+            "bank": "ERB distribution \u00b7 3 active bands \u00b7 configured ranges; connect audio for the active frequency limit",
+            "activeChoices": {
+              "count": 3,
+              "first": 0,
+              "last": 2
+            },
+            "shown": 3,
+            "rangeMax": "2",
+            "exactHelp": "Authored indices 0\u2013255; active indices 0\u20132. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.",
+            "band255": null
+          },
+          "persisted": [
+            0,
+            2
+          ]
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [0,2], L: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "L",
+          "bandIds": [
+            0,
+            2
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0.8,
+          "dominant": 0,
+          "radius": 642,
+          "displacement": 48.150000000000006,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.8,
+          "waveform": 0.75,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [0,2], R: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "R",
+          "bandIds": [
+            0,
+            2
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0.2,
+          "dominant": 2,
+          "radius": 168,
+          "displacement": -8.4,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.2,
+          "waveform": -0.5,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [0,2], C: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "C",
+          "bandIds": [
+            0,
+            2
+          ],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": 0.45,
+          "dominant": 0,
+          "radius": 365.5,
+          "displacement": 9.137500000000001,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.6,
+          "waveform": 0.25,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.355,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 32, targets [5,100,255]: production picker and persistence",
+        "passed": true,
+        "data": {
+          "ui": {
+            "summary": "1 active target \u00b7 2 inactive targets (100, 255). Raise the band count to reactivate.",
+            "bank": "ERB distribution \u00b7 32 active bands \u00b7 configured ranges; connect audio for the active frequency limit",
+            "activeChoices": {
+              "count": 32,
+              "first": 0,
+              "last": 31
+            },
+            "shown": 32,
+            "rangeMax": "31",
+            "exactHelp": "Authored indices 0\u2013255; active indices 0\u201331. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.",
+            "band255": null
+          },
+          "persisted": [
+            5,
+            100,
+            255
+          ]
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 32, [5,100,255], L: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 32,
+          "chanId": "L",
+          "bandIds": [
+            5,
+            100,
+            255
+          ],
+          "lengths": {
+            "L": 32,
+            "R": 32,
+            "C": 32
+          },
+          "energy": 0.9,
+          "dominant": 5,
+          "radius": 721,
+          "displacement": 54.075,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.8,
+          "waveform": 0.75,
+          "inheritedColor": {
+            "r": 0.8012499999999999,
+            "g": 1,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 0.8012499999999999,
+            "g": 1,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 1,
+            "g": 0.6925,
+            "b": 0.09999999999999998
+          },
+          "expectedExplicit": {
+            "r": 1,
+            "g": 0.6925,
+            "b": 0.09999999999999998
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 32, [5,100,255], R: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 32,
+          "chanId": "R",
+          "bandIds": [
+            5,
+            100,
+            255
+          ],
+          "lengths": {
+            "L": 32,
+            "R": 32,
+            "C": 32
+          },
+          "energy": 0.1,
+          "dominant": 5,
+          "radius": 89,
+          "displacement": -4.45,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.2,
+          "waveform": -0.5,
+          "inheritedColor": {
+            "r": 0.8012499999999999,
+            "g": 1,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 0.8012499999999999,
+            "g": 1,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 1,
+            "g": 0.6925,
+            "b": 0.09999999999999998
+          },
+          "expectedExplicit": {
+            "r": 1,
+            "g": 0.6925,
+            "b": 0.09999999999999998
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 32, [5,100,255], C: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 32,
+          "chanId": "C",
+          "bandIds": [
+            5,
+            100,
+            255
+          ],
+          "lengths": {
+            "L": 32,
+            "R": 32,
+            "C": 32
+          },
+          "energy": 0.5,
+          "dominant": 5,
+          "radius": 405,
+          "displacement": 10.125,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.6,
+          "waveform": 0.25,
+          "inheritedColor": {
+            "r": 0.8012499999999999,
+            "g": 1,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 0.8012499999999999,
+            "g": 1,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 1,
+            "g": 0.6925,
+            "b": 0.09999999999999998
+          },
+          "expectedExplicit": {
+            "r": 1,
+            "g": 0.6925,
+            "b": 0.09999999999999998
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 256, targets [5,100,255]: production picker and persistence",
+        "passed": true,
+        "data": {
+          "ui": {
+            "summary": "3 active targets \u00b7 0 inactive targets",
+            "bank": "ERB distribution \u00b7 256 active bands \u00b7 configured ranges; connect audio for the active frequency limit",
+            "activeChoices": {
+              "count": 256,
+              "first": 0,
+              "last": 255
+            },
+            "shown": 256,
+            "rangeMax": "255",
+            "exactHelp": "Authored indices 0\u2013255; active indices 0\u2013255. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.",
+            "band255": "22.5 kHz\u2013\u221e"
+          },
+          "persisted": [
+            5,
+            100,
+            255
+          ]
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 256, [5,100,255], L: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 256,
+          "chanId": "L",
+          "bandIds": [
+            5,
+            100,
+            255
+          ],
+          "lengths": {
+            "L": 256,
+            "R": 256,
+            "C": 256
+          },
+          "energy": 0.46666666666666673,
+          "dominant": 5,
+          "radius": 378.66666666666674,
+          "displacement": 28.400000000000006,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.8,
+          "waveform": 0.75,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.46046875,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.46046875,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 1,
+            "g": 0.39718749999999997,
+            "b": 0.09999999999999998
+          },
+          "expectedExplicit": {
+            "r": 1,
+            "g": 0.39718749999999997,
+            "b": 0.09999999999999998
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 256, [5,100,255], R: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 256,
+          "chanId": "R",
+          "bandIds": [
+            5,
+            100,
+            255
+          ],
+          "lengths": {
+            "L": 256,
+            "R": 256,
+            "C": 256
+          },
+          "energy": 0.20000000000000004,
+          "dominant": 255,
+          "radius": 168.00000000000003,
+          "displacement": -8.400000000000002,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.2,
+          "waveform": -0.5,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.33390624999999996,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.33390624999999996,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 1,
+            "g": 0.39718749999999997,
+            "b": 0.09999999999999998
+          },
+          "expectedExplicit": {
+            "r": 1,
+            "g": 0.39718749999999997,
+            "b": 0.09999999999999998
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 256, [5,100,255], C: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 256,
+          "chanId": "C",
+          "bandIds": [
+            5,
+            100,
+            255
+          ],
+          "lengths": {
+            "L": 256,
+            "R": 256,
+            "C": 256
+          },
+          "energy": 0.3333333333333333,
+          "dominant": 5,
+          "radius": 273.3333333333333,
+          "displacement": 6.833333333333333,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.6,
+          "waveform": 0.25,
+          "inheritedColor": {
+            "r": 1,
+            "g": 0.46046875,
+            "b": 0.09999999999999998
+          },
+          "expectedInherited": {
+            "r": 1,
+            "g": 0.46046875,
+            "b": 0.09999999999999998
+          },
+          "explicitColor": {
+            "r": 1,
+            "g": 0.39718749999999997,
+            "b": 0.09999999999999998
+          },
+          "expectedExplicit": {
+            "r": 1,
+            "g": 0.39718749999999997,
+            "b": 0.09999999999999998
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, targets []: production picker and persistence",
+        "passed": true,
+        "data": {
+          "ui": {
+            "summary": "Full spectrum \u00b7 channel energy",
+            "bank": "ERB distribution \u00b7 3 active bands \u00b7 configured ranges; connect audio for the active frequency limit",
+            "activeChoices": {
+              "count": 3,
+              "first": 0,
+              "last": 2
+            },
+            "shown": 3,
+            "rangeMax": "2",
+            "exactHelp": "Authored indices 0\u2013255; active indices 0\u20132. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.",
+            "band255": null
+          },
+          "persisted": []
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [], L: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "L",
+          "bandIds": [],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": null,
+          "dominant": null,
+          "radius": 642,
+          "displacement": 48.150000000000006,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.8,
+          "waveform": 0.75,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [], R: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "R",
+          "bandIds": [],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": null,
+          "dominant": null,
+          "radius": 168,
+          "displacement": -8.4,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.2,
+          "waveform": -0.5,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "count 3, [], C: real runtime energy/radius/color",
+        "passed": true,
+        "data": {
+          "count": 3,
+          "chanId": "C",
+          "bandIds": [],
+          "lengths": {
+            "L": 3,
+            "R": 3,
+            "C": 3
+          },
+          "energy": null,
+          "dominant": null,
+          "radius": 484,
+          "displacement": 12.100000000000001,
+          "minDim": 1000,
+          "response": {
+            "minRadiusFrac": 0.01,
+            "maxRadiusFrac": 0.8,
+            "waveformRadialDisplaceFrac": 0.1
+          },
+          "full": 0.6,
+          "waveform": 0.25,
+          "inheritedColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedInherited": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "explicitColor": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          },
+          "expectedExplicit": {
+            "r": 0.35499999999999987,
+            "g": 0.09999999999999998,
+            "b": 1
+          }
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "256 \u2192 32 \u2192 3 \u2192 256 preserves targets, native editor focus/roots/drafts and reactivates",
+        "passed": true,
+        "data": {
+          "serializedBytes": 1671,
+          "sha256OfCanonicalJson": "506a53a8eb8d3fa78ba69144c2dae98c4510439185eaa91580f7eb49c88c052e",
+          "keys": [
+            "transitions",
+            "reloadedTargets"
+          ]
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "G.1 edit exact native focus survives bank changes",
+        "passed": true,
+        "data": {
+          "action": "edit",
+          "exactNodeRetained": true,
+          "connected": true
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "G.1 duplicate exact native focus survives bank changes",
+        "passed": true,
+        "data": {
+          "action": "duplicate",
+          "exactNodeRetained": true,
+          "connected": true
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "G.1 remove exact native focus survives bank changes",
+        "passed": true,
+        "data": {
+          "action": "remove",
+          "exactNodeRetained": true,
+          "connected": true
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "G.1 edit-ring exact native focus survives bank changes",
+        "passed": true,
+        "data": {
+          "action": "edit-ring",
+          "exactNodeRetained": true,
+          "connected": true
+        },
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "unmodified portable: checkbox/range edits keep inactive targets; Full spectrum clears all",
+        "passed": true,
+        "data": [
+          {
+            "id": "A",
+            "bandIds": []
+          },
+          {
+            "id": "B",
+            "bandIds": [
+              2,
+              255
+            ]
+          }
+        ],
+        "pageErrors": [],
+        "consoleErrors": []
+      },
+      {
+        "name": "native exact authored inactive entry and invalid draft remain truthful and independent",
+        "passed": true,
+        "data": [
+          {
+            "id": "A",
+            "bandIds": [
+              0,
+              2
+            ]
+          },
+          {
+            "id": "B",
+            "bandIds": [
+              2,
+              255
+            ]
+          }
+        ],
+        "pageErrors": [],
+        "consoleErrors": []
+      }
+    ],
+    "format": "Large observations represented by byte count/digest/keys. Original diagnostic provenance labels describe that script, not this target artifact."
+  },
+  "g3": {
+    "actualArtifactVersion": "v0.1.15m.i.i",
+    "actualArtifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+    "browser": "151.0.7922.173",
+    "passed": 27,
+    "total": 27,
+    "rawResultSha256": "e17c1c8016db5f3101033effa66001bebf95c940370951dd52e295e966cee334",
+    "cases": [
+      {
+        "name": "original imported speed and trace: canonical/native/readout/renderer",
+        "passed": true,
+        "data": {
+          "canonicalSpeed": 0.123456,
+          "nativeSpeed": 0.123456,
+          "speedStep": "any",
+          "speedReadout": "0.123456 rad/s (7.1\u00b0/s)",
+          "canonicalLines": 16,
+          "nativeLines": 16,
+          "lineStep": "1",
+          "renderedLines": 16,
+          "bulkSpeed": 0.123456,
+          "bulkLines": 16
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence angular-speed",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.01,
+            "max": 3,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": 0.01,
+              "native": 0.01
+            },
+            {
+              "value": 0.010000299,
+              "native": 0.010000299
+            },
+            {
+              "value": 0.123456,
+              "native": 0.123456
+            },
+            {
+              "value": 2.999999701,
+              "native": 2.999999701
+            },
+            {
+              "value": 3,
+              "native": 3
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence center-x",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": -0.95,
+            "max": 0.95,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": -0.95,
+              "native": -0.95
+            },
+            {
+              "value": -0.94999981,
+              "native": -0.94999981
+            },
+            {
+              "value": 0.123456,
+              "native": 0.123456
+            },
+            {
+              "value": 0.94999981,
+              "native": 0.94999981
+            },
+            {
+              "value": 0.95,
+              "native": 0.95
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence center-y",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": -0.95,
+            "max": 0.95,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": -0.95,
+              "native": -0.95
+            },
+            {
+              "value": -0.94999981,
+              "native": -0.94999981
+            },
+            {
+              "value": -0.123456,
+              "native": -0.123456
+            },
+            {
+              "value": 0.94999981,
+              "native": 0.94999981
+            },
+            {
+              "value": 0.95,
+              "native": 0.95
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence min-radius",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.01,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": 0.01,
+              "native": 0.01
+            },
+            {
+              "value": 0.010000039,
+              "native": 0.010000039
+            },
+            {
+              "value": 0.123456,
+              "native": 0.123456
+            },
+            {
+              "value": 0.399999961,
+              "native": 0.399999961
+            },
+            {
+              "value": 0.4,
+              "native": 0.4
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence max-radius",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.3,
+            "max": 1,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": 0.3,
+              "native": 0.3
+            },
+            {
+              "value": 0.30000007,
+              "native": 0.30000007
+            },
+            {
+              "value": 0.654321,
+              "native": 0.654321
+            },
+            {
+              "value": 0.99999993,
+              "native": 0.99999993
+            },
+            {
+              "value": 1,
+              "native": 1
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence waveform-displacement",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.01,
+            "max": 1,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": 0.01,
+              "native": 0.01
+            },
+            {
+              "value": 0.010000099,
+              "native": 0.010000099
+            },
+            {
+              "value": 0.123456,
+              "native": 0.123456
+            },
+            {
+              "value": 0.999999901,
+              "native": 0.999999901
+            },
+            {
+              "value": 1,
+              "native": 1
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence emit-rate",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 10,
+            "max": 1000,
+            "step": 10
+          },
+          "rows": [
+            {
+              "value": 10,
+              "native": 10
+            },
+            {
+              "value": 10.000099,
+              "native": 10.000099
+            },
+            {
+              "value": 15.5,
+              "native": 15.5
+            },
+            {
+              "value": 999.999901,
+              "native": 999.999901
+            },
+            {
+              "value": 1000,
+              "native": 1000
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence size-min",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.5,
+            "max": 6,
+            "step": 0.1
+          },
+          "rows": [
+            {
+              "value": 0.5,
+              "native": 0.5
+            },
+            {
+              "value": 0.50000055,
+              "native": 0.50000055
+            },
+            {
+              "value": 1.23456,
+              "native": 1.23456
+            },
+            {
+              "value": 5.99999945,
+              "native": 5.99999945
+            },
+            {
+              "value": 6,
+              "native": 6
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence size-max",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 1,
+            "max": 12,
+            "step": 0.1
+          },
+          "rows": [
+            {
+              "value": 1,
+              "native": 1
+            },
+            {
+              "value": 1.0000011,
+              "native": 1.0000011
+            },
+            {
+              "value": 6.123456,
+              "native": 6.123456
+            },
+            {
+              "value": 11.9999989,
+              "native": 11.9999989
+            },
+            {
+              "value": 12,
+              "native": 12
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence size-decay",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.1,
+            "max": 120,
+            "step": 0.1
+          },
+          "rows": [
+            {
+              "value": 0.1,
+              "native": 0.1
+            },
+            {
+              "value": 0.10001199000000001,
+              "native": 0.10001199
+            },
+            {
+              "value": 2.34567,
+              "native": 2.34567
+            },
+            {
+              "value": 119.99998801,
+              "native": 119.99998801
+            },
+            {
+              "value": 120,
+              "native": 120
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence lifetime",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0.1,
+            "max": 600,
+            "step": 0.1
+          },
+          "rows": [
+            {
+              "value": 0.1,
+              "native": 0.1
+            },
+            {
+              "value": 0.10005999,
+              "native": 0.10005999
+            },
+            {
+              "value": 180.123456,
+              "native": 180.123456
+            },
+            {
+              "value": 599.99994001,
+              "native": 599.99994001
+            },
+            {
+              "value": 600,
+              "native": 600
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence min-placement-distance",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0,
+            "max": 10,
+            "step": 0.1
+          },
+          "rows": [
+            {
+              "value": 0,
+              "native": 0
+            },
+            {
+              "value": 1e-06,
+              "native": 1e-06
+            },
+            {
+              "value": 0.123456,
+              "native": 0.123456
+            },
+            {
+              "value": 9.999999,
+              "native": 9.999999
+            },
+            {
+              "value": 10,
+              "native": 10
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence line-alpha",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "rows": [
+            {
+              "value": 0,
+              "native": 0
+            },
+            {
+              "value": 1e-07,
+              "native": 1e-07
+            },
+            {
+              "value": 0.123456,
+              "native": 0.123456
+            },
+            {
+              "value": 0.9999999,
+              "native": 0.9999999
+            },
+            {
+              "value": 1,
+              "native": 1
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence line-width",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 1,
+            "max": 6,
+            "step": 1
+          },
+          "rows": [
+            {
+              "value": 1,
+              "native": 1
+            },
+            {
+              "value": 1.0000005,
+              "native": 1.0000005
+            },
+            {
+              "value": 2.34567,
+              "native": 2.34567
+            },
+            {
+              "value": 5.9999995,
+              "native": 5.9999995
+            },
+            {
+              "value": 6,
+              "native": 6
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native precision/boundaries/persistence hue",
+        "passed": true,
+        "data": {
+          "bounds": {
+            "min": 0,
+            "max": 360,
+            "step": 1
+          },
+          "rows": [
+            {
+              "value": 0,
+              "native": 0
+            },
+            {
+              "value": 3.6e-05,
+              "native": 3.6e-05
+            },
+            {
+              "value": 123.456789,
+              "native": 123.456789
+            },
+            {
+              "value": 359.999964,
+              "native": 359.999964
+            },
+            {
+              "value": 360,
+              "native": 360
+            }
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native individual explicit edits, CONFIG arrows and stable editor focus/drafts/scroll",
+        "passed": true,
+        "data": {
+          "focusAfterRefresh": true,
+          "draftPreserved": "0,not-an-index",
+          "scrollPreserved": true,
+          "speeds": [
+            0.345678,
+            0.234567
+          ],
+          "lines": [
+            27,
+            17
+          ]
+        }
+      },
+      {
+        "name": "AUD-009 native Bulk uniform/mixed, unrelated field edits and CONFIG increments",
+        "passed": true,
+        "data": {
+          "uniform": {
+            "speed": 0.123456,
+            "speedOutput": "0.123456 rad/s (7.1\u00b0/s)",
+            "lines": 16
+          },
+          "mixedBeforeEdit": [
+            0.123456,
+            0.234567
+          ],
+          "after": [
+            {
+              "id": "A",
+              "speed": 0.466789,
+              "lines": 27
+            },
+            {
+              "id": "B",
+              "speed": 0.466789,
+              "lines": 27
+            }
+          ],
+          "shareReload": true
+        }
+      },
+      {
+        "name": "AUD-009 native designed phase, G.1 action focus and G.2 active target response",
+        "passed": true,
+        "data": {
+          "focus": true,
+          "connected": true,
+          "phase": 0.123456,
+          "phaseCanonical": 0.123456,
+          "phaseStep": "any",
+          "targets": [
+            0,
+            255
+          ],
+          "energy": 0.1,
+          "dominant": 0
+        }
+      },
+      {
+        "name": "AUD-009 native bank-count refresh retains focused range, targets, exact draft and numeric values",
+        "passed": true,
+        "data": {
+          "same": true,
+          "connected": true,
+          "speed": 0.123456,
+          "lines": 16,
+          "targets": [
+            0,
+            255
+          ],
+          "count": 32,
+          "length": 32,
+          "draft": "invalid exact"
+        }
+      },
+      {
+        "name": "AUD-009 native pointer editing commits actual range value to only its Orb",
+        "passed": true,
+        "data": {
+          "native": 1.86979023972603,
+          "canonical": 1.86979023972603,
+          "other": 0.234567,
+          "focused": true
+        }
+      },
+      {
+        "name": "AUD-009 native all Bulk continuous fields display uniform imported precision",
+        "passed": true,
+        "data": [
+          {
+            "id": "rngOmega",
+            "canonical": 0.123456,
+            "native": 0.123456,
+            "output": "0.123456 rad/s (7.1\u00b0/s)",
+            "step": "any"
+          },
+          {
+            "id": "rngMinRad",
+            "canonical": 0.123456,
+            "native": 0.123456,
+            "output": "0.123456",
+            "step": "any"
+          },
+          {
+            "id": "rngMaxRad",
+            "canonical": 0.654321,
+            "native": 0.654321,
+            "output": "0.654321",
+            "step": "any"
+          },
+          {
+            "id": "rngWfDisp",
+            "canonical": 0.123456,
+            "native": 0.123456,
+            "output": "0.123456",
+            "step": "any"
+          },
+          {
+            "id": "rngEmit",
+            "canonical": 15.5,
+            "native": 15.5,
+            "output": "15.5/s",
+            "step": "any"
+          },
+          {
+            "id": "rngSizeMin",
+            "canonical": 1.23456,
+            "native": 1.23456,
+            "output": "1.23456px",
+            "step": "any"
+          },
+          {
+            "id": "rngSizeMax",
+            "canonical": 6.123456,
+            "native": 6.123456,
+            "output": "6.123456px",
+            "step": "any"
+          },
+          {
+            "id": "rngSizeToMin",
+            "canonical": 2.34567,
+            "native": 2.34567,
+            "output": "2.34567s",
+            "step": "any"
+          },
+          {
+            "id": "rngTTL",
+            "canonical": 180.123456,
+            "native": 180.123456,
+            "output": "180.123456s",
+            "step": "any"
+          },
+          {
+            "id": "rngMinPlacementDistance",
+            "canonical": 0.123456,
+            "native": 0.123456,
+            "output": "0.123456 px",
+            "step": "any"
+          }
+        ]
+      },
+      {
+        "name": "AUD-009 uninstrumented portable preset share/reload reflects native controls",
+        "passed": true,
+        "data": {
+          "speed": 0.123456,
+          "lines": 16,
+          "instrumented": false
+        }
+      },
+      {
+        "name": "AUD-008 native built geometry/energy count 3",
+        "passed": true,
+        "data": [
+          {
+            "floor": 5e-324,
+            "firstEdges": [
+              5e-324,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-307,
+            "firstEdges": [
+              1e-307,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-200,
+            "firstEdges": [
+              1e-200,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 0
+          },
+          {
+            "floor": 20,
+            "firstEdges": [
+              20,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 0
+          },
+          {
+            "floor": 22499.9999999999,
+            "firstEdges": [
+              22499.9999999999,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 0
+          },
+          {
+            "floor": 22500,
+            "firstEdges": [
+              22500,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 1
+          }
+        ]
+      },
+      {
+        "name": "AUD-008 native built geometry/energy count 4",
+        "passed": true,
+        "data": [
+          {
+            "floor": 5e-324,
+            "firstEdges": [
+              5e-324,
+              3.3341381242276124e-160,
+              22500
+            ],
+            "midpoint": 3.3341381242276124e-160,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-307,
+            "firstEdges": [
+              1e-307,
+              4.743416490252404e-152,
+              22500
+            ],
+            "midpoint": 4.743416490252404e-152,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-200,
+            "firstEdges": [
+              1e-200,
+              1.4999999999999912e-98,
+              22500
+            ],
+            "midpoint": 1.4999999999999912e-98,
+            "zeroBands": 0
+          },
+          {
+            "floor": 20,
+            "firstEdges": [
+              20,
+              670.8203932499366,
+              22500
+            ],
+            "midpoint": 670.8203932499366,
+            "zeroBands": 0
+          },
+          {
+            "floor": 22499.9999999999,
+            "firstEdges": [
+              22499.9999999999,
+              22499.99999999995,
+              22500
+            ],
+            "midpoint": 22499.99999999995,
+            "zeroBands": 0
+          },
+          {
+            "floor": 22500,
+            "firstEdges": [
+              22500,
+              22500,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 2
+          }
+        ]
+      },
+      {
+        "name": "AUD-008 native built geometry/energy count 32",
+        "passed": true,
+        "data": [
+          {
+            "floor": 5e-324,
+            "firstEdges": [
+              5e-324,
+              4.1279198126e-313,
+              3.4488781242798653e-302,
+              2.8815386093297697e-291
+            ],
+            "midpoint": 3.3341381242276124e-160,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-307,
+            "firstEdges": [
+              1e-307,
+              2.3900450328716928e-297,
+              5.712315259155432e-287,
+              1.3652690711341934e-276
+            ],
+            "midpoint": 4.743416490252404e-152,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-200,
+            "firstEdges": [
+              1e-200,
+              6.482453606026713e-194,
+              4.202220475429205e-187,
+              2.724069927426594e-180
+            ],
+            "midpoint": 1.4999999999999912e-98,
+            "zeroBands": 0
+          },
+          {
+            "floor": 20,
+            "firstEdges": [
+              20,
+              25.2775559153712,
+              31.947741652735864,
+              40.37804129984322
+            ],
+            "midpoint": 670.8203932499366,
+            "zeroBands": 0
+          },
+          {
+            "floor": 22499.9999999999,
+            "firstEdges": [
+              22499.9999999999,
+              22499.99999999991,
+              22499.99999999991,
+              22499.99999999991
+            ],
+            "midpoint": 22499.99999999995,
+            "zeroBands": 26
+          },
+          {
+            "floor": 22500,
+            "firstEdges": [
+              22500,
+              22500,
+              22500,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 30
+          }
+        ]
+      },
+      {
+        "name": "AUD-008 native built geometry/energy count 256",
+        "passed": true,
+        "data": [
+          {
+            "floor": 5e-324,
+            "firstEdges": [
+              5e-324,
+              9.4e-323,
+              1.877e-321,
+              3.6625e-320
+            ],
+            "midpoint": 3.3341381242276124e-160,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-307,
+            "firstEdges": [
+              1e-307,
+              1.681883826040502e-306,
+              2.8287332042963815e-305,
+              4.757600624489917e-304
+            ],
+            "midpoint": 4.743416490252404e-152,
+            "zeroBands": 0
+          },
+          {
+            "floor": 1e-200,
+            "firstEdges": [
+              1e-200,
+              6.375821525934474e-200,
+              4.065110013056799e-199,
+              2.5918415926539882e-198
+            ],
+            "midpoint": 1.4999999999999912e-98,
+            "zeroBands": 0
+          },
+          {
+            "floor": 20,
+            "firstEdges": [
+              20,
+              20.560913555188172,
+              21.137558311196038,
+              21.730375460212546
+            ],
+            "midpoint": 670.8203932499366,
+            "zeroBands": 0
+          },
+          {
+            "floor": 22499.9999999999,
+            "firstEdges": [
+              22499.9999999999,
+              22499.99999999991,
+              22499.99999999991,
+              22499.99999999991
+            ],
+            "midpoint": 22499.99999999995,
+            "zeroBands": 250
+          },
+          {
+            "floor": 22500,
+            "firstEdges": [
+              22500,
+              22500,
+              22500,
+              22500
+            ],
+            "midpoint": 22500,
+            "zeroBands": 254
+          }
+        ]
+      }
+    ],
+    "format": "Large observations represented by byte count/digest/keys. Original diagnostic provenance labels describe that script, not this target artifact."
+  },
+  "h": {
+    "actualArtifactVersion": "v0.1.15m.i.i",
+    "actualArtifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+    "browser": "151.0.7922.173",
+    "passed": 9,
+    "total": 9,
+    "rawResultSha256": "9af5ea6ea967b41fc624861d6c5fb463ba21c9751ddb2bd8fe400d3268231c92",
+    "cases": [
+      {
+        "name": "idle mutation absence, focused inventory identity, tooltip listeners and canonical state",
+        "pass": true,
+        "details": {
+          "iterations": 2000,
+          "mutations": 0,
+          "focusedNodePreserved": true,
+          "canonicalStatePreserved": true,
+          "listenersStable": true
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "tooltips, off-step values, new/removed controls, reorder, drafts and immediate feedback",
+        "pass": true,
+        "details": {
+          "offStep": "0.123456",
+          "title": "Angular Speed: 0.123456 rad/s (7.1\u00b0/s)",
+          "accessible": "0.123456 rad/s (7.1\u00b0/s)",
+          "invalidDraft": "bad target",
+          "newTooltip": "Angular Speed: 1.5707963267948966 rad/s (90.0\u00b0/s)",
+          "survivingListenerAdds": 5,
+          "removed": {
+            "indexed": false,
+            "connected": false,
+            "listeners": {
+              "adds": 5,
+              "removes": 3
+            }
+          }
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "hidden panel reveal refreshes canonical values, targets, tooltips and restores focus immediately",
+        "pass": true,
+        "details": {
+          "value": "0.234567",
+          "title": "Angular Speed: 0.234567 rad/s (13.4\u00b0/s)",
+          "targets": [
+            0,
+            255
+          ],
+          "bandCount": 3,
+          "focusRecovered": true
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "asynchronous source status and mono/stereo diagnostics stay truthful without preference edits",
+        "pass": true,
+        "details": {
+          "statuses": [
+            "Waiting for microphone permission.",
+            "Microphone permission denied.",
+            "Stream live: Fixture stream - Capture: mono (1ch) - Bands: mono-ish (L\u2248R)",
+            "Stream live: Fixture stream - Capture: mono (1ch) - Bands: stereo (L\u2260R)"
+          ],
+          "fixture": "canonical source projection and producer diagnostics, same settings reference"
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "native File play/pause/stop, toast expiry, repeat, previous/next, removal and Clear",
+        "pass": true,
+        "details": {
+          "verified": [
+            "pause",
+            "resume",
+            "stop",
+            "next",
+            "previous",
+            "repeat",
+            "toast appearance/expiration",
+            "queue removal",
+            "Clear"
+          ]
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "native pending File activation cancellation settles identity before delayed resume completion",
+        "pass": true,
+        "details": {
+          "queue": 0,
+          "source": "none",
+          "status": "idle",
+          "loaded": false,
+          "media": false,
+          "disabled": true
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "native File to fake-device Mic and rejected Stream settles source selector errors",
+        "pass": true,
+        "details": {
+          "fakeDeviceMicActive": true,
+          "streamStatus": "Stream share was cancelled or denied.",
+          "fileReturn": true
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      },
+      {
+        "name": "native recorder timer, held finalization, natural EOF settlement, download and transport unlock",
+        "pass": true,
+        "details": {
+          "held": {
+            "phase": "finalizing",
+            "file": "A.wav",
+            "index": 0,
+            "busy": "true",
+            "loadDisabled": true,
+            "sourceDisabled": true,
+            "status": "Finalizing export"
+          },
+          "complete": {
+            "phase": "complete",
+            "index": 1,
+            "bytes": 17568,
+            "busy": "false",
+            "url": true
+          },
+          "retainedExportOnError": true,
+          "errorFixture": "error event delivered to native MediaRecorder; RecorderEngine handles its normal callback and retains prior successful export"
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [
+          "[RecorderEngine] recorder-error Error: Injected native recorder failure\n    at eval (eval at evaluate (:311:30), <anonymous>:1:74)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+        ],
+        "unhandledRejections": []
+      },
+      {
+        "name": "uninstrumented portable playback and recording smoke",
+        "pass": true,
+        "details": {
+          "nativePlayback": true,
+          "nativeRecording": true,
+          "exportAvailable": true
+        },
+        "pageErrors": [],
+        "expectedInjectedConsoleErrors": [],
+        "unhandledRejections": []
+      }
+    ],
+    "format": "Large observations represented by byte count/digest/keys. Original diagnostic provenance labels describe that script, not this target artifact."
+  }
+}

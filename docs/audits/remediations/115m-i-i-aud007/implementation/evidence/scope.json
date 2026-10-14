@@ -1,0 +1,22 @@
+{
+  "pass": true,
+  "baseline": "b2d84e9122991affea5c8525a07c5f755a52a3ce",
+  "priorInvestigationFilesByteIdentical": 21,
+  "protectedModulesByteIdentical": [
+    "src/js/audio/audio-engine.js",
+    "src/js/audio/input-source-manager.js",
+    "src/js/audio/queue.js",
+    "src/js/ui/ui.js",
+    "src/js/core/config.js",
+    "src/js/core/preferences.js",
+    "src/js/core/state.js",
+    "src/js/main.js",
+    "src/js/recording/recorder-engine.js",
+    "agents.md",
+    "ROADMAP.md"
+  ],
+  "peakFunctionMovedUnchanged": true,
+  "schema": 10,
+  "version": "v0.1.15m.i.i",
+  "canonicalTrackedArtifacts": "No tracked historical application/release files changed; current dist is ignored generated output."
+}

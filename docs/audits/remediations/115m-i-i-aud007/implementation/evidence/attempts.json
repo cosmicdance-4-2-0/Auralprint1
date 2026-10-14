@@ -1,0 +1,22 @@
+[
+  {
+    "check": "Initial npm test after mutant diagnostics",
+    "result": "Node test discovery included intentional mutant copies under work/; runner interrupted",
+    "correction": "Mutations now use system temporary directories and remove them. Standard full suite passes; no mutant files are in the repository."
+  },
+  {
+    "check": "Version metadata assertion",
+    "result": "Initial full suite failed escaped constants-banner regex still expecting i.h",
+    "correction": "Synchronized regex with authorized i.i revision. Full suite 825 passed, zero failed, one established skip."
+  },
+  {
+    "check": "Initial native recovery fixture",
+    "result": "Picker appends files to nonempty Queue; fixture waited for immediate auto-activation of appended recovery File",
+    "correction": "Use existing Next control to select appended recovery File. Native suite 12/12. Production Queue behavior unchanged."
+  },
+  {
+    "check": "Intermediate CI 3834a3b3eb87665d9fecb88948c91e91b64a8ee2",
+    "result": "Version-banner regex correction not yet pushed",
+    "correction": "Corrected assertion included in final native/evidence commit; exact final-head CI verified separately after push."
+  }
+]

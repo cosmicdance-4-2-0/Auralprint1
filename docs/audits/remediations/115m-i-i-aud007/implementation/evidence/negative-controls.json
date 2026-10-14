@@ -1,0 +1,124 @@
+{
+  "originalSourceModified": false,
+  "cases": [
+    {
+      "name": "reset-release",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "Reset must retain unsettled occupancy",
+      "pass": true,
+      "mutation": [
+        [
+          "function reset() {\n    generation++;",
+          "function reset() {\n    active = null;\n    generation++;"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 Reset during decode clears intent but retains resource occupancy (2.903534ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 14.765627\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:113:3\n\u2716 AUD-007 Reset during decode clears intent but retains resource occupancy (2.903534ms)\n  AssertionError [ERR_ASSERTION]: Reset must retain unsettled occupancy\n  \n  false !== true\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/reset-release/tests/waveform-coordinator.test.js:120:12)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "name": "overlap",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "second decode cannot start before A settles",
+      "pass": true,
+      "mutation": [
+        [
+          "if (active) {",
+          "if (false && active) {"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 decoding A blocks all B/C work until actual settlement (3.337543ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 16.038881\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:67:1\n\u2716 AUD-007 decoding A blocks all B/C work until actual settlement (3.337543ms)\n  AssertionError [ERR_ASSERTION]: second decode cannot start before A settles\n  + actual - expected\n  \n    [\n      'A',\n  +   'C'\n    ]\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/overlap/tests/waveform-coordinator.test.js:72:10)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: [Array],\n    expected: [Array],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "name": "fifo",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "only newest pending request may start",
+      "pass": true,
+      "mutation": [
+        [
+          "let pending = null;",
+          "let pending = null;\n  const queue = [];"
+        ],
+        [
+          "pending.file = null;\n    pending.resolve();",
+          "queue.push({ ...pending });\n    pending.resolve();"
+        ],
+        [
+          "const next = pending;",
+          "const next = queue.shift() || pending;"
+        ],
+        [
+          "if (isCurrent(next)) start(next);",
+          "if (next) start(next);"
+        ],
+        [
+          "active = job;\n    void run(job);",
+          "generation = job.generation;\n    active = job;\n    void run(job);"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 reading A reserves the entire pipeline; B never starts and only C remains pending (3.290874ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 15.38634\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:49:1\n\u2716 AUD-007 reading A reserves the entire pipeline; B never starts and only C remains pending (3.290874ms)\n  AssertionError [ERR_ASSERTION]: only newest pending request may start\n  + actual - expected\n  \n    [\n      'A',\n  +   'B'\n  -   'C'\n    ]\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/fifo/tests/waveform-coordinator.test.js:58:10)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: [Array],\n    expected: [Array],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "name": "stale-success",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "coordinator must reject stale success independent of extractor",
+      "pass": true,
+      "mutation": [
+        [
+          "if (isCurrent(job) && peaks)",
+          "if (peaks)"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 coordinator rejects stale extractor success independently of extractor checks (1.785809ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 14.112836\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:203:1\n\u2716 AUD-007 coordinator rejects stale extractor success independently of extractor checks (1.785809ms)\n  AssertionError [ERR_ASSERTION]: coordinator must reject stale success independent of extractor\n  \n  true !== false\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/stale-success/tests/waveform-coordinator.test.js:212:10)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: true,\n    expected: false,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "name": "stale-rejection",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "stale rejection must not overwrite current status",
+      "pass": true,
+      "mutation": [
+        [
+          "if (isCurrent(job)) onUpdate(\"unavailable\", null);",
+          "onUpdate(\"unavailable\", null);"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 obsolete decode rejection cannot overwrite C status and C recovers (3.829748ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 17.885271\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:86:3\n\u2716 AUD-007 obsolete decode rejection cannot overwrite C status and C recovers (3.829748ms)\n  AssertionError [ERR_ASSERTION]: stale rejection must not overwrite current status\n  \n  true !== false\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/stale-rejection/tests/waveform-coordinator.test.js:92:12)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: true,\n    expected: false,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "name": "reset-restart",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "Reset must discard pending work, never restart B",
+      "pass": true,
+      "mutation": [
+        [
+          "function reset() {\n    generation++;\n    discardPending();",
+          "function reset() {"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 Reset leaves no pending restart after decode settles (3.494965ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 18.566754\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:129:3\n\u2716 AUD-007 Reset leaves no pending restart after decode settles (3.494965ms)\n  AssertionError [ERR_ASSERTION]: Reset must discard pending work, never restart B\n  + actual - expected\n  \n    [\n      'A',\n  +   'B'\n    ]\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/reset-restart/tests/waveform-coordinator.test.js:136:12)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: [Array],\n    expected: [Array],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n"
+    },
+    {
+      "name": "reject-stuck",
+      "positiveExit": 0,
+      "mutantExit": 1,
+      "expectedAssertion": "rejected decoder must release occupied slot",
+      "pass": true,
+      "mutation": [
+        [
+          "} catch {\n      if (isCurrent(job))",
+          "} catch {\n      job.failed = true;\n      if (isCurrent(job))"
+        ],
+        [
+          "active = null;\n      job.resolve();",
+          "if (!job.failed) active = null;\n      job.resolve();"
+        ]
+      ],
+      "mutantOutput": "\u2716 AUD-007 current decode rejection releases the gate for a later File (3.202615ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 0\n\u2139 fail 1\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 15.893799\n\n\u2716 failing tests:\n\ntest at tests/waveform-coordinator.test.js:98:3\n\u2716 AUD-007 current decode rejection releases the gate for a later File (3.202615ms)\n  AssertionError [ERR_ASSERTION]: rejected decoder must release occupied slot\n  \n  true !== false\n  \n      at TestContext.<anonymous> (file:///tmp/auralprint-aud007-mutations-18rekwpa/reject-stuck/tests/waveform-coordinator.test.js:104:12)\n      at async Test.run (node:internal/test_runner/test:1389:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: true,\n    expected: false,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n"
+    }
+  ],
+  "passed": 7
+}

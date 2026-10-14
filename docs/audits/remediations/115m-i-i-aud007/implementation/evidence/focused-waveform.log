@@ -1,0 +1,41 @@
+✔ AUD-007 Scrubber clears old peaks, terminates drag and distinguishes waiting from decoding (4.953282ms)
+✔ AUD-007 Clear invalidates pending presentation without admitting stale File work (0.798826ms)
+✔ AUD-007 mic invalidates pending presentation without admitting stale File work (1.072259ms)
+✔ AUD-007 stream invalidates pending presentation without admitting stale File work (0.503411ms)
+✔ AUD-007 fallback seeking/playback and unchanged time text remain independent of waveform failure (1.388594ms)
+✔ AUD-007 repeated load/reset retains no pending File reads or new interaction listeners (3.153052ms)
+✔ RC-14: touchcancel terminates touch drag ownership before unrelated moves (0.438645ms)
+✔ RC-14: touchend terminates touch drag ownership before unrelated moves (0.158904ms)
+✔ RC-14: reset terminates touch drag ownership before unrelated moves (0.165835ms)
+✔ RC-14: load terminates touch drag ownership before unrelated moves (0.317026ms)
+✔ RC-14: init terminates touch drag ownership before unrelated moves (0.114459ms)
+✔ non-divisible waveform buckets include a final-sample impulse (0.185012ms)
+✔ short buffers retain a terminal impulse at the end of the timeline (0.129621ms)
+✔ a middle impulse maps to the corresponding middle waveform region (0.089301ms)
+✔ multi-channel terminal peaks use absolute magnitude (0.09468ms)
+✔ ordinary long buffers use proportional intervals and peak semantics (0.139805ms)
+✔ zero-length channel data returns finite zero-filled peaks (0.08162ms)
+✔ AUD-007 reading A reserves the entire pipeline; B never starts and only C remains pending (0.711017ms)
+✔ AUD-007 decoding A blocks all B/C work until actual settlement (0.369994ms)
+✔ AUD-007 obsolete read rejection cannot overwrite C status and C recovers (0.382773ms)
+✔ AUD-007 current read rejection releases the gate for a later File (0.750976ms)
+✔ AUD-007 obsolete decode rejection cannot overwrite C status and C recovers (0.306722ms)
+✔ AUD-007 current decode rejection releases the gate for a later File (0.311598ms)
+✔ AUD-007 Reset during read clears intent but retains resource occupancy (0.29846ms)
+✔ AUD-007 Reset leaves no pending restart after read settles (0.195178ms)
+✔ AUD-007 Reset during decode clears intent but retains resource occupancy (0.328334ms)
+✔ AUD-007 Reset leaves no pending restart after decode settles (0.157622ms)
+✔ AUD-007 unresolved read keeps all repeated replacements bounded (0.513826ms)
+✔ AUD-007 unresolved decode keeps all repeated replacements bounded (1.108261ms)
+✔ AUD-007 repeated selection of the identical File creates separate generations (0.324948ms)
+✔ AUD-007 synchronous extractor failure settles and permits later extraction (0.142009ms)
+✔ AUD-007 presentation reset during admission prevents even the full read (0.085095ms)
+✔ AUD-007 coordinator rejects stale extractor success independently of extractor checks (0.146105ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.603389

@@ -1,0 +1,755 @@
+{
+  "version": "v0.1.15m.i.i",
+  "browser": "151.0.7922.173",
+  "artifactSha256": "4a2dd902e4038cfc2e54a5e6580b7781b93c338ed2842f235c5b355f9ed073bd",
+  "environment": "headless Linux Chromium, localhost portable/root/nested. File read and native decoder output delivery can be held by test wrappers. Native completion and delivery settlement are tracked separately. No physical reclamation or whole-browser memory cap claim.",
+  "cases": [
+    {
+      "name": "portable short native playback/ready",
+      "pass": true,
+      "data": {
+        "reads": [
+          {
+            "name": "A.wav",
+            "bytes": 1411244,
+            "loaded": true,
+            "playing": true,
+            "nativeCompleted": true,
+            "deliveryHeld": false
+          }
+        ],
+        "decodes": [
+          {
+            "bytes": 1411244,
+            "nativeInvoked": true,
+            "nativeCompleted": true,
+            "deliveryHeld": false,
+            "frames": 352800,
+            "channels": 2,
+            "sampleRate": 44100
+          }
+        ],
+        "maxReads": 1,
+        "maxDecodes": 1,
+        "ownership": {
+          "occupied": false,
+          "pending": false,
+          "generation": 2,
+          "activeGeneration": null,
+          "pendingGeneration": null
+        },
+        "peakCount": 512,
+        "filename": "A.wav",
+        "playing": true,
+        "text": "0:00 / 0:08",
+        "stableReady": {
+          "iterations": 1000,
+          "mutations": 0,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "hosted root native playback/ready",
+      "pass": true,
+      "data": {
+        "reads": [
+          {
+            "name": "A.wav",
+            "bytes": 1411244,
+            "loaded": true,
+            "playing": true,
+            "nativeCompleted": true,
+            "deliveryHeld": false
+          }
+        ],
+        "decodes": [
+          {
+            "bytes": 1411244,
+            "nativeInvoked": true,
+            "nativeCompleted": true,
+            "deliveryHeld": false,
+            "frames": 352800,
+            "channels": 2,
+            "sampleRate": 44100
+          }
+        ],
+        "maxReads": 1,
+        "maxDecodes": 1,
+        "ownership": {
+          "occupied": false,
+          "pending": false,
+          "generation": 2,
+          "activeGeneration": null,
+          "pendingGeneration": null
+        },
+        "peakCount": 512,
+        "filename": "A.wav",
+        "playing": true,
+        "text": "0:00 / 0:08",
+        "stableReady": {
+          "iterations": 1000,
+          "mutations": 0,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "hosted nested native playback/ready",
+      "pass": true,
+      "data": {
+        "reads": [
+          {
+            "name": "A.wav",
+            "bytes": 1411244,
+            "loaded": true,
+            "playing": true,
+            "nativeCompleted": true,
+            "deliveryHeld": false
+          }
+        ],
+        "decodes": [
+          {
+            "bytes": 1411244,
+            "nativeInvoked": true,
+            "nativeCompleted": true,
+            "deliveryHeld": false,
+            "frames": 352800,
+            "channels": 2,
+            "sampleRate": 44100
+          }
+        ],
+        "maxReads": 1,
+        "maxDecodes": 1,
+        "ownership": {
+          "occupied": false,
+          "pending": false,
+          "generation": 2,
+          "activeGeneration": null,
+          "pendingGeneration": null
+        },
+        "peakCount": 512,
+        "filename": "A.wav",
+        "playing": true,
+        "text": "0:00 / 0:08",
+        "stableReady": {
+          "iterations": 1000,
+          "mutations": 0,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "native sixth-channel terminal impulse contributes to final bucket",
+      "pass": true,
+      "data": {
+        "channels": 6,
+        "finalPeak": 0.89996337890625,
+        "earlyPeak": 0,
+        "buckets": 512
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "A native result held; B/C supersession admits no extra read/decode, only C proceeds",
+      "pass": true,
+      "data": {
+        "blocked": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": true,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": true,
+            "pending": true,
+            "generation": 6,
+            "activeGeneration": 2,
+            "pendingGeneration": 6
+          },
+          "peakCount": 0,
+          "filename": "C.wav",
+          "playing": true,
+          "text": "0:00 / 0:08 • waiting for waveform"
+        },
+        "stableWaiting": {
+          "iterations": 1000,
+          "mutations": 0,
+          "text": "0:00 / 0:08 • waiting for waveform"
+        },
+        "settled": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            },
+            {
+              "name": "C.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": false,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            },
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 6,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 512,
+          "filename": "C.wav",
+          "playing": false,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "A native encoded read result held; replacement skips stale decode and admits only C",
+      "pass": true,
+      "data": {
+        "blocked": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": true
+            }
+          ],
+          "decodes": [],
+          "maxReads": 1,
+          "maxDecodes": 0,
+          "ownership": {
+            "occupied": true,
+            "pending": true,
+            "generation": 6,
+            "activeGeneration": 2,
+            "pendingGeneration": 6
+          },
+          "peakCount": 0,
+          "filename": "C.wav",
+          "playing": true,
+          "text": "0:00 / 0:08 • waiting for waveform"
+        },
+        "settled": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            },
+            {
+              "name": "C.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 6,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 512,
+          "filename": "C.wav",
+          "playing": true,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "optional native-decode refusal preserves playback, seek and later recovery",
+      "pass": true,
+      "data": {
+        "failed": {
+          "loaded": true,
+          "playing": true,
+          "error": "",
+          "time": 5.999509,
+          "duration": 8,
+          "seekFraction": 0.75
+        },
+        "stableUnavailable": {
+          "iterations": 1000,
+          "mutations": 0,
+          "text": "0:06 / 0:08 • waveform unavailable"
+        },
+        "recovered": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            },
+            {
+              "name": "recovery.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": false,
+              "nativeCompleted": false,
+              "deliveryHeld": false
+            },
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 4,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 512,
+          "filename": "recovery.wav",
+          "playing": true,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "Clear pending native delivery invalidates peaks and pending intent but retains occupancy",
+      "pass": true,
+      "data": {
+        "cleared": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": true,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": true,
+            "pending": false,
+            "generation": 5,
+            "activeGeneration": 2,
+            "pendingGeneration": null
+          },
+          "peakCount": 0,
+          "filename": "",
+          "playing": false,
+          "text": "--:-- / --:-- • no track loaded"
+        },
+        "settled": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 5,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 0,
+          "filename": "",
+          "playing": false,
+          "text": "--:-- / --:-- • no track loaded"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "pending File → mic preserves live-source ownership and discards waveform intent",
+      "pass": true,
+      "data": {
+        "blocked": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": true,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": true,
+            "pending": false,
+            "generation": 5,
+            "activeGeneration": 2,
+            "pendingGeneration": null
+          },
+          "peakCount": 0,
+          "filename": "",
+          "playing": false,
+          "text": "Microphone input active • live input"
+        },
+        "settled": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 5,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 0,
+          "filename": "",
+          "playing": false,
+          "text": "Microphone input active • live input"
+        },
+        "source": {
+          "kind": "mic",
+          "status": "active",
+          "error": ""
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "pending File → stream preserves live-source ownership and discards waveform intent",
+      "pass": true,
+      "data": {
+        "blocked": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": true,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": true,
+            "pending": false,
+            "generation": 5,
+            "activeGeneration": 2,
+            "pendingGeneration": null
+          },
+          "peakCount": 0,
+          "filename": "",
+          "playing": false,
+          "text": "--:-- / --:-- • no track loaded"
+        },
+        "settled": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 5,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 0,
+          "filename": "",
+          "playing": false,
+          "text": "Stream share was cancelled or denied."
+        },
+        "source": {
+          "kind": "stream",
+          "status": "error",
+          "error": "Stream share was cancelled or denied."
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "native recording survives File changes while waveform operation remains blocked",
+      "pass": true,
+      "data": {
+        "active": {
+          "phase": "recording",
+          "filename": "C.wav",
+          "readCount": 1,
+          "decodeCount": 1
+        },
+        "exported": {
+          "bytes": 11451,
+          "url": true
+        },
+        "settled": {
+          "reads": [
+            {
+              "name": "A.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            },
+            {
+              "name": "C.wav",
+              "bytes": 1411244,
+              "loaded": true,
+              "playing": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false
+            }
+          ],
+          "decodes": [
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            },
+            {
+              "bytes": 1411244,
+              "nativeInvoked": true,
+              "nativeCompleted": true,
+              "deliveryHeld": false,
+              "frames": 352800,
+              "channels": 2,
+              "sampleRate": 44100
+            }
+          ],
+          "maxReads": 1,
+          "maxDecodes": 1,
+          "ownership": {
+            "occupied": false,
+            "pending": false,
+            "generation": 6,
+            "activeGeneration": null,
+            "pendingGeneration": null
+          },
+          "peakCount": 512,
+          "filename": "C.wav",
+          "playing": true,
+          "text": "0:00 / 0:08"
+        }
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    },
+    {
+      "name": "browser abortable-reader capability probe (not implemented)",
+      "pass": true,
+      "data": {
+        "events": [
+          {
+            "type": "abort",
+            "readyState": 2
+          },
+          {
+            "type": "loadend",
+            "readyState": 2
+          }
+        ],
+        "resultNull": true,
+        "bytes": 65536,
+        "productionReader": "File.arrayBuffer unchanged",
+        "physicalReleaseClaim": false
+      },
+      "pageErrors": [],
+      "failedAssets": []
+    }
+  ]
+}

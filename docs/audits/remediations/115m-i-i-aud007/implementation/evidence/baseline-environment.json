@@ -1,0 +1,16 @@
+{
+  "startingHead": "b2d84e9122991affea5c8525a07c5f755a52a3ce",
+  "startingMain": "704bf13d3a3dfb76032343226bad7240191ef6c6",
+  "pr50StatusAtStart": "open draft, unmerged, exact accepted head",
+  "startingTreeClean": true,
+  "branch": "codex/115m-i-i-aud007-coordinator",
+  "stackedDraftPR": "https://github.com/cosmicdance-4-2-0/Auralprint1/pull/51",
+  "base": "codex/115m-i-i-aud007-policy",
+  "version": "v0.1.15m.i.i",
+  "schema": 10,
+  "node": "v24.19.0",
+  "python": "Python 3.12.14",
+  "esbuild": "0.25.12",
+  "chromium": "Chromium 151.0.7922.173 built on Debian GNU/Linux 13 (trixie)",
+  "cleanInstall": "npm ci succeeded directly; no dependency cache fallback or alternate esbuild binary needed in I.2A"
+}
