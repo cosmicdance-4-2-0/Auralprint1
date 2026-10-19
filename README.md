@@ -2,7 +2,7 @@
 
 Offline-capable audio analysis, playback, visualization, and recording. Spectral analysis drives the visualizers.
 
-**Current release:** Release 3 / Build 113 (`v0.1.13`). Build 114 (`v0.1.14`) was shipped internally. **Release candidate:** Build 115N (`v0.1.15n`), preset schema 10; final acceptance **WITHHELD**. Build 115 is not a canonical shipped release. The owner reports 115N is publicly deployed for [RC testing](docs/development/build-115-release-delta.md#115n-rc-1-field-evidence-owner-tester-reports-october-1819-2026), not approved as Release 4.
+**Current release:** Release 3 / Build 113 (`v0.1.13`). Build 114 (`v0.1.14`) was shipped internally. **Release candidate:** Build 115N (`v0.1.15n`), preset schema 10; final acceptance **WITHHELD**. Build 115 is not a canonical shipped release. The owner reports 115N is publicly deployed for [RC testing](docs/development/build-115-release-delta.md#115n-rc-field-evidence), not approved as Release 4.
 
 - [ROADMAP.md](ROADMAP.md): current scope, future builds, acceptance gates, and deferrals.
 - [agents.md](agents.md): binding architecture and development contracts.

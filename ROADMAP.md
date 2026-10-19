@@ -77,7 +77,7 @@ The [CI workflow](.github/workflows/ci.yml) checks sequential locked install/tes
 
 ### Build 115N acceptance gates
 
-**115N RC validation in progress; final acceptance WITHHELD.** Owner reports the RC is publicly deployed for opt-in testing; the [field evidence](docs/development/build-115-release-delta.md#115n-rc-1-field-evidence-owner-tester-reports-october-1819-2026) records results without claiming release or universal support. Independent evidence and explicit human approval are still required for applicable scenarios:
+**115N RC validation in progress; final acceptance WITHHELD.** Owner reports the RC is publicly deployed for opt-in testing; the [field evidence](docs/development/build-115-release-delta.md#115n-rc-field-evidence) records results without claiming release or universal support. Independent evidence and explicit human approval are still required for applicable scenarios:
 
 - Firefox/Safari and mobile browsers, physical touch, responsive panel recovery, keyboard/focus and assistive technology.
 - Real compressed/media breadth, device sample rates/channel layouts, microphone hardware, OS display/system-audio permissions, cancellation and recovery.

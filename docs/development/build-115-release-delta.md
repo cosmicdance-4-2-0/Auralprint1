@@ -90,6 +90,8 @@ These are verified baseline-path corrections, not a claim of a new defect introd
 
 The same Camera/3D, richer band, file-preset, hardware/UX and caching deferrals apply. Resolving bounded resource correctness does not complete Build 117 optimization, bound long-duration recording memory, or certify expert/max-count visual usability.
 
+<a id="115n-rc-field-evidence"></a>
+
 ## 115N RC #1 field evidence (owner/tester reports, October 18–19, 2026)
 
 - **Public test:** Owner reports deploying `v0.1.15n` to [auralprint.idiw.net](https://auralprint.idiw.net) after notifying Discord testers. More than 24 hours of owner use and manual exercise of the new systems found no release-blocking application defect. This is public RC exposure, **not** canonical shipment.
