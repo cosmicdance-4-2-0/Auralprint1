@@ -90,6 +90,16 @@ These are verified baseline-path corrections, not a claim of a new defect introd
 
 The same Camera/3D, richer band, file-preset, hardware/UX and caching deferrals apply. Resolving bounded resource correctness does not complete Build 117 optimization, bound long-duration recording memory, or certify expert/max-count visual usability.
 
+## 115N RC #1 field evidence (owner/tester reports, October 18–19, 2026)
+
+- **Public test:** Owner reports deploying `v0.1.15n` to [auralprint.idiw.net](https://auralprint.idiw.net) after notifying Discord testers. More than 24 hours of owner use and manual exercise of the new systems found no release-blocking application defect. This is public RC exposure, **not** canonical shipment.
+- **Firefox Stream:** Owner reports that shared-stream audio works in Chrome, Opera and Edge but not Firefox. Firefox display capture audio is [not implemented](https://bugzilla.mozilla.org/show_bug.cgi?id=1541425); a display stream can therefore lack audio tracks even when requested. Current [source manager](../../src/js/audio/input-source-manager.js) rejects zero-audio-track streams. No native Firefox track-count trace was captured; do not claim Stream audio is supported there. Other Firefox workflows are separate.
+- **Constrained hardware:** Owner's 16-Orb stereo preset (256 ERB bands, FFT 8192, 60 Trace lines per Orb, approximately 70.48-second TTL) on an AMD A8 with two GTX 1650 cards: `requestAnimationFrame` 10-second averages were **9.8 FPS** with maximum live particles 16,384, **19.4 FPS** at 4,096, and **21.2 FPS** at 2,048. At the 16,384 limit, observed live population was about 10,608, with 16 emissions, 256 spacing suppressions and zero emission-budget rejections per update. These are user measurements, not cross-device guarantees.
+- **High-end hardware:** Another tester with an i9 and RTX 5090 reports visually smooth operation with the same preset at approximately 16K live particles and a climbing rejection counter (counter type not established). No measured FPS was supplied.
+- **Future work:** Particle/Trace rendering performance and Orb-panel ergonomics remain Build 117 candidates. A tester requested Trace segments that retain their originating particle's color instead of recoloring the entire path; this is **not** a Build 115 feature or approved schema change.
+
+These reports support a release decision but do not substitute for unreported device, browser, accessibility, export-fidelity, offline-portable or artwork checks in the [115N gates](../../ROADMAP.md#build-115n-acceptance-gates). No release number, canonical changelog entry or shipment approval is established.
+
 ## Decisions reserved for release review
 
 - Approve whether eventual public notes compare Build 113 or another explicitly approved shipped baseline; preserve Build 114's internal distinction.
