@@ -103,19 +103,21 @@ The [CI workflow](.github/workflows/ci.yml) checks sequential locked install/tes
 
 Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, visualizer ownership, RC-01–RC-22 and distribution metadata) are not open deferrals. Related future improvements retain their existing homes. No new functional assignment is created by documentation reconciliation.
 
-## Build 116: camera controls, render separate from simulation
+## Build 116: simulation world, camera and projection
 
-**Status: next planned milestone after Release 4.**
+**Status: 116A foundation in progress after Release 4.** [Build 116 contract](docs/development/build-116.md).
 
-Deliver pan, zoom, rotation, and reset camera. Start at the simulation origin. Provide discoverable controls and define pointer/keyboard interactions before adding gestures that compete with seeking, file drop, or panel scrolling.
+World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
+
+Staged work: **116A** world coordinate contract and independent geometry; **116B** world-to-screen camera projection and inverse transform; **116C** configurable world size and camera UI/persistence with schema migration; **116D** compatibility, interactive and distribution acceptance. Small reviewable passes; no Build 117 optimizations.
 
 Acceptance gates:
 
-- Camera changes affect projection only: orb phases, centers, analysis, and transport do not change.
-- Reset returns to a documented default view.
-- Resizing and device-pixel-ratio changes remain correct.
-- Decide and document camera persistence before implementation. Persisted camera fields require the complete preset pipeline update, schema increment, and legacy migration; runtime-only camera state must remain outside presets.
-- Playback, recording, and the single-file build pass regression validation with the transformed view.
+- World dimensions can be configured independently of browser dimensions; changing viewport size, devicePixelRatio, pan, zoom or camera rotation must not mutate Orb locations/phases, retained particle coordinates, Ring geometry, analysis or playback.
+- Default framing should approximate the familiar Build 115 appearance; explicitly test loaded schema-10 presets and legacy migration. The first persisted world configuration requires schema 11, CONFIG defaults/limits, codec migration and all preset/UI owners. Freeze no new preset semantics prematurely.
+- Pan, zoom, rotation, reset and the inverse coordinate transform are deterministic and accessible; camera reset returns to a documented default and interactive controls avoid transport, seek, drag/drop and panel gesture conflicts.
+- Decide camera persistence explicitly before implementation; application-only camera state stays out of presets unless a versioned design is approved. World dimensions are intended Scene configuration and must traverse the canonical preferences pipeline.
+- Pixel-valued particle spacing/sizes and trace/ring widths retain explicit semantics; camera transforms must not silently change emission decisions. Resize, high-DPI, history retention, recording, hosted and single-file behavior pass regression validation.
 
 ## Build 117: UX and performance hardening
 
