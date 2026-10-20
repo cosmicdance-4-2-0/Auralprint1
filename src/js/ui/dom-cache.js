@@ -167,6 +167,7 @@ function primeDomCache() {
 
     ui.bandDebug = document.getElementById("bandDebug");
     ui.bandMeta = document.getElementById("bandMeta");
+    ui.btnDownloadSpectralEvidence = document.getElementById("btnDownloadSpectralEvidence");
     ui.bandTable = document.getElementById("bandTable");
 
     ui.btnOpenAudio = document.getElementById("btnOpenAudio");
