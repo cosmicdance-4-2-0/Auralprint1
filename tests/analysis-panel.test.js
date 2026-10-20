@@ -14,7 +14,7 @@ function el() {
   };
 }
 function fixture(count=2) {
-  const keys=["analysisPanel","analysisStatus","rngRmsGain","valRmsGain","rngSmooth","valSmooth","selFFT","valFFT","selDistMode","valDistMode","inpBandFloorHz","valBandFloorHz","inpBandCeilingHz","valBandCeilingHz","valBandCount","bandMeta","bandDebug","bandTable"];
+  const keys=["analysisPanel","analysisStatus","rngRmsGain","valRmsGain","rngSmooth","valSmooth","selFFT","valFFT","selDistMode","valDistMode","inpBandFloorHz","valBandFloorHz","inpBandCeilingHz","valBandCeilingHz","valBandCount","bandMeta","bandDebug","bandTable","btnDownloadSpectralEvidence"];
   const ui=Object.fromEntries(keys.map(k=>[k,el()]));
   ui.selFFT.options=[]; ui.selDistMode.options=[];
   const settings={audio:{rmsGain:1,smoothingTimeConstant:.8,fftSize:2048},bands:{count,floorHz:20,ceilingHz:22500,distributionMode:"erb"}};
@@ -73,7 +73,7 @@ test("HUD distinguishes configured and effective floor when Nyquist constrains g
 test("template gives migrated controls one Analysis owner",()=>{
   const html=readFileSync(new URL("../src/index.template.html",import.meta.url),"utf8");
   const analysis=html.match(/<div id="analysisPanel"[\s\S]*?<div id="scenePanel"/)?.[0]||"";
-  for(const id of ["rngRmsGain","rngSmooth","selFFT","selDistMode","bandDebug","bandMeta","bandTable"]) {assert.match(analysis,new RegExp(`id="${id}"`));assert.equal((html.match(new RegExp(`id="${id}"`,"g"))||[]).length,1)}
+  for(const id of ["rngRmsGain","rngSmooth","selFFT","selDistMode","bandDebug","bandMeta","bandTable","btnDownloadSpectralEvidence"]) {assert.match(analysis,new RegExp(`id="${id}"`));assert.equal((html.match(new RegExp(`id="${id}"`,"g"))||[]).length,1)}
   assert.doesNotMatch(analysis,/bandOverlaySection/);
 });
 
@@ -113,4 +113,48 @@ test('AUD-004 explicit reveal refresh bypasses only the existing HUD interval gu
     frame.spectrum.dominantName='On reveal';frame.spectrum.energies01[0]=.9;
     panel.refresh(frame,true);assert.match(ui.bandDebug.children[0].textContent,/On reveal/);assert.equal(ui.bandTable.children[3].children[0].style.width,'90%');
   }finally{restore()}
+});
+
+
+test("spectral evidence download requires live analysis and copies observations without changing prefs", () => {
+  const restore = installDocument(), { ui, settings, prefs } = fixture(2), saved = [];
+  const initialPrefs = structuredClone(prefs);
+  try {
+    const panel = createAnalysisPanelUi({
+      ui, getSettings: () => settings, mutablePreferences: prefs,
+      saveEvidence: (snapshot) => saved.push(snapshot), now: () => 1000,
+    });
+    panel.init(); panel.init();
+    assert.equal(ui.btnDownloadSpectralEvidence.listenerCount("click"), 1);
+    assert.equal(ui.btnDownloadSpectralEvidence.disabled, true);
+    ui.btnDownloadSpectralEvidence.dispatch("click");
+    assert.equal(saved.length, 0);
+    assert.match(ui.analysisStatus.textContent, /not ready/);
+
+    const frame = {
+      ready: true, monoLike: true,
+      channels: {
+        L: { rms: .1, energy01: .2, bandEnergies01: [.1, .3] },
+        R: { rms: .1, energy01: .2, bandEnergies01: [.2, .4] },
+        C: { rms: .1, energy01: .2, bandEnergies01: [.15, .35] },
+      },
+      spectrum: {
+        lowHz: [0, 20], highHz: [20, Infinity],
+        dominantIndex: 1, dominantName: "High",
+        metadata: { sampleRateHz: 48000, nyquistHz: 24000, effectiveFloorHz: 20, configCeilingHz: 22500, effectiveCeilingHz: 22500 },
+      },
+    };
+    panel.refresh(frame);
+    assert.equal(ui.btnDownloadSpectralEvidence.disabled, false);
+    ui.btnDownloadSpectralEvidence.dispatch("click");
+    assert.equal(saved.length, 1);
+    assert.equal(saved[0].bands[0].lowHz, 0);
+    assert.equal(saved[0].bands[1].energies01.R, .4);
+    assert.match(ui.analysisStatus.textContent, /download requested/);
+    frame.spectrum.lowHz[0] = 10;
+    assert.equal(saved[0].bands[0].lowHz, 0);
+    panel.refresh({ready:false, spectrum:frame.spectrum});
+    assert.equal(ui.btnDownloadSpectralEvidence.disabled, true);
+    assert.deepEqual(prefs, initialPrefs);
+  } finally { restore(); }
 });
