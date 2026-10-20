@@ -3,6 +3,23 @@ import { CONFIG } from "../core/config.js";
 import { BAND_NAMES, preferences, runtime } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { BandBank } from "../audio/band-bank.js";
+import { captureSpectralEvidence } from "../audio/spectral-evidence.js";
+
+function downloadEvidenceJson(snapshot) {
+  const blob = new Blob([`${JSON.stringify(snapshot, null, 2)}\n`], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  try {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "auralprint-spectral-evidence.json";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    try { link.click(); } finally { link.remove(); }
+  } finally {
+    // Let the browser begin consuming the Blob before releasing its URL.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+}
 
 function createAnalysisPanelUi({
   ui = state.ui,
@@ -11,6 +28,7 @@ function createAnalysisPanelUi({
   commitPreferences = () => {},
   bandColor = () => ({ r: 1, g: 1, b: 1 }),
   now = () => performance.now(),
+  saveEvidence = downloadEvidenceJson,
 } = {}) {
   let initializedOn = null;
   let lastSettingsRef = null;
@@ -19,6 +37,7 @@ function createAnalysisPanelUi({
   let rows = [];
   let dominantBadge = null;
   let lastHudUpdateMs = -Infinity;
+  let latestFrame = null;
 
   function addOptions(select, values) {
     if (!select || select.options.length) return;
@@ -80,6 +99,11 @@ function createAnalysisPanelUi({
     if (ui.bandMeta.textContent !== text) ui.bandMeta.textContent=text;
   }
   function refresh(frame=null, forceHud=false) {
+    latestFrame = frame?.spectrum ? frame : null;
+    if (ui.btnDownloadSpectralEvidence) {
+      const disabled = latestFrame?.ready !== true;
+      if (ui.btnDownloadSpectralEvidence.disabled !== disabled) ui.btnDownloadSpectralEvidence.disabled = disabled;
+    }
     const settings=getSettings(); if(!settings) return;
     syncControls(settings); refreshMetadata(frame,settings);
     const definitionRef=frame?.spectrum?.lowHz || state.bands.lowHz;
@@ -118,6 +142,18 @@ function createAnalysisPanelUi({
     ui.selFFT.addEventListener("change",()=>{mutablePreferences.audio.fftSize=Number(ui.selFFT.value);commitPreferences("fft size");});
     ui.selDistMode.addEventListener("change",()=>{mutablePreferences.bands.distributionMode=ui.selDistMode.value;commitPreferences("band distribution mode",{rebuildBandsOnDefinitionChange:true});});
     ui.inpBandFloorHz.addEventListener("change",()=>commitFrequency("floor")); ui.inpBandCeilingHz.addEventListener("change",()=>commitFrequency("ceiling"));
+    if (ui.btnDownloadSpectralEvidence) {
+      ui.btnDownloadSpectralEvidence.disabled = true;
+      ui.btnDownloadSpectralEvidence.addEventListener("click", () => {
+        try {
+          const snapshot = captureSpectralEvidence(latestFrame);
+          saveEvidence(snapshot);
+          status(`Spectral evidence download requested (${snapshot.bands.length} bands).`);
+        } catch (error) {
+          status(`Spectral evidence unavailable: ${error.message}`);
+        }
+      });
+    }
     syncControls(); return true;
   }
   return { init, refresh, syncControls };
