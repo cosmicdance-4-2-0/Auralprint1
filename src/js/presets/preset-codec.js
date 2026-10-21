@@ -9,11 +9,9 @@ import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { assertOrbAdmission } from "../core/orb-admission.js";
 
 // Preset data contract, independent of URL/base64 or application state.
-// Build 115 freezes schema 10; future persisted additions, removals, renames,
-// ownership moves or semantic changes require schema 11 plus migration.
-// Authorized pre-release v0.1.15m.h.t correction adds Orb placement distance;
-// and v0.1.15m.h.u adds selected scene-wide particle resource budgets.
-// Normalization supplies CONFIG defaults to missing schema-2–10 fields.
+// Schema 10 is published and immutable. Schema 11 adds the authorized world
+// reference and explicitly named world-unit placement distance; schemas 2–10
+// retain their historical input contracts and migrate below.
 const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);

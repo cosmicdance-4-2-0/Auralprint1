@@ -28,7 +28,7 @@ Capabilities below are implemented in source. Covered automated behavior and rec
 | Visuals and color | Singleton Spectral Ring and Orbs in Visualizers; shared Scene appearance in Settings; designed/reset/pause semantics | Artistic acceptance and resize/orientation coverage; simulation/projection separation in Build 116 |
 | Particle resources | Settings-owned emission/retention budgets and diagnostics; per-Orb minimum placement distance; fairness, oldest retirement and bounded emission time | Heavy Canvas/UI and large synchronous retirement costs require measured 115N disposition; broader optimization in Build 117 |
 | Capture | Canvas plus optional source audio, format/FPS, Balanced/Custom/Unrestricted resource policy, five-minute default Stop target, independent local settings, retained export and preserve-export Cancel | Exported audio fidelity/external players, downloads, long duration and devices in 115N |
-| Presets | Pure schema-10 codec, URL transport, schemas 2–9 migration including both schema-9 forms, configuration-only persistence | File import/export remains Build 119 |
+| Presets | Build 116A schema-11 codec, URL transport, schemas 2–10 migration including both schema-9 forms, configuration-only persistence | File import/export remains Build 119 |
 | Workspace | Independent panels, unified launcher, collapse/global hide/restore, visible focus ownership and Queue focus recovery | Wider keyboard/accessibility/mobile acceptance; long-panel refinements in Build 117 |
 | Distribution | Versioned self-contained portable HTML and relocatable hosted package from shared JS/CSS | Owner-reported direct-file and Python-hosted functional coverage; managed automation file:// blocked; network-disabled portability remains separate; no caching/installability claim |
 
@@ -105,11 +105,11 @@ Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, vis
 
 ## Build 116: simulation world, camera and projection
 
-**Status: 116A foundation in progress after Release 4.** [Build 116 contract](docs/development/build-116.md).
+**Status: 116A integration implemented for review in PR #68 after Release 4.** [Build 116 contract](docs/development/build-116.md).
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
-Staged work: **116A** world coordinate contract and independent geometry; **116B** world-to-screen camera projection and inverse transform; **116C** configurable world size and camera UI/persistence with schema migration; **116D** compatibility, interactive and distribution acceptance. Small reviewable passes; no Build 117 optimizations.
+Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** world-to-screen camera projection and inverse transform; **116C** remaining camera UI/persistence after explicit policy approval; **116D** compatibility, interactive and distribution acceptance. Small reviewable passes; no Build 117 optimizations.
 
 Acceptance gates:
 
@@ -117,7 +117,7 @@ Acceptance gates:
 - Default framing should approximate the familiar Build 115 appearance; explicitly test loaded schema-10 presets and legacy migration. The first persisted world configuration requires schema 11, CONFIG defaults/limits, codec migration and all preset/UI owners. Freeze no new preset semantics prematurely.
 - Pan, zoom, rotation, reset and the inverse coordinate transform are deterministic and accessible; camera reset returns to a documented default and interactive controls avoid transport, seek, drag/drop and panel gesture conflicts.
 - Decide camera persistence explicitly before implementation; application-only camera state stays out of presets unless a versioned design is approved. World dimensions are intended Scene configuration and must traverse the canonical preferences pipeline.
-- Pixel-valued particle spacing/sizes and trace/ring widths retain explicit semantics; camera transforms must not silently change emission decisions. Resize, high-DPI, history retention, recording, hosted and single-file behavior pass regression validation.
+- World-unit particle spacing and CSS-screen-sized particle/Trace/Ring presentation retain explicit semantics; camera transforms must not silently change emission decisions. Resize, high-DPI, history retention, recording, hosted and single-file behavior pass regression validation.
 
 ## Build 117: UX and performance hardening
 
