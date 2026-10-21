@@ -21,6 +21,8 @@ import { createVisualizersPanelUi } from "./visualizers-panel.js";
 import { createAnalysisPanelUi } from "./analysis-panel.js";
 import { createSpectralRingEditorUi } from "./spectral-ring-editor.js";
 import { createScenePanelUi } from "./scene-panel.js";
+import { createCameraControlsUi } from "./camera-controls.js";
+import { createCameraInteraction } from "./camera-interaction.js";
 
 /* =============================================================================
    UI
@@ -349,6 +351,8 @@ const UI = (() => {
       refreshAllUiText(latestAnalysisFrame); // Settle presentation before restoring focus.
     },
   });
+  const cameraInteraction = createCameraInteraction();
+  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction });
   const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,
@@ -450,6 +454,7 @@ const UI = (() => {
     AudioEngine.applyPlaybackSettingsLive();
     orbEditorUi.refresh();
     scenePanelUi.refresh(runtime.settings);
+    cameraControlsUi.refresh();
 
     if (reason && typeof showStatus === "function") showStatus(`Updated: ${reason}`);
   }
@@ -1245,6 +1250,7 @@ const UI = (() => {
 
     analysisPanelUi.refresh(analysisFrame);
     scenePanelUi.refresh(runtime.settings);
+    cameraControlsUi.refresh();
 
     // Settings/definition replacement invalidates meaning, not every animation frame.
     // Comparing generated titles ensures unrelated changes do not rewrite controls.
@@ -1273,6 +1279,8 @@ const UI = (() => {
     orbEditorUi.init();
     spectralRingEditorUi.init();
     scenePanelUi.init();
+    cameraInteraction.init();
+    cameraControlsUi.init();
     visualizersPanelUi.init();
 
     initConfigTooltips();

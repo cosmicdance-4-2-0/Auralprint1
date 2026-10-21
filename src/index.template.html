@@ -258,6 +258,23 @@
       </div>
       <p id="worldHeightError" class="picker-error" role="alert"></p>
     </div></details>
+    <details id="cameraSection" class="settings-section" open><summary>Viewport Camera</summary><div class="section-body">
+      <p id="cameraHelp" class="section-description">Move the view without changing the simulation. Camera settings last for this session and are not included in presets. Pan buttons move the camera along the current view's axes. Positive rotation turns the camera counterclockwise; the scene appears clockwise.</p>
+      <div class="row"><label for="numCameraX">Camera X (world units)</label><input id="numCameraX" type="number" inputmode="decimal" step="any" aria-describedby="cameraHelp cameraXError" /><div id="valCameraX" class="val"></div></div>
+      <p id="cameraXError" class="picker-error" role="alert"></p>
+      <div class="row"><label for="numCameraY">Camera Y (world units)</label><input id="numCameraY" type="number" inputmode="decimal" step="any" aria-describedby="cameraHelp cameraYError" /><div id="valCameraY" class="val"></div></div>
+      <p id="cameraYError" class="picker-error" role="alert"></p>
+      <div class="camera-actions" role="group" aria-label="Pan camera in view directions"><button id="btnCameraPanLeft" type="button">Pan left</button><button id="btnCameraPanRight" type="button">Pan right</button><button id="btnCameraPanUp" type="button">Pan up</button><button id="btnCameraPanDown" type="button">Pan down</button></div>
+      <div class="row"><label for="numCameraZoom">Camera zoom (×)</label><input id="numCameraZoom" type="number" inputmode="decimal" step="any" aria-describedby="cameraHelp cameraZoomError" /><div id="valCameraZoom" class="val"></div></div>
+      <p id="cameraZoomError" class="picker-error" role="alert"></p>
+      <div class="camera-actions" role="group" aria-label="Camera zoom"><button id="btnCameraZoomOut" type="button">Zoom out</button><button id="btnCameraZoomIn" type="button">Zoom in</button></div>
+      <div class="row"><label for="numCameraRotation">Camera rotation (degrees)</label><input id="numCameraRotation" type="number" inputmode="decimal" step="any" aria-describedby="cameraHelp cameraRotationError" /><div id="valCameraRotation" class="val"></div></div>
+      <p id="cameraRotationError" class="picker-error" role="alert"></p>
+      <div class="camera-actions" role="group" aria-label="Camera rotation"><button id="btnCameraRotateCW" type="button">Rotate clockwise</button><button id="btnCameraRotateCCW" type="button">Rotate counterclockwise</button></div>
+      <div class="row"><label for="chkCameraInteraction">Enable camera mode on canvas</label><input id="chkCameraInteraction" type="checkbox" aria-describedby="cameraInteractionHelp" /><div id="valCameraInteraction" class="val" role="status">Camera mode off</div></div>
+      <p id="cameraInteractionHelp" class="section-description">When enabled, drag the canvas with one pointer to pan; use the wheel to zoom around the pointer. With the canvas focused: arrows pan, +/− zoom, [/] rotate clockwise/counterclockwise, Home resets the camera, and Escape exits camera mode. H, Space, R and N/P keep their existing actions. Keyboard camera controls above also work with camera mode off.</p>
+      <div class="camera-actions"><button id="btnResetCamera" type="button">Reset Camera</button></div>
+    </div></details>
     <details class="settings-section" open><summary>Canvas</summary><div class="section-body">
     <div class="row">
       <label for="clrBg">Background</label>

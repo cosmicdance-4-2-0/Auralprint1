@@ -24,6 +24,14 @@ function primeDomCache() {
       "statParticleRateLimited", "statParticleRetentionRejected", "statParticleExpired", "statParticleRetentionRetired"]) {
       ui[id] = document.getElementById(id);
     }
+    for (const id of ["cameraSection", "numCameraX", "numCameraY", "numCameraZoom", "numCameraRotation",
+      "valCameraX", "valCameraY", "valCameraZoom", "valCameraRotation",
+      "cameraXError", "cameraYError", "cameraZoomError", "cameraRotationError",
+      "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight",
+      "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut",
+      "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera"]) {
+      ui[id] = document.getElementById(id);
+    }
     ui.visualizersPanel = document.getElementById("visualizersPanel");
     ui.visualizersStatus = document.getElementById("visualizersStatus");
     ui.visualizerList = document.getElementById("visualizerList");

@@ -9,3 +9,9 @@
       overflow: auto;
       z-index: 30;
     }
+
+/* View controls share the Settings panel, but own no Scene preferences. */
+.camera-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+#cameraSection .val { white-space: normal; overflow-wrap: anywhere; }
+#c[data-camera-interaction="true"] { touch-action: none; cursor: grab; }
+#c[data-camera-dragging="true"] { cursor: grabbing; }
