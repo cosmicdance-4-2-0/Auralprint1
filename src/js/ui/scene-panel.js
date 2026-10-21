@@ -1,5 +1,6 @@
 import { CONFIG } from "../core/config.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
+import { normalizeWorldSettings } from "../core/world-settings.js";
 import { fmt } from "../core/utils.js";
 
 const SOURCE_LABELS = {
@@ -19,6 +20,10 @@ function bindRange(control, limit) {
 function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, commitPreferences = () => {} } = {}) {
   let initializedOn = null;
   let lastSettingsRef = null;
+  const worldFields = [
+    ["widthUnits", "numWorldWidth", "valWorldWidth", "worldWidthError"],
+    ["heightUnits", "numWorldHeight", "valWorldHeight", "worldHeightError"],
+  ];
   const resources = [
     ["maxActiveParticles", "numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError"],
     ["maxEmissionsPerFrame", "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError"],
@@ -42,6 +47,24 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, co
   function init() {
     if (initializedOn === ui?.scenePanel) return false;
     initializedOn = ui?.scenePanel || null;
+    for (const [key, inputId, , errorId] of worldFields) {
+      const control = ui[inputId], limits = CONFIG.limits.world[key];
+      bindRange(control, limits);
+      control.addEventListener("change", () => {
+        const raw = control.value.trim(), value = raw === "" ? NaN : Number(raw);
+        if (!Number.isFinite(value) || value < limits.min || value > limits.max) {
+          control.setAttribute("aria-invalid", "true");
+          ui[errorId].textContent = `Enter a number from ${limits.min} to ${limits.max} world units.`;
+          return;
+        }
+        control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = "";
+        const current = normalizeWorldSettings(preferences.world);
+        control.value = String(value);
+        if (current[key] === value) return;
+        preferences.world = { ...current, [key]: value };
+        commitPreferences(key === "widthUnits" ? "world width" : "world height");
+      });
+    }
     for (const [key, inputId, , errorId] of resources) {
       const control = ui[inputId], limits = CONFIG.limits.particleSafety[key];
       bindRange(control, limits);
@@ -86,6 +109,13 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, co
     if (!settings || settings === lastSettingsRef) return false;
     const previous = lastSettingsRef;
     lastSettingsRef = settings;
+    for (const [key, inputId, outputId, errorId] of worldFields) {
+      const control = ui[inputId], value = settings.world[key];
+      const changed = previous?.world?.[key] !== value;
+      if (changed || (document.activeElement !== control && control.getAttribute("aria-invalid") !== "true")) control.value = String(value);
+      if (changed) { control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = ""; }
+      ui[outputId].textContent = `${value} world units`;
+    }
     for (const [key, inputId, outputId, errorId] of resources) {
       const control = ui[inputId], value = settings.particleSafety[key];
       const changed = previous?.particleSafety?.[key] !== value;

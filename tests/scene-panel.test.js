@@ -77,7 +77,7 @@ test("Settings copy retains canonical Scene IDs alongside Visualizers", () => {
   assert.equal(byId("btnHideScene").attrs["aria-label"], "Hide Scene Settings panel");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("scenePanel")).text, "Scene Settings");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("visualizersPanel")).text, "Visualizers");
-  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
+  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Simulation World", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
 });
 
 function element(tag = "div") {
@@ -93,7 +93,7 @@ function element(tag = "div") {
   };
 }
 function harness(getParticleStats) {
-  const ids = ["clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
+  const ids = ["numWorldWidth","valWorldWidth","worldWidthError","numWorldHeight","valWorldHeight","worldHeightError","clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
   const ui = Object.fromEntries(ids.map((id) => [id, element(id === "selParticleColorSrc" ? "select" : "div")]));
   ui.scenePanel = element();
   const preferences = structuredClone(CONFIG.defaults);
@@ -101,6 +101,62 @@ function harness(getParticleStats) {
   const panel = createScenePanelUi({ ui, preferences, getSettings: () => settings, getParticleStats, commitPreferences: () => { commits += 1; } });
   return { ui, preferences, panel, commits: () => commits, replaceSettings(next) { settings = next; } };
 }
+
+test("116A: world controls have one Scene owner and accessible units/help/errors", () => {
+  for (const [input, error] of [["numWorldWidth", "worldWidthError"], ["numWorldHeight", "worldHeightError"]]) {
+    const controls = templateNodes.filter(n => n.attrs.id === input);
+    assert.equal(controls.length, 1);
+    const control = controls[0]; assert.equal(control.attrs.type, "number");
+    assert.ok(control.ancestors.includes("worldSection")); assert.ok(control.ancestors.includes("scenePanel"));
+    assert.equal(control.attrs["aria-describedby"], `worldDimensionsHelp ${error}`);
+    assert.match(templateNodes.find(n => n.tag === "label" && n.attrs.for === input).text, /world units/);
+    assert.equal(templateNodes.find(n => n.attrs.id === error).attrs.role, "alert");
+  }
+});
+
+test("116A: world inputs validate without coercing drafts, bind CONFIG limits and commit independent axes", () => {
+  const oldDocument = globalThis.document; globalThis.document = { createElement: tag => element(tag) };
+  try {
+    const h = harness(); h.panel.init(); h.panel.init();
+    for (const [key, input, output, error] of [["widthUnits", "numWorldWidth", "valWorldWidth", "worldWidthError"], ["heightUnits", "numWorldHeight", "valWorldHeight", "worldHeightError"]]) {
+      const control = h.ui[input], limits = CONFIG.limits.world[key];
+      assert.equal(control.min, String(limits.min)); assert.equal(control.max, String(limits.max)); assert.equal(control.step, String(limits.step));
+      assert.equal(control.listenerCount("change"), 1); assert.equal(control.value, "1000");
+      assert.equal(h.ui[output].textContent, "1000 world units");
+      const baseline = structuredClone(h.preferences), commits = h.commits();
+      for (const invalid of ["", "0", "-1", "NaN", "Infinity", "1x", String(limits.max + 1)]) {
+        control.focus(); control.value = invalid; control.dispatch("input"); assert.equal(h.commits(), commits);
+        control.dispatch("change"); assert.equal(h.commits(), commits); assert.deepEqual(h.preferences, baseline);
+        assert.equal(control.getAttribute("aria-invalid"), "true"); assert.match(h.ui[error].textContent, /world units/);
+        h.replaceSettings(structuredClone(baseline)); h.panel.refresh(); assert.equal(control.value, invalid, "unrelated refresh retains invalid draft");
+      }
+      for (const value of [limits.min, 2345.678, limits.max]) {
+        control.value = String(value); control.dispatch("change");
+        assert.equal(h.preferences.world[key], value);
+        assert.equal(control.getAttribute("aria-invalid"), "false"); assert.equal(h.ui[error].textContent, "");
+        const expected = structuredClone(baseline); expected.world[key] = value;
+        assert.deepEqual(h.preferences, expected, "only this axis changed");
+        h.replaceSettings(structuredClone(h.preferences)); h.panel.refresh();
+      }
+      const count = h.commits(); control.dispatch("change"); assert.equal(h.commits(), count, "unchanged choice does not commit");
+      const restored = structuredClone(CONFIG.defaults); h.replaceSettings(restored); h.panel.refresh();
+      assert.equal(control.value, "1000"); assert.equal(h.ui[output].textContent, "1000 world units");
+    }
+  } finally { globalThis.document = oldDocument; }
+});
+
+test("116A: preset replacement clears obsolete world drafts without accumulating listeners", () => {
+  const oldDocument = globalThis.document; globalThis.document = { createElement: tag => element(tag) };
+  try {
+    const h = harness(); h.panel.init();
+    const control = h.ui.numWorldWidth; control.focus(); control.value = ""; control.dispatch("change");
+    const next = structuredClone(CONFIG.defaults); next.world = { widthUnits: 2400.5, heightUnits: 1600.25 };
+    h.replaceSettings(next); h.panel.refresh(); h.panel.init();
+    assert.equal(control.value, "2400.5"); assert.equal(control.getAttribute("aria-invalid"), "false");
+    assert.equal(h.ui.worldWidthError.textContent, ""); assert.equal(h.ui.numWorldHeight.value, "1600.25");
+    assert.equal(control.listenerCount("change"), 1); assert.equal(document.activeElement, control);
+  } finally { globalThis.document = oldDocument; }
+});
 
 test("Scene panel initializes idempotently from the canonical source enum", () => {
   const oldDocument = globalThis.document; globalThis.document = { createElement: (tag) => element(tag) };
