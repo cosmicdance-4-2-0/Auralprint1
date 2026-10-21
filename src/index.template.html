@@ -192,7 +192,7 @@
       <div id="valTTL" class="val"></div>
     </div>
     <div class="row">
-      <label for="rngMinPlacementDistance">Minimum Placement Distance</label>
+      <label for="rngMinPlacementDistance">Minimum Placement Distance (world units)</label>
       <input id="rngMinPlacementDistance" type="range" aria-describedby="minPlacementDistanceHelp" />
       <div id="valMinPlacementDistance" class="val"></div>
     </div>
@@ -243,6 +243,21 @@
   <div id="scenePanel" class="panel" style="display:none" role="region" aria-label="Scene Settings">
     <div class="panel-header"><div><h2 class="panel-title">Scene Settings</h2><p class="panel-description">Configure shared appearance, scene-wide defaults, and presets.</p></div><button id="btnHideScene" aria-label="Hide Scene Settings panel">Hide</button></div>
     <div class="muted panel-status" id="sceneStatus">Shared scene settings and preset controls.</div>
+    <details id="worldSection" class="settings-section" open><summary>Simulation World</summary><div class="section-body">
+      <p id="worldDimensionsHelp" class="section-description">World dimensions set the reference size for Orb and Ring proportions. Points and particles can exist beyond these dimensions. The view fits the shorter world dimension to the shorter viewport dimension.</p>
+      <div class="row">
+        <label for="numWorldWidth">World width (world units)</label>
+        <input id="numWorldWidth" type="number" inputmode="decimal" aria-describedby="worldDimensionsHelp worldWidthError" />
+        <div id="valWorldWidth" class="val"></div>
+      </div>
+      <p id="worldWidthError" class="picker-error" role="alert"></p>
+      <div class="row">
+        <label for="numWorldHeight">World height (world units)</label>
+        <input id="numWorldHeight" type="number" inputmode="decimal" aria-describedby="worldDimensionsHelp worldHeightError" />
+        <div id="valWorldHeight" class="val"></div>
+      </div>
+      <p id="worldHeightError" class="picker-error" role="alert"></p>
+    </div></details>
     <details class="settings-section" open><summary>Canvas</summary><div class="section-body">
     <div class="row">
       <label for="clrBg">Background</label>

@@ -22,7 +22,7 @@ function def(id, rate = 240, ttl = 600) {
   // These unchanged governance assertions exercise deliberately dense zero spacing.
   // The spacing-default path is covered separately in rc15-spacing.test.js.
   result.id = id; result.particles.emitPerSecond = rate; result.particles.ttlSec = ttl;
-  result.particles.minPlacementDistancePx = 0;
+  result.particles.minPlacementDistanceUnits = 0;
   return result;
 }
 function scene(count, particlePolicy, rate = 240) {
@@ -57,12 +57,12 @@ test("RC-15 phase 2: default budgets are independent and frozen; governor state 
   assert.throws(() => { governor.policy = policy; }, TypeError);
   const dirty = structuredClone(CONFIG.defaults); dirty.particleSafety = policy;
   dirty.orbs[0].allocationCursor = 2; dirty.orbs[0].particles.activeCount = 123;
-  assert.deepEqual(encodePresetPayload(dirty), { schema: 10, prefs: CONFIG.defaults });
+  assert.deepEqual(encodePresetPayload(dirty), { schema: 11, prefs: CONFIG.defaults });
 });
 
 for (const count of [0, 1, 2, 256, 4096]) {
   test(`RC-15 phase 2: exact aggregate frame limit with ${count} accepted Orbs`, () => {
-    const accepted = sanitizePreset({ schema: 10, prefs: { orbs: Array.from({length: count}, (_, i) => def(`EXTREME-${i}`)) } });
+    const accepted = sanitizePreset({ schema: 11, prefs: { orbs: Array.from({length: count}, (_, i) => def(`EXTREME-${i}`)) } });
     assert.equal(accepted.orbs.length, count);
     const s = scene(0); s.orbs = accepted.orbs.map(d => new Orb(d)); s.visualizers.rebuild(s.orbs);
     const snapshot = structuredClone(accepted);
@@ -270,7 +270,7 @@ test("RC-15 phase 2: retired particles disappear from actual particle drawing an
     const arcs=[],lines=[];
     state.ctx=new Proxy({}, {get(_t,key){return (...args)=>{if(key==='arc')arcs.push(args[0]);if(key==='moveTo'||key==='lineTo')lines.push(args[0]);};},set(){return true;}});
     Renderer.drawOrb(orb,0,0);
-    assert.deepEqual(arcs,[52,53,54,55]); assert.deepEqual(lines,[53,54,55]);
+    assert.deepEqual(arcs,[50.2,50.3,50.4,50.5]); assert.deepEqual(lines,[50.3,50.4,50.5]);
   } finally{s.visualizers.dispose();state.ctx=oldCtx;runtime.settings=oldSettings;[state.widthPx,state.heightPx,state.dpr]=oldSize;}
 });
 
@@ -316,7 +316,7 @@ test("RC-15 phase 2: canonical Add/Duplicate/Remove, track reset and repeated pr
     assert.equal(VisualizerRuntime.getParticleStats().activeParticles,0);assert.equal(source.trail.emitAccumulator,0);
     for(let i=0;i<6;i++){
       const oldNodes=state.orbs.flatMap(o=>{const a=[];for(let n=o.trail.particles.head;n;n=n.next)a.push(n);return a;});
-      replacePreferences(sanitizePreset({schema:10,prefs:{orbs:i%2?[def('NEW')]:[]}}));resolveSettings();initOrbs();
+      replacePreferences(sanitizePreset({schema:11,prefs:{orbs:i%2?[def('NEW')]:[]}}));resolveSettings();initOrbs();
       assert.equal(VisualizerRuntime.getParticleStats().activeParticles,0);assert.ok(oldNodes.every(n=>n.trail===null));
       context.nowSec++;VisualizerRuntime.update(context);
       assert.equal(VisualizerRuntime.getParticleStats().activeParticles,i%2?4:0);

@@ -1,6 +1,6 @@
 /*
  * Build 116A: independent world reference geometry.
- * Pure and not yet connected to Orb/Ring runtime or viewport projection.
+ * Pure reference math shared by resolved world state and Orb/Ring geometry.
  */
 
 function createWorldGeometry(widthUnits, heightUnits) {

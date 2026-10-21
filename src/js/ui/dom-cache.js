@@ -17,7 +17,8 @@ function primeDomCache() {
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
     ui.scenePanel = document.getElementById("scenePanel");
-    for (const id of ["numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError",
+    for (const id of ["numWorldWidth", "valWorldWidth", "worldWidthError", "numWorldHeight", "valWorldHeight", "worldHeightError",
+      "numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError",
       "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError",
       "statParticleLive", "statParticleEmitted", "statParticleSpacingRejected", "statParticleBudgetRejected",
       "statParticleRateLimited", "statParticleRetentionRejected", "statParticleExpired", "statParticleRetentionRetired"]) {
@@ -207,7 +208,7 @@ function primeDomCache() {
     bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
     bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
     bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
-    bindRange(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistancePx);
+    bindRange(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistanceUnits);
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);

@@ -91,7 +91,7 @@ test("RC-16: schemas 2–10 discard entries without losing scenes or reviving al
     assert.equal(normalized.visuals.backgroundColor, "#123456");
     assert.ok(normalized.orbs.every(o => !("bandNames" in o) && !("bandId" in o)));
     const encoded = encodePresetPayload(normalized);
-    assert.equal(encoded.schema, 10);
+    assert.equal(encoded.schema, 11);
     assert.deepEqual(sanitizePreset(decodePresetPayload(JSON.parse(JSON.stringify(encoded)))), normalized);
   }
 });
@@ -101,7 +101,7 @@ test("RC-16: inspected historical fixtures keep all expected values, including b
   for (const fixture of fixtures) {
     const normalized = sanitizePreset(decodePresetPayload(fixture));
     for (const [path, expected] of Object.entries(fixture.expected)) {
-      assert.deepEqual(path.split(".").reduce((value, key) => value[key], normalized), expected, `schema ${fixture.schema}: ${path}`);
+      assert.deepEqual(path.replace("minPlacementDistancePx", "minPlacementDistanceUnits").split(".").reduce((value, key) => value[key], normalized), expected, `schema ${fixture.schema}: ${path}`);
     }
     for (const orb of fixture.prefs.orbs || []) assert.ok((orb.bandIds || []).every(Number.isInteger));
   }
@@ -134,14 +134,14 @@ function withScene(callback) {
 }
 
 test("RC-16: original URL import and actual Orb.step radius now match the empty control", t => withScene(() => {
-  location.hash = rawHash({ schema: 10, prefs: { orbs: [{ id: "X", bandIds: malformed }] } });
+  location.hash = rawHash({ schema: 11, prefs: { orbs: [{ id: "X", bandIds: malformed }] } });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences.orbs[0].bandIds, []);
   const frame = { channels: Object.fromEntries(["L", "R", "C"].map(c => [c, { energy01: .9, bandEnergies01: [0, 0, ...Array(highest - 1).fill(.9)] }])) };
   const radius = def => {
     const orb = new Orb(def), selection = selectOrbAnalysis(orb, frame);
     orb.step(1 / 60, 1, selection.band, selection.energyOverride01, 0);
-    orb.trail.dispose(); return orb.baseRadiusPx;
+    orb.trail.dispose(); return orb.baseRadiusUnits;
   };
   assert.equal(radius(preferences.orbs[0]), 721);
   assert.equal(radius({ ...preferences.orbs[0], bandIds: [] }), 721);
@@ -168,7 +168,7 @@ test("RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy
     { id: `${chanId}-valid`, chanId, bandIds: [7, 3, 0] },
     { id: `${chanId}-zero`, chanId, bandIds: [0] },
   ]);
-  runtime.settings = sanitizePreset({ schema: 10, prefs: { orbs: definitions } });
+  runtime.settings = sanitizePreset({ schema: 11, prefs: { orbs: definitions } });
   const orbs = runtime.settings.orbs.map(def => new Orb(def));
   const visualizers = createVisualizerRuntime(); visualizers.rebuild(orbs);
   const before = structuredClone(bandState);
@@ -179,23 +179,23 @@ test("RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy
       const [allInvalid, empty, mixedOrb, valid, zero] = orbs.filter(o => o.chanId === chanId);
       const channel = frame.channels[chanId], energies = channel.bandEnergies01;
       const selected = (energies[7] + energies[3] + energies[0]) / 3;
-      close(empty.baseRadiusPx, 10 + 790 * channel.energy01);
-      assert.equal(allInvalid.baseRadiusPx, empty.baseRadiusPx);
-      assert.equal(allInvalid.radialDispPx, empty.radialDispPx);
+      close(empty.baseRadiusUnits, 10 + 790 * channel.energy01);
+      assert.equal(allInvalid.baseRadiusUnits, empty.baseRadiusUnits);
+      assert.equal(allInvalid.radialDispUnits, empty.radialDispUnits);
       assert.deepEqual(allInvalid.bandIds, []);
       assert.equal(selectOrbAnalysis(allInvalid, frame).energyOverride01, null);
       assert.equal(selectOrbAnalysis(allInvalid, frame).band, channel);
-      close(valid.baseRadiusPx, 10 + 790 * selected);
-      assert.equal(mixedOrb.baseRadiusPx, valid.baseRadiusPx);
-      close(zero.baseRadiusPx, 10 + 790 * energies[0]);
-      assert.notEqual(zero.baseRadiusPx, empty.baseRadiusPx);
+      close(valid.baseRadiusUnits, 10 + 790 * selected);
+      assert.equal(mixedOrb.baseRadiusUnits, valid.baseRadiusUnits);
+      close(zero.baseRadiusUnits, 10 + 790 * energies[0]);
+      assert.notEqual(zero.baseRadiusUnits, empty.baseRadiusUnits);
       for (const orb of [allInvalid, empty, mixedOrb, valid, zero]) {
-        close(orb.radialDispPx, orb.baseRadiusPx * orb.response.waveformRadialDisplaceFrac * channel.waveform[0]);
-        const radius = orb.baseRadiusPx + orb.radialDispPx;
+        close(orb.radialDispUnits, orb.baseRadiusUnits * orb.response.waveformRadialDisplaceFrac * channel.waveform[0]);
+        const radius = orb.baseRadiusUnits + orb.radialDispUnits;
         close(orb.xSim, radius * Math.cos(orb.angleRad) + orb.centerXFrac * 1000);
         close(orb.ySim, radius * Math.sin(orb.angleRad) + orb.centerYFrac * 1000);
       }
-      rows.push({ chanId, fullRadius: empty.baseRadiusPx, selectedRadius: valid.baseRadiusPx, band0Radius: zero.baseRadiusPx });
+      rows.push({ chanId, fullRadius: empty.baseRadiusUnits, selectedRadius: valid.baseRadiusUnits, band0Radius: zero.baseRadiusUnits });
     }
     assert.equal(new Set(rows.map(r => r.fullRadius)).size, 3);
     assert.equal(new Set(rows.map(r => r.selectedRadius)).size, 3);
@@ -206,7 +206,7 @@ test("RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy
 }));
 
 test("RC-16: URL round-trip, runtime reconciliation and duplication preserve scene/history and errors", () => withScene(() => {
-  location.hash = rawHash({ schema: 10, prefs: { orbs: [{ id: "A", chanId: "R", bandIds: mixed, hueOffsetDeg: 42 }, { id: "B", bandIds: malformed }] } });
+  location.hash = rawHash({ schema: 11, prefs: { orbs: [{ id: "A", chanId: "R", bandIds: mixed, hueOffsetDeg: 42 }, { id: "B", bandIds: malformed }] } });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   resolveSettings(); initOrbs();
   const a = state.orbs[0]; a.angleRad = 1.25;
@@ -214,7 +214,7 @@ test("RC-16: URL round-trip, runtime reconciliation and duplication preserve sce
   const tail = a.trail.particles.tail;
   UrlPreset.writeHashFromPrefs();
   const encoded = JSON.parse(Buffer.from(location.hash.slice(3), "base64url"));
-  assert.equal(encoded.schema, 10);
+  assert.equal(encoded.schema, 11);
   assert.deepEqual(encoded.prefs.orbs.map(o => o.bandIds), [[7, 3, 0], []]);
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   preferences.orbs[0].bandIds = [highest, null, 0, true];
@@ -230,7 +230,7 @@ test("RC-16: URL round-trip, runtime reconciliation and duplication preserve sce
   assert.equal(copy.angleRad, copy.startAngleRad);
   assert.equal(a.trail.particles.tail, tail);
   const saved = structuredClone(preferences);
-  for (const payload of [{ schema: 11, prefs: {} }, { schema: 10, prefs: { orbs: Array.from({ length: CONFIG.limits.orbs.maxCount + 1 }, () => ({ bandIds: malformed })) } }]) {
+  for (const payload of [{ schema: 12, prefs: {} }, { schema: 11, prefs: { orbs: Array.from({ length: CONFIG.limits.orbs.maxCount + 1 }, () => ({ bandIds: malformed })) } }]) {
     location.hash = rawHash(payload);
     assert.equal(UrlPreset.applyFromLocationHash(), false);
     assert.deepEqual(preferences, saved);

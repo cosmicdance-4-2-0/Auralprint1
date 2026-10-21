@@ -21,7 +21,7 @@ const wrap=angle=>((angle%TAU)+TAU)%TAU;
 function callbackHarness({chirality=1,ttl=60,spacing=0,rate=1000,budget=1000,phaseMode='free'}={}) {
   const settings=structuredClone(CONFIG.defaults);settings.particleSafety={maxEmissionsPerFrame:budget,maxActiveParticles:131072};
   settings.bands.overlay.phaseMode=phaseMode;settings.bands.overlay.ringSpeedRadPerSec=.75;
-  const def=settings.orbs[0];def.chirality=chirality;def.startAngleRad=1;def.motion.angularSpeedRadPerSec=.75;def.particles={...def.particles,ttlSec:ttl,emitPerSecond:rate,minPlacementDistancePx:spacing};
+  const def=settings.orbs[0];def.chirality=chirality;def.startAngleRad=1;def.motion.angularSpeedRadPerSec=.75;def.particles={...def.particles,ttlSec:ttl,emitPerSecond:rate,minPlacementDistanceUnits:spacing};
   const orb=new Orb(def),settingsRef={settings},stateRef={time:{lastTimestampMs:null,simPaused:false},bands:{ringPhaseRad:1},orbs:[orb]};
   const v=createVisualizerRuntime({settingsRef,createSpectralRing:()=>createSpectralRingVisualizer({settingsRef,stateRef})});v.rebuild([orb]);
   let nowMs=100000,audioSamples=0,analysisUpdates=0;const frames=[],document={hidden:false};
@@ -59,7 +59,7 @@ test("production callback: 120-second stall ages/expires history, retains fracti
   try {h.clock(100000);h.clock(100100);const retained=h.orb.trail.particles.tail,phase=h.orb.angleRad;h.orb.trail.emitAccumulator=.75;
     const stalled=h.clock(220100);assert.equal(stalled.motionDtSec,0);assert.equal(stalled.dtSec,0);assert.equal(h.orb.angleRad,phase);assert.equal(h.orb.trail.particles.length,0);assert.equal(retained.trail,null);assert.equal(h.v.getParticleStats().expired,1);assert.equal(h.v.getParticleStats().requestedDemand,0);assert.equal(h.orb.trail.emitAccumulator,.75);
     h.clock(220200);close(h.orb.angleRad,phase+.075,'first ordinary recovery frame');assert.equal(h.v.getParticleStats().emissions,1);
-    h.clock(220300);close(h.orb.angleRad,phase+.15,'subsequent recovery frame');assert.equal(h.v.getParticleStats().emissions,0,'stationary geometry suppressed with width zero');
+    h.clock(220300);close(h.orb.angleRad,phase+.15,'subsequent recovery frame');assert.equal(h.v.getParticleStats().emissions,1,'world motion continues with a zero-sized viewport');
   }finally{h.dispose();}
 });
 
@@ -123,7 +123,7 @@ test("unordered supported timestamps use safe fallback; transfer/eviction/reset 
 
 test("different Orb TTLs retire independently, last-tail spacing resumes on empty trail without coordinate cache",()=>{
   const g=new ParticleGovernor({maxEmissionsPerFrame:2,maxActiveParticles:100}),a=new TrailSystem(),b=new TrailSystem();for(const t of [a,b])t.setGovernor(g);g.setTrails([a,b]);a.emitAt(0,0,0,rgb);b.emitAt(0,0,0,rgb);
-  try {g.beginFrame();a.updateAndEmit(1/60,1,0,0,rgb,{...particles,emitPerSecond:60,ttlSec:1,minPlacementDistancePx:.5});b.updateAndEmit(1/60,1,0,0,rgb,{...particles,emitPerSecond:60,ttlSec:2,minPlacementDistancePx:.5});g.finishFrame();assert.equal(g.stats.expired,1);assert.equal(g.stats.emissions,1);assert.equal(g.stats.spatiallyRejectedDemand,1);assert.equal(a.particles.tail.particle.bornSec,1);assert.equal(b.particles.tail.particle.bornSec,0);}finally{g.dispose();}
+  try {g.beginFrame();a.updateAndEmit(1/60,1,0,0,rgb,{...particles,emitPerSecond:60,ttlSec:1,minPlacementDistanceUnits:.5});b.updateAndEmit(1/60,1,0,0,rgb,{...particles,emitPerSecond:60,ttlSec:2,minPlacementDistanceUnits:.5});g.finishFrame();assert.equal(g.stats.expired,1);assert.equal(g.stats.emissions,1);assert.equal(g.stats.spatiallyRejectedDemand,1);assert.equal(a.particles.tail.particle.bornSec,1);assert.equal(b.particles.tail.particle.bornSec,0);}finally{g.dispose();}
 });
 
 test("direct Orb and frame callers retain default delta convention; explicit motion wraps independently",()=>{
@@ -133,9 +133,9 @@ test("direct Orb and frame callers retain default delta convention; explicit mot
 
 
 test("motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field",()=>{
-  const prefs=structuredClone(CONFIG.defaults);prefs.particleSafety={maxEmissionsPerFrame:16384,maxActiveParticles:1048576};prefs.orbs[0].particles.minPlacementDistancePx=0;
+  const prefs=structuredClone(CONFIG.defaults);prefs.particleSafety={maxEmissionsPerFrame:16384,maxActiveParticles:1048576};prefs.orbs[0].particles.minPlacementDistanceUnits=0;
   prefs.timing.motionDtSec=.2;prefs.timing.motionDiscontinuitySec=.5;prefs.orbs[0].particles.overlapRadiusPx=1;
-  const payload=encodePresetPayload(prefs);assert.equal(payload.schema,10);assert.deepEqual(payload.prefs.timing,{maxDeltaTimeSec:1/30});assert.deepEqual(payload.prefs.particleSafety,prefs.particleSafety);assert.equal(payload.prefs.orbs[0].particles.minPlacementDistancePx,0);assert.equal('overlapRadiusPx' in payload.prefs.orbs[0].particles,false);assert.deepEqual(sanitizePreset(payload),payload.prefs);
+  const payload=encodePresetPayload(prefs);assert.equal(payload.schema,11);assert.deepEqual(payload.prefs.timing,{maxDeltaTimeSec:1/30});assert.deepEqual(payload.prefs.particleSafety,prefs.particleSafety);assert.equal(payload.prefs.orbs[0].particles.minPlacementDistanceUnits,0);assert.equal('overlapRadiusPx' in payload.prefs.orbs[0].particles,false);assert.deepEqual(sanitizePreset(payload),payload.prefs);
 });
 
 test("smaller selected emission delta never slows independent motion",()=>{

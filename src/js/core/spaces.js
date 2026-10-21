@@ -9,7 +9,10 @@ const Spaces = (() => {
   }
   function simToScreen(xSim, ySim) {
     const c = centerPx();
-    return { x: c.x + xSim, y: c.y - ySim };
+    // Compatibility fit only: world geometry never reads this presentation
+    // scale. A zero-size viewport has zero scale without changing the world.
+    const scale = Math.min(state.widthPx, state.heightPx) / state.world.referenceSpanUnits;
+    return { x: c.x + xSim * scale, y: c.y - ySim * scale };
   }
   return { centerPx, simToScreen };
 })();

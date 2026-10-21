@@ -15,7 +15,7 @@ import { ColorPolicy } from '../src/js/render/color-policy.js';
 
 const cap = CONFIG.limits.orbs.maxCount;
 const color = { r:.2,g:.4,b:.6 };
-const defs = (count, spacing = .5) => normalizeOrbCollection(Array.from({length:count},(_,i)=>({id:`ORB${i}`,particles:{minPlacementDistancePx:spacing}})));
+const defs = (count, spacing = .5) => normalizeOrbCollection(Array.from({length:count},(_,i)=>({id:`ORB${i}`,particles:{minPlacementDistanceUnits:spacing}})));
 const overLimit = error => error instanceof RangeError && error.code === 'orb-limit-exceeded';
 function scene(count, spacing = .5) {
   const orbs=defs(count, spacing).map(d=>new Orb(d)), v=createVisualizerRuntime();v.rebuild(orbs);
@@ -45,13 +45,13 @@ test('RC-15 phase 3: immutable admission policy accepts zero and exactly 4096; r
   assert.throws(()=>{CONFIG.limits.orbs.maxCount=8192;},TypeError);
   assert.deepEqual(normalizeOrbCollection([]),[]);
   const exact=defs(cap);assert.equal(exact.length,cap);
-  assert.equal(decodePresetPayload({schema:10,prefs:{orbs:exact}}).ok,true);
-  assert.equal(sanitizePreset({schema:10,prefs:{orbs:exact}}).orbs.length,cap);
+  assert.equal(decodePresetPayload({schema:11,prefs:{orbs:exact}}).ok,true);
+  assert.equal(sanitizePreset({schema:11,prefs:{orbs:exact}}).orbs.length,cap);
   const oversized=new Array(cap+1);Object.defineProperty(oversized,0,{get(){throw Error('must not normalize oversized elements');}});
   assert.throws(()=>normalizeOrbCollection(oversized),overLimit);
-  assert.throws(()=>sanitizePreset({schema:10,prefs:{orbs:oversized}}),overLimit);
+  assert.throws(()=>sanitizePreset({schema:11,prefs:{orbs:oversized}}),overLimit);
   assert.throws(()=>encodePresetPayload({orbs:oversized}),overLimit);
-  assert.deepEqual(decodePresetPayload({schema:10,prefs:{orbs:oversized}}),{ok:false,code:'orb-limit-exceeded'});
+  assert.deepEqual(decodePresetPayload({schema:11,prefs:{orbs:oversized}}),{ok:false,code:'orb-limit-exceeded'});
 });
 
 test('RC-15 phase 3: admission rejection includes both schema-9 forms, respecting top-level precedence',()=>{
@@ -76,7 +76,7 @@ test('RC-15 phase 3: oversized import/replacement/resolution preserves prior pre
     const oversized=Array.from({length:cap+1},()=>({id:'ORB0'}));
     assert.throws(()=>replacePreferences({...p,orbs:oversized}),overLimit);
     assert.deepEqual(preferences,p);assert.equal(preferences.orbs,prefOrbs);
-    globalThis.location={hash:'#p='+Buffer.from(JSON.stringify({schema:10,prefs:{orbs:oversized}})).toString('base64url')};
+    globalThis.location={hash:'#p='+Buffer.from(JSON.stringify({schema:11,prefs:{orbs:oversized}})).toString('base64url')};
     assert.equal(UrlPreset.applyFromLocationHash(),false);
     assert.deepEqual(preferences,p);assert.equal(preferences.orbs,prefOrbs);assert.equal(runtime.settings,settings);
     preferences.orbs=oversized;assert.throws(resolveSettings,overLimit);assert.equal(runtime.settings,settings);
@@ -137,8 +137,8 @@ test('RC-15 phase 3: normal rendering preserves coordinates, size/age/fade, chro
     for(const mode of ['fixed','lastParticle','dominantBand']){
       orb.trace={...orb.trace,numLines:2,lineColorMode:mode};const c=canvas();state.ctx=c.ctx;
       Renderer.drawOrb(orb,5,0);
-      assert.deepEqual(c.arcs.map(a=>a.slice(0,3)),[[50,50,2],[51,48,2],[52,46,2],[53,44,2],[54,42,5]]);
-      assert.deepEqual(c.points,[['moveTo',52,46],['lineTo',53,44],['lineTo',54,42]]);
+      assert.deepEqual(c.arcs.map(a=>a.slice(0,3)),[[50,50,2],[50.1,49.8,2],[50.2,49.6,2],[50.3,49.4,2],[50.4,49.2,5]]);
+      assert.deepEqual(c.points,[['moveTo',50.2,49.6],['lineTo',50.3,49.4],['lineTo',50.4,49.2]]);
       assert.equal(c.strokes[0],`rgba(${Math.round(ColorPolicy.pickLineColorRgb01(orb.trail.particles,0,mode).r*255)},${Math.round(ColorPolicy.pickLineColorRgb01(orb.trail.particles,0,mode).g*255)},${Math.round(ColorPolicy.pickLineColorRgb01(orb.trail.particles,0,mode).b*255)},${orb.trace.lineAlpha})`);
       assert.deepEqual(c.fills,['rgba(13,25,38,1)','rgba(26,51,77,1)','rgba(38,77,115,1)','rgba(51,102,153,1)','rgba(51,102,153,1)']);
       assert.equal(c.calls.arc,5);assert.equal(c.calls.lineTo,2);
@@ -218,7 +218,7 @@ test('RC-15 phase 3: governed preset round-trip keeps schema 10 and omits live s
     s.v.update(s.context);const prefs={...structuredClone(CONFIG.defaults),orbs:s.orbs};
     prefs.orbs[0].particles.overlapRadiusPx=10;prefs.orbs[0].activeParticles=99;
     const encoded=encodePresetPayload(prefs),again=encodePresetPayload(sanitizePreset(decodePresetPayload(encoded)));
-    assert.deepEqual(again,encoded);assert.equal(encoded.schema,10);
+    assert.deepEqual(again,encoded);assert.equal(encoded.schema,11);
     const json=JSON.stringify(encoded);for(const field of ['overlapRadiusPx','governor','emitAccumulator','priorityNext','activeParticles','heapIndex'])assert.ok(!json.includes(field));
     assert.equal(encoded.prefs.orbs.length,2);
   }finally{s.v.dispose();}

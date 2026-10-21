@@ -20,7 +20,7 @@ const timingCases = [
 
 test("RC-15 phase 1: emitted particles at identical and nearby coordinates coexist until real-time TTL with spacing disabled", () => {
   const trail = new TrailSystem();
-  const settings = { ...CONFIG.defaults.orbs[0].particles, ttlSec: 1, minPlacementDistancePx: 0 };
+  const settings = { ...CONFIG.defaults.orbs[0].particles, ttlSec: 1, minPlacementDistanceUnits: 0 };
   for (const [x, y, now] of [[10, 20, 0], [10, 20, .25], [10.1, 20.1, .5]]) {
     trail.updateAndEmit(1 / 60, now, x, y, rgb, settings);
   }
@@ -46,25 +46,25 @@ test("RC-15 phase 1: trail reset clears retained particles and fractional emissi
   assert.equal(trail.particles.length, 0);
 });
 
-test("RC-15 phase 1: development schema-10 overlap input decodes, strips, and preserves all remaining fields", () => {
-  const canonical = JSON.parse(readFileSync(new URL("./fixtures/schema-10-full.json", import.meta.url), "utf8"));
+test("RC-15 phase 1: current overlap input decodes, strips, and preserves all remaining fields", () => {
+  const canonical = JSON.parse(readFileSync(new URL("./fixtures/schema-11-full.json", import.meta.url), "utf8"));
   const dirty = structuredClone(canonical);
   dirty.orbs.forEach((orb, i) => { orb.particles.overlapRadiusPx = i + 2; orb.particles.unknown = true; });
   dirty.unknown = true;
   const snapshot = structuredClone(dirty);
-  const decoded = decodePresetPayload({ schema: 10, prefs: dirty });
+  const decoded = decodePresetPayload({ schema: 11, prefs: dirty });
   assert.equal(decoded.ok, true);
   const next = sanitizePreset(decoded);
   assert.deepEqual(next, canonical);
-  assert.deepEqual(encodePresetPayload(next), { schema: 10, prefs: canonical });
-  assert.deepEqual(encodePresetPayload(dirty), { schema: 10, prefs: canonical });
+  assert.deepEqual(encodePresetPayload(next), { schema: 11, prefs: canonical });
+  assert.deepEqual(encodePresetPayload(dirty), { schema: 11, prefs: canonical });
   assert.deepEqual(dirty, snapshot);
   const fallback = { ...CONFIG.defaults.orbs[0], particles: dirty.orbs[0].particles };
   for (const orb of [...CONFIG.defaults.orbs, ...normalizeOrbCollection(dirty.orbs), normalizeOrbDef({}, fallback)]) {
     assert.equal("overlapRadiusPx" in orb.particles, false);
-    assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistancePx"]);
+    assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistanceUnits"]);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 10);
+  assert.equal(PRESET_SCHEMA_VERSION, 11);
 });
 
 test("RC-15 phase 1: timing ceiling is frozen CONFIG authority across codec and preference resolution", () => {
@@ -77,7 +77,7 @@ test("RC-15 phase 1: timing ceiling is frozen CONFIG authority across codec and 
     for (const [requested, expected] of timingCases) {
       const input = { timing: { maxDeltaTimeSec: requested } };
       assert.equal(normalizeMaxDeltaTimeSec(requested), expected);
-      assert.equal(sanitizePreset({ schema: 10, prefs: input }).timing.maxDeltaTimeSec, expected);
+      assert.equal(sanitizePreset({ schema: 11, prefs: input }).timing.maxDeltaTimeSec, expected);
       assert.equal(encodePresetPayload(input).prefs.timing.maxDeltaTimeSec, expected);
       replacePreferences({ ...structuredClone(CONFIG.defaults), ...input });
       resolveSettings();
@@ -147,7 +147,7 @@ test("RC-15 phase 1: per-Orb burst guard is independent of imported timing and b
       runtime.settings = { timing: { maxDeltaTimeSec } };
       for (const rate of [240, 1000, 1e6, Number.MAX_VALUE]) {
         const trail = new TrailSystem();
-        const settings = { ...CONFIG.defaults.orbs[0].particles, emitPerSecond: rate, minPlacementDistancePx: 0 };
+        const settings = { ...CONFIG.defaults.orbs[0].particles, emitPerSecond: rate, minPlacementDistanceUnits: 0 };
         trail.updateAndEmit(120, 0, 0, 0, rgb, settings);
         assert.equal(trail.particles.length, Math.ceil(Math.min(rate, CONFIG.limits.particles.emitPerSecond.max) * ceiling) + 2);
       }

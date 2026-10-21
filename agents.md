@@ -73,6 +73,14 @@ Agents MUST:
 
 ## 2. Preset System (CRITICAL)
 
+Build 116A is explicitly authorized to use schema **11** for Scene-owned
+`world { widthUnits, heightUnits }` and Orb `particles.minPlacementDistanceUnits`.
+CONFIG → preferences → resolved settings → frozen `state.world` owns dimensions.
+Supported schemas 2–10 migrate legacy pixel spacing at the approved fixed one
+world unit per reference CSS pixel; schema 10 itself remains immutable.
+Camera zoom semantics for CSS-sized marks/widths and camera persistence remain
+undecided. See the [116A contract](docs/development/build-116.md).
+
 ### 2.1 Schema Discipline
 
 Preset system is **versioned and backward-compatible**.
@@ -233,7 +241,7 @@ id, chanId, bandIds, chirality, startAngleRad,
 hueOffsetDeg, colorSource, centerXFrac, centerYFrac,
 motion { angularSpeedRadPerSec },
 response { minRadiusFrac, maxRadiusFrac, waveformRadialDisplaceFrac },
-particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, minPlacementDistancePx },
+particles { emitPerSecond, sizeMaxPx, sizeMinPx, sizeToMinSec, ttlSec, minPlacementDistanceUnits },
 trace { lines, numLines, lineAlpha, lineWidthPx, lineColorMode }
 ```
 
@@ -282,7 +290,7 @@ by production initialization.
 Particle heap/list ownership is ephemeral and belongs to each runtime. `TrailSystem.particles` is a renderer-readable chronological collection (`length`, iteration, `at`, suffix `slice`/`suffix` iterator); rendering uses direct suffix traversal. Only TrailSystem and its governor create or retire particles. Shared admission/retention accounting must follow lifecycle disposal and preserve surviving ID-based history.
 
 Minimum placement distance compares only the same Orb's currently retained
-trail tail using squared distance scaled by active DPR. Nonzero spacing prepares
+trail tail using squared distance in world units, independently of viewport/DPR. Nonzero spacing prepares
 at most one candidate per callback before shared scheduling, discards redundant
 whole opportunities, and retains fractional rate progress. Zero bypasses spacing
 and preserves dense emission semantics. Spatial suppression never deletes history

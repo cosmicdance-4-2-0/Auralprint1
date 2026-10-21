@@ -19,7 +19,7 @@ function withSettings(run) {
 }
 
 test("RC-07: count-2 URL input represents 1 kHz after canonical import/resolve/rebuild", () => withSettings(() => {
-  globalThis.location = { hash: "#p=" + Buffer.from(JSON.stringify({ schema: 10, prefs: { bands: { count: 2 }, orbs: [] } })).toString("base64url") };
+  globalThis.location = { hash: "#p=" + Buffer.from(JSON.stringify({ schema: 11, prefs: { bands: { count: 2 }, orbs: [] } })).toString("base64url") };
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   resolveSettings();
   BandBank.rebuild(22500, 48000);
@@ -45,7 +45,7 @@ test("RC-07: import and runtime share minimum/maximum validation without mutatin
     assert.ok(Object.is(preferences.bands.count, count));
     assert.equal(encodePresetPayload(preferences).prefs.bands.count, expected);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 10);
+  assert.equal(PRESET_SCHEMA_VERSION, 11);
 }));
 
 test("RC-07: every supported count/distribution covers 0 through Nyquist, including clamped ceilings", () => withSettings(() => {
@@ -81,7 +81,7 @@ for (const counts of [[256, 32, 256], [256, 3, 256], [3, 32, 3]]) {
   test(`AUD-003: ${counts.join(' → ')} retains and reactivates authored targets through bank rebuild/share`, () => withSettings(() => {
     for (const raw of [[], [0, 2], [5, 100, 255], [255], [255, 5, 100], [5, '7', 5, 1.5, -1, 100, 255]]) {
       const canonical = sanitizeOrbBandIds(raw);
-      replacePreferences(sanitizePreset({ schema: 10, prefs: { bands: { count: counts[0] }, orbs: [{ id: 'A', chanId: 'R', bandIds: raw, hueOffsetDeg: 42 }] } }));
+      replacePreferences(sanitizePreset({ schema: 11, prefs: { bands: { count: counts[0] }, orbs: [{ id: 'A', chanId: 'R', bandIds: raw, hueOffsetDeg: 42 }] } }));
       const originalOrb = structuredClone(preferences.orbs[0]);
       for (const count of counts) {
         preferences.bands.count = count; resolveSettings(); BandBank.rebuild(22500, 48000);
@@ -96,7 +96,7 @@ for (const counts of [[256, 32, 256], [256, 3, 256], [3, 32, 3]]) {
         assert.equal(selected.energyOverride01, canonical.length ? (active.length ? .5 : 0) : null);
         assert.equal(selected.selectedDominantBandIndex, active[0] ?? null);
         const encoded = encodePresetPayload(preferences);
-        assert.equal(encoded.schema, 10); assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)).orbs[0], originalOrb);
+        assert.equal(encoded.schema, 11); assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)).orbs[0], originalOrb);
         globalThis.location = { hash: '#p=' + Buffer.from(JSON.stringify(encoded)).toString('base64url') };
         assert.equal(UrlPreset.applyFromLocationHash(), true); assert.deepEqual(preferences.orbs[0], originalOrb);
       }
@@ -107,7 +107,7 @@ for (const counts of [[256, 32, 256], [256, 3, 256], [3, 32, 3]]) {
 }
 
 test('AUD-003: original schema-10 count-3 scene persists inactive 255; legacy name migration stays canonical', () => withSettings(() => {
-  const prefs = sanitizePreset({ schema: 10, prefs: { bands: { count: 3 }, orbs: [{ id: 'A', bandIds: [255] }, { id: 'legacy', bandNames: [BAND_NAMES[7], BAND_NAMES[0]] }] } });
+  const prefs = sanitizePreset({ schema: 11, prefs: { bands: { count: 3 }, orbs: [{ id: 'A', bandIds: [255] }, { id: 'legacy', bandNames: [BAND_NAMES[7], BAND_NAMES[0]] }] } });
   assert.deepEqual(prefs.orbs[0].bandIds, [255]); assert.deepEqual(prefs.orbs[1].bandIds, [7, 0]);
   assert.deepEqual(sanitizePreset(decodePresetPayload(encodePresetPayload(prefs))).orbs.map(o => o.bandIds), [[255], [7, 0]]);
 }));

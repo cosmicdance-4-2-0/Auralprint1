@@ -12,7 +12,7 @@ export const continuousOrbCases = [
   ['sizeMax','particles','sizeMaxPx',CONFIG.limits.particles.sizeMaxPx,6.123456],
   ['decay','particles','sizeToMinSec',CONFIG.limits.particles.sizeToMinSec,2.34567],
   ['ttl','particles','ttlSec',CONFIG.limits.particles.ttlSec,180.123456],
-  ['spacing','particles','minPlacementDistancePx',CONFIG.limits.particles.minPlacementDistancePx,.123456],
+  ['spacing','particles','minPlacementDistanceUnits',CONFIG.limits.particles.minPlacementDistanceUnits,.123456],
   ['lineAlpha','trace','lineAlpha',CONFIG.limits.trace.lineAlpha,.123456],
   ['lineWidth','trace','lineWidthPx',CONFIG.limits.trace.lineWidthPx,2.34567],
   ['hue',null,'hueOffsetDeg',CONFIG.limits.orbs.hueOffsetDeg,123.456789],

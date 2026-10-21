@@ -1,5 +1,5 @@
 import { CONFIG } from "../core/config.js";
-import { normalizeMinPlacementDistancePx } from "../core/preferences.js";
+import { normalizeMinPlacementDistanceUnits } from "../core/preferences.js";
 import { ParticleGovernor } from "./particle-governor.js";
 import { ParticleList } from "./particle-list.js";
 
@@ -68,7 +68,7 @@ class TrailSystem {
     }
   }
 
-  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings, dpr = 1) {
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings) {
     if (this.standalone) this.governor.beginFrame();
     const g = this.governor;
     this.expireParticles(nowSec, particleSettings.ttlSec);
@@ -86,13 +86,13 @@ class TrailSystem {
     this.pendingEmissions = Number.isFinite(nowSec) && g.frameActive ? Math.min(whole, maximum) : 0;
     g.stats.requestedDemand = Math.min(Number.MAX_SAFE_INTEGER, g.stats.requestedDemand + whole);
     g.addDropped(whole - this.pendingEmissions, "rateLimitedDemand");
-    const spacingPx = normalizeMinPlacementDistancePx(particleSettings.minPlacementDistancePx);
-    if (spacingPx > 0 && this.pendingEmissions > 0) {
+    const spacingUnits = normalizeMinPlacementDistanceUnits(particleSettings.minPlacementDistanceUnits);
+    if (spacingUnits > 0 && this.pendingEmissions > 0) {
       // One sampled position per callback: extra whole opportunities are redundant.
       // Read only this Orb's current retained tail, after TTL retirement. No cache
       // survives reset/eviction, and proximity never deletes historical particles.
       const last = this.particles.tail?.particle;
-      const threshold = spacingPx * (Number.isFinite(dpr) && dpr > 0 ? dpr : 1);
+      const threshold = spacingUnits;
       const thresholdSquared = threshold * threshold;
       let eligible = true;
       if (last) {

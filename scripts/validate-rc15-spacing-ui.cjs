@@ -16,10 +16,10 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('n
       const selector='[id$="-min-placement-distance"]';
       await page.evaluate(selector=>{const control=document.querySelector(selector);for(let p=control.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;window.spacingControl=control;window.spacingCard=control.closest('.orb-editor-card');},selector);
       const control=page.locator(selector).first();await control.focus();
-      assert.equal(await control.getAttribute('min'),'0');assert.equal(await control.getAttribute('max'),'10');assert.equal(await control.getAttribute('step'),'0.1');
+      assert.equal(await control.getAttribute('min'),'0');assert.equal(await control.getAttribute('max'),'10');assert.equal(await control.getAttribute('step'),'any');
       await control.press('ArrowRight');assert.equal(await control.inputValue(),'0.6');
       await control.press('Home');assert.equal(await control.inputValue(),'0');
-      assert.equal(await control.getAttribute('aria-valuetext'),'0.0 pixels');
+      assert.equal(await control.getAttribute('aria-valuetext'),'0 world units');
       assert.equal(await page.locator('#valMinPlacementDistance').textContent(),'mixed');
       assert.ok(await page.evaluate(()=>document.activeElement===window.spacingControl));
       const result=await page.evaluate(()=>{
@@ -31,15 +31,15 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('n
         const payload=JSON.parse(atob(location.hash.slice(3).replace(/-/g,'+').replace(/_/g,'/')));
         return {retained,payload,canvasWidth:document.querySelector('#c').width,cssWidth:innerWidth,help:document.getElementById(window.spacingControl.getAttribute('aria-describedby')).textContent,bulkValue:document.querySelector('#valMinPlacementDistance').textContent};
       });
-      assert.ok(result.retained);assert.equal(result.payload.schema,10);assert.equal(result.payload.prefs.orbs.length,3);
-      assert.ok(result.payload.prefs.orbs.every(orb=>orb.particles.minPlacementDistancePx===2.3));
-      assert.equal(result.canvasWidth,result.cssWidth*dpr);assert.equal(result.bulkValue,'2.3 px');
+      assert.ok(result.retained);assert.equal(result.payload.schema,11);assert.equal(result.payload.prefs.orbs.length,3);
+      assert.ok(result.payload.prefs.orbs.every(orb=>orb.particles.minPlacementDistanceUnits===2.3));
+      assert.equal(result.canvasWidth,result.cssWidth*dpr);assert.equal(result.bulkValue,'2.3 world units');
       assert.equal(result.help,"Minimum distance from this Orb's last retained particle before a new particle is placed. 0 disables filtering.");
       assert.equal(requests.filter(url=>!url.startsWith(origin)).length,0);
       assert.ok((await page.title()).includes(version));results.push({dpr,...result,externalRequests:0});await page.close();
     }
     assert.deepEqual(errors,[]);
-    const report={version,browser:await browser.version(),verified:['standalone boot with external requests blocked','DPR 1 and 2','keyboard range edits to zero','pixel accessibility value','mixed Bulk state','Bulk edit','duplication','surviving editor and input identity','schema-10 persistence','exact help text'],errors,results};
+    const report={version,browser:await browser.version(),verified:['standalone boot with external requests blocked','DPR 1 and 2','keyboard range edits to zero','world-unit accessibility value','mixed Bulk state','Bulk edit','duplication','surviving editor and input identity','schema-11 persistence','exact help text'],errors,results};
     fs.writeFileSync(process.env.AP_REPORT,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({version,browser:report.browser,verified:report.verified,errors},null,2));
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(error=>{console.error(error);process.exitCode=1;});

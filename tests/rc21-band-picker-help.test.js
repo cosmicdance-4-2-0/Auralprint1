@@ -35,8 +35,8 @@ test("RC-21: one-band, multi-band and empty targeting keep the selected channel'
           orb.step(0, 0, selected.band, selected.energyOverride01, 0);
           const energy = expected ?? channel.energy01;
           const radius = 1000 * (orb.response.minRadiusFrac + (orb.response.maxRadiusFrac - orb.response.minRadiusFrac) * energy);
-          assert.ok(Math.abs(orb.baseRadiusPx - radius) < 1e-10);
-          assert.equal(orb.radialDispPx, orb.baseRadiusPx * orb.response.waveformRadialDisplaceFrac * channel.waveform[0]);
+          assert.ok(Math.abs(orb.baseRadiusUnits - radius) < 1e-10);
+          assert.equal(orb.radialDispUnits, orb.baseRadiusUnits * orb.response.waveformRadialDisplaceFrac * channel.waveform[0]);
           rows.push({ chanId, bandIds, selected: expected, full: channel.energy01, waveform: channel.waveform[0] });
         } finally { orb.trail.dispose(); }
       }

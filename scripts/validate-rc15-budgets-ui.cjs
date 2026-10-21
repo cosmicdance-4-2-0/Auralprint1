@@ -28,8 +28,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('n
       assert.ok(await page.evaluate(()=>document.activeElement===document.querySelector('#numMaxEmissionsPerFrame')&&window.liveControl===document.querySelector('#numMaxActiveParticles')&&window.orbHost===document.querySelector('#orbEditorList')));
       await page.evaluate(()=>document.querySelector('#btnShare').click());
       const payload=await page.evaluate(()=>JSON.parse(atob(location.hash.slice(3).replace(/-/g,'+').replace(/_/g,'/'))));
-      assert.deepEqual(payload.prefs.particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});assert.equal(payload.schema,10);
-      assert.ok(payload.prefs.orbs.every(o=>o.particles.minPlacementDistancePx===.5));
+      assert.deepEqual(payload.prefs.particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});assert.equal(payload.schema,11);
+      assert.ok(payload.prefs.orbs.every(o=>o.particles.minPlacementDistanceUnits===.5));
       assert.equal('retentionEvictionsTotal' in payload.prefs.particleSafety,false);
       await page.reload();assert.equal(await live.inputValue(),'65536');assert.equal(await emissions.inputValue(),'4096');
       await page.evaluate(()=>{document.querySelector('#btnResetPrefs').click();});assert.equal(await live.inputValue(),'16384');assert.equal(await emissions.inputValue(),'512');
@@ -40,7 +40,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('n
       results.push({dpr,payload,zeroReload:true,externalRequests:0});await page.close();
     }
     assert.deepEqual(errors,[]);
-    const report={version,browser:await browser.version(),verified:['offline standalone boot','DPR 1 and 2','numeric maximum attributes','keyboard ArrowUp and Enter change commit','empty refusal and visible feedback','selected value display','focus/input/host identity','share schema 10 without runtime counters','URL reload','Reset All defaults','zero policy URL reload','actual empty-scene diagnostic counts'],results,errors};
+    const report={version,browser:await browser.version(),verified:['offline standalone boot','DPR 1 and 2','numeric maximum attributes','keyboard ArrowUp and Enter change commit','empty refusal and visible feedback','selected value display','focus/input/host identity','share schema 11 without runtime counters','URL reload','Reset All defaults','zero policy URL reload','actual empty-scene diagnostic counts'],results,errors};
     fs.writeFileSync(process.env.AP_REPORT,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({version,browser:report.browser,verified:report.verified,errors},null,2));
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(e=>{console.error(e);process.exitCode=1;});

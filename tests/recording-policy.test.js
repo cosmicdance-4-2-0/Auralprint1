@@ -42,7 +42,7 @@ test("N3 storage: local round trip, unknown fields stripped, reset independent o
   assert.deepEqual(Object.keys(raw).sort(),["custom","profile","version"]);
   raw.blob="never retained";store.setItem("",JSON.stringify(raw));
   const b=createRecordingPolicySettings({storage:()=>store});b.reset();
-  assert.equal(b.policy().profile,"balanced");assert.equal(PRESET_SCHEMA_VERSION,10);
+  assert.equal(b.policy().profile,"balanced");assert.equal(PRESET_SCHEMA_VERSION,11);
 });
 test("N3 storage: invalid records fall back truthfully without overwriting; unavailable saving retains Unrestricted", () => {
   for (const raw of ["{",JSON.stringify({version:22}),JSON.stringify({version:1,...choice({maxChunks:0},"unrestricted")})]) {
@@ -63,7 +63,7 @@ test("N3 policy settings never contaminate Scene presets or URL payload", async 
   const settings=createRecordingPolicySettings({storage:()=>memory()});settings.set(choice({},"unrestricted"));
   assert.equal(JSON.stringify(encodePresetPayload(preferences)),before);
   const payload=encodePresetPayload({...preferences,recordingResources:settings.read().selection});
-  assert.equal(payload.schema,10);assert.equal(Object.hasOwn(payload.prefs,"recordingResources"),false);
+  assert.equal(payload.schema,11);assert.equal(Object.hasOwn(payload.prefs,"recordingResources"),false);
   assert.doesNotMatch(JSON.stringify(payload),/aggregateBytes|softBytes|durationMs|unrestricted/);
 });
 

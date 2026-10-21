@@ -26,7 +26,7 @@ test("version metadata and schema remain aligned", () => {
   const constants = readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.match(version, /^v[0-9][A-Za-z0-9.\-]*$/);
   assert.ok(constants.includes(`   Auralprint\n   ${version.slice(1)}\n`), "Source header must match root version");
-  assert.equal(PRESET_SCHEMA_VERSION, 10);
+  assert.equal(PRESET_SCHEMA_VERSION, 11);
 });
 
 test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
@@ -3177,7 +3177,7 @@ test("Copy Share Link writes the canonical schema-10 hash and reports only in Se
     state.ui.btnShare.click();
     await Promise.resolve();
     assert.equal(writeHash.mock.calls.length, 1);
-    assert.equal(decodePresetHash(location.hash).schema, 10);
+    assert.equal(decodePresetHash(location.hash).schema, 11);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3189,7 +3189,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
     delete globalThis.navigator.clipboard;
     state.ui.btnShare.click();
     await Promise.resolve();
-    assert.equal(decodePresetHash(location.hash).schema, 10);
+    assert.equal(decodePresetHash(location.hash).schema, 11);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
@@ -3419,7 +3419,7 @@ const MG_BULK_FIELDS = [
   ["rngSizeMin", "valSizeMin", "particles", "sizeMinPx", "input", 1, 2],
   ["rngSizeToMin", "valSizeToMin", "particles", "sizeToMinSec", "input", 2, 4],
   ["rngTTL", "valTTL", "particles", "ttlSec", "input", 10, 12],
-  ["rngMinPlacementDistance", "valMinPlacementDistance", "particles", "minPlacementDistancePx", "input", 0, 2],
+  ["rngMinPlacementDistance", "valMinPlacementDistance", "particles", "minPlacementDistanceUnits", "input", 0, 2],
 ];
 
 for (const [controlId, outputId, group, field, event, first, second] of MG_BULK_FIELDS) {
@@ -3562,12 +3562,12 @@ test("spacing individual live edit retains Orb phase, particles, editor focus, a
     const tail=orb.trail.particles.tail;
     const control=root.querySelectorAll("input").find(node=>node.id?.endsWith("min-placement-distance"));
     control.focus(); control.value="2.3"; control.dispatch("input");
-    for(const source of [preferences.orbs,runtime.settings.orbs,state.orbs])assert.equal(source.find(o=>o.id===id).particles.minPlacementDistancePx,2.3);
+    for(const source of [preferences.orbs,runtime.settings.orbs,state.orbs])assert.equal(source.find(o=>o.id===id).particles.minPlacementDistanceUnits,2.3);
     assert.equal(state.orbs.find(o=>o.id===id),orb); assert.equal(orb.angleRad,2.5);
     assert.equal(orb.trail.particles.tail,tail); assert.equal(orb.trail.emitAccumulator,.37);
     assert.equal(state.ui.orbEditorList.children[0],root); assert.equal(document.activeElement,control);
     const commits=t.mock.method(UI,"refreshAllUiText");
-    control.value="0"; control.dispatch("input"); assert.equal(orb.particles.minPlacementDistancePx,0);
+    control.value="0"; control.dispatch("input"); assert.equal(orb.particles.minPlacementDistanceUnits,0);
     assert.ok(commits.mock.callCount()<=1,"a single input has one refresh path");
     state.ui.btnVisualizersAddOrb.click();
     assert.equal(state.ui.orbEditorList.children.find(node=>node.dataset.orbId===id),root);
