@@ -19,7 +19,18 @@ function defaultOrb(identity) {
    ========================================================================== */
 const CONFIG = deepFreeze({
   // Application runtime only. Scene defaults below are preset-owned.
-  camera: { defaults: { x: 0, y: 0, zoom: 1, rotationRad: 0 } },
+  camera: {
+    defaults: { x: 0, y: 0, zoom: 1, rotationRad: 0 },
+    // Provisional 116C interaction choices, pending owner artistic testing.
+    interaction: {
+      enabledByDefault: false,
+      panStepUnits: 50,
+      zoomFactor: 1.1,
+      rotationStepDeg: 5,
+      wheelZoomPerPixel: 0.0015,
+      wheelLinePixels: 16,
+    },
+  },
   bandNames: [
 // 0–31  Planetary Core – The Iron-Nickel Heart of the World (deepest sub-bass)
   "Eternal Core",

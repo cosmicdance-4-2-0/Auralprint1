@@ -80,10 +80,12 @@ Supported schemas 2–10 migrate legacy pixel spacing at the approved fixed one
 world unit per reference CSS pixel; schema 10 itself remains immutable.
 Build 116B keeps camera state application/runtime-only in `state.camera`, with
 CONFIG-owned defaults outside Scene defaults and validated runtime setters.
-Camera is absent from preferences, schema 11 and URLs. Particle/Trace/Ring mark
-sizes remain CSS-screen-sized under zoom, provisionally pending 116C artistic
-review. Neither this interim ownership nor sizing decides future persistence
-policy. See the [Build 116 contract](docs/development/build-116.md).
+Camera is absent from preferences, schema 11 and URLs. Build 116C exposes one
+Viewport Camera UI owner, CONFIG-driven interaction steps and opt-in canvas
+interaction; native control and canvas actions use the validated setters.
+Particle/Trace/Ring mark sizes remain CSS-screen-sized under zoom, provisionally
+pending owner artistic evaluation. Neither this runtime-only pass nor sizing
+decides future persistence policy. See the [Build 116 contract](docs/development/build-116.md).
 
 ### 2.1 Schema Discipline
 

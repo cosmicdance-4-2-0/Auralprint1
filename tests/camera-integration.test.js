@@ -10,6 +10,7 @@ import { createAnalysisFrame } from "../src/js/audio/analysis-frame.js";
 import { createVisualizerRuntime } from "../src/js/render/visualizer-runtime.js";
 import { encodePresetPayload, sanitizePreset } from "../src/js/presets/preset-codec.js";
 import { UrlPreset } from "../src/js/presets/url-preset.js";
+import { panCamera, rotateCamera, zoomCamera } from "../src/js/ui/camera-actions.js";
 
 const cameras = [
   { x: 0, y: 0, zoom: 1, rotationRad: 0 },
@@ -144,6 +145,34 @@ test("116B: camera-independent placement, dense emission and fractional progress
     }
     for (const row of rows.slice(1)) assert.deepEqual(row, rows[0]);
   }
+}));
+
+test("116C: interactive actions leave running and paused Orb simulation, history and emission decisions identical", () => scene(() => {
+  const definition = structuredClone(runtime.settings.orbs[0]);
+  Object.assign(definition.particles, { emitPerSecond: 150, minPlacementDistanceUnits: .5 });
+  const control = new Orb(definition), manipulated = new Orb(definition), frame = analysis();
+  const retained = [];
+  try {
+    for (let index = 0; index < 18; index++) {
+      const before = snapshot(manipulated);
+      const particles = [...manipulated.trail.particles];
+      panCamera(index % 2 ? -1 : 1, index % 3 ? 1 : -1);
+      rotateCamera(index % 2 ? 1 : -1);
+      zoomCamera(index % 2 ? 1 / 1.1 : 1.1, { x: 230, y: 510 });
+      if (index % 5 === 0) resetCamera();
+      assert.deepEqual(snapshot(manipulated), before);
+      [...manipulated.trail.particles].forEach((particle, i) => assert.equal(particle, particles[i]));
+      const paused = index >= 8 && index <= 11;
+      for (const orb of [control, manipulated]) {
+        if (paused) orb.trail.expireParticles(index / 60, orb.particles.ttlSec);
+        else orb.step(1 / 60, index / 60, frame.channels.C, .5, 1 / 60);
+      }
+      assert.deepEqual(snapshot(manipulated), snapshot(control), `frame ${index}, paused=${paused}`);
+      assert.deepEqual(manipulated.trail.governor.getStats(), control.trail.governor.getStats());
+      retained.push(manipulated.trail.particles.length);
+    }
+    assert.ok(retained.some(count => count > 0));
+  } finally { control.trail.dispose(); manipulated.trail.dispose(); }
 }));
 
 test("116B: historical and newly emitted particles, Trace and Ring share projection with CSS-sized marks", () => scene(({ arcs, strokes, lines, moves, viewport, clearDraws }) => {

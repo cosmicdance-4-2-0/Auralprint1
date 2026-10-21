@@ -21,6 +21,8 @@ import { createVisualizersPanelUi } from "./visualizers-panel.js";
 import { createAnalysisPanelUi } from "./analysis-panel.js";
 import { createSpectralRingEditorUi } from "./spectral-ring-editor.js";
 import { createScenePanelUi } from "./scene-panel.js";
+import { createCameraControlsUi } from "./camera-controls.js";
+import { createCameraInteraction } from "./camera-interaction.js";
 
 /* =============================================================================
    UI
@@ -341,6 +343,8 @@ const UI = (() => {
   const tooltipGroups = new Map();
   let tooltipSettingsRef = null;
   let tooltipBandEdgesRef = null;
+  let tooltipCameraRef = null;
+  let tooltipCameraMode = null;
   let latestAnalysisFrame = null; // Producer-owned frame, retained only for immediate reveal.
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel,
     onPanelShown: (panel) => {
@@ -349,6 +353,8 @@ const UI = (() => {
       refreshAllUiText(latestAnalysisFrame); // Settle presentation before restoring focus.
     },
   });
+  const cameraInteraction = createCameraInteraction();
+  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction });
   const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,
@@ -450,6 +456,7 @@ const UI = (() => {
     AudioEngine.applyPlaybackSettingsLive();
     orbEditorUi.refresh();
     scenePanelUi.refresh(runtime.settings);
+    cameraControlsUi.refresh();
 
     if (reason && typeof showStatus === "function") showStatus(`Updated: ${reason}`);
   }
@@ -1245,9 +1252,15 @@ const UI = (() => {
 
     analysisPanelUi.refresh(analysisFrame);
     scenePanelUi.refresh(runtime.settings);
+    cameraControlsUi.refresh();
 
     // Settings/definition replacement invalidates meaning, not every animation frame.
     // Comparing generated titles ensures unrelated changes do not rewrite controls.
+    if (tooltipCameraRef !== state.camera || tooltipCameraMode !== cameraInteraction.isEnabled()) {
+      tooltipCameraRef = state.camera;
+      tooltipCameraMode = cameraInteraction.isEnabled();
+      invalidateConfigTooltips(ui.scenePanel);
+    }
     if (tooltipSettingsRef !== runtime.settings || tooltipBandEdgesRef !== state.bands.lowHz) {
       tooltipSettingsRef = runtime.settings;
       tooltipBandEdgesRef = state.bands.lowHz;
@@ -1273,6 +1286,8 @@ const UI = (() => {
     orbEditorUi.init();
     spectralRingEditorUi.init();
     scenePanelUi.init();
+    cameraInteraction.init();
+    cameraControlsUi.init();
     visualizersPanelUi.init();
 
     initConfigTooltips();
@@ -1918,7 +1933,7 @@ const UI = (() => {
     // Global shortcuts are intentionally suppressed while a control has focus,
     // so typing/adjusting controls never triggers transport/panel side effects.
     window.addEventListener("keydown", (e) => {
-      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       if (hasFocusedInteractiveTarget(e)) return;
 
       if (e.code === "KeyH") {

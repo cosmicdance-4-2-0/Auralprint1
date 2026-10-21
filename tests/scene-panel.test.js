@@ -77,7 +77,7 @@ test("Settings copy retains canonical Scene IDs alongside Visualizers", () => {
   assert.equal(byId("btnHideScene").attrs["aria-label"], "Hide Scene Settings panel");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("scenePanel")).text, "Scene Settings");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("visualizersPanel")).text, "Visualizers");
-  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Simulation World", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
+  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Simulation World", "Viewport Camera", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
 });
 
 function element(tag = "div") {
