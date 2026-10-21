@@ -105,11 +105,11 @@ Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, vis
 
 ## Build 116: simulation world, camera and projection
 
-**Status: 116A accepted in merged PR #68; 116B camera mathematics implemented for review after Release 4.** [Build 116 contract](docs/development/build-116.md).
+**Status: 116A and 116B accepted in merged PRs #68/#69; 116C interactive camera implemented for owner artistic evaluation after Release 4.** [Build 116 contract and validation](docs/development/build-116.md#116c-interactive-camera). Build 115 remains the public release.
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
-Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** runtime-only camera ownership, projection/inverse and deterministic reset; **116C** camera controls, interactions and artistic sizing after review (future persistence requires a separate decision); **116D** compatibility, interactive and distribution acceptance. Small reviewable passes; no Build 117 optimizations.
+Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** runtime-only camera ownership, projection/inverse and deterministic reset; **116C** accessible camera controls and opt-in pointer/wheel/local-key interaction, retaining provisional CSS-sized marks for human evaluation (future persistence requires a separate decision); **116D** final compatibility and release acceptance after review. Stop after 116C; no 116D or Build 117 work is authorized by this pass.
 
 Acceptance gates:
 
