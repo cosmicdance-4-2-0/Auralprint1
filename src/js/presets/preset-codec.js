@@ -1,7 +1,8 @@
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
+import { normalizeWorldSettings } from "../core/world-settings.js";
 import { CONFIG } from "../core/config.js";
 import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
@@ -13,7 +14,7 @@ import { assertOrbAdmission } from "../core/orb-admission.js";
 // Authorized pre-release v0.1.15m.h.t correction adds Orb placement distance;
 // and v0.1.15m.h.u adds selected scene-wide particle resource budgets.
 // Normalization supplies CONFIG defaults to missing schema-2–10 fields.
-const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
+const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 
@@ -64,6 +65,7 @@ function sanitizePreset(decoded) {
   // Presets are full configuration snapshots. Always migrate/sanitize from
   // canonical defaults so older or partial payloads cannot inherit live state.
   const next = deepClone(CONFIG.defaults);
+  if (schema === PRESET_SCHEMA_VERSION) next.world = normalizeWorldSettings(incoming.world);
 
   if (incoming.visuals) {
     if (isValidHexColor(incoming.visuals.backgroundColor)) next.visuals.backgroundColor = incoming.visuals.backgroundColor;
@@ -204,6 +206,19 @@ function sanitizePreset(decoded) {
         };
         mappedOrb.particles = { ...base.particles, ...(incoming.particles || {}) };
         mappedOrb.trace = { ...base.trace, ...(incoming.trace || {}) };
+      }
+      if (schema <= LEGACY_SCHEMA_V10 && mappedOrb && typeof mappedOrb === "object") {
+        // Published schemas retain pixel-valued input. Only migration converts
+        // it into schema 11's explicitly named world-unit field; ignore injected
+        // world/Units fields in old payloads and never mutate the source object.
+        const particles = mappedOrb.particles;
+        const legacyPx = particles?.minPlacementDistancePx;
+        mappedOrb.particles = { ...particles,
+          minPlacementDistanceUnits: Number.isFinite(legacyPx)
+            ? legacyPx * CONFIG.worldGeometry.legacyWorldUnitsPerCssPixel
+            : CONFIG.defaults.orbs[i % defaults.length].particles.minPlacementDistanceUnits,
+        };
+        delete mappedOrb.particles.minPlacementDistancePx;
       }
       return mappedOrb;
     }));

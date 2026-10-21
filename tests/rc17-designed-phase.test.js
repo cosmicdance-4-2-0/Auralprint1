@@ -67,7 +67,7 @@ for (let schema = 2; schema <= 10; schema++) test(`RC-17 presets: schema ${schem
   assert.deepEqual(next.orbs[0].bandIds, [7, 3, 0]); assert.equal(next.orbs[0].hueOffsetDeg, 42);
   assert.deepEqual(next.particleSafety, payload.prefs.particleSafety);
   assert.ok(!("unknown" in next) && !("unknown" in next.orbs[3]));
-  const encoded = encodePresetPayload(next); assert.equal(encoded.schema, 10);
+  const encoded = encodePresetPayload(next); assert.equal(encoded.schema, 11);
   assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)), next);
   assert.notEqual(next.orbs[0].motion, next.orbs[1].motion);
   // Missing, invalid and explicit zero respect corresponding collection defaults.
@@ -91,11 +91,11 @@ test("RC-17 presets: historical fixtures and both schema-9 formats retain unrela
       assert.equal(sanitizePreset(decodePresetPayload(changed)).orbs[0].startAngleRad, 3 * Math.PI / 2);
     }
   }
-  const development = sanitizePreset({ schema: 10, prefs: { orbs: [{ startAngleRad: 4 * Math.PI,
+  const development = sanitizePreset({ schema: 11, prefs: { orbs: [{ startAngleRad: 4 * Math.PI,
     particles: { overlapRadiusPx: 99 } }] } });
   assert.equal(development.orbs[0].startAngleRad, 0);
   assert.ok(!("overlapRadiusPx" in development.orbs[0].particles));
-  assert.equal(development.orbs[0].particles.minPlacementDistancePx, defaultOrb.particles.minPlacementDistancePx);
+  assert.equal(development.orbs[0].particles.minPlacementDistanceUnits, defaultOrb.particles.minPlacementDistanceUnits);
 });
 
 test("RC-17 collection: defaults, creation and independent duplication use canonical designed phase", () => {
@@ -122,8 +122,8 @@ function withScene(callback) {
 }
 
 test("RC-17 URL/replacement: import/export preserve precise phase, canonical shape and independent runtime history", () => withScene(() => {
-  assert.equal(PRESET_SCHEMA_VERSION, 10);
-  location.hash = rawHash({ schema: 10, prefs: { orbs: [{ id: "A", startAngleRad: 4 * Math.PI },
+  assert.equal(PRESET_SCHEMA_VERSION, 11);
+  location.hash = rawHash({ schema: 11, prefs: { orbs: [{ id: "A", startAngleRad: 4 * Math.PI },
     { id: "B", startAngleRad: 1.5 / RAD_TO_DEG }] } });
   assert.equal(UrlPreset.applyFromLocationHash(), true); resolveSettings(); initOrbs();
   const [a, b] = state.orbs; a.angleRad = 1.25;
@@ -141,7 +141,7 @@ test("RC-17 URL/replacement: import/export preserve precise phase, canonical sha
   assert.notEqual(copy, a); assert.equal(copy.angleRad, Math.PI / 2); assert.equal(copy.startAngleRad, a.startAngleRad);
   assert.equal(copy.trail.particles.length, 0); assert.equal(a.trail.particles.tail, tail);
   const before = structuredClone(preferences);
-  location.hash = rawHash({ schema: 11, prefs: {} }); assert.equal(UrlPreset.applyFromLocationHash(), false);
+  location.hash = rawHash({ schema: 12, prefs: {} }); assert.equal(UrlPreset.applyFromLocationHash(), false);
   assert.deepEqual(preferences, before);
   replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings(); initOrbs(); resetOrbsToDesignedPhases();
   assert.deepEqual(preferences, CONFIG.defaults); assert.deepEqual(state.orbs.map(o => o.angleRad), [0, Math.PI]);
@@ -170,7 +170,7 @@ test("RC-17 geometry: equivalent phases produce actual matching coordinates, wav
 }));
 
 for (const phaseMode of ["orb", "free"]) test(`RC-17 lifecycle: moving edit and ${phaseMode} Ring preserve history until explicit visual reset`, () => withScene(() => {
-  replacePreferences(sanitizePreset({ schema: 10, prefs: { orbs: [{ id: "A", startAngleRad: .25, chirality: 1,
+  replacePreferences(sanitizePreset({ schema: 11, prefs: { orbs: [{ id: "A", startAngleRad: .25, chirality: 1,
     motion: { angularSpeedRadPerSec: 2 } }, { id: "B", startAngleRad: Math.PI }],
     bands: { overlay: { phaseMode, ringSpeedRadPerSec: 1 } } } }));
   resolveSettings(); initOrbs(); const a = state.orbs[0], b = state.orbs[1];

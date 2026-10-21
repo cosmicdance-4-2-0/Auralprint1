@@ -21,29 +21,29 @@ test("generated controls commit by persistent ID after reorder and focusOrb is I
 
 test("bulk helper keeps mixed and zero semantics",()=>{assert.deepEqual(readBulkOrbValue([],"particles","emitPerSecond"),{available:false,mixed:false,value:undefined});assert.equal(readBulkOrbValue([orb("A"),orb("B")],"particles","emitPerSecond").mixed,false);});
 
-test("minimum placement distance controls bind by ID, report pixels and mixed state, and retain focus/listeners", () => {
+test("minimum placement distance controls bind by ID, report world units and mixed state, and retain focus/listeners", () => {
   const h = harness(["A","B"]);
   try {
     h.editor.init(); const a=h.editor.getController("A"), control=a.spacing, root=a.root;
     assert.deepEqual([control.min,control.max,control.step],["0","10","any"]);
-    assert.equal(control.value,"0.5"); assert.equal(a.spacingValue.textContent,"0.5 px");
-    assert.equal(control.getAttribute("aria-valuetext"),"0.5 pixels");
+    assert.equal(control.value,"0.5"); assert.equal(a.spacingValue.textContent,"0.5 world units");
+    assert.equal(control.getAttribute("aria-valuetext"),"0.5 world units");
     const help=a.root.children[1].children.flatMap(group=>group.children).flatMap(node=>node.children).find(node=>node.id===control.getAttribute("aria-describedby"));
     assert.equal(help.textContent,"Minimum distance from this Orb's last retained particle before a new particle is placed. 0 disables filtering.");
     control.focus(); control.value="0"; control.dispatch("input");
-    assert.equal(preferences.orbs[0].particles.minPlacementDistancePx,0);
-    assert.equal(preferences.orbs[1].particles.minPlacementDistancePx,.5);
+    assert.equal(preferences.orbs[0].particles.minPlacementDistanceUnits,0);
+    assert.equal(preferences.orbs[1].particles.minPlacementDistanceUnits,.5);
     assert.equal(h.calls.at(-1)[0],"A");
     preferences.orbs.reverse(); resolveSettings(); h.editor.refresh();
     assert.equal(h.editor.getController("A").root,root); assert.equal(h.editor.getController("A").spacing,control);
-    assert.equal(document.activeElement,control); assert.equal(a.spacingValue.textContent,"0 px");
+    assert.equal(document.activeElement,control); assert.equal(a.spacingValue.textContent,"0 world units");
     assert.equal(h.view.valMinPlacementDistance.textContent,"mixed");
     assert.equal(h.view.rngMinPlacementDistance.getAttribute("aria-valuetext"),"mixed");
     assert.equal(h.editor.init(),false); assert.equal(control.listenerCount("input"),1);
     assert.equal(h.view.rngMinPlacementDistance.listenerCount("input"),1);
     h.view.rngMinPlacementDistance.value="2.3"; h.view.rngMinPlacementDistance.dispatch("input");
-    assert.ok(preferences.orbs.every(o=>o.particles.minPlacementDistancePx===2.3));
-    resolveSettings(); h.editor.refresh(); assert.equal(h.view.valMinPlacementDistance.textContent,"2.3 px");
+    assert.ok(preferences.orbs.every(o=>o.particles.minPlacementDistanceUnits===2.3));
+    resolveSettings(); h.editor.refresh(); assert.equal(h.view.valMinPlacementDistance.textContent,"2.3 world units");
     const settingsBefore=runtime.settings; h.editor.refresh(settingsBefore);
     assert.equal(h.editor.getController("A").spacing,control); assert.equal(document.activeElement,control);
     preferences.orbs=[]; resolveSettings(); h.editor.refresh();
@@ -54,7 +54,7 @@ test("minimum placement distance controls bind by ID, report pixels and mixed st
     assert.match(template,/label for="rngMinPlacementDistance">Minimum Placement Distance/);
     assert.match(template,/id="rngMinPlacementDistance" type="range" aria-describedby="minPlacementDistanceHelp"/);
     const domCache=readFileSync(new URL("../src/js/ui/dom-cache.js",import.meta.url),"utf8");
-    assert.match(domCache,/bindRange\(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistancePx\)/);
+    assert.match(domCache,/bindRange\(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistanceUnits\)/);
   } finally { h.restore(); }
 });
 

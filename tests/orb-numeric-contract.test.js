@@ -18,8 +18,8 @@ for (const [key,group,field,limits,precise] of continuousOrbCases) {
     for (const value of [limits.min, limits.min + (limits.max-limits.min)*1e-7, precise, limits.max - (limits.max-limits.min)*1e-7, limits.max]) {
       const incoming=structuredClone(fallback); writeNumeric(incoming,group,field,value);
       const normalized=normalizeOrbDef(incoming,fallback); assert.equal(readNumeric(normalized,group,field),value);
-      const prefs=sanitizePreset({schema:10,prefs:{orbs:[incoming]}});
-      const payload=encodePresetPayload(prefs); assert.equal(payload.schema,10);
+      const prefs=sanitizePreset({schema:11,prefs:{orbs:[incoming]}});
+      const payload=encodePresetPayload(prefs); assert.equal(payload.schema,11);
       assert.equal(readNumeric(sanitizePreset(decodePresetPayload(payload)).orbs[0],group,field),value);
     }
     for (const value of [NaN, Infinity, -Infinity, '0.123456', null]) {
@@ -36,7 +36,7 @@ test('AUD-009: trace count ceil normalization is shared by import, direct change
       const fallback=structuredClone(CONFIG.defaults.orbs[0]);fallback.trace.numLines=10;
       const orb=normalizeOrbDef({...fallback,trace:{...fallback.trace,numLines:raw}},fallback);
       assert.equal(orb.trace.numLines,expected);
-      const prefs=sanitizePreset({schema:10,prefs:{orbs:[{id:'A',trace:{numLines:raw}}]}});
+      const prefs=sanitizePreset({schema:11,prefs:{orbs:[{id:'A',trace:{numLines:raw}}]}});
       assert.equal(prefs.orbs[0].trace.numLines,expected);
       replacePreferences(prefs);resolveSettings();
       assert.equal(runtime.settings.orbs[0].trace.numLines,expected);
@@ -52,7 +52,7 @@ test('AUD-009: trace count ceil normalization is shared by import, direct change
 test('AUD-009: unrelated settings preserve precise independent Orb values and inactive targets',()=>{
   const old=structuredClone(preferences);
   try{
-    replacePreferences(sanitizePreset({schema:10,prefs:{bands:{count:3},orbs:[{id:'A',bandIds:[0,255],motion:{angularSpeedRadPerSec:.123456},trace:{numLines:15.5}},{id:'B',bandIds:[255],motion:{angularSpeedRadPerSec:.234567},trace:{numLines:17}}]}}));resolveSettings();
+    replacePreferences(sanitizePreset({schema:11,prefs:{bands:{count:3},orbs:[{id:'A',bandIds:[0,255],motion:{angularSpeedRadPerSec:.123456},trace:{numLines:15.5}},{id:'B',bandIds:[255],motion:{angularSpeedRadPerSec:.234567},trace:{numLines:17}}]}}));resolveSettings();
     const orbs=structuredClone(preferences.orbs);
     preferences.audio.playbackVolume=.4;resolveSettings();
     assert.deepEqual(preferences.orbs,orbs);assert.deepEqual(runtime.settings.orbs,orbs);

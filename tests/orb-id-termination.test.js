@@ -13,7 +13,7 @@ import { VisualizerRuntime } from "../src/js/render/visualizer-runtime.js";
 
 const HUGE_ID = "ORB9007199254740992";
 const HUGE_NEXT = "ORB9007199254740993";
-const payload = (ids) => ({ schema: 10, prefs: { orbs: ids.map((id) => ({ id })) } });
+const payload = (ids) => ({ schema: 11, prefs: { orbs: ids.map((id) => ({ id })) } });
 const idsOf = (orbs) => orbs.map((orb) => orb.id);
 
 test("RC-01: timeout-protected allocation/import gate and direct huge-ID regressions", async (t) => {
@@ -34,7 +34,7 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
     const id = ${JSON.stringify(HUGE_ID)};
     parentPort.postMessage("before allocation");
     assert.equal(allocateOrbId([{ id }]), ${JSON.stringify(HUGE_NEXT)});
-    const payload = { schema: 10, prefs: { orbs: [{ id }, { id }] } };
+    const payload = { schema: 11, prefs: { orbs: [{ id }, { id }] } };
     parentPort.postMessage("before sanitation");
     assert.equal(new Set(sanitizePreset(decodePresetPayload(payload)).orbs.map(o => o.id)).size, 2);
     parentPort.postMessage("before URL import");
@@ -110,12 +110,12 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
     const snapshot = structuredClone(input);
     const decoded = decodePresetPayload(input);
     assert.equal(decoded.ok, true);
-    assert.equal(decoded.schema, 10);
+    assert.equal(decoded.schema, 11);
     const next = sanitizePreset(decoded);
     assert.deepEqual(idsOf(next.orbs), [HUGE_ID, HUGE_NEXT]);
-    assert.deepEqual(encodePresetPayload(next), { schema: 10, prefs: next });
+    assert.deepEqual(encodePresetPayload(next), { schema: 11, prefs: next });
     assert.deepEqual(JSON.parse(JSON.stringify(encodePresetPayload(next))).prefs, next);
-    assert.equal(PRESET_SCHEMA_VERSION, 10);
+    assert.equal(PRESET_SCHEMA_VERSION, 11);
     assert.deepEqual(input, snapshot);
   });
 
@@ -163,7 +163,7 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
         UrlPreset.writeHashFromPrefs();
         assert.match(location.hash, /^#p=[A-Za-z0-9_-]+$/);
         const encoded = JSON.parse(Buffer.from(location.hash.slice(3), "base64url").toString("utf8"));
-        assert.deepEqual(encoded, { schema: 10, prefs: expected });
+        assert.deepEqual(encoded, { schema: 11, prefs: expected });
         assert.equal(UrlPreset.applyFromLocationHash(), true);
         assert.deepEqual(preferences, expected);
       }

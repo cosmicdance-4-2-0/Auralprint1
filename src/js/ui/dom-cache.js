@@ -207,7 +207,7 @@ function primeDomCache() {
     bindRange(ui.rngSizeMin, CONFIG.limits.particles.sizeMinPx);
     bindRange(ui.rngSizeToMin, CONFIG.limits.particles.sizeToMinSec);
     bindRange(ui.rngTTL, CONFIG.limits.particles.ttlSec);
-    bindRange(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistancePx);
+    bindRange(ui.rngMinPlacementDistance, CONFIG.limits.particles.minPlacementDistanceUnits);
 
     bindRange(ui.rngOmega, CONFIG.limits.motion.angularSpeedRadPerSec);
     bindRange(ui.rngWfDisp, CONFIG.limits.orbs.response.waveformRadialDisplaceFrac);

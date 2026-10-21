@@ -68,22 +68,13 @@ test("spacing uses squared two-dimensional distance and only the most recent ret
   } finally { trail.dispose(); }
 });
 
-for (const dpr of [1,2]) test(`CSS spacing and production Orb DPR wiring at DPR ${dpr}`, () => {
-  const trail = new TrailSystem(), oldSize = [state.widthPx,state.heightPx,state.dpr];
-  const def = structuredClone(CONFIG.defaults.orbs[0]); def.motion.angularSpeedRadPerSec = 0;
-  def.response = { minRadiusFrac: 0, maxRadiusFrac: 0, waveformRadialDisplaceFrac: 0 };
-  const orb = new Orb(def);
+for (const dpr of [1,2]) test(`world spacing ignores historical extra DPR argument ${dpr}`, () => {
+  const trail = new TrailSystem();
   try {
     tick(trail, 0, 0, 1/60, 0, {}, dpr);
-    assert.equal(tick(trail, .49*dpr, 0, 1/60, 0, {}, dpr).emissions,0);
-    assert.equal(tick(trail, .5*dpr, 0, 1/60, 0, {}, dpr).emissions,1);
-    state.widthPx = state.heightPx = 100*dpr; state.dpr = dpr;
-    orb.step(1/60,0,null,null,0);
-    orb.centerXFrac += .0049; orb.step(1/60,0,null,null,0);
-    assert.equal(orb.trail.particles.length,1);
-    orb.centerXFrac = def.centerXFrac + .005; orb.step(1/60,0,null,null,0);
-    assert.equal(orb.trail.particles.length,2);
-  } finally { trail.dispose(); orb.trail.dispose(); [state.widthPx,state.heightPx,state.dpr] = oldSize; }
+    assert.equal(tick(trail, .49, 0, 1/60, 0, {}, dpr).emissions,0);
+    assert.equal(tick(trail, .5, 0, 1/60, 0, {}, dpr).emissions,1);
+  } finally { trail.dispose(); }
 });
 
 test("stationary trail becomes eligible after TTL expiry, eviction, or explicit reset without a coordinate cache", () => {
@@ -155,7 +146,7 @@ test("zero fully bypasses comparisons, preserves duplicate rate demand, and obey
   const { governor:g, trails } = shared(16,{maxEmissionsPerFrame:7,maxActiveParticles:11});
   try {
     for (let f=0;f<20;f++) {
-      g.beginFrame(); trails.forEach(t=>t.updateAndEmit(1/60,f/60,0,0,rgb,settings({minPlacementDistancePx:0})));
+      g.beginFrame(); trails.forEach(t=>t.updateAndEmit(1/60,f/60,0,0,rgb,settings({minPlacementDistanceUnits:0})));
       assert.ok(trails.every(t=>t.pendingEmissions===4)); g.finishFrame();
       assert.equal(g.stats.emissions,7); assert.equal(g.stats.requestedDemand,64); assert.equal(g.stats.droppedDemand,57);
       assert.equal(g.stats.spatiallyRejectedDemand,0); assert.equal(g.stats.placementComparisons,0);
@@ -183,43 +174,43 @@ test("running spacing changes preserve particles and fractions, and paused runti
   v.rebuild([orb]);
   try {
     v.update(frame); const tail=orb.trail.particles.tail, phase=orb.angleRad;
-    orb.trail.emitAccumulator=.5; def.particles.minPlacementDistancePx=0; orb.syncFromDef(def);
+    orb.trail.emitAccumulator=.5; def.particles.minPlacementDistanceUnits=0; orb.syncFromDef(def);
     assert.equal(orb.angleRad,phase); assert.equal(orb.trail.particles.tail,tail); assert.equal(orb.trail.emitAccumulator,.5);
     frame.simPaused=true; v.update(frame); assert.equal(v.getParticleStats().requestedDemand,0); assert.equal(orb.trail.particles.tail,tail);
     frame.simPaused=false; v.update(frame); assert.equal(v.getParticleStats().emissions,4); assert.equal(orb.trail.emitAccumulator,.5);
-    def.particles.minPlacementDistancePx=10; orb.syncFromDef(def);
+    def.particles.minPlacementDistanceUnits=10; orb.syncFromDef(def);
     assert.equal(tail.trail,orb.trail); consistent(orb.trail.governor);
   } finally { v.dispose(); }
 });
 
-test("schema 10 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated", () => {
-  assert.equal(PRESET_SCHEMA_VERSION,10);
-  assert.deepEqual(CONFIG.limits.particles.minPlacementDistancePx,{min:0,max:10,step:.1});
-  assert.ok(Object.isFrozen(CONFIG.limits.particles.minPlacementDistancePx));
-  const prefs=structuredClone(CONFIG.defaults); prefs.orbs[0].particles.minPlacementDistancePx=0; prefs.orbs[1].particles.minPlacementDistancePx=2.3;
+test("schema 11 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated", () => {
+  assert.equal(PRESET_SCHEMA_VERSION,11);
+  assert.deepEqual(CONFIG.limits.particles.minPlacementDistanceUnits,{min:0,max:10,step:.1});
+  assert.ok(Object.isFrozen(CONFIG.limits.particles.minPlacementDistanceUnits));
+  const prefs=structuredClone(CONFIG.defaults); prefs.orbs[0].particles.minPlacementDistanceUnits=0; prefs.orbs[1].particles.minPlacementDistanceUnits=2.3;
   prefs.orbs[0].particles.overlapRadiusPx=10; prefs.orbs[0].particles.spatiallyRejectedDemand=123;
   const encoded=encodePresetPayload(prefs);
-  assert.equal(encoded.schema,10); assert.deepEqual(encoded.prefs.orbs.map(o=>o.particles.minPlacementDistancePx),[0,2.3]);
+  assert.equal(encoded.schema,11); assert.deepEqual(encoded.prefs.orbs.map(o=>o.particles.minPlacementDistanceUnits),[0,2.3]);
   assert.equal('overlapRadiusPx' in encoded.prefs.orbs[0].particles,false);
   assert.equal('spatiallyRejectedDemand' in encoded.prefs.orbs[0].particles,false);
   assert.deepEqual(sanitizePreset(encoded),encoded.prefs);
   for (const [value,expected] of [[undefined,.5],[null,.5],[NaN,.5],[Infinity,.5],[-Infinity,.5],['0',.5],[{},.5],[-1,0],[11,10],[0,0],[.1,.1]]) {
-    const input={id:'A',particles:{minPlacementDistancePx:value,overlapRadiusPx:9}};
-    assert.equal(normalizeOrbDef(input,CONFIG.defaults.orbs[0]).particles.minPlacementDistancePx,expected);
-    assert.equal(sanitizePreset({schema:10,prefs:{orbs:[input]}}).orbs[0].particles.minPlacementDistancePx,expected);
+    const input={id:'A',particles:{minPlacementDistanceUnits:value,overlapRadiusPx:9}};
+    assert.equal(normalizeOrbDef(input,CONFIG.defaults.orbs[0]).particles.minPlacementDistanceUnits,expected);
+    assert.equal(sanitizePreset({schema:11,prefs:{orbs:[input]}}).orbs[0].particles.minPlacementDistanceUnits,expected);
     const trail=new TrailSystem();
-    try { tick(trail,0,0,1/60,0,{minPlacementDistancePx:value}); assert.equal(trail.particles.length,expected===0?4:1); }
+    try { tick(trail,0,0,1/60,0,{minPlacementDistanceUnits:value}); assert.equal(trail.particles.length,expected===0?4:1); }
     finally { trail.dispose(); }
   }
   const legacy=JSON.parse(readFileSync(new URL('./fixtures/legacy-presets.json',import.meta.url),'utf8'));
   for (const schema of [2,3,4,5,6,7,8,9,10]) {
     const next=sanitizePreset({schema,prefs:{orbs:[{id:'A',chanId:'R',particles:{overlapRadiusPx:7}}],particles:{overlapRadiusPx:8}}});
-    assert.equal(next.orbs[0].particles.minPlacementDistancePx,.5); assert.equal(next.orbs[0].chanId,'R');
+    assert.equal(next.orbs[0].particles.minPlacementDistanceUnits,.5); assert.equal(next.orbs[0].chanId,'R');
     assert.equal('overlapRadiusPx' in next.orbs[0].particles,false);
   }
   for (const fixture of legacy) {
     const next=sanitizePreset(fixture);
-    assert.ok(next.orbs.every(o=>o.particles.minPlacementDistancePx===.5),`historical schema ${fixture.schema}`);
+    assert.ok(next.orbs.every(o=>o.particles.minPlacementDistanceUnits===.5),`historical schema ${fixture.schema}`);
   }
 });
 
@@ -227,12 +218,12 @@ test("canonical creation, duplication, ID reconciliation, preset apply, track/vi
   const oldPrefs=structuredClone(preferences),oldSettings=runtime.settings,oldOrbs=[...state.orbs];
   const frame={dtSec:1/60,nowSec:0,simPaused:false,analysisFrame:createAnalysisFrame()};
   try {
-    const prefs=structuredClone(CONFIG.defaults); prefs.orbs[0].particles.minPlacementDistancePx=2.3;
+    const prefs=structuredClone(CONFIG.defaults); prefs.orbs[0].particles.minPlacementDistanceUnits=2.3;
     replacePreferences(prefs); resolveSettings(); initOrbs(); VisualizerRuntime.update(frame);
     const source=state.orbs[0],tail=source.trail.particles.tail,phase=source.angleRad;
     const duplicate=duplicateRuntimeOrb(source.id),copy=state.orbs.find(o=>o.id===duplicate.id);
-    assert.equal(copy.particles.minPlacementDistancePx,2.3); assert.equal(copy.trail.particles.length,0);
-    const added=createRuntimeOrb(); assert.equal(state.orbs.find(o=>o.id===added.id).particles.minPlacementDistancePx,.5);
+    assert.equal(copy.particles.minPlacementDistanceUnits,2.3); assert.equal(copy.trail.particles.length,0);
+    const added=createRuntimeOrb(); assert.equal(state.orbs.find(o=>o.id===added.id).particles.minPlacementDistanceUnits,.5);
     preferences.orbs.reverse(); resolveSettings(); reconcileOrbs();
     assert.equal(state.orbs.find(o=>o.id===source.id),source); assert.equal(source.trail.particles.tail,tail); assert.equal(source.angleRad,phase);
     const encoded=encodePresetPayload(preferences); replacePreferences(sanitizePreset(encoded)); resolveSettings(); reconcileOrbs();

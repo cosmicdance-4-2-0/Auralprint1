@@ -7,7 +7,7 @@ import {TrailSystem} from '../src/js/render/trail-system.js';
 import {ParticleGovernor} from '../src/js/render/particle-governor.js';
 import {createVisualizerRuntime} from '../src/js/render/visualizer-runtime.js';
 import {createAnalysisFrame} from '../src/js/audio/analysis-frame.js';
-const rgb={r:1,g:0,b:0},p={...CONFIG.defaults.orbs[0].particles,emitPerSecond:1000,minPlacementDistancePx:0,ttlSec:60};
+const rgb={r:1,g:0,b:0},p={...CONFIG.defaults.orbs[0].particles,emitPerSecond:1000,minPlacementDistanceUnits:0,ttlSec:60};
 function owners(g){
  const nodes=new Set(),priorities=new Set();let prev=null;
  for(let t=g.nextPriority;t;t=t.priorityNext){assert.ok(!priorities.has(t));priorities.add(t);assert.equal(t.priorityPrev,prev);prev=t;}
@@ -27,7 +27,7 @@ test('integrated: eligible low-rate demand survives sustained competition, reord
 for(const fps of [120,60,10,5])test(`integrated synthetic 16-Orb history: ${fps} FPS covers TTL rotation; Trace suffix remains independent`,()=>{
  const old={width:state.widthPx,height:state.heightPx,dpr:state.dpr};state.widthPx=1280;state.heightPx=800;state.dpr=1;
  const settings=structuredClone(CONFIG.defaults);settings.particleSafety={maxEmissionsPerFrame:512,maxActiveParticles:65536};settings.orbs=Array.from({length:16},(_,i)=>({...structuredClone(settings.orbs[i%2]),id:`history-${i}`,startAngleRad:0,chirality:1}));
- for(const d of settings.orbs){d.motion.angularSpeedRadPerSec=.5;d.response.minRadiusFrac=d.response.maxRadiusFrac=.2;d.response.waveformRadialDisplaceFrac=0;d.particles={...d.particles,emitPerSecond:1000,ttlSec:14,minPlacementDistancePx:.5};d.trace={...d.trace,numLines:1000,lines:true};}
+ for(const d of settings.orbs){d.motion.angularSpeedRadPerSec=.5;d.response.minRadiusFrac=d.response.maxRadiusFrac=.2;d.response.waveformRadialDisplaceFrac=0;d.particles={...d.particles,emitPerSecond:1000,ttlSec:14,minPlacementDistanceUnits:.5};d.trace={...d.trace,numLines:1000,lines:true};}
  const orbs=settings.orbs.map(d=>new Orb(d)),v=createVisualizerRuntime({settingsRef:{settings},createSpectralRing:()=>({id:'ring',type:'spectral-ring',update(){},dispose(){},isVisible(){return false;}})});v.rebuild(orbs);const frame={dtSec:Math.min(1/fps,1/30),motionDtSec:1/fps,nowSec:0,simPaused:false,analysisFrame:createAnalysisFrame()};let evicted=0,expired=0,emitted=0;
  try{for(let f=1;f<=20*fps;f++){frame.nowSec=f/fps;v.update(frame);const s=v.getParticleStats();evicted+=s.evicted;expired+=s.expired;emitted+=s.emissions;}const g=orbs[0].trail.governor;owners(g);assert.equal(evicted,0);assert.ok(expired>0);assert.equal(emitted,20*fps*16);
  for(const o of orbs){assert.ok(Math.abs(o.angleRad-(10%(2*Math.PI)))<1e-9);const head=o.trail.particles.head.particle,tail=o.trail.particles.tail.particle,history=tail.bornSec-head.bornSec;assert.ok(history>=14-2/fps-1e-9&&history<14);assert.ok(history*.5>2*Math.PI,'particle history covers a full revolution');const suffix=[...o.trail.particles.suffix(o.trace.numLines+1)],traceHistory=suffix.at(-1).bornSec-suffix[0].bornSec;
@@ -48,7 +48,7 @@ test('integrated: 200 lifecycle/policy churn cycles preserve survivors, release 
 });
 test('integrated: unordered transfer, TTL edits, oldest trim and empty-tail spacing preserve ownership',()=>{
  const source=new TrailSystem(),g=new ParticleGovernor({maxEmissionsPerFrame:1,maxActiveParticles:4});for(const born of [10,0,9,1])source.emitAt(born,0,born,rgb);source.emitAccumulator=.75;source.setGovernor(g);g.setTrails([source]);assert.equal(source.particles.birthOrderMonotonic,false);assert.equal(source.emitAccumulator,.75);
- try{source.expireParticles(10,2);assert.deepEqual([...source.particles].map(p=>p.bornSec),[10,9]);owners(g);g.applyPolicy({maxEmissionsPerFrame:1,maxActiveParticles:1});assert.deepEqual([...source.particles].map(p=>p.bornSec),[10]);assert.equal(source.particles.birthOrderMonotonic,true);source.expireParticles(11,1);assert.equal(source.particles.length,0);g.beginFrame();source.updateAndEmit(1/60,11,10,0,rgb,{...p,minPlacementDistancePx:.5});assert.equal(source.pendingEmissions,1);g.finishFrame();assert.equal(g.stats.emissions,1);owners(g);
+ try{source.expireParticles(10,2);assert.deepEqual([...source.particles].map(p=>p.bornSec),[10,9]);owners(g);g.applyPolicy({maxEmissionsPerFrame:1,maxActiveParticles:1});assert.deepEqual([...source.particles].map(p=>p.bornSec),[10]);assert.equal(source.particles.birthOrderMonotonic,true);source.expireParticles(11,1);assert.equal(source.particles.length,0);g.beginFrame();source.updateAndEmit(1/60,11,10,0,rgb,{...p,minPlacementDistanceUnits:.5});assert.equal(source.pendingEmissions,1);g.finishFrame();assert.equal(g.stats.emissions,1);owners(g);
  }finally{g.dispose();}
 });
 test('integrated: long-running phase modulo stays finite; track reset keeps phase and visual reset restores design',()=>{
