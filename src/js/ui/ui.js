@@ -343,6 +343,8 @@ const UI = (() => {
   const tooltipGroups = new Map();
   let tooltipSettingsRef = null;
   let tooltipBandEdgesRef = null;
+  let tooltipCameraRef = null;
+  let tooltipCameraMode = null;
   let latestAnalysisFrame = null; // Producer-owned frame, retained only for immediate reveal.
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel,
     onPanelShown: (panel) => {
@@ -1254,6 +1256,11 @@ const UI = (() => {
 
     // Settings/definition replacement invalidates meaning, not every animation frame.
     // Comparing generated titles ensures unrelated changes do not rewrite controls.
+    if (tooltipCameraRef !== state.camera || tooltipCameraMode !== cameraInteraction.isEnabled()) {
+      tooltipCameraRef = state.camera;
+      tooltipCameraMode = cameraInteraction.isEnabled();
+      invalidateConfigTooltips(ui.scenePanel);
+    }
     if (tooltipSettingsRef !== runtime.settings || tooltipBandEdgesRef !== state.bands.lowHz) {
       tooltipSettingsRef = runtime.settings;
       tooltipBandEdgesRef = state.bands.lowHz;
@@ -1926,7 +1933,7 @@ const UI = (() => {
     // Global shortcuts are intentionally suppressed while a control has focus,
     // so typing/adjusting controls never triggers transport/panel side effects.
     window.addEventListener("keydown", (e) => {
-      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       if (hasFocusedInteractiveTarget(e)) return;
 
       if (e.code === "KeyH") {

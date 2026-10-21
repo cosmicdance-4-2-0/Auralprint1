@@ -31,7 +31,8 @@ function rotateCamera(direction) {
 function zoomCamera(factor, backingPoint = null) {
   if (!Number.isFinite(factor) || factor <= 0) return false;
   const camera = state.camera, limits = CONFIG.limits.camera.zoom;
-  const zoom = Math.max(limits.min, Math.min(limits.max, camera.zoom * factor));
+  const zoom = factor >= limits.max / camera.zoom ? limits.max
+    : factor <= limits.min / camera.zoom ? limits.min : camera.zoom * factor;
   if (zoom === camera.zoom) return true;
   if (backingPoint === null) return commitCamera({ zoom });
   const before = viewportToWorld(backingPoint.x, backingPoint.y, state, state.world, camera);
