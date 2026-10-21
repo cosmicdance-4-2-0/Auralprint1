@@ -1,6 +1,6 @@
 /* =============================================================================
    Auralprint
-   0.1.15a
+   0.1.16b
 
    Build 116B — Runtime camera and forward/inverse projection
    Independent world geometry; runtime-only camera; preset schema v11.
