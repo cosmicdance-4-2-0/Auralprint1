@@ -111,17 +111,24 @@ async function distributionChecks(page, url, dpr) {
   assert.equal((await share(page)).prefs.orbs[0].particles.minPlacementDistanceUnits, .6);
   const capture = await page.evaluate(async () => {
     const canvas = document.querySelector('#c'), stream = canvas.captureStream(10);
-    const recorder = new MediaRecorder(stream), chunks = [];
+    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' }), chunks = [];
     recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
-    const stopped = new Promise((resolve, reject) => { recorder.onstop = resolve; recorder.onerror = reject; });
+    const stopped = new Promise((resolve, reject) => {
+      recorder.onstop = resolve; recorder.onerror = event => reject(Error(event.error?.message || 'native recorder error'));
+    });
     try {
-      recorder.start(); await new Promise(resolve => setTimeout(resolve, 250)); recorder.stop(); await stopped;
+      recorder.start(); await new Promise(resolve => setTimeout(resolve, 1000)); recorder.stop(); await stopped;
       const blob = new Blob(chunks, { type: recorder.mimeType });
       if (!blob.size) throw Error('empty canvas capture');
       const video = document.createElement('video'), objectUrl = URL.createObjectURL(blob);
       try {
-        const metadata = new Promise((resolve, reject) => { video.onloadedmetadata = resolve; video.onerror = reject; });
-        video.src = objectUrl; await metadata;
+        let timer;
+        const metadata = new Promise((resolve, reject) => {
+          timer = setTimeout(() => reject(Error('capture metadata timed out')), 5000);
+          video.onloadedmetadata = resolve;
+          video.onerror = () => reject(Error(`capture decode ${video.error?.code}: ${video.error?.message}`));
+        });
+        try { video.src = objectUrl; await metadata; } finally { clearTimeout(timer); }
         return { bytes: blob.size, videoWidth: video.videoWidth, videoHeight: video.videoHeight,
           canvasWidth: canvas.width, canvasHeight: canvas.height };
       } finally { video.removeAttribute('src'); video.load(); URL.revokeObjectURL(objectUrl); }
@@ -165,7 +172,8 @@ async function distributionChecks(page, url, dpr) {
         await page.route('**/*', route => route.request().url().startsWith(base) ? route.continue() : route.abort());
         if (edition === 'source') report.source.push(await sourceChecks(page, base, dpr));
         else report.distributions.push({ edition, ...await distributionChecks(page,
-          base + (edition === 'portable' ? `/dist/auralprint_${version.slice(1)}.html` : '/dist/hosted/index.html'), dpr) });
+          base + (edition === 'portable' ? `/dist/auralprint_${version.slice(1)}.html` : '/dist/hosted/index.html'), dpr)
+          .catch(error => { throw Error(`${edition} DPR ${dpr}: ${error.message}`, { cause: error }); }) });
         await page.close();
       }
     }

@@ -16,7 +16,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('n
       const selector='[id$="-min-placement-distance"]';
       await page.evaluate(selector=>{const control=document.querySelector(selector);for(let p=control.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;window.spacingControl=control;window.spacingCard=control.closest('.orb-editor-card');},selector);
       const control=page.locator(selector).first();await control.focus();
-      assert.equal(await control.getAttribute('min'),'0');assert.equal(await control.getAttribute('max'),'10');assert.equal(await control.getAttribute('step'),'0.1');
+      assert.equal(await control.getAttribute('min'),'0');assert.equal(await control.getAttribute('max'),'10');assert.equal(await control.getAttribute('step'),'any');
       await control.press('ArrowRight');assert.equal(await control.inputValue(),'0.6');
       await control.press('Home');assert.equal(await control.inputValue(),'0');
       assert.equal(await control.getAttribute('aria-valuetext'),'0 world units');
