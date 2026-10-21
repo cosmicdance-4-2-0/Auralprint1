@@ -90,9 +90,9 @@ Release 4, accepted and shipped. AnalysisFrame separates analysis from visualize
 
 **Release artifact:** [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html). Firefox does not supply shared-display audio for Stream mode; File and Mic are separate workflows. See [release acceptance and qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-## Build 116 — v0.1.16: Camera Controls (Render ≠ Sim)
+## Build 116 — Simulation World, Camera & Projection (in progress)
 
-Planned projection-only pan, zoom, and rotation. Simulation/analysis must remain unaffected. [Acceptance requirements](ROADMAP.md#build-116-camera-controls-render-separate-from-simulation).
+116A establishes independent world-geometry semantics before changing rendering or adding controls. World dimensions define reference geometry, **not** clipping/collision bounds. Pan, zoom, rotation, world-size configuration and schema-11 migration are subsequent passes; [116 development contract](docs/development/build-116.md) and [acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 ## Build 117 — v0.1.17: UX + Performance Hardening
 

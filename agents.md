@@ -471,16 +471,16 @@ Agents MUST align work with roadmap builds:
 - **113**: Recording / capture (MediaRecorder, WebM-first)
 - **114**: Live inputs (mic / stream)
 - **115**: Visualizer architecture + Orb overhaul v1
-- **116**: Camera (render ≠ sim)
+- **116**: Simulation world, camera and projection (world ≠ viewport)
 
 If a change does not map to a roadmap item:
 → It is likely out of scope.
 
-### 8.1 Camera Boundary
+### 8.1 World / camera boundary
 
-> Camera/projection changes render space, never simulation or analysis state.
+> World dimensions define reference geometry; they do not impose clipping or collisions. Camera/projection changes only the view of the world, never simulation, particle history or analysis state.
 
-Camera remains Build 116 and MUST stay behind completion of the Build 115 analysis/visualization and ownership work.
+Build 116 owns the simulation-world, camera and viewport separation. Existing 115 preset semantics are immutable; new persisted world settings require schema 11 and full migration. No unapproved camera state is included in presets. Details: [Build 116 contract](docs/development/build-116.md).
 
 ---
 
