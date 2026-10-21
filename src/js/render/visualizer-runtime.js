@@ -60,9 +60,12 @@ function createSpectralRingVisualizer({ settingsRef = runtime, stateRef = state 
           ? stateRef.orbs[0].angleRad
           : stateRef.bands.ringPhaseRad;
       } else if (!simPaused) {
-        stateRef.bands.ringPhaseRad = (
-          (stateRef.bands.ringPhaseRad + overlay.ringSpeedRadPerSec * motionDtSec) % TAU + TAU
-        ) % TAU;
+        const phaseDelta = overlay.ringSpeedRadPerSec * motionDtSec;
+        if (phaseDelta !== 0) {
+          stateRef.bands.ringPhaseRad = (
+            (stateRef.bands.ringPhaseRad + phaseDelta) % TAU + TAU
+          ) % TAU;
+        }
       }
     },
     render(renderer, frameContext) {

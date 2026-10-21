@@ -1,6 +1,7 @@
 import { clamp, lerp, hexToRgb01, rgb01ToCss, lerpRgb01 } from "../core/utils.js";
 import { TAU } from "../core/constants.js";
 import { runtime } from "../core/preferences.js";
+import { worldUnitsFromFraction } from "../core/world-geometry.js";
 import { state } from "../core/state.js";
 import { Spaces } from "../core/spaces.js";
 import { ColorPolicy } from "./color-policy.js";
@@ -83,13 +84,13 @@ const Renderer = (() => {
     }
   }
 
-  function spectralRingWaveformDisplacementPx(baseRadiusPx, angleRad, waveform, overlay) {
+  function spectralRingWaveformDisplacementUnits(baseRadiusUnits, angleRad, waveform, overlay) {
     if (!waveform || waveform.length === 0) return 0;
     const phase01 = ((angleRad % TAU) + TAU) % TAU / TAU;
     const idx = Math.floor(phase01 * (waveform.length - 1));
     const sample = waveform[idx];
     // Overlay displacement ownership stays within bands.overlay.
-    return baseRadiusPx * overlay.waveformRadialDisplaceFrac * sample;
+    return baseRadiusUnits * overlay.waveformRadialDisplaceFrac * sample;
   }
 
   function drawSpectralRing(analysisFrame) {
@@ -104,10 +105,10 @@ const Renderer = (() => {
     const wf = analysisFrame.channels.C.waveform;
     const energies = analysisFrame.spectrum.energies01;
 
-    const minDim = Math.min(state.widthPx, state.heightPx);
+    const world = state.world;
     // Overlay radius contract is independent from orb/audio radius controls.
-    const minR = minDim * overlay.minRadiusFrac;
-    const maxR = minDim * overlay.maxRadiusFrac;
+    const minR = worldUnitsFromFraction(world, overlay.minRadiusFrac);
+    const maxR = worldUnitsFromFraction(world, overlay.maxRadiusFrac);
     const safeMin = Math.min(minR, maxR);
     const safeMax = Math.max(minR, maxR);
 
@@ -117,7 +118,7 @@ const Renderer = (() => {
       const angle = phase + (i * TAU / n);
       const e = clamp((energies && energies[i]) || 0, 0, 1);
       const baseR = safeMin + (safeMax - safeMin) * e;
-      const disp = spectralRingWaveformDisplacementPx(baseR, angle, wf, overlay);
+      const disp = spectralRingWaveformDisplacementUnits(baseR, angle, wf, overlay);
 
       const r = baseR + disp;
       const xSim = r * Math.cos(angle);

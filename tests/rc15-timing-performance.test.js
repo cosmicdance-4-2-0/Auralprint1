@@ -59,7 +59,7 @@ test("production callback: 120-second stall ages/expires history, retains fracti
   try {h.clock(100000);h.clock(100100);const retained=h.orb.trail.particles.tail,phase=h.orb.angleRad;h.orb.trail.emitAccumulator=.75;
     const stalled=h.clock(220100);assert.equal(stalled.motionDtSec,0);assert.equal(stalled.dtSec,0);assert.equal(h.orb.angleRad,phase);assert.equal(h.orb.trail.particles.length,0);assert.equal(retained.trail,null);assert.equal(h.v.getParticleStats().expired,1);assert.equal(h.v.getParticleStats().requestedDemand,0);assert.equal(h.orb.trail.emitAccumulator,.75);
     h.clock(220200);close(h.orb.angleRad,phase+.075,'first ordinary recovery frame');assert.equal(h.v.getParticleStats().emissions,1);
-    h.clock(220300);close(h.orb.angleRad,phase+.15,'subsequent recovery frame');assert.equal(h.v.getParticleStats().emissions,0,'stationary geometry suppressed with width zero');
+    h.clock(220300);close(h.orb.angleRad,phase+.15,'subsequent recovery frame');assert.equal(h.v.getParticleStats().emissions,1,'world motion continues with a zero-sized viewport');
   }finally{h.dispose();}
 });
 

@@ -270,7 +270,7 @@ test("RC-15 phase 2: retired particles disappear from actual particle drawing an
     const arcs=[],lines=[];
     state.ctx=new Proxy({}, {get(_t,key){return (...args)=>{if(key==='arc')arcs.push(args[0]);if(key==='moveTo'||key==='lineTo')lines.push(args[0]);};},set(){return true;}});
     Renderer.drawOrb(orb,0,0);
-    assert.deepEqual(arcs,[52,53,54,55]); assert.deepEqual(lines,[53,54,55]);
+    assert.deepEqual(arcs,[50.2,50.3,50.4,50.5]); assert.deepEqual(lines,[50.3,50.4,50.5]);
   } finally{s.visualizers.dispose();state.ctx=oldCtx;runtime.settings=oldSettings;[state.widthPx,state.heightPx,state.dpr]=oldSize;}
 });
 

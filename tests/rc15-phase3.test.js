@@ -137,8 +137,8 @@ test('RC-15 phase 3: normal rendering preserves coordinates, size/age/fade, chro
     for(const mode of ['fixed','lastParticle','dominantBand']){
       orb.trace={...orb.trace,numLines:2,lineColorMode:mode};const c=canvas();state.ctx=c.ctx;
       Renderer.drawOrb(orb,5,0);
-      assert.deepEqual(c.arcs.map(a=>a.slice(0,3)),[[50,50,2],[51,48,2],[52,46,2],[53,44,2],[54,42,5]]);
-      assert.deepEqual(c.points,[['moveTo',52,46],['lineTo',53,44],['lineTo',54,42]]);
+      assert.deepEqual(c.arcs.map(a=>a.slice(0,3)),[[50,50,2],[50.1,49.8,2],[50.2,49.6,2],[50.3,49.4,2],[50.4,49.2,5]]);
+      assert.deepEqual(c.points,[['moveTo',50.2,49.6],['lineTo',50.3,49.4],['lineTo',50.4,49.2]]);
       assert.equal(c.strokes[0],`rgba(${Math.round(ColorPolicy.pickLineColorRgb01(orb.trail.particles,0,mode).r*255)},${Math.round(ColorPolicy.pickLineColorRgb01(orb.trail.particles,0,mode).g*255)},${Math.round(ColorPolicy.pickLineColorRgb01(orb.trail.particles,0,mode).b*255)},${orb.trace.lineAlpha})`);
       assert.deepEqual(c.fills,['rgba(13,25,38,1)','rgba(26,51,77,1)','rgba(38,77,115,1)','rgba(51,102,153,1)','rgba(51,102,153,1)']);
       assert.equal(c.calls.arc,5);assert.equal(c.calls.lineTo,2);

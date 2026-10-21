@@ -89,8 +89,8 @@ test("runtime Orbs use independent motion, response, waveform, and particle sett
   aDef.particles.emitPerSecond = 10; bDef.particles.emitPerSecond = 100;
   const a = new Orb(aDef); const b = new Orb(bDef); const band = { energy01: .5, waveform: [1, 1] };
   a.step(.1, 1, band, .5, 0); b.step(.1, 1, band, .5, 0);
-  assert.notEqual(a.angleRad, b.angleRad); assert.notEqual(a.baseRadiusPx, b.baseRadiusPx);
-  assert.equal(a.radialDispPx, 0); assert.notEqual(b.radialDispPx, 0);
+  assert.notEqual(a.angleRad, b.angleRad); assert.notEqual(a.baseRadiusUnits, b.baseRadiusUnits);
+  assert.equal(a.radialDispUnits, 0); assert.notEqual(b.radialDispUnits, 0);
   assert.ok(b.trail.particles.length > a.trail.particles.length);
   assert.equal(a.trail.emitAccumulator, 0);
   assert.equal(b.trail.emitAccumulator, 0, "refused whole demand is discarded");

@@ -158,7 +158,7 @@ test("RC-17 geometry: equivalent phases produce actual matching coordinates, wav
         for (let i = 0; i < 10000; i++) {
           for (const orb of [a, b]) orb.step(0, i / 10, { energy01: .6, waveform }, null, 7, null, i ? .1 : 0);
           close(a.xSim, b.xSim, "x coordinate"); close(a.ySim, b.ySim, "y coordinate");
-          assert.equal(a.radialDispPx, b.radialDispPx);
+          assert.equal(a.radialDispUnits, b.radialDispUnits);
           assert.deepEqual(ColorPolicy.pickParticleColorRgb01(a.angleRad, a), ColorPolicy.pickParticleColorRgb01(b.angleRad, b));
           assert.ok(a.angleRad >= 0 && a.angleRad < TAU);
         }

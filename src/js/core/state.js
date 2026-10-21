@@ -75,6 +75,7 @@ function createRecordingState() {
 const initialBandEnergies = { L: [], R: [], C: [] };
 
 const state = {
+  world: null, // Initialized from resolved Scene settings, never the viewport.
   canvas: null,
   ctx: null,
   widthPx: 0,

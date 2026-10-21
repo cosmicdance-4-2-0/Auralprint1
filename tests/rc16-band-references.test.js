@@ -141,7 +141,7 @@ test("RC-16: original URL import and actual Orb.step radius now match the empty 
   const radius = def => {
     const orb = new Orb(def), selection = selectOrbAnalysis(orb, frame);
     orb.step(1 / 60, 1, selection.band, selection.energyOverride01, 0);
-    orb.trail.dispose(); return orb.baseRadiusPx;
+    orb.trail.dispose(); return orb.baseRadiusUnits;
   };
   assert.equal(radius(preferences.orbs[0]), 721);
   assert.equal(radius({ ...preferences.orbs[0], bandIds: [] }), 721);
@@ -179,23 +179,23 @@ test("RC-16: real AnalysisFrame/runtime responses preserve distinct L/R/C energy
       const [allInvalid, empty, mixedOrb, valid, zero] = orbs.filter(o => o.chanId === chanId);
       const channel = frame.channels[chanId], energies = channel.bandEnergies01;
       const selected = (energies[7] + energies[3] + energies[0]) / 3;
-      close(empty.baseRadiusPx, 10 + 790 * channel.energy01);
-      assert.equal(allInvalid.baseRadiusPx, empty.baseRadiusPx);
-      assert.equal(allInvalid.radialDispPx, empty.radialDispPx);
+      close(empty.baseRadiusUnits, 10 + 790 * channel.energy01);
+      assert.equal(allInvalid.baseRadiusUnits, empty.baseRadiusUnits);
+      assert.equal(allInvalid.radialDispUnits, empty.radialDispUnits);
       assert.deepEqual(allInvalid.bandIds, []);
       assert.equal(selectOrbAnalysis(allInvalid, frame).energyOverride01, null);
       assert.equal(selectOrbAnalysis(allInvalid, frame).band, channel);
-      close(valid.baseRadiusPx, 10 + 790 * selected);
-      assert.equal(mixedOrb.baseRadiusPx, valid.baseRadiusPx);
-      close(zero.baseRadiusPx, 10 + 790 * energies[0]);
-      assert.notEqual(zero.baseRadiusPx, empty.baseRadiusPx);
+      close(valid.baseRadiusUnits, 10 + 790 * selected);
+      assert.equal(mixedOrb.baseRadiusUnits, valid.baseRadiusUnits);
+      close(zero.baseRadiusUnits, 10 + 790 * energies[0]);
+      assert.notEqual(zero.baseRadiusUnits, empty.baseRadiusUnits);
       for (const orb of [allInvalid, empty, mixedOrb, valid, zero]) {
-        close(orb.radialDispPx, orb.baseRadiusPx * orb.response.waveformRadialDisplaceFrac * channel.waveform[0]);
-        const radius = orb.baseRadiusPx + orb.radialDispPx;
+        close(orb.radialDispUnits, orb.baseRadiusUnits * orb.response.waveformRadialDisplaceFrac * channel.waveform[0]);
+        const radius = orb.baseRadiusUnits + orb.radialDispUnits;
         close(orb.xSim, radius * Math.cos(orb.angleRad) + orb.centerXFrac * 1000);
         close(orb.ySim, radius * Math.sin(orb.angleRad) + orb.centerYFrac * 1000);
       }
-      rows.push({ chanId, fullRadius: empty.baseRadiusPx, selectedRadius: valid.baseRadiusPx, band0Radius: zero.baseRadiusPx });
+      rows.push({ chanId, fullRadius: empty.baseRadiusUnits, selectedRadius: valid.baseRadiusUnits, band0Radius: zero.baseRadiusUnits });
     }
     assert.equal(new Set(rows.map(r => r.fullRadius)).size, 3);
     assert.equal(new Set(rows.map(r => r.selectedRadius)).size, 3);

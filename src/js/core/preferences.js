@@ -1,6 +1,8 @@
 import { normalizeMaxDeltaTimeSec } from "./timing.js";
 import { normalizeParticleSafety } from "./particle-safety.js";
 import { normalizeWorldSettings } from "./world-settings.js";
+import { createWorldGeometry } from "./world-geometry.js";
+import { state } from "./state.js";
 import { CONFIG } from "./config.js";
 import { TAU } from "./constants.js";
 import { assertOrbAdmission } from "./orb-admission.js";
@@ -40,6 +42,12 @@ function resolveSettings() {
   assertOrbAdmission(preferences.orbs);
   runtime.settings = deepClone(preferences);
   runtime.settings.world = normalizeWorldSettings(preferences.world);
+  const { widthUnits, heightUnits } = runtime.settings.world;
+  // Resolved Scene settings alone own world state. Preserve the descriptor on
+  // unrelated settings updates; canvas sizing has no path to this assignment.
+  if (state.world?.widthUnits !== widthUnits || state.world?.heightUnits !== heightUnits) {
+    state.world = createWorldGeometry(widthUnits, heightUnits);
+  }
   runtime.settings.bands.count = normalizeBandCount(preferences.bands.count);
   runtime.settings.timing = { maxDeltaTimeSec: normalizeMaxDeltaTimeSec(preferences.timing?.maxDeltaTimeSec) };
   runtime.settings.particleSafety = normalizeParticleSafety(preferences.particleSafety);
@@ -201,5 +209,8 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     trace,
   };
 }
+
+// Initialize through the same canonical pipeline used at boot and on edits.
+resolveSettings();
 
 export { preferences, runtime, replacePreferences, BAND_NAMES, BAND_NAME_TO_INDEX, resolveSettings, normalizeBandCount, normalizeOrbChannelId, sanitizeOrbBandIds, normalizeOrbDef, normalizeOrbPhaseRad, normalizeMinPlacementDistanceUnits };

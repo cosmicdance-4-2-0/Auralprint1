@@ -1,6 +1,7 @@
 import { clamp } from "../core/utils.js";
 import { TAU } from "../core/constants.js";
 import { normalizeOrbChannelId, sanitizeOrbBandIds } from "../core/preferences.js";
+import { worldUnitsFromFraction } from "../core/world-geometry.js";
 import { state } from "../core/state.js";
 import { TrailSystem } from "./trail-system.js";
 import { ColorPolicy } from "./color-policy.js";
@@ -29,8 +30,8 @@ class Orb {
 
     this.xSim = 0;
     this.ySim = 0;
-    this.baseRadiusPx = 0;
-    this.radialDispPx = 0;
+    this.baseRadiusUnits = 0;
+    this.radialDispUnits = 0;
   }
 
   resetPhase() { this.angleRad = this.startAngleRad; }
@@ -54,34 +55,37 @@ class Orb {
   // Legacy direct callers omit motionDtSec and retain their supplied delta.
   // The application frame loop supplies independently bounded emission/motion.
   step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null, motionDtSec = dtSec) {
-    this.angleRad += this.chirality * this.motion.angularSpeedRadPerSec * motionDtSec;
-    this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
+    const angleDelta = this.chirality * this.motion.angularSpeedRadPerSec * motionDtSec;
+    if (angleDelta !== 0) {
+      this.angleRad += angleDelta;
+      this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
+    }
 
-    const minDim = Math.min(state.widthPx, state.heightPx);
-    const minR = minDim * this.response.minRadiusFrac;
-    const maxR = minDim * this.response.maxRadiusFrac;
+    const world = state.world;
+    const minR = worldUnitsFromFraction(world, this.response.minRadiusFrac);
+    const maxR = worldUnitsFromFraction(world, this.response.maxRadiusFrac);
     const safeMin = Math.min(minR, maxR);
     const safeMax = Math.max(minR, maxR);
 
     const energy01 = Number.isFinite(energyOverride01)
       ? clamp(energyOverride01, 0, 1)
       : (band ? band.energy01 : 0);
-    this.baseRadiusPx = safeMin + (safeMax - safeMin) * energy01;
+    this.baseRadiusUnits = safeMin + (safeMax - safeMin) * energy01;
 
     const wf = band ? band.waveform : null;
     if (wf && wf.length > 0) {
       const phase01 = this.angleRad / TAU;
       const idx = Math.floor(phase01 * (wf.length - 1));
       const sample = wf[idx];
-      this.radialDispPx = this.baseRadiusPx * this.response.waveformRadialDisplaceFrac * sample;
+      this.radialDispUnits = this.baseRadiusUnits * this.response.waveformRadialDisplaceFrac * sample;
     } else {
-      this.radialDispPx = 0;
+      this.radialDispUnits = 0;
     }
 
-    const radius = this.baseRadiusPx + this.radialDispPx;
+    const radius = this.baseRadiusUnits + this.radialDispUnits;
 
-    this.xSim = radius * Math.cos(this.angleRad) + this.centerXFrac * minDim;
-    this.ySim = radius * Math.sin(this.angleRad) + this.centerYFrac * minDim;
+    this.xSim = radius * Math.cos(this.angleRad) + worldUnitsFromFraction(world, this.centerXFrac);
+    this.ySim = radius * Math.sin(this.angleRad) + worldUnitsFromFraction(world, this.centerYFrac);
 
     const rgbStart = ColorPolicy.pickParticleColorRgb01(
       this.angleRad,
