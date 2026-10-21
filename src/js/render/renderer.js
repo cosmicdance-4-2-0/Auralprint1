@@ -11,6 +11,7 @@ import { ColorPolicy } from "./color-policy.js";
    ========================================================================== */
 const Renderer = (() => {
   function clearFrame() {
+    if (!Spaces.centerPx()) return;
     const ctx = state.ctx;
     const s = runtime.settings;
     ctx.fillStyle = s.visuals.backgroundColor;
@@ -39,6 +40,7 @@ const Renderer = (() => {
     let first = true;
     for (const particle of particles.suffix(neededPts)) {
       const point = Spaces.simToScreen(particle.xSim, particle.ySim);
+      if (!point) { first = true; continue; }
       if (first) { ctx.moveTo(point.x, point.y); first = false; }
       else ctx.lineTo(point.x, point.y);
     }
@@ -77,6 +79,7 @@ const Renderer = (() => {
       }
 
       const ps = Spaces.simToScreen(p.xSim, p.ySim);
+      if (!ps) continue;
       ctx.fillStyle = rgb01ToCss(color, 1);
       ctx.beginPath();
       ctx.arc(ps.x, ps.y, size, 0, TAU);
@@ -140,6 +143,7 @@ const Renderer = (() => {
 
         const a = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
         const b = Spaces.simToScreen(pts[j].xSim, pts[j].ySim);
+        if (!a || !b) continue;
 
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
@@ -155,6 +159,7 @@ const Renderer = (() => {
       const c = ColorPolicy.bandRgb01(i);
       ctx.fillStyle = rgb01ToCss(c, overlay.alpha);
       const p = Spaces.simToScreen(pts[i].xSim, pts[i].ySim);
+      if (!p) continue;
       ctx.beginPath();
       ctx.arc(p.x, p.y, rPx, 0, TAU);
       ctx.fill();

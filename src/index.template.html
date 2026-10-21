@@ -244,7 +244,7 @@
     <div class="panel-header"><div><h2 class="panel-title">Scene Settings</h2><p class="panel-description">Configure shared appearance, scene-wide defaults, and presets.</p></div><button id="btnHideScene" aria-label="Hide Scene Settings panel">Hide</button></div>
     <div class="muted panel-status" id="sceneStatus">Shared scene settings and preset controls.</div>
     <details id="worldSection" class="settings-section" open><summary>Simulation World</summary><div class="section-body">
-      <p id="worldDimensionsHelp" class="section-description">World dimensions set the reference size for Orb and Ring proportions. Points and particles can exist beyond these dimensions. The view fits the shorter world dimension to the shorter viewport dimension.</p>
+      <p id="worldDimensionsHelp" class="section-description">World dimensions set the reference size for Orb and Ring proportions. Points and particles can exist beyond these dimensions. The default view fits the shorter world dimension to the shorter viewport dimension. Changing world dimensions during a session changes Orb and Ring geometry. Existing particles remain at their original world positions, so trails may appear discontinuous.</p>
       <div class="row">
         <label for="numWorldWidth">World width (world units)</label>
         <input id="numWorldWidth" type="number" inputmode="decimal" aria-describedby="worldDimensionsHelp worldWidthError" />

@@ -78,8 +78,12 @@ Build 116A is explicitly authorized to use schema **11** for Scene-owned
 CONFIG → preferences → resolved settings → frozen `state.world` owns dimensions.
 Supported schemas 2–10 migrate legacy pixel spacing at the approved fixed one
 world unit per reference CSS pixel; schema 10 itself remains immutable.
-Camera zoom semantics for CSS-sized marks/widths and camera persistence remain
-undecided. See the [116A contract](docs/development/build-116.md).
+Build 116B keeps camera state application/runtime-only in `state.camera`, with
+CONFIG-owned defaults outside Scene defaults and validated runtime setters.
+Camera is absent from preferences, schema 11 and URLs. Particle/Trace/Ring mark
+sizes remain CSS-screen-sized under zoom, provisionally pending 116C artistic
+review. Neither this interim ownership nor sizing decides future persistence
+policy. See the [Build 116 contract](docs/development/build-116.md).
 
 ### 2.1 Schema Discipline
 

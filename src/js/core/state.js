@@ -1,4 +1,5 @@
 import { CONFIG } from "./config.js";
+import { createCameraState } from "./camera-state.js";
 
 /* =============================================================================
    App State
@@ -75,6 +76,7 @@ function createRecordingState() {
 const initialBandEnergies = { L: [], R: [], C: [] };
 
 const state = {
+  camera: createCameraState(), // Application runtime only; never Scene settings.
   world: null, // Initialized from resolved Scene settings, never the viewport.
   canvas: null,
   ctx: null,
@@ -128,4 +130,21 @@ const state = {
   }
 };
 
-export { createSourceState, createRecordingState, state };
+// Each operation atomically replaces the one authoritative immutable snapshot.
+// These view operations have no simulation, preset, or lifecycle side effects.
+function setCamera(patch) {
+  if (!patch || typeof patch !== "object" || Array.isArray(patch)
+    || Object.keys(patch).some(key => !Object.hasOwn(CONFIG.camera.defaults, key))) {
+    throw new RangeError("Camera updates must contain only camera state fields.");
+  }
+  const next = createCameraState({ ...state.camera, ...patch });
+  state.camera = next;
+  return next;
+}
+
+function resetCamera() {
+  state.camera = createCameraState();
+  return state.camera;
+}
+
+export { createSourceState, createRecordingState, state, setCamera, resetCamera };

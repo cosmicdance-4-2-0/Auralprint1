@@ -18,6 +18,8 @@ function defaultOrb(identity) {
    CONFIG — Canonical truth (never mutated)
    ========================================================================== */
 const CONFIG = deepFreeze({
+  // Application runtime only. Scene defaults below are preset-owned.
+  camera: { defaults: { x: 0, y: 0, zoom: 1, rotationRad: 0 } },
   bandNames: [
 // 0–31  Planetary Core – The Iron-Nickel Heart of the World (deepest sub-bass)
   "Eternal Core",
@@ -512,6 +514,8 @@ bands: {
   },
 
   limits: {
+    // Provisional numerical support range; interaction/artistic policy is 116C.
+    camera: { zoom: { min: 0.01, max: 100 } },
     world: {
       widthUnits: { min: 1, max: 1_000_000, step: "any" },
       heightUnits: { min: 1, max: 1_000_000, step: "any" },
