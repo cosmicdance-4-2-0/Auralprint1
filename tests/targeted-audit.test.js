@@ -733,6 +733,9 @@ function createStubUiElement(tagName = "div") {
     getAttribute(name) {
       return attributes.has(name) ? attributes.get(name) : null;
     },
+    removeAttribute(name) {
+      attributes.delete(name);
+    },
     classList: {
       add(...names) {
         for (const name of names) classes.add(name);
@@ -782,6 +785,7 @@ function createUiWireHarness() {
   const previousCanvas = state.canvas;
   const elements = new Map();
   const windowListeners = new Map();
+  const documentListeners = new Map();
 
   function getElement(id) {
     if (!elements.has(id)) {
@@ -805,9 +809,21 @@ function createUiWireHarness() {
       entries.push(handler);
       windowListeners.set(type, entries);
     },
+    removeEventListener(type, handler) {
+      windowListeners.set(type, (windowListeners.get(type) || []).filter(entry => entry !== handler));
+    },
   };
   globalThis.document = {
     activeElement: null,
+    hidden: false,
+    addEventListener(type, handler) {
+      const entries = documentListeners.get(type) || [];
+      entries.push(handler);
+      documentListeners.set(type, entries);
+    },
+    removeEventListener(type, handler) {
+      documentListeners.set(type, (documentListeners.get(type) || []).filter(entry => entry !== handler));
+    },
     getElementById(id) {
       return getElement(id);
     },
