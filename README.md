@@ -92,7 +92,7 @@ Release 4, accepted and shipped. AnalysisFrame separates analysis from visualize
 
 ## Build 116 — Simulation World, Camera & Projection (in progress)
 
-116A integrates independent Orb/Ring world geometry, configurable Scene dimensions and schema-11 migration from supported schemas 2–10. World dimensions define reference geometry, **not** clipping/collision bounds; placement spacing uses world units independently of viewport/DPR. Pan, zoom, rotation and camera persistence remain later work; [116 development contract](docs/development/build-116.md) and [acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+116A integrates independent Orb/Ring world geometry, configurable Scene dimensions and schema-11 migration from supported schemas 2–10. World dimensions define reference geometry, **not** clipping/collision bounds; placement spacing uses world units independently of viewport/DPR. 116B adds runtime-only camera translation, rotation, zoom, reset and forward/inverse projection. CSS-sized marks retain their size under zoom provisionally. Interactive controls and future persistence decisions await later review; [116 development contract](docs/development/build-116.md) and [acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 ## Build 117 — v0.1.17: UX + Performance Hardening
 
