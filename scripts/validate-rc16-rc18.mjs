@@ -40,19 +40,19 @@ export async function validateRc16Rc18() {
   const rows = [], pauses = [];
   try {
     for (const chanId of ["L", "R", "C"]) {
-      const full = load(chanId, []).baseRadiusPx;
+      const full = load(chanId, []).baseRadiusUnits;
       const malformed = load(chanId, [null, false, "", [], true]);
       assert(malformed.bandIds.length === 0, "malformed targets became bands");
-      close(malformed.baseRadiusPx, full, "all-invalid vs empty control");
+      close(malformed.baseRadiusUnits, full, "all-invalid vs empty control");
       const target = load(chanId, [7, null, 3, false, 7, 0, true, 3]);
       assert(JSON.stringify(target.bandIds) === "[7,3,0]", "stable selection");
       const [energy, zero, three, seven] = distributions[chanId];
-      const minDim = Math.min(state.widthPx, state.heightPx);
+      const minDim = state.world.referenceSpanUnits;
       close(full, minDim * (.01 + .79 * energy), "full selected-channel radius");
-      close(target.baseRadiusPx, minDim * (.01 + .79 * (zero + three + seven) / 3), "target selected-channel radius");
+      close(target.baseRadiusUnits, minDim * (.01 + .79 * (zero + three + seven) / 3), "target selected-channel radius");
       const band0 = load(chanId, [0]);
-      close(band0.baseRadiusPx, minDim * (.01 + .79 * zero), "valid Band 0 radius");
-      rows.push({ chanId, fullRadiusPx: full, selectedRadiusPx: target.baseRadiusPx, band0RadiusPx: band0.baseRadiusPx });
+      close(band0.baseRadiusUnits, minDim * (.01 + .79 * zero), "valid Band 0 radius");
+      rows.push({ chanId, fullRadiusUnits: full, selectedRadiusUnits: target.baseRadiusUnits, band0RadiusUnits: band0.baseRadiusUnits });
     }
     // Actual generated editor commits parsed numbers and actual picker indices.
     const orb = load("R", []);
