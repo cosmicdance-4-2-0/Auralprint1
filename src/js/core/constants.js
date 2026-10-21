@@ -2,8 +2,8 @@
    Auralprint
    0.1.15a
 
-   Build 116A — Independent simulation world
-   Scene world reference and world-unit placement; preset schema v11.
+   Build 116B — Runtime camera and forward/inverse projection
+   Independent world geometry; runtime-only camera; preset schema v11.
    ========================================================================== */
 
 const TAU = Math.PI * 2;
