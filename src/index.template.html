@@ -14,6 +14,8 @@
 <body>
   <canvas id="c" tabindex="0" aria-label="Audio analysis canvas. H hides panels; Space pauses motion; R resets visuals."></canvas>
 
+  <div id="cameraFitStatus" class="camera-fit-feedback" role="status" aria-live="polite" hidden></div>
+
   <!-- First-run hint overlay: hidden once audio is loaded -->
   <div id="loadHint">
     <div class="hint-title">Auralprint</div>
@@ -258,7 +260,8 @@
       <div class="row"><label for="numCameraRotation">Camera rotation (degrees)</label><input id="numCameraRotation" type="number" inputmode="decimal" step="any" aria-describedby="cameraHelp cameraRotationError" /><div id="valCameraRotation" class="val"></div></div>
       <p id="cameraRotationError" class="picker-error" role="alert"></p>
       <div class="camera-actions" role="group" aria-label="Camera rotation"><button id="btnCameraRotateCW" type="button">Rotate clockwise</button><button id="btnCameraRotateCCW" type="button">Rotate counterclockwise</button></div>
-      <div class="camera-actions"><button id="btnResetCamera" type="button">Reset Camera</button></div>
+      <div class="camera-actions"><button id="btnResetCamera" type="button">Reset Camera</button><button id="btnFitCamera" type="button" aria-describedby="cameraFitHelp">Fit View</button></div>
+      <p id="cameraFitHelp" class="section-description">Fit the world, retained trails and potential Orb/Ring extent once, preserving rotation. Zoom limits may prevent a complete fit.</p>
       <div class="row"><label for="numCameraPanSpeed">Pan speed (CSS pixels/second)</label><input id="numCameraPanSpeed" type="number" inputmode="decimal" aria-describedby="cameraSpeedHelp cameraPanSpeedError" /><div id="valCameraPanSpeed" class="val"></div></div>
       <p id="cameraPanSpeedError" class="picker-error" role="alert"></p>
       <div class="row"><label for="numCameraRotationSpeed">Rotation speed (degrees/second)</label><input id="numCameraRotationSpeed" type="number" inputmode="decimal" aria-describedby="cameraSpeedHelp cameraRotationSpeedError" /><div id="valCameraRotationSpeed" class="val"></div></div>
@@ -266,7 +269,7 @@
       <p id="cameraSpeedHelp" class="section-description">Speeds apply to held movement keys. View and speed settings last for this session and are excluded from presets.</p>
       <details class="settings-section" open><summary>Control reference</summary><div class="section-body camera-reference">
         <p><strong>Camera mode + canvas focus:</strong> W/S move forward/back; A/D strafe; Q/E rotate counterclockwise/clockwise. Hold Shift to boost movement and rotation. Combine keys to move and turn.</p>
-        <p>Drag to grab the world; wheel to zoom at the pointer. Arrows pan in steps; +/− zoom; [/] rotate clockwise/counterclockwise; Home resets; Escape exits camera mode.</p>
+        <p>Drag to grab the world; wheel to zoom at the pointer. Arrows pan in steps; +/− zoom; [/] rotate clockwise/counterclockwise; C or Home resets; F fits the world and composition; Escape exits camera mode.</p>
         <p>H hides/restores panels; Space pauses visual motion; R resets visuals; N/P change tracks. Panel buttons also work with camera mode off.</p>
       </div></details>
     </div>

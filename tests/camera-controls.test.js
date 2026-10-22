@@ -18,12 +18,12 @@ function element() {
   };
 }
 function harness() {
-  const ids = ["cameraSection", "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight", "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut", "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFocusCameraCanvas"];
+  const ids = ["cameraSection", "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight", "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut", "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFitCamera", "btnFocusCameraCanvas"];
   for (const name of ["X", "Y", "Zoom", "Rotation", "PanSpeed", "RotationSpeed"]) ids.push(`numCamera${name}`, `valCamera${name}`, `camera${name}Error`);
   const ui = Object.fromEntries(ids.map(id => [id, element()]));
   let enabled = false, cancellations = 0;
   let speeds = Object.freeze({panSpeedCssPxPerSec: 320, rotationSpeedDegPerSec: 60});
-  const interaction = { getSpeeds: () => speeds, setSpeeds(patch) { speeds = Object.freeze({...speeds, ...patch}); }, isEnabled: () => enabled, setEnabled(value) { enabled = value; }, cancelDrag() { cancellations++; } };
+  const interaction = { getSpeeds: () => speeds, setSpeeds(patch) { speeds = Object.freeze({...speeds, ...patch}); }, isEnabled: () => enabled, setEnabled(value) { enabled = value; }, cancelDrag() { cancellations++; }, cancelInput() { cancellations++; } };
   const controls = createCameraControlsUi({ ui, interaction });
   return { ui, controls, interaction, cancellations: () => cancellations };
 }

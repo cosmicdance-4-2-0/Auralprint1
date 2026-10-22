@@ -17,7 +17,7 @@ const SPEED_FIELDS = [
 const sync = (node, key, value) => { if (node[key] !== value) node[key] = value; };
 const displayValue = (camera, field) => field.key === "rotationRad" ? camera.rotationRad * RAD_TO_DEG : camera[field.key];
 
-function createCameraControlsUi({ ui, interaction } = {}) {
+function createCameraControlsUi({ ui, interaction, fitView = () => {} } = {}) {
   let initializedOn = null, lastCamera = null, lastEnabled = null, lastSpeeds = null;
 
   function refresh(force = false, committedInput = null) {
@@ -143,8 +143,8 @@ function createCameraControlsUi({ ui, interaction } = {}) {
       });
     }
     ui.btnFocusCameraCanvas.addEventListener("click", () => state.canvas?.focus({ preventScroll: true }));
-    const bindAction = (id, action) => ui[id].addEventListener("click", () => {
-      interaction.cancelDrag();
+    const bindAction = (id, action, stopMovement = false) => ui[id].addEventListener("click", () => {
+      if (stopMovement) interaction.cancelInput(); else interaction.cancelDrag();
       action();
       refresh(true);
     });
@@ -156,7 +156,8 @@ function createCameraControlsUi({ ui, interaction } = {}) {
     bindAction("btnCameraZoomOut", () => zoomCamera(1 / CONFIG.camera.interaction.zoomFactor));
     bindAction("btnCameraRotateCW", () => rotateCamera(-1));
     bindAction("btnCameraRotateCCW", () => rotateCamera(1));
-    bindAction("btnResetCamera", resetCamera);
+    bindAction("btnResetCamera", resetCamera, true);
+    bindAction("btnFitCamera", fitView, true);
     ui.chkCameraInteraction.addEventListener("change", () => {
       interaction.setEnabled(ui.chkCameraInteraction.checked);
       refresh();

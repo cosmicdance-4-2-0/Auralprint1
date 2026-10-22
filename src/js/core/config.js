@@ -30,6 +30,7 @@ const CONFIG = deepFreeze({
       wheelZoomPerPixel: 0.0015,
       wheelLinePixels: 16,
     },
+    fit: { paddingCssPx: 16, feedbackDurationMs: 6000 },
     keyboard: {
       panSpeedCssPxPerSec: 320,
       rotationSpeedDegPerSec: 60,

@@ -23,6 +23,7 @@ import { createSpectralRingEditorUi } from "./spectral-ring-editor.js";
 import { createScenePanelUi } from "./scene-panel.js";
 import { createCameraControlsUi } from "./camera-controls.js";
 import { createCameraInteraction } from "./camera-interaction.js";
+import { fitCamera } from "./camera-actions.js";
 
 /* =============================================================================
    UI
@@ -351,8 +352,30 @@ const UI = (() => {
       refreshAllUiText(latestAnalysisFrame); // Settle presentation before restoring focus.
     },
   });
-  const cameraInteraction = createCameraInteraction();
-  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction });
+  let cameraFitFeedbackTimer = null;
+  function fitView() {
+    const result = fitCamera(latestAnalysisFrame);
+    const message = result.reason === "minimum-zoom"
+      ? `Fit limited: minimum zoom ${CONFIG.limits.camera.zoom.min} cannot contain all content.`
+      : result.reason === "screen-margin"
+        ? "Cannot fit: screen-sized marks and margins exceed the viewport. Enlarge the viewport or reduce mark sizes."
+        : !result.applied
+          ? "Cannot fit: viewport or drawable geometry is invalid."
+          : result.reason === "maximum-zoom"
+            ? `View fitted at maximum zoom ${CONFIG.limits.camera.zoom.max}.`
+            : "View fitted to world and composition.";
+    clearTimeout(cameraFitFeedbackTimer);
+    ui.cameraFitStatus.textContent = message;
+    ui.cameraFitStatus.hidden = false;
+    // Operational feedback stays visible even with the Camera panel hidden.
+    // This timer is request-scoped; the frame path does no status DOM work.
+    cameraFitFeedbackTimer = setTimeout(() => {
+      ui.cameraFitStatus.hidden = true;
+    }, CONFIG.camera.fit.feedbackDurationMs);
+    return result;
+  }
+  const cameraInteraction = createCameraInteraction({ fitView });
+  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction, fitView });
   const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,

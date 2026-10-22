@@ -2,6 +2,9 @@ import { CONFIG } from "../core/config.js";
 import { RAD_TO_DEG } from "../core/constants.js";
 import { state, setCamera } from "../core/state.js";
 import { viewportToWorld } from "../core/camera-projection.js";
+import { computeCameraFit } from "../core/camera-fit.js";
+import { runtime } from "../core/preferences.js";
+import { collectCameraFitContent } from "../render/camera-fit-content.js";
 
 // Shared by native controls and canvas shortcuts. Every successful operation
 // replaces the authoritative camera through its validated runtime setter.
@@ -67,4 +70,23 @@ function zoomCamera(factor, backingPoint = null) {
   return commitCamera({ zoom, x: camera.x + (before.x - after.x), y: camera.y + (before.y - after.y) });
 }
 
-export { panCamera, rotateCamera, zoomCamera, moveCameraFrame };
+// An explicit one-shot query. Neither drawing nor the animation callback calls
+// this collector: retained history is traversed only when the operator asks.
+function fitCamera(analysisFrame = null) {
+  const result = computeCameraFit({
+    primitives: collectCameraFitContent({ world: state.world, orbs: state.orbs,
+      overlay: runtime.settings.bands.overlay, analysisFrame }),
+    viewport: { widthPx: state.widthPx, heightPx: state.heightPx, dpr: state.dpr },
+    world: state.world, rotationRad: state.camera.rotationRad,
+    zoomLimits: CONFIG.limits.camera.zoom, paddingCssPx: CONFIG.camera.fit.paddingCssPx,
+  });
+  if (!result) return { applied: false, fits: false, reason: "invalid-geometry" };
+  // Screen-sized marks cannot be made smaller by changing camera zoom. Leave
+  // the view intact and explain this separate no-fit condition to the operator.
+  if (result.reason === "screen-margin") return { ...result, applied: false };
+  const applied = commitCamera(result.camera);
+  return { ...result, applied, fits: applied && result.fits,
+    reason: applied ? result.reason : "invalid-geometry" };
+}
+
+export { panCamera, rotateCamera, zoomCamera, moveCameraFrame, fitCamera };

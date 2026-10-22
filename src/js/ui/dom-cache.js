@@ -32,7 +32,7 @@ function primeDomCache() {
       "cameraXError", "cameraYError", "cameraZoomError", "cameraRotationError",
       "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight",
       "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut",
-      "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera"]) {
+      "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFitCamera", "cameraFitStatus"]) {
       ui[id] = document.getElementById(id);
     }
     ui.visualizersPanel = document.getElementById("visualizersPanel");
