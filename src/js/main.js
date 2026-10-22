@@ -43,6 +43,7 @@ function onAnimationFrame(tsMs) {
     ? simulationDeltaSec(elapsedSec, runtime.settings.timing?.maxDeltaTimeSec) : 0;
   const nowSec = performance.now() / 1000;
 
+  UI.updateCamera(motionDtSec);
   updateAnalysisFrame(analysisFrame, AudioEngine.sample(), state.bands);
 
   visualizerFrameContext.dtSec = dtSec;

@@ -1998,6 +1998,7 @@ const UI = (() => {
 
   } // end wireControls
 
+    updateCamera: cameraInteraction.tick,
   return {
     setCssVarsFromConfig,
     wireControls,

@@ -25,7 +25,7 @@ for (const phaseMode of ["free", "orb"]) test(`RC-18: production Space/callback 
     createAnalysisFrame, updateAnalysisFrame(frame, sample, bands) { updates++; return updateAnalysisFrame(frame, sample, bands); },
     AudioEngine: { sample() { samples++; return { ready: true, bands: { C: { energy01: samples / 100, timeDomain: Float32Array.of(samples) } } }; } },
     VisualizerRuntime: { update(frame) { lastFrame = frame; v.update(frame); }, render() {} },
-    Renderer: {}, UI: { refreshAllUiText() {} }, Scrubber: { draw() {} },
+    Renderer: {}, UI: { updateCamera() {}, refreshAllUiText() {} }, Scrubber: { draw() {} },
     window: { addEventListener(_event, handler) { shortcut = handler; } }, hasFocusedInteractiveTarget: () => false,
   });
   // Execute the real callback and real shortcut body; boot/DOM seams are stubbed.

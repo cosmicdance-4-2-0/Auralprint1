@@ -30,6 +30,12 @@ const CONFIG = deepFreeze({
       wheelZoomPerPixel: 0.0015,
       wheelLinePixels: 16,
     },
+    keyboard: {
+      panSpeedCssPxPerSec: 320,
+      rotationSpeedDegPerSec: 60,
+      shiftMultiplier: 3,
+      maxFrameDeltaSec: 0.1,
+    },
   },
   bandNames: [
 // 0–31  Planetary Core – The Iron-Nickel Heart of the World (deepest sub-bass)
@@ -526,7 +532,11 @@ bands: {
 
   limits: {
     // Provisional numerical support range; interaction/artistic policy is 116C.
-    camera: { zoom: { min: 0.01, max: 100 } },
+    camera: {
+      zoom: { min: 0.01, max: 100 },
+      panSpeedCssPxPerSec: { min: 0, max: 3200, step: 20 },
+      rotationSpeedDegPerSec: { min: 0, max: 360, step: 5 },
+    },
     world: {
       widthUnits: { min: 1, max: 1_000_000, step: "any" },
       heightUnits: { min: 1, max: 1_000_000, step: "any" },

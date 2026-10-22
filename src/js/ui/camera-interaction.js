@@ -1,7 +1,10 @@
 import { CONFIG } from "../core/config.js";
+import { RAD_TO_DEG } from "../core/constants.js";
 import { state, setCamera, resetCamera } from "../core/state.js";
 import { Spaces } from "../core/spaces.js";
-import { panCamera, zoomCamera, rotateCamera } from "./camera-actions.js";
+import { panCamera, zoomCamera, rotateCamera, moveCameraFrame } from "./camera-actions.js";
+
+const HELD_KEYS = { w: 1, s: 2, a: 4, d: 8, q: 16, e: 32 };
 
 // Browser client coordinates and backing pixels differ under CSS scaling/DPR.
 // Captured pointers can be outside the rectangle; do not clamp their positions.
@@ -19,7 +22,50 @@ function createCameraInteraction() {
   let canvas = null;
   let enabled = CONFIG.camera.interaction.enabledByDefault;
   let drag = null;
+  let heldKeys = 0, shiftHeld = false;
+  let cssWidth = 0, cssHeight = 0, sizeObserver = null;
+  let speeds = Object.freeze({
+    panSpeedCssPxPerSec: CONFIG.camera.keyboard.panSpeedCssPxPerSec,
+    rotationSpeedDegPerSec: CONFIG.camera.keyboard.rotationSpeedDegPerSec,
+  });
   const cleanups = [];
+
+  function clearHeldKeys() { heldKeys = 0; shiftHeld = false; }
+  function cancelInput() { clearHeldKeys(); cancelDrag(); }
+  function cacheCanvasSize() {
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    cssWidth = rect.width; cssHeight = rect.height;
+  }
+
+  function setSpeeds(patch) {
+    if (!patch || typeof patch !== "object" || Array.isArray(patch)) throw new RangeError("Camera speeds require a valid patch.");
+    for (const key of Object.keys(patch)) {
+      const limit = CONFIG.limits.camera[key];
+      if (!Object.hasOwn(speeds, key) || !Number.isFinite(patch[key]) || patch[key] < limit.min || patch[key] > limit.max) {
+        throw new RangeError("Camera speeds must be finite and within CONFIG limits.");
+      }
+    }
+    if (Object.keys(patch).every(key => speeds[key] === patch[key])) return speeds;
+    speeds = Object.freeze({ ...speeds, ...patch });
+    return speeds;
+  }
+
+  function tick(elapsedSec) {
+    if (!enabled || !canvas || document.hidden || document.activeElement !== canvas
+      || !Number.isFinite(elapsedSec) || elapsedSec <= 0 || elapsedSec > CONFIG.camera.keyboard.maxFrameDeltaSec) {
+      clearHeldKeys();
+      return false;
+    }
+    if (!heldKeys) return false;
+    let horizontal = Number(!!(heldKeys & HELD_KEYS.d)) - Number(!!(heldKeys & HELD_KEYS.a));
+    let vertical = Number(!!(heldKeys & HELD_KEYS.w)) - Number(!!(heldKeys & HELD_KEYS.s));
+    if (horizontal && vertical) { horizontal *= Math.SQRT1_2; vertical *= Math.SQRT1_2; }
+    const rotation = Number(!!(heldKeys & HELD_KEYS.q)) - Number(!!(heldKeys & HELD_KEYS.e));
+    const elapsed = elapsedSec * (shiftHeld ? CONFIG.camera.keyboard.shiftMultiplier : 1);
+    return moveCameraFrame(horizontal, vertical, rotation * speeds.rotationSpeedDegPerSec / RAD_TO_DEG * elapsed,
+      speeds.panSpeedCssPxPerSec * elapsed, cssWidth, cssHeight);
+  }
 
   function cancelDrag() {
     const previous = drag;
@@ -34,12 +80,12 @@ function createCameraInteraction() {
     if (!canvas) return;
     canvas.setAttribute("data-camera-interaction", String(enabled));
     canvas.setAttribute("aria-description", enabled
-      ? "Camera mode on. Drag to pan; wheel to zoom at the pointer. Arrow keys pan; plus and minus zoom; brackets rotate; Home resets camera; Escape exits camera mode."
-      : "Camera mode off. Enable direct manipulation in Settings, Viewport Camera.");
+      ? "Camera mode on. Hold W A S D to move and Q E to turn; Shift boosts speed. Drag to pan; wheel to zoom at the pointer. Arrow keys pan; plus and minus zoom; brackets rotate; Home resets camera; Escape exits camera mode."
+      : "Camera mode off. Enable direct manipulation in the Camera workspace panel.");
   }
 
   function setEnabled(value) {
-    cancelDrag();
+    cancelInput();
     enabled = value === true;
     syncMode();
   }
@@ -111,8 +157,28 @@ function createCameraInteraction() {
   }
 
   function keyDown(event) {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.isComposing) {
+      clearHeldKeys();
+      return;
+    }
     if (!enabled || event.target !== canvas || event.defaultPrevented || event.isComposing
-      || event.altKey || event.ctrlKey || event.metaKey) return;
+      || document.hidden) return;
+    const key = event.key?.toLowerCase();
+    const heldKey = HELD_KEYS[key];
+    if (heldKey || key === "shift") {
+      if (document.activeElement !== canvas) return;
+      event.preventDefault();
+      event.stopPropagation();
+      // Repeats cannot reacquire keys cleared after blur or a discontinuity.
+      if (event.repeat) return;
+      if (heldKey) {
+        heldKeys |= heldKey;
+        shiftHeld = event.shiftKey === true;
+        cacheCanvasSize();
+        cancelDrag();
+      } else shiftHeld = true;
+      return;
+    }
     let action;
     switch (event.key) {
       case "ArrowLeft": action = () => panCamera(-1, 0); break;
@@ -123,7 +189,7 @@ function createCameraInteraction() {
       case "-": case "_": action = () => zoomCamera(1 / CONFIG.camera.interaction.zoomFactor); break;
       case "[": action = () => rotateCamera(-1); break;
       case "]": action = () => rotateCamera(1); break;
-      case "Home": action = resetCamera; break;
+      case "Home": action = () => { clearHeldKeys(); resetCamera(); }; break;
       case "Escape": action = () => setEnabled(false); break;
       default: return; // H/Space/R/N/P keep their existing application ownership.
     }
@@ -133,13 +199,22 @@ function createCameraInteraction() {
     action();
   }
 
+  function keyUp(event) {
+    const key = event.key?.toLowerCase();
+    const heldKey = HELD_KEYS[key];
+    if (heldKey) heldKeys &= ~heldKey;
+    if (key === "shift") shiftHeld = event.shiftKey === true;
+  }
+
   function listen(target, name, handler, options) {
     target.addEventListener(name, handler, options);
     cleanups.push(() => target.removeEventListener(name, handler, options));
   }
 
   function dispose() {
-    cancelDrag();
+    cancelInput();
+    sizeObserver?.disconnect();
+    sizeObserver = null;
     for (const cleanup of cleanups.splice(0)) cleanup();
     if (canvas) {
       canvas.removeAttribute("data-camera-interaction");
@@ -159,16 +234,23 @@ function createCameraInteraction() {
     listen(canvas, "pointerup", pointerUp);
     listen(canvas, "pointercancel", pointerCancel);
     listen(canvas, "lostpointercapture", pointerCancel);
-    listen(canvas, "blur", cancelDrag);
+    listen(canvas, "blur", cancelInput);
     listen(canvas, "wheel", wheel, { passive: false });
     listen(canvas, "keydown", keyDown);
-    listen(window, "blur", cancelDrag);
-    listen(document, "visibilitychange", () => { if (document.hidden) cancelDrag(); });
+    listen(window, "keyup", keyUp);
+    listen(window, "blur", cancelInput);
+    listen(window, "resize", cacheCanvasSize);
+    listen(document, "visibilitychange", () => { if (document.hidden) cancelInput(); });
+    if (typeof ResizeObserver === "function") {
+      sizeObserver = new ResizeObserver(cacheCanvasSize);
+      sizeObserver.observe(canvas);
+    }
     syncMode();
     return true;
   }
 
-  return { init, dispose, setEnabled, isEnabled: () => enabled, cancelDrag };
+  return { init, dispose, setEnabled, isEnabled: () => enabled, cancelDrag,
+    tick, getSpeeds: () => speeds, setSpeeds };
 }
 
 export { createCameraInteraction, clientToCanvas };
