@@ -12,11 +12,6 @@
 .camera-reference { font-size: 12px; line-height: 1.6; color: #aabbbc; }
 .camera-reference p { margin: 0 0 8px; }
 #cameraPanel .section-description { margin-left: 0; }
-/* In short viewports, preserve a scrollable workspace above the launcher.
-   The front panel can overlap the audio dock; the Audio launcher restores it. */
-@media (max-height: 450px) {
-  #cameraPanel { bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-launcher-clearance)); }
-}
 .camera-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
 #cameraSection .val { white-space: normal; overflow-wrap: anywhere; }
 #cameraSection input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
