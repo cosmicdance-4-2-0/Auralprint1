@@ -34,7 +34,7 @@ The portable file is designed to run without adjacent assets. Direct local-file 
 
 ## Using Auralprint
 
-Load audio in **File**, or select **Mic** / **Stream** with browser permission. **Audio** controls sources and playback; **Queue** controls the playlist; **Analysis** owns spectral configuration; **Visualizers** owns Orbs and the Spectral Ring; **Settings** owns Scene appearance, particle resources, and presets; **Record** owns capture. **H** hides/restores panels outside text inputs; **Space** pauses visual motion/emission, not audio analysis.
+Load audio in **File**, or select **Mic** / **Stream** with browser permission. **Audio** controls sources and playback; **Queue** controls the playlist; **Analysis** owns spectral configuration; **Visualizers** owns Orbs and the Spectral Ring; **Settings** owns Scene appearance, particle resources, and presets; **Camera** owns runtime view and performance controls; **Record** owns capture. **H** hides/restores panels outside text inputs; **Space** pauses visual motion/emission, not audio analysis.
 
 **Waveforms:** Audio → Waveforms has optional 4/8/15-minute stereo-equivalent workload profiles, separate encoded-input and estimated-PCM admission limits, and manual generation. Playback does not require waveform preparation. These limits do not bound total browser memory.
 
@@ -92,7 +92,7 @@ Release 4, accepted and shipped. AnalysisFrame separates analysis from visualize
 
 ## Build 116 — Simulation World, Camera & Projection (in progress)
 
-116A integrates independent Orb/Ring world geometry, configurable Scene dimensions and schema-11 migration from supported schemas 2–10. World dimensions define reference geometry, **not** clipping/collision bounds; placement spacing uses world units independently of viewport/DPR. 116B adds runtime-only camera ownership and forward/inverse projection. 116C (`v0.1.16c`) exposes **Settings → Viewport Camera**: precise coordinates, zoom, rotation, view-direction pan, reset and optional canvas interaction. Camera mode starts off; enable it to drag and wheel-zoom around the pointer. Every action is also available through native keyboard controls. Camera values stay out of presets. CSS-sized marks remain provisional pending owner artistic evaluation; [116 development contract and preview instructions](docs/development/build-116.md#116c-interactive-camera) and [acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+116A integrates independent Orb/Ring world geometry, configurable Scene dimensions and schema-11 migration from supported schemas 2–10. World dimensions define reference geometry, **not** clipping/collision bounds; placement spacing uses world units independently of viewport/DPR. 116B adds runtime-only camera ownership and forward/inverse projection. 116C.A (`v0.1.16c.a.a`) gives **Camera** its own workspace launcher and operational panel. Enable camera mode, choose **Focus canvas**, and hold WASD/QE to move/turn; Shift boosts speed; C resets and F fits the world/composition while preserving rotation. Slow visible frames retain held input. Drag pans and wheel zooms around the pointer. Speeds and camera stay runtime-only, including while the panel is hidden. CSS-sized marks retain accepted behavior; [116 development contract and preview instructions](docs/development/build-116.md#116ca-camera-workspace-and-continuous-control) and [acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 ## Build 117 — v0.1.17: UX + Performance Hardening
 

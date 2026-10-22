@@ -2,6 +2,9 @@ import { CONFIG } from "../core/config.js";
 import { RAD_TO_DEG } from "../core/constants.js";
 import { state, setCamera } from "../core/state.js";
 import { viewportToWorld } from "../core/camera-projection.js";
+import { computeCameraFit } from "../core/camera-fit.js";
+import { runtime } from "../core/preferences.js";
+import { collectCameraFitContent } from "../render/camera-fit-content.js";
 
 // Shared by native controls and canvas shortcuts. Every successful operation
 // replaces the authoritative camera through its validated runtime setter.
@@ -28,6 +31,31 @@ function rotateCamera(direction) {
     + direction * CONFIG.camera.interaction.rotationStepDeg / RAD_TO_DEG });
 }
 
+// Integrate a constant view-relative velocity while the camera turns. The
+// midpoint orientation times sinc(half turn) is the exact circular-arc integral,
+// so splitting a held combination into different frame intervals gives the same
+// path. Projection fit and backing/CSS ratios convert screen speed, never world
+// geometry. Rectangle dimensions are cached by the interaction owner.
+function moveCameraFrame(horizontal, vertical, turnRad, distanceCssPx, cssWidth, cssHeight) {
+  const camera = state.camera;
+  let x = camera.x, y = camera.y;
+  if (distanceCssPx !== 0 && (horizontal !== 0 || vertical !== 0)) {
+    const scale = Math.min(state.widthPx, state.heightPx) / state.world?.referenceSpanUnits * camera.zoom;
+    if (!Number.isFinite(scale) || scale <= 0 || !Number.isFinite(cssWidth) || cssWidth <= 0
+      || !Number.isFinite(cssHeight) || cssHeight <= 0) return false;
+    const halfTurn = turnRad * 0.5;
+    const distance = distanceCssPx / scale * (halfTurn === 0 ? 1 : Math.sin(halfTurn) / halfTurn);
+    const angle = camera.rotationRad + halfTurn;
+    const cos = Math.cos(angle), sin = Math.sin(angle);
+    const viewX = horizontal * state.widthPx / cssWidth;
+    const viewY = vertical * state.heightPx / cssHeight;
+    x += distance * (viewX * cos - viewY * sin);
+    y += distance * (viewX * sin + viewY * cos);
+  }
+  if (x === camera.x && y === camera.y && turnRad === 0) return false;
+  return commitCamera({ x, y, rotationRad: camera.rotationRad + turnRad });
+}
+
 function zoomCamera(factor, backingPoint = null) {
   if (!Number.isFinite(factor) || factor <= 0) return false;
   const camera = state.camera, limits = CONFIG.limits.camera.zoom;
@@ -42,4 +70,23 @@ function zoomCamera(factor, backingPoint = null) {
   return commitCamera({ zoom, x: camera.x + (before.x - after.x), y: camera.y + (before.y - after.y) });
 }
 
-export { panCamera, rotateCamera, zoomCamera };
+// An explicit one-shot query. Neither drawing nor the animation callback calls
+// this collector: retained history is traversed only when the operator asks.
+function fitCamera(analysisFrame = null) {
+  const result = computeCameraFit({
+    primitives: collectCameraFitContent({ world: state.world, orbs: state.orbs,
+      overlay: runtime.settings.bands.overlay, analysisFrame }),
+    viewport: { widthPx: state.widthPx, heightPx: state.heightPx, dpr: state.dpr },
+    world: state.world, rotationRad: state.camera.rotationRad,
+    zoomLimits: CONFIG.limits.camera.zoom, paddingCssPx: CONFIG.camera.fit.paddingCssPx,
+  });
+  if (!result) return { applied: false, fits: false, reason: "invalid-geometry" };
+  // Screen-sized marks cannot be made smaller by changing camera zoom. Leave
+  // the view intact and explain this separate no-fit condition to the operator.
+  if (result.reason === "screen-margin") return { ...result, applied: false };
+  const applied = commitCamera(result.camera);
+  return { ...result, applied, fits: applied && result.fits,
+    reason: applied ? result.reason : "invalid-geometry" };
+}
+
+export { panCamera, rotateCamera, zoomCamera, moveCameraFrame, fitCamera };

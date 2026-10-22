@@ -1,0 +1,39 @@
+/* Runtime camera instrument; shares the workspace shell and projection owner. */
+#cameraPanel {
+  position: fixed;
+  top: calc(var(--ui-pad) + var(--ui-safe-t));
+  right: calc(var(--ui-pad) + var(--ui-safe-r));
+  bottom: calc(var(--ui-pad) + var(--ui-safe-b) + var(--ui-queue-clearance));
+  padding: var(--ui-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 30;
+}
+.camera-reference { font-size: 12px; line-height: 1.6; color: #aabbbc; }
+.camera-reference p { margin: 0 0 8px; }
+#cameraPanel .section-description { margin-left: 0; }
+.camera-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+#cameraSection .val { white-space: normal; overflow-wrap: anywhere; }
+#cameraSection input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+#cameraSection input::-webkit-inner-spin-button,
+#cameraSection input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+#c[data-camera-interaction="true"] { touch-action: none; cursor: grab; }
+#c[data-camera-dragging="true"] { cursor: grabbing; }
+
+/* Fit feedback remains visible when performance panels are hidden. */
+.camera-fit-feedback {
+  background: var(--ui-panel-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  box-sizing: border-box;
+  position: fixed;
+  top: calc(var(--ui-pad) + var(--ui-safe-t));
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 2 * var(--ui-pad) - var(--ui-safe-l) - var(--ui-safe-r));
+  padding: var(--ui-pad);
+  z-index: 40;
+  pointer-events: none;
+  font-size: 12px;
+  line-height: 1.5;
+}

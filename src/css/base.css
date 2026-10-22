@@ -2,6 +2,7 @@
 @import "./audio-panel.css";
 @import "./queue-panel.css";
 @import "./scene-panel.css";
+@import "./camera-panel.css";
 @import "./analysis-panel.css";
 @import "./visualizers-panel.css";
 @import "./record-panel.css";

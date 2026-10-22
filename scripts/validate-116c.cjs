@@ -65,9 +65,9 @@ async function captureInfo(page, compareViews = false) {
 }
 
 async function setField(page, id, value) { await page.locator('#' + id).fill(String(value)); await page.locator('#' + id).press('Tab'); }
-async function openSettings(page) { await page.locator('#btnOpenScene').click(); await page.locator('#cameraSection').evaluate(el => el.open = true); }
-async function hideSettings(page) { await page.locator('#btnHideScene').click(); }
-async function mode(page, enabled) { await openSettings(page); await page.locator('#chkCameraInteraction').setChecked(enabled); await hideSettings(page); }
+async function openCamera(page) { if (!await page.locator('#cameraPanel').isVisible()) await page.locator('#btnOpenCamera').click(); }
+async function hideCamera(page) { await page.locator('#btnHideCamera').click(); }
+async function mode(page, enabled) { await openCamera(page); await page.locator('#chkCameraInteraction').setChecked(enabled); await hideCamera(page); }
 async function readCamera(page) { return page.evaluate(() => test116c ? { ...test116c.state.camera } : null); }
 async function tick(page) { await page.evaluate(() => test116c.tick()); }
 async function sourceChecks(page, base, dpr) {
@@ -97,10 +97,10 @@ async function sourceChecks(page, base, dpr) {
   });
   assert.equal(await page.locator('#chkCameraInteraction').isChecked(), false);
   const before = await page.evaluate(() => test116c.snapshot());
-  await openSettings(page);
+  await openCamera(page);
   // Native tab sequence enters every control in the camera section.
-  await page.locator('#numCameraX').focus(); const tabIds = [];
-  for (let i = 0; i < 20; i++) { const id = await page.evaluate(() => document.activeElement.id); if (!id || !await page.locator('#cameraSection').evaluate((el, id) => el.contains(document.getElementById(id)), id)) break; tabIds.push(id); await page.keyboard.press('Tab'); }
+  await page.locator('#chkCameraInteraction').focus(); const tabIds = [];
+  for (let i = 0; i < 25; i++) { const id = await page.evaluate(() => document.activeElement.id); if (!id || !await page.locator('#cameraSection').evaluate((el, id) => el.contains(document.getElementById(id)), id)) break; tabIds.push(id); await page.keyboard.press('Tab'); }
   for (const id of ['numCameraX', 'numCameraY', 'numCameraZoom', 'numCameraRotation', 'chkCameraInteraction', 'btnResetCamera', 'btnCameraPanLeft', 'btnCameraPanRight', 'btnCameraPanUp', 'btnCameraPanDown', 'btnCameraZoomIn', 'btnCameraZoomOut', 'btnCameraRotateCW', 'btnCameraRotateCCW']) assert.ok(tabIds.includes(id), `tab did not reach ${id}`);
   await setField(page, 'numCameraX', 123.456789012345); await setField(page, 'numCameraY', -987.65432109876);
   await setField(page, 'numCameraZoom', 2.345678901234); await setField(page, 'numCameraRotation', 37.123456789);
@@ -119,7 +119,7 @@ async function sourceChecks(page, base, dpr) {
   await setField(page, 'numCameraRotation', 90); await page.locator('#btnCameraPanRight').click(); camera = await readCamera(page); close(camera.y, 50); close(camera.x, 0);
   await page.evaluate(() => { const t = test116c; t.setCamera({ x: 12.234567890123, y: -87.65432109, zoom: 1.4567890123, rotationRad: .71234567890123 }); t.tick(); });
   assert.equal(Number(await page.locator('#numCameraX').inputValue()), 12.234567890123);
-  await page.locator('#btnResetCamera').click(); await hideSettings(page);
+  await page.locator('#btnResetCamera').click(); await hideCamera(page);
   assert.deepEqual(await page.evaluate(() => test116c.snapshot()), before);
 
   // Outside mode, ordinary pointer and wheel events are untouched.
@@ -191,7 +191,7 @@ async function sourceChecks(page, base, dpr) {
     await page.evaluate(count => { const t = test116c; t.preferences.orbs = structuredClone(t.defaults.slice(0, count)); t.resolveSettings(); t.initOrbs(); t.tick(); }, count);
     for (const paused of [false, true]) {
       await page.evaluate(paused => test116c.state.time.simPaused = paused, paused);
-      await openSettings(page); const old = await readCamera(page); await page.locator('#btnCameraPanUp').click(); assert.notDeepEqual(await readCamera(page), old); await hideSettings(page);
+      await openCamera(page); const old = await readCamera(page); await page.locator('#btnCameraPanUp').click(); assert.notDeepEqual(await readCamera(page), old); await hideCamera(page);
     }
     populations.push(count);
   }
@@ -206,7 +206,7 @@ async function sourceChecks(page, base, dpr) {
     window.views116c = [sampleView116c()]; window.viewTimes116c = [.25]; window.captureStart116c = Date.now(); t.RecorderEngine.setIncludePlaybackAudio(false); const status = t.RecorderEngine.start(); if (status.phase !== 'recording') throw Error(JSON.stringify(status)); window.captureTimer116c = setInterval(t.tick, 30);
   });
   await page.waitForTimeout(650);
-  await openSettings(page); await setField(page, 'numCameraX', 1500); await setField(page, 'numCameraZoom', 1.7); await hideSettings(page); await tick(page);
+  await openCamera(page); await setField(page, 'numCameraX', 1500); await setField(page, 'numCameraZoom', 1.7); await hideCamera(page); await tick(page);
   await page.evaluate(() => { views116c.push(sampleView116c()); viewTimes116c.push((Date.now() - captureStart116c) / 1000 + .25); }); await page.waitForTimeout(650);
   await page.evaluate(() => { clearInterval(captureTimer116c); test116c.RecorderEngine.stop(); });
   await page.waitForFunction(() => test116c.state.recording.lastExportUrl);
@@ -220,9 +220,9 @@ async function sourceChecks(page, base, dpr) {
 
 async function distributionChecks(page, url, dpr) {
   await page.goto(url); await page.waitForFunction(() => document.querySelector('#c').width > 0);
-  await openSettings(page); await setField(page, 'numCameraX', 77.123456789); await setField(page, 'numCameraZoom', 2.123456789); await setField(page, 'numCameraRotation', 37.5);
+  await openCamera(page); await setField(page, 'numCameraX', 77.123456789); await setField(page, 'numCameraZoom', 2.123456789); await setField(page, 'numCameraRotation', 37.5);
   assert.equal(Number(await page.locator('#numCameraX').inputValue()), 77.123456789);
-  await page.locator('#chkCameraInteraction').check(); await hideSettings(page);
+  await page.locator('#chkCameraInteraction').check(); await hideCamera(page);
   // Native DataTransfer/File dispatch exercises the unchanged application drop path.
   const encoded = wav().toString('base64');
   for (const enabled of [true, false]) {
@@ -246,7 +246,7 @@ async function distributionChecks(page, url, dpr) {
   await page.evaluate(() => { native116c.media.currentTime = 2; });
   const mediaTime = await page.evaluate(() => native116c.media.currentTime);
   await page.locator('#c').focus(); await page.keyboard.press('ArrowRight'); close(await page.evaluate(() => native116c.media.currentTime), mediaTime);
-  await openSettings(page); assert.notEqual(Number(await page.locator('#numCameraX').inputValue()), 77.123456789); await hideSettings(page);
+  await openCamera(page); assert.notEqual(Number(await page.locator('#numCameraX').inputValue()), 77.123456789); await hideCamera(page);
   await mode(page, false); await page.locator('#c').focus(); await page.keyboard.press('ArrowRight'); close(await page.evaluate(() => native116c.media.currentTime), mediaTime + 5);
   const scrubber = await page.locator('#scrubberCanvas').boundingBox(); await page.mouse.click(scrubber.x + scrubber.width * .4, scrubber.y + scrubber.height / 2);
   assert.ok(Math.abs(await page.evaluate(() => native116c.media.currentTime) - 12) < 30 / scrubber.width + .01, 'scrubber seek within one client pixel');
@@ -258,7 +258,7 @@ async function distributionChecks(page, url, dpr) {
   await page.locator('#btnRecordStop').click(); await page.waitForFunction(() => !document.querySelector('#btnRecordDownloadLast').disabled);
   const capture = await captureInfo(page); assert.equal(capture.videoWidth, 1000 * dpr); assert.equal(capture.videoHeight, 800 * dpr);
   await page.locator('#btnHideRecord').click(); await page.locator('#btnStop').click();
-  await openSettings(page); const stoppedX = Number(await page.locator('#numCameraX').inputValue()); await page.locator('#btnCameraPanRight').click(); assert.notEqual(Number(await page.locator('#numCameraX').inputValue()), stoppedX); await page.locator('#btnResetCamera').click(); assert.equal(Number(await page.locator('#numCameraX').inputValue()), 0); assert.equal(Number(await page.locator('#numCameraZoom').inputValue()), 1);
+  await openCamera(page); const stoppedX = Number(await page.locator('#numCameraX').inputValue()); await page.locator('#btnCameraPanRight').click(); assert.notEqual(Number(await page.locator('#numCameraX').inputValue()), stoppedX); await page.locator('#btnResetCamera').click(); assert.equal(Number(await page.locator('#numCameraX').inputValue()), 0); assert.equal(Number(await page.locator('#numCameraZoom').inputValue()), 1);
   await page.evaluate(() => document.querySelector('#btnShare').click());
   const payload = await page.evaluate(() => JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/')))); assert.equal(payload.schema, 11); assert.doesNotMatch(JSON.stringify(payload), /camera|rotationRad/);
   return { dpr, realStereoPlayback: true, dropsWithModeEnabledAndDisabled: true, canvasKeysDoNotSeek: true, globalTrackNavigation: true, globalSeekAndScrubberPreserved: true, panelKeyboardPriority: true, pausedStoppedAndRunningControls: true, movingCameraRecording: capture, runtimeOnlySchema11: true };

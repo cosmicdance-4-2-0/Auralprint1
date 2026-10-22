@@ -119,7 +119,7 @@ test("RC-15 phase 1: production animation boundary discards stall time with no l
       performance: { now: () => nowSec * 1000 }, createAnalysisFrame: () => ({}),
       updateAnalysisFrame() {}, AudioEngine: { sample: () => ({}) }, Renderer: {},
       VisualizerRuntime: { update: frame => frames.push({ ...frame }), render() {} },
-      UI: { refreshAllUiText() {} }, Scrubber: { draw() {} },
+      UI: { updateCamera() {}, refreshAllUiText() {} }, Scrubber: { draw() {} },
     });
     vm.runInContext(source, context);
     const frame = ts => context.onAnimationFrame(ts);

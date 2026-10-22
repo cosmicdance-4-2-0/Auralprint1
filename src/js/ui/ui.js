@@ -23,6 +23,7 @@ import { createSpectralRingEditorUi } from "./spectral-ring-editor.js";
 import { createScenePanelUi } from "./scene-panel.js";
 import { createCameraControlsUi } from "./camera-controls.js";
 import { createCameraInteraction } from "./camera-interaction.js";
+import { fitCamera } from "./camera-actions.js";
 
 /* =============================================================================
    UI
@@ -343,8 +344,6 @@ const UI = (() => {
   const tooltipGroups = new Map();
   let tooltipSettingsRef = null;
   let tooltipBandEdgesRef = null;
-  let tooltipCameraRef = null;
-  let tooltipCameraMode = null;
   let latestAnalysisFrame = null; // Producer-owned frame, retained only for immediate reveal.
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel,
     onPanelShown: (panel) => {
@@ -353,8 +352,30 @@ const UI = (() => {
       refreshAllUiText(latestAnalysisFrame); // Settle presentation before restoring focus.
     },
   });
-  const cameraInteraction = createCameraInteraction();
-  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction });
+  let cameraFitFeedbackTimer = null;
+  function fitView() {
+    const result = fitCamera(latestAnalysisFrame);
+    const message = result.reason === "minimum-zoom"
+      ? `Fit limited: minimum zoom ${CONFIG.limits.camera.zoom.min} cannot contain all content.`
+      : result.reason === "screen-margin"
+        ? "Cannot fit: screen-sized marks and margins exceed the viewport. Enlarge the viewport or reduce mark sizes."
+        : !result.applied
+          ? "Cannot fit: viewport or drawable geometry is invalid."
+          : result.reason === "maximum-zoom"
+            ? `View fitted at maximum zoom ${CONFIG.limits.camera.zoom.max}.`
+            : "View fitted to world and composition.";
+    clearTimeout(cameraFitFeedbackTimer);
+    ui.cameraFitStatus.textContent = message;
+    ui.cameraFitStatus.hidden = false;
+    // Operational feedback stays visible even with the Camera panel hidden.
+    // This timer is request-scoped; the frame path does no status DOM work.
+    cameraFitFeedbackTimer = setTimeout(() => {
+      ui.cameraFitStatus.hidden = true;
+    }, CONFIG.camera.fit.feedbackDurationMs);
+    return result;
+  }
+  const cameraInteraction = createCameraInteraction({ fitView });
+  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction, fitView });
   const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,
@@ -505,6 +526,7 @@ const UI = (() => {
       "#visualizersPanel select",
       "#scenePanel input",
       "#scenePanel select",
+      "#cameraPanel input",
       "#recordPanel input",
       "#recordPanel select",
     ];
@@ -579,7 +601,7 @@ const UI = (() => {
     ui.configTooltipByControl = new Map();
     for (const spec of ui.configTooltipSpecs) {
       ui.configTooltipByControl.set(spec.control, spec);
-      const panel = [ui.audioPanel, ui.analysisPanel, ui.visualizersPanel, ui.scenePanel, ui.recordPanel]
+      const panel = [ui.audioPanel, ui.analysisPanel, ui.visualizersPanel, ui.scenePanel, ui.cameraPanel, ui.recordPanel]
         .find(candidate => candidate?.contains(spec.control)) || null;
       if (!tooltipGroups.has(panel)) tooltipGroups.set(panel, { specs: [], dirty: true });
       tooltipGroups.get(panel).specs.push(spec);
@@ -1256,11 +1278,8 @@ const UI = (() => {
 
     // Settings/definition replacement invalidates meaning, not every animation frame.
     // Comparing generated titles ensures unrelated changes do not rewrite controls.
-    if (tooltipCameraRef !== state.camera || tooltipCameraMode !== cameraInteraction.isEnabled()) {
-      tooltipCameraRef = state.camera;
-      tooltipCameraMode = cameraInteraction.isEnabled();
-      invalidateConfigTooltips(ui.scenePanel);
-    }
+    // Camera readouts change continuously. Tooltips refresh on focus/hover/edit
+    // and panel reveal, without invalidating any panel on each camera frame.
     if (tooltipSettingsRef !== runtime.settings || tooltipBandEdgesRef !== state.bands.lowHz) {
       tooltipSettingsRef = runtime.settings;
       tooltipBandEdgesRef = state.bands.lowHz;
@@ -2002,6 +2021,7 @@ const UI = (() => {
     setCssVarsFromConfig,
     wireControls,
     refreshAllUiText,
+    updateCamera: cameraInteraction.tick,
     refreshRecordingUi,
     getRecordingUiModel,
     dispatchSourceSwitchAction,

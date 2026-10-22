@@ -10,21 +10,31 @@ const FIELDS = [
   { key: "zoom", name: "Zoom", unit: "×" },
   { key: "rotationRad", name: "Rotation", unit: "degrees" },
 ];
+const SPEED_FIELDS = [
+  { key: "panSpeedCssPxPerSec", name: "PanSpeed", unit: "CSS pixels/second" },
+  { key: "rotationSpeedDegPerSec", name: "RotationSpeed", unit: "degrees/second" },
+];
+const sync = (node, key, value) => { if (node[key] !== value) node[key] = value; };
 const displayValue = (camera, field) => field.key === "rotationRad" ? camera.rotationRad * RAD_TO_DEG : camera[field.key];
 
-function createCameraControlsUi({ ui, interaction } = {}) {
-  let initializedOn = null, lastCamera = null, lastEnabled = null;
+function createCameraControlsUi({ ui, interaction, fitView = () => {} } = {}) {
+  let initializedOn = null, lastCamera = null, lastEnabled = null, lastSpeeds = null;
 
-  function refresh(force = false) {
-    if (!initializedOn) return false;
+  function refresh(force = false, committedInput = null) {
+    if (!initializedOn || (!force && ui.cameraPanel?.style.display === "none")) return false;
+    const focused = typeof document !== "undefined" ? document.activeElement : null;
     const camera = state.camera, enabled = interaction.isEnabled();
     if (force || camera !== lastCamera) {
       for (const field of FIELDS) {
         const input = ui[`numCamera${field.name}`], value = displayValue(camera, field);
-        input.value = String(value);
-        input.setAttribute("aria-invalid", "false");
-        ui[`camera${field.name}Error`].textContent = "";
-        ui[`valCamera${field.name}`].textContent = `${value} ${field.unit}`;
+        // Live movement may update readouts, but a focused numeric draft belongs
+        // to its editor until commit/blur, including temporarily invalid text.
+        if (input !== focused || input === committedInput) {
+          sync(input, "value", String(value));
+          if (input.getAttribute("aria-invalid") !== "false") input.setAttribute("aria-invalid", "false");
+          sync(ui[`camera${field.name}Error`], "textContent", "");
+        }
+        sync(ui[`valCamera${field.name}`], "textContent", `${value} ${field.unit}`);
       }
       ui.btnCameraZoomOut.disabled = camera.zoom <= CONFIG.limits.camera.zoom.min;
       ui.btnCameraZoomIn.disabled = camera.zoom >= CONFIG.limits.camera.zoom.max;
@@ -35,6 +45,33 @@ function createCameraControlsUi({ ui, interaction } = {}) {
       ui.valCameraInteraction.textContent = enabled ? "Camera mode on" : "Camera mode off";
       lastEnabled = enabled;
     }
+    const speeds = interaction.getSpeeds();
+    if (force || speeds !== lastSpeeds) {
+      for (const field of SPEED_FIELDS) {
+        const input = ui[`numCamera${field.name}`];
+        if (input !== focused || input === committedInput) {
+          sync(input, "value", String(speeds[field.key]));
+          if (input.getAttribute("aria-invalid") !== "false") input.setAttribute("aria-invalid", "false");
+          sync(ui[`camera${field.name}Error`], "textContent", "");
+        }
+        sync(ui[`valCamera${field.name}`], "textContent", `${speeds[field.key]} ${field.unit}`);
+      }
+      lastSpeeds = speeds;
+    }
+    return true;
+  }
+
+  function commitSpeed(field) {
+    const input = ui[`numCamera${field.name}`], raw = input.value.trim();
+    const value = DECIMAL.test(raw) ? Number(raw) : NaN;
+    const limits = CONFIG.limits.camera[field.key];
+    if (!Number.isFinite(value) || value < limits.min || value > limits.max) {
+      input.setAttribute("aria-invalid", "true");
+      ui[`camera${field.name}Error`].textContent = `Enter ${limits.min} to ${limits.max} ${field.unit}.`;
+      return false;
+    }
+    interaction.setSpeeds({ [field.key]: value });
+    refresh(true, input);
     return true;
   }
 
@@ -60,7 +97,7 @@ function createCameraControlsUi({ ui, interaction } = {}) {
       }
     }
     interaction.cancelDrag();
-    refresh(true);
+    refresh(true, input);
     return true;
   }
 
@@ -75,6 +112,9 @@ function createCameraControlsUi({ ui, interaction } = {}) {
         input.max = String(CONFIG.limits.camera.zoom.max);
       }
       input.addEventListener("change", () => commitField(field));
+      input.addEventListener("blur", () => {
+        if (input.getAttribute("aria-invalid") !== "true") refresh(true);
+      });
       input.addEventListener("keydown", event => {
         if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.isComposing) return;
         if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
@@ -94,8 +134,17 @@ function createCameraControlsUi({ ui, interaction } = {}) {
         commitField(field);
       });
     }
-    const bindAction = (id, action) => ui[id].addEventListener("click", () => {
-      interaction.cancelDrag();
+    for (const field of SPEED_FIELDS) {
+      const input = ui[`numCamera${field.name}`], limits = CONFIG.limits.camera[field.key];
+      input.min = String(limits.min); input.max = String(limits.max); input.step = String(limits.step);
+      input.addEventListener("change", () => commitSpeed(field));
+      input.addEventListener("blur", () => {
+        if (input.getAttribute("aria-invalid") !== "true") refresh(true);
+      });
+    }
+    ui.btnFocusCameraCanvas.addEventListener("click", () => state.canvas?.focus({ preventScroll: true }));
+    const bindAction = (id, action, stopMovement = false) => ui[id].addEventListener("click", () => {
+      if (stopMovement) interaction.cancelInput(); else interaction.cancelDrag();
       action();
       refresh(true);
     });
@@ -107,7 +156,8 @@ function createCameraControlsUi({ ui, interaction } = {}) {
     bindAction("btnCameraZoomOut", () => zoomCamera(1 / CONFIG.camera.interaction.zoomFactor));
     bindAction("btnCameraRotateCW", () => rotateCamera(-1));
     bindAction("btnCameraRotateCCW", () => rotateCamera(1));
-    bindAction("btnResetCamera", resetCamera);
+    bindAction("btnResetCamera", resetCamera, true);
+    bindAction("btnFitCamera", fitView, true);
     ui.chkCameraInteraction.addEventListener("change", () => {
       interaction.setEnabled(ui.chkCameraInteraction.checked);
       refresh();

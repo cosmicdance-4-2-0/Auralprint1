@@ -24,12 +24,15 @@ function primeDomCache() {
       "statParticleRateLimited", "statParticleRetentionRejected", "statParticleExpired", "statParticleRetentionRetired"]) {
       ui[id] = document.getElementById(id);
     }
-    for (const id of ["cameraSection", "numCameraX", "numCameraY", "numCameraZoom", "numCameraRotation",
+    for (const id of ["cameraPanel", "btnHideCamera", "openCamera", "btnOpenCamera", "btnFocusCameraCanvas",
+      "numCameraPanSpeed", "valCameraPanSpeed", "cameraPanSpeedError",
+      "numCameraRotationSpeed", "valCameraRotationSpeed", "cameraRotationSpeedError",
+      "cameraSection", "numCameraX", "numCameraY", "numCameraZoom", "numCameraRotation",
       "valCameraX", "valCameraY", "valCameraZoom", "valCameraRotation",
       "cameraXError", "cameraYError", "cameraZoomError", "cameraRotationError",
       "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight",
       "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut",
-      "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera"]) {
+      "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFitCamera", "cameraFitStatus"]) {
       ui[id] = document.getElementById(id);
     }
     ui.visualizersPanel = document.getElementById("visualizersPanel");

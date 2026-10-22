@@ -26,7 +26,7 @@ function callbackHarness({chirality=1,ttl=60,spacing=0,rate=1000,budget=1000,pha
   const v=createVisualizerRuntime({settingsRef,createSpectralRing:()=>createSpectralRingVisualizer({settingsRef,stateRef})});v.rebuild([orb]);
   let nowMs=100000,audioSamples=0,analysisUpdates=0;const frames=[],document={hidden:false};
   const source=readFileSync(new URL('../src/js/main.js',import.meta.url),'utf8').replace(/\r\n/g,'\n').replace(/^import .*;\n/gm,'').replace(/^main\(\);$/m,'').replace(/^export .*;$/m,'');
-  const context=vm.createContext({CONFIG,state:stateRef,runtime:settingsRef,simulationDeltaSec,visualMotionDeltaSec,document,requestAnimationFrame(){},resizeCanvasToDisplaySize(){},performance:{now:()=>nowMs},createAnalysisFrame,updateAnalysisFrame(){analysisUpdates++;},AudioEngine:{sample(){audioSamples++;return {}; }},Renderer:{},VisualizerRuntime:{update(f){frames.push({...f});v.update(f);},render(){}},UI:{refreshAllUiText(){}},Scrubber:{draw(){}}});
+  const context=vm.createContext({CONFIG,state:stateRef,runtime:settingsRef,simulationDeltaSec,visualMotionDeltaSec,document,requestAnimationFrame(){},resizeCanvasToDisplaySize(){},performance:{now:()=>nowMs},createAnalysisFrame,updateAnalysisFrame(){analysisUpdates++;},AudioEngine:{sample(){audioSamples++;return {}; }},Renderer:{},VisualizerRuntime:{update(f){frames.push({...f});v.update(f);},render(){}},UI:{updateCamera(){},refreshAllUiText(){}},Scrubber:{draw(){}}});
   vm.runInContext(source,context);
   return {orb,v,stateRef,settingsRef,document,frames,clock(ts,realMs=ts){nowMs=realMs;context.onAnimationFrame(ts);return frames.at(-1);},rebase(){context.rebaseVisualFrameClock();},analysisCounts:()=>({audioSamples,analysisUpdates}),dispose(){v.dispose();}};
 }

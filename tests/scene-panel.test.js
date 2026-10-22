@@ -77,7 +77,7 @@ test("Settings copy retains canonical Scene IDs alongside Visualizers", () => {
   assert.equal(byId("btnHideScene").attrs["aria-label"], "Hide Scene Settings panel");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("scenePanel")).text, "Scene Settings");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("visualizersPanel")).text, "Visualizers");
-  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Simulation World", "Viewport Camera", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
+  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Simulation World", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
 });
 
 function element(tag = "div") {
@@ -243,4 +243,26 @@ test("diagnostics read actual governor fields even with unchanged settings; unch
     assert.equal(h.ui.statParticleSpacingRejected.textContent,'12');assert.equal(h.ui.statParticleBudgetRejected.textContent,'4');assert.equal(h.ui.statParticleRateLimited.textContent,'5');assert.equal(h.ui.statParticleRetentionRejected.textContent,'6');assert.equal(h.ui.statParticleExpired.textContent,'7');assert.equal(h.ui.statParticleRetentionRetired.textContent,'8');
     assert.ok(templateNodes.some(n=>n.text.includes('Retention retirements (since runtime initialization)')));
   }finally{globalThis.document=old;}
+});
+
+test("116C.A Camera controls have one dedicated workspace owner, accessible runtime speeds and canvas focus action", () => {
+  const byId = id => templateNodes.filter(node => node.attrs.id === id);
+  for (const id of ["cameraSection", "numCameraX", "numCameraY", "numCameraZoom", "numCameraRotation", "chkCameraInteraction",
+    "numCameraPanSpeed", "numCameraRotationSpeed", "btnResetCamera", "btnFocusCameraCanvas"]) {
+    assert.equal(byId(id).length, 1, id);
+    assert.ok(byId(id)[0].ancestors.includes("cameraPanel"), id);
+    assert.ok(!byId(id)[0].ancestors.includes("scenePanel"), id);
+  }
+  const launcher = byId("btnOpenCamera")[0];
+  assert.equal(launcher.text, "Camera"); assert.equal(launcher.attrs["aria-controls"], "cameraPanel");
+  assert.ok(launcher.ancestors.includes("workspaceLauncher"));
+  assert.equal(byId("cameraPanel")[0].attrs["aria-labelledby"], "cameraPanelTitle");
+  assert.equal(byId("btnHideCamera")[0].attrs["aria-label"], "Hide Camera panel");
+  for (const [input, error, unit] of [["numCameraPanSpeed", "cameraPanSpeedError", /CSS pixels\/second/],
+    ["numCameraRotationSpeed", "cameraRotationSpeedError", /degrees\/second/]]) {
+    assert.equal(byId(input)[0].attrs.type, "number");
+    assert.match(byId(input)[0].attrs["aria-describedby"], new RegExp(error));
+    assert.equal(byId(error)[0].attrs.role, "alert");
+    assert.match(templateNodes.find(node => node.tag === "label" && node.attrs.for === input).text, unit);
+  }
 });

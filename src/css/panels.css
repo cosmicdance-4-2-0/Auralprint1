@@ -99,7 +99,7 @@
     /* Responsive panel layout on <=980px: clamp Visualizers/Bands/Orbs widths to viewport-safe bounds,
        and anchor #scenePanel to the left edge (clear right anchor) so both side panels share alignment. */
     @media (max-width: 980px) {
-      #visualizersPanel, #scenePanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
+      #visualizersPanel, #scenePanel, #cameraPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
     }
 
     @media (max-width: 920px) {
