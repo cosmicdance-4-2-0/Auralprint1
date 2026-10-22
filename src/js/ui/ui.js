@@ -343,8 +343,6 @@ const UI = (() => {
   const tooltipGroups = new Map();
   let tooltipSettingsRef = null;
   let tooltipBandEdgesRef = null;
-  let tooltipCameraRef = null;
-  let tooltipCameraMode = null;
   let latestAnalysisFrame = null; // Producer-owned frame, retained only for immediate reveal.
   const workspace = createWorkspaceUi({ ui, readRecordLauncherLabel: readRecordingLauncherLabel,
     onPanelShown: (panel) => {
@@ -505,6 +503,7 @@ const UI = (() => {
       "#visualizersPanel select",
       "#scenePanel input",
       "#scenePanel select",
+      "#cameraPanel input",
       "#recordPanel input",
       "#recordPanel select",
     ];
@@ -579,7 +578,7 @@ const UI = (() => {
     ui.configTooltipByControl = new Map();
     for (const spec of ui.configTooltipSpecs) {
       ui.configTooltipByControl.set(spec.control, spec);
-      const panel = [ui.audioPanel, ui.analysisPanel, ui.visualizersPanel, ui.scenePanel, ui.recordPanel]
+      const panel = [ui.audioPanel, ui.analysisPanel, ui.visualizersPanel, ui.scenePanel, ui.cameraPanel, ui.recordPanel]
         .find(candidate => candidate?.contains(spec.control)) || null;
       if (!tooltipGroups.has(panel)) tooltipGroups.set(panel, { specs: [], dirty: true });
       tooltipGroups.get(panel).specs.push(spec);
@@ -1256,11 +1255,8 @@ const UI = (() => {
 
     // Settings/definition replacement invalidates meaning, not every animation frame.
     // Comparing generated titles ensures unrelated changes do not rewrite controls.
-    if (tooltipCameraRef !== state.camera || tooltipCameraMode !== cameraInteraction.isEnabled()) {
-      tooltipCameraRef = state.camera;
-      tooltipCameraMode = cameraInteraction.isEnabled();
-      invalidateConfigTooltips(ui.scenePanel);
-    }
+    // Camera readouts change continuously. Tooltips refresh on focus/hover/edit
+    // and panel reveal, without invalidating any panel on each camera frame.
     if (tooltipSettingsRef !== runtime.settings || tooltipBandEdgesRef !== state.bands.lowHz) {
       tooltipSettingsRef = runtime.settings;
       tooltipBandEdgesRef = state.bands.lowHz;
@@ -1998,11 +1994,11 @@ const UI = (() => {
 
   } // end wireControls
 
-    updateCamera: cameraInteraction.tick,
   return {
     setCssVarsFromConfig,
     wireControls,
     refreshAllUiText,
+    updateCamera: cameraInteraction.tick,
     refreshRecordingUi,
     getRecordingUiModel,
     dispatchSourceSwitchAction,

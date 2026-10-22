@@ -84,16 +84,16 @@ test("RC-13: visible focus owns panel stacking and Queue Hide restores the real 
   const previousDocument = globalThis.document;
   globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
   const ui = {};
-  for (const key of ["audioPanel", "analysisPanel", "scenePanel", "visualizersPanel", "queuePanel", "recordPanel", "btnToggleWorkspaceLauncher", "btnToggleQueue", "btnHideQueue"]) ui[key] = element();
+  for (const key of ["audioPanel", "analysisPanel", "scenePanel", "cameraPanel", "visualizersPanel", "queuePanel", "recordPanel", "btnToggleWorkspaceLauncher", "btnToggleQueue", "btnHideQueue"]) ui[key] = element();
   const workspace = createWorkspaceUi({ ui });
   try {
     workspace.init();
     assert.equal(workspace.init(), false);
-    for (const key of ["analysisPanel", "scenePanel", "visualizersPanel", "queuePanel", "recordPanel"]) {
+    for (const key of ["analysisPanel", "scenePanel", "cameraPanel", "visualizersPanel", "queuePanel", "recordPanel"]) {
       ui[key].dispatch("focusin");
       assert.equal(ui[key].classList.contains("panel-front"), true);
       assert.equal(ui[key].listenerCount("focusin"), 1);
-      for (const other of ["analysisPanel", "scenePanel", "visualizersPanel", "queuePanel", "recordPanel"]) {
+      for (const other of ["analysisPanel", "scenePanel", "cameraPanel", "visualizersPanel", "queuePanel", "recordPanel"]) {
         assert.equal(ui[other].classList.contains("panel-front"), key === other);
       }
     }
@@ -178,7 +178,7 @@ test("workspace owns deterministic visibility, restore, focus, record, collapse,
     assert.equal(ui.recordPanel.style.display, "none");
     assert.equal(ui.scenePanel.style.display, "none");
     assert.equal(ui.panelRestoreSnapshot.scene, true);
-    assert.deepEqual(Object.keys(ui.panelRestoreSnapshot).sort(), ["analysis", "audio", "queue", "record", "scene", "visualizers"]);
+    assert.deepEqual(Object.keys(ui.panelRestoreSnapshot).sort(), ["analysis", "audio", "camera", "queue", "record", "scene", "visualizers"]);
     assert.equal(workspace.showSimPanel, undefined);
     assert.equal(workspace.hideSimPanel, undefined);
     assert.equal(ui.btnOpenScene.title, "Show Settings panel");
@@ -208,4 +208,61 @@ test("Record restore remains eligible only while hooks are enabled", () => {
     assert.equal(ui.recordPanel.style.display, "none"); assert.equal(ui.recordingPanelVisible, false);
     assert.equal(ui.recordingPanelRestoreAfterGlobalHide, false);
   } finally { globalThis.document = previousDocument; state.recording.hooksEnabled = previousHooks; }
+});
+
+test("116C.A Camera workspace has independent focus, stacking, launcher and hide/restore ownership", () => {
+  const previousDocument = globalThis.document;
+  globalThis.document = { activeElement: null, documentElement: { style: { setProperty() {} } } };
+  const ui = {
+    audioPanel: element("grid"), scenePanel: element("none"), cameraPanel: element("none"),
+    openAudio: element(), btnOpenAudio: element(), btnHideAudio: element(),
+    openCamera: element(), btnOpenCamera: element(), btnHideCamera: element(),
+    btnToggleWorkspaceLauncher: element(), workspaceLauncher: element(), workspaceLauncherCollapsed: false,
+  };
+  ui.cameraPanel.contains = target => target === ui.cameraPanel || target === ui.btnHideCamera;
+  const shown = [], workspace = createWorkspaceUi({ ui, onPanelShown: panel => shown.push(panel) });
+  const camera = state.camera, playing = state.audio.isPlaying;
+  try {
+    assert.equal(workspace.init(), true); assert.equal(workspace.init(), false);
+    assert.equal(ui.btnOpenCamera.listenerCount("click"), 1);
+    assert.equal(ui.btnHideCamera.listenerCount("click"), 1);
+    assert.equal(ui.cameraPanel.listenerCount("focusin"), 1);
+    ui.btnOpenCamera.focus(); ui.btnOpenCamera.dispatch("click");
+    assert.equal(document.activeElement, ui.btnHideCamera);
+    assert.equal(ui.cameraPanel.style.display, "block");
+    assert.equal(ui.scenePanel.style.display, "none");
+    assert.equal(ui.btnOpenCamera.getAttribute("aria-pressed"), "true");
+    assert.equal(ui.btnOpenCamera.title, "Hide Camera panel");
+    assert.equal(ui.cameraPanel.classList.contains("panel-front"), true);
+    assert.deepEqual(shown, [ui.cameraPanel]);
+
+    workspace.showScenePanel();
+    assert.equal(ui.scenePanel.classList.contains("panel-front"), true);
+    ui.cameraPanel.dispatch("focusin");
+    assert.equal(ui.cameraPanel.classList.contains("panel-front"), true);
+    assert.equal(ui.scenePanel.classList.contains("panel-front"), false);
+    workspace.hideScenePanel();
+    workspace.setLauncherCollapsed(true);
+    ui.btnHideCamera.focus(); ui.btnHideCamera.dispatch("click");
+    assert.equal(document.activeElement, ui.btnOpenCamera);
+    assert.equal(ui.workspaceLauncher.dataset.collapsed, "false");
+    assert.equal(ui.btnOpenCamera.getAttribute("aria-pressed"), "false");
+    assert.equal(ui.audioPanel.style.display, "grid");
+
+    workspace.showCameraPanel();
+    workspace.togglePanels();
+    assert.equal(ui.cameraPanel.style.display, "none");
+    assert.equal(ui.audioPanel.style.display, "none");
+    assert.equal(ui.panelRestoreSnapshot.camera, true);
+    workspace.togglePanels();
+    assert.equal(ui.cameraPanel.style.display, "block");
+    assert.equal(ui.audioPanel.style.display, "grid");
+    assert.equal(ui.scenePanel.style.display, "none");
+    assert.equal(state.camera, camera);
+    assert.equal(state.audio.isPlaying, playing);
+
+    workspace.hideCameraPanel();
+    workspace.togglePanels(); workspace.togglePanels();
+    assert.equal(ui.cameraPanel.style.display, "none", "global restore retains Camera's independent hidden state");
+  } finally { globalThis.document = previousDocument; }
 });

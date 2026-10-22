@@ -35,6 +35,7 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     syncLauncherControl(ui.openAnalysis, ui.btnOpenAnalysis, { active: isPanelVisible(ui.analysisPanel), label: isPanelVisible(ui.analysisPanel) ? "Hide Analysis panel" : "Show Analysis panel" });
     syncLauncherControl(ui.openVisualizers, ui.btnOpenVisualizers, { active: isPanelVisible(ui.visualizersPanel), label: isPanelVisible(ui.visualizersPanel) ? "Hide Visualizers panel" : "Show Visualizers panel" });
     syncLauncherControl(ui.openScene, ui.btnOpenScene, { active: isPanelVisible(ui.scenePanel), label: isPanelVisible(ui.scenePanel) ? "Hide Settings panel" : "Show Settings panel" });
+    syncLauncherControl(ui.openCamera, ui.btnOpenCamera, { active: isPanelVisible(ui.cameraPanel), label: isPanelVisible(ui.cameraPanel) ? "Hide Camera panel" : "Show Camera panel" });
     syncLauncherControl(ui.openRecord, ui.btnOpenRecord, {
       visible: !!state.recording?.hooksEnabled,
       active: !!ui.recordingPanelVisible,
@@ -55,7 +56,7 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
 
   function toggleLauncherCollapsed() { setLauncherCollapsed(!ui.workspaceLauncherCollapsed); }
   function bringPanelForward(panel) {
-    for (const candidate of [ui.visualizersPanel, ui.analysisPanel, ui.scenePanel, ui.queuePanel, ui.recordPanel]) {
+    for (const candidate of [ui.visualizersPanel, ui.analysisPanel, ui.scenePanel, ui.cameraPanel, ui.queuePanel, ui.recordPanel]) {
       if (candidate) syncClass(candidate, "panel-front", candidate === panel);
     }
   }
@@ -92,6 +93,9 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
   function hideVisualizersPanel() { if (!ui.visualizersPanel) return; ui.visualizersPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.visualizersPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenVisualizers); }
   function showVisualizersPanel() { if (!ui.visualizersPanel) return; ui.visualizersPanel.style.display = "block"; bringPanelForward(ui.visualizersPanel); syncLauncherState(); onPanelShown(ui.visualizersPanel); if (document.activeElement === ui.btnOpenVisualizers && ui.btnHideVisualizers) ui.btnHideVisualizers.focus(); }
 
+  function hideCameraPanel() { if (!ui.cameraPanel) return; ui.cameraPanel.style.display = "none"; syncLauncherState(); if (document.activeElement && ui.cameraPanel.contains(document.activeElement)) restoreLauncherFocus(ui.btnOpenCamera); }
+  function showCameraPanel() { if (!ui.cameraPanel) return; ui.cameraPanel.style.display = "block"; bringPanelForward(ui.cameraPanel); syncLauncherState(); onPanelShown(ui.cameraPanel); if (document.activeElement === ui.btnOpenCamera && ui.btnHideCamera) ui.btnHideCamera.focus(); }
+
   function setRecordPanelVisibility(visible) {
     if (!ui.recordPanel || !ui.openRecord) return;
     const nextVisible = !!visible && !!state.recording.hooksEnabled;
@@ -106,16 +110,16 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
   function primeRecordUi() { if (!ui.recordPanel || !ui.openRecord) return; if (!state.recording.hooksEnabled) ui.recordingPanelRestoreAfterGlobalHide = false; setRecordPanelVisibility(!!state.recording.hooksEnabled && !!ui.recordingPanelVisible); }
 
   function togglePanels() {
-    const visible = { audio: isPanelVisible(ui.audioPanel), visualizers: isPanelVisible(ui.visualizersPanel), analysis: isPanelVisible(ui.analysisPanel), scene: isPanelVisible(ui.scenePanel), queue: isPanelVisible(ui.queuePanel), record: isPanelVisible(ui.recordPanel) };
+    const visible = { audio: isPanelVisible(ui.audioPanel), visualizers: isPanelVisible(ui.visualizersPanel), analysis: isPanelVisible(ui.analysisPanel), scene: isPanelVisible(ui.scenePanel), camera: isPanelVisible(ui.cameraPanel), queue: isPanelVisible(ui.queuePanel), record: isPanelVisible(ui.recordPanel) };
     if (Object.values(visible).some(Boolean)) {
       ui.panelRestoreSnapshot = visible;
       ui.recordingPanelRestoreAfterGlobalHide = visible.record;
-      hideAudioPanel(); hideAnalysisPanel(); hideVisualizersPanel(); hideScenePanel(); hideQueuePanel();
+      hideAudioPanel(); hideAnalysisPanel(); hideVisualizersPanel(); hideScenePanel(); hideCameraPanel(); hideQueuePanel();
       if (visible.record) hideRecordPanel({ preserveRestoreFlag: true });
       return;
     }
     const restore = ui.panelRestoreSnapshot || { audio: true };
-    if (restore.audio) showAudioPanel(); if (restore.analysis) showAnalysisPanel(); if (restore.visualizers) showVisualizersPanel(); if (restore.scene) showScenePanel(); if (restore.queue) showQueuePanel();
+    if (restore.audio) showAudioPanel(); if (restore.analysis) showAnalysisPanel(); if (restore.visualizers) showVisualizersPanel(); if (restore.scene) showScenePanel(); if (restore.camera) showCameraPanel(); if (restore.queue) showQueuePanel();
     const restoreRecord = !!ui.recordingPanelRestoreAfterGlobalHide;
     ui.recordingPanelRestoreAfterGlobalHide = false;
     if (restoreRecord) showRecordPanel();
@@ -128,18 +132,19 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     setLauncherCollapsed(!!ui.workspaceLauncherCollapsed);
     primeRecordUi();
     if (ui.btnToggleWorkspaceLauncher) ui.btnToggleWorkspaceLauncher.addEventListener("click", toggleLauncherCollapsed);
-    for (const [button, panel, hide, show] of [[ui.btnOpenAudio, ui.audioPanel, hideAudioPanel, showAudioPanel], [ui.btnOpenAnalysis, ui.analysisPanel, hideAnalysisPanel, showAnalysisPanel], [ui.btnOpenVisualizers, ui.visualizersPanel, hideVisualizersPanel, showVisualizersPanel], [ui.btnOpenScene, ui.scenePanel, hideScenePanel, showScenePanel]]) {
+    for (const [button, panel, hide, show] of [[ui.btnOpenAudio, ui.audioPanel, hideAudioPanel, showAudioPanel], [ui.btnOpenAnalysis, ui.analysisPanel, hideAnalysisPanel, showAnalysisPanel], [ui.btnOpenVisualizers, ui.visualizersPanel, hideVisualizersPanel, showVisualizersPanel], [ui.btnOpenScene, ui.scenePanel, hideScenePanel, showScenePanel], [ui.btnOpenCamera, ui.cameraPanel, hideCameraPanel, showCameraPanel]]) {
       if (button) button.addEventListener("click", () => isPanelVisible(panel) ? hide() : show());
     }
     if (ui.btnHideAudio) ui.btnHideAudio.addEventListener("click", hideAudioPanel);
     if (ui.btnHideAnalysis) ui.btnHideAnalysis.addEventListener("click", hideAnalysisPanel);
     if (ui.btnHideVisualizers) ui.btnHideVisualizers.addEventListener("click", hideVisualizersPanel);
     if (ui.btnHideScene) ui.btnHideScene.addEventListener("click", hideScenePanel);
+    if (ui.btnHideCamera) ui.btnHideCamera.addEventListener("click", hideCameraPanel);
     if (ui.btnHideQueue) ui.btnHideQueue.addEventListener("click", hideQueuePanel);
     if (ui.btnTogglePanels) ui.btnTogglePanels.addEventListener("click", togglePanels);
     if (ui.btnHideRecord) ui.btnHideRecord.addEventListener("click", hideRecordPanel);
     if (ui.btnOpenRecord) ui.btnOpenRecord.addEventListener("click", () => ui.recordingPanelVisible ? hideRecordPanel() : showRecordPanel());
-    for (const panel of [ui.visualizersPanel, ui.analysisPanel, ui.scenePanel, ui.queuePanel, ui.recordPanel]) if (panel) {
+    for (const panel of [ui.visualizersPanel, ui.analysisPanel, ui.scenePanel, ui.cameraPanel, ui.queuePanel, ui.recordPanel]) if (panel) {
       panel.addEventListener("pointerdown", () => bringPanelForward(panel));
       panel.addEventListener("focusin", () => { if (isPanelVisible(panel)) bringPanelForward(panel); });
     }
@@ -149,7 +154,7 @@ function createWorkspaceUi({ ui = state.ui, readRecordLauncherLabel = () => "Rec
     return true;
   }
 
-  return { init, isPanelVisible, syncLauncherState, setLauncherCollapsed, bringPanelForward, hideQueuePanel, showQueuePanel, hideAudioPanel, showAudioPanel, hideAnalysisPanel, showAnalysisPanel, hideVisualizersPanel, showVisualizersPanel, hideScenePanel, showScenePanel, setRecordPanelVisibility, hideRecordPanel, showRecordPanel, primeRecordUi, togglePanels };
+  return { init, isPanelVisible, syncLauncherState, setLauncherCollapsed, bringPanelForward, hideQueuePanel, showQueuePanel, hideAudioPanel, showAudioPanel, hideAnalysisPanel, showAnalysisPanel, hideVisualizersPanel, showVisualizersPanel, hideScenePanel, showScenePanel, hideCameraPanel, showCameraPanel, setRecordPanelVisibility, hideRecordPanel, showRecordPanel, primeRecordUi, togglePanels };
 }
 
 export { createWorkspaceUi };

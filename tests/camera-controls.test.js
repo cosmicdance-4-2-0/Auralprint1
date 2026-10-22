@@ -18,11 +18,12 @@ function element() {
   };
 }
 function harness() {
-  const ids = ["cameraSection", "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight", "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut", "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera"];
-  for (const name of ["X", "Y", "Zoom", "Rotation"]) ids.push(`numCamera${name}`, `valCamera${name}`, `camera${name}Error`);
+  const ids = ["cameraSection", "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight", "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut", "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFocusCameraCanvas"];
+  for (const name of ["X", "Y", "Zoom", "Rotation", "PanSpeed", "RotationSpeed"]) ids.push(`numCamera${name}`, `valCamera${name}`, `camera${name}Error`);
   const ui = Object.fromEntries(ids.map(id => [id, element()]));
   let enabled = false, cancellations = 0;
-  const interaction = { isEnabled: () => enabled, setEnabled(value) { enabled = value; }, cancelDrag() { cancellations++; } };
+  let speeds = Object.freeze({panSpeedCssPxPerSec: 320, rotationSpeedDegPerSec: 60});
+  const interaction = { getSpeeds: () => speeds, setSpeeds(patch) { speeds = Object.freeze({...speeds, ...patch}); }, isEnabled: () => enabled, setEnabled(value) { enabled = value; }, cancelDrag() { cancellations++; } };
   const controls = createCameraControlsUi({ ui, interaction });
   return { ui, controls, interaction, cancellations: () => cancellations };
 }
@@ -116,4 +117,57 @@ test("116C controls follow authoritative replacements and all button/keyboard pa
     for (const [key, value] of Object.entries(saved)) assert.equal(state[key], value, key);
     assert.ok(h.cancellations() > 0);
   } finally { resetCamera(); }
+});
+
+
+test("116C.A: live camera refresh preserves focused drafts and skips hidden-panel work", () => {
+  const h = harness(), previousDocument = globalThis.document;
+  try {
+    resetCamera(); globalThis.document = { activeElement: null };
+    h.ui.cameraPanel = { style: { display: "block" } };
+    h.controls.init();
+    document.activeElement = h.ui.numCameraX;
+    h.ui.numCameraX.value = "-";
+    h.ui.numCameraX.dispatch("change");
+    const error = h.ui.cameraXError.textContent;
+    setCamera({ x: 777, y: 456 }); h.controls.refresh();
+    assert.equal(h.ui.numCameraX.value, "-");
+    assert.equal(h.ui.numCameraX.getAttribute("aria-invalid"), "true");
+    assert.equal(h.ui.cameraXError.textContent, error);
+    assert.equal(h.ui.valCameraX.textContent, "777 world units");
+    assert.equal(h.ui.numCameraY.value, "456");
+    h.controls.refresh(true); assert.equal(h.ui.numCameraX.value, "-");
+    document.activeElement = null; h.ui.numCameraX.dispatch("blur");
+    assert.equal(h.ui.numCameraX.value, "-");
+    assert.equal(h.ui.numCameraX.getAttribute("aria-invalid"), "true");
+    h.ui.numCameraX.value = "777"; h.ui.numCameraX.dispatch("change");
+    assert.equal(h.ui.numCameraX.getAttribute("aria-invalid"), "false");
+    h.ui.cameraPanel.style.display = "none";
+    setCamera({ x: 999 }); assert.equal(h.controls.refresh(), false);
+    assert.equal(h.ui.numCameraX.value, "777");
+    h.ui.cameraPanel.style.display = "block"; h.controls.refresh();
+    assert.equal(h.ui.numCameraX.value, "999");
+  } finally { globalThis.document = previousDocument; resetCamera(); }
+});
+
+test("116C.A: speed controls are CONFIG bounded runtime actions and focus returns to canvas", () => {
+  const h = harness(), previousCanvas = state.canvas;
+  try {
+    h.controls.init(); h.controls.init();
+    for (const [name, key, value] of [["PanSpeed", "panSpeedCssPxPerSec", 640], ["RotationSpeed", "rotationSpeedDegPerSec", 120]]) {
+      const input = h.ui[`numCamera${name}`], limits = CONFIG.limits.camera[key];
+      assert.equal(input.min, String(limits.min)); assert.equal(input.max, String(limits.max));
+      assert.equal(input.step, String(limits.step)); assert.equal(input.listenerCount("change"), 1);
+      input.value = String(value); input.dispatch("change");
+      assert.equal(h.interaction.getSpeeds()[key], value);
+      for (const invalid of ["-", "Infinity", String(limits.max + 1), String(limits.min - 1)]) {
+        input.value = invalid; input.dispatch("change");
+        assert.equal(h.interaction.getSpeeds()[key], value);
+        assert.equal(input.getAttribute("aria-invalid"), "true");
+      }
+    }
+    let focused = 0; state.canvas = { focus(options) { assert.equal(options.preventScroll, true); focused++; } };
+    h.ui.btnFocusCameraCanvas.dispatch("click"); assert.equal(focused, 1);
+    assert.equal(h.ui.btnFocusCameraCanvas.listenerCount("click"), 1);
+  } finally { state.canvas = previousCanvas; resetCamera(); }
 });
