@@ -81,8 +81,10 @@ world unit per reference CSS pixel; schema 10 itself remains immutable.
 Build 116B keeps camera state application/runtime-only in `state.camera`, with
 CONFIG-owned defaults outside Scene defaults and validated runtime setters.
 Camera is absent from preferences, schema 11 and URLs. Build 116C exposes one
-Viewport Camera UI owner, CONFIG-driven interaction steps and opt-in canvas
+Camera workspace UI owner, CONFIG-driven interaction steps and opt-in canvas
 interaction; native control and canvas actions use the validated setters.
+116C.A integrates held WASD/QE through the existing frame callback with
+runtime-only speeds, CSS-screen-pixel panning and explicit canvas focus ownership.
 Particle/Trace/Ring mark sizes remain CSS-screen-sized under zoom, provisionally
 pending owner artistic evaluation. Neither this runtime-only pass nor sizing
 decides future persistence policy. See the [Build 116 contract](docs/development/build-116.md).
@@ -347,6 +349,7 @@ Panels:
 - Queue
 - Visualizers
 - Settings (Scene appearance, particle resources, and presets)
+- Camera (runtime view, mode and movement speeds)
 - Analysis
 - Record (when enabled)
 

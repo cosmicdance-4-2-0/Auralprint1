@@ -83,7 +83,7 @@ Native Chromium **151.0.7922.173** passed both `scripts/validate-116a.cjs` and `
 
 Baseline: PR #69 merged at `bb1ed1c112d2006e1678f71d169db81729ba5e18`. The branch also includes the owner's subsequent version-only correction `c57eac01f601c16e2bd7e62d8bd218e00e383724`; this preview is `v0.1.16c`.
 
-Settings → **Viewport Camera**, adjacent to Simulation World, owns X/Y in world units, numeric zoom, rotation in degrees, view-direction pan buttons, zoom/rotation buttons, Reset Camera and the canvas-mode checkbox. Controls reflect `state.camera`, work stopped/paused/running with zero Orbs, and call `setCamera()`/`resetCamera()` through focused UI/action modules. Finite positions remain unbounded. Numeric controls reject malformed/nonfinite/out-of-range drafts with inline accessible errors; `step=any` and no-op degree edits preserve valid precision. Arrow Up/Down in these fields adjusts the valid draft using CONFIG steps.
+In the accepted 116C baseline, Settings → **Viewport Camera**, adjacent to Simulation World, owned X/Y in world units, numeric zoom, rotation in degrees, view-direction pan buttons, zoom/rotation buttons, Reset Camera and the canvas-mode checkbox. Controls reflect `state.camera`, work stopped/paused/running with zero Orbs, and call `setCamera()`/`resetCamera()` through focused UI/action modules. Finite positions remain unbounded. Numeric controls reject malformed/nonfinite/out-of-range drafts with inline accessible errors; `step=any` and no-op degree edits preserve valid precision. Arrow Up/Down in these fields adjusts the valid draft using CONFIG steps.
 
 `CONFIG.camera.interaction` owns the provisional choices: **50 world units** per pan, **1.1×** per zoom action, **5°** per rotation action, wheel exponential coefficient **0.0015 per CSS pixel**, and **16 CSS pixels** per line-mode wheel unit (page mode uses the real canvas rectangle height). Existing zoom bounds remain **0.01–100**; large wheel deltas reach exact endpoints. These values and the current sizing policy require human evaluation, not artistic approval by tests.
 
@@ -111,4 +111,45 @@ Open `http://localhost:8000/auralprint_0.1.16c.html` (portable), or `http://loca
 
 Owner sequence: load music; open Settings → Viewport Camera; edit X/Y, zoom and rotation, then pan at 90°. Enable camera mode, drag beyond canvas edges and wheel at an off-center particle. Tab through controls; focus the canvas and try arrows/+/−/brackets/Home/Escape, then confirm mode-off arrows seek. Compare Space-pause and audio pause/Stop while moving the view. Drop another audio file, move the camera during a short recording, and inspect the export. Compare Reset Camera with Reset Visualizers; apply/share a preset and confirm the view is retained locally and excluded from the link.
 
-**Stop after 116C.** Owner artistic evaluation is next; 116D/final compatibility and release acceptance require review. Remaining decisions are step feel, rotation semantics and provisional screen-sized marks. Camera persistence remains undecided beyond this pass. Firefox/WebKit, assistive-technology users, physical touch/orientation/DPR changes, OS-level file dragging, direct `file://` launch, fully offline operation, long recordings and audio/export fidelity were not validated here. Chromium policy blocks `file://` navigation in this environment; portable HTTP usage passed. Blur/cancel signals are injected during native captured drags, and touch/orientation/DPR use browser emulation. No Build 117 work or public release/canon update is included.
+**116C baseline handoff:** owner artistic evaluation was next; 116D/final compatibility and release acceptance require review. Remaining decisions are step feel, rotation semantics and provisional screen-sized marks. Camera persistence remains undecided beyond this pass. Firefox/WebKit, assistive-technology users, physical touch/orientation/DPR changes, OS-level file dragging, direct `file://` launch, fully offline operation, long recordings and audio/export fidelity were not validated here. Chromium policy blocks `file://` navigation in this environment; portable HTTP usage passed. Blur/cancel signals are injected during native captured drags, and touch/orientation/DPR use browser emulation. No Build 117 work or public release/canon update is included.
+
+## 116C.A Camera workspace and continuous control
+
+Baseline: PR #71 is merged; current `main` and branch base are **`5ee433bdc13a1f8abf07d8bc3a73dc9d11ed18dc`**. Its accepted tested head is `8cc6e60aac0e44a1f4fff4c411d7387bbfea1da8`. The dedicated branch is `codex/116ca-camera-workspace`; WIP version is **`v0.1.16c.a`**. Build 115 canon, historical fixtures and preset schema 11 are unchanged.
+
+**Camera** in the bottom workspace launcher now owns the existing view controls, mode/status, runtime pan/rotation speeds, **Focus canvas for camera controls**, and a control reference. Settings retains Simulation World and Scene preferences. The workspace owner handles independent visibility, stacking, launcher collapse, focus recovery and H snapshots. Hiding Camera preserves its view, mode, audio and speeds. Camera clears the Audio dock at every viewport size; scroll the panel or independently hide Audio when vertical space is limited.
+
+With camera mode enabled and canvas keyboard focus, hold **W/S** forward/back, **A/D** strafe, **Q/E** counterclockwise/clockwise camera rotation, and **Shift** to boost both. Combinations translate and turn together; diagonal translation is normalized. Arrows, +/−, brackets, Home and Escape retain their 116C actions. H, Space, R, N/P and mode-off seeking keep their existing owners. Native controls, scrubber, recording and audio drops do not acquire movement keys.
+
+`CONFIG.camera.keyboard` owns provisional defaults **320 CSS pixels/second**, **60 degrees/second**, **3× Shift**, and the **0.1-second inclusive** camera frame threshold. `CONFIG.limits.camera` owns speed bounds/increments: pan **0–3200, step 20**; rotation **0–360, step 5**. Speeds are session controls, excluded from Scene preferences, URLs and storage. Reset Camera preserves speeds. Existing discrete action steps remain 50 world units / 5° / 1.1×.
+
+The existing animation callback calls `cameraInteraction.tick()` before rendering, independently of playback, simulation pause and Orb count. Key events track held state; repeats do not advance the view. The active projection fit, zoom and cached CSS/backing ratios convert screen velocity to world translation. The analytic turning integral makes combined translation/rotation coherent across frame intervals, with one validated camera replacement per active frame. No extra animation loop or per-tick layout queries were added. Key release, canvas/window blur, hidden documents, lost focus, mode exit, invalid/nonpositive time and intervals above 0.1 seconds discard held input; press again after interruption. No movement debt is retained.
+
+Focused numeric drafts survive external camera replacement. Hidden Camera controls skip refresh; visible updates synchronize existing values/readouts without rebuilding controls. Camera frames no longer invalidate Settings or panel tooltips; tooltips refresh on reveal, focus, hover and editing. Forward/inverse transforms, world geometry/history, CSS-sized marks, analysis, particle admission and RecorderEngine's canonical viewport remain unchanged.
+
+### Validation
+
+The tested runtime implementation is `1718d57a28094b0ff65c374852cabaffa7b87d7a`; validation scripts and this handoff are separate follow-up commits. Focused tests cover key state, frame intervals (120/60/20/10 Hz plus mixed intervals), exact simultaneous movement/turning, diagonals, view axes, zoom/world/DPR/CSS scaling, boosts, interruption, speed validation, focus and UI ownership. Full validation: `npm test -- --test-concurrency=2` passed **1,110 tests**, with one existing opt-in million-particle retention test skipped and zero failures. `npm run build`, `python3 scripts/verify_distribution.py` and whitespace checks passed. Build 115 canon and historical preset fixtures match the baseline.
+
+Linux Chromium **151.0.7922.173** passed `validate-116a.cjs`, `validate-116b.cjs`, the Camera-adapted `validate-116c.cjs`, and new `validate-116ca.cjs` across source, portable and hosted at DPR **1 and 2**, with no page/console errors or failed responses. The 116C.A harness samples actual native held keys over real animation frames: 54 pan probes measured approximately **320 CSS pixels/second**, including 0°/90°/180°/37.5°, zoom 0.01/1/100, diagonals, Shift **960**, edited speed **160**, Q/E and combined translation/rotation. It checks focus/visibility/mode cancellation, panel state/focus, numeric drafts, shortcuts/seeking/drop ownership, stopped/playing/paused and zero/one/two Orbs, viewport/DPR resize and narrow/short layouts. Mutation probes found zero tooltip/element changes during visible movement and zero Camera control/text/tooltip writes while hidden. Six moving-camera RecorderEngine exports decoded at canonical **1000×800** (DPR 1) or **2000×1600** (DPR 2); MIME was `video/webm;codecs=vp9,opus`. Prior 116B/C video-content and projection regressions also passed.
+
+Reproduce the new native checks with external tooling: `AP_PLAYWRIGHT_MODULE=/path/to/playwright AP_CHROMIUM_PATH=/path/to/chromium AP_REPORT=/path/to/report.json node scripts/validate-116ca.cjs`. No application dependency was added. Browser evidence is Linux Chromium over local HTTP; Firefox/WebKit, direct `file://`, physical devices, assistive-technology users and OS file dragging remain unverified. Cancellation lifecycle signals are additionally injected; touch/DPR/orientation use emulation in prior harnesses. Short exports establish viewport capture behavior, not long-duration safety or audio fidelity.
+
+### Preview and owner check
+
+```sh
+npm ci
+npm test
+npm run build
+python3 scripts/verify_distribution.py
+python3 -m http.server 8000 --directory dist
+```
+
+Open `http://localhost:8000/auralprint_0.1.16c.a.html` or `http://localhost:8000/hosted/`.
+
+1. Load music; launch Camera, enable camera mode, select **Focus canvas**, and hold W, W+D, W+Q and W+Shift+E. Adjust both speeds and try rotation at 90°.
+2. Press H while moving; restore panels and confirm the view/mode survived. Compare Space-pause, audio pause and Stop. Drag and wheel over an off-center mark.
+3. Release keys, tab into a number field, leave the window, and press Escape. Confirm movement stops and fresh canvas focus/key presses recover. Check mode-off arrows seek.
+4. Make a short recording while moving; inspect the export. Resize the browser, apply/share a preset, and confirm retained trails remain in world coordinates and camera/speeds stay local.
+
+**Stop after 116C.A.** Camera serialization, animation paths, 116D, Build 117 optimization and public release/canon changes are excluded. Movement tuning remains provisional for owner evaluation.
