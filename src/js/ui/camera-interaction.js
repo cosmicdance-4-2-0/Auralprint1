@@ -18,7 +18,7 @@ function clientToCanvas(canvas, clientX, clientY) {
   return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
 }
 
-function createCameraInteraction() {
+function createCameraInteraction({ fitView = () => {} } = {}) {
   let canvas = null;
   let enabled = CONFIG.camera.interaction.enabledByDefault;
   let drag = null;
@@ -52,17 +52,20 @@ function createCameraInteraction() {
   }
 
   function tick(elapsedSec) {
-    if (!enabled || !canvas || document.hidden || document.activeElement !== canvas
-      || !Number.isFinite(elapsedSec) || elapsedSec <= 0 || elapsedSec > CONFIG.camera.keyboard.maxFrameDeltaSec) {
+    if (!enabled || !canvas || document.hidden || document.activeElement !== canvas) {
       clearHeldKeys();
       return false;
     }
-    if (!heldKeys) return false;
+    // Timing safety discards time, never physical key ownership. The main clock
+    // supplies zero after a suspension; ordinary slow frames use a bounded step
+    // and resume on the next callback without accumulating movement debt.
+    if (!heldKeys || !Number.isFinite(elapsedSec) || elapsedSec <= 0) return false;
     let horizontal = Number(!!(heldKeys & HELD_KEYS.d)) - Number(!!(heldKeys & HELD_KEYS.a));
     let vertical = Number(!!(heldKeys & HELD_KEYS.w)) - Number(!!(heldKeys & HELD_KEYS.s));
     if (horizontal && vertical) { horizontal *= Math.SQRT1_2; vertical *= Math.SQRT1_2; }
     const rotation = Number(!!(heldKeys & HELD_KEYS.q)) - Number(!!(heldKeys & HELD_KEYS.e));
-    const elapsed = elapsedSec * (shiftHeld ? CONFIG.camera.keyboard.shiftMultiplier : 1);
+    const elapsed = Math.min(elapsedSec, CONFIG.camera.keyboard.maxMovementDeltaSec)
+      * (shiftHeld ? CONFIG.camera.keyboard.shiftMultiplier : 1);
     return moveCameraFrame(horizontal, vertical, rotation * speeds.rotationSpeedDegPerSec / RAD_TO_DEG * elapsed,
       speeds.panSpeedCssPxPerSec * elapsed, cssWidth, cssHeight);
   }
@@ -80,7 +83,7 @@ function createCameraInteraction() {
     if (!canvas) return;
     canvas.setAttribute("data-camera-interaction", String(enabled));
     canvas.setAttribute("aria-description", enabled
-      ? "Camera mode on. Hold W A S D to move and Q E to turn; Shift boosts speed. Drag to pan; wheel to zoom at the pointer. Arrow keys pan; plus and minus zoom; brackets rotate; Home resets camera; Escape exits camera mode."
+      ? "Camera mode on. Hold W A S D to move and Q E to turn; Shift boosts speed. Drag to pan; wheel to zoom at the pointer. Arrow keys pan; plus and minus zoom; brackets rotate; C or Home resets camera; F fits the world; Escape exits camera mode."
       : "Camera mode off. Enable direct manipulation in the Camera workspace panel.");
   }
 
@@ -164,12 +167,22 @@ function createCameraInteraction() {
     if (!enabled || event.target !== canvas || event.defaultPrevented || event.isComposing
       || document.hidden) return;
     const key = event.key?.toLowerCase();
+    if (key === "c" || key === "f") {
+      if (document.activeElement !== canvas) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (!event.repeat) {
+        cancelInput();
+        if (key === "c") resetCamera(); else fitView();
+      }
+      return;
+    }
     const heldKey = HELD_KEYS[key];
     if (heldKey || key === "shift") {
       if (document.activeElement !== canvas) return;
       event.preventDefault();
       event.stopPropagation();
-      // Repeats cannot reacquire keys cleared after blur or a discontinuity.
+      // Repeats cannot reacquire keys cleared by lifecycle cancellation or reset.
       if (event.repeat) return;
       if (heldKey) {
         heldKeys |= heldKey;
@@ -249,7 +262,7 @@ function createCameraInteraction() {
     return true;
   }
 
-  return { init, dispose, setEnabled, isEnabled: () => enabled, cancelDrag,
+  return { init, dispose, setEnabled, isEnabled: () => enabled, cancelDrag, cancelInput,
     tick, getSpeeds: () => speeds, setSpeeds };
 }
 

@@ -34,7 +34,7 @@ const CONFIG = deepFreeze({
       panSpeedCssPxPerSec: 320,
       rotationSpeedDegPerSec: 60,
       shiftMultiplier: 3,
-      maxFrameDeltaSec: 0.1,
+      maxMovementDeltaSec: 0.1,
     },
   },
   bandNames: [

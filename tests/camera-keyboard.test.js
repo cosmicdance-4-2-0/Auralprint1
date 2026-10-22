@@ -26,7 +26,7 @@ function target() {
   };
 }
 
-function harness(run) {
+function harness(run, options) {
   const saved = { camera: state.camera, canvas: state.canvas, world: state.world,
     widthPx: state.widthPx, heightPx: state.heightPx, dpr: state.dpr,
     window: globalThis.window, document: globalThis.document };
@@ -40,7 +40,7 @@ function harness(run) {
   state.canvas = canvas; state.world = createWorldGeometry(1000, 1000);
   state.widthPx = canvas.width; state.heightPx = canvas.height; state.dpr = 1;
   resetCamera();
-  const interaction = createCameraInteraction(); interaction.init(); interaction.setEnabled(true);
+  const interaction = createCameraInteraction(options); interaction.init(); interaction.setEnabled(true);
   const down = (key, props) => canvas.emit("keydown", { key, ...props });
   const up = key => window.emit("keyup", { key });
   const hold = (keys, intervals) => {
@@ -160,14 +160,13 @@ test("116C.A: speed settings have one stable runtime snapshot and reject invalid
   const camera = state.camera; assert.equal(hold(["w", "q"], [.1]), camera);
 }));
 
-test("116C.A: blur, hidden tabs, mode cancellation and abnormal frames discard held input without debt", () => harness(({ canvas, interaction, down }) => {
+test("116C.A: blur, hidden tabs, focus loss and mode cancellation discard held input", () => harness(({ canvas, interaction, down }) => {
   const cancel = [
     () => canvas.emit("blur"), () => window.emit("blur"),
     () => { document.hidden = true; document.emit("visibilitychange"); document.hidden = false; },
     () => { document.activeElement = {}; interaction.tick(.05); document.activeElement = canvas; },
     () => { interaction.setEnabled(false); interaction.setEnabled(true); },
     () => down("Escape"),
-    ...[0, -.1, NaN, Infinity, .10001, 10].map(delta => () => interaction.tick(delta)),
   ];
   for (const stop of cancel) {
     interaction.setEnabled(true); down("w"); down("Shift"); stop();
@@ -179,16 +178,76 @@ test("116C.A: blur, hidden tabs, mode cancellation and abnormal frames discard h
   }
 }));
 
+test("116C.A: slow visible frames bound movement time and preserve held translation, rotation and Shift", () => harness(({ down, interaction }) => {
+  down("w", { shiftKey: true }); down("q", { shiftKey: true });
+  const movementStep = CONFIG.camera.keyboard.maxMovementDeltaSec;
+  let expectedTurn = 0;
+  for (const elapsed of [.12, .2, .3, 10, .05]) {
+    const camera = state.camera;
+    assert.equal(interaction.tick(elapsed), true);
+    const turn = CONFIG.camera.keyboard.rotationSpeedDegPerSec * Math.PI / 180
+      * Math.min(elapsed, movementStep) * CONFIG.camera.keyboard.shiftMultiplier;
+    expectedTurn += turn;
+    close(state.camera.rotationRad, expectedTurn);
+    assert.ok(Math.hypot(state.camera.x - camera.x, state.camera.y - camera.y)
+      <= CONFIG.camera.keyboard.panSpeedCssPxPerSec / .8 * Math.min(elapsed, movementStep)
+        * CONFIG.camera.keyboard.shiftMultiplier + 1e-9, "no update spends deferred movement time");
+  }
+}));
+
+test("116C.A: zero, invalid and discarded deltas skip movement without cancelling physical held keys", () => harness(({ down, up, interaction }) => {
+  down("w");
+  for (const elapsed of [0, -.1, NaN, Infinity, -Infinity, visualMotionDeltaSec(120)]) {
+    const camera = state.camera;
+    assert.equal(interaction.tick(elapsed), false); assert.equal(state.camera, camera);
+    down("w", { repeat: true });
+    interaction.tick(.05); close(state.camera.y - camera.y, 20);
+  }
+  up("w"); const stopped = state.camera;
+  interaction.tick(.3); assert.equal(state.camera, stopped);
+}));
+
+test("116C.A: C and Home reset once, cancel held movement, and preserve mode and runtime speeds", () => harness(({ down, interaction }) => {
+  const speeds = interaction.setSpeeds({ panSpeedCssPxPerSec: 640, rotationSpeedDegPerSec: 120 });
+  for (const key of ["c", "C", "Home"]) {
+    setCamera({ x: 230, y: -100, zoom: 3, rotationRad: .7 });
+    down("w", { shiftKey: true }); down("q", { shiftKey: true }); interaction.tick(.05);
+    const event = down(key, { shiftKey: true });
+    assert.equal(event.defaultPrevented, true); assert.equal(event.stopped, true);
+    assert.deepEqual(state.camera, CONFIG.camera.defaults);
+    assert.equal(interaction.getSpeeds(), speeds); assert.equal(interaction.isEnabled(), true);
+    const camera = state.camera;
+    down("w", { repeat: true }); down("q", { repeat: true }); interaction.tick(.05);
+    assert.equal(state.camera, camera, "reset requires a fresh movement keypress");
+  }
+  setCamera({ x: 500 }); const camera = state.camera;
+  down("c", { repeat: true }); assert.equal(state.camera, camera, "C repeats are consumed without resetting again");
+}));
+
+test("116C.A: F dispatches one shared fit action and clears held input", () => {
+  let fitted = 0;
+  harness(({ down, interaction }) => {
+    down("w"); interaction.tick(.05);
+    assert.equal(down("F", { shiftKey: true }).stopped, true); assert.equal(fitted, 1);
+    const camera = state.camera;
+    down("w", { repeat: true }); interaction.tick(.05); assert.equal(state.camera, camera);
+    down("f", { repeat: true }); assert.equal(fitted, 1);
+    down("f"); assert.equal(fitted, 2);
+  }, { fitView() { fitted++; } });
+});
+
 test("116C.A: camera mode and real canvas focus own movement; text, transport and browser keys remain unclaimed", () => harness(({ canvas, interaction, down }) => {
   interaction.setEnabled(false);
-  for (const key of ["w", "q", "Shift"]) assert.equal(down(key).defaultPrevented, false);
+  for (const key of ["w", "q", "Shift", "c", "f"]) assert.equal(down(key).defaultPrevented, false);
   interaction.setEnabled(true); document.activeElement = {};
-  for (const key of ["w", "q", "Shift"]) assert.equal(down(key).defaultPrevented, false);
+  for (const key of ["w", "q", "Shift", "c", "f"]) assert.equal(down(key).defaultPrevented, false);
   document.activeElement = canvas;
   for (const key of ["h", " ", "r", "n", "p", "Tab"]) assert.equal(down(key).stopped, false);
   for (const modifier of ["ctrlKey", "altKey", "metaKey", "isComposing"]) {
     down("w"); const camera = state.camera;
     assert.equal(down("w", { [modifier]: true }).stopped, false);
+    assert.equal(down("c", { [modifier]: true }).stopped, false);
+    assert.equal(down("f", { [modifier]: true }).stopped, false);
     interaction.tick(.05); assert.equal(state.camera, camera);
   }
   down("w", { target: {} }); const camera = state.camera;
@@ -232,7 +291,10 @@ test("116C.A: the production callback advances held camera input before renderin
     down("w", { repeat: true }); frame(100250); close(state.camera.y, 40);
     down("w"); frame(100300); close(state.camera.y, 60);
     frame(220300); close(deltas.at(-1), 0); close(state.camera.y, 60);
-    frame(220350); close(state.camera.y, 60);
+    frame(220350); close(state.camera.y, 80);
+    frame(220470); close(state.camera.y, 120);
+    frame(220670); close(state.camera.y, 160);
+    frame(220970); close(state.camera.y, 200);
     assert.equal(scheduled, rendered.length, "the existing callback owns every scheduled frame");
   } finally { state.time = savedTime; }
 }));
