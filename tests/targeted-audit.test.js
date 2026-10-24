@@ -26,7 +26,7 @@ test("version metadata and schema remain aligned", () => {
   const constants = readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.match(version, /^v[0-9][A-Za-z0-9.\-]*$/);
   assert.ok(constants.includes(`   Auralprint\n   ${version.slice(1)}\n`), "Source header must match root version");
-  assert.equal(PRESET_SCHEMA_VERSION, 11);
+  assert.equal(PRESET_SCHEMA_VERSION, 12);
 });
 
 test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
@@ -3193,7 +3193,7 @@ test("Copy Share Link writes the canonical schema-10 hash and reports only in Se
     state.ui.btnShare.click();
     await Promise.resolve();
     assert.equal(writeHash.mock.calls.length, 1);
-    assert.equal(decodePresetHash(location.hash).schema, 11);
+    assert.equal(decodePresetHash(location.hash).schema, 12);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3205,7 +3205,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
     delete globalThis.navigator.clipboard;
     state.ui.btnShare.click();
     await Promise.resolve();
-    assert.equal(decodePresetHash(location.hash).schema, 11);
+    assert.equal(decodePresetHash(location.hash).schema, 12);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });

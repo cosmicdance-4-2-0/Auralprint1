@@ -19,7 +19,7 @@ for (const [key,group,field,limits,precise] of continuousOrbCases) {
       const incoming=structuredClone(fallback); writeNumeric(incoming,group,field,value);
       const normalized=normalizeOrbDef(incoming,fallback); assert.equal(readNumeric(normalized,group,field),value);
       const prefs=sanitizePreset({schema:11,prefs:{orbs:[incoming]}});
-      const payload=encodePresetPayload(prefs); assert.equal(payload.schema,11);
+      const payload=encodePresetPayload(prefs); assert.equal(payload.schema, 12);
       assert.equal(readNumeric(sanitizePreset(decodePresetPayload(payload)).orbs[0],group,field),value);
     }
     for (const value of [NaN, Infinity, -Infinity, '0.123456', null]) {

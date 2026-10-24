@@ -2,6 +2,7 @@ import { TAU, RAD_TO_DEG } from "./constants.js";
 import { deepFreeze } from "./utils.js";
 
 const SIMULATION_MAX_DELTA_TIME_SEC = 1 / 30;
+const DEFAULT_CAMERA = { x: 0, y: 0, zoom: 1, rotationRad: 0 };
 
 const DEFAULT_ORB_BEHAVIOR = {
   motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
@@ -18,9 +19,9 @@ function defaultOrb(identity) {
    CONFIG — Canonical truth (never mutated)
    ========================================================================== */
 const CONFIG = deepFreeze({
-  // Application runtime only. Scene defaults below are preset-owned.
+  // Shared camera policy; live state and authored Scene state are independent.
   camera: {
-    defaults: { x: 0, y: 0, zoom: 1, rotationRad: 0 },
+    defaults: DEFAULT_CAMERA,
     // Provisional 116C interaction choices, pending owner artistic testing.
     interaction: {
       enabledByDefault: false,
@@ -445,6 +446,7 @@ const CONFIG = deepFreeze({
   worldGeometry: { legacyWorldUnitsPerCssPixel: 1 },
 
   defaults: {
+    sceneCamera: DEFAULT_CAMERA,
     world: { widthUnits: 1000, heightUnits: 1000 },
     visuals: {
       backgroundColor: "#000000",

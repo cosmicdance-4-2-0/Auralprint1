@@ -220,7 +220,7 @@ test("116B: historical and newly emitted particles, Trace and Ring share project
   } finally { orb.trail.dispose(); }
 }));
 
-test("116B: camera stays runtime-only across schema-11 encoding, URL replacement and legacy migration", () => scene(() => {
+test("116B: camera stays runtime-only across schema-12 encoding, URL replacement and legacy migration", () => scene(() => {
   setCamera(cameras.at(-1)); let camera = state.camera;
   assert.equal("camera" in preferences, false); assert.equal("camera" in runtime.settings, false);
   assert.equal("camera" in CONFIG.defaults, false);
@@ -233,8 +233,8 @@ test("116B: camera stays runtime-only across schema-11 encoding, URL replacement
   preferences.camera = { ...camera };
   UrlPreset.writeHashFromPrefs();
   const payload = JSON.parse(Buffer.from(location.hash.slice(3), "base64url").toString("utf8"));
-  assert.equal(payload.schema, 11); assert.equal("camera" in payload.prefs, false);
-  assert.deepEqual(Object.keys(payload.prefs).sort(), ["audio", "bands", "orbs", "particleSafety", "timing", "visuals", "world"]);
+  assert.equal(payload.schema, 12); assert.equal("camera" in payload.prefs, false);
+  assert.deepEqual(Object.keys(payload.prefs).sort(), ["audio", "bands", "orbs", "particleSafety", "sceneCamera", "timing", "visuals", "world"]);
   assert.equal(UrlPreset.applyFromLocationHash(), true); resolveSettings();
   assert.equal(state.camera, camera);
   assert.equal("camera" in preferences, false); assert.equal("camera" in runtime.settings, false);

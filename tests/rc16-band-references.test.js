@@ -91,7 +91,7 @@ test("RC-16: schemas 2–10 discard entries without losing scenes or reviving al
     assert.equal(normalized.visuals.backgroundColor, "#123456");
     assert.ok(normalized.orbs.every(o => !("bandNames" in o) && !("bandId" in o)));
     const encoded = encodePresetPayload(normalized);
-    assert.equal(encoded.schema, 11);
+    assert.equal(encoded.schema, 12);
     assert.deepEqual(sanitizePreset(decodePresetPayload(JSON.parse(JSON.stringify(encoded)))), normalized);
   }
 });
@@ -214,7 +214,7 @@ test("RC-16: URL round-trip, runtime reconciliation and duplication preserve sce
   const tail = a.trail.particles.tail;
   UrlPreset.writeHashFromPrefs();
   const encoded = JSON.parse(Buffer.from(location.hash.slice(3), "base64url"));
-  assert.equal(encoded.schema, 11);
+  assert.equal(encoded.schema, 12);
   assert.deepEqual(encoded.prefs.orbs.map(o => o.bandIds), [[7, 3, 0], []]);
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   preferences.orbs[0].bandIds = [highest, null, 0, true];
@@ -230,7 +230,7 @@ test("RC-16: URL round-trip, runtime reconciliation and duplication preserve sce
   assert.equal(copy.angleRad, copy.startAngleRad);
   assert.equal(a.trail.particles.tail, tail);
   const saved = structuredClone(preferences);
-  for (const payload of [{ schema: 12, prefs: {} }, { schema: 11, prefs: { orbs: Array.from({ length: CONFIG.limits.orbs.maxCount + 1 }, () => ({ bandIds: malformed })) } }]) {
+  for (const payload of [{ schema: 13, prefs: {} }, { schema: 11, prefs: { orbs: Array.from({ length: CONFIG.limits.orbs.maxCount + 1 }, () => ({ bandIds: malformed })) } }]) {
     location.hash = rawHash(payload);
     assert.equal(UrlPreset.applyFromLocationHash(), false);
     assert.deepEqual(preferences, saved);

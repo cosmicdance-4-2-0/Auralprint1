@@ -2,6 +2,7 @@ import { normalizeMaxDeltaTimeSec } from "./timing.js";
 import { normalizeParticleSafety } from "./particle-safety.js";
 import { normalizeWorldSettings } from "./world-settings.js";
 import { createWorldGeometry } from "./world-geometry.js";
+import { normalizeSceneCamera } from "./camera-state.js";
 import { state } from "./state.js";
 import { CONFIG } from "./config.js";
 import { TAU } from "./constants.js";
@@ -23,8 +24,10 @@ function normalizeMinPlacementDistanceUnits(value, fallback = CONFIG.defaults.or
 function replacePreferences(next) {
   const replacement = (next && typeof next === "object") ? next : deepClone(CONFIG.defaults);
   assertOrbAdmission(replacement.orbs);
+  const sceneCamera = normalizeSceneCamera(replacement.sceneCamera);
   for (const key of Object.keys(preferences)) delete preferences[key];
   Object.assign(preferences, replacement);
+  preferences.sceneCamera = sceneCamera;
   return preferences;
 }
 
@@ -42,6 +45,7 @@ function resolveSettings() {
   assertOrbAdmission(preferences.orbs);
   runtime.settings = deepClone(preferences);
   runtime.settings.world = normalizeWorldSettings(preferences.world);
+  runtime.settings.sceneCamera = normalizeSceneCamera(preferences.sceneCamera);
   const { widthUnits, heightUnits } = runtime.settings.world;
   // Resolved Scene settings alone own world state. Preserve the descriptor on
   // unrelated settings updates; canvas sizing has no path to this assignment.
