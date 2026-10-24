@@ -1,5 +1,11 @@
 # Auralprint Changelog
 
+## Build 116 (unreleased)
+
+- **Live-input recovery (AUD-001).** Microphone/shared-stream audio that ends
+  during acquisition or graph setup no longer appears live. The same source
+  button permits an intentional retry, and obsolete cleanup preserves newer inputs.
+
 ---
 
 ## v110 → v111
