@@ -869,6 +869,7 @@ test("external shared stream end tears down the stream, resets live visuals, and
 test("teardownActiveSource stops stream-backed sessions even when the kind is mic", async () => {
   const stopCounts = { audio: 0, video: 0 };
   const fakeAudioTrack = {
+    readyState: "live",
     addEventListener() {},
     removeEventListener() {},
     stop() { stopCounts.audio += 1; },

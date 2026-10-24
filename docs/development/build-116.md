@@ -1,5 +1,18 @@
 # Build 116 — simulation world, camera and projection
 
+## AUD-001 corrective disposition
+
+The October 24 audit's Medium live-input readiness defect is corrected against
+accepted `main` **`0bbe5172cb4f1ec863bd00eb9e4e32c4e15f744f`**. Acquired live
+sessions own pending listeners/tracks before attachment; admission and atomic
+commit check the ID-selected audio track, stream activity and activation ownership.
+Ended acquisitions retain granted permission, recover with existing reconnect
+feedback, and permit the same Mic/Stream button to request capture again.
+Session-fenced callbacks and synchronous recovery cannot overwrite a successor.
+Committed Stream multi-track/video policy, recorder ownership, UI locks and schema
+12 are unchanged. [AUD-001 handoff and evidence](../audits/remediations/116-aud001/README.md)
+records the failing baseline, 91 focused tests, full suite, 72 native cases and
+remaining device qualifications. Owner acceptance and release approval remain pending.
 
 ## 116D authored Scene camera
 

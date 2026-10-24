@@ -232,3 +232,26 @@ test("RC-03: optional attachment guard also protects a running context", async t
   h.assertTracks("mic", "live");
   h.streams.mic.getTracks().forEach(track => track.stop());
 });
+
+for (const kind of ["mic", "stream"]) {
+  test(`AUD-001: ${kind} audio ending during resume cannot commit active`, async t => {
+    const h = await harness(t);
+    const held = h.holdResume();
+    const pending = h.activate(kind);
+    await held.entered.promise;
+    // stop() changes readiness without delivering an ended event. Reconcile
+    // state after resume even when no lifecycle callback can rescue activation.
+    h.streams[kind].getAudioTracks()[0].stop();
+    held.resolve();
+    await pending;
+    assert.equal(h.stateRef.source.sessionActive, false);
+    assert.equal(h.stateRef.source.kind, "none");
+    assert.equal(h.stateRef.source.status, "idle");
+    assert.equal(h.stateRef.source.errorCode, `${kind}-ended`);
+    assert.equal(h.stateRef.source.permission[kind], "granted");
+    assert.deepEqual(h.stateRef.source.streamMeta, { hasAudio: false, hasVideo: false, audioChannelCount: null });
+    assert.equal(h.engine.sample().ready, false);
+    assert.equal(h.nodes.some(value => value.mediaStream === h.streams[kind]), false);
+    assert.ok(h.streams[kind].getTracks().every(track => track.readyState === "ended"));
+  });
+}

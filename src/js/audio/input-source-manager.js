@@ -54,14 +54,18 @@ function createInputSourceManager(deps = {}) {
     return { video: true, audio: Object.keys(audio).length ? audio : true };
   }
 
-  function readAudioChannelCount(audioTracks) {
+  function selectAudioTrack(audioTracks) {
     // createMediaStreamSource selects the first audio track by Unicode ID order.
     let selectedTrack = null;
     for (const track of audioTracks) {
       if (track && (!selectedTrack || track.id < selectedTrack.id)) selectedTrack = track;
     }
+    return selectedTrack;
+  }
+
+  function readAudioChannelCount(audioTracks) {
     try {
-      const channelCount = selectedTrack?.getSettings?.()?.channelCount;
+      const channelCount = selectAudioTrack(audioTracks)?.getSettings?.()?.channelCount;
       return Number.isInteger(channelCount) && channelCount > 0 ? channelCount : null;
     } catch {
       return null;
@@ -284,6 +288,8 @@ function createInputSourceManager(deps = {}) {
   }
 
   function stopSessionStreamTracks(session) {
+    if (!session || session.tracksStopped) return;
+    session.tracksStopped = true;
     const mediaStream = session && session.mediaStream;
     if (!mediaStream || typeof mediaStream.getTracks !== "function") return;
     for (const track of mediaStream.getTracks()) {
@@ -346,11 +352,22 @@ function createInputSourceManager(deps = {}) {
     return audioTracks.every((track) => track && track.readyState === "ended");
   }
 
-  function createLiveInputEndedCleanup(kind, mediaStream) {
+  function isLiveInputUsable(session) {
+    // Membership survives stop(). Web Audio selects one track by ID, so an
+    // unrelated ended audio/video track must not veto an otherwise valid input.
+    return session.mediaStream?.active !== false && session.audioTrack?.readyState === "live";
+  }
+
+  function isLiveSessionCurrent(session) {
+    return activeSession === session && isActivationTokenCurrent(session.activationToken);
+  }
+
+  function createLiveInputEndedCleanup(session) {
+    const { kind, mediaStream } = session;
     if (!mediaStream || typeof mediaStream.getTracks !== "function") return [];
     const cleanupFns = [];
     const endSession = () => {
-      handleExternalStreamEnded();
+      endLiveSession(session);
     };
 
     if (kind === "stream") {
@@ -360,7 +377,9 @@ function createInputSourceManager(deps = {}) {
       for (const track of audioTracks) {
         if (!track || typeof track.addEventListener !== "function") continue;
         const onEnded = () => {
-          if (areAllAudioTracksEnded(mediaStream)) endSession();
+          // Preserve the established all-audio-tracks end policy once active.
+          // During attachment, the track Web Audio will select must be live.
+          if (session.committed ? areAllAudioTracksEnded(mediaStream) : !isLiveInputUsable(session)) endSession();
         };
         track.addEventListener("ended", onEnded);
         cleanupFns.push(() => {
@@ -412,7 +431,7 @@ function createInputSourceManager(deps = {}) {
     };
   }
 
-  async function teardownActiveSource({ reason = "" } = {}) {
+  function teardownSource({ reason = "" } = {}) {
     const sourceState = ensureSourceState();
     if (!hasManagedSourceState()) {
       return false;
@@ -434,6 +453,76 @@ function createInputSourceManager(deps = {}) {
 
     resetToIdle();
     return true;
+  }
+
+  async function teardownActiveSource(options = {}) {
+    return teardownSource(options);
+  }
+
+  function prepareLiveSession(kind, mediaStream, options, activationToken) {
+    const session = {
+      kind, mediaStream, activationToken,
+      label: options.label || "",
+      audioTrack: selectAudioTrack(mediaStream?.getAudioTracks?.() || []),
+      cleanupFns: [],
+      committed: false,
+      hasAudio: !!mediaStream?.getAudioTracks?.().length,
+      hasVideo: !!mediaStream?.getVideoTracks?.().length,
+      audioChannelCount: kind === "stream" ? (options.audioChannelCount ?? null) : null,
+    };
+    // The same session owns pending and committed resources. Teardown can
+    // release its tracks/listeners even while native resume remains pending.
+    activeSession = session;
+    session.cleanupFns = createLiveInputEndedCleanup(session);
+    return session;
+  }
+
+  function commitLiveSession(session) {
+    if (!isLiveSessionCurrent(session)) return session.endedResult || readCancelledActivation(session.kind);
+    if (!isLiveInputUsable(session)) return endLiveSession(session);
+    // No await between readiness/ownership checks and publishing the session.
+    session.committed = true;
+    return commitActiveSession(session);
+  }
+
+  async function attachLiveSession(kind, mediaStream, options, activationToken) {
+    const sourceState = ensureSourceState();
+    sourceState.permission[kind] = "granted";
+    const session = prepareLiveSession(kind, mediaStream, options, activationToken);
+    if (!isLiveInputUsable(session)) return endLiveSession(session);
+    let attached;
+    try {
+      attached = await audioEngine.attachMediaStreamSource(mediaStream, {
+        kind, label: session.label, monitorOutput: false,
+        isCurrent: () => isLiveSessionCurrent(session) && isLiveInputUsable(session),
+      });
+    } catch (err) {
+      if (!isLiveSessionCurrent(session)) {
+        clearActiveSessionListeners(session);
+        stopSessionStreamTracks(session);
+        return session.endedResult || readCancelledActivation(kind);
+      }
+      if (!isLiveInputUsable(session)) return endLiveSession(session);
+      teardownSource({ reason: `${kind}-attach-failed` });
+      return commitFailure(kind, {
+        status: "error", code: `${kind}-attach-failed`,
+        message: err?.message
+          ? `${kind === "mic" ? "Microphone" : "Stream"} activation failed: ${err.message}`
+          : `${kind === "mic" ? "Microphone" : "Stream"} activation failed.`,
+        label: session.label,
+      });
+    }
+    if (!isLiveSessionCurrent(session)) {
+      clearActiveSessionListeners(session);
+      stopSessionStreamTracks(session);
+      return session.endedResult || readCancelledActivation(kind);
+    }
+    if (!isLiveInputUsable(session)) return endLiveSession(session);
+    if (attached === false) {
+      teardownSource({ reason: `${kind}-attach-cancelled` });
+      return readCancelledActivation(kind);
+    }
+    return commitLiveSession(session);
   }
 
   async function activateFile(file, options = {}) {
@@ -507,7 +596,7 @@ function createInputSourceManager(deps = {}) {
 
   async function activateMic() {
     if (hasManagedSourceState()) {
-      await teardownActiveSource({ reason: "switch-to-mic" });
+      teardownSource({ reason: "switch-to-mic" });
     }
 
     const support = syncSupportState();
@@ -563,39 +652,12 @@ function createInputSourceManager(deps = {}) {
       });
     }
 
-    let attached;
-    try {
-      attached = await audioEngine.attachMediaStreamSource(mediaStream, {
-        kind: "mic",
-        label,
-        monitorOutput: false,
-        isCurrent: () => isActivationTokenCurrent(activationToken),
-      });
-    } catch (err) {
-      stopSessionStreamTracks({ mediaStream });
-      if (!isActivationTokenCurrent(activationToken)) return readCancelledActivation("mic");
-      return commitFailure("mic", {
-        status: "error",
-        code: "mic-attach-failed",
-        message: err && err.message
-          ? `Microphone activation failed: ${err.message}`
-          : "Microphone activation failed.",
-        label,
-      });
-    }
-
-    if (attached === false || !isActivationTokenCurrent(activationToken)) {
-      stopSessionStreamTracks({ mediaStream });
-      return readCancelledActivation("mic");
-    }
-
-    sourceState.permission.mic = "granted";
-    return registerFutureStreamSession("mic", mediaStream, { label });
+    return attachLiveSession("mic", mediaStream, { label }, activationToken);
   }
 
   async function activateStream() {
     if (hasManagedSourceState()) {
-      await teardownActiveSource({ reason: "switch-to-stream" });
+      teardownSource({ reason: "switch-to-stream" });
     }
 
     const support = syncSupportState();
@@ -649,50 +711,29 @@ function createInputSourceManager(deps = {}) {
       });
     }
 
-    let attached;
-    try {
-      attached = await audioEngine.attachMediaStreamSource(mediaStream, {
-        kind: "stream",
-        label,
-        monitorOutput: false,
-        isCurrent: () => isActivationTokenCurrent(activationToken),
-      });
-    } catch (err) {
-      stopSessionStreamTracks({ mediaStream });
-      if (!isActivationTokenCurrent(activationToken)) return readCancelledActivation("stream");
-      sourceState.permission.stream = "granted";
-      return commitFailure("stream", {
-        status: "error",
-        code: "stream-attach-failed",
-        message: err && err.message
-          ? `Stream activation failed: ${err.message}`
-          : "Stream activation failed.",
-        label,
-      });
-    }
-
-    if (attached === false || !isActivationTokenCurrent(activationToken)) {
-      stopSessionStreamTracks({ mediaStream });
-      return readCancelledActivation("stream");
-    }
-
-    sourceState.permission.stream = "granted";
-    return registerFutureStreamSession("stream", mediaStream, { label, audioChannelCount });
+    return attachLiveSession("stream", mediaStream, { label, audioChannelCount }, activationToken);
   }
 
-  async function handleExternalStreamEnded() {
-    if (!activeSession || !activeSession.mediaStream) return false;
-    const endedKind = activeSession.kind || "stream";
-    await teardownActiveSource({ reason: `external-${endedKind}-ended` });
-    if (typeof onExternalLiveInputReset === "function") {
-      try { onExternalLiveInputReset(); } catch {}
-    }
-    return commitRecoverableIdle(endedKind, {
+  function endLiveSession(session) {
+    if (!session?.mediaStream || !isLiveSessionCurrent(session)) return false;
+    const endedKind = session.kind;
+    // Cleanup and recovery are one synchronous transition; a queued callback
+    // from this session cannot unload or write feedback over its successor.
+    teardownSource({ reason: `external-${endedKind}-ended` });
+    session.endedResult = commitRecoverableIdle(endedKind, {
       code: `${endedKind}-ended`,
       message: endedKind === "mic"
         ? "Microphone input ended. Select Mic to reconnect."
         : "Shared stream ended. Select Stream to share again.",
     });
+    if (typeof onExternalLiveInputReset === "function") {
+      try { onExternalLiveInputReset(); } catch {}
+    }
+    return session.endedResult;
+  }
+
+  async function handleExternalStreamEnded() {
+    return endLiveSession(activeSession);
   }
 
   function clearRecoverableIdleError() {
@@ -751,16 +792,7 @@ function createInputSourceManager(deps = {}) {
   }
 
   function registerFutureStreamSession(kind, mediaStream, options = {}) {
-    const cleanupFns = createLiveInputEndedCleanup(kind, mediaStream);
-    return commitActiveSession({
-      kind,
-      label: options.label || "",
-      mediaStream,
-      cleanupFns,
-      hasAudio: !!(mediaStream && typeof mediaStream.getAudioTracks === "function" && mediaStream.getAudioTracks().length),
-      hasVideo: !!(mediaStream && typeof mediaStream.getVideoTracks === "function" && mediaStream.getVideoTracks().length),
-      audioChannelCount: kind === "stream" ? (options.audioChannelCount ?? null) : null,
-    });
+    return commitLiveSession(prepareLiveSession(kind, mediaStream, options, activationSeq));
   }
 
   if (audioEngine && typeof audioEngine === "object") {
