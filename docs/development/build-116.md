@@ -1,5 +1,67 @@
 # Build 116 — simulation world, camera and projection
 
+
+## 116D authored Scene camera
+
+**Owner-authorized implementation for final review, not release approval.**
+Baseline: merged PR #72 and verified `main` at
+`23b1f13b7769a9fdaf090aa54a1e9fa87f1f7695` (`v0.1.16c.a.a`).
+116A–116C.A, including the owner's physical 16-Orb hero evaluation, are accepted.
+116D WIP is `v0.1.16d`, on `codex/116d-authored-scene-camera`.
+[Review handoff and compatibility evidence](build-116d-handoff.md).
+Earlier milestone sections below describe their original scope; this section
+supersedes their runtime-only persistence and preset-application statements.
+
+A Scene has an authored view at `preferences.sceneCamera`; a user performs through
+`state.camera`, the sole live camera. Schema **12** adds only
+`sceneCamera { x, y, zoom, rotationRad }`: center in world units, positive
+dimensionless zoom and radians. CONFIG supplies the same factory camera
+`{ x: 0, y: 0, zoom: 1, rotationRad: 0 }` to both owners without duplicating numeric
+policy. Existing zoom limits are 0.01–100, finite positions are unbounded, and
+rotation normalizes to `[0, 2π)` through the existing camera-state creator.
+
+`normalizeSceneCamera()` supplies malformed/missing individual fields from CONFIG;
+nonpositive/nonfinite zoom defaults, positive finite zoom clamps to existing
+limits, and types never coerce. Canonical output has exactly four fields and
+retains numerical precision. Normalization, replacement, resolution, capture and
+live initialization copy snapshots; no live reference enters Scene configuration.
+
+The codec accepts schemas **2–12**, including both historical schema-9 layouts.
+Schema 11 retains every existing Scene field, configured world dimensions and
+`minPlacementDistanceUnits`; world import deliberately starts at schema 11,
+independently of the current writer version. Schemas 2–10 retain default world
+geometry and the accepted pixel-spacing migration. All schemas 2–11 get CONFIG's
+default camera, ignoring injected `sceneCamera`, runtime `camera` and historical
+Scene camera properties. Historical fixtures and Build 115 artifacts remain immutable.
+
+Successful URL startup, **Apply URL Preset** and hash changes sanitize the whole
+payload, replace preferences, resolve settings, initialize the live camera, then
+synchronize through existing subsystem paths. URL transport still owns only
+encoding/decoding and preference replacement. Invalid presets change neither
+preferences nor camera. Initialization needs no canvas dimensions. Import retains
+its existing explicit visual reset; ordinary settings resolution preserves the
+live camera.
+
+The existing Camera panel owns **Save Current View as Scene View** and **Restore
+Scene View**. Save validates/copies the live camera and commits through
+`applyPrefs()` without visual reset; Restore cancels held/gesture input and
+applies the resolved authored camera without changing Scene preferences or history.
+Readouts distinguish saved and live views. **Copy Share Link** includes the saved
+view; movement alone never updates preferences or the URL. **C / Reset Camera**
+restores factory defaults, **F / Fit View** remains a one-time composition fit,
+and **Reset All Settings** resets both views through the complete reset path.
+Mode, speeds, key/focus/gesture state and panel visibility remain runtime-only.
+
+Projection remains uniform and short-side based. Shared center, zoom, orientation,
+world geometry and visualizer settings reproduce the authored view, while unlike
+screen aspect ratios may reveal different extents. Pixel-identical framing is not
+promised. Resize/DPR never write the authored camera or simulation geometry;
+CSS-screen-sized particle, Trace and Ring marks remain provisional. RecorderEngine
+continues to capture the live canonical viewport. No letterboxing, alternate
+renderer, recorder dimensions, local JSON workflow or Build 117 work is added.
+
+**Stop at the review PR.** No merge, tag, publish, deployment or Build 117.
+
 ## 116B projection interface contract
 
 116B starts from merged PR #68, exact `main` commit `1044d06771280703a7237826f181bdc537228321`. Camera state is application/runtime-only for this pass: one frozen `state.camera` snapshot, changed by `setCamera(patch)` or deterministic `resetCamera()`. CONFIG owns application camera defaults separately from Scene defaults and owns zoom limits. Presets, URLs and schema 11 retain their accepted structure.
