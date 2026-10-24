@@ -6,7 +6,7 @@ import { rename, rm } from "node:fs/promises";
 import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V8 } from "../src/js/core/constants.js";
 import { CONFIG } from "../src/js/core/config.js";
 import { normalizeOrbDef, preferences, runtime, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
-import { state } from "../src/js/core/state.js";
+import { state, setCamera } from "../src/js/core/state.js";
 import { AudioEngine } from "../src/js/audio/audio-engine.js";
 import { BandBankController } from "../src/js/audio/band-bank-controller.js";
 import { createAnalysisFrame, updateAnalysisFrame } from "../src/js/audio/analysis-frame.js";
@@ -26,7 +26,7 @@ test("version metadata and schema remain aligned", () => {
   const constants = readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.match(version, /^v[0-9][A-Za-z0-9.\-]*$/);
   assert.ok(constants.includes(`   Auralprint\n   ${version.slice(1)}\n`), "Source header must match root version");
-  assert.equal(PRESET_SCHEMA_VERSION, 11);
+  assert.equal(PRESET_SCHEMA_VERSION, 12);
 });
 
 test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
@@ -3129,6 +3129,7 @@ async function withSettingsActionHarness(t, run, coordinator = UI) {
   const previousBands = { ...state.bands };
   const previousOrbs = state.orbs.slice();
   const previousSourceKind = state.source.kind;
+  const previousCamera = state.camera;
   const descriptors = Object.fromEntries(["location", "history", "navigator"].map((name) => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
   t.mock.timers.enable({ apis: ["setTimeout"] });
   const location = { pathname: "/", search: "", hash: "", href: "https://example.test/" };
@@ -3179,6 +3180,7 @@ async function withSettingsActionHarness(t, run, coordinator = UI) {
     Object.assign(state.bands, previousBands);
     state.orbs.splice(0, state.orbs.length, ...previousOrbs);
     state.source.kind = previousSourceKind;
+    setCamera(previousCamera);
     VisualizerRuntime.rebuild(state.orbs);
   }
 }
@@ -3187,13 +3189,13 @@ function settingsPresetHash(prefs) {
   return `#p=${Buffer.from(JSON.stringify({ schema: PRESET_SCHEMA_VERSION, prefs }), "utf8").toString("base64url")}`;
 }
 
-test("Copy Share Link writes the canonical schema-10 hash and reports only in Settings", async (t) => {
+test("Copy Share Link writes the canonical schema-12 hash and reports only in Settings", async (t) => {
   await withSettingsActionHarness(t, async ({ clipboard, location }) => {
     const writeHash = t.mock.method(UrlPreset, "writeHashFromPrefs");
     state.ui.btnShare.click();
     await Promise.resolve();
     assert.equal(writeHash.mock.calls.length, 1);
-    assert.equal(decodePresetHash(location.hash).schema, 11);
+    assert.equal(decodePresetHash(location.hash).schema, 12);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3205,7 +3207,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
     delete globalThis.navigator.clipboard;
     state.ui.btnShare.click();
     await Promise.resolve();
-    assert.equal(decodePresetHash(location.hash).schema, 11);
+    assert.equal(decodePresetHash(location.hash).schema, 12);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
@@ -3218,11 +3220,15 @@ test("Apply URL Preset uses canonical apply, conditional BandBank rebuild and Se
     next.bands.distributionMode = "bark";
     next.visuals.backgroundColor = "#123456";
     next.orbs[0].startAngleRad = 1;
+    next.sceneCamera = { x: 123.456, y: -654.321, zoom: 2.75, rotationRad: .789 };
+    setCamera({ x: 900, y: -800, zoom: .1 });
     location.hash = settingsPresetHash(next);
     const rebuild = t.mock.method(BandBankController, "rebuildNow");
     const oldLowHz = state.bands.lowHz;
     state.ui.btnApplyUrl.click();
     assert.equal(preferences.visuals.backgroundColor, "#123456");
+    assert.deepEqual(state.camera, next.sceneCamera);
+    assert.notEqual(state.camera, preferences.sceneCamera);
     assert.equal(runtime.settings.bands.floorHz, 55);
     assert.equal(runtime.settings.bands.distributionMode, "bark");
     assert.notEqual(state.bands.lowHz, oldLowHz);
@@ -3238,12 +3244,14 @@ test("Apply URL Preset uses canonical apply, conditional BandBank rebuild and Se
 test("missing and invalid URL presets report only in Settings and retain preferences", async (t) => {
   await withSettingsActionHarness(t, ({ location }) => {
     const previous = structuredClone(preferences);
+    const camera = setCamera({ x: 123, y: -456, zoom: 7, rotationRad: 1.23 });
     for (const hash of ["", "#p=invalid"]) {
       location.hash = hash;
       state.ui.btnApplyUrl.click();
       assert.equal(state.ui.sceneStatus.textContent, "No valid preset in URL.");
       assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
       assert.deepEqual(preferences, previous);
+      assert.equal(state.camera, camera);
     }
   });
 });
@@ -3251,6 +3259,8 @@ test("missing and invalid URL presets report only in Settings and retain prefere
 test("Reset All Settings restores complete CONFIG defaults and reports only in Settings", async (t) => {
   await withSettingsActionHarness(t, () => {
     preferences.audio.volume = 0.25;
+    preferences.sceneCamera = { x: 123, y: -456, zoom: 3.4, rotationRad: .789 };
+    setCamera({ x: -800, zoom: .1, rotationRad: 2.5 });
     preferences.visuals.backgroundColor = "#123456";
     preferences.bands.floorHz = 55;
     preferences.orbs[0].motion.angularSpeedRadPerSec = 2;
@@ -3259,6 +3269,8 @@ test("Reset All Settings restores complete CONFIG defaults and reports only in S
     state.ui.btnResetPrefs.click();
     assert.deepEqual(preferences, CONFIG.defaults);
     assert.deepEqual(runtime.settings, CONFIG.defaults);
+    assert.deepEqual(state.camera, CONFIG.camera.defaults);
+    assert.notEqual(state.camera, preferences.sceneCamera);
     assert.equal(rebuild.mock.calls.length, 1);
     assert.equal(state.orbs[0].angleRad, CONFIG.defaults.orbs[0].startAngleRad);
     assert.equal(state.ui.sceneStatus.textContent, "All settings reset.");
@@ -4733,4 +4745,45 @@ test('AUD-004 recorder finalization alone updates busy/status and completion unl
     state.recording.phase='complete';UI.refreshAllUiText();
     assert.equal(state.ui.recordPanel.getAttribute('aria-busy'),'false');assert.equal(state.ui.btnLoad.disabled,false);
   });}finally{Object.assign(state.recording,previous);}
+});
+
+
+for (const count of [0, 1, 2, 16]) test(`116D authoring through Camera UI preserves ${count} Orbs and session owners`, async t => {
+  await withSettingsActionHarness(t, async ({ location, dispatchWindow }) => {
+    preferences.orbs = Array.from({ length: count }, (_, i) => ({ ...structuredClone(CONFIG.defaults.orbs[i % 2]), id: `capture-${i}` }));
+    UI.applyPrefs(null); initOrbs();
+    state.orbs.forEach((orb, i) => { orb.angleRad = .123 + i; orb.trail.emitAt(700 + i, -800 - i, 0, { r: 1, g: 0, b: 0 }); orb.trail.emitAccumulator = .375; });
+    const camera = setCamera({ x: 123.456789, y: -654.987654, zoom: 2.345, rotationRad: .713579 });
+    const owners = { world: state.world, audio: state.audio, time: state.time, recording: state.recording };
+    const orbs = state.orbs.slice(), particles = orbs.map(o => [...o.trail.particles]);
+    state.ui.btnSaveSceneView.click();
+    assert.deepEqual(preferences.sceneCamera, camera); assert.deepEqual(runtime.settings.sceneCamera, camera);
+    assert.notEqual(preferences.sceneCamera, camera); assert.equal(state.camera, camera);
+    assert.match(state.ui.sceneCameraStatus.textContent, /saved/);
+    setCamera({ x: 800, zoom: .5, rotationRad: 2 });
+    state.ui.btnShare.click(); await Promise.resolve();
+    assert.deepEqual(decodePresetHash(location.hash).prefs.sceneCamera, camera);
+    const preset = structuredClone(preferences);
+    state.ui.btnRestoreSceneView.click();
+    assert.deepEqual(state.camera, camera); assert.deepEqual(preferences, preset);
+    state.ui.btnResetCamera.click();
+    assert.deepEqual(state.camera, CONFIG.camera.defaults); assert.deepEqual(preferences, preset);
+    assert.equal(state.world, owners.world);
+    orbs.forEach((orb, i) => {
+      assert.equal(state.orbs[i], orb); assert.equal(orb.angleRad, .123 + i);
+      assert.equal(orb.trail.emitAccumulator, .375);
+      assert.deepEqual([...orb.trail.particles], particles[i]);
+      assert.equal(orb.trail.particles.at(0), particles[i][0]);
+    });
+    // Both supported import callers initialize the live view, old schemas use defaults.
+    for (const schema of [10, 11, 12]) {
+      location.hash = `#p=${Buffer.from(JSON.stringify({ schema, prefs: preset })).toString("base64url")}`;
+      setCamera({ x: 900 });
+      if (schema % 2) dispatchWindow("hashchange"); else state.ui.btnApplyUrl.click();
+      assert.deepEqual(state.camera, schema === 12 ? camera : CONFIG.camera.defaults);
+    }
+    // Capture/Restore/Reset Camera above must preserve all actual identities;
+    // URL import keeps its established explicit visual-reset behavior.
+    assert.equal(owners.audio, state.audio); assert.equal(owners.time, state.time); assert.equal(owners.recording, state.recording);
+  });
 });

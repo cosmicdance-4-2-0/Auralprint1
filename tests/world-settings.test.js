@@ -43,6 +43,7 @@ test("116A: published schema-10 fixture migrates all settings and spacing withou
   const snapshot = structuredClone(old);
   const expected = structuredClone(old);
   expected.world = { widthUnits: 1000, heightUnits: 1000 };
+  expected.sceneCamera = structuredClone(CONFIG.defaults.sceneCamera);
   for (const orb of expected.orbs) {
     orb.particles.minPlacementDistanceUnits = orb.particles.minPlacementDistancePx;
     delete orb.particles.minPlacementDistancePx;
@@ -51,7 +52,7 @@ test("116A: published schema-10 fixture migrates all settings and spacing withou
   assert.deepEqual(next, expected);
   assert.deepEqual(old, snapshot);
   const encoded = encodePresetPayload(next);
-  assert.equal(encoded.schema, 11);
+  assert.equal(encoded.schema, 12);
   assert.deepEqual(encoded.prefs, expected);
   assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)), expected);
 });
@@ -89,6 +90,6 @@ test("116A: current world-unit fields never inherit the retired pixel alias", ()
 });
 
 test("116A: all supported schemas decode; future schemas stay rejected", () => {
-  for (let schema = 2; schema <= 11; schema++) assert.equal(decodePresetPayload({ schema, prefs: {} }).ok, true);
-  for (const schema of [1, 12, "11", 11.5]) assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
+  for (let schema = 2; schema <= 12; schema++) assert.equal(decodePresetPayload({ schema, prefs: {} }).ok, true);
+  for (const schema of [1, 13, "12", 12.5]) assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
 });

@@ -1,7 +1,8 @@
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
+import { normalizeSceneCamera } from "../core/camera-state.js";
 import { normalizeWorldSettings } from "../core/world-settings.js";
 import { CONFIG } from "../core/config.js";
 import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
@@ -10,9 +11,9 @@ import { assertOrbAdmission } from "../core/orb-admission.js";
 
 // Preset data contract, independent of URL/base64 or application state.
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
-// reference and explicitly named world-unit placement distance; schemas 2–10
-// retain their historical input contracts and migrate below.
-const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
+// reference and explicitly named world-unit placement distance. Schema 12 adds
+// only the authored Scene camera; schemas 2–11 retain their input contracts.
+const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 
@@ -63,7 +64,8 @@ function sanitizePreset(decoded) {
   // Presets are full configuration snapshots. Always migrate/sanitize from
   // canonical defaults so older or partial payloads cannot inherit live state.
   const next = deepClone(CONFIG.defaults);
-  if (schema === PRESET_SCHEMA_VERSION) next.world = normalizeWorldSettings(incoming.world);
+  if (schema >= LEGACY_SCHEMA_V11) next.world = normalizeWorldSettings(incoming.world);
+  if (schema >= PRESET_SCHEMA_VERSION) next.sceneCamera = normalizeSceneCamera(incoming.sceneCamera);
 
   if (incoming.visuals) {
     if (isValidHexColor(incoming.visuals.backgroundColor)) next.visuals.backgroundColor = incoming.visuals.backgroundColor;

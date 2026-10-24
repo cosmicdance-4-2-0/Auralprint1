@@ -152,14 +152,14 @@ async function sourceChecks(page, base, dpr) {
     }
     t.UrlPreset.writeHashFromPrefs(); const hash = location.hash;
     const payload = JSON.parse(atob(hash.slice(3).replace(/-/g, '+').replace(/_/g, '/')));
-    if (payload.schema !== 11 || /camera|rotationRad/.test(JSON.stringify(payload))) throw Error('runtime camera entered preset');
+    if (payload.schema !== 12 || "camera" in payload.prefs || JSON.stringify(payload.prefs.sceneCamera) !== JSON.stringify(t.CONFIG.camera.defaults)) throw Error('runtime camera entered preset');
     if (!t.UrlPreset.applyFromLocationHash()) throw Error('URL apply failed');
     t.resolveSettings();
     if (t.state.camera !== camera) throw Error('preset apply changed camera');
     t.resetCamera(); t.step();
     if (JSON.stringify(t.snapshot()) !== before) throw Error('camera reset changed simulation/history');
     if (t.state.camera.x !== 0 || t.state.camera.y !== 0 || t.state.camera.zoom !== 1 || t.state.camera.rotationRad !== 0) throw Error('reset was not deterministic');
-    return { cameras: results, cssSizesIndependentOfZoom: true, presetSchema: payload.schema, cameraAbsentFromUrl: true, invalidCameraRejected: true };
+    return { cameras: results, cssSizesIndependentOfZoom: true, presetSchema: payload.schema, liveCameraExcludedFromUrl: true, invalidCameraRejected: true };
   });
   const cdp = await page.context().newCDPSession(page), viewports = [];
   await page.evaluate(() => test116b.setCamera({ x: -1500, y: 2200, zoom: 2.5, rotationRad: .3 }));
@@ -227,7 +227,7 @@ async function distributionChecks(page, url, dpr) {
   assert.equal(capture.canvasWidth, 1000 * dpr); assert.equal(capture.canvasHeight, 800 * dpr);
   await page.evaluate(() => document.querySelector('#btnShare').click());
   const payload = await page.evaluate(() => JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/'))));
-  assert.equal(payload.schema, 11); assert.doesNotMatch(JSON.stringify(payload), /camera|rotationRad/);
+  assert.equal(payload.schema, 12); assert.equal('camera' in payload.prefs, false); assert.deepEqual(payload.prefs.sceneCamera, { x: 0, y: 0, zoom: 1, rotationRad: 0 });
   await page.locator('#btnStop').click();
   return { dpr, actualStereoWavPlayback: true, runtimeCameraAbsentFromUrl: true, recorderEngineCapture: capture };
 }

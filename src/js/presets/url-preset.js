@@ -2,7 +2,7 @@ import { preferences, replacePreferences } from "../core/preferences.js";
 import { encodePresetPayload, decodePresetPayload, sanitizePreset } from "./preset-codec.js";
 
 /* =============================================================================
-   URL hash transport for preset schemas 2–10.
+   URL hash transport for preset schemas 2–12.
    Migration and sanitation belong to the transport-independent preset codec.
    ========================================================================== */
 const UrlPreset = (() => {

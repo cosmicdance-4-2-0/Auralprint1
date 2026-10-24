@@ -76,7 +76,7 @@ function createRecordingState() {
 const initialBandEnergies = { L: [], R: [], C: [] };
 
 const state = {
-  camera: createCameraState(), // Application runtime only; never Scene settings.
+  camera: createCameraState(), // Sole live view; independent of the authored Scene view.
   world: null, // Initialized from resolved Scene settings, never the viewport.
   canvas: null,
   ctx: null,

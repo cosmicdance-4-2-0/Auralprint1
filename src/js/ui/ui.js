@@ -24,6 +24,7 @@ import { createScenePanelUi } from "./scene-panel.js";
 import { createCameraControlsUi } from "./camera-controls.js";
 import { createCameraInteraction } from "./camera-interaction.js";
 import { fitCamera } from "./camera-actions.js";
+import { restoreSceneCamera } from "./scene-camera-actions.js";
 
 /* =============================================================================
    UI
@@ -375,7 +376,8 @@ const UI = (() => {
     return result;
   }
   const cameraInteraction = createCameraInteraction({ fitView });
-  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction, fitView });
+  const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction, fitView,
+    commitPreferences: reason => applyPrefs(reason) });
   const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,
@@ -458,12 +460,16 @@ const UI = (() => {
   }
 
   function applyPrefs(reason, options = {}) {
-    const { rebuildBandsOnDefinitionChange = false, showStatus = null } = options;
+    const { rebuildBandsOnDefinitionChange = false, showStatus = null, initializeCamera = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
 
     resolveSettings();
+    if (initializeCamera) {
+      cameraInteraction.cancelInput();
+      restoreSceneCamera();
+    }
     VisualizerRuntime.syncSettings(runtime.settings);
     syncOrbsFromSettings();
 
@@ -485,7 +491,7 @@ const UI = (() => {
 
   function resetPrefs() {
     replacePreferences(deepClone(CONFIG.defaults));
-    applyPrefs(null, { rebuildBandsOnDefinitionChange: true });
+    applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
     initOrbs();
     resetVisualizers("visuals");
     sceneStatusToast("All settings reset.", 4000);
@@ -502,14 +508,14 @@ const UI = (() => {
     }
   }
 
-  function applyUrlNow() {
+  function applyUrlNow(showInvalid = true) {
     const ok = UrlPreset.applyFromLocationHash();
     if (ok) {
-      applyPrefs(null, { rebuildBandsOnDefinitionChange: true });
+      applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
       initOrbs();
       resetVisualizers("visuals");
       sceneStatusToast("Preset applied from URL.", 4000);
-    } else {
+    } else if (showInvalid) {
       sceneStatusToast("No valid preset in URL.", 4000);
     }
   }
@@ -2005,15 +2011,7 @@ const UI = (() => {
       }
     }, { passive: false });
 
-    window.addEventListener("hashchange", () => {
-      const ok = UrlPreset.applyFromLocationHash();
-      if (ok) {
-        applyPrefs(null, { rebuildBandsOnDefinitionChange: true });
-        initOrbs();
-        resetVisualizers("visuals");
-        sceneStatusToast("Preset applied from URL.", 4000);
-      }
-    });
+    window.addEventListener("hashchange", () => applyUrlNow(false));
 
   } // end wireControls
 

@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 20, 2026. **Release 4 / Build 115 (`v0.1.15`) is accepted for public shipment.** Preset schema **10** is frozen; changes after shipment require versioned migration per [agents.md](agents.md#21-schema-discipline).
+Updated: October 24, 2026. **Release 4 / Build 115 (`v0.1.15`) is accepted for public shipment.** Preset schema **10** is frozen; changes after shipment require versioned migration per [agents.md](agents.md#21-schema-discipline).
 
 **RC-01 through RC-22 completed corrective review at checkpoint `a198b14b087da6b855041c3a23acb550a156ff4e`; Build 115N passed automated CI and received owner acceptance following public RC testing.** Release 4 is Build 115. Platform limitations and unverified environments are disclosed below; earlier audit snapshots remain immutable. The [audit disposition index](docs/development/build-115.md#audit-disposition-index) retains historical corrective evidence.
 
@@ -28,11 +28,11 @@ Capabilities below are implemented in source. Covered automated behavior and rec
 | Visuals and color | Singleton Spectral Ring and Orbs in Visualizers; shared Scene appearance in Settings; designed/reset/pause semantics | Artistic acceptance and resize/orientation coverage; simulation/projection separation in Build 116 |
 | Particle resources | Settings-owned emission/retention budgets and diagnostics; per-Orb minimum placement distance; fairness, oldest retirement and bounded emission time | Heavy Canvas/UI and large synchronous retirement costs require measured 115N disposition; broader optimization in Build 117 |
 | Capture | Canvas plus optional source audio, format/FPS, Balanced/Custom/Unrestricted resource policy, five-minute default Stop target, independent local settings, retained export and preserve-export Cancel | Exported audio fidelity/external players, downloads, long duration and devices in 115N |
-| Presets | Build 116A schema-11 codec, URL transport, schemas 2–10 migration including both schema-9 forms, configuration-only persistence | File import/export remains Build 119 |
+| Presets | Build 116D schema-12 codec with authored Scene view, URL transport, schemas 2–11 migration including both schema-9 forms, configuration-only persistence | File import/export remains Build 119 |
 | Workspace | Independent panels, unified launcher, collapse/global hide/restore, visible focus ownership and Queue focus recovery | Wider keyboard/accessibility/mobile acceptance; long-panel refinements in Build 117 |
 | Distribution | Versioned self-contained portable HTML and relocatable hosted package from shared JS/CSS | Owner-reported direct-file and Python-hosted functional coverage; managed automation file:// blocked; network-disabled portability remains separate; no caching/installability claim |
 
-Camera, richer frequency/band tools, preset-file workflows, and 3D remain planned. A separate Scene/compositor architecture is not a prerequisite for the current interface.
+Richer frequency/band tools, preset-file workflows, and 3D remain planned. Camera is implemented in Build 116 and awaits final owner review. A separate Scene/compositor architecture is not a prerequisite for the current interface.
 
 ## Build 115 staged delivery plan
 
@@ -105,18 +105,18 @@ Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, vis
 
 ## Build 116: simulation world, camera and projection
 
-**Status: 116A–116C accepted in merged PRs #68/#69/#71; 116C.A adds the Camera workspace and continuous performance controls for owner evaluation.** [Build 116 contract and validation](docs/development/build-116.md#116ca-camera-workspace-and-continuous-control). Build 115 remains the public release.
+**Status: 116A–116C.A accepted in merged PRs #68/#69/#71/#72. 116D implements the authored Scene camera and final compatibility pass for owner review; release approval remains pending.** [Build 116 contract and validation](docs/development/build-116.md#116d-authored-scene-camera). Build 115 remains the public release.
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
-Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** runtime-only camera ownership, projection/inverse and deterministic reset; **116C** accessible camera controls and opt-in pointer/wheel/local-key interaction, retaining provisional CSS-sized marks for human evaluation (future persistence requires a separate decision); **116C.A** dedicated Camera workspace and continuous canvas-focused keyboard control; **116D** final compatibility and release acceptance after review. Stop after 116C.A; no 116D or Build 117 work is authorized by this pass.
+Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** runtime-only camera ownership, projection/inverse and deterministic reset; **116C** accessible camera controls and opt-in pointer/wheel/local-key interaction, retaining provisional CSS-sized marks for human evaluation (subsequent persistence is authorized in 116D); **116C.A** dedicated Camera workspace and continuous canvas-focused keyboard control; **116D** versioned authored Scene camera persistence and final compatibility validation. Stop at the 116D review PR; no merge, release, deployment or Build 117 work is authorized.
 
 Acceptance gates:
 
 - World dimensions can be configured independently of browser dimensions; changing viewport size, devicePixelRatio, pan, zoom or camera rotation must not mutate Orb locations/phases, retained particle coordinates, Ring geometry, analysis or playback.
 - Default framing should approximate the familiar Build 115 appearance; explicitly test loaded schema-10 presets and legacy migration. The first persisted world configuration requires schema 11, CONFIG defaults/limits, codec migration and all preset/UI owners. Freeze no new preset semantics prematurely.
 - Pan, zoom, rotation, reset and the inverse coordinate transform are deterministic and accessible; camera reset returns to a documented default and interactive controls avoid transport, seek, drag/drop and panel gesture conflicts.
-- Decide camera persistence explicitly before implementation; application-only camera state stays out of presets unless a versioned design is approved. World dimensions are intended Scene configuration and must traverse the canonical preferences pipeline.
+- Schema 12 persists only the explicitly saved `sceneCamera`; `state.camera` remains the live performance view. Copy Share Link does not capture movement. Startup and URL import initialize the live camera from the normalized authored view; schemas 2–11 initialize factory defaults. Schema-11 world geometry and unit spacing survive migration. World and authored-camera settings traverse the canonical preferences pipeline.
 - World-unit particle spacing and CSS-screen-sized particle/Trace/Ring presentation retain explicit semantics; camera transforms must not silently change emission decisions. Resize, high-DPI, history retention, recording, hosted and single-file behavior pass regression validation.
 
 ## Build 117: UX and performance hardening

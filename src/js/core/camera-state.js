@@ -25,4 +25,20 @@ function createCameraState(camera = CONFIG.camera.defaults) {
   });
 }
 
-export { createCameraState, isValidCameraState };
+// Persistence boundary: malformed fields fall back independently, positive
+// finite zoom clamps to the existing live-camera range. Never coerce types or
+// retain input references. The strict live setter keeps its rejection policy.
+function normalizeSceneCamera(camera) {
+  const defaults = CONFIG.defaults.sceneCamera;
+  const input = camera && typeof camera === "object" && !Array.isArray(camera) ? camera : {};
+  const zoom = CONFIG.limits.camera.zoom;
+  return createCameraState({
+    x: Number.isFinite(input.x) ? input.x : defaults.x,
+    y: Number.isFinite(input.y) ? input.y : defaults.y,
+    zoom: Number.isFinite(input.zoom) && input.zoom > 0
+      ? Math.max(zoom.min, Math.min(zoom.max, input.zoom)) : defaults.zoom,
+    rotationRad: Number.isFinite(input.rotationRad) ? input.rotationRad : defaults.rotationRad,
+  });
+}
+
+export { createCameraState, isValidCameraState, normalizeSceneCamera };

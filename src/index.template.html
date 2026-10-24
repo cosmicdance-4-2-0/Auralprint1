@@ -261,12 +261,16 @@
       <p id="cameraRotationError" class="picker-error" role="alert"></p>
       <div class="camera-actions" role="group" aria-label="Camera rotation"><button id="btnCameraRotateCW" type="button">Rotate clockwise</button><button id="btnCameraRotateCCW" type="button">Rotate counterclockwise</button></div>
       <div class="camera-actions"><button id="btnResetCamera" type="button">Reset Camera</button><button id="btnFitCamera" type="button" aria-describedby="cameraFitHelp">Fit View</button></div>
-      <p id="cameraFitHelp" class="section-description">Fit the world, retained trails and potential Orb/Ring extent once, preserving rotation. Zoom limits may prevent a complete fit.</p>
+      <p id="cameraFitHelp" class="section-description">Reset Camera (C) restores the factory view. Fit View (F) fits the world, retained trails and potential Orb/Ring extent once, preserving rotation. Zoom limits may prevent a complete fit.</p>
+      <div class="camera-actions"><button id="btnSaveSceneView" type="button" aria-describedby="sceneCameraHelp">Save Current View as Scene View</button><button id="btnRestoreSceneView" type="button" aria-describedby="sceneCameraHelp">Restore Scene View</button></div>
+      <p id="sceneCameraHelp" class="section-description">Camera movement changes only your live view. Save it explicitly to update the Scene view used by Copy Share Link. Restore returns to that saved view. Different screen shapes may show more or less of the world.</p>
+      <p id="sceneCameraReadout" class="section-description"></p>
+      <p id="sceneCameraStatus" class="section-description" role="status"></p>
       <div class="row"><label for="numCameraPanSpeed">Pan speed (CSS pixels/second)</label><input id="numCameraPanSpeed" type="number" inputmode="decimal" aria-describedby="cameraSpeedHelp cameraPanSpeedError" /><div id="valCameraPanSpeed" class="val"></div></div>
       <p id="cameraPanSpeedError" class="picker-error" role="alert"></p>
       <div class="row"><label for="numCameraRotationSpeed">Rotation speed (degrees/second)</label><input id="numCameraRotationSpeed" type="number" inputmode="decimal" aria-describedby="cameraSpeedHelp cameraRotationSpeedError" /><div id="valCameraRotationSpeed" class="val"></div></div>
       <p id="cameraRotationSpeedError" class="picker-error" role="alert"></p>
-      <p id="cameraSpeedHelp" class="section-description">Speeds apply to held movement keys. View and speed settings last for this session and are excluded from presets.</p>
+      <p id="cameraSpeedHelp" class="section-description">Speeds apply to held movement keys. Live movement, mode and speeds last for this session. Only the explicitly saved Scene view is included in presets.</p>
       <details class="settings-section" open><summary>Control reference</summary><div class="section-body camera-reference">
         <p><strong>Camera mode + canvas focus:</strong> W/S move forward/back; A/D strafe; Q/E rotate counterclockwise/clockwise. Hold Shift to boost movement and rotation. Combine keys to move and turn.</p>
         <p>Drag to grab the world; wheel to zoom at the pointer. Arrows pan in steps; +/− zoom; [/] rotate clockwise/counterclockwise; C or Home resets; F fits the world and composition; Escape exits camera mode.</p>
@@ -368,6 +372,7 @@
     <details class="settings-section"><summary>Presets<span class="section-description">Share or restore configuration</span></summary><div class="section-body">
       <p class="panel-description">Links include settings. Your files, queue and recordings stay in this session.</p>
       <div class="panel-actions"><button id="btnShare">Copy Share Link</button><button id="btnApplyUrl">Apply URL Preset</button><button id="btnResetPrefs">Reset All Settings</button></div>
+      <p class="section-description">Links use the saved Scene view. To share your current live viewpoint, use Camera → Save Current View as Scene View first.</p>
     </div></details>
   </div>
 

@@ -78,24 +78,38 @@ Build 116A is explicitly authorized to use schema **11** for Scene-owned
 CONFIG → preferences → resolved settings → frozen `state.world` owns dimensions.
 Supported schemas 2–10 migrate legacy pixel spacing at the approved fixed one
 world unit per reference CSS pixel; schema 10 itself remains immutable.
-Build 116B keeps camera state application/runtime-only in `state.camera`, with
-CONFIG-owned defaults outside Scene defaults and validated runtime setters.
-Camera is absent from preferences, schema 11 and URLs. Build 116C exposes one
-Camera workspace UI owner, CONFIG-driven interaction steps and opt-in canvas
-interaction; native control and canvas actions use the validated setters.
-116C.A integrates held WASD/QE through the existing frame callback with
-runtime-only speeds, CSS-screen-pixel panning and explicit canvas focus ownership.
-Particle/Trace/Ring mark sizes remain CSS-screen-sized under zoom, provisionally
-pending owner artistic evaluation. Neither this runtime-only pass nor sizing
-decides future persistence policy. See the [Build 116 contract](docs/development/build-116.md).
+Build 116D authorizes schema **12** for `preferences.sceneCamera`:
+`{ x, y, zoom, rotationRad }` (world units, dimensionless zoom, radians).
+CONFIG owns shared factory defaults and existing camera limits. Schemas 2–11
+receive the default camera and ignore injected/historical camera properties;
+schema 11 retains world geometry and unit spacing, while schemas 2–10 retain
+their established pixel-spacing migration and default world.
+
+`state.camera` alone owns the live view. Movement, numeric editing, C and F never
+capture it into Scene preferences. The existing Camera workspace owns explicit
+**Save Current View as Scene View** and **Restore Scene View** actions. Capture
+uses canonical settings synchronization without visual reset; Restore stops
+input and replaces only the live view. Successful URL startup/import resolves
+Scene settings, then initializes the live camera before subsystem synchronization.
+Invalid imports change neither preferences nor camera. Copy Share Link serializes
+only the authored view. C restores factory defaults; F remains a one-time fit.
+Reset All Settings restores both cameras through its existing complete reset.
+
+Mode, speeds, key/focus/gesture state and panel visibility remain runtime-only.
+Short-side aspect-preserving projection, world geometry/history, responsive held
+movement, CSS-screen-sized marks and canonical viewport recording retain their
+accepted contracts. Different aspect ratios may expose different world extents.
+See the [Build 116 contract](docs/development/build-116.md).
 
 ### 2.1 Schema Discipline
 
 Preset system is **versioned and backward-compatible**.
 
-Schema 10 is frozen when Build 115 ships. Any future persisted-field addition,
-removal, rename, ownership move, or semantic change requires schema 11 and
-migration from 10. Schema numbers must never be reused for incompatible formats.
+Released schema 10 and accepted development schema 11 are immutable. Schema 12
+is the current authored-camera format. Future persisted-field additions, removals,
+renames, ownership moves or semantic changes require a new version and migration.
+Schema numbers must never be reused for incompatible formats. The following
+pre-release exceptions are historical and do not authorize changes to Build 115.
 Narrow pre-release exception: Build 115 has not shipped. Revision v0.1.15m.h.q
 retires `particles.overlapRadiusPx` from schema 10 without incrementing it.
 Development-era schema-10 inputs containing this property remain accepted;
@@ -349,7 +363,7 @@ Panels:
 - Queue
 - Visualizers
 - Settings (Scene appearance, particle resources, and presets)
-- Camera (runtime view, mode and movement speeds)
+- Camera (live view, authored Scene view, mode and movement speeds)
 - Analysis
 - Record (when enabled)
 
@@ -497,7 +511,7 @@ If a change does not map to a roadmap item:
 
 > World dimensions define reference geometry; they do not impose clipping or collisions. Camera/projection changes only the view of the world, never simulation, particle history or analysis state.
 
-Build 116 owns the simulation-world, camera and viewport separation. Existing 115 preset semantics are immutable; new persisted world settings require schema 11 and full migration. No unapproved camera state is included in presets. Details: [Build 116 contract](docs/development/build-116.md).
+Build 116 owns the simulation-world, camera and viewport separation. Existing 115 preset semantics are immutable; new persisted world settings require schema 11 and full migration. Schema 12 includes only the explicitly authored Scene camera; live camera state is never implicitly captured. Details: [Build 116 contract](docs/development/build-116.md).
 
 ---
 

@@ -18,7 +18,7 @@ function element() {
   };
 }
 function harness() {
-  const ids = ["cameraSection", "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight", "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut", "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFitCamera", "btnFocusCameraCanvas"];
+  const ids = ["btnSaveSceneView", "btnRestoreSceneView", "sceneCameraReadout", "sceneCameraStatus", "cameraSection", "chkCameraInteraction", "valCameraInteraction", "btnCameraPanLeft", "btnCameraPanRight", "btnCameraPanUp", "btnCameraPanDown", "btnCameraZoomIn", "btnCameraZoomOut", "btnCameraRotateCW", "btnCameraRotateCCW", "btnResetCamera", "btnFitCamera", "btnFocusCameraCanvas"];
   for (const name of ["X", "Y", "Zoom", "Rotation", "PanSpeed", "RotationSpeed"]) ids.push(`numCamera${name}`, `valCamera${name}`, `camera${name}Error`);
   const ui = Object.fromEntries(ids.map(id => [id, element()]));
   let enabled = false, cancellations = 0;

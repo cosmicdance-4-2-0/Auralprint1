@@ -81,13 +81,13 @@ async function sourceChecks(page, base, dpr) {
   await input.fill('0'); await input.press('Tab'); assert.equal(await input.getAttribute('aria-invalid'), 'true');
   assert.deepEqual((await share(page)).prefs.world, edited.preferences);
   await input.fill('2400.5'); await input.press('Tab');
-  const payload = await share(page); assert.equal(payload.schema, 11); assert.deepEqual(payload.prefs.world, edited.preferences);
+  const payload = await share(page); assert.equal(payload.schema, 12); assert.deepEqual(payload.prefs.world, edited.preferences);
   await page.goto(base + '/source' + hash(payload));
   assert.equal(await page.locator('#numWorldWidth').inputValue(), '2400.5');
   const old = JSON.parse(fs.readFileSync(path.join(root, 'tests/fixtures/schema-10-full.json')));
   await page.goto(base + '/source' + hash({ schema: 10, prefs: old }));
   const migrated = await share(page);
-  assert.equal(migrated.schema, 11); assert.deepEqual(migrated.prefs.world, { widthUnits: 1000, heightUnits: 1000 });
+  assert.equal(migrated.schema, 12); assert.deepEqual(migrated.prefs.world, { widthUnits: 1000, heightUnits: 1000 });
   assert.deepEqual(migrated.prefs.orbs.map(o => o.particles.minPlacementDistanceUnits), [0, .5, 2.3]);
   assert.ok(migrated.prefs.orbs.every(o => !('minPlacementDistancePx' in o.particles)));
   await cdp.detach();
@@ -99,7 +99,7 @@ async function distributionChecks(page, url, dpr) {
   await page.goto(url); await page.waitForFunction(() => document.querySelector('#c').width > 0);
   await setWorld(page, 2300.5, 600.25);
   const payload = await share(page);
-  assert.equal(payload.schema, 11); assert.deepEqual(payload.prefs.world, { widthUnits: 2300.5, heightUnits: 600.25 });
+  assert.equal(payload.schema, 12); assert.deepEqual(payload.prefs.world, { widthUnits: 2300.5, heightUnits: 600.25 });
   await page.goto(url + hash(payload));
   assert.equal(await page.locator('#numWorldWidth').inputValue(), '2300.5');
   assert.equal(await page.locator('#numWorldHeight').inputValue(), '600.25');
