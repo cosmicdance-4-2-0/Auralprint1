@@ -1,12 +1,13 @@
 // AUD-001 native UI regression. Run after build with external Playwright/Chromium.
 // AP_PLAYWRIGHT_MODULE, AP_CHROMIUM_PATH, AP_REPORT select tooling/output.
+// AP_REPO_ROOT optionally selects an isolated reproduction checkout.
 // AP_EXPECT_BASELINE=1 asserts the original dead-input/blocked-retry defect.
 // HTTP-only instrumentation exposes existing module references, without changing
 // lifecycle logic; generated files on disk are never edited.
 const assert = require('node:assert/strict');
 const fs = require('node:fs'), path = require('node:path'), http = require('node:http');
 const { chromium } = require(process.env.AP_PLAYWRIGHT_MODULE || 'playwright');
-const root = path.resolve(__dirname, '..');
+const root = path.resolve(process.env.AP_REPO_ROOT || path.join(__dirname, '..'));
 const version = fs.readFileSync(path.join(root, 'version'), 'utf8').trim();
 const baseline = process.env.AP_EXPECT_BASELINE === '1';
 const expose = 'window.aud001App = { state, AudioEngine, InputSourceManager, RecorderEngine };';
@@ -58,6 +59,14 @@ const instrument = js => {
       await page.goto(url); await page.waitForFunction(() => !!window.aud001App && document.querySelector('#btnPlay')?.textContent === 'Play');
       await page.evaluate(async ({kind, phase}) => {
         const p = window.aud001 = { kind, phase, calls: {mic:0, stream:0}, results: [], graphs: [], streams: [], callbacks: [] };
+        p.recorders = [];
+        const NativeRecorder = MediaRecorder;
+        window.MediaRecorder = class extends NativeRecorder {
+          constructor(...args) {
+            super(...args); this.observedBytes = 0; p.recorders.push(this);
+            this.addEventListener('dataavailable', event => { this.observedBytes += event.data?.size || 0; });
+          }
+        };
         const defer = () => { let resolve, reject; const promise = new Promise((a,b) => {resolve=a;reject=b;}); return {promise,resolve,reject}; };
         p.capture = defer(); p.resume = defer();
         const NativeContext = AudioContext;
@@ -70,7 +79,7 @@ const instrument = js => {
           const stream = new MediaStream(tracks); p.streams.push(stream);
           for (const target of [stream, ...stream.getTracks()]) {
             const add = target.addEventListener.bind(target);
-            target.addEventListener = (type, callback, ...args) => { if (type === 'ended' || type === 'inactive') p.callbacks.push(callback); return add(type, callback, ...args); };
+            target.addEventListener = (type, callback, ...args) => { if (stream === p.first && (type === 'ended' || type === 'inactive')) p.callbacks.push(callback); return add(type, callback, ...args); };
           }
           return stream;
         };
@@ -114,7 +123,7 @@ const instrument = js => {
           manager[method] = async (...args) => { const result = await original(...args); p.results.push(result); return result; };
         }
         p.snapshot = () => ({ source: structuredClone(aud001App.state.source), audio: { filename: aud001App.state.audio.filename, isLoaded: aud001App.state.audio.isLoaded },
-          calls: {...p.calls}, ready: engine.sample().ready, rms: engine.sample().rmsL,
+          calls: {...p.calls}, ready: engine.sample().ready, rms: engine.sample().bands?.L.rms,
           tracks: p.first.getTracks().map(t => t.readyState), graphs: p.graphs.map(g => ({first:g.stream===p.first,disconnects:g.disconnects})),
           upstream: p.streams.indexOf(engine.getRecorderTap().ensureStream()),
           status: document.querySelector('#audioStatus').textContent });
@@ -124,12 +133,15 @@ const instrument = js => {
     const button = kind => kind === 'mic' ? '#btnSourceMic' : '#btnSourceStream';
     const snapshot = page => page.evaluate(() => aud001.snapshot());
     for (const edition of ['source','portable','hosted']) for (const kind of ['mic','stream']) {
+      console.error(`AUD-001: ${edition} ${kind}`);
       for (const phase of baseline ? ['capture','registration'] : ['capture','resume','registration','inactive','normal']) {
         const page = await open(edition, kind, phase);
         try {
           await page.locator(button(kind)).click();
           if (phase === 'capture') {
             await page.waitForFunction(kind => aud001.calls[kind] === 1, kind);
+            await page.locator(button(kind)).click();
+            assert.equal((await snapshot(page)).calls[kind], 1, 'requesting duplicate must not recapture');
             await page.evaluate(async () => { await aud001.end(); aud001.capture.resolve(aud001.first); });
           } else if (phase === 'resume' || phase === 'inactive') {
             await page.waitForFunction(() => aud001.entered);
@@ -141,7 +153,7 @@ const instrument = js => {
           }
           await page.waitForFunction(() => aud001.results.length === 1);
           if (phase === 'normal') {
-            await page.waitForFunction(() => aud001App.AudioEngine.sample().rmsL > 0.01);
+            await page.waitForFunction(() => aud001App.AudioEngine.sample().bands?.L.rms > 0.01);
             assert.equal((await snapshot(page)).source.sessionActive, true);
             await page.evaluate(() => aud001.end());
           }
@@ -163,9 +175,13 @@ const instrument = js => {
           assert.equal(retry.calls[kind], baseline ? 1 : 2);
           if (!baseline) {
             assert.equal(retry.source.status, 'active'); assert.equal(retry.source.sessionActive, true); assert.equal(retry.upstream, 1);
-            await page.waitForFunction(() => aud001App.AudioEngine.sample().rmsL > 0.01);
+            await page.waitForFunction(() => aud001App.AudioEngine.sample().bands?.L.rms > 0.01);
+            await page.locator(button(kind)).click();
+            assert.equal((await snapshot(page)).calls[kind], 2, 'active duplicate must not recapture');
           }
           report.cases.push({edition,kind,phase,before,retry,passed:true});
+        } catch (error) {
+          report.cases.push({edition,kind,phase,passed:false,error:error.message,snapshot:await snapshot(page)}); throw error;
         } finally { await page.close(); }
       }
       if (baseline) continue;
@@ -174,6 +190,8 @@ const instrument = js => {
         try {
           await page.locator(button(kind)).click(); await page.waitForFunction(() => aud001.entered);
           if (winner === 'file') {
+            await page.locator('#btnSourceFile').click();
+            await page.waitForFunction(() => aud001App.state.source.kind === 'none');
             const wav = Buffer.alloc(44 + 48000 * 2); wav.write('RIFF'); wav.writeUInt32LE(wav.length-8,4); wav.write('WAVEfmt ',8);
             wav.writeUInt32LE(16,16); wav.writeUInt16LE(1,20); wav.writeUInt16LE(1,22); wav.writeUInt32LE(48000,24);
             wav.writeUInt32LE(96000,28); wav.writeUInt16LE(2,32); wav.writeUInt16LE(16,34); wav.write('data',36); wav.writeUInt32LE(wav.length-44,40);
@@ -195,9 +213,39 @@ const instrument = js => {
           assert.equal(after.ready,before.ready); assert.ok(after.tracks.every(s => s === 'ended'));
           assert.ok(after.graphs.every(g => !g.first && g.disconnects === 0));
           report.cases.push({edition,kind,winner,reject,before,after,passed:true});
+        } catch (error) {
+          report.cases.push({edition,kind,winner,reject,passed:false,error:error.message,snapshot:await snapshot(page)}); throw error;
         } finally { await page.close(); }
       }
+      const page = await open(edition,kind,'normal');
+      try {
+        await page.locator(button(kind)).click(); await page.waitForFunction(() => aud001.results.length === 1);
+        await page.waitForFunction(() => aud001App.AudioEngine.sample().bands?.L.rms > 0.01);
+        const started = await page.evaluate(() => aud001App.RecorderEngine.start()); assert.equal(started.ok,true);
+        await page.waitForFunction(() => aud001App.state.recording.phase === 'recording' && document.querySelector('#btnSourceFile').disabled);
+        await page.waitForFunction(() => aud001.recorders.at(-1).observedBytes > 0);
+        await page.evaluate(() => ['btnSourceFile','btnSourceMic','btnSourceStream'].forEach(id => document.getElementById(id).click()));
+        const locked = await snapshot(page); assert.equal(locked.calls[kind],1); assert.equal(locked.source.kind,kind);
+        // Recorder Stop releases its render tracks; the manager still owns input.
+        await page.evaluate(() => aud001App.RecorderEngine.stop());
+        await page.waitForFunction(() => aud001App.state.recording.phase === 'complete');
+        assert.ok((await snapshot(page)).tracks.every(s => s === 'live'));
+        assert.equal((await page.evaluate(() => aud001App.RecorderEngine.start())).ok,true);
+        await page.waitForFunction(() => aud001.recorders.at(-1).observedBytes > 0);
+        await page.evaluate(() => aud001.end());
+        const ended = await snapshot(page); assert.equal(ended.source.sessionActive,false); assert.equal(ended.source.errorCode,`${kind}-ended`);
+        assert.equal(await page.evaluate(() => aud001App.state.recording.phase),'recording');
+        await page.evaluate(() => aud001App.RecorderEngine.stop());
+        await page.waitForFunction(() => aud001App.state.recording.phase === 'complete');
+        const bytes = await page.evaluate(async () => (await (await fetch(aud001App.state.recording.lastExportUrl)).blob()).size); assert.ok(bytes > 0);
+        await page.locator(button(kind)).click(); await page.waitForFunction(() => aud001.results.length === 2);
+        const retry = await snapshot(page); assert.equal(retry.calls[kind],2); assert.equal(retry.upstream,1);
+        report.cases.push({edition,kind,phase:'recording-stop-end-and-retry',locked,ended,retry,exportBytes:bytes,passed:true});
+      } catch (error) {
+        report.cases.push({edition,kind,phase:'recording-stop-end-and-retry',passed:false,error:error.message,snapshot:await snapshot(page)}); throw error;
+      } finally { await page.close(); }
     }
+    assert.equal(report.cases.length, baseline ? 12 : 72);
     assert.deepEqual(report.errors,[]); assert.deepEqual(report.failedResources,[]);
   } finally {
     if (process.env.AP_REPORT) { fs.mkdirSync(path.dirname(process.env.AP_REPORT),{recursive:true}); fs.writeFileSync(process.env.AP_REPORT,JSON.stringify(report,null,2)+'\n'); }
