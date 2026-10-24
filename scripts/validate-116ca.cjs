@@ -41,9 +41,21 @@ async function openCamera(page) { if (!await page.locator('#cameraPanel').isVisi
 async function setField(page, id, value) { await page.locator('#' + id).fill(String(value)); await page.locator('#' + id).press('Tab'); }
 async function reset(page, { rotation = 0, zoom = 1 } = {}) { await openCamera(page); await page.locator('#btnResetCamera').click(); if (rotation) await setField(page, 'numCameraRotation', rotation); if (zoom !== 1) await setField(page, 'numCameraZoom', zoom); }
 async function hold(page, keys, duration = 420) {
-  await page.locator('#c').focus();
-  try { for (const key of keys) await page.keyboard.down(key); return await frames(page, duration); }
-  finally { for (const key of keys.toReversed()) await page.keyboard.up(key); }
+  // These speed measurements require ordinary <=100ms native intervals. Keep
+  // every existing rate/direction/per-frame assertion; retry only invalid
+  // sampling windows, with a bounded count and report evidence. The corrective
+  // harness separately verifies capped movement through actual slow frames.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await page.locator('#c').focus();
+    let samples;
+    try { for (const key of keys) await page.keyboard.down(key); samples = await frames(page, duration); }
+    finally { for (const key of keys.toReversed()) await page.keyboard.up(key); }
+    const intervals = samples.slice(1).map((sample, i) => (sample.timestamp - samples[i].timestamp) / 1000);
+    if (intervals.every(delta => delta <= .1)) return samples;
+    await page.evaluate(probe => { (window.invalidTimingWindows116ca ??= []).push(probe); },
+      { keys, duration, attempt: attempt + 1, intervals });
+    if (attempt === 2) return samples; // Existing assertions still fail this window.
+  }
 }
 function motion(samples, { speed = 320, zoom = 1, rotation = 0, horizontal = 0, vertical = 1, height = 800 } = {}) {
   assert.ok(samples.length >= 6, `only ${samples.length} real animation samples`);
@@ -212,11 +224,11 @@ async function playbackAndRecording(page) {
   });
   assert.equal(capture.width, capture.canvasWidth); assert.equal(capture.height, capture.canvasHeight);
   await page.locator('#btnHideRecord').click(); await page.locator('#btnStop').click();
-  // Copy Link remains Settings-owned; it must omit every camera runtime field.
+  // Copy Link remains Settings-owned; it includes only the authored camera.
   await page.evaluate(() => document.querySelector('#btnShare').click());
   const payload = await page.evaluate(() => JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/'))));
-  assert.equal(payload.schema, 11); assert.doesNotMatch(JSON.stringify(payload), /camera|rotationRad|panSpeed|shiftMultiplier/);
-  return { dropsModeOffAndOn: true, playing, audioPaused, stopped, seekingAndScrubberPriority: true, nextPrevious: true, duringCapture, capture, runtimeExcludedFromSchema11: true };
+  assert.equal(payload.schema, 12); assert.equal('camera' in payload.prefs, false); assert.deepEqual(payload.prefs.sceneCamera, { x: 0, y: 0, zoom: 1, rotationRad: 0 }); assert.doesNotMatch(JSON.stringify(payload), /panSpeed|shiftMultiplier/);
+  return { dropsModeOffAndOn: true, playing, audioPaused, stopped, seekingAndScrubberPriority: true, nextPrevious: true, duringCapture, capture, runtimeExcludedFromSchema12: true };
 }
 
 async function layoutChecks(page) {
@@ -257,7 +269,7 @@ async function check(page, source) {
   await setField(page, 'numCameraPanSpeed', 160); await setField(page, 'numCameraRotationSpeed', 30); await reset(page); const customSpeed = motion(await hold(page, ['w']), { speed: 160 }); await reset(page); const customRotation = await hold(page, ['Shift', 'q']); close((customRotation.at(-1).rotationRad - customRotation[0].rotationRad) / ((customRotation.at(-1).timestamp - customRotation[0].timestamp) / 1000), Math.PI / 2, .08, 'custom rotation with Shift'); await setField(page, 'numCameraPanSpeed', 320); await setField(page, 'numCameraRotationSpeed', 60);
   const refreshWork = await refreshWorkChecks(page), sourceState = source ? await sourceChecks(page) : undefined;
   const playback = await playbackAndRecording(page), layouts = await layoutChecks(page);
-  return { workspace, ownership, moves, diagonal, boost, rotationFrames: rotate.length, combinedTranslationRotationShift: true, customSpeed, refreshWork, sourceState, playback, layouts };
+  return { invalidTimingWindows: await page.evaluate(() => window.invalidTimingWindows116ca || []), workspace, ownership, moves, diagonal, boost, rotationFrames: rotate.length, combinedTranslationRotationShift: true, customSpeed, refreshWork, sourceState, playback, layouts };
 }
 
 (async () => {

@@ -195,8 +195,8 @@ async function sourceChecks(page, base, dpr) {
     }
     populations.push(count);
   }
-  const schema = await page.evaluate(() => { const t = test116c, camera = t.state.camera; t.UrlPreset.writeHashFromPrefs(); const payload = JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/'))); if (!t.UrlPreset.applyFromLocationHash()) throw Error('schema-11 round trip failed'); t.resolveSettings(); if (t.state.camera !== camera) throw Error('preset reset camera'); return payload; });
-  assert.equal(schema.schema, 11); assert.doesNotMatch(JSON.stringify(schema), /camera|rotationRad/);
+  const schema = await page.evaluate(() => { const t = test116c, camera = t.state.camera; t.UrlPreset.writeHashFromPrefs(); const payload = JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/'))); if (!t.UrlPreset.applyFromLocationHash()) throw Error('schema-12 round trip failed'); t.resolveSettings(); if (t.state.camera !== camera) throw Error('preset reset camera'); return payload; });
+  assert.equal(schema.schema, 12); assert.equal('camera' in schema.prefs, false); assert.deepEqual(schema.prefs.sceneCamera, { x: 0, y: 0, zoom: 1, rotationRad: 0 });
   // Deterministic visible geometry on the canonical viewport, recorded across an actual UI pan.
   await page.evaluate(() => {
     const t = test116c; t.preferences.orbs = structuredClone(t.defaults.slice(0, 1)); t.preferences.orbs[0].particles.sizeMaxPx = 20; t.preferences.orbs[0].particles.sizeMinPx = 20; t.preferences.bands.overlay.enabled = true;
@@ -215,7 +215,7 @@ async function sourceChecks(page, base, dpr) {
   return { initialDpr: dpr, controlsKeyboardAndPrecision: true, tabIds, invalidDraftsRejected: true, rotatedPointerCaptureAndCssScaling: true,
     dragTerminations: endings, freshDragRecovery: true, pointerAnchoredWheel: true, wheelLimits, modeOffEventsUntouched: true,
     simulationIdentitiesAndValuesPreserved: true, localArrowsDoNotSeek: true, globalShortcutsAndPanelKeysRetained: true,
-    layouts, singleTouchEmulation: true, populations, runtimeCameraAbsentFromSchema11: true, capture };
+    layouts, singleTouchEmulation: true, populations, liveCameraExcludedFromPreset: true, capture };
 }
 
 async function distributionChecks(page, url, dpr) {
@@ -260,8 +260,8 @@ async function distributionChecks(page, url, dpr) {
   await page.locator('#btnHideRecord').click(); await page.locator('#btnStop').click();
   await openCamera(page); const stoppedX = Number(await page.locator('#numCameraX').inputValue()); await page.locator('#btnCameraPanRight').click(); assert.notEqual(Number(await page.locator('#numCameraX').inputValue()), stoppedX); await page.locator('#btnResetCamera').click(); assert.equal(Number(await page.locator('#numCameraX').inputValue()), 0); assert.equal(Number(await page.locator('#numCameraZoom').inputValue()), 1);
   await page.evaluate(() => document.querySelector('#btnShare').click());
-  const payload = await page.evaluate(() => JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/')))); assert.equal(payload.schema, 11); assert.doesNotMatch(JSON.stringify(payload), /camera|rotationRad/);
-  return { dpr, realStereoPlayback: true, dropsWithModeEnabledAndDisabled: true, canvasKeysDoNotSeek: true, globalTrackNavigation: true, globalSeekAndScrubberPreserved: true, panelKeyboardPriority: true, pausedStoppedAndRunningControls: true, movingCameraRecording: capture, runtimeOnlySchema11: true };
+  const payload = await page.evaluate(() => JSON.parse(atob(location.hash.slice(3).replace(/-/g, '+').replace(/_/g, '/')))); assert.equal(payload.schema, 12); assert.equal('camera' in payload.prefs, false); assert.deepEqual(payload.prefs.sceneCamera, { x: 0, y: 0, zoom: 1, rotationRad: 0 });
+  return { dpr, realStereoPlayback: true, dropsWithModeEnabledAndDisabled: true, canvasKeysDoNotSeek: true, globalTrackNavigation: true, globalSeekAndScrubberPreserved: true, panelKeyboardPriority: true, pausedStoppedAndRunningControls: true, movingCameraRecording: capture, liveCameraExcludedFromPreset: true };
 }
 
 (async () => {

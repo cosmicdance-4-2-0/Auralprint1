@@ -167,7 +167,14 @@ async function fitChecks(page, prefs, source) {
 }
 async function recordingChecks(page) {
   await openCamera(page); await page.locator('#btnFitCamera').click(); await page.locator('#btnOpenRecord').click(); await page.locator('#chkRecordIncludeAudio').uncheck(); await page.locator('#btnRecordStart').click(); await page.waitForFunction(() => !document.querySelector('#btnRecordStop').disabled);
+  const authoredDuringRecording = await readCamera(page);
+  await page.locator('#btnSaveSceneView').evaluate(button => button.click());
+  cameraNear(await readCamera(page), authoredDuringRecording);
+  assert.equal(await page.locator('#btnRecordStop').isDisabled(), false);
   await waitFrames(page, 180); await page.locator('#c').focus(); const before = await readCamera(page); await page.keyboard.down('w'); await waitFrames(page, 650); await page.keyboard.up('w'); const after = await readCamera(page); assert.ok(Math.hypot(after.x - before.x, after.y - before.y) > 0); await waitFrames(page, 150);
+  await page.locator('#btnRestoreSceneView').evaluate(button => button.click());
+  cameraNear(await readCamera(page), authoredDuringRecording);
+  assert.equal(await page.locator('#btnRecordStop').isDisabled(), false);
   await page.locator('#btnRecordStop').click(); await page.waitForFunction(() => !document.querySelector('#btnRecordDownloadLast').disabled);
   const capture = await page.evaluate(async () => {
     const o = nativeCorrective, canvas = document.querySelector('#c'), blob = o.blobs.at(-1); if (!blob?.object.size || o.canvases.some(c => c !== canvas)) throw Error('not a canonical recorder export');
@@ -177,7 +184,7 @@ async function recordingChecks(page) {
     const sample = document.createElement('canvas'); sample.width = sample.height = 64; const ctx = sample.getContext('2d', { willReadFrequently: true }), images = [];
     for (const time of [.1, .8]) { const seeked = wait('seeked'); video.currentTime = time; await seeked; ctx.drawImage(video, 0, 0, 64, 64); images.push(ctx.getImageData(0, 0, 64, 64).data); }
     let difference = 0; for (let i = 0; i < images[0].length; i += 4) for (let c = 0; c < 3; c++) difference += Math.abs(images[0][i + c] - images[1][i + c]); difference /= 64 * 64 * 3;
-    const result = { bytes: blob.object.size, mime: blob.object.type, width: video.videoWidth, height: video.videoHeight, canvasWidth: canvas.width, canvasHeight: canvas.height, canonicalViewport: true, decodedFrameDifference: difference };
+    const result = { bytes: blob.object.size, mime: blob.object.type, width: video.videoWidth, height: video.videoHeight, canvasWidth: canvas.width, canvasHeight: canvas.height, canonicalViewport: true, authoringDuringRecording: true, decodedFrameDifference: difference };
     video.removeAttribute('src'); video.load(); return result;
   });
   assert.equal(capture.width, capture.canvasWidth); assert.equal(capture.height, capture.canvasHeight); assert.ok(capture.decodedFrameDifference > .05, 'held camera movement absent from decoded video');
@@ -206,7 +213,7 @@ async function lifecycleChecks(page) {
     res.setHeader('Content-Type', ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' })[path.extname(file)] || 'application/octet-stream'); res.end(fs.readFileSync(file));
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  const report = { version, editions: [], errors: [], failedResponses: [], scene: 'Representative16-Orb composition constructed through canonical schema11; not an owner-provided preset.', limitations: ['Linux Chromium via local HTTP; no physical device, Firefox/WebKit or file:// coverage.', 'Visible slow frames are genuine synchronous main-thread stalls while a native key remains down; blur/hiding additionally use lifecycle signal injection.', 'Short recordings test decoded camera movement and canonical viewport dimensions, not audio fidelity or long-duration limits.'] };
+  const report = { version, editions: [], errors: [], failedResponses: [], scene: 'Representative16-Orb composition constructed through canonical schema12; not an owner-provided preset.', limitations: ['Linux Chromium via local HTTP; no physical device, Firefox/WebKit or file:// coverage.', 'Visible slow frames are genuine synchronous main-thread stalls while a native key remains down; blur/hiding additionally use lifecycle signal injection.', 'Short recordings test decoded camera movement and canonical viewport dimensions, not audio fidelity or long-duration limits.'] };
   let browser;
   try {
     browser = await chromium.launch({ executablePath: process.env.AP_CHROMIUM_EXECUTABLE || process.env.AP_CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] }); report.browser = await browser.version();
