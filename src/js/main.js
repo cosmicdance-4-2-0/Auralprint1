@@ -12,6 +12,7 @@ import { Scrubber } from "./audio/scrubber.js";
 import { Renderer } from "./render/renderer.js";
 import { RecorderEngine } from "./recording/recorder-engine.js";
 import { UI } from "./ui/ui.js";
+import { restoreSceneCamera } from "./ui/scene-camera-actions.js";
 import { initOrbs } from "./render/orb-runtime.js";
 import { VisualizerRuntime } from "./render/visualizer-runtime.js";
 
@@ -67,8 +68,9 @@ function main() {
   state.ctx = state.canvas.getContext("2d", { alpha: false });
 
   resolveSettings();
-  UrlPreset.applyFromLocationHash();
+  const presetApplied = UrlPreset.applyFromLocationHash();
   resolveSettings();
+  if (presetApplied) restoreSceneCamera();
   InputSourceManager.init({
     onExternalLiveInputReset: UI.resetTrackVisualState,
   });

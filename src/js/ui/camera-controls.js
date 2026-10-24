@@ -2,6 +2,8 @@ import { CONFIG } from "../core/config.js";
 import { RAD_TO_DEG } from "../core/constants.js";
 import { state, setCamera, resetCamera } from "../core/state.js";
 import { panCamera, rotateCamera, zoomCamera } from "./camera-actions.js";
+import { preferences } from "../core/preferences.js";
+import { saveSceneCamera, restoreSceneCamera } from "./scene-camera-actions.js";
 
 const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
 const FIELDS = [
@@ -17,13 +19,22 @@ const SPEED_FIELDS = [
 const sync = (node, key, value) => { if (node[key] !== value) node[key] = value; };
 const displayValue = (camera, field) => field.key === "rotationRad" ? camera.rotationRad * RAD_TO_DEG : camera[field.key];
 
-function createCameraControlsUi({ ui, interaction, fitView = () => {} } = {}) {
+function createCameraControlsUi({ ui, interaction, fitView = () => {}, commitPreferences = () => {} } = {}) {
   let initializedOn = null, lastCamera = null, lastEnabled = null, lastSpeeds = null;
+  let lastSceneCamera = null, lastMatchesScene = null;
 
   function refresh(force = false, committedInput = null) {
     if (!initializedOn || (!force && ui.cameraPanel?.style.display === "none")) return false;
     const focused = typeof document !== "undefined" ? document.activeElement : null;
     const camera = state.camera, enabled = interaction.isEnabled();
+    const sceneCamera = preferences.sceneCamera;
+    const matchesScene = camera.x === sceneCamera.x && camera.y === sceneCamera.y
+      && camera.zoom === sceneCamera.zoom && camera.rotationRad === sceneCamera.rotationRad;
+    if (force || sceneCamera !== lastSceneCamera || matchesScene !== lastMatchesScene) {
+      sync(ui.sceneCameraReadout, "textContent", `Saved Scene view: X ${sceneCamera.x}, Y ${sceneCamera.y} world units; zoom ${sceneCamera.zoom}×; rotation ${sceneCamera.rotationRad * RAD_TO_DEG}°. ${matchesScene ? "Live view matches." : "Live view differs."}`);
+      lastSceneCamera = sceneCamera;
+      lastMatchesScene = matchesScene;
+    }
     if (force || camera !== lastCamera) {
       for (const field of FIELDS) {
         const input = ui[`numCamera${field.name}`], value = displayValue(camera, field);
@@ -158,6 +169,15 @@ function createCameraControlsUi({ ui, interaction, fitView = () => {} } = {}) {
     bindAction("btnCameraRotateCCW", () => rotateCamera(1));
     bindAction("btnResetCamera", resetCamera, true);
     bindAction("btnFitCamera", fitView, true);
+    bindAction("btnSaveSceneView", () => {
+      saveSceneCamera();
+      commitPreferences("Scene view");
+      ui.sceneCameraStatus.textContent = "Current view saved as Scene view.";
+    });
+    bindAction("btnRestoreSceneView", () => {
+      restoreSceneCamera();
+      ui.sceneCameraStatus.textContent = "Scene view restored.";
+    }, true);
     ui.chkCameraInteraction.addEventListener("change", () => {
       interaction.setEnabled(ui.chkCameraInteraction.checked);
       refresh();
