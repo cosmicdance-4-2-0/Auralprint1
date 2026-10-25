@@ -331,7 +331,7 @@ Result: **1,063 passed, one skipped, zero failures**. The skip is the existing o
 Focused evidence:
 
 - `tests/world-geometry.test.js`: pure reference dimensions, immutability, overflow/failure cases and out-of-reference coordinates.
-- `tests/world-settings.test.js` and `tests/preset-schema-11.test.js`: CONFIG normalization, independent axes, complete canonical round trips, unchanged schema-10 fixture conversion, all legacy schemas, sanitation, alias stripping, URL replacement and unsupported-version rejection.
+- `tests/world-settings.test.js` and [`tests/preset-schema-11.test.js` at the merged 116A revision](https://github.com/cosmicdance-4-2-0/Auralprint1/blob/1044d06771280703a7237826f181bdc537228321/tests/preset-schema-11.test.js) (current successor: [`tests/preset-schema-12.test.js`](../../tests/preset-schema-12.test.js)): CONFIG normalization, independent axes, complete canonical round trips, unchanged schema-10 fixture conversion, all legacy schemas, sanitation, alias stripping, URL replacement and unsupported-version rejection.
 - `tests/world-integration.test.js`: Orb centers/reversed radii/energy/waveforms; actual Ring draw geometry; resize/orientation/DPR-only changes and zero layout followed by update/render; unchanged world/phase/coordinates/history identities; identical placement decisions; world edits and zero/N Orb reconciliation; default and migrated legacy framing; CSS presentation sizes.
 - `tests/scene-panel.test.js`, Orb editor and existing lifecycle/resource tests: validated UI commits, accessible units/errors, invalid drafts, preset replacement, focus/listener reuse, retained history, TTL/budgets/fairness and pause.
 
