@@ -254,7 +254,7 @@ test("malformed values preserve existing clamps, defaults, enum rejection and de
   Object.assign(expected.bands.rainbow, { hueOffsetDeg: 0, saturation: 1 });
   expected.orbs = [{ ...structuredClone(CONFIG.defaults.orbs[0]), id: "BAD", chanId: "C", bandIds: [7, 19], chirality: 1,
     hueOffsetDeg: 360, colorSource: "inherit", centerXFrac: -.95, centerYFrac: .95,
-    motion: { angularSpeedRadPerSec: .01 },
+    motion: { angularSpeedRadPerSec: CONFIG.limits.motion.angularSpeedRadPerSec.min },
     response: { minRadiusFrac: .01, maxRadiusFrac: 1, waveformRadialDisplaceFrac: .1 },
     particles: { emitPerSecond: 1000, sizeMaxPx: 2, sizeMinPx: 2, sizeToMinSec: 8, ttlSec: 8, minPlacementDistanceUnits: 0.5 },
     trace: { lines: true, numLines: 1000, lineAlpha: 0, lineWidthPx: 6, lineColorMode: "dominantBand" } }];

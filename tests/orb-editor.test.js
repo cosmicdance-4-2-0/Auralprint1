@@ -102,7 +102,7 @@ test("every schema-10 Orb setting has a generated writable control",()=>{const h
 
 test("phase is presented accessibly in degrees and commits radians by stable ID",()=>{const h=harness(["A","B","C"]);try{h.editor.init();const a=h.editor.getController("A");for(const [radians,degrees] of [[0,0],[Math.PI/2,90],[Math.PI,180],[Math.PI*1.5,270]]){preferences.orbs[0].startAngleRad=radians;resolveSettings();h.editor.refresh(runtime.settings);assert.equal(Number(a.phase.value),radians*RAD_TO_DEG);assert.equal(a.phaseValue.textContent,`${degrees}°`);assert.equal(a.phase.getAttribute("aria-valuetext"),`${degrees} degrees`);}preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();a.phase.value="180";a.phase.dispatch("input");assert.equal(preferences.orbs.find(o=>o.id==="A").startAngleRad,Math.PI);assert.equal(preferences.orbs.find(o=>o.id==="B").startAngleRad,CONFIG.defaults.orbs[0].startAngleRad);assert.equal(h.calls.at(-1)[0],"A");}finally{h.restore()}});
 
-test("nested controls remain independent and canonical normalization refreshes their values",()=>{const h=harness(["A","B"]);try{h.editor=createOrbEditorUi({ui:h.view,showStatus:()=>{},commitPreferences:()=>{},commitOrbChangeById(id){const i=preferences.orbs.findIndex(o=>o.id===id);preferences.orbs[i]=normalizeOrbDef(preferences.orbs[i],CONFIG.defaults.orbs[0]);resolveSettings();}});h.editor.init();const b=h.editor.getController("B");b.speed.value="2.25";b.speed.dispatch("input");b.lineAlpha.value="0.44";b.lineAlpha.dispatch("input");b.lineWidth.value="5";b.lineWidth.dispatch("input");b.sizeMax.value="2";b.sizeMax.dispatch("input");b.sizeMin.value="5";b.sizeMin.dispatch("input");b.decay.value="8";b.decay.dispatch("input");b.ttl.value="1";b.ttl.dispatch("input");h.editor.refresh();const a=preferences.orbs.find(o=>o.id==="A"), normalized=preferences.orbs.find(o=>o.id==="B");assert.equal(a.motion.angularSpeedRadPerSec,CONFIG.defaults.orbs[0].motion.angularSpeedRadPerSec);assert.equal(normalized.motion.angularSpeedRadPerSec,2.25);assert.equal(normalized.trace.lineAlpha,.44);assert.equal(normalized.trace.lineWidthPx,5);assert.equal(normalized.particles.sizeMinPx,2);assert.equal(normalized.particles.ttlSec,6);assert.equal(b.sizeMin.value,"2");assert.equal(b.ttl.value,"6");}finally{h.restore()}});
+test("nested controls remain independent and canonical normalization refreshes their values",()=>{const h=harness(["A","B"]);try{h.editor=createOrbEditorUi({ui:h.view,showStatus:()=>{},commitPreferences:()=>{},commitOrbChangeById(id){const i=preferences.orbs.findIndex(o=>o.id===id);preferences.orbs[i]=normalizeOrbDef(preferences.orbs[i],CONFIG.defaults.orbs[0]);resolveSettings();}});h.editor.init();const b=h.editor.getController("B");b.speed.value="129";b.speed.dispatch("input");b.lineAlpha.value="0.44";b.lineAlpha.dispatch("input");b.lineWidth.value="5";b.lineWidth.dispatch("input");b.sizeMax.value="2";b.sizeMax.dispatch("input");b.sizeMin.value="5";b.sizeMin.dispatch("input");b.decay.value="8";b.decay.dispatch("input");b.ttl.value="1";b.ttl.dispatch("input");h.editor.refresh();const a=preferences.orbs.find(o=>o.id==="A"), normalized=preferences.orbs.find(o=>o.id==="B");assert.equal(a.motion.angularSpeedRadPerSec,CONFIG.defaults.orbs[0].motion.angularSpeedRadPerSec);assert.equal(normalized.motion.angularSpeedRadPerSec,selectConfigGrid(129/RAD_TO_DEG,CONFIG.limits.motion.angularSpeedRadPerSec));assert.equal(normalized.trace.lineAlpha,.44);assert.equal(normalized.trace.lineWidthPx,5);assert.equal(normalized.particles.sizeMinPx,2);assert.equal(normalized.particles.ttlSec,6);assert.equal(b.sizeMin.value,"2");assert.equal(b.ttl.value,"6");}finally{h.restore()}});
 
 test("ten arbitrary-ID Orb cards retain independent phase and nested values",()=>{const ids=Array.from({length:10},(_,i)=>`scene orb ${i*7}`),h=harness(ids);try{preferences.orbs.forEach((o,i)=>{o.startAngleRad=(i%2)*Math.PI;o.motion.angularSpeedRadPerSec=.2+i*.1;o.bandIds=[i];});resolveSettings();h.editor.init();assert.equal(h.editor.refresh().size,10);assert.equal(new Set(ids.map(id=>h.editor.getController(id).phase.id)).size,10);const target=h.editor.getController(ids[7]);target.ttl.value="12";target.ttl.dispatch("input");assert.equal(preferences.orbs[7].particles.ttlSec,12);assert.equal(preferences.orbs[6].particles.ttlSec,CONFIG.defaults.orbs[0].particles.ttlSec);}finally{h.restore()}});
 
@@ -170,13 +170,14 @@ for (const [key,group,field,limit,value] of continuousOrbCases) {
     try {
       writeNumeric(preferences.orbs[0],group,field,value);resolveSettings();h.editor.init();
       const c=h.editor.getController('A'),control=c[key],root=c.root,other=structuredClone(preferences.orbs[1]);
-      assert.equal(control.step,String(limit.step));assert.equal(control.min,String(limit.min));assert.equal(control.max,String(limit.max));
-      assert.equal(Number(control.value),selectConfigGrid(value,limit));assert.ok(c[`${key}Value`].textContent.includes(String(value)));assert.match(c[`${key}Value`].textContent,/Current.*slider selection/);
+      const scale=key==='speed'?RAD_TO_DEG:1;
+      assert.equal(control.step,String(limit.step*scale));assert.equal(control.min,String(limit.min*scale));assert.equal(control.max,String(limit.max*scale));
+      assert.equal(Number(control.value),selectConfigGrid(value,limit)*scale);assert.ok(c[`${key}Value`].textContent.includes(String(value)));assert.match(c[`${key}Value`].textContent,/Current.*slider selection/);
       control.focus();root.open=true;
       preferences.audio.playbackVolume=.7;resolveSettings();h.editor.refresh();
       assert.ok(document.activeElement===control);assert.ok(h.editor.getController('A').root===root);assert.equal(root.open,true);
-      assert.equal(Number(control.value),selectConfigGrid(value,limit));assert.equal(readNumeric(preferences.orbs[0],group,field),value);assert.deepEqual(h.calls,[]);
-      control.value=String(value+limit.step/3);control.dispatch('input');
+      assert.equal(Number(control.value),selectConfigGrid(value,limit)*scale);assert.equal(readNumeric(preferences.orbs[0],group,field),value);assert.deepEqual(h.calls,[]);
+      control.value=String((value+limit.step/3)*scale);control.dispatch('input');
       assert.equal(readNumeric(preferences.orbs[0],group,field),selectConfigGrid(value+limit.step/3,limit));assert.ok(isOnConfigGrid(readNumeric(preferences.orbs[0],group,field),limit));assert.deepEqual(preferences.orbs[1],other);
       assert.equal(h.calls.at(-1)[0],'A');assert.equal(control.listenerCount('input'),1);assert.equal(control.listenerCount('keydown'),1);
     }finally{h.restore();}
@@ -189,13 +190,13 @@ test('AUD-009: continuous/integral keyboard edits leave legacy values for the CO
     preferences.orbs.forEach(o=>{o.motion.angularSpeedRadPerSec=.123456;o.trace.numLines=16});resolveSettings();h.editor.init();
     const c=h.editor.getController('A');let prevented=0;
     c.speed.dispatch('keydown',{key:'ArrowRight',preventDefault(){prevented++}});
-    assert.ok(Math.abs(preferences.orbs[0].motion.angularSpeedRadPerSec-.13)<1e-15);
+    assert.ok(Math.abs(preferences.orbs[0].motion.angularSpeedRadPerSec-(7.5/RAD_TO_DEG))<1e-15);
     assert.equal(preferences.orbs[1].motion.angularSpeedRadPerSec,.123456);
     assert.equal(c.numLines.step,String(CONFIG.limits.trace.numLines.step));c.numLines.dispatch('keydown',{key:'ArrowRight',preventDefault(){prevented++}});assert.equal(preferences.orbs[0].trace.numLines,20);
-    h.view.rngOmega.dispatch('keydown',{key:'ArrowRight',preventDefault(){prevented++}});assert.ok(preferences.orbs.every(o=>Math.abs(o.motion.angularSpeedRadPerSec-.13)<1e-15));
+    h.view.rngOmega.dispatch('keydown',{key:'ArrowRight',preventDefault(){prevented++}});assert.ok(preferences.orbs.every(o=>Math.abs(o.motion.angularSpeedRadPerSec-(7.5/RAD_TO_DEG))<1e-15));
     h.view.rngNumLines.dispatch('keydown',{key:'ArrowRight',preventDefault(){prevented++}});assert.ok(preferences.orbs.every(o=>o.trace.numLines===20));
     assert.equal(prevented,4);
-    preferences.orbs[0].motion.angularSpeedRadPerSec=CONFIG.limits.motion.angularSpeedRadPerSec.max;resolveSettings();h.editor.refresh();const calls=h.calls.length;c.speed.dispatch('keydown',{key:'ArrowRight',preventDefault(){}});assert.equal(h.calls.length,calls);
+    preferences.orbs[0].motion.angularSpeedRadPerSec=selectConfigGrid(CONFIG.limits.motion.angularSpeedRadPerSec.max,CONFIG.limits.motion.angularSpeedRadPerSec);resolveSettings();h.editor.refresh();const calls=h.calls.length;c.speed.dispatch('keydown',{key:'ArrowRight',preventDefault(){}});assert.equal(h.calls.length,calls);
     c.speed.dispatch('keydown',{key:'ArrowLeft',ctrlKey:true,preventDefault(){assert.fail('modified shortcuts untouched')}});assert.equal(h.calls.length,calls);
     h.editor.init();assert.equal(h.view.rngOmega.listenerCount('keydown'),1);
   }finally{h.restore();}
@@ -205,12 +206,12 @@ test('AUD-009: Bulk uniform off-step/mixed values survive unrelated edits and ex
   const h=harness(['A','B']);
   try{
     preferences.orbs.forEach(o=>{o.motion.angularSpeedRadPerSec=.123456;o.trace.numLines=16;o.particles.sizeMaxPx=6.123456});resolveSettings();h.editor.init();
-    assert.equal(h.view.rngOmega.step,String(CONFIG.limits.motion.angularSpeedRadPerSec.step));assert.equal(h.view.rngOmega.value,'0.12');assert.match(h.view.valOmega.textContent,/Current 0.123456.*slider selection 0.12/);assert.equal(h.view.rngNumLines.value,'20');
+    assert.equal(h.view.rngOmega.step,'0.5');assert.equal(Number(h.view.rngOmega.value),selectConfigGrid(.123456,CONFIG.limits.motion.angularSpeedRadPerSec)*RAD_TO_DEG);assert.match(h.view.valOmega.textContent,/Current 0.123456.*slider selection/);assert.equal(h.view.rngNumLines.value,'20');
     const speeds=preferences.orbs.map(o=>o.motion.angularSpeedRadPerSec);h.view.rngTTL.value='40.123456';h.view.rngTTL.dispatch('input');resolveSettings();h.editor.refresh();
     assert.deepEqual(preferences.orbs.map(o=>o.motion.angularSpeedRadPerSec),speeds);assert.ok(preferences.orbs.every(o=>o.particles.sizeMaxPx===6.123456));
     preferences.orbs[1].motion.angularSpeedRadPerSec=.234567;resolveSettings();h.editor.refresh();assert.equal(h.view.valOmega.textContent,'mixed');assert.match(h.view.rngOmega.getAttribute('aria-valuetext'),/^mixed; slider selection/);
     const before=structuredClone(preferences.orbs);h.view.rngOmega.focus();preferences.audio.playbackVolume=.3;resolveSettings();h.editor.refresh();assert.deepEqual(preferences.orbs,before);assert.ok(document.activeElement===h.view.rngOmega);
-    h.view.rngOmega.value='.345678';h.view.rngOmega.dispatch('input');assert.deepEqual(preferences.orbs.map(o=>o.motion.angularSpeedRadPerSec),[.35,.35]);assert.ok(preferences.orbs.every(o=>o.trace.numLines===16));
+    h.view.rngOmega.value=String(.345678*RAD_TO_DEG);h.view.rngOmega.dispatch('input');assert.deepEqual(preferences.orbs.map(o=>o.motion.angularSpeedRadPerSec),[selectConfigGrid(.345678,CONFIG.limits.motion.angularSpeedRadPerSec),selectConfigGrid(.345678,CONFIG.limits.motion.angularSpeedRadPerSec)]);assert.ok(preferences.orbs.every(o=>o.trace.numLines===16));
   }finally{h.restore();}
 });
 
@@ -219,8 +220,8 @@ for(const item of bulkSliders) test(`CONFIG Bulk owner: ${item.selector} validat
   const h=harness(['A','B']);
   try {
     h.editor.init();const control=h.view[item.selector.slice(1)];
-    assert.deepEqual([control.min,control.max,control.step],[String(item.limit.min),String(item.limit.max),String(item.limit.step)]);
-    const before=structuredClone(preferences.orbs);control.value=String(item.legacy);control.dispatch('input');
+    assert.deepEqual([control.min,control.max,control.step],[String(item.limit.min*(item.scale||1)),String(item.limit.max*(item.scale||1)),String(item.limit.step*(item.scale||1))]);
+    const before=structuredClone(preferences.orbs);control.value=String(item.legacy*(item.scale||1));control.dispatch('input');
     for(let i=0;i<before.length;i++){
       const group=item.path[2],field=item.path[3],value=preferences.orbs[i][group][field];
       assert.ok(isOnConfigGrid(value,item.limit));before[i][group][field]=value;
@@ -236,5 +237,36 @@ for(const bulk of [false,true]) test(`CONFIG ${bulk?'Bulk':'individual'} coupled
       const before=structuredClone(preferences.orbs),control=bulk?h.view[id]:h.editor.getController('A')[key];control.value=String(raw);control.dispatch('input');
       before[0].particles[field]=expected;if(bulk)before[1].particles[field]=expected;assert.deepEqual(preferences.orbs,before);
     }
+  }finally{h.restore()}
+});
+
+test('Angular startup uses exact pi/2 with matching degree-native individual and Bulk selections',()=>{
+  const h=harness(['A','B']);
+  try {
+    h.editor.init();const individual=h.editor.getController('A').speed,bulk=h.view.rngOmega;
+    for(const control of [individual,bulk]){
+      assert.equal(control.min,'0.5');assert.equal(control.step,'0.5');assert.equal(control.max,String(3*RAD_TO_DEG));assert.equal(control.value,'90');
+      assert.doesNotMatch(control.getAttribute('aria-valuetext'),/Current .*slider selection/);
+      assert.match(control.getAttribute('aria-valuetext'),/rad\/s.*90\.0°\/s/);
+    }
+    assert.ok(preferences.orbs.every(o=>o.motion.angularSpeedRadPerSec===Math.PI/2));
+    individual.dispatch('keydown',{key:'ArrowRight',preventDefault(){}});
+    const individualSpeed=preferences.orbs[0].motion.angularSpeedRadPerSec;
+    bulk.dispatch('keydown',{key:'ArrowRight',preventDefault(){}});
+    assert.ok(preferences.orbs.every(o=>o.motion.angularSpeedRadPerSec===individualSpeed));
+    assert.ok(Math.abs(individualSpeed*RAD_TO_DEG-90.5)<1e-12);
+  }finally{h.restore()}
+});
+
+test('Mixed angular Bulk refresh preserves canonical radians and describes its degree-native selection correctly',()=>{
+  const h=harness(['A','B']);
+  try {
+    h.editor.init();preferences.orbs[1].motion.angularSpeedRadPerSec=.123456;resolveSettings();
+    const before=structuredClone(preferences);h.editor.refresh();
+    assert.deepEqual(preferences,before);assert.equal(h.view.rngOmega.value,'90');
+    assert.equal(h.view.valOmega.textContent,'mixed');
+    assert.equal(h.view.rngOmega.getAttribute('aria-valuetext'),`mixed; slider selection ${Math.PI/2} rad/s (90.0°/s)`);
+    h.view.rngOmega.dispatch('keydown',{key:'ArrowLeft',preventDefault(){}});
+    assert.ok(preferences.orbs.every(o=>Math.abs(o.motion.angularSpeedRadPerSec*RAD_TO_DEG-89.5)<1e-12));
   }finally{h.restore()}
 });

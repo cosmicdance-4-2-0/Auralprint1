@@ -2,7 +2,7 @@ import { RAD_TO_DEG } from '../../src/js/core/constants.js';
 import { CONFIG } from '../../src/js/core/config.js';
 // Independent inventory of the actual UI owners; all numerical policy is CONFIG.
 const l = CONFIG.limits;
-const orb = (suffix,path,limit,legacy) => ({ selector:`input[id$="-${suffix}"]`, path:['orbs',0,...path], limit, legacy, owner:'Orb', scale:path[0]==='startAngleRad'?RAD_TO_DEG:1 });
+const orb = (suffix,path,limit,legacy) => ({ selector:`input[id$="-${suffix}"]`, path:['orbs',0,...path], limit, legacy, owner:'Orb', scale:path[0]==='startAngleRad'||path[1]==='angularSpeedRadPerSec'?RAD_TO_DEG:1 });
 export const individualSliders = [
   orb('angular-speed',['motion','angularSpeedRadPerSec'],l.motion.angularSpeedRadPerSec,.123456),
   orb('center-x',['centerXFrac'],l.orbs.centerXFrac,.123456), orb('center-y',['centerYFrac'],l.orbs.centerYFrac,-.123456),
@@ -32,7 +32,7 @@ export const ringSliders = [
   ['rngBandOverlayWfDisp','waveformRadialDisplaceFrac','overlayWaveformRadialDisplaceFrac',.123456],
   ['rngBandLineAlpha','lineAlpha','overlayLineAlpha',.123456], ['rngBandLineWidth','lineWidthPx','overlayLineWidthPx',2.34567],
   ['rngRingSpeed','ringSpeedRadPerSec','ringSpeedRadPerSec',.123456],
-].map(([id,field,limit,legacy])=>({selector:'#'+id,path:['bands','overlay',field],limit:l.bands[limit],legacy,owner:'Ring'}));
+].map(([id,field,limit,legacy])=>({selector:'#'+id,path:['bands','overlay',field],limit:l.bands[limit],legacy,owner:'Ring',scale:field==='ringSpeedRadPerSec'?RAD_TO_DEG:1}));
 export const sliderCases = [...individualSliders,...bulkSliders,...analysisSliders,...ringSliders];
 export const readPath = (object,path) => path.reduce((o,key)=>o[key],object);
 export const writePath = (object,path,value) => { const parent=readPath(object,path.slice(0,-1)); parent[path.at(-1)]=value; };

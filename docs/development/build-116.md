@@ -1,5 +1,35 @@
 # Build 116 — simulation world, camera and projection
 
+## CONFIG angular-step alignment
+
+Baseline: merged PR #77, `7a9f96757482f63ae1fbe5f3b0e6ac02d401f21e`.
+`ANGULAR_SPEED_STEP_RAD_PER_SEC = Math.PI / 360` now owns the Orb speed minimum
+and step and the Ring speed step. Both default Orb speeds remain **exactly π/2**;
+the complete startup Scene is unchanged. Orb's 3 rad/s maximum remains a bound:
+the last editing selection is 171.5°/s. Ring's 0–TAU range now includes exact TAU
+at index 720. This supersedes PR #77's 0.01 rad/s angular editing grids.
+
+Individual/Bulk Orb speed and Ring speed use native degrees/second, with an
+exact **0.5°/s** step converted from CONFIG by the existing shared range helper.
+Canonical values and persistence stay in radians/second; designed phase retains
+its separate 1° increment and 360° → zero wrap. Ring speed at 360°/s commits TAU
+without phase wrapping. Mixed Bulk refresh interprets its selection in the
+binding's native units. Existing canonical readouts/ARIA retain their units.
+
+The helper names its 64-epsilon index allowance for binary64 arithmetic/native
+15-digit serialization, with exact dependency bounds taking precedence. Decimal
+cleanup is explicitly limited to simple grids with at most 10 decimal places;
+finer/pi-derived steps retain the index calculation. Exponents count toward
+those places, correcting scientific-notation selections previously rounded to
+zero. Tests cover residue, meaningful off-grid values, current maximum indices
+and one million, exact dependency edges, and scientific/high-precision steps.
+
+Historical in-range radians, Share, schemas/migrations, Build 115 fixtures,
+simulation and retained histories remain unchanged. The explicitly lowered
+CONFIG minimum also admits speeds between π/360 and the former 0.01 bound through
+the existing finite/clamp normalization; no step quantization is added there.
+Version/release designation remains unchanged. Stop at owner review.
+
 ## AUD-002 / AUD-003 and CONFIG step correction
 
 Against accepted `main` `d2a92a868e214ae5cba77ea91600b9965038ff19`, Analysis
@@ -14,7 +44,7 @@ defaults remain unchanged until deliberate editing; visible/accessible readouts
 identify both the current value and slider selection when they differ. Phase
 converts CONFIG's radian bounds/step to native degrees so Chromium can select
 360° exactly, then commits canonical radian indices with the established zero
-wrap and preserved history. Ring speed's non-grid maximum is not a new index.
+wrap and preserved history. Angular speed boundaries now follow the alignment above.
 
 `npm run test:browser:editing` adds a separate mandatory Chromium gate to the
 existing Ubuntu job using PR #76's pinned installation; the authored-camera

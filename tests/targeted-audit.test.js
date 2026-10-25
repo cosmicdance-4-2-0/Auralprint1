@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { rename, rm } from "node:fs/promises";
 
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V8 } from "../src/js/core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V8, RAD_TO_DEG } from "../src/js/core/constants.js";
+import { selectConfigGrid, isOnConfigGrid } from "../src/js/ui/config-range.js";
 import { CONFIG } from "../src/js/core/config.js";
 import { normalizeOrbDef, preferences, runtime, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
 import { state, setCamera } from "../src/js/core/state.js";
@@ -3379,7 +3380,7 @@ test("M.H individual Orb and Spectral Ring edits emit only Visualizer feedback",
     const control = state.ui.orbEditorList.children[0].querySelectorAll("input").find((node) => node.id?.endsWith("angular-speed"));
     control.value = "2";
     control.dispatch("input");
-    assert.equal(runtime.settings.orbs[0].motion.angularSpeedRadPerSec, 2);
+    assert.equal(runtime.settings.orbs[0].motion.angularSpeedRadPerSec, selectConfigGrid(2/RAD_TO_DEG,CONFIG.limits.motion.angularSpeedRadPerSec));
     assert.equal(statusWrites.visualizerEditStatus.length, 1);
     assert.match(state.ui.visualizerEditStatus.textContent, /^Updated: .* angular speed$/);
     state.ui.rngBandAlpha.value = "0.4";
@@ -3460,12 +3461,13 @@ for (const [controlId, outputId, group, field, event, first, second] of MG_BULK_
       const settingsBefore = runtime.settings, runtimeOrbs = [...state.orbs];
       const unrelatedBefore = preferences.orbs.map((orb) => orb.centerXFrac);
       if (typeof first === "boolean") state.ui[controlId].checked = first;
-      else state.ui[controlId].value = String(first);
+      else state.ui[controlId].value = String(field === "angularSpeedRadPerSec" ? first*RAD_TO_DEG : first);
       state.ui[controlId].dispatch(event);
       assert.notEqual(runtime.settings, settingsBefore);
       for (const source of [preferences.orbs, runtime.settings.orbs, state.orbs]) {
         assert.equal(source.length, 2);
-        assert.ok(source.every((orb) => orb[group][field] === first), `${group}.${field}`);
+        const expected=field === "angularSpeedRadPerSec" ? selectConfigGrid(first,CONFIG.limits.motion.angularSpeedRadPerSec) : first;
+        assert.ok(source.every((orb) => orb[group][field] === expected), `${group}.${field}`);
       }
       assert.deepEqual(state.orbs, runtimeOrbs, "bulk editing retains live Orb objects");
       assert.deepEqual(preferences.orbs.map((orb) => orb.centerXFrac), unrelatedBefore);
@@ -4594,10 +4596,10 @@ for (const bulk of [false, true]) {
       const runtimeOrbs = [...state.orbs]; speed.focus(); root.open = true;
       preferences.audio.playbackVolume = .4; UI.applyPrefs(null);
       assert.ok(document.activeElement === speed); assert.ok(state.ui.orbEditorList.children[0] === root); assert.equal(root.open, true);
-      assert.equal(speed.value, '0.12'); assert.match(speed.getAttribute('aria-valuetext'), /Current 0.123456.*slider selection 0.12/); assert.ok(preferences.orbs.every(orb => orb.motion.angularSpeedRadPerSec === .123456));
-      speed.value = '.234567'; speed.dispatch('input');
-      assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec, .23);
-      assert.equal(preferences.orbs[1].motion.angularSpeedRadPerSec, bulk ? .23 : .123456);
+      assert.equal(Number(speed.value), selectConfigGrid(.123456,CONFIG.limits.motion.angularSpeedRadPerSec)*RAD_TO_DEG); assert.match(speed.getAttribute('aria-valuetext'), /Current 0.123456.*slider selection/); assert.ok(preferences.orbs.every(orb => orb.motion.angularSpeedRadPerSec === .123456));
+      speed.value = String(.234567*RAD_TO_DEG); speed.dispatch('input');
+      assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec, selectConfigGrid(.234567,CONFIG.limits.motion.angularSpeedRadPerSec));
+      assert.equal(preferences.orbs[1].motion.angularSpeedRadPerSec, bulk ? selectConfigGrid(.234567,CONFIG.limits.motion.angularSpeedRadPerSec) : .123456);
       // The Node mock intentionally allows fractional range input: the canonical
       // consumer, not native snapping, must establish the integral contract.
       count.value = '17.1'; count.dispatch('input');
@@ -4675,8 +4677,9 @@ test('AUD-004 tooltip titles are idempotent on idle, focus and unrelated setting
     assert.deepEqual(writes,[], 'unchanged tooltip title writes');
     preferences.visuals.backgroundColor='#123456';UI.applyPrefs(null);UI.refreshAllUiText();
     assert.deepEqual(writes,[], 'unrelated setting must not rewrite this tooltip');
-    control.value='.123456';await control.dispatch('input');
-    assert.match(control.title,/0\.12 rad\/s/);assert.match(control.getAttribute('aria-valuetext'),/0\.12 rad\/s/);
+    control.value=String(.123456*RAD_TO_DEG);await control.dispatch('input');
+    const speed=preferences.orbs[0].motion.angularSpeedRadPerSec;assert.ok(isOnConfigGrid(speed,CONFIG.limits.motion.angularSpeedRadPerSec));
+    assert.ok(control.title.includes(`${speed} rad/s`));assert.ok(control.getAttribute('aria-valuetext').includes(`${speed} rad/s`));
     assert.equal(document.activeElement,control);
   });
 });
@@ -4707,7 +4710,7 @@ test('AUD-004 hidden Visualizers reveal refreshes values, titles and focus befor
     for(let i=0;i<20;i++)UI.refreshAllUiText();
     assert.notEqual(control.value,'0.234567','hidden editor is deferred');
     state.ui.btnOpenVisualizers.click();
-    assert.equal(control.value,'0.23','reveal must refresh the CONFIG selection synchronously');assert.match(control.getAttribute('aria-valuetext'),/Current 0.234567.*slider selection 0.23/);assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec,.234567);
+    assert.equal(Number(control.value),selectConfigGrid(.234567,CONFIG.limits.motion.angularSpeedRadPerSec)*RAD_TO_DEG,'reveal must refresh the CONFIG selection synchronously');assert.match(control.getAttribute('aria-valuetext'),/Current 0.234567.*slider selection/);assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec,.234567);
     assert.match(control.title,/0\.234567 rad\/s/);assert.equal(document.activeElement,state.ui.btnHideVisualizers);
     assert.equal(state.ui.orbEditorList.children[0],root);
   });
@@ -4801,5 +4804,32 @@ for (const count of [0, 1, 2, 16]) test(`116D authoring through Camera UI preser
     // Capture/Restore/Reset Camera above must preserve all actual identities;
     // URL import keeps its established explicit visual-reset behavior.
     assert.equal(owners.audio, state.audio); assert.equal(owners.time, state.time); assert.equal(owners.recording, state.recording);
+  });
+});
+
+test('Angular alignment: startup, refresh, Share and deliberate speed editing retain live simulation/history owners',async t=>{
+  await withSettingsActionHarness(t,async({location})=>{
+    assert.deepEqual(preferences,CONFIG.defaults);
+    assert.deepEqual(runtime.settings,CONFIG.defaults);
+    assert.ok(state.orbs.every(o=>o.motion.angularSpeedRadPerSec===Math.PI/2));
+    hostVisualizerEditors();UI.refreshAllUiText();
+    const original=structuredClone(preferences),orbs=[...state.orbs];
+    // Establish real moving state and retained history before exercising editing.
+    VisualizerRuntime.update({dtSec:1/60,motionDtSec:.1,nowSec:1,simPaused:false,analysisFrame:createAnalysisFrame()});
+    state.orbs.forEach((o,i)=>{o.trail.emitAt(100+i,-200-i,1,{r:1,g:0,b:0});o.trail.emitAccumulator=.375});
+    const saved=orbs.map(o=>({angle:o.angleRad,x:o.xSim,y:o.ySim,trail:o.trail,list:o.trail.particles,tail:o.trail.particles.tail,governor:o.trail.governor}));
+    const world=state.world,camera=state.camera,ring=state.bands.ringPhaseRad;
+    const retained=()=>{
+      assert.equal(state.world,world);assert.equal(state.camera,camera);assert.equal(state.bands.ringPhaseRad,ring);
+      orbs.forEach((o,i)=>{const s=saved[i];assert.equal(state.orbs[i],o);assert.equal(o.angleRad,s.angle);assert.equal(o.xSim,s.x);assert.equal(o.ySim,s.y);assert.equal(o.trail,s.trail);assert.equal(o.trail.particles,s.list);assert.equal(o.trail.particles.tail,s.tail);assert.equal(o.trail.governor,s.governor);assert.equal(o.trail.emitAccumulator,.375)});
+    };
+    const speed=state.ui.orbEditorList.children[0].querySelectorAll('input').find(c=>c.id?.endsWith('-angular-speed'));
+    assert.equal(speed.value,'90');assert.doesNotMatch(speed.getAttribute('aria-valuetext'),/Current .*slider selection/);
+    UI.applyPrefs(null);UI.refreshAllUiText();retained();assert.deepEqual(preferences,original);
+    await state.ui.btnShare.click();assert.deepEqual(decodePresetHash(location.hash).prefs,original);retained();
+    speed.value='90.5';speed.dispatch('input');retained();
+    const expected=structuredClone(original);expected.orbs[0].motion.angularSpeedRadPerSec=preferences.orbs[0].motion.angularSpeedRadPerSec;
+    assert.ok(Math.abs(expected.orbs[0].motion.angularSpeedRadPerSec*RAD_TO_DEG-90.5)<1e-12);assert.deepEqual(preferences,expected);
+    assert.equal(state.orbs[1].motion.angularSpeedRadPerSec,Math.PI/2);
   });
 });

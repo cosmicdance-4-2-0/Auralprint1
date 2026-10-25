@@ -125,7 +125,8 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     const picker = createBandPicker(pickerRoot, { orbLabel: `Orb ${id}`, onChange(ids) { bands.value = formatOrbBandIdsText(ids); bands.setAttribute("aria-invalid", "false"); error.textContent = ""; commit("bandIds", ids, `${id} bands`); }, formatRange: BandBank.formatBandRangeText, getActiveCount: () => runtime.settings.bands.count, describeBank: () => `${runtime.settings.bands.distributionMode.toUpperCase()} distribution · ${runtime.settings.bands.count} active bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}` });
     return { id, root, summary, title, identity, chan: chanField.control, chanValue: chanField.output, bands, bandValue, error, chir: chirField.control, chirValue: chirField.output, phase: phaseField.control, phaseValue: phaseField.output, hue: hueField.control, hueValue: hueField.output, color: colorField.control, colorValue: colorField.output, x: xField.control, xValue: xField.output, y: yField.control, yValue: yField.output, speed: speedField.control, speedValue: speedField.output, minRadius: minRadiusField.control, minRadiusValue: minRadiusField.output, maxRadius: maxRadiusField.control, maxRadiusValue: maxRadiusField.output, waveform: waveformField.control, waveformValue: waveformField.output, emit: emitField.control, emitValue: emitField.output, sizeMin: sizeMinField.control, sizeMinValue: sizeMinField.output, sizeMax: sizeMaxField.control, sizeMaxValue: sizeMaxField.output, decay: decayField.control, decayValue: decayField.output, ttl: ttlField.control, ttlValue: ttlField.output, spacing: spacingField.control, spacingValue: spacingField.output, lines: linesField.control, linesValue: linesField.output, numLines: numLinesField.control, numLinesValue: numLinesField.output, lineAlpha: alphaField.control, lineAlphaValue: alphaField.output, lineWidth: widthField.control, lineWidthValue: widthField.output, lineColor: lineColorField.control, lineColorValue: lineColorField.output, picker };
   }
-  const bindRange = (control, limit) => bindConfigRange(control, limit, limit === CONFIG.limits.orbs.startAngleRad ? RAD_TO_DEG : 1);
+  const bindRange = (control, limit) => bindConfigRange(control, limit,
+    limit === CONFIG.limits.orbs.startAngleRad || limit === CONFIG.limits.motion.angularSpeedRadPerSec ? RAD_TO_DEG : 1);
   function syncController(c, orb, position) {
     const set = syncConfigRange;
     const setSelect = (control, output, value) => {
@@ -177,10 +178,10 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
       if (control.type === "range") {
         // Mixed values have no single canonical value. Keep a valid selection,
         // and make its purpose explicit without retaining an obsolete baseline.
-        syncConfigRange(control, output, model.mixed ? Number(control.value) : model.value, format);
+        const selection = syncConfigRange(control, output, model.mixed ? null : model.value, format);
         if (model.mixed) {
           output.textContent = "mixed";
-          control.setAttribute("aria-valuetext", `mixed; slider selection ${format(Number(control.value))}`);
+          control.setAttribute("aria-valuetext", `mixed; slider selection ${format(selection)}`);
         }
       } else {
         control.value = model.mixed && control === ui.selLineColorMode ? "" : String(model.value);

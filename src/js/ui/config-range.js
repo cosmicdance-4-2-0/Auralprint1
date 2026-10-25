@@ -50,7 +50,7 @@ function selectConfigGrid(value, limit, bounds = {}) {
   return gridValue(limit, Math.max(first, Math.min(last, Math.round((value - limit.min) / limit.step))));
 }
 function bindConfigRange(control, limit, scale = 1) {
-  // Phase uses degrees natively: decimal HTML step arithmetic otherwise places
+  // Angular controls use degrees natively: HTML decimal arithmetic otherwise puts
   // 360 * String(oneDegreeInRadians) just beyond String(TAU) in Chromium.
   // This unit conversion derives all three attributes from CONFIG unchanged.
   control.min = String(limit.min * scale); control.max = String(limit.max * scale); control.step = String(limit.step * scale);
@@ -79,7 +79,11 @@ function readConfigRange(control, bounds) {
   return value;
 }
 function syncConfigRange(control, output, canonical, format = String) {
-  const model = models.get(control), selection = selectConfigGrid(canonical, model.limit);
+  const model = models.get(control);
+  // Mixed Bulk fields have no canonical value. Interpret their existing native
+  // selection in the binding's units, without treating degrees as radians.
+  canonical ??= selectConfigGrid(Number(control.value) / model.scale, model.limit);
+  const selection = selectConfigGrid(canonical, model.limit);
   model.canonical = canonical;
   control.value = String(selection * model.scale);
   const text = canonical === selection ? format(canonical)
@@ -87,6 +91,7 @@ function syncConfigRange(control, output, canonical, format = String) {
   output.textContent = text;
   output.setAttribute('data-config-range-discrepancy', String(canonical !== selection));
   control.setAttribute('aria-valuetext', text);
+  return selection;
 }
 
 export { bindConfigRange, readConfigRange, syncConfigRange, isOnConfigGrid, selectConfigGrid, gridValue, lastGridIndex };

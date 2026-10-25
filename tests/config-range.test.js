@@ -17,9 +17,13 @@ for (const {owner,selector,limit} of sliderCases) test(`CONFIG editing grid: ${o
   assert.equal(selectConfigGrid(NaN,limit),null); assert.equal(selectConfigGrid(Infinity,limit),null);
 });
 
-test('Ring maximum is not an editing index; phase endpoint is exactly TAU and wraps only at its owner',()=>{
+test('Orb maximum remains a bound; Ring and designed phase reach exact TAU on their grids',()=>{
   const ring=CONFIG.limits.bands.ringSpeedRadPerSec,phase=CONFIG.limits.orbs.startAngleRad;
-  assert.equal(isOnConfigGrid(ring.max,ring),false);assert.equal(selectConfigGrid(ring.max,ring),6.28);
+  const speed=CONFIG.limits.motion.angularSpeedRadPerSec;
+  assert.equal(isOnConfigGrid(speed.max,speed),false);
+  assert.equal(selectConfigGrid(speed.max,speed),speed.min+342*speed.step);
+  assert.ok(Math.abs(selectConfigGrid(speed.max,speed)*180/Math.PI-171.5)<1e-12);
+  assert.equal(isOnConfigGrid(ring.max,ring),true);assert.equal(selectConfigGrid(ring.max,ring),2*Math.PI);
   assert.equal(isOnConfigGrid(phase.max,phase),true);assert.equal(selectConfigGrid(phase.max,phase),phase.max);
   let value=0;
   for(let i=0;i<1000;i++) { value=selectConfigGrid(value+.01,CONFIG.limits.orbs.centerXFrac); assert.ok(isOnConfigGrid(value,CONFIG.limits.orbs.centerXFrac)); }
@@ -44,7 +48,7 @@ test('Schemas 10/11/12, defaults and share retain legacy off-grid values; no per
   }
   const defaults=sanitizePreset({schema:12,prefs:{}});
   assert.equal(defaults.orbs[0].motion.angularSpeedRadPerSec,Math.PI/2);
-  assert.equal(isOnConfigGrid(Math.PI/2,CONFIG.limits.motion.angularSpeedRadPerSec),false);
+  assert.equal(isOnConfigGrid(Math.PI/2,CONFIG.limits.motion.angularSpeedRadPerSec),true);
 });
 
 test('Exact legacy dependency bounds take precedence over floating membership tolerance',()=>{
