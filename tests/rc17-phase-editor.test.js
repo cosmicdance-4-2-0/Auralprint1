@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { selectConfigGrid } from "../src/js/ui/config-range.js";
 import { CONFIG } from "../src/js/core/config.js";
 import { TAU, RAD_TO_DEG } from "../src/js/core/constants.js";
 import { preferences, runtime, replacePreferences, resolveSettings, normalizeOrbDef } from "../src/js/core/preferences.js";
@@ -32,7 +33,7 @@ function withEditor(callback) {
   const view = { orbEditorList: element() };
   for (const name of ["chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin",
     "rngSizeToMin", "rngTTL", "rngMinPlacementDistance", "rngOmega", "rngWfDisp", "rngMinRad", "rngMaxRad"]) {
-    view[name] = element(); view[name].type = name.startsWith("chk") ? "checkbox" : "range";
+    view[name] = element(); view[name].type = name.startsWith("chk") ? "checkbox" : name.startsWith("sel") ? "select" : "range";
     view["val" + name.replace(/^(chk|rng|sel)/, "")] = element();
   }
   replacePreferences(sanitizePreset({ schema: 10, prefs: { orbs: [{ id: "A", startAngleRad: 4 * Math.PI },
@@ -48,11 +49,12 @@ function withEditor(callback) {
   finally { replacePreferences(saved.prefs); runtime.settings = saved.settings; globalThis.document = saved.document; }
 }
 function assertUi(controller, expected) {
-  assert.equal(Number(controller.phase.value), expected);
-  assert.equal(controller.phase.min, "0"); assert.equal(controller.phase.max, String(TAU));
-  assert.equal(controller.phase.step, "any");
-  const degrees = controller.phaseValue.textContent.slice(0, -1);
-  assert.equal(controller.phase.getAttribute("aria-valuetext"), `${degrees} degrees`);
+  assert.equal(Number(controller.phase.value), selectConfigGrid(expected,CONFIG.limits.orbs.startAngleRad)*RAD_TO_DEG);
+  assert.equal(controller.phase.min, "0"); assert.equal(controller.phase.max, String(TAU*RAD_TO_DEG));
+  assert.equal(controller.phase.step, String(CONFIG.limits.orbs.startAngleRad.step*RAD_TO_DEG));
+  const text = controller.phaseValue.textContent;
+  const degrees = text.startsWith("Current ") ? text.slice(8).split("°")[0] : text.slice(0,-1);
+  assert.equal(controller.phase.getAttribute("aria-valuetext"), text.replaceAll("°", " degrees"));
   assert.ok(Math.abs(Number(degrees) - expected * RAD_TO_DEG) < 1e-12);
   assert.notEqual(controller.phaseValue.textContent, "360°");
 }
@@ -72,7 +74,7 @@ test("RC-17 UI: native endpoint input resynchronizes in the same commit, stable 
   const c = editor.getController("A"), input = c.phase, root = c.root; input.focus();
   preferences.orbs.reverse(); resolveSettings(); editor.refresh();
   assert.equal(editor.getController("A").phase, input); assert.equal(document.activeElement, input);
-  input.value = String(TAU); input.dispatchEvent(new Event("input"));
+  input.value = String(TAU*RAD_TO_DEG); input.dispatchEvent(new Event("input"));
   assert.deepEqual(commits, ["A"]); assertUi(c, 0);
   assert.equal(preferences.orbs.find(o => o.id === "A").startAngleRad, 0);
   assert.equal(preferences.orbs.find(o => o.id === "C").startAngleRad, Math.PI / 2);
@@ -84,11 +86,11 @@ test("RC-17 UI: native endpoint input resynchronizes in the same commit, stable 
   assert.equal(editor.getController("B"), undefined);
   assert.equal(editor.init(), false); for (let i = 0; i < 5; i++) { resolveSettings(); editor.refresh(); }
   assert.equal(input.count("input"), 1); assert.equal(input.count("keydown"), 1);
-  input.value = String(2.5 / RAD_TO_DEG); input.dispatchEvent(new Event("input"));
-  assert.deepEqual(commits, ["A", "A"]); assertUi(c, 2.5 / RAD_TO_DEG);
+  input.value = "2.5"; input.dispatchEvent(new Event("input"));
+  assert.deepEqual(commits, ["A", "A"]); assertUi(c, 3 / RAD_TO_DEG);
 }));
 
-test("RC-17 UI: Arrow keys move one degree while preserving imported fractions and synchronizing endpoint zero", () => withEditor(({ editor, commits }) => {
+test("RC-17 UI: Arrow keys move one degree onto the degree lattice and synchronizing endpoint zero", () => withEditor(({ editor, commits }) => {
   const c = editor.getController("A");
   const first = new Event("keydown", { cancelable: true }); first.key = "ArrowRight";
   c.phase.dispatchEvent(first);
@@ -96,14 +98,22 @@ test("RC-17 UI: Arrow keys move one degree while preserving imported fractions a
   assert.equal(c.phaseValue.textContent, "1°"); assert.equal(c.phase.getAttribute("aria-valuetext"), "1 degrees");
   commits.length = 0;
   preferences.orbs[0].startAngleRad = 1.5 / RAD_TO_DEG; resolveSettings(); editor.refresh();
-  for (const [key, expected] of [["ArrowRight", 2.5], ["ArrowUp", 3.5], ["ArrowLeft", 2.5], ["ArrowDown", 1.5]]) {
+  for (const [key, expected] of [["ArrowRight", 2], ["ArrowUp", 3], ["ArrowLeft", 2], ["ArrowDown", 1]]) {
     const event = new Event("keydown", { cancelable: true }); event.key = key; c.phase.dispatchEvent(event);
     assert.equal(event.defaultPrevented, true);
-    assert.ok(Math.abs(Number(c.phase.value) * RAD_TO_DEG - expected) < 1e-12);
+    assert.ok(Math.abs(Number(c.phase.value) - expected) < 1e-12);
     assertUi(c, preferences.orbs[0].startAngleRad);
   }
   assert.equal(commits.length, 4);
   preferences.orbs[0].startAngleRad = 359.5 / RAD_TO_DEG; resolveSettings(); editor.refresh();
   const right = new Event("keydown", { cancelable: true }); right.key = "ArrowRight"; c.phase.dispatchEvent(right);
   assertUi(c, 0); assert.equal(preferences.orbs[0].startAngleRad, 0);
+}));
+
+test('CONFIG phase indices complete repeated turns without incremental radian drift',()=>withEditor(({editor})=>{
+  const input=editor.getController('A').phase,limit=CONFIG.limits.orbs.startAngleRad;
+  for(let i=1;i<=720;i++){
+    const event=new Event('keydown',{cancelable:true});event.key='ArrowRight';input.dispatchEvent(event);
+    assert.equal(preferences.orbs[0].startAngleRad,(i%360)*limit.step);
+  }
 }));

@@ -1,0 +1,21 @@
+Editing smoke: v0.1.16d, Chromium 156.0.8078.4, 38 sliders
+PASS source DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+FAIL editing smoke: AssertionError [ERR_ASSERTION]: input[id$="-angular-speed"]
++ actual - expected
+
+  [
+    '0.01',
+    '3',
++   'any'
+-   '0.01'
+  ]
+
+    at sliders (/workspace/Auralprint1/work/accepted-main/scripts/smoke-editing.cjs:80:12)
+    at async /workspace/Auralprint1/work/accepted-main/scripts/smoke-editing.cjs:133:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [Array],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}

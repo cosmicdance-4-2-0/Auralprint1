@@ -6,6 +6,7 @@ import { createAnalysisPanelUi } from "../src/js/ui/analysis-panel.js";
 function el() {
   const listeners=new Map();
   return { value:"", textContent:"", style:{display:"block"}, children:[], options:[], className:"", min:"", max:"", step:"",
+    setAttribute(key,value){this[key]=String(value)}, getAttribute(key){return this[key]},
     addEventListener(type,fn){const a=listeners.get(type)||[];a.push(fn);listeners.set(type,a)},
     dispatch(type){for(const fn of listeners.get(type)||[])fn({target:this})},
     appendChild(node){this.children.push(node);if(this===node.parentSelect)this.options.push(node);return node},
@@ -112,5 +113,32 @@ test('AUD-004 explicit reveal refresh bypasses only the existing HUD interval gu
     const frame={spectrum:{energies01:[.25,.75],lowHz:[0,20],dominantIndex:1,dominantName:'Before',metadata:{}}};panel.refresh(frame);
     frame.spectrum.dominantName='On reveal';frame.spectrum.energies01[0]=.9;
     panel.refresh(frame,true);assert.match(ui.bandDebug.children[0].textContent,/On reveal/);assert.equal(ui.bandTable.children[3].children[0].style.width,'90%');
+  }finally{restore()}
+});
+
+for(const field of ['floor','ceiling']) for(const draft of ['37.125','','1e','-']) test(`AUD-002: ${field} ${JSON.stringify(draft)} survives refresh and explicit replacement fences late events`,()=>{
+  const restore=installDocument(),{ui,settings,prefs}=fixture();let active=settings,commits=0;
+  try {
+    const panel=createAnalysisPanelUi({ui,getSettings:()=>active,mutablePreferences:prefs,commitPreferences:()=>{commits++;active=structuredClone(prefs)}});panel.init();
+    const input=field==='floor'?ui.inpBandFloorHz:ui.inpBandCeilingHz;
+    document.activeElement=input;input.value=draft;input.selectionStart=1;input.selectionEnd=3;input.dispatch('input');
+    active=structuredClone(active);active.audio.rmsGain=2;panel.refresh(null,true);
+    assert.equal(input.value,draft);assert.equal(document.activeElement,input);assert.equal(input.selectionStart,1);assert.equal(input.selectionEnd,3);assert.equal(ui.valRmsGain.textContent,'2');assert.match(ui.bandMeta.textContent,/Configured floor/);
+    ui.analysisPanel.style.display='none';panel.refresh();ui.analysisPanel.style.display='block';panel.refresh(null,true);assert.equal(input.value,draft);
+    active=structuredClone(active);active.bands.floorHz=55;active.bands.ceilingHz=18000;Object.assign(prefs.bands,active.bands);
+    panel.syncControls(active,{replaceDrafts:true});assert.equal(input.value,field==='floor'?'55':'18000');
+    input.dispatch('blur');input.dispatch('change');input.dispatch('change');assert.equal(commits,0);
+    input.value=field==='floor'?'55.125':'18000.125';input.dispatch('input');input.dispatch('change');input.dispatch('blur');input.dispatch('change');assert.equal(commits,1,'single established change commit; fractional Hz remains admissible');
+    for(const invalid of ['', '1e', '-1', field==='floor'?'99999':'1']) { const before=structuredClone(prefs);input.value=invalid;input.dispatch('change');assert.deepEqual(prefs,before);assert.equal(commits,1); }
+  }finally{restore()}
+});
+
+for(const [id,field] of [['rngRmsGain','rmsGain'],['rngSmooth','smoothingTimeConstant']]) test(`AUD-003: Analysis ${field} preserves import, describes selection and validates its own submission`,()=>{
+  const restore=installDocument(),{ui,settings,prefs}=fixture();let commits=0;
+  try {
+    settings.audio[field]=prefs.audio[field]=.123456;
+    const panel=createAnalysisPanelUi({ui,getSettings:()=>settings,mutablePreferences:prefs,commitPreferences:()=>commits++});panel.init();
+    assert.equal(ui[id].value,'0.12');assert.match(ui[id].getAttribute('aria-valuetext'),/Current 0.123456; slider selection 0.12/);assert.equal(prefs.audio[field],.123456);
+    const before=structuredClone(prefs);ui[id].value='.23789';ui[id].dispatch('input');assert.equal(prefs.audio[field],.24);before.audio[field]=.24;assert.deepEqual(prefs,before);assert.equal(commits,1);
   }finally{restore()}
 });

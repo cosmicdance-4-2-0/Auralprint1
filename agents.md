@@ -271,9 +271,14 @@ Rules:
 - Only fields returned by `normalizeOrbDef()` are valid
 - `startAngleRad` is canonical designed phase in `[0, TAU)`, distinct from live
   `angleRad`. Editing preserves live phase/history; Reset Visuals applies design.
-  The native phase range preserves fractional imports (`step=any`); Arrow keys
-  use CONFIG's one-degree increment. Its 360-degree endpoint commits as zero,
-  synchronously refreshing the thumb and shared visible/accessibility readout.
+  Native Orb/Bulk, Analysis and Ring sliders use CONFIG steps. New UI commits
+  select `min + n * step` within bounds; off-grid imports and shipped defaults
+  retain canonical precision until deliberate editing. Readouts and ARIA identify
+  both the current canonical value and the slider selection when they differ.
+  Phase converts CONFIG's radian bounds/step to native degrees (0–360, step 1),
+  and commits CONFIG radian grid indices; its exact 360-degree endpoint
+  commits as zero, synchronously refreshing the thumb and readout. Preset
+  normalization remains backward compatible, not globally step-strict.
 - Adding a field requires full preset pipeline update (Section 2)
 - `bandIds` accepts only integer numbers in `[0, CONFIG.bandNames.length - 1]`,
   retaining first-occurrence order and uniqueness. Discard unsupported entries,

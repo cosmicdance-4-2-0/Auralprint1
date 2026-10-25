@@ -1,5 +1,5 @@
 import { CONFIG } from "../core/config.js";
-import { fmt } from "../core/utils.js";
+import { bindConfigRange, readConfigRange, syncConfigRange } from "./config-range.js";
 
 const CONTROL_FIELDS = [
   ["chkBandOverlay", "enabled", "change", true],
@@ -15,11 +15,7 @@ const CONTROL_FIELDS = [
   ["rngRingSpeed", "ringSpeedRadPerSec", "input"],
 ];
 
-function bindRange(element, limit) {
-  element.min = String(limit.min);
-  element.max = String(limit.max);
-  element.step = String(limit.step);
-}
+const bindRange = bindConfigRange;
 
 function createSpectralRingEditorUi({ ui, preferences, getSettings, commitPreferences = () => {} } = {}) {
   let initializedOn = null;
@@ -46,9 +42,12 @@ function createSpectralRingEditorUi({ ui, preferences, getSettings, commitPrefer
     }
     for (const [control, field, eventName, checkbox, stringValue] of CONTROL_FIELDS) {
       ui[control].addEventListener(eventName, () => {
+        if (ui[control].disabled) return;
+        const numeric = !checkbox && !stringValue ? readConfigRange(ui[control]) : null;
+        if (!checkbox && !stringValue && numeric === null) return;
         preferences.bands.overlay[field] = checkbox
           ? !!ui[control].checked
-          : (stringValue ? ui[control].value : Number(ui[control].value));
+          : (stringValue ? ui[control].value : numeric);
         commitPreferences(`spectral ring ${field}`);
       });
     }
@@ -64,17 +63,14 @@ function createSpectralRingEditorUi({ ui, preferences, getSettings, commitPrefer
     ui.valBandOverlay.textContent = overlay.enabled ? "Visible" : "Hidden";
     ui.chkBandConnect.checked = !!overlay.connectAdjacent;
     ui.valBandConnect.textContent = overlay.connectAdjacent ? "On" : "Off";
-    ui.rngBandAlpha.value = String(overlay.alpha); ui.valBandAlpha.textContent = fmt(overlay.alpha, 2);
-    ui.rngBandPoint.value = String(overlay.pointSizePx); ui.valBandPoint.textContent = `${overlay.pointSizePx}px`;
-    ui.rngBandOverlayMinRad.value = String(overlay.minRadiusFrac); ui.valBandOverlayMinRad.textContent = fmt(overlay.minRadiusFrac, 3);
-    ui.rngBandOverlayMaxRad.value = String(overlay.maxRadiusFrac); ui.valBandOverlayMaxRad.textContent = fmt(overlay.maxRadiusFrac, 3);
-    ui.rngBandOverlayWfDisp.value = String(overlay.waveformRadialDisplaceFrac); ui.valBandOverlayWfDisp.textContent = fmt(overlay.waveformRadialDisplaceFrac, 3);
-    ui.rngBandLineAlpha.value = String(overlay.lineAlpha); ui.valBandLineAlpha.textContent = fmt(overlay.lineAlpha, 2);
-    ui.rngBandLineWidth.value = String(overlay.lineWidthPx); ui.valBandLineWidth.textContent = `${overlay.lineWidthPx}px`;
+    for (const [control, output, field, format] of [
+      [ui.rngBandAlpha,ui.valBandAlpha,"alpha"], [ui.rngBandPoint,ui.valBandPoint,"pointSizePx",v=>`${v}px`],
+      [ui.rngBandOverlayMinRad,ui.valBandOverlayMinRad,"minRadiusFrac"], [ui.rngBandOverlayMaxRad,ui.valBandOverlayMaxRad,"maxRadiusFrac"],
+      [ui.rngBandOverlayWfDisp,ui.valBandOverlayWfDisp,"waveformRadialDisplaceFrac"], [ui.rngBandLineAlpha,ui.valBandLineAlpha,"lineAlpha"],
+      [ui.rngBandLineWidth,ui.valBandLineWidth,"lineWidthPx",v=>`${v}px`], [ui.rngRingSpeed,ui.valRingSpeed,"ringSpeedRadPerSec",v=>`${v} rad/s`],
+    ]) syncConfigRange(control,output,overlay[field],format);
     ui.selRingPhaseMode.value = overlay.phaseMode;
     ui.valRingPhaseMode.textContent = overlay.phaseMode === "orb" ? "First Orb" : "Free-run";
-    ui.rngRingSpeed.value = String(overlay.ringSpeedRadPerSec);
-    ui.valRingSpeed.textContent = `${fmt(overlay.ringSpeedRadPerSec, 2)} rad/s`;
     ui.rngRingSpeed.disabled = overlay.phaseMode === "orb";
     return true;
   }

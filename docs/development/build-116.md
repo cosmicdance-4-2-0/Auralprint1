@@ -1,5 +1,29 @@
 # Build 116 — simulation world, camera and projection
 
+## AUD-002 / AUD-003 and CONFIG step correction
+
+Against accepted `main` `d2a92a868e214ae5cba77ea91600b9965038ff19`, Analysis
+frequency drafts now survive unrelated settings/File/frame refreshes. Existing
+change validation owns commit/rejection; successful URL application and full
+reset explicitly replace drafts and fence late change events. Fractional Hz
+remains valid; CONFIG defines no frequency editing lattice.
+
+All 38 Orb/Bulk, Analysis and Ring sliders now bind CONFIG steps and validate
+new submissions at their editing owner. Legacy canonical values and shipped
+defaults remain unchanged until deliberate editing; visible/accessible readouts
+identify both the current value and slider selection when they differ. Phase
+converts CONFIG's radian bounds/step to native degrees so Chromium can select
+360° exactly, then commits canonical radian indices with the established zero
+wrap and preserved history. Ring speed's non-grid maximum is not a new index.
+
+`npm run test:browser:editing` adds a separate mandatory Chromium gate to the
+existing Ubuntu job using PR #76's pinned installation; the authored-camera
+gate is unchanged. [Inventory, reproduction, verification and owner handoff](../audits/remediations/116-aud002-aud003/README.md)
+record every limit/default, compatibility behavior and the separate unapproved
+decision required for globally step-strict preset normalization. Schema 12,
+migrations, CONFIG values, Build 115 canon and historical evidence are unchanged.
+Owner review remains the stopping point; no merge or release approval is implied.
+
 ## AUD-001 corrective disposition
 
 The October 24 audit's Medium live-input readiness defect is corrected against

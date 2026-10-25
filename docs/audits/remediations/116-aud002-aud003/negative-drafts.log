@@ -1,0 +1,19 @@
+Editing smoke: v0.1.16d, Chromium 156.0.8078.4, 38 sliders
+FAIL editing smoke: AssertionError [ERR_ASSERTION]: File completion lost a focused draft
++ actual - expected
+
+  {
+    badInput: false,
++   value: '20'
+-   value: '37.125'
+  }
+
+    at drafts (/workspace/Auralprint1/work/accepted-main/scripts/smoke-editing.cjs:48:12)
+    at async /workspace/Auralprint1/work/accepted-main/scripts/smoke-editing.cjs:132:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: [Object],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}

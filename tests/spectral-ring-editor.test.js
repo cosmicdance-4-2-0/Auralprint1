@@ -7,6 +7,7 @@ function element() {
   const listeners = new Map();
   return {
     value: "", checked: false, disabled: false, textContent: "", options: [], children: [],
+    setAttribute(key,value){this[key]=String(value)}, getAttribute(key){return this[key]},
     addEventListener(type, fn) { (listeners.get(type) || listeners.set(type, []).get(type)).push(fn); },
     dispatch(type) { for (const fn of listeners.get(type) || []) fn({ target: this }); },
     appendChild(child) { this.children.push(child); this.options.push(child); },
@@ -57,4 +58,18 @@ test("Spectral Ring refresh is runtime-settings reference guarded", () => {
     h.replaceSettings(next); assert.equal(h.editor.refresh(), true); assert.equal(h.ui.rngBandLineAlpha.value, "0.77");
     assert.equal(h.editor.refresh(), false);
   } finally { globalThis.document = oldDocument; }
+});
+
+const { ringSliders } = await import('./helpers/step-control-cases.js');
+for(const item of ringSliders) test(`AUD-003: ${item.selector} legacy representation, CONFIG binding and independent owner validation`,()=>{
+  const oldDocument=globalThis.document;globalThis.document={createElement:()=>element()};
+  try {
+    const h=harness(),field=item.path.at(-1),id=item.selector.slice(1),overlay={...CONFIG.defaults.bands.overlay,[field]:item.legacy};
+    h.preferences.bands.overlay=structuredClone(overlay);h.replaceSettings({bands:{overlay}});h.editor.init();
+    assert.deepEqual([h.ui[id].min,h.ui[id].max,h.ui[id].step],[String(item.limit.min),String(item.limit.max),String(item.limit.step)]);
+    assert.equal(h.preferences.bands.overlay[field],item.legacy);assert.match(h.ui[id].getAttribute('aria-valuetext'),/Current .*slider selection/);
+    const before=structuredClone(h.preferences);h.ui[id].value=String(item.legacy+item.limit.step/3);h.ui[id].dispatch('input');
+    const value=h.preferences.bands.overlay[field],index=(value-item.limit.min)/item.limit.step;
+    assert.ok(value>=item.limit.min&&value<=item.limit.max);assert.ok(Math.abs(index-Math.round(index))<1e-10);before.bands.overlay[field]=value;assert.deepEqual(h.preferences,before);assert.equal(h.commits(),1);
+  } finally {globalThis.document=oldDocument}
 });
