@@ -43,7 +43,7 @@ const BandBankController = (() => {
     const wasKnown = Number.isFinite(sampleRateHz);
     const prevEffective = getEffectiveCeilingHz();
 
-    sampleRateHz = Number.isFinite(nextSampleRateHz) ? nextSampleRateHz : null;
+    sampleRateHz = Number.isFinite(nextSampleRateHz) && nextSampleRateHz > 0 ? nextSampleRateHz : null;
 
     const nextEffective = getEffectiveCeilingHz();
     const becameKnown = !wasKnown && Number.isFinite(sampleRateHz);

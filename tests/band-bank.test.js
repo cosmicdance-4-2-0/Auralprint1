@@ -199,7 +199,11 @@ test('AUD-008: other distributions retain their transformation and linear interp
   for (const [mode, to, from] of [['linear', x => x, x => x], ['mel', hzToMel, melToHz], ['bark', hzToBark, barkToHz], ['erb', hzToErb, erbToHz]]) {
     for (const n of [1, 2, 30, 254]) {
       const edges = computeInteriorEdges(mode, n, 20, 22500);
-      for (let i = 0; i <= n; i++) assert.equal(edges[i], from(to(20) + (to(22500) - to(20)) * (i / n)));
+      assert.equal(edges[0],20); assert.equal(edges[n],22500);
+      for (let i = 0; i <= n; i++) {
+        const expected = from(to(20) + (to(22500) - to(20)) * (i / n));
+        assert.ok(Math.abs(edges[i]-expected) <= expected*3e-12, 'same perceptual definition within round-trip precision');
+      }
     }
   }
 });

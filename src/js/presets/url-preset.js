@@ -1,11 +1,13 @@
 import { preferences, replacePreferences } from "../core/preferences.js";
 import { encodePresetPayload, decodePresetPayload, sanitizePreset } from "./preset-codec.js";
+import { frequencyLimitMessage } from "../core/band-frequency.js";
 
 /* =============================================================================
    URL hash transport for preset schemas 2–12.
    Migration and sanitation belong to the transport-independent preset codec.
    ========================================================================== */
 const UrlPreset = (() => {
+  let validationMessage = "";
   function base64UrlEncode(bytes) {
     let s = "";
     for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
@@ -35,10 +37,12 @@ const UrlPreset = (() => {
     const json = new TextDecoder().decode(bytes);
     const obj = JSON.parse(json);
     const decoded = decodePresetPayload(obj);
+    if (!decoded.ok && decoded.code === "unsupported-frequency") validationMessage = frequencyLimitMessage();
     return decoded.ok ? decoded : null;
   }
 
   function applyFromLocationHash() {
+    validationMessage = "";
     try {
       const decoded = decodePrefsFromHash(location.hash);
       if (!decoded) return false;
@@ -56,7 +60,8 @@ const UrlPreset = (() => {
     history.replaceState(null, "", location.pathname + location.search + hash);
   }
 
-  return { applyFromLocationHash, writeHashFromPrefs };
+  function getValidationMessage() { return validationMessage; }
+  return { applyFromLocationHash, writeHashFromPrefs, getValidationMessage };
 })();
 
 export { UrlPreset };

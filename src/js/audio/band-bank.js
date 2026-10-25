@@ -3,39 +3,78 @@ import { TAU } from "../core/constants.js";
 import { runtime, BAND_NAMES } from "../core/preferences.js";
 import { state } from "../core/state.js";
 
-// Perceptual frequency scale converters
-// Mel scale (O'Shaughnessy 1987)
-function hzToMel(hz)  { return 2595 * Math.log10(1 + hz / 700); }
-function melToHz(mel)  { return 700 * (Math.pow(10, mel / 2595) - 1); }
-// Bark scale (Traunmüller 1990 — closed-form invertible)
-function hzToBark(hz)  { return (26.81 * hz) / (1960 + hz) - 0.53; }
-function barkToHz(b)   { return 1960 * (b + 0.53) / (26.28 - b); }
-// ERB-rate scale (Glasberg & Moore 1990)
-function hzToErb(hz)   { return 21.4 * Math.log10(0.00437 * hz + 1); }
-function erbToHz(e)    { return (Math.pow(10, e / 21.4) - 1) / 0.00437; }
+// Direct helpers accept positive finite Hz across binary64, independently of
+// CONFIG's application admission limit. Inverses require finite scale values
+// with a representable nonnegative Hz result; invalid domains throw RangeError.
+function positiveHz(hz) {
+  if (!Number.isFinite(hz) || hz <= 0) throw new RangeError("Frequency must be positive and finite.");
+  return hz;
+}
+function finiteHz(hz) {
+  if (!Number.isFinite(hz) || hz < 0) throw new RangeError("Scale value has no finite nonnegative frequency.");
+  return hz;
+}
+function scaledLog(hz, scale, coefficient) {
+  positiveHz(hz);
+  const ratio = hz / scale;
+  // log1p(x)/x tends to one, including when division underflows to zero.
+  return ratio <= 1 ? hz * (coefficient / scale) * (ratio === 0 ? 1 : Math.log1p(ratio) / ratio)
+    : coefficient * Math.log1p(ratio);
+}
+function unscaleLog(value, scale, coefficient) {
+  if (!Number.isFinite(value) || value < 0) throw new RangeError("Scale value must be finite and nonnegative.");
+  const maximum = scaledLog(Number.MAX_VALUE, scale, coefficient);
+  if (value > maximum) throw new RangeError("Scale value exceeds the finite frequency domain.");
+  if (value === maximum) return Number.MAX_VALUE;
+  const exponent = value / coefficient;
+  return finiteHz(exponent <= 1
+    ? value * (scale / coefficient) * (exponent === 0 ? 1 : Math.expm1(exponent) / exponent)
+    : scale * Math.expm1(exponent));
+}
+// Mel (O'Shaughnessy 1987), Bark (Traunmüller 1990), ERB-rate
+// (Glasberg & Moore 1990). Constants define the existing distributions.
+function hzToMel(hz) { return scaledLog(hz, 700, 2595 / Math.LN10); }
+function melToHz(mel) { return unscaleLog(mel, 700, 2595 / Math.LN10); }
+// A scalar binary64 Bark coordinate eventually rounds to its asymptote and
+// cannot round-trip extreme Hz. Edge generation below avoids that coordinate.
+function hzToBark(hz) { return 26.81 * (positiveHz(hz) / (1960 + hz)) - 0.53; }
+function barkToHz(b) {
+  if (!Number.isFinite(b) || b < -0.53 || b >= 26.28) throw new RangeError("Bark value must be in [-0.53, 26.28).");
+  return finiteHz(1960 * ((b + 0.53) / (26.28 - b)));
+}
+function hzToErb(hz) { return scaledLog(hz, 1 / 0.00437, 21.4 / Math.LN10); }
+function erbToHz(e) { return unscaleLog(e, 1 / 0.00437, 21.4 / Math.LN10); }
+
+// expm1(x)/x has the analytic value one at zero. Keeping this ratio avoids
+// losing subnormal frequency differences in logarithmic scale coordinates.
+const expRelative = x => x === 0 ? 1 : Math.expm1(x) / x;
+function interpolateShiftedLog(f0, f1, t, scale) {
+  const span = Math.log1p((f1 - f0) / (scale + f0));
+  return f0 + (f1 - f0) * (t * expRelative(t * span) / expRelative(span));
+}
 
 // Returns n+1 Hz edge values linearly spaced in the chosen perceptual domain
 function computeInteriorEdges(mode, n, f0, f1) {
+  positiveHz(f0); positiveHz(f1);
+  if (f0 > f1 || !Number.isInteger(n) || n < 1) throw new RangeError("Edges require an ordered frequency interval and positive integer count.");
   const edges = new Array(n + 1);
-  if (mode === "mel") {
-    const s0 = hzToMel(f0), s1 = hzToMel(f1);
-    for (let i = 0; i <= n; i++) edges[i] = melToHz(s0 + (s1 - s0) * (i / n));
-  } else if (mode === "bark") {
-    const s0 = hzToBark(f0), s1 = hzToBark(f1);
-    for (let i = 0; i <= n; i++) edges[i] = barkToHz(s0 + (s1 - s0) * (i / n));
-  } else if (mode === "erb") {
-    const s0 = hzToErb(f0), s1 = hzToErb(f1);
-    for (let i = 0; i <= n; i++) edges[i] = erbToHz(s0 + (s1 - s0) * (i / n));
-  } else if (mode === "log") {
-    // Forming f1 / f0 can overflow for accepted positive subnormal floors.
-    // Interpolate logarithms instead; retain exact endpoints (including a
-    // collapsed interval) rather than introducing round-trip endpoint error.
-    const log0 = Math.log(f0), log1 = Math.log(f1);
-    edges[0] = f0;
-    for (let i = 1; i < n; i++) edges[i] = f0 === f1 ? f0 : Math.exp(log0 + (log1 - log0) * (i / n));
-    edges[n] = f1;
-  } else { // "linear" (default / fallback)
-    for (let i = 0; i <= n; i++) edges[i] = lerp(f0, f1, i / n);
+  edges[0] = f0; edges[n] = f1;
+  for (let i = 1; i < n; i++) {
+    const t = i / n;
+    let hz;
+    if (f0 === f1) hz = f0;
+    else if (mode === "mel" || mode === "erb") hz = interpolateShiftedLog(f0, f1, t, mode === "mel" ? 700 : 1 / 0.00437);
+    else if (mode === "bark") {
+      // Algebraically interpolate the original Bark rational function in Hz.
+      // Avoid its rounded -0.53/26.28 endpoints and inverse cancellation/pole.
+      const denominator = 1960 + (1 - t) * f1 + t * f0;
+      hz = f0 + (f1 - f0) * (t * ((1960 + f0) / denominator));
+    } else if (mode === "log") hz = Math.exp(lerp(Math.log(f0), Math.log(f1), t));
+    else hz = lerp(f0, f1, t); // Existing linear fallback.
+    // Roundoff can cross an endpoint. NaN/Infinity must never reach clamp.
+    if (!Number.isFinite(hz)) throw new RangeError("Nonfinite interior frequency.");
+    edges[i] = clamp(hz, f0, f1);
+    if (edges[i] < edges[i - 1]) throw new RangeError("Reversed interior frequency.");
   }
   return edges;
 }
@@ -88,7 +127,11 @@ const BandBank = (() => {
     const configuredFloorHz = s.bands.floorHz;
     const configCeilingHz = s.bands.ceilingHz;
     const f1 = Number.isFinite(effectiveCeilingHz) ? effectiveCeilingHz : configCeilingHz;
+    positiveHz(configuredFloorHz); positiveHz(configCeilingHz); positiveHz(f1);
+    if (configuredFloorHz > configCeilingHz || f1 > configCeilingHz || !Number.isInteger(n) || n < 3) throw new RangeError("Invalid band definition.");
     const f0 = Math.min(configuredFloorHz, f1);
+    const interiorBands = n - 2;
+    const edges = computeInteriorEdges(s.bands.distributionMode, interiorBands, f0, f1);
 
     state.bands.lowHz = new Array(n);
     state.bands.highHz = new Array(n);
@@ -96,9 +139,6 @@ const BandBank = (() => {
     state.bands.lowHz[0] = 0;
     state.bands.highHz[0] = f0;
 
-    const interiorBands = n - 2;
-    const edges = computeInteriorEdges(s.bands.distributionMode, interiorBands, f0, f1);
-    for (let i = 0; i < edges.length; i++) edges[i] = clamp(edges[i], f0, f1);
     for (let i = 0; i < interiorBands; i++) {
       state.bands.lowHz[1 + i]  = edges[i];
       state.bands.highHz[1 + i] = edges[i + 1];
@@ -113,8 +153,8 @@ const BandBank = (() => {
       C: { energies01: new Array(n).fill(0) },
     };
     state.bands.energies01 = state.bands.channels.C.energies01;
-    state.bands.meta.sampleRateHz = Number.isFinite(sampleRateHz) ? sampleRateHz : null;
-    state.bands.meta.nyquistHz = Number.isFinite(sampleRateHz) ? sampleRateHz * 0.5 : null;
+    state.bands.meta.sampleRateHz = Number.isFinite(sampleRateHz) && sampleRateHz > 0 ? sampleRateHz : null;
+    state.bands.meta.nyquistHz = state.bands.meta.sampleRateHz === null ? null : sampleRateHz * 0.5;
     state.bands.meta.effectiveFloorHz = f0;
     state.bands.meta.configCeilingHz = configCeilingHz;
     state.bands.meta.effectiveCeilingHz = f1;

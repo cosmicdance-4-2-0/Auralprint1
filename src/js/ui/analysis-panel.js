@@ -1,6 +1,7 @@
 import { bindConfigRange, readConfigRange, syncConfigRange } from "./config-range.js";
 import { clamp, fmt, rgb01ToCss } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
+import { frequencyLimitMessage } from "../core/band-frequency.js";
 import { BAND_NAMES, preferences, runtime } from "../core/preferences.js";
 import { state } from "../core/state.js";
 import { BandBank } from "../audio/band-bank.js";
@@ -54,6 +55,7 @@ function createAnalysisPanelUi({
     const value=Number(input.value), floor=kind === "floor" ? value : settings.bands.floorHz, ceiling=kind === "ceiling" ? value : settings.bands.ceilingHz;
     let message="";
     if (!Number.isFinite(value) || value <= 0) message=`Band ${kind === "floor" ? "floor" : "ceiling"} must be a positive finite number.`;
+    else if (value > CONFIG.limits.bands.frequencyHz.max) message=frequencyLimitMessage();
     else if (floor > ceiling) message=kind === "floor" ? "Band floor cannot exceed configured ceiling." : "Configured ceiling cannot be below band floor.";
     dirtyFrequencies.delete(input);
     if (message) { input.value=String(settings.bands[field]); status(message); return false; }
@@ -123,6 +125,7 @@ function createAnalysisPanelUi({
     if(initializedOn===ui.analysisPanel) return false; initializedOn=ui.analysisPanel;
     bindRange(ui.rngRmsGain,CONFIG.limits.audio.rmsGain); bindRange(ui.rngSmooth,CONFIG.limits.audio.smoothingTimeConstant);
     addOptions(ui.selFFT,CONFIG.limits.audio.fftSizes); addOptions(ui.selDistMode,CONFIG.limits.bands.distributionModes);
+    for (const input of [ui.inpBandFloorHz, ui.inpBandCeilingHz]) input.max=String(CONFIG.limits.bands.frequencyHz.max);
     ui.rngRmsGain.addEventListener("input",()=>{const value=readConfigRange(ui.rngRmsGain);if(value!==null){mutablePreferences.audio.rmsGain=value;commitPreferences("rms gain (analysis)");}});
     ui.rngSmooth.addEventListener("input",()=>{const value=readConfigRange(ui.rngSmooth);if(value!==null){mutablePreferences.audio.smoothingTimeConstant=value;commitPreferences("smoothing");}});
     ui.selFFT.addEventListener("change",()=>{mutablePreferences.audio.fftSize=Number(ui.selFFT.value);commitPreferences("fft size");});

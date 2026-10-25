@@ -7,6 +7,7 @@ import { state } from "./state.js";
 import { CONFIG } from "./config.js";
 import { TAU } from "./constants.js";
 import { assertOrbAdmission } from "./orb-admission.js";
+import { assertSupportedBandFrequencies } from "./band-frequency.js";
 import { clamp, deepClone } from "./utils.js";
 
 /* =============================================================================
@@ -24,6 +25,7 @@ function normalizeMinPlacementDistanceUnits(value, fallback = CONFIG.defaults.or
 function replacePreferences(next) {
   const replacement = (next && typeof next === "object") ? next : deepClone(CONFIG.defaults);
   assertOrbAdmission(replacement.orbs);
+  assertSupportedBandFrequencies(replacement.bands);
   const sceneCamera = normalizeSceneCamera(replacement.sceneCamera);
   for (const key of Object.keys(preferences)) delete preferences[key];
   Object.assign(preferences, replacement);
@@ -43,6 +45,7 @@ function normalizeBandCount(count) {
 
 function resolveSettings() {
   assertOrbAdmission(preferences.orbs);
+  assertSupportedBandFrequencies(preferences.bands);
   runtime.settings = deepClone(preferences);
   runtime.settings.world = normalizeWorldSettings(preferences.world);
   runtime.settings.sceneCamera = normalizeSceneCamera(preferences.sceneCamera);

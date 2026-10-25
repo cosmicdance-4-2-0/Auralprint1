@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createAnalysisPanelUi } from "../src/js/ui/analysis-panel.js";
+import { CONFIG } from "../src/js/core/config.js";
 
 function el() {
   const listeners=new Map();
@@ -23,6 +24,25 @@ function fixture(count=2) {
   return {ui,settings,prefs};
 }
 function installDocument(){const previous=globalThis.document;globalThis.document={createElement(){return el()}};return()=>{globalThis.document=previous}};
+
+for(const field of ['floorHz','ceilingHz']) test(`AUD-004 ${field}: reject above CONFIG max, preserve drafts/Scene, then accept a fraction`,()=>{
+  const restore=installDocument(),{ui,settings,prefs}=fixture();let active=settings,commits=0;
+  try {
+    const maximum=CONFIG.limits.bands.frequencyHz.max;
+    active.bands.ceilingHz=prefs.bands.ceilingHz=maximum;
+    const panel=createAnalysisPanelUi({ui,getSettings:()=>active,mutablePreferences:prefs,commitPreferences:()=>{commits++;active=structuredClone(prefs)}});panel.init();
+    const input=field==='floorHz'?ui.inpBandFloorHz:ui.inpBandCeilingHz;
+    assert.equal(input.max,String(maximum));
+    const before=structuredClone(prefs);
+    document.activeElement=input;input.value=String(maximum+1);input.dispatch('input');
+    active=structuredClone(active);panel.refresh();assert.equal(input.value,String(maximum+1));
+    input.dispatch('change');assert.deepEqual(prefs,before);assert.equal(commits,0);assert.equal(input.value,String(before.bands[field]));
+    assert.match(ui.analysisStatus.textContent,/384,000 Hz/);
+    input.value=field==='floorHz'?'31.125':String(maximum-.125);input.dispatch('input');input.dispatch('change');
+    const expected=structuredClone(before);expected.bands[field]=Number(input.value);
+    assert.deepEqual(prefs,expected);assert.equal(commits,1);
+  } finally {restore();}
+});
 
 test("Analysis controls initialize idempotently and commit their canonical fields",()=>{
   const restore=installDocument(), {ui,settings,prefs}=fixture(); const commits=[];
