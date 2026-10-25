@@ -1,8 +1,22 @@
 // Editing-only CONFIG grid. Preset sanitation deliberately does not use this:
 // existing Scenes and shipped defaults retain their historical precision.
 const models = new WeakMap();
-const indexTolerance = index => 64 * Number.EPSILON * Math.max(1, Math.abs(index));
+// A 15-significant-digit native range serialization can lose a few dozen
+// binary64 epsilons before subtraction/division reconstructs the grid index.
+// This relative allowance is for integer-index membership, not value rounding;
+// exact bounds below still take precedence. Current sliders reach index 5999.
+const GRID_INDEX_ROUNDOFF_FACTOR = 64;
+const indexTolerance = index => GRID_INDEX_ROUNDOFF_FACTOR * Number.EPSILON * Math.max(1, Math.abs(index));
 const nearIndex = index => Math.abs(index - Math.round(index)) <= indexTolerance(index);
+
+// Clean cancellation residue only for simple decimal UI grids. Ten places is a
+// conservative cleanup ceiling, not persisted precision: finer/high-precision
+// steps (including pi-derived angles) retain the binary64 index calculation.
+const MAX_SIMPLE_DECIMAL_PLACES = 10;
+function decimalPlaces(value) {
+  const [coefficient, exponent = "0"] = String(value).split("e");
+  return Math.max(0, (coefficient.split(".")[1] || "").length - Number(exponent));
+}
 
 function lastGridIndex({ min, max, step }) {
   const index = (max - min) / step;
@@ -14,9 +28,8 @@ function gridValue(limit, index) {
   const raw = limit.min + index * limit.step;
   // Decimal CONFIG steps should serialize without cancellation residue. Radian
   // steps retain binary64 index multiplication, including the exact TAU endpoint.
-  const decimals = value => (String(value).split('.')[1] || '').length;
-  const places = Math.max(decimals(limit.min), decimals(limit.step));
-  const value = places <= 10 ? Number(raw.toFixed(places)) : raw;
+  const places = Math.max(decimalPlaces(limit.min), decimalPlaces(limit.step));
+  const value = places <= MAX_SIMPLE_DECIMAL_PLACES ? Number(raw.toFixed(places)) : raw;
   return index === last && nearIndex((limit.max - limit.min) / limit.step) ? limit.max : value;
 }
 function isOnConfigGrid(value, limit) {

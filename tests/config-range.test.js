@@ -52,3 +52,35 @@ test('Exact legacy dependency bounds take precedence over floating membership to
   assert.equal(selectConfigGrid(1,limit,{min:1.2000000000000002}),1.3);
   assert.equal(selectConfigGrid(2,limit,{max:1.1999999999999997}),1.1);
 });
+
+for(const [min,step,index,expected] of [
+  [0,1e-7,3,3e-7], [1e-8,1e-7,3,3.1e-7],
+  [0,2.5e-7,3,7.5e-7], [0,1.25e-7,3,3.75e-7],
+  [0,1e-10,3,3e-10], [-.95,.01,95,0], [.05,.01,8,.13],
+]) test(`Decimal grid formatting: min ${min}, step ${step}, index ${index}`,()=>{
+  const limit={min,max:1,step},raw=min+index*step;
+  const value=selectConfigGrid(raw,limit);
+  assert.equal(value,expected);assert.equal(selectConfigGrid(value,limit),value);
+  assert.ok(isOnConfigGrid(value,limit),'formatted result remains on its grid');
+});
+
+test('High-precision steps retain the index calculation rather than decimal cleanup',()=>{
+  for(const step of [1e-11,.10000000000000002,Math.PI/360]) {
+    const limit={min:0,max:10,step},expected=3*step;
+    assert.equal(selectConfigGrid(expected,limit),expected);
+  }
+});
+
+test('Index tolerance admits arithmetic and native serialization residue but rejects meaningful off-grid values',()=>{
+  assert.ok(isOnConfigGrid(.1+.2,{min:0,max:1,step:.1}));
+  // Current sliders reach index 5999; one million also exercises scientific
+  // notation grids without treating a fractional index as rounding residue.
+  const limit={min:.1,max:200000,step:.1};
+  for(const index of [1,179,342,5999,1000000]) {
+    const exact=limit.min+index*limit.step;
+    const native=Number(exact.toPrecision(15));
+    assert.ok(isOnConfigGrid(native,limit),`native residue at ${index}`);
+    assert.ok(isOnConfigGrid(exact+Number.EPSILON*Math.max(1,Math.abs(exact)),limit),`arithmetic residue at ${index}`);
+    for(const fraction of [1e-6,.001,.25,.5])assert.equal(isOnConfigGrid(exact+fraction*limit.step,limit),false,`fraction ${fraction} at ${index}`);
+  }
+});
