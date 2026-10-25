@@ -1,4 +1,5 @@
 import { CONFIG } from "../core/config.js";
+import { RAD_TO_DEG } from "../core/constants.js";
 import { bindConfigRange, readConfigRange, syncConfigRange } from "./config-range.js";
 
 const CONTROL_FIELDS = [
@@ -31,7 +32,7 @@ function createSpectralRingEditorUi({ ui, preferences, getSettings, commitPrefer
     bindRange(ui.rngBandOverlayWfDisp, CONFIG.limits.bands.overlayWaveformRadialDisplaceFrac);
     bindRange(ui.rngBandLineAlpha, CONFIG.limits.bands.overlayLineAlpha);
     bindRange(ui.rngBandLineWidth, CONFIG.limits.bands.overlayLineWidthPx);
-    bindRange(ui.rngRingSpeed, CONFIG.limits.bands.ringSpeedRadPerSec);
+    bindRange(ui.rngRingSpeed, CONFIG.limits.bands.ringSpeedRadPerSec, RAD_TO_DEG);
 
     if (!ui.selRingPhaseMode.options.length) {
       for (const [value, label] of [["orb", "Lock to first Orb phase"], ["free", "Free-run"]]) {

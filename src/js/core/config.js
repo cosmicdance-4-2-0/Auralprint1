@@ -2,6 +2,7 @@ import { TAU, RAD_TO_DEG } from "./constants.js";
 import { deepFreeze } from "./utils.js";
 
 const SIMULATION_MAX_DELTA_TIME_SEC = 1 / 30;
+const ANGULAR_SPEED_STEP_RAD_PER_SEC = Math.PI / 360;
 const DEFAULT_CAMERA = { x: 0, y: 0, zoom: 1, rotationRad: 0 };
 
 const DEFAULT_ORB_BEHAVIOR = {
@@ -565,7 +566,7 @@ bands: {
     },
 
     motion: {
-      angularSpeedRadPerSec: { min: 0.01, max: 3, step: 0.01 },
+      angularSpeedRadPerSec: { min: ANGULAR_SPEED_STEP_RAD_PER_SEC, max: 3, step: ANGULAR_SPEED_STEP_RAD_PER_SEC },
     },
 
     audio: {
@@ -584,7 +585,7 @@ bands: {
       overlayMinRadiusFrac: { min: 0.01, max: 0.4, step: 0.01 },
       overlayMaxRadiusFrac: { min: 0.3, max: 1, step: 0.01 },
       overlayWaveformRadialDisplaceFrac: { min: 0.01, max: 1.00, step: 0.01 },
-      ringSpeedRadPerSec: { min: 0, max: TAU, step: 0.01 },
+      ringSpeedRadPerSec: { min: 0, max: TAU, step: ANGULAR_SPEED_STEP_RAD_PER_SEC },
       distributionModes: ["linear", "log", "mel", "bark", "erb"],
     },
 
