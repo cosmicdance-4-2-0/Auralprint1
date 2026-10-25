@@ -1,5 +1,100 @@
 # Build 116 — simulation world, camera and projection
 
+## AUD-004 numerical stability and supported frequency domain
+
+Corrective baseline: accepted `main`
+`06d114bd93904dc77baea50567e369453233ca4e`, `v0.1.16d`, schema **12**.
+The October 24 audit remains immutable. AUD-004 is corrected for owner review;
+this is neither a release decision nor Build 117/118 development.
+
+`CONFIG.limits.bands.frequencyHz.max` owns the **384,000 Hz** maximum for
+configured floor and ceiling. Defaults remain **20–22,500 Hz**. Positive finite
+fractional frequencies, including subnormals, retain admission; no additional
+minimum or editing grid was introduced. Canonical floor never exceeds ceiling.
+Existing malformed/missing-value sanitation and reversed-input migration remain;
+the compatibility change is rejection of previously accepted finite frequencies
+above the CONFIG maximum. Existing in-domain Scenes retain their values during
+reading, refresh and Share. A source customization must keep defaults within its
+chosen domain; an isolated **1e307 Hz** customization is regression-tested.
+
+Analysis rejects an excessive deliberate edit, restores its previous field value
+and explains the CONFIG limit without committing other settings. Focused/dirty
+draft protection from AUD-002 remains. Codec admission rejects the entire
+out-of-domain preset before replacing preferences; decoder failures retain
+`{ ok: false, code }` with `unsupported-frequency`, and URL application retains
+its boolean result. Apply, hash changes and startup expose the limit through the
+existing preset status owner. Schema-12 encoding/sanitation throws a coded
+RangeError for an excessive frequency instead of clipping it. The writer also
+rejects explicitly nonpositive/nonfinite or reversed frequencies instead of
+repairing them; legacy import sanitation remains independent. Schemas **2–12**,
+both schema-9 forms and unrelated world, Orb and authored-camera fields retain
+their migration contracts; no schema or version increment was needed.
+
+Bark's forward helper divides before multiplying. Edge generation interpolates
+the same rational Bark definition algebraically in Hz, avoiding cancellation at
+its low endpoint and loss of frequency information near its asymptote. Mel/ERB
+use `log1p`, `expm1` and their analytic ratios at zero; shifted-log interpolation
+retains subnormal differences without subtracting nearly equal transformed
+coordinates. Log interpolation still operates on logarithms, and linear spacing
+retains its definition. All distributions preserve exact endpoints and collapsed
+intervals. Finite/order checks run before publishing replacement BandBank arrays;
+NaN never reaches the edge clamp. Duplicate boundaries caused by binary64
+resolution remain valid zero-width bands; no artificial spacing or FFT-bin
+inclusion change was introduced. The final band's intentional Infinity remains.
+
+Direct edge helpers accept ordered **positive finite binary64 Hz**, independently
+of CONFIG, with a positive integer interval count; invalid inputs throw
+RangeError. Scalar forward helpers accept positive finite Hz. Inverses require
+representable nonnegative Hz results (Bark coordinates in `[-0.53, 26.28)`).
+Scalar Bark coordinates eventually lose invertible precision near the asymptote;
+edge generation avoids that coordinate entirely. No wider perceptual-scale
+recommendation or new analysis backend is implied.
+
+The CONFIG maximum is independent of AudioContext rate. Before initialization,
+the controller uses the validated configured ceiling; afterwards it rebuilds at
+`min(configuredCeilingHz, actualSampleRateHz / 2)`. Mathematical sample-rate cases
+**44,100 / 48,000 / 96,000 / 384,000 Hz** give Nyquist limits
+**22,050 / 24,000 / 48,000 / 192,000 Hz**, further bounded by the Scene ceiling.
+No AudioContext rate is requested or forced. This maximum does not establish
+universal ultrasonic support or original-file-rate analysis.
+
+Reproduction on the unmodified baseline (`bark`, count 256, floor 20, ceiling
+1e307, no AudioContext): **255/255 computed edges nonfinite**, **254 NaNs in
+lowHz and 254 in highHz**, plus the separate intentional final Infinity. The
+corrected direct-helper negative control has zero nonfinite interior entries;
+normal preset admission rejects the same excessive configuration atomically.
+The final 28 numerical/domain regressions run against an isolated unmodified
+baseline fail **26**, pass **2**; the original 254-NaN assertion fails explicitly.
+
+Validation: focused numerical/codec/UI tests pass, including independent
+**700-digit Python Decimal** definitions, recorded accepted-baseline normal
+results, all five distributions, supported count endpoints, fractional/subnormal,
+collapsed/extreme intervals, adjacent maximum values, invalid input and an
+isolated source-customized maximum. Full `npm test`: **1,328 passed, one existing
+opt-in skip**. Build, distribution verification and `git diff --check` pass.
+Build 115 canon, historical fixtures and the original forensic audit are unchanged.
+
+Pinned Playwright **1.64.1** / Chromium **156.0.8078.4** passed native frequency
+checks in source, portable and hosted at DPR **1 and 2**, including startup/hash
+rejection, valid fractional imports, atomic failed imports with focused drafts,
+subsequent edits/imports, Share, full reset, all distributions and actual audio
+initialization. The complete editing gate additionally passed the delayed File
+draft and 38-slider regressions in all six combinations. The authored-camera
+smoke, broader 116D six-way compatibility check and **72** native Mic/Stream/File
+cases passed without page/console/resource errors. Actual AudioContext rate was
+**44,100 Hz** (effective ceiling **22,050 Hz** for the maximum Scene); higher-rate
+cases are mathematical tests. Generated audio/synthetic streams and local HTTP
+do not certify owner music/artwork, physical devices/permissions, other engines,
+direct-file launch or high-rate hardware.
+
+Reproduce the focused native check after building with
+`npm run test:browser:editing -- --frequencies-only`; `AP_DPRS=1,2` selects both
+device scales. The ordinary command retains the complete mandatory editing gate.
+Owner acceptance: load a familiar Scene/music, compare defaults, try **384000**
+then **384001** in Analysis, Share after rejection, import an excessive link,
+then a valid link; confirm effective Nyquist metadata and draft/reset behavior.
+Stop for owner review; no merge, tag, deployment or publication is authorized.
+
 ## CONFIG angular-step alignment
 
 Baseline: merged PR #77, `7a9f96757482f63ae1fbe5f3b0e6ac02d401f21e`.

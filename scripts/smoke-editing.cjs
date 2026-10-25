@@ -5,16 +5,26 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const {chromium}=require('playwright');
 const root=path.resolve(__dirname,'..'),version=fs.readFileSync(path.join(root,'version'),'utf8').trim();
+const frequenciesOnly=process.argv.includes('--frequencies-only');
 const hash=prefs=>'#p='+Buffer.from(JSON.stringify({schema:12,prefs})).toString('base64url');
 const frames=page=>page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 const near=(a,b)=>assert.ok(Math.abs(a-b)<=1e-12*Math.max(1,Math.abs(a),Math.abs(b)),`${a} != ${b}`);
 const readPath=(object,keys)=>keys.reduce((o,k)=>o[k],object);
 const writePath=(object,keys,value)=>{readPath(object,keys.slice(0,-1))[keys.at(-1)]=value;};
 const onGrid=(value,{min,max,step})=>Number.isFinite(value)&&value>=min&&value<=max&&Math.abs((value-min)/step-Math.round((value-min)/step))<1e-9;
-async function share(page){return page.evaluate(()=>{document.getElementById('btnShare').click();return JSON.parse(atob(location.hash.slice(3).replace(/-/g,'+').replace(/_/g,'/'))).prefs;});}
+async function share(page){
+  const prefs=await page.evaluate(()=>{
+    // Await this action's asynchronous clipboard feedback before the next
+    // import, so an older Share toast cannot overwrite the observed rejection.
+    document.getElementById('sceneStatus').textContent='';
+    document.getElementById('btnShare').click();return JSON.parse(atob(location.hash.slice(3).replace(/-/g,'+').replace(/_/g,'/'))).prefs;
+  });
+  await page.waitForFunction(()=>/^Share link /.test(document.getElementById('sceneStatus').textContent));
+  return prefs;
+}
 async function apply(page,prefs){await page.evaluate(h=>{history.replaceState(null,'',location.pathname+h);document.getElementById('btnApplyUrl').click();},hash(prefs));await frames(page);}
 async function show(page,owner){await page.evaluate(owner=>{
-  const panel=owner==='Analysis'?'Analysis':'Visualizers';
+  const panel=['Analysis','Audio'].includes(owner)?owner:'Visualizers';
   for(const name of ['Audio','Analysis','Visualizers','Scene','Camera','Queue','Record']){
     const element=document.getElementById(name==='Audio'?'audioPanel':name==='Scene'?'scenePanel':name[0].toLowerCase()+name.slice(1)+'Panel');
     const button=document.getElementById('btnOpen'+name);
@@ -84,6 +94,79 @@ async function drafts(page,fixture){
   for(const [id,value] of [['inpBandFloorHz','30000'],['inpBandCeilingHz','10']]){
     const before=await share(page),input=page.locator('#'+id);await input.fill(value);await input.press('Tab');assert.deepEqual(await share(page),before,'Crossed bounds mutated preferences');
   }
+}
+async function frequencies(page,defaults,maximum,modes,edition){
+  const fixture=structuredClone(defaults);
+  Object.assign(fixture.bands,{floorHz:.125,ceilingHz:maximum});
+  fixture.world.widthUnits=2345.5;fixture.sceneCamera.x=123.125;
+  for(const mode of modes){
+    fixture.bands.distributionMode=mode;
+    await apply(page,fixture);await show(page,'Analysis');
+    assert.deepEqual(await share(page),fixture,'Frequency import/share altered the Scene');
+    assert.equal(await page.locator('#inpBandCeilingHz').inputValue(),String(maximum));
+    assert.match(await page.locator('#bandMeta').textContent(),/pending audio context/);
+    assert.doesNotMatch(await page.locator('#bandTable').textContent(),/NaN|n\/a/);
+    if(edition==='source')assert.equal(await page.evaluate(async()=>{
+      const {state}=await import('/src/js/core/state.js');
+      return [...state.bands.lowHz,...state.bands.highHz.slice(0,-1)].every(Number.isFinite);
+    }),true);
+  }
+  for(const id of ['inpBandFloorHz','inpBandCeilingHz']){
+    const before=await share(page),input=page.locator('#'+id);
+    assert.equal(await input.getAttribute('max'),String(maximum));
+    await input.fill(String(maximum+1));await input.press('Tab');
+    assert.match(await page.locator('#analysisStatus').textContent(),new RegExp(maximum.toLocaleString('en-US')+' Hz'));
+    assert.deepEqual(await share(page),before,'Rejected edit mutated the Scene');
+    assert.equal(await input.inputValue(),String(before.bands[id==='inpBandFloorHz'?'floorHz':'ceilingHz']));
+    const value=id==='inpBandFloorHz'?'31.125':String(maximum-.125);
+    await input.fill(value);await input.press('Tab');
+    const after=structuredClone(before);after.bands[id==='inpBandFloorHz'?'floorHz':'ceilingHz']=Number(value);
+    assert.deepEqual(await share(page),after,'Subsequent valid fractional edit failed');
+  }
+  const before=await share(page),bad=structuredClone(before);
+  bad.bands.ceilingHz=1e307;bad.world.widthUnits=12345;bad.sceneCamera.x=-999;bad.orbs=[];
+  await page.locator('#inpBandFloorHz').fill('43.125');
+  await apply(page,bad);
+  assert.match(await page.locator('#sceneStatus').textContent(),new RegExp(maximum.toLocaleString('en-US')+' Hz'));
+  assert.equal(await page.locator('#inpBandFloorHz').inputValue(),'43.125','Failed import overwrote a focused dirty draft');
+  assert.ok(await page.locator('#inpBandFloorHz').evaluate(el=>document.activeElement===el));
+  assert.deepEqual(await share(page),before,'Failed preset import was not atomic');
+  await apply(page,fixture);assert.deepEqual(await share(page),fixture);
+  await page.locator('#inpBandFloorHz').fill('42.125');
+  await page.evaluate(()=>document.getElementById('btnResetPrefs').click());
+  assert.deepEqual(await share(page),defaults);
+  assert.equal(await page.locator('#inpBandFloorHz').inputValue(),'20');
+  await apply(page,fixture);
+  await show(page,'Audio');await page.locator('#btnLoad').click();
+  await page.locator('#fileInput').setInputFiles({name:'aud004-playback.wav',mimeType:'audio/wav',buffer:wav()});
+  await page.waitForFunction(()=>document.getElementById('btnPlay').textContent==='Pause');
+  const rate=await page.evaluate(()=>editingSmoke.actualSampleRate);
+  assert.ok(Number.isFinite(rate)&&rate>0,'AudioContext did not report its actual sample rate');
+  await show(page,'Analysis');await frames(page);
+  const expected=Math.min(maximum,rate/2);
+  assert.match(await page.locator('#bandMeta').textContent(),new RegExp('Effective ceiling: '+(expected/1000).toFixed(2)+' kHz'));
+  assert.doesNotMatch(await page.locator('#bandTable').textContent(),/NaN|n\/a/);
+  assert.equal((await share(page)).bands.ceilingHz,maximum);
+  if(edition==='source')assert.deepEqual(await page.evaluate(async()=>{
+    const {state}=await import('/src/js/core/state.js');return [state.bands.meta.sampleRateHz,state.bands.meta.effectiveCeilingHz];
+  }),[rate,expected]);
+  await page.evaluate(()=>{document.getElementById('btnStop').click();document.getElementById('btnClearQueue').click();});
+  await page.waitForFunction(()=>document.getElementById('btnPlay').disabled);
+  await apply(page,defaults);
+  return rate;
+}
+async function rejectedFrequencyStartup(page,url,defaults,maximum){
+  // A query change forces document startup; a hash-only goto retains the live
+  // Scene and exercises hashchange instead of a fresh import.
+  await page.goto(url+'?aud004-startup=1'+hash({bands:{ceilingHz:1e307}}));
+  await page.waitForFunction(()=>document.querySelector('input[id$="-angular-speed"]'));
+  const message=new RegExp(maximum.toLocaleString('en-US')+' Hz');
+  assert.match(await page.locator('#sceneStatus').textContent(),message);
+  assert.deepEqual(await share(page),defaults,'Rejected startup link changed the default Scene');
+  await page.evaluate(h=>{location.hash=h;},hash({bands:{floorHz:1e307}}));
+  await page.waitForFunction(()=>document.getElementById('sceneStatus').textContent.startsWith('Band frequencies must not exceed'));
+  assert.match(await page.locator('#sceneStatus').textContent(),message);
+  assert.deepEqual(await share(page),defaults,'Rejected hashchange changed the Scene');
 }
 async function angularStartup(page,defaults,cases){
   assert.deepEqual(await share(page),defaults,'Startup/Share changed the accepted default Scene');
@@ -163,14 +246,18 @@ async function sliders(page,fixture,cases){
     for(const dpr of (process.env.AP_DPRS||'1').split(',').map(Number))for(const [edition,file] of [['source','/source'],['portable',`/dist/auralprint_${version.slice(1)}.html`],['hosted','/dist/hosted/index.html']]){
       const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:dpr}),page=await context.newPage();page.setDefaultTimeout(10000);
       page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('requestfailed',r=>errors.push(r.url()));page.on('response',r=>{if(r.status()>=400)errors.push(`HTTP ${r.status()} ${r.url()}`);});
-      await page.addInitScript(()=>{window.editingSmoke={delayFile:false};const play=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=async function(...args){const result=await play.apply(this,args);if(editingSmoke.delayFile){editingSmoke.delayFile=false;await new Promise(resolve=>{editingSmoke.release=resolve;editingSmoke.waiting=true;});}return result;};});
+      await page.addInitScript(()=>{window.editingSmoke={delayFile:false};const Context=window.AudioContext;window.AudioContext=new Proxy(Context,{construct(Target,args){const context=new Target(...args);editingSmoke.actualSampleRate=context.sampleRate;return context;}});const play=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=async function(...args){const result=await play.apply(this,args);if(editingSmoke.delayFile){editingSmoke.delayFile=false;await new Promise(resolve=>{editingSmoke.release=resolve;editingSmoke.waiting=true;});}return result;};});
       await page.goto(`http://127.0.0.1:${server.address().port}${file}`);await page.waitForFunction(()=>document.querySelector('input[id$="-angular-speed"]'));await frames(page);
-      await angularStartup(page,CONFIG.defaults,sliderCases);console.log(`PASS ${edition} DPR ${dpr}: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint`);
-      await drafts(page,fixture);console.log(`PASS ${edition} DPR ${dpr}: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events`);
-      await sliders(page,fixture,sliderCases);console.log(`PASS ${edition} DPR ${dpr}: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock`);
-      assert.deepEqual(errors,[]);results.push({edition,dpr,sliders:sliderCases.length});await context.close();
+      if(!frequenciesOnly){await angularStartup(page,CONFIG.defaults,sliderCases);console.log(`PASS ${edition} DPR ${dpr}: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint`);}
+      await rejectedFrequencyStartup(page,`http://127.0.0.1:${server.address().port}${file}`,CONFIG.defaults,CONFIG.limits.bands.frequencyHz.max);
+      const actualSampleRate=await frequencies(page,CONFIG.defaults,CONFIG.limits.bands.frequencyHz.max,CONFIG.limits.bands.distributionModes,edition);console.log(`PASS ${edition} DPR ${dpr}: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext ${actualSampleRate} Hz`);
+      if(!frequenciesOnly){
+        await drafts(page,fixture);console.log(`PASS ${edition} DPR ${dpr}: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events`);
+        await sliders(page,fixture,sliderCases);console.log(`PASS ${edition} DPR ${dpr}: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock`);
+      }
+      assert.deepEqual(errors,[]);results.push({edition,dpr,sliders:sliderCases.length,actualSampleRate});await context.close();
     }
-    if(process.env.AP_REPORT)fs.writeFileSync(process.env.AP_REPORT,JSON.stringify({version,browser:browser.version(),results,errors},null,2)+'\n');
+    if(process.env.AP_REPORT)fs.writeFileSync(process.env.AP_REPORT,JSON.stringify({version,browser:browser.version(),frequenciesOnly,results,errors},null,2)+'\n');
     console.log('PASS editing smoke');
   }finally{if(browser)await browser.close();await new Promise(r=>server.close(r));}
 })().catch(error=>{console.error('FAIL editing smoke:',error);process.exitCode=1;});

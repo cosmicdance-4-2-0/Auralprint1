@@ -8,6 +8,7 @@ import { CONFIG } from "../core/config.js";
 import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { assertOrbAdmission } from "../core/orb-admission.js";
+import { assertSupportedBandFrequencies } from "../core/band-frequency.js";
 
 // Preset data contract, independent of URL/base64 or application state.
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
@@ -21,7 +22,7 @@ function decodePresetPayload(payload) {
   if (!isRecord(payload) || !isRecord(payload.prefs)) return { ok: false, code: "malformed-payload" };
   if (!SUPPORTED_SCHEMAS.includes(payload.schema)) return { ok: false, code: "unsupported-schema" };
   const incoming = payload.schema === LEGACY_SCHEMA_V9 ? recoverScene9Preferences(payload.prefs) : payload.prefs;
-  try { assertOrbAdmission(incoming.orbs); }
+  try { assertOrbAdmission(incoming.orbs); assertSupportedBandFrequencies(incoming.bands); }
   catch (error) { return { ok: false, code: error.code }; }
   return { ok: true, schema: payload.schema, prefs: payload.prefs };
 }
@@ -50,6 +51,17 @@ function recoverScene9Preferences(prefs) {
 }
 
 function encodePresetPayload(prefs) {
+  // A writer must never repair an explicitly supplied out-of-domain frequency.
+  // Legacy input sanitation remains a separate decoder/migration policy.
+  assertSupportedBandFrequencies(prefs?.bands);
+  const bands = prefs?.bands;
+  const invalidValue = ["floorHz", "ceilingHz"].some(field => bands && hasOwn(bands, field)
+    && (!Number.isFinite(bands[field]) || bands[field] <= 0));
+  if (invalidValue || bands?.floorHz > bands?.ceilingHz) {
+    const error = new RangeError("Cannot encode invalid band frequencies.");
+    error.code = "invalid-frequency";
+    throw error;
+  }
   // Sanitize on both boundaries: arbitrary preference/runtime additions can
   // never leak through a clone of the mutable preferences object.
   return { schema: PRESET_SCHEMA_VERSION, prefs: sanitizePreset({ schema: PRESET_SCHEMA_VERSION, prefs }) };
@@ -61,6 +73,7 @@ function sanitizePreset(decoded) {
     ? recoverScene9Preferences(decoded.prefs)
     : decoded.prefs;
   assertOrbAdmission(incoming.orbs);
+  assertSupportedBandFrequencies(incoming.bands);
   // Presets are full configuration snapshots. Always migrate/sanitize from
   // canonical defaults so older or partial payloads cannot inherit live state.
   const next = deepClone(CONFIG.defaults);

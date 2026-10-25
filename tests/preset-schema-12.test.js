@@ -261,6 +261,11 @@ test("malformed values preserve existing clamps, defaults, enum rejection and de
   location.hash = rawHash({ schema: 12, prefs: input });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences, expected);
+  assert.throws(() => encodePresetPayload(input), error => error.code === "invalid-frequency");
+  // AUD-004 requires a strict frequency writer; unrelated field sanitation
+  // below retains its established encoding contract.
+  input.bands.floorHz = expected.bands.floorHz;
+  input.bands.ceilingHz = expected.bands.ceilingHz;
   assert.deepEqual(encodePresetPayload(input).prefs, expected);
   // RC-16 rejects numeric strings; deliberate numeric selections still survive.
   input.orbs[0].bandIds = [7, 2, 19];

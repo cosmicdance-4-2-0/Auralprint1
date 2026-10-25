@@ -517,8 +517,8 @@ const UI = (() => {
       initOrbs();
       resetVisualizers("visuals");
       sceneStatusToast("Preset applied from URL.", 4000);
-    } else if (showInvalid) {
-      sceneStatusToast("No valid preset in URL.", 4000);
+    } else if (showInvalid || UrlPreset.getValidationMessage()) {
+      sceneStatusToast(UrlPreset.getValidationMessage() || "No valid preset in URL.", 4000);
     }
   }
 
@@ -2014,6 +2014,9 @@ const UI = (() => {
     }, { passive: false });
 
     window.addEventListener("hashchange", () => applyUrlNow(false));
+    // Startup decodes before the controls exist. Retain its domain rejection
+    // for the established preset status owner once wiring is complete.
+    if (UrlPreset.getValidationMessage()) sceneStatusToast(UrlPreset.getValidationMessage(), 4000);
 
   } // end wireControls
 

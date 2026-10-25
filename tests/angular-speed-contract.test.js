@@ -14,6 +14,9 @@ test('Angular alignment preserves the entire accepted startup Scene and every un
   // Snapshots captured from accepted main 7a9f967, before this pass's changes.
   assert.equal(digest(CONFIG.defaults),'81bc92485e95cd1e1d9446a54b7f2c714e2d341ac3e20ccc54ddfe76fdf70e2b');
   const limits=structuredClone(CONFIG.limits);
+  // AUD-004 separately authorizes the frequency domain; retain the original
+  // snapshot's protection for every pre-existing unrelated limit.
+  delete limits.bands.frequencyHz;
   delete limits.motion.angularSpeedRadPerSec.min;delete limits.motion.angularSpeedRadPerSec.step;delete limits.bands.ringSpeedRadPerSec.step;
   assert.equal(digest(limits),'839c6a7d4d2a09e1a032b51ed3653148e88248367b31e3a74dbd96bc299b90b0');
   assert.deepEqual(sanitizePreset({schema:12,prefs:{}}),CONFIG.defaults);

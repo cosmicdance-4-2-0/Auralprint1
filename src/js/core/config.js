@@ -494,11 +494,8 @@ const CONFIG = deepFreeze({
     ],
 
 bands: {
-  // Ceiling adjusted (Now 22.5K) to restore band 255 functionality. Should now be 22.5K to 24K (Effectively, depending on nyquist)
-  // To others: Ceiling should be under assumed Nyquist cap: To prevent band 255 death. 
-  // If configured above the actual Nyquist ceiling: Band 255 will become effectively Nyquist to Nyquist, so: Dead.
-  // I question if this is a bug, or a configuration limit to be aware of. 
-  
+  // Configured frequency domain is independent of the actual AudioContext rate.
+  // The controller caps at Nyquist; the final open-ended band can collapse there.
   count: 256,
   floorHz: 20,
   ceilingHz: 22500,
@@ -578,6 +575,9 @@ bands: {
     bands: {
       // Floor band, at least one interior band, and open-ended top band.
       count: { min: 3, max: 256 },
+      // User-configured domain, independent of the live AudioContext Nyquist.
+      // Positive finite fractional Hz remain supported; no editing lattice.
+      frequencyHz: { max: 384000 },
       overlayAlpha: { min: 0, max: 1, step: 0.01 },
       overlayLineAlpha: { min: 0, max: 1, step: 0.01 },
       overlayLineWidthPx: { min: 1, max: 6, step: 1 },
