@@ -36,6 +36,12 @@ jobs:
         run: npm run build
       - name: Verify portable and hosted packaging contracts
         run: python scripts/verify_distribution.py
+      - name: Install pinned Chromium for browser smoke (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: npx playwright install --with-deps chromium --only-shell
+      - name: Verify authored Scene camera in built applications (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: npm run test:browser
       - name: Verify versioned artifact and untracked generated output
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

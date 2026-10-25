@@ -14,6 +14,53 @@ Committed Stream multi-track/video policy, recorder ownership, UI locks and sche
 records the failing baseline, 91 focused tests, full suite, 72 native cases and
 remaining device qualifications. Owner acceptance and release approval remain pending.
 
+## AUD-005 corrective disposition
+
+Against accepted `main` `7dd1de6f09d91472e739cad19916a90dcc21731f`, CI now runs
+`npm run test:browser` against the generated version-derived portable HTML and
+hosted `index.html` over local HTTP. One headless Chromium process verifies
+nondefault schema-12 world/camera startup, live/authored separation, UI Save,
+Share and Restore, a fresh recipient, in-session Apply URL Preset, invalid-import
+atomicity, C/F ownership and fresh schema-11 migration to CONFIG camera defaults.
+Browser-side observation checks live controls before the first named application
+animation callback and at its first canvas clear; it never waits for the expected
+camera to appear. Hosted relative HTML/manifest resources are fetched in Chromium.
+Page/console errors, failed requests, installation/launch errors and assertions
+fail the gate; waits are bounded by observable frames and UI readiness.
+
+Playwright **1.64.1** is an exact, lockfile-managed development dependency, outside
+the runtime bundle. The existing Ubuntu test/build job installs its matching
+Chromium headless shell explicitly, then tests that job's already-built artifacts:
+
+```sh
+npm ci
+npm run build
+npx playwright install --with-deps chromium --only-shell
+npm run test:browser
+```
+
+The existing exact-commit checkout, Ubuntu/Windows Node tests, build, distribution
+verification, artifact checks and `git diff --check` remain. Windows downloads no
+browser. The smoke is a required failing step within the existing **Test and build
+(ubuntu-latest)** check; owners must require that check in branch protection if it
+is not already required. Branch-protection settings were not changed or verified.
+
+The decisive disposable-checkout mutation removed only
+`if (presetApplied) restoreSceneCamera();`, then rebuilt. The same normal smoke
+command exited **1**, identifying the initial authored-camera mismatch
+`x: actual=0, expected=137.25`. Unmodified and restored builds both passed
+(approximately **6.4 seconds** each locally). The full Node suite passed
+**1,200**, with one existing opt-in skip; build/distribution checks passed. The
+unchanged optional `validate-116d.cjs` also passed source/portable/hosted at DPR 1/2.
+No production code, schemas 2–12, Build 115 canon or historical fixture changed.
+AUD-005 is corrected subject to owner review; no release approval is implied.
+
+The mandatory smoke qualifies Linux headless Chromium, local HTTP, a 1000×800
+viewport and DPR 1. It uses no audio devices, capture permissions or external
+media. Other engines, physical devices, direct `file://`, deployed hosting,
+pixel-identical framing, artistic/performance stress and recording remain outside
+this gate; the larger optional native harness remains available for broader checks.
+
 ## 116D authored Scene camera
 
 **Owner-authorized implementation for final review, not release approval.**
