@@ -4,8 +4,10 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. Released following 115N RC testing and owner acceptance. Build 114 (`v0.1.14`) was internal; previous public release was Release 3 / Build 113.
 
+**Current source checkout:** Build 116D (`v0.1.16d`), preset schema 12. Implementation and the first audit's remediations are merged; further acceptance is pending. The owner has not authorized 116 RC #1 or public publication. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+
 - [ROADMAP.md](ROADMAP.md): current scope, future builds, acceptance gates, and deferrals.
-- [agents.md](agents.md): binding architecture and development contracts.
+- [AGENTS.md](AGENTS.md): binding architecture and development contracts.
 - [Build 115 history](docs/development/build-115.md): engineering chronology and corrective dispositions.
 - [Build 115 release comparison](docs/development/build-115-release-delta.md): public Build 113 and internal Build 114 baselines.
 - [Canonical changelog](docs/Canon/changelog.md): chronological build changes, including internal milestones.
@@ -19,22 +21,26 @@ npm ci
 npm test
 npm run build
 python scripts/verify_distribution.py
+npm run test:browser
+npm run test:browser:editing
 ```
 
 Do not run test and build concurrently: tests temporarily rename build directories.
 
+Before the native browser checks, install Playwright's matching Chromium headless shell and required platform dependencies. Ubuntu CI uses `npx playwright install --with-deps chromium --only-shell`; local installations need the browser and dependencies appropriate to their OS. Commands and CI setup are defined in [package.json](package.json) and the [CI workflow](.github/workflows/ci.yml).
+
 Build outputs:
 
-- **Portable:** `dist/auralprint_<version-without-leading-v>.html` (for this release: `dist/auralprint_0.1.15.html`); application JS/CSS and favicon embedded.
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16d.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
-`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI checks Linux and Windows builds. Browser tooling is optional.
+`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; both Chromium smoke checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
 
 ## Using Auralprint
 
-Load audio in **File**, or select **Mic** / **Stream** with browser permission. **Audio** controls sources and playback; **Queue** controls the playlist; **Analysis** owns spectral configuration; **Visualizers** owns Orbs and the Spectral Ring; **Settings** owns Scene appearance, particle resources, and presets; **Camera** owns runtime view and performance controls; **Record** owns capture. **H** hides/restores panels outside text inputs; **Space** pauses visual motion/emission, not audio analysis.
+Load audio in **File**, or select **Mic** / **Stream** with browser permission. **Audio** controls sources and playback; **Queue** controls the playlist; **Analysis** owns spectral configuration; **Visualizers** owns Orbs and the Spectral Ring; **Settings** owns Scene appearance, particle resources, and presets; **Camera** owns the live view, authored Scene view actions and performance controls; **Record** owns capture. **H** hides/restores panels outside text inputs; **Space** pauses visual motion/emission, not audio analysis.
 
 **Waveforms:** Audio → Waveforms has optional 4/8/15-minute stereo-equivalent workload profiles, separate encoded-input and estimated-PCM admission limits, and manual generation. Playback does not require waveform preparation. These limits do not bound total browser memory.
 
@@ -66,7 +72,8 @@ Builds 112 and 114 were shipped internally, not as new public releases.
 | 112 | Internal shipped | Queue and scrubber |
 | 114 | Internal shipped | Microphone and stream input |
 | 115 | Release 4, shipped | Analysis/visualizer separation and independent Orbs |
-| 116–120 | Planned | See [ROADMAP.md](ROADMAP.md) |
+| 116 | 116D merged, unreleased | Independent world and authored/live cameras; acceptance pending |
+| 117–120 | Planned / gated | See [ROADMAP.md](ROADMAP.md) |
 
 ## Build 111 — v0.1.11 (Release 2, ✅ shipped - previous canonical)
 
@@ -76,7 +83,9 @@ Stereo L/R/C analysis, Orbs, band overlay, URL presets, and panel controls. Play
 
 Waveform seeking, multi-file queue, navigation, drag/drop, repeat and track-end handling. Queue and playback position remain runtime state, not presets.
 
-## Build 113 — v0.1.13 (Release 3, ✅ shipped - canonical): Recording / Capture
+<a id="build-113--v0113-release-3--shipped---canonical-recording--capture"></a>
+
+## Build 113 — v0.1.13 (Release 3, ✅ shipped - previous canonical): Recording / Capture
 
 Recording panel with browser-supported WebM/MP4, optional source audio, frame-rate choice, latest export/download, and five band-distribution modes. Previously the public release baseline.
 
@@ -92,7 +101,11 @@ Release 4, accepted and shipped. AnalysisFrame separates analysis from visualize
 
 ## Build 116 — Simulation World, Camera & Projection (in progress)
 
-116A integrates independent Orb/Ring world geometry, configurable Scene dimensions and schema-11 migration from supported schemas 2–10. World dimensions define reference geometry, **not** clipping/collision bounds; placement spacing uses world units independently of viewport/DPR. 116B adds runtime-only camera ownership and forward/inverse projection. 116C.A (`v0.1.16c.a.a`) gives **Camera** its own workspace launcher and operational panel. Enable camera mode, choose **Focus canvas**, and hold WASD/QE to move/turn; Shift boosts speed; C resets and F fits the world/composition while preserving rotation. Slow visible frames retain held input. Drag pans and wheel zooms around the pointer. Speeds and camera stay runtime-only, including while the panel is hidden. CSS-sized marks retain accepted behavior; [116 development contract and preview instructions](docs/development/build-116.md#116ca-camera-workspace-and-continuous-control) and [acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+Implemented Build 116D separates the simulation world from the viewport. Configurable world dimensions define Orb/Ring reference geometry, **not** clipping/collision bounds; particle placement spacing uses world units independently of viewport/DPR. Camera movement changes the view, preserving simulation and retained history; marks retain CSS-screen sizing.
+
+`state.camera` owns the live performance view. Under schema 12, `preferences.sceneCamera` owns the explicitly authored Scene viewpoint. **Save Current View as Scene View** explicitly persists the live pose into the Scene; **Restore Scene View** stops input and restores that authored view to the live camera. **Copy Share Link** serializes the authored Scene, including its saved viewpoint; live navigation never implicitly saves or shares its current pose.
+
+Enable camera mode for drag-to-pan and pointer-centered wheel zoom. With canvas keyboard focus, hold WASD/QE to move/turn and Shift to boost; **C** resets to the factory view and **F** performs a one-shot world/composition fit while preserving rotation. Slow visible frames retain held input. Camera mode and keyboard focus are distinct from panel visibility: hiding Camera preserves mode/view, while losing canvas focus stops held movement. Mode, movement speeds, input state and panel state remain runtime-only. See the [Build 116D contract](docs/development/build-116.md#116d-authored-scene-camera) for implementation detail and [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection) for pending acceptance.
 
 ## Build 117 — v0.1.17: UX + Performance Hardening
 
