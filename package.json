@@ -5,9 +5,11 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "watch": "node scripts/watch.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "test:browser": "node scripts/smoke-scene-camera.cjs"
   },
   "devDependencies": {
-    "esbuild": "^0.25.5"
+    "esbuild": "^0.25.5",
+    "playwright": "1.64.1"
   }
 }
