@@ -85,6 +85,24 @@ async function drafts(page,fixture){
     const before=await share(page),input=page.locator('#'+id);await input.fill(value);await input.press('Tab');assert.deepEqual(await share(page),before,'Crossed bounds mutated preferences');
   }
 }
+async function angularStartup(page,defaults,cases){
+  assert.deepEqual(await share(page),defaults,'Startup/Share changed the accepted default Scene');
+  const angular=cases.filter(item=>['angularSpeedRadPerSec','ringSpeedRadPerSec'].includes(item.path.at(-1)));
+  let individualSpeed;
+  for(const item of angular){
+    await apply(page,defaults);const control=await reveal(page,item),ui=await inspect(control),ring=item.owner==='Ring';
+    assert.equal(ui.step,'0.5');assert.equal(ui.min,ring?'0':'0.5');assert.equal(ui.value,ring?0:90);
+    assert.doesNotMatch(ui.text,/Current .*slider selection/,'Exact startup speed must not claim a discrepancy');
+    assert.match(ui.aria,/rad\/s/);
+    const before=await share(page);await control.focus();await control.press('ArrowRight');
+    const value=await committed(page,control,before,item);near(value*180/Math.PI,ring ? .5 : 90.5);
+    if(item.owner==='Orb')individualSpeed=value;
+    if(item.owner==='Bulk')assert.equal(value,individualSpeed,'Individual and Bulk half-degree commits differ');
+    const prior=await share(page);await control.press('End');const end=await committed(page,control,prior,item);
+    if(ring){assert.equal(end,2*Math.PI,'Ring endpoint must remain exact canonical TAU');assert.equal((await inspect(control)).value,360);}
+    else {near(end*180/Math.PI,171.5);assert.ok(end<3,'Orb max is a bound, not an extra grid index');}
+  }
+}
 async function sliders(page,fixture,cases){
   await apply(page,fixture);
   const initial=await share(page);assert.deepEqual(initial,fixture,'Import/share altered legacy values');
@@ -146,7 +164,8 @@ async function sliders(page,fixture,cases){
       const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:dpr}),page=await context.newPage();page.setDefaultTimeout(10000);
       page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('requestfailed',r=>errors.push(r.url()));page.on('response',r=>{if(r.status()>=400)errors.push(`HTTP ${r.status()} ${r.url()}`);});
       await page.addInitScript(()=>{window.editingSmoke={delayFile:false};const play=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=async function(...args){const result=await play.apply(this,args);if(editingSmoke.delayFile){editingSmoke.delayFile=false;await new Promise(resolve=>{editingSmoke.release=resolve;editingSmoke.waiting=true;});}return result;};});
-      await page.goto(`http://127.0.0.1:${server.address().port}${file}`+hash(fixture));await page.waitForFunction(()=>document.querySelector('input[id$="-angular-speed"]'));await frames(page);
+      await page.goto(`http://127.0.0.1:${server.address().port}${file}`);await page.waitForFunction(()=>document.querySelector('input[id$="-angular-speed"]'));await frames(page);
+      await angularStartup(page,CONFIG.defaults,sliderCases);console.log(`PASS ${edition} DPR ${dpr}: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint`);
       await drafts(page,fixture);console.log(`PASS ${edition} DPR ${dpr}: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events`);
       await sliders(page,fixture,sliderCases);console.log(`PASS ${edition} DPR ${dpr}: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock`);
       assert.deepEqual(errors,[]);results.push({edition,dpr,sliders:sliderCases.length});await context.close();

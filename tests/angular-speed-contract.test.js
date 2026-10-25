@@ -29,6 +29,8 @@ test('Pi-derived half-degree grids reconstruct startup pi/2 and Ring TAU exactly
     assert.ok(isOnConfigGrid(definition.motion.angularSpeedRadPerSec,orb));
     assert.equal(selectConfigGrid(definition.motion.angularSpeedRadPerSec,orb),definition.motion.angularSpeedRadPerSec);
   }
+  assert.equal(orb.min+179*orb.step,Math.PI/2,'Default reconstructs from its grid index with identical bits');
+  assert.equal(ring.min+720*ring.step,TAU,'Ring endpoint reconstructs without relying on bound snapping');
   assert.equal(lastGridIndex(orb),342);assert.equal(lastGridIndex(ring),720);
   assert.ok(Math.abs(selectConfigGrid(3,orb)*RAD_TO_DEG-171.5)<1e-12);
   assert.ok(selectConfigGrid(3,orb)<3);assert.equal(isOnConfigGrid(3,orb),false);

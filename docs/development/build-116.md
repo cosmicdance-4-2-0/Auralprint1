@@ -30,6 +30,13 @@ CONFIG minimum also admits speeds between π/360 and the former 0.01 bound throu
 the existing finite/clamp normalization; no step quantization is added there.
 Version/release designation remains unchanged. Stop at owner review.
 
+Validation: full Node **1,298 passed, one existing opt-in skip**; build,
+distribution verification and whitespace checks passed. Both required Chromium
+gates passed; editing covers source/portable/hosted at DPR 1/2, including exact
+startup/Share and angular endpoints. Native RC-17 phase/history and 116D
+visualizer/camera compatibility also passed at DPR 1/2 (Chromium 156.0.8078.4,
+Playwright 1.64.1). CI results and owner checks are recorded in the review PR.
+
 ## AUD-002 / AUD-003 and CONFIG step correction
 
 Against accepted `main` `d2a92a868e214ae5cba77ea91600b9965038ff19`, Analysis
