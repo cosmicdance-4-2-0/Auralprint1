@@ -19,7 +19,7 @@ export async function validateRc17() {
     input.focus(); assert(document.activeElement === input, "could not focus visible phase control");
   };
   const agrees = (input, expected) => {
-    const result = read(input); close(result.value, expected, "native slider precision");
+    const result = read(input); close(result.value, expected*RAD_TO_DEG, "native degree slider precision");
     assert(result.aria === result.display.slice(0, -1) + " degrees", "visible/accessible disagreement");
     close(parseFloat(result.display), expected * RAD_TO_DEG, "display precision"); return result;
   };
@@ -44,9 +44,9 @@ export async function validateRc17() {
       const before = orb.angleRad, ringBefore = state.bands.ringPhaseRad, list = orb.trail.particles;
       const tail = list.tail, governor = orb.trail.governor, beforeOther = other.angleRad;
       const stats = VisualizerRuntime.getParticleStats();
-      focus(input); input.value = String(1.5 / RAD_TO_DEG); input.dispatchEvent(new Event("input", { bubbles: true }));
+      focus(input); input.value = "2"; input.dispatchEvent(new Event("input", { bubbles: true }));
       const designed = orb.startAngleRad, ui = agrees(input, designed);
-      close(designed, 1.5 / RAD_TO_DEG, "requested edit at native precision");
+      close(designed, 2 / RAD_TO_DEG, "requested edit on the CONFIG degree lattice");
       assert(orb.startAngleRad === preferences.orbs[0].startAngleRad, "designed phase not persisted/synced");
       assert(state.orbs[0] === orb && orb.angleRad === before && other.angleRad === beforeOther, "edit teleported/recreated Orb");
       assert(orb.trail.particles === list && list.tail === tail && orb.trail.governor === governor, "edit changed history/governor");
@@ -78,7 +78,7 @@ export async function validateRc17() {
       for (let i = 0; i < 5; i++) { UI.applyPrefs(null); UI.refreshAllUiText(); }
       assert(window.__rc17Listeners?.get(input)?.length === countBefore, "refresh duplicated native listeners");
       const duplicatePhase = duplicate.startAngleRad;
-      input.value = String(TAU); input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.value = String(TAU*RAD_TO_DEG); input.dispatchEvent(new Event("input", { bubbles: true }));
       const endpoint = agrees(input, 0);
       assert(preferences.orbs.find(o => o.id === "moving").startAngleRad === 0 && orb.startAngleRad === 0, "endpoint committed by wrong ID");
       assert(duplicate.startAngleRad === duplicatePhase, "endpoint changed independent Orb");

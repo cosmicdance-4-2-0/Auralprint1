@@ -42,6 +42,9 @@ jobs:
       - name: Verify authored Scene camera in built applications (Ubuntu only)
         if: runner.os == 'Linux'
         run: npm run test:browser
+      - name: Verify Analysis drafts and CONFIG slider editing (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: npm run test:browser:editing
       - name: Verify versioned artifact and untracked generated output
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

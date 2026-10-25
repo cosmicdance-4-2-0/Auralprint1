@@ -492,6 +492,7 @@ const UI = (() => {
   function resetPrefs() {
     replacePreferences(deepClone(CONFIG.defaults));
     applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
+    analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
     initOrbs();
     resetVisualizers("visuals");
     sceneStatusToast("All settings reset.", 4000);
@@ -512,6 +513,7 @@ const UI = (() => {
     const ok = UrlPreset.applyFromLocationHash();
     if (ok) {
       applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
+      analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
       initOrbs();
       resetVisualizers("visuals");
       sceneStatusToast("Preset applied from URL.", 4000);

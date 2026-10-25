@@ -1,0 +1,12 @@
+{
+  rngRmsGain: { value: '0.12', step: '0.01', readout: '0.12' },
+  rngBandPoint: { value: '3', step: '1', readout: '3.456px' },
+  rngOmega: {
+    value: '0.123456',
+    step: 'any',
+    readout: '0.123456 rad/s (7.1°/s)'
+  },
+  rngNumLines: { value: '16', step: '1', readout: '16' }
+}
+before { value: '37.125', focused: true }
+after { value: '20', focused: true, status: 'Loaded: draft.wav' }

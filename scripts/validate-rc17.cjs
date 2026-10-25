@@ -7,15 +7,15 @@ const root = path.resolve(__dirname, '..');
 const version = fs.readFileSync(path.join(root, 'version'), 'utf8').trim();
 const baseline = process.argv.includes('--baseline');
 const expectDefect = baseline || process.argv.includes('--expect-defect');
-// Chromium serializes range doubles to about 15 significant decimal digits,
-// including with step=any. Require agreement at that native precision; preserve
-// exact canonical persistence separately. This is not a degree snapping tolerance.
+// Native number serialization has finite decimal precision. Phase selections
+// are now degree-native CONFIG indices; exact canonical radian persistence is
+// checked separately through Share. This tolerance does not admit off-grid edits.
 const close = (a, b) => assert.ok(Math.abs(a - b) < 1e-14, `${a} != ${b}`);
 const hash = radians => '#p=' + Buffer.from(JSON.stringify({ schema: 10, prefs: {
   orbs: [{ id: 'phase-probe', startAngleRad: radians, motion: { angularSpeedRadPerSec: 2 } }]
 } })).toString('base64url');
 const inspect = el => ({ rawValue: el.value, value: Number(el.value), min: el.min, max: el.max, step: el.step,
-  degrees: Number(el.value) * 180 / Math.PI, display: el.closest('.row').querySelector('.val').textContent,
+  degrees: Number(el.value), display: el.closest('.row').querySelector('.val').textContent,
   accessibleValue: el.getAttribute('aria-valuetext'), stepMismatch: el.validity.stepMismatch });
 async function share(page) {
   await page.evaluate(() => document.querySelector('#btnShare').click());
@@ -36,7 +36,7 @@ async function share(page) {
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   let browser;
-  const report = { version, baseline, method: 'Actual URL import, boot-generated Orb editor, public Share transport; native Chromium at DPR 1/2.', rows: [], pageErrors: [] };
+  const report = { version, baseline, nativePhaseUnit: 'degrees derived from CONFIG radians', method: 'Actual URL import, boot-generated Orb editor, public Share transport; native Chromium at DPR 1/2.', rows: [], pageErrors: [] };
   try {
     browser = await chromium.launch({ executablePath: process.env.AP_CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
     report.browser = await browser.version();
@@ -76,10 +76,17 @@ async function share(page) {
           const native = await phase.evaluate(inspect);
           native.input = radians; native.persisted = (await share(page)).prefs.orbs[0].startAngleRad;
           if (!expectDefect) {
-            close(native.value, native.persisted);
-            assert.equal(native.step, 'any'); assert.equal(native.stepMismatch, false);
-            assert.equal(native.accessibleValue, native.display.slice(0, -1) + ' degrees');
-            assert.ok(Math.abs(parseFloat(native.display) - native.degrees) < 1e-10);
+            const index = native.value;
+            assert.ok(Math.abs(index-Math.round(index))<1e-10, "Native selection must be a CONFIG degree index");
+            assert.equal(Number(native.step), 1); assert.equal(native.stepMismatch, false);
+            assert.equal(native.accessibleValue, native.display.replaceAll('°', ' degrees'));
+            const tau=2*Math.PI;
+            const expected=radians>=0&&radians<tau?radians:((radians%tau)+tau)%tau;
+            assert.equal(native.persisted,expected,'Native refresh must preserve imported phase exactly');
+            if (native.display.startsWith('Current ')) {
+              assert.match(native.display,/Current .*slider selection/);
+              assert.ok(Math.abs(parseFloat(native.display.slice(8))-native.persisted*180/Math.PI)<1e-10,'Current degree readout retains canonical phase');
+            } else assert.ok(Math.abs(parseFloat(native.display)-native.degrees)<1e-10, "Degree readout agrees at native serialization precision");
             assert.notEqual(native.display, '360°');
           }
           fractional.push(native);
@@ -96,8 +103,8 @@ async function share(page) {
           await phase.evaluate(el => { for (let p = el.parentElement; p; p = p.parentElement) if (p.tagName === 'DETAILS') p.open = true; });
           await phase.focus(); await phase.press('ArrowRight');
           const keyboard = await phase.evaluate(inspect);
-          assert.ok(Math.abs(keyboard.degrees - 2.5) < 1e-10);
-          close(keyboard.value, (await share(page)).prefs.orbs[0].startAngleRad);
+          assert.ok(Math.abs(keyboard.degrees - 2) < 1e-10);
+          close(keyboard.value*Math.PI/180, (await share(page)).prefs.orbs[0].startAngleRad);
           row.keyboard = keyboard;
           await phase.press('End');
           const endpoint = await phase.evaluate(inspect);
@@ -108,7 +115,7 @@ async function share(page) {
           // Real pointer-originated native input, with the same synchronous commit.
           await phase.click({ position: { x: (await phase.boundingBox()).width / 2, y: 8 } });
           const pointer = await phase.evaluate(inspect);
-          close(pointer.value, (await share(page)).prefs.orbs[0].startAngleRad);
+          close(pointer.value*Math.PI/180, (await share(page)).prefs.orbs[0].startAngleRad);
           assert.equal(pointer.accessibleValue, pointer.display.slice(0, -1) + ' degrees');
           row.pointer = pointer;
           if (standalone && process.env.AP_SCREENSHOTS_DIR) {
@@ -133,7 +140,9 @@ async function share(page) {
       page.on('pageerror', e => report.pageErrors.push(e.message));
       await page.goto(`${base}/dist/auralprint_${version.slice(1)}.html` + hash(Math.PI / 120));
       const phase = page.locator('input[id$="-phase-offset"]').first();
-      assert.equal((await phase.evaluate(inspect)).display, '1.5°');
+      const designedReadout=(await phase.evaluate(inspect)).display;
+      assert.match(designedReadout,/Current 1.5°; slider selection 2°/);
+      assert.equal((await share(page)).prefs.orbs[0].startAngleRad,Math.PI/120);
       await page.evaluate(() => document.querySelector('#btnResetVisuals').click());
       const frames = 44100 * 2, wav = Buffer.alloc(44 + frames * 4);
       wav.write('RIFF'); wav.writeUInt32LE(36 + frames * 4, 4); wav.write('WAVE', 8); wav.write('fmt ', 12);
@@ -143,7 +152,7 @@ async function share(page) {
       await page.locator('#fileInput').setInputFiles({ name: 'rc17-stereo.wav', mimeType: 'audio/wav', buffer: wav });
       await page.waitForFunction(() => document.querySelector('#btnPlay').textContent === 'Pause');
       await page.waitForFunction(() => /0:01/.test(document.querySelector('#scrubberTime').textContent));
-      assert.equal((await phase.evaluate(inspect)).display, '1.5°', 'designed UI must not follow animated phase');
+      assert.equal((await phase.evaluate(inspect)).display, designedReadout, 'designed UI must not follow animated phase');
       await page.locator('#btnStop').click();
       report.rows.push({ dpr, standalone: true, normalScheduling: true,
         verified: ['unmodified standalone boot/import', 'Reset Visuals button', 'stereo WAV decode/playback', 'advancing scrubber', 'designed readout stays fixed during motion', 'stop'] });

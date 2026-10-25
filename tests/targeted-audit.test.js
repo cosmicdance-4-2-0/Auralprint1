@@ -4566,8 +4566,24 @@ for (const action of ['edit', 'duplicate', 'remove', 'edit-ring']) {
   });
 }
 
+for (const field of ['inpBandFloorHz', 'inpBandCeilingHz']) for (const draft of ['37.125', '']) {
+  test(`AUD-002: delayed File completion preserves focused ${field} draft ${JSON.stringify(draft)}`, async t => {
+    const entered = rc02Deferred(), resume = rc02Deferred();
+    await withRc02FileWorkflow(t, { contextState: 'suspended', onResume: () => { entered.resolve(); return resume.promise; } }, async ({ ingest, waitForCompletions }) => {
+      const pending = ingest(['analysis-draft.wav']); await entered.promise;
+      const input = state.ui[field]; input.focus(); input.value = draft;
+      const settings = runtime.settings;
+      resume.resolve(); await pending; await waitForCompletions(1); UI.refreshAllUiText();
+      assert.equal(state.audio.filename, 'analysis-draft.wav'); assert.notEqual(runtime.settings, settings);
+      assert.equal(input.value, draft); assert.equal(document.activeElement, input);
+      assert.equal(preferences.bands.floorHz, CONFIG.defaults.bands.floorHz);
+      assert.equal(preferences.bands.ceilingHz, CONFIG.defaults.bands.ceilingHz);
+    });
+  });
+}
+
 for (const bulk of [false, true]) {
-  test(`AUD-009: real UI ${bulk ? 'Bulk' : 'individual'} commits share one numeric normalization boundary`, async (t) => {
+  test(`AUD-009: real UI ${bulk ? 'Bulk' : 'individual'} edits enforce CONFIG grids while legacy persistence retains precision`, async (t) => {
     await withSettingsActionHarness(t, () => {
       preferences.orbs.forEach(orb => { orb.motion.angularSpeedRadPerSec = .123456; orb.trace.numLines = 15.5; orb.bandIds = [0, 255]; });
       preferences.bands.count = 3; UI.applyPrefs(null); hostVisualizerEditors(); UI.refreshAllUiText();
@@ -4578,19 +4594,19 @@ for (const bulk of [false, true]) {
       const runtimeOrbs = [...state.orbs]; speed.focus(); root.open = true;
       preferences.audio.playbackVolume = .4; UI.applyPrefs(null);
       assert.ok(document.activeElement === speed); assert.ok(state.ui.orbEditorList.children[0] === root); assert.equal(root.open, true);
-      assert.equal(speed.value, '0.123456'); assert.ok(preferences.orbs.every(orb => orb.motion.angularSpeedRadPerSec === .123456));
+      assert.equal(speed.value, '0.12'); assert.match(speed.getAttribute('aria-valuetext'), /Current 0.123456.*slider selection 0.12/); assert.ok(preferences.orbs.every(orb => orb.motion.angularSpeedRadPerSec === .123456));
       speed.value = '.234567'; speed.dispatch('input');
-      assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec, .234567);
-      assert.equal(preferences.orbs[1].motion.angularSpeedRadPerSec, bulk ? .234567 : .123456);
+      assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec, .23);
+      assert.equal(preferences.orbs[1].motion.angularSpeedRadPerSec, bulk ? .23 : .123456);
       // The Node mock intentionally allows fractional range input: the canonical
       // consumer, not native snapping, must establish the integral contract.
       count.value = '17.1'; count.dispatch('input');
       for (const source of [preferences.orbs, runtime.settings.orbs, state.orbs]) {
-        assert.equal(source[0].trace.numLines, 18); assert.equal(source[1].trace.numLines, bulk ? 18 : 16);
+        assert.equal(source[0].trace.numLines, 20); assert.equal(source[1].trace.numLines, bulk ? 20 : 16);
         assert.deepEqual(source.map(orb => orb.bandIds), [[0, 255], [0, 255]]);
       }
       assert.ok(state.orbs.every((orb, i) => orb === runtimeOrbs[i]));
-      UI.refreshAllUiText(); assert.equal(Number(count.value), 18);
+      UI.refreshAllUiText(); assert.equal(Number(count.value), 20);
     });
   });
 }
@@ -4660,7 +4676,7 @@ test('AUD-004 tooltip titles are idempotent on idle, focus and unrelated setting
     preferences.visuals.backgroundColor='#123456';UI.applyPrefs(null);UI.refreshAllUiText();
     assert.deepEqual(writes,[], 'unrelated setting must not rewrite this tooltip');
     control.value='.123456';await control.dispatch('input');
-    assert.match(control.title,/0\.123456 rad\/s/);assert.match(control.getAttribute('aria-valuetext'),/0\.123456 rad\/s/);
+    assert.match(control.title,/0\.12 rad\/s/);assert.match(control.getAttribute('aria-valuetext'),/0\.12 rad\/s/);
     assert.equal(document.activeElement,control);
   });
 });
@@ -4691,7 +4707,7 @@ test('AUD-004 hidden Visualizers reveal refreshes values, titles and focus befor
     for(let i=0;i<20;i++)UI.refreshAllUiText();
     assert.notEqual(control.value,'0.234567','hidden editor is deferred');
     state.ui.btnOpenVisualizers.click();
-    assert.equal(control.value,'0.234567','reveal must refresh canonical values synchronously');
+    assert.equal(control.value,'0.23','reveal must refresh the CONFIG selection synchronously');assert.match(control.getAttribute('aria-valuetext'),/Current 0.234567.*slider selection 0.23/);assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec,.234567);
     assert.match(control.title,/0\.234567 rad\/s/);assert.equal(document.activeElement,state.ui.btnHideVisualizers);
     assert.equal(state.ui.orbEditorList.children[0],root);
   });

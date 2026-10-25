@@ -45,6 +45,12 @@ summary:focus-visible, input:focus-visible, #c:focus-visible {
 .row > input:not([type="color"]):not([type="checkbox"]), .row > select { width: 100%; }
 .row > input[type="checkbox"] { justify-self: end; }
 .row > .val { grid-column: 2; font-size: 11px; color: #9fb6b6; }
+.val[data-config-range-discrepancy="true"] {
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
 .advanced-control { margin: var(--ui-gap) 0; font-size: 12px; color: #aabbbc; }
 .band-selection-summary { font-size: 12px; line-height: 1.5; max-height: 6em; overflow: auto; overflow-wrap: anywhere; color: var(--ui-accent); }
 .band-chooser { padding: var(--ui-gap); border: 1px solid var(--ui-border); border-radius: 8px; }
