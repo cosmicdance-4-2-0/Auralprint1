@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { preferences, runtime, replacePreferences, resolveSettings } from "../src/js/core/preferences.js";
@@ -41,7 +42,7 @@ function scene(ids, run) {
 }
 
 const idsNow = () => state.orbs.map(orb => orb.id);
-const persistedIds = () => encodePresetPayload(preferences).prefs.orbs.map(orb => orb.id);
+const persistedIds = () => canonicalPrefs(encodePresetPayload(preferences)).orbs.map(orb => orb.id);
 const confirmText = payload => `Remove ${payload.displayName} (${payload.id})? This cannot be undone.`;
 
 test("RC-22: collision cancellation/acceptance through generated button delegation preserves Ring and survivor", t => scene(["spectral-ring", "ORB1"], h => {

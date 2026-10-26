@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
@@ -27,7 +28,7 @@ test("version metadata and schema remain aligned", () => {
   const constants = readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.match(version, /^v[0-9][A-Za-z0-9.\-]*$/);
   assert.ok(constants.includes(`   Auralprint\n   ${version.slice(1)}\n`), "Source header must match root version");
-  assert.equal(PRESET_SCHEMA_VERSION, 12);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
 });
 
 test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
@@ -977,10 +978,10 @@ test("URL preset schema 9 round-trips per-orb Build 115 fields", () => {
     UrlPreset.writeHashFromPrefs();
     const payload = decodePresetHash(locationStub.hash);
     assert.equal(payload.schema, PRESET_SCHEMA_VERSION);
-    assert.equal(payload.prefs.orbs[0].hueOffsetDeg, 120);
-    assert.equal(payload.prefs.orbs[0].colorSource, "angle");
-    assert.equal(payload.prefs.orbs[0].centerXFrac, 0.1);
-    assert.equal(payload.prefs.orbs[1].chanId, "C");
+    assert.equal(canonicalPrefs(payload).orbs[0].hueOffsetDeg, 120);
+    assert.equal(canonicalPrefs(payload).orbs[0].colorSource, "angle");
+    assert.equal(canonicalPrefs(payload).orbs[0].centerXFrac, 0.1);
+    assert.equal(canonicalPrefs(payload).orbs[1].chanId, "C");
 
     replacePreferences(structuredClone(CONFIG.defaults));
     resolveSettings();
@@ -1693,9 +1694,9 @@ test("URL preset serialization excludes runtime source and recording state", () 
   try {
     UrlPreset.writeHashFromPrefs();
     const payload = decodePresetHash(locationStub.hash);
-    assert.ok(payload && payload.prefs);
-    assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs, "source"), false);
-    assert.equal(Object.prototype.hasOwnProperty.call(payload.prefs, "recording"), false);
+    assert.ok(payload && canonicalPrefs(payload));
+    assert.equal(Object.prototype.hasOwnProperty.call(canonicalPrefs(payload), "source"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(canonicalPrefs(payload), "recording"), false);
   } finally {
     applySourceAndAudioState({ source: previousSource, audio: previousAudio });
     Object.assign(state.recording, previousRecording);
@@ -3187,7 +3188,7 @@ async function withSettingsActionHarness(t, run, coordinator = UI) {
 }
 
 function settingsPresetHash(prefs) {
-  return `#p=${Buffer.from(JSON.stringify({ schema: PRESET_SCHEMA_VERSION, prefs }), "utf8").toString("base64url")}`;
+  return `#p=${Buffer.from(JSON.stringify({ schema: 12, prefs }), "utf8").toString("base64url")}`;
 }
 
 test("Copy Share Link writes the canonical schema-12 hash and reports only in Settings", async (t) => {
@@ -3196,7 +3197,7 @@ test("Copy Share Link writes the canonical schema-12 hash and reports only in Se
     state.ui.btnShare.click();
     await Promise.resolve();
     assert.equal(writeHash.mock.calls.length, 1);
-    assert.equal(decodePresetHash(location.hash).schema, 12);
+    assert.equal(decodePresetHash(location.hash).schema, 13);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3208,7 +3209,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
     delete globalThis.navigator.clipboard;
     state.ui.btnShare.click();
     await Promise.resolve();
-    assert.equal(decodePresetHash(location.hash).schema, 12);
+    assert.equal(decodePresetHash(location.hash).schema, 13);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
@@ -4176,7 +4177,7 @@ test('RC-15 budgets: committed Settings edits synchronize without recreating gov
     assert.equal(g.policy.maxActiveParticles,65536);assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(runtime.settings.particleSafety.maxActiveParticles,65536);
     control.value='';control.dispatch('change');assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(control.getAttribute('aria-invalid'),'true');
     state.ui.numMaxEmissionsPerFrame.value='4096';state.ui.numMaxEmissionsPerFrame.dispatch('change');assert.equal(g.policy.maxEmissionsPerFrame,4096);
-    state.ui.btnShare.click();const payload=JSON.parse(Buffer.from(location.hash.slice(3),'base64url').toString('utf8'));assert.deepEqual(payload.prefs.particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});
+    state.ui.btnShare.click();const payload=JSON.parse(Buffer.from(location.hash.slice(3),'base64url').toString('utf8'));assert.deepEqual(canonicalPrefs(payload).particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});
     const imported=structuredClone(CONFIG.defaults);imported.particleSafety={maxEmissionsPerFrame:0,maxActiveParticles:0};location.hash=settingsPresetHash(imported);state.ui.btnApplyUrl.click();assert.deepEqual(g.policy,imported.particleSafety);assert.equal(g.activeParticles,0);assert.equal(state.ui.numMaxActiveParticles.value,'0');
     state.ui.btnResetPrefs.click();assert.deepEqual(g.policy,CONFIG.defaults.particleSafety);assert.equal(state.ui.numMaxActiveParticles.value,'16384');assert.equal(state.ui.numMaxEmissionsPerFrame.value,'512');
   });
@@ -4781,7 +4782,7 @@ for (const count of [0, 1, 2, 16]) test(`116D authoring through Camera UI preser
     assert.match(state.ui.sceneCameraStatus.textContent, /saved/);
     setCamera({ x: 800, zoom: .5, rotationRad: 2 });
     state.ui.btnShare.click(); await Promise.resolve();
-    assert.deepEqual(decodePresetHash(location.hash).prefs.sceneCamera, camera);
+    assert.deepEqual(canonicalPrefs(decodePresetHash(location.hash)).sceneCamera, camera);
     const preset = structuredClone(preferences);
     state.ui.btnRestoreSceneView.click();
     assert.deepEqual(state.camera, camera); assert.deepEqual(preferences, preset);
@@ -4826,7 +4827,7 @@ test('Angular alignment: startup, refresh, Share and deliberate speed editing re
     const speed=state.ui.orbEditorList.children[0].querySelectorAll('input').find(c=>c.id?.endsWith('-angular-speed'));
     assert.equal(speed.value,'90');assert.doesNotMatch(speed.getAttribute('aria-valuetext'),/Current .*slider selection/);
     UI.applyPrefs(null);UI.refreshAllUiText();retained();assert.deepEqual(preferences,original);
-    await state.ui.btnShare.click();assert.deepEqual(decodePresetHash(location.hash).prefs,original);retained();
+    await state.ui.btnShare.click();assert.deepEqual(canonicalPrefs(decodePresetHash(location.hash)),original);retained();
     speed.value='90.5';speed.dispatch('input');retained();
     const expected=structuredClone(original);expected.orbs[0].motion.angularSpeedRadPerSec=preferences.orbs[0].motion.angularSpeedRadPerSec;
     assert.ok(Math.abs(expected.orbs[0].motion.angularSpeedRadPerSec*RAD_TO_DEG-90.5)<1e-12);assert.deepEqual(preferences,expected);

@@ -9,7 +9,7 @@ import { state } from "../src/js/core/state.js";
 import { UrlPreset } from "../src/js/presets/url-preset.js";
 
 function presetHash(prefs) {
-  const json = JSON.stringify({ schema: PRESET_SCHEMA_VERSION, prefs });
+  const json = JSON.stringify({ schema: 12, prefs });
   return `#p=${Buffer.from(json, "utf8").toString("base64url")}`;
 }
 

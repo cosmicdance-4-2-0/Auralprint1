@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { CONFIG } from "../src/js/core/config.js";
@@ -43,9 +44,9 @@ test("RC-07: import and runtime share minimum/maximum validation without mutatin
     resolveSettings();
     assert.equal(runtime.settings.bands.count, expected);
     assert.ok(Object.is(preferences.bands.count, count));
-    assert.equal(encodePresetPayload(preferences).prefs.bands.count, expected);
+    assert.equal(canonicalPrefs(encodePresetPayload(preferences)).bands.count, expected);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 12);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
 }));
 
 test("RC-07: every supported count/distribution covers 0 through Nyquist, including clamped ceilings", () => withSettings(() => {
@@ -96,7 +97,7 @@ for (const counts of [[256, 32, 256], [256, 3, 256], [3, 32, 3]]) {
         assert.equal(selected.energyOverride01, canonical.length ? (active.length ? .5 : 0) : null);
         assert.equal(selected.selectedDominantBandIndex, active[0] ?? null);
         const encoded = encodePresetPayload(preferences);
-        assert.equal(encoded.schema, 12); assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)).orbs[0], originalOrb);
+        assert.equal(encoded.schema, 13); assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)).orbs[0], originalOrb);
         globalThis.location = { hash: '#p=' + Buffer.from(JSON.stringify(encoded)).toString('base64url') };
         assert.equal(UrlPreset.applyFromLocationHash(), true); assert.deepEqual(preferences.orbs[0], originalOrb);
       }

@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -52,7 +53,7 @@ test("budgets: one integer normalization contract for sanitation, resolution and
       const sanitized=sanitizePreset({schema:11,prefs:{particleSafety:input}});assert.deepEqual(sanitized.particleSafety,normalized);
       replacePreferences({...structuredClone(CONFIG.defaults),particleSafety:input});resolveSettings();
       assert.deepEqual(runtime.settings.particleSafety,normalized); assert.deepEqual(new ParticleGovernor(input).policy,normalized);
-      assert.deepEqual(encodePresetPayload({...sanitized,governor:{heap:[1]},particleSafety:{...normalized,retentionEvictionsTotal:3}}).prefs,sanitized);
+      assert.deepEqual(canonicalPrefs(encodePresetPayload({...sanitized,governor:{heap:[1]},particleSafety:{...normalized,retentionEvictionsTotal:3}})),sanitized);
     }
   }}finally{replacePreferences(old);runtime.settings=settings;}
 });
@@ -61,9 +62,9 @@ test("budgets: schema 10 zero/upper limits round trip, historical missing defaul
   for(const policy of [{maxEmissionsPerFrame:0,maxActiveParticles:0},{maxEmissionsPerFrame:16384,maxActiveParticles:1048576}]) {
     const prefs=structuredClone(CONFIG.defaults);prefs.particleSafety=policy;prefs.orbs[0].particles.minPlacementDistanceUnits=0;
     prefs.orbs[0].particles.overlapRadiusPx=9;
-    const payload=encodePresetPayload(prefs);assert.equal(payload.schema, 12);assert.deepEqual(payload.prefs.particleSafety,policy);
-    assert.deepEqual(sanitizePreset(payload),payload.prefs);assert.equal(payload.prefs.orbs[0].particles.minPlacementDistanceUnits,0);
-    assert.equal('overlapRadiusPx' in payload.prefs.orbs[0].particles,false);
+    const payload=encodePresetPayload(prefs);assert.equal(payload.schema, 13);assert.deepEqual(canonicalPrefs(payload).particleSafety,policy);
+    assert.deepEqual(sanitizePreset(payload),canonicalPrefs(payload));assert.equal(canonicalPrefs(payload).orbs[0].particles.minPlacementDistanceUnits,0);
+    assert.equal('overlapRadiusPx' in canonicalPrefs(payload).orbs[0].particles,false);
   }
   const historical=JSON.parse(readFileSync(new URL('./fixtures/legacy-presets.json',import.meta.url),'utf8'));
   for(const payload of [...historical,...Array.from({length:9},(_,i)=>({schema:i+2,prefs:{}}))]) assert.deepEqual(sanitizePreset(payload).particleSafety,defaults);
@@ -168,9 +169,9 @@ test("budgets: canonical lifecycle, preset replacement and default reset never r
     const source=state.orbs[0],g=source.trail.governor,tail=source.trail.particles.tail;
     const copy=duplicateRuntimeOrb(source.id),added=createRuntimeOrb();assert.deepEqual(g.policy,p.particleSafety);
     preferences.orbs.reverse();resolveSettings();reconcileOrbs();assert.equal(source.trail.particles.tail,tail);assert.equal(source.trail.governor,g);
-    const payload=encodePresetPayload(preferences);payload.prefs.particleSafety={maxEmissionsPerFrame:2,maxActiveParticles:1};replacePreferences(sanitizePreset(payload));resolveSettings();reconcileOrbs();assert.deepEqual(g.policy,payload.prefs.particleSafety);assert.equal(g.activeParticles,1);
-    removeRuntimeOrb(copy.id);removeRuntimeOrb(added.id);resetOrbTrailsForTrack();resetVisualizers('visuals');VisualizerRuntime.rebuild(state.orbs);assert.deepEqual(g.policy,payload.prefs.particleSafety);
-    VisualizerRuntime.dispose();initOrbs();assert.equal(state.orbs[0].trail.governor,g);assert.deepEqual(g.policy,payload.prefs.particleSafety);
+    const payload=encodePresetPayload(preferences);payload.prefs.particleSafety={maxEmissionsPerFrame:2,maxActiveParticles:1};replacePreferences(sanitizePreset(payload));resolveSettings();reconcileOrbs();assert.deepEqual(g.policy,canonicalPrefs(payload).particleSafety);assert.equal(g.activeParticles,1);
+    removeRuntimeOrb(copy.id);removeRuntimeOrb(added.id);resetOrbTrailsForTrack();resetVisualizers('visuals');VisualizerRuntime.rebuild(state.orbs);assert.deepEqual(g.policy,canonicalPrefs(payload).particleSafety);
+    VisualizerRuntime.dispose();initOrbs();assert.equal(state.orbs[0].trail.governor,g);assert.deepEqual(g.policy,canonicalPrefs(payload).particleSafety);
     replacePreferences(structuredClone(CONFIG.defaults));resolveSettings();initOrbs();assert.deepEqual(g.policy,defaults);
     replacePreferences({...structuredClone(CONFIG.defaults),orbs:[],particleSafety:{maxEmissionsPerFrame:0,maxActiveParticles:0}});resolveSettings();initOrbs();VisualizerRuntime.update(context);assert.deepEqual(g.policy,{maxEmissionsPerFrame:0,maxActiveParticles:0});assert.equal(g.activeParticles,0);
   }finally{VisualizerRuntime.dispose();replacePreferences(oldPrefs);runtime.settings=oldSettings;state.orbs=oldOrbs;}

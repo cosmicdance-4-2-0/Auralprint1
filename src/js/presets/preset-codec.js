@@ -1,4 +1,4 @@
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V12 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
@@ -9,6 +9,8 @@ import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { assertOrbAdmission } from "../core/orb-admission.js";
 import { assertSupportedBandFrequencies } from "../core/band-frequency.js";
+import { compactPreferences, expandCompactPreferences } from "./compact-preset.js";
+import { assertPresetStructure } from "./preset-limits.js";
 
 // Preset data contract, independent of URL/base64 or application state.
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
@@ -16,15 +18,20 @@ import { assertSupportedBandFrequencies } from "../core/band-frequency.js";
 // only the authored Scene camera. Historical formats and migrations remain
 // supported, subject to current CONFIG-supported frequency admission across all
 // supported schemas; formerly admitted excessive frequencies may now be rejected.
-const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
+const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V12, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 
 function decodePresetPayload(payload) {
   if (!isRecord(payload) || !isRecord(payload.prefs)) return { ok: false, code: "malformed-payload" };
   if (!SUPPORTED_SCHEMAS.includes(payload.schema)) return { ok: false, code: "unsupported-schema" };
-  const incoming = payload.schema === LEGACY_SCHEMA_V9 ? recoverScene9Preferences(payload.prefs) : payload.prefs;
-  try { assertOrbAdmission(incoming.orbs); assertSupportedBandFrequencies(incoming.bands); }
+  try {
+    assertPresetStructure(payload);
+    if (payload.schema === PRESET_SCHEMA_VERSION && Object.keys(payload).some(key => !["schema", "prefs"].includes(key))) return { ok: false, code: "unknown-preset-field" };
+    const incoming = payload.schema === PRESET_SCHEMA_VERSION ? expandCompactPreferences(payload.prefs)
+      : payload.schema === LEGACY_SCHEMA_V9 ? recoverScene9Preferences(payload.prefs) : payload.prefs;
+    assertOrbAdmission(incoming.orbs); assertSupportedBandFrequencies(incoming.bands);
+  }
   catch (error) { return { ok: false, code: error.code }; }
   return { ok: true, schema: payload.schema, prefs: payload.prefs };
 }
@@ -66,10 +73,16 @@ function encodePresetPayload(prefs) {
   }
   // Sanitize on both boundaries: arbitrary preference/runtime additions can
   // never leak through a clone of the mutable preferences object.
-  return { schema: PRESET_SCHEMA_VERSION, prefs: sanitizePreset({ schema: PRESET_SCHEMA_VERSION, prefs }) };
+  return { schema: PRESET_SCHEMA_VERSION, prefs: compactPreferences(sanitizeCanonicalPreset({ schema: PRESET_SCHEMA_VERSION, prefs })) };
 }
 
 function sanitizePreset(decoded) {
+  return sanitizeCanonicalPreset(decoded.schema === PRESET_SCHEMA_VERSION
+    ? { schema: PRESET_SCHEMA_VERSION, prefs: expandCompactPreferences(decoded.prefs) }
+    : decoded);
+}
+
+function sanitizeCanonicalPreset(decoded) {
   const schema = decoded && Number.isInteger(decoded.schema) ? decoded.schema : PRESET_SCHEMA_VERSION;
   const incoming = schema === LEGACY_SCHEMA_V9
     ? recoverScene9Preferences(decoded.prefs)
@@ -80,7 +93,7 @@ function sanitizePreset(decoded) {
   // canonical defaults so older or partial payloads cannot inherit live state.
   const next = deepClone(CONFIG.defaults);
   if (schema >= LEGACY_SCHEMA_V11) next.world = normalizeWorldSettings(incoming.world);
-  if (schema >= PRESET_SCHEMA_VERSION) next.sceneCamera = normalizeSceneCamera(incoming.sceneCamera);
+  if (schema >= LEGACY_SCHEMA_V12) next.sceneCamera = normalizeSceneCamera(incoming.sceneCamera);
 
   if (incoming.visuals) {
     if (isValidHexColor(incoming.visuals.backgroundColor)) next.visuals.backgroundColor = incoming.visuals.backgroundColor;

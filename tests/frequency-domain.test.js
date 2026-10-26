@@ -1,3 +1,4 @@
+import { canonicalPrefs, canonicalHash } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { CONFIG } from "../src/js/core/config.js";
@@ -31,7 +32,7 @@ test("AUD-004 CONFIG owns maximum; fractional/default/exact and adjacent limits"
   for(const [floorHz,ceilingHz] of [[20,22500],[.125,22500.125],[max,max],[20,adjacent(max,-1)],[Number.MIN_VALUE,max]]) {
     const input=structuredClone(CONFIG.defaults);Object.assign(input.bands,{floorHz,ceilingHz});
     const encoded=encodePresetPayload(input),decoded=decodePresetPayload(encoded);
-    assert.equal(encoded.schema,12);assert.equal(decoded.ok,true);
+    assert.equal(encoded.schema,13);assert.equal(decoded.ok,true);
     assert.deepEqual(sanitizePreset(decoded),input);
   }
 });
@@ -65,13 +66,13 @@ test("AUD-004 failed URL import is atomic; subsequent import/share preserves ind
     assert.match(UrlPreset.getValidationMessage(),/384,000 Hz/);
     assert.deepEqual(preferences,before);assert.equal(runtime.settings,settings);assert.equal(state.camera,camera);
     globalThis.history={replaceState(_a,_b,url){location.hash=url.slice(url.indexOf("#"));}};
-    UrlPreset.writeHashFromPrefs();assert.deepEqual(JSON.parse(Buffer.from(location.hash.slice(3),"base64url")).prefs,before);
+    UrlPreset.writeHashFromPrefs();assert.deepEqual(canonicalHash(location.hash).prefs,before);
     const valid=structuredClone(before);Object.assign(valid.bands,{floorHz:31.125,ceilingHz:max,distributionMode:"bark"});
     valid.world.widthUnits=12345;valid.sceneCamera.x=123;
     location.hash=hash({schema:12,prefs:valid});assert.equal(UrlPreset.applyFromLocationHash(),true);
     assert.equal(UrlPreset.getValidationMessage(),"");
     assert.deepEqual(preferences,valid);UrlPreset.writeHashFromPrefs();
-    assert.deepEqual(JSON.parse(Buffer.from(location.hash.slice(3),"base64url")).prefs,valid);
+    assert.deepEqual(canonicalHash(location.hash).prefs,valid);
   } finally {globalThis.location=oldLocation;globalThis.history=oldHistory;replacePreferences(previous);resolveSettings();}
 });
 
@@ -107,9 +108,9 @@ test("AUD-004 changing only source CONFIG raises codec, preferences and UI domai
       assert.equal(decodePresetPayload({schema:12,prefs}).ok,true);
       replacePreferences(sanitizePreset({schema:12,prefs}));resolveSettings();
       BandBankController.syncFromSettings();BandBankController.rebuildNow();
-      assert.equal(encodePresetPayload(preferences).prefs.bands.ceilingHz,1e307);
+      assert.equal(sanitizePreset(decodePresetPayload(encodePresetPayload(preferences))).bands.ceilingHz,1e307);
       assert.ok(state.bands.lowHz.every(Number.isFinite));assert.ok(state.bands.highHz.slice(0,-1).every(Number.isFinite));
-      assert.deepEqual(decodePresetPayload({schema:12,prefs:{bands:{ceilingHz:Number.MAX_VALUE}}}),{ok:false,code:'unsupported-frequency'});
+      assert.deepEqual(decodePresetPayload({schema:13,prefs:{bands:{ceilingHz:Number.MAX_VALUE}}}),{ok:false,code:'unsupported-frequency'});
       const node=()=>({options:[],addEventListener(){},textContent:'',setAttribute(){},getAttribute(){},value:''});
       globalThis.document={createElement:node};
       const keys=['analysisPanel','rngRmsGain','valRmsGain','rngSmooth','valSmooth','selFFT','valFFT','selDistMode','valDistMode','inpBandFloorHz','valBandFloorHz','inpBandCeilingHz','valBandCeilingHz','valBandCount'];
