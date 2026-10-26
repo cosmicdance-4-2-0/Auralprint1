@@ -16,7 +16,8 @@ import { SCHEMA_13_BASELINE } from "./schema-13-baseline.js";
 // Preset data contract, independent of URL/base64 or application state.
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
 // reference and explicitly named world-unit placement distance. Schema 12 adds
-// only the authored Scene camera. Historical formats and migrations remain
+// only the authored Scene camera. Schema 13 uses frozen deltas and ordered
+// band ranges. Historical formats and migrations remain
 // supported, subject to current CONFIG-supported frequency admission across all
 // supported schemas; formerly admitted excessive frequencies may now be rejected.
 const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V12, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];

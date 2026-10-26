@@ -1,9 +1,9 @@
 /* =============================================================================
    Auralprint
-   0.1.16d
+   0.1.16e
 
-   Build 116D — Authored Scene camera and independent live camera
-   Independent world geometry; authored viewpoint; preset schema v12.
+   Build 116E — Compact schema-13 presets and native DEFLATE sharing
+   Canonical Scene configuration; frozen deltas; ordered band ranges.
    ========================================================================== */
 
 const TAU = Math.PI * 2;

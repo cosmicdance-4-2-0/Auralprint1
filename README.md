@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Build 116D (`v0.1.16d`), preset schema 12. Implementation and the first audit's remediations are merged; further acceptance is pending. The owner has not authorized 116 RC #1 or public publication. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+**Current source checkout:** Proposed Build 116E (`v0.1.16e`), preset schema 13. Compact presets and native DEFLATE sharing extend the accepted 116D camera work; browser/device acceptance remains pending. The owner has not authorized 116 RC #1 or public publication. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -24,6 +24,7 @@ npm run build
 python scripts/verify_distribution.py
 npm run test:browser
 npm run test:browser:editing
+npm run test:browser:presets
 ```
 
 Do not run test and build concurrently: tests temporarily rename build directories.
@@ -32,12 +33,20 @@ Before the native browser checks, install Playwright's matching Chromium headles
 
 Build outputs:
 
-- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16d.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16e.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
-`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; both Chromium smoke checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
+`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; all three Chromium browser checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
+
+## Sharing in proposed Build 116E
+
+**Copy Share Link** writes a compact schema-13 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-13 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
+
+Opening a compressed link requires working native DEFLATE decompression. Unsupported browsers retain the active Scene and show an explanation; an uncompressed link is the compatibility option. Schemas 2–12 retain their decoding meanings in this build. Older Auralprint builds cannot read schema 13. Link length depends on the Scene and the sharing service's limits.
+
+See [116E protocol, measurements, reproducible checks and owner device matrix](docs/development/build-116.md#116e-compact-presets). Optional Firefox/WebKit checks remain separate from mandatory Chromium CI.
 
 <a id="build-115--v0115-visualizer-architecture--orb-overhaul-v1"></a>
 
@@ -61,7 +70,7 @@ Firefox does not supply shared-display audio for Stream mode; Stream requires an
 
 ## Camera in the Build 116 checkout
 
-Build 116D separates the simulation world from the viewport. Configurable world dimensions define Orb/Ring reference geometry, **not** clipping/collision bounds; particle placement spacing uses world units independently of viewport/DPR. Camera movement changes the view, preserving simulation and retained history; marks retain CSS-screen sizing.
+Build 116 separates the simulation world from the viewport. Configurable world dimensions define Orb/Ring reference geometry, **not** clipping/collision bounds; particle placement spacing uses world units independently of viewport/DPR. Camera movement changes the view, preserving simulation and retained history; marks retain CSS-screen sizing.
 
 The live performance view is separate from the authored Scene viewpoint. **Save Current View as Scene View** explicitly persists the live pose into the Scene; **Restore Scene View** stops input and restores that authored view to the live camera. **Copy Share Link** serializes the authored Scene, including its saved viewpoint; live navigation never implicitly saves or shares its current pose.
 
