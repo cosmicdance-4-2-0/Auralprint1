@@ -8,24 +8,31 @@ import { createHash } from 'node:crypto';
 import { CONFIG } from '../src/js/core/config.js';
 import { SCHEMA_13_BASELINE } from '../src/js/presets/schema-13-baseline.js';
 import { encodePresetPayload, decodePresetPayload, sanitizePreset } from '../src/js/presets/preset-codec.js';
-import { encodeBandRanges, decodeBandRanges } from '../src/js/presets/compact-preset.js';
+import { compactPreferences, encodeBandRanges, decodeBandRanges } from '../src/js/presets/compact-preset.js';
 import { parsePresetJson, assertPresetStructure } from '../src/js/presets/preset-limits.js';
 
 const full = JSON.parse(readFileSync(new URL('./fixtures/schema-12-full.json', import.meta.url)));
 const compact = prefs => ({schema:13,prefs});
+const encode13 = prefs => {
+  const historical = structuredClone(prefs);
+  delete historical.audio.clearQueueOnSourceExit;
+  for (const orb of historical.orbs) { delete orb.trace.fadeEnabled; delete orb.trace.fadeSegments; }
+  return compact(compactPreferences(historical, 13));
+};
+const migrated = prefs => sanitizePreset({schema:12,prefs});
 const canonical = payload => { const decoded=decodePresetPayload(payload); assert.equal(decoded.ok,true,decoded.code); return sanitizePreset(decoded); };
 
 test('13: every canonical field, precise numbers, empty collections and opaque identities round-trip',()=>{
   for (const prefs of [CONFIG.defaults, full, {...full,orbs:[]}, {...full,orbs:[...full.orbs].reverse()}]) {
-    const before=structuredClone(prefs), wire=encodePresetPayload(prefs);
+    const before=structuredClone(prefs), wire=encode13(prefs);
     assert.equal(wire.schema,13);
-    assert.deepEqual(canonical(JSON.parse(JSON.stringify(wire))),prefs);
+    assert.deepEqual(canonical(JSON.parse(JSON.stringify(wire))),migrated(prefs));
     assert.deepEqual(prefs,before);
   }
 });
 
 test('13: defaults omit completely; nested siblings and zero/false/empty survive',()=>{
-  assert.deepEqual(encodePresetPayload(CONFIG.defaults),compact({}));
+  assert.deepEqual(encode13(CONFIG.defaults),compact({}));
   const wire=compact({orbs:[{id:'opaque-宇宙',bandIds:'',trace:{lines:false,lineAlpha:0}}],
     audio:{volume:0},particleSafety:{maxEmissionsPerFrame:0},bands:{overlay:{enabled:true}}});
   const prefs=canonical(wire);
@@ -35,7 +42,7 @@ test('13: defaults omit completely; nested siblings and zero/false/empty survive
   assert.equal(prefs.particleSafety.maxEmissionsPerFrame,0);
   assert.equal(prefs.particleSafety.maxActiveParticles,16384);
   assert.equal(prefs.bands.overlay.enabled,true);assert.equal(prefs.bands.overlay.alpha,.65);
-  assert.deepEqual(canonical(encodePresetPayload(prefs)),prefs);
+  assert.deepEqual(canonical(encode13(prefs)),prefs);
   assert.deepEqual(canonical(compact({orbs:[]})).orbs,[]);
 });
 
@@ -122,9 +129,12 @@ test('13 frozen literal fingerprint and future CONFIG factory-default independen
       import {SCHEMA_13_BASELINE as frozen} from './src/js/presets/schema-13-baseline.js';
       import {decodePresetPayload,sanitizePreset} from './src/js/presets/preset-codec.js';
       assert.notEqual(CONFIG.defaults.audio.volume,frozen.audio.volume);
-      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:{}})),frozen);
+      const expected = structuredClone(frozen);
+      expected.audio.clearQueueOnSourceExit = false;
+      for (const orb of expected.orbs) Object.assign(orb.trace,{fadeEnabled:false,fadeSegments:5});
+      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:{}})),expected);
       const invalid= {sceneCamera:{zoom:0},audio:{repeatMode:'invalid'},bands:{count:1},particleSafety:{maxEmissionsPerFrame:.5,maxActiveParticles:.5}};
-      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:invalid})),frozen);
+      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:invalid})),expected);
     `],{cwd:dir});
   } finally {rmSync(dir,{recursive:true,force:true});}
 });

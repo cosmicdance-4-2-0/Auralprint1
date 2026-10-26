@@ -114,9 +114,9 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
     assert.equal(decoded.schema, 11);
     const next = sanitizePreset(decoded);
     assert.deepEqual(idsOf(next.orbs), [HUGE_ID, HUGE_NEXT]);
-    assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 13, prefs: next });
+    assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 14, prefs: next });
     assert.deepEqual(canonicalPrefs(JSON.parse(JSON.stringify(encodePresetPayload(next)))), next);
-    assert.equal(PRESET_SCHEMA_VERSION, 13);
+    assert.equal(PRESET_SCHEMA_VERSION, 14);
     assert.deepEqual(input, snapshot);
   });
 
@@ -164,7 +164,7 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
         UrlPreset.writeHashFromPrefs();
         assert.match(location.hash, /^#p=[A-Za-z0-9_-]+$/);
         const encoded = JSON.parse(Buffer.from(location.hash.slice(3), "base64url").toString("utf8"));
-        assert.deepEqual(canonicalPayload(encoded), { schema: 13, prefs: expected });
+        assert.deepEqual(canonicalPayload(encoded), { schema: 14, prefs: expected });
         assert.equal(UrlPreset.applyFromLocationHash(), true);
         assert.deepEqual(preferences, expected);
       }

@@ -77,7 +77,7 @@ test("Settings copy retains canonical Scene IDs alongside Visualizers", () => {
   assert.equal(byId("btnHideScene").attrs["aria-label"], "Hide Scene Settings panel");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("scenePanel")).text, "Scene Settings");
   assert.equal(templateNodes.find((node) => node.tag === "h2" && node.ancestors.includes("visualizersPanel")).text, "Visualizers");
-  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Simulation World", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
+  assert.deepEqual(templateNodes.filter((node) => node.tag === "summary" && node.ancestors.includes("scenePanel")).map((node) => node.text), ["Source Behavior", "Simulation World", "Canvas", "Particle Defaults", "Band Palette", "Performance", "PresetsShare or restore configuration"]);
 });
 
 function element(tag = "div") {
@@ -93,7 +93,7 @@ function element(tag = "div") {
   };
 }
 function harness(getParticleStats) {
-  const ids = ["numWorldWidth","valWorldWidth","worldWidthError","numWorldHeight","valWorldHeight","worldHeightError","clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
+  const ids = ["chkClearQueueOnSourceExit","numWorldWidth","valWorldWidth","worldWidthError","numWorldHeight","valWorldHeight","worldHeightError","clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
   const ui = Object.fromEntries(ids.map((id) => [id, element(id === "selParticleColorSrc" ? "select" : "div")]));
   ui.scenePanel = element();
   const preferences = structuredClone(CONFIG.defaults);
@@ -265,4 +265,45 @@ test("116C.A Camera controls have one dedicated workspace owner, accessible runt
     assert.equal(byId(error)[0].attrs.role, "alert");
     assert.match(templateNodes.find(node => node.tag === "label" && node.attrs.for === input).text, unit);
   }
+});
+
+test("116F: Queue policy has one accessible Scene owner and explains shared-preset behavior", () => {
+  const controls = templateNodes.filter(node => node.attrs.id === "chkClearQueueOnSourceExit");
+  assert.equal(controls.length, 1);
+  assert.ok(controls[0].ancestors.includes("scenePanel"));
+  assert.ok(!controls[0].ancestors.includes("visualizersPanel"));
+  assert.equal(controls[0].attrs.type, "checkbox");
+  assert.equal(controls[0].attrs["aria-describedby"], "clearQueueOnSourceExitHelp");
+  assert.equal(templateNodes.find(node => node.tag === "label" && node.attrs.for === "chkClearQueueOnSourceExit").text,
+    "Clear File Queue when switching sources");
+  assert.equal(templateNodes.find(node => node.attrs.id === "clearQueueOnSourceExitHelp").text,
+    "Clears the File Queue after successfully switching to Mic or Stream. This choice is saved in presets, including shared presets.");
+});
+
+test("116F: Scene Queue checkbox commits once and refresh follows canonical settings without repeated DOM work", () => {
+  const old = globalThis.document;
+  globalThis.document = { createElement: element };
+  try {
+    const h = harness();
+    h.panel.init();
+    assert.equal(h.ui.chkClearQueueOnSourceExit.checked, false);
+    assert.equal(h.panel.init(), false);
+    assert.equal(h.ui.chkClearQueueOnSourceExit.listenerCount("change"), 1);
+    h.ui.chkClearQueueOnSourceExit.checked = true;
+    h.ui.chkClearQueueOnSourceExit.dispatch("change");
+    assert.equal(h.preferences.audio.clearQueueOnSourceExit, true);
+    assert.equal(h.commits(), 1);
+    h.ui.chkClearQueueOnSourceExit.dispatch("change");
+    assert.equal(h.commits(), 1);
+    const enabled = structuredClone(CONFIG.defaults);
+    enabled.audio.clearQueueOnSourceExit = true;
+    h.replaceSettings(enabled); h.panel.refresh();
+    assert.equal(h.ui.chkClearQueueOnSourceExit.checked, true);
+    h.replaceSettings(structuredClone(CONFIG.defaults)); h.panel.refresh();
+    assert.equal(h.ui.chkClearQueueOnSourceExit.checked, false);
+    let writes = 0;
+    Object.defineProperty(h.ui.chkClearQueueOnSourceExit, "checked", { get: () => false, set: () => { writes++; } });
+    assert.equal(h.panel.refresh(), false);
+    assert.equal(writes, 0);
+  } finally { globalThis.document = old; }
 });

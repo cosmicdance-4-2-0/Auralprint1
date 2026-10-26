@@ -62,7 +62,7 @@ test("budgets: schema 10 zero/upper limits round trip, historical missing defaul
   for(const policy of [{maxEmissionsPerFrame:0,maxActiveParticles:0},{maxEmissionsPerFrame:16384,maxActiveParticles:1048576}]) {
     const prefs=structuredClone(CONFIG.defaults);prefs.particleSafety=policy;prefs.orbs[0].particles.minPlacementDistanceUnits=0;
     prefs.orbs[0].particles.overlapRadiusPx=9;
-    const payload=encodePresetPayload(prefs);assert.equal(payload.schema, 13);assert.deepEqual(canonicalPrefs(payload).particleSafety,policy);
+    const payload=encodePresetPayload(prefs);assert.equal(payload.schema, 14);assert.deepEqual(canonicalPrefs(payload).particleSafety,policy);
     assert.deepEqual(sanitizePreset(payload),canonicalPrefs(payload));assert.equal(canonicalPrefs(payload).orbs[0].particles.minPlacementDistanceUnits,0);
     assert.equal('overlapRadiusPx' in canonicalPrefs(payload).orbs[0].particles,false);
   }

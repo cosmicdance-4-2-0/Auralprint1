@@ -526,7 +526,7 @@ const UI = (() => {
         catch { /* The valid complete link is already in the address bar. */ }
       }
       if (location.hash !== result.hash) return;
-      const fallback = result.fallback ? " Uncompressed schema-13 link: native DEFLATE unavailable." : "";
+      const fallback = result.fallback ? " Uncompressed schema-14 link: native DEFLATE unavailable." : "";
       sceneStatusToast((copied ? "Share link copied to clipboard."
         : "Share link written to URL — copy from address bar.") + fallback, 6000);
     } catch {
@@ -1445,13 +1445,27 @@ const UI = (() => {
       activeLoadRequestId += 1;
     }
 
+    function maybeClearQueueAfterSourceExit(activation, kind, enabled, requestId, queueRevision) {
+      // InputSourceManager owns source acceptance/cancellation. Reuse the File
+      // request fence and Queue's mutation fence so a completion cannot delete
+      // files belonging to a newer source or Queue action.
+      if (!enabled || !activation?.ok || requestId !== activeLoadRequestId
+        || queueRevision !== Queue.revision || state.source.kind !== kind
+        || state.source.status !== "active" || state.source.sessionActive !== true) return;
+      Queue.clear();
+    }
+
     async function switchToMicMode() {
       if (isSourceSwitchLocked()) return false;
       if (state.source.kind === "mic" && (state.source.status === "requesting" || state.source.status === "active")) {
         return false;
       }
 
+      const clearQueueOnExit = isFileWorkflowMode(state.source)
+        && runtime.settings.audio.clearQueueOnSourceExit === true;
       invalidatePendingTrackLoads();
+      const sourceExitRequestId = activeLoadRequestId;
+      const queueRevision = Queue.revision;
       clearAudioStatusToast();
       clearAudioState();
       workspace.hideQueuePanel();
@@ -1459,6 +1473,7 @@ const UI = (() => {
         reason: "switch-to-mic",
       });
       const activation = await InputSourceManager.activateMic();
+      maybeClearQueueAfterSourceExit(activation, "mic", clearQueueOnExit, sourceExitRequestId, queueRevision);
       RecorderEngine.getSupportStatus();
       refreshQueuePanel();
       return !!(activation && activation.ok);
@@ -1470,7 +1485,11 @@ const UI = (() => {
         return false;
       }
 
+      const clearQueueOnExit = isFileWorkflowMode(state.source)
+        && runtime.settings.audio.clearQueueOnSourceExit === true;
       invalidatePendingTrackLoads();
+      const sourceExitRequestId = activeLoadRequestId;
+      const queueRevision = Queue.revision;
       clearAudioStatusToast();
       clearAudioState();
       workspace.hideQueuePanel();
@@ -1478,6 +1497,7 @@ const UI = (() => {
         reason: "switch-to-stream",
       });
       const activation = await InputSourceManager.activateStream();
+      maybeClearQueueAfterSourceExit(activation, "stream", clearQueueOnExit, sourceExitRequestId, queueRevision);
       RecorderEngine.getSupportStatus();
       refreshQueuePanel();
       return !!(activation && activation.ok);
