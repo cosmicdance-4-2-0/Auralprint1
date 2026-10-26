@@ -1,5 +1,9 @@
 # Build 116 — simulation world, camera and projection
 
+## Accepted integration history
+
+At accepted `main` [`e4495d8`](https://github.com/cosmicdance-4-2-0/Auralprint1/commit/e4495d8ceae3d33c6d8464c1b56a3cfe937cd2d5), the completed integration sequence is 116A foundation/integration (PRs [#67](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/67)/[#68](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/68)), B ([#69](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/69)), C ([#71](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/71)), C.A ([#72](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/72)) and D ([#73](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/73)). The first forensic audit ([#74](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/74)) and corrective PRs [#75](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/75)–[#79](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/79), including angular-step alignment in #78, are merged. The sections below retain their original decisions, validation and review stops; those stops describe historical checkpoints. [ROADMAP](../../ROADMAP.md#build-116-simulation-world-camera-and-projection) owns remaining acceptance and authorization gates. Build 116D remains unreleased.
+
 ## AUD-004 numerical stability and supported frequency domain
 
 Corrective baseline: accepted `main`
