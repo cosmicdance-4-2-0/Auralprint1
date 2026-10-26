@@ -1,4 +1,4 @@
-# agents.md — Auralprint
+# AGENTS.md — Auralprint
 
 **Purpose**
 This document defines the operating contract for autonomous or semi-autonomous agents working on the Auralprint codebase. It is not guidance; it is **policy**. Deviations must be explicit, justified, and versioned.
