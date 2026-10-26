@@ -1,5 +1,6 @@
-// Optional native Chromium evidence. No project dependency on Playwright.
-// Run after build. RC20_PLAYWRIGHT_MODULE / RC20_CHROMIUM_PATH select external tools.
+// Optional historical RC-20 distribution probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
+// Run after build. RC20_PLAYWRIGHT_MODULE / RC20_CHROMIUM_PATH select tooling.
 // RC20_REPORT selects a JSON evidence file (default prints to stdout).
 const { chromium } = require(process.env.RC20_PLAYWRIGHT_MODULE || 'playwright');
 const assert = require('node:assert/strict');

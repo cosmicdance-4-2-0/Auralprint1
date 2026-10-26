@@ -1,4 +1,7 @@
-// Optional standalone validation; environment browser tooling is not a dependency.
+// Optional historical RC-15 standalone budget probe with schema-11 expectations.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
+// This is not a current-source gate. AP_PLAYWRIGHT_MODULE / AP_CHROMIUM_PATH select tooling.
+// AP_REPORT is required for evidence output.
 const {chromium}=require(process.env.AP_PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('node:http');
 (async()=>{

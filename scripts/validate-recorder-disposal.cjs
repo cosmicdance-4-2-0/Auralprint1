@@ -1,4 +1,5 @@
-// Optional RC-19 native validation. No browser dependency is required by CI.
+// Optional historical RC-19 native probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
 // RC19_PLAYWRIGHT_MODULE, RC19_CHROMIUM_PATH, RC19_REPORT select tooling/output.
 // RC19_EXPECT_BASELINE=1 runs the historical active-disposal reproduction only.
 const assert = require('node:assert/strict');

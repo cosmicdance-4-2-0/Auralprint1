@@ -1,4 +1,5 @@
-// Optional native RC-05 probe; Playwright remains outside project dependencies.
+// Optional historical RC-05 finalization/EOF probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
 // RC05_PLAYWRIGHT_MODULE, RC05_CHROMIUM_PATH, RC05_REPORT select developer tooling.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');

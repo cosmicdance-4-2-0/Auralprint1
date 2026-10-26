@@ -3,7 +3,7 @@
      Owns the ordered list of files to play and the cursor (current index).
       All track-change entry points (Load, drag-drop, Next, Prev, click-to-jump)
       call into Queue for data, then call loadAndPlay() for the actual playback.
-     Queue state is runtime-only until the Playlist module replaces it.
+     Queue state is runtime-only.
    ========================================================================== */
 const Queue = (() => {
   // Each item: { file: File, name: string }

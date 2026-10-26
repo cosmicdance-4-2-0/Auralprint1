@@ -16,18 +16,16 @@
 
   <div id="cameraFitStatus" class="camera-fit-feedback" role="status" aria-live="polite" hidden></div>
 
-  <!-- First-run hint overlay: hidden once audio is loaded -->
+  <!-- First-run hint overlay: hidden after a File/Mic/Stream session becomes active. -->
   <div id="loadHint">
     <div class="hint-title">Auralprint</div>
     <div class="hint-sub">Discover your audio's identity...</div>
     <div class="hint-note">Load audio below, or choose Mic / Stream.</div>
   </div>
 
-<!-- Bottom Audio Panel
-     Row 1 (36px): [scrubber canvas 1fr] [time]
-     Row 2 (40px): Source | Load | Prev | Next | Play | Stop | Repeat | Shuffle | Mute | Vol | [status 1fr] | Queue | HideAudio -->
+<!-- Audio panel: waveform/seek controls, source/transport controls, then status. -->
  <div id="audioPanel" class="panel">
-  <!-- Scrubber row: row 1 (top of panel), scrubber only -->
+  <!-- Scrubber row: waveform/seek canvas, time, conditional Generate and Waveforms options. -->
   <div id="scrubberRow">
     <canvas id="scrubberCanvas" width="1" height="36"></canvas>
     <span id="scrubberTime" class="muted">--:-- / --:--</span>
@@ -475,7 +473,7 @@
     <div id="recordSettingsNote" class="muted recordSettingsNote">Settings apply to new recordings only. Not saved to presets.</div>
   </div>
 
-  <!-- Build 115 workspace launcher bar. Existing panel IDs remain canonical until later phases. -->
+  <!-- Workspace launcher bar: recover panels and collapse or restore launcher controls. -->
   <div
     id="workspaceLauncher"
     class="workspace-launcher"

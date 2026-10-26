@@ -121,7 +121,7 @@ function normalizeOrbPhaseRad(value, fallback = 0) {
 }
 
 function normalizeOrbDef(incomingOrb, fallbackOrb) {
-  // Canonical orb fields (v11 schema): see agents.md §4.2.
+  // This normalizer owns canonical Orb fields, using CONFIG defaults and limits.
   const fallback = fallbackOrb || {};
   const orb = (incomingOrb && typeof incomingOrb === "object") ? incomingOrb : {};
   const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);

@@ -10,9 +10,9 @@ import { createWaveformControls } from "../ui/waveform-options.js";
    Scrubber
    Draws waveform overview + played progress + live playhead on #scrubberCanvas.
    Handles click/drag seeking.
-   Decodes audio asynchronously (non-blocking): playback starts immediately;
-   waveform renders when decode completes. Explicit states are shown for
-   no-track, decoding, ready, and waveform-unavailable.
+   Waveform admission coordinates bounded metadata probing and optional decoding
+   separately from playback; the overview renders when extraction completes.
+   Presents admission/extraction status without owning playback or source lifetime.
    ========================================================================== */
 
 const Scrubber = (() => {
@@ -70,8 +70,8 @@ const Scrubber = (() => {
     waveformAdmission.reset();
   }
 
-  // Get the <audio> element from AudioEngine internals. AudioEngine exposes
-  // a getMediaEl() accessor added in this build for scrubber and seek use only.
+  // AudioEngine exposes the media element for seeking and scoped metadata
+  // handling through waveform admission; transport EOF retains its own owner.
   function getMediaEl() {
     return AudioEngine.getMediaEl ? AudioEngine.getMediaEl() : null;
   }

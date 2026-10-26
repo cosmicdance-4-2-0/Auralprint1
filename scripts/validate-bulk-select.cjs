@@ -1,4 +1,6 @@
-// Optional native keyboard regression; external Playwright is not a dependency.
+// Optional historical RC-11 keyboard probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
+// AP_PLAYWRIGHT_MODULE / AP_CHROMIUM_PATH select tooling; RC11_EXPECT_DEFECT=1 is a negative control.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');

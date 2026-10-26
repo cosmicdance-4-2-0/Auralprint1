@@ -173,8 +173,11 @@ const Renderer = (() => {
     drawParticles(particles, nowSec, orb.particles);
   }
 
-  // RecorderEngine owns captureStream() and any MediaStream lifecycle.
-  // Renderer exposes only the canonical display canvas as a read-only tap target.
+  // Renderer exposes the canonical display canvas and read-only render information.
+  // RecorderEngine owns recording/session/export coordination and render-capture
+  // track cleanup; AudioEngine owns audio-tap release. InputSourceManager retains
+  // upstream live-source tracks. Merged streams reference shared tracks without
+  // owning their destruction; recorder cleanup must not stop upstream audio.
   function getRecorderTap() {
     return {
       canvas: state.canvas,

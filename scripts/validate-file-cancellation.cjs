@@ -1,5 +1,5 @@
-// Optional native RC-02 regression against the unmodified built HTML.
-// Playwright is developer tooling, not a project dependency.
+// Optional historical RC-02 probe against unmodified built HTML; applicability is checkpoint-specific.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
 // RC02_PLAYWRIGHT_MODULE, RC02_CHROMIUM_PATH, RC02_ARTIFACT, RC02_REPORT are optional.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');

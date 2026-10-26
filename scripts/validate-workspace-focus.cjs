@@ -1,4 +1,7 @@
-// Optional native keyboard focus regression; no Playwright project dependency.
+// Optional historical RC-13 keyboard-focus probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
+// AP_PLAYWRIGHT_MODULE / AP_CHROMIUM_PATH select tooling; AP_ARTIFACT_VERSION selects the build.
+// RC13_EXPECT_DEFECT=1 selects the historical negative control; AP_REPORT selects evidence output.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
