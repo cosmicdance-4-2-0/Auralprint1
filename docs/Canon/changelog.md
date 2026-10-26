@@ -183,7 +183,7 @@ Build 115 (`v0.1.15`, preset schema 10) is the fourth public release. Build 114 
 ### New Features
 
 - **Independent visualizer architecture.** AnalysisFrame separates audio analysis from visualizer consumers. VisualizerRuntime manages the Spectral Ring and a stable-ID collection of zero, one or many Orbs.
-- **Complete per-Orb controls.** Add, duplicate, remove and edit individual Orbs, including channel/band targets, motion, response, particle trails, Trace, center, color and designed starting phase. Bulk Edit supports multiple selected Orbs.
+- **Complete per-Orb controls.** Add, duplicate, remove and edit individual Orbs, including channel/band targets, motion, response, particle trails, Trace, center, color and designed starting phase. Bulk Edit applies to all Orbs with mixed-value awareness.
 - **Dedicated workspaces.** Analysis owns FFT and band settings, Visualizers owns Orbs and Spectral Ring, and Settings owns shared Scene appearance and presets.
 - **Particle resource controls.** Configurable per-frame emission and live-particle budgets, minimum Orb-local placement spacing and live resource diagnostics.
 - **Recording Resources controls.** Balanced offers a five-minute automatic Stop target, while Custom and Unrestricted provide deliberate application-limit overrides. Previous successful exports survive cancelled or failed replacements.

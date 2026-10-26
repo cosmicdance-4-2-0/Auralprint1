@@ -1,10 +1,10 @@
 # Auralprint development roadmap
 
-Updated: October 24, 2026. **Release 4 / Build 115 (`v0.1.15`) is accepted for public shipment.** Preset schema **10** is frozen; changes after shipment require versioned migration per [agents.md](agents.md#21-schema-discipline).
+Updated: October 25, 2026. **Release 4 / Build 115 (`v0.1.15`) is accepted for public shipment.** Preset schema **10** is frozen; changes after shipment require versioned migration per [AGENTS.md](AGENTS.md#21-schema-discipline).
 
 **RC-01 through RC-22 completed corrective review at checkpoint `a198b14b087da6b855041c3a23acb550a156ff4e`; Build 115N passed automated CI and received owner acceptance following public RC testing.** Release 4 is Build 115. Platform limitations and unverified environments are disclosed below; earlier audit snapshots remain immutable. The [audit disposition index](docs/development/build-115.md#audit-disposition-index) retains historical corrective evidence.
 
-This document owns the current plan and acceptance criteria. [Development history](docs/development/build-115.md) owns chronology; [agents.md](agents.md) owns engineering policy. **Release 4 / Build 115 is the current public release. Build 113 was Release 3; Build 114 was an internal shipment.** The [release comparison](docs/development/build-115-release-delta.md) distinguishes both baselines. Build 116 Camera follows Build 115.
+This document owns the current plan and acceptance criteria. [Development history](docs/development/build-115.md) owns chronology; [AGENTS.md](AGENTS.md) owns engineering policy. **Release 4 / Build 115 is the current public release. Build 113 was Release 3; Build 114 was an internal shipment.** The [release comparison](docs/development/build-115-release-delta.md) distinguishes both baselines. Build 116 Camera follows Build 115.
 
 
 Current accepted recorder work: the October 9 AUD-006 investigation/calibration
@@ -56,11 +56,11 @@ Stages 1–15 are complete for Build 115. Accepted corrective milestones include
 
 ## Build 115: Visualizer Architecture + Orb Overhaul v1
 
-Data flows `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Renderer → Canvas`. Camera/projection is a future downstream stage in Build 116. Visualizers consume producer-owned analysis without Web Audio access or mutation.
+In Build 115, data flowed `Audio Sources → Audio / Spectral Analysis → AnalysisFrame → Visualizer consumers → Renderer → Canvas`. Camera/projection followed as a downstream stage in Build 116. Visualizers consume producer-owned analysis without Web Audio access or mutation.
 
 Analysis owns extraction, band definitions, metadata and diagnostics independently of Orb count. VisualizerRuntime owns lifecycle/composition; Orbs update before the dependent Ring, while rendering keeps Ring first and Orbs in preference order. Per-Orb settings and stable identity survive reconciliation; runtime phase/trails/UI/session state are not presets.
 
-Visualizers owns collection management, complete Orb editors/Bulk Edit, and the singleton Ring editor. Settings owns Scene color/palette, particle resources and presets. Persistence deliberately remains at schema-10 `orbs`, `bands.overlay`, `visuals`, shared `bands` color paths, and root `particleSafety`; there is no persisted Scene object. See [README Build 115 scope](README.md#build-115--v0115-visualizer-architecture--orb-overhaul-v1) for the milestone overview and [policy](agents.md) for binding interfaces.
+Visualizers owns collection management, complete Orb editors/Bulk Edit, and the singleton Ring editor. Settings owns Scene color/palette, particle resources and presets. Build 115 persistence deliberately stayed at schema-10 `orbs`, `bands.overlay`, `visuals`, shared `bands` color paths, and root `particleSafety`; it had no persisted Scene object. See [README Build 115 scope](README.md#build-115--v0115-visualizer-architecture--orb-overhaul-v1) for the milestone overview and [policy](AGENTS.md) for binding interfaces.
 
 ### Protected semantics and limits
 
@@ -105,14 +105,18 @@ Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, vis
 
 ## Build 116: simulation world, camera and projection
 
-**Status: 116A–116C.A accepted in merged PRs #68/#69/#71/#72. 116D implements the authored Scene camera and final compatibility pass for owner review; release approval remains pending.** [Build 116 contract and validation](docs/development/build-116.md#116d-authored-scene-camera). Build 115 remains the public release.
+**Status: 116A, B, C, C.A and D implementation merged in PRs #67/#68/#69/#71/#72/#73. The first forensic audit (#74) and remediations #75–#79 are merged. Documentation reconciliation is in progress; a second independent adversarial code audit remains pending. The owner has not authorized 116 RC #1 or public publication.** [Build 116 contract and validation](docs/development/build-116.md#116d-authored-scene-camera). Build 115 remains the public release.
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
-Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** runtime-only camera ownership, projection/inverse and deterministic reset; **116C** accessible camera controls and opt-in pointer/wheel/local-key interaction, retaining provisional CSS-sized marks for human evaluation (subsequent persistence is authorized in 116D); **116C.A** dedicated Camera workspace and continuous canvas-focused keyboard control; **116D** versioned authored Scene camera persistence and final compatibility validation. Stop at the 116D review PR; no merge, release, deployment or Build 117 work is authorized.
+Staged work: **116A** world coordinate contract, independent geometry, configurable world dimensions and authorized schema-11 migration; **116B** runtime-only camera ownership, projection/inverse and deterministic reset; **116C** accessible camera controls and opt-in pointer/wheel/local-key interaction, retaining provisional CSS-sized marks for human evaluation (subsequent persistence is authorized in 116D); **116C.A** dedicated Camera workspace and continuous canvas-focused keyboard control; **116D** versioned authored Scene camera persistence and final compatibility validation. Implementation merge does not establish RC or release acceptance; Build 117 remains a separate milestone.
 
 Acceptance gates:
 
+- Complete an independent post-remediation adversarial code audit.
+- Correct any newly demonstrated release blockers.
+- Obtain owner evaluation and real-world acceptance.
+- Obtain explicit owner authorization before 116 RC #1 promotion, release, tagging, deployment or public publication.
 - World dimensions can be configured independently of browser dimensions; changing viewport size, devicePixelRatio, pan, zoom or camera rotation must not mutate Orb locations/phases, retained particle coordinates, Ring geometry, analysis or playback.
 - Default framing should approximate the familiar Build 115 appearance; explicitly test loaded schema-10 presets and legacy migration. The first persisted world configuration requires schema 11, CONFIG defaults/limits, codec migration and all preset/UI owners. Freeze no new preset semantics prematurely.
 - Pan, zoom, rotation, reset and the inverse coordinate transform are deterministic and accessible; camera reset returns to a documented default and interactive controls avoid transport, seek, drag/drop and panel gesture conflicts.
