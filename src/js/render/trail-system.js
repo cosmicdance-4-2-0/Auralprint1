@@ -79,7 +79,7 @@ class TrailSystem {
     const fraction = Number.isFinite(this.emitAccumulator) && this.emitAccumulator >= 0
       ? this.emitAccumulator % 1 : 0;
     const total = fraction + rate * delta;
-    // Retain the phase-1 secondary bound; overflow/invalid demand never controls a loop.
+    // Bound emission demand; overflow/invalid demand never controls a loop.
     const maximum = Math.ceil(rate * CONFIG.limits.timing.maxDeltaTimeSec) + 2;
     const whole = Number.isFinite(total) ? Math.floor(total) : Number.MAX_SAFE_INTEGER;
     this.emitAccumulator = Number.isFinite(total) ? total % 1 : 0;

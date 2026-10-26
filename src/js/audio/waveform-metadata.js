@@ -114,8 +114,9 @@ function inspectPcmWavHeader(bytes, fileSizeBytes, { maxBytes, maxChunks }) {
   return unknown(offset >= end ? "data-missing" : "probe-work-exhausted");
 }
 
-// Explicit opt-in adapter only. No production call site in I.2B. No File full-read
-// method or native decode; one source-budgeted prefix and bounded chunk work per invocation.
+// Waveform admission uses this probe before optional extraction. No full-file
+// read or native decode here: one encoded-input-budgeted prefix and bounded
+// chunk work per invocation.
 async function probeWaveformMetadata(file, policy) {
   const probe = policy?.metadataProbe;
   if (!Number.isSafeInteger(policy?.maxEncodedBytes) || policy.maxEncodedBytes < 0

@@ -41,7 +41,7 @@ class ParticleList {
   }
 
   slice(start = 0) {
-    // Trace only needs a chronological suffix, as before the storage change.
+    // Trace only needs a chronological suffix; walk backward from the tail.
     const count = this.length - Math.max(0, start);
     let node = this.tail;
     for (let i = 1; node && i < count; i++) node = node.prev;

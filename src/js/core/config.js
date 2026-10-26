@@ -403,17 +403,17 @@ const CONFIG = deepFreeze({
     outputFileNameTemplate: "auralprint-capture-{yyyy}{mm}{dd}-{hh}{min}{ss}",
 
     panelPlacement: {
-      // Future record panel dock corner inside the existing panel system.
+      // Record panel dock corner inside the workspace panel system.
       edgeX: "right",
       edgeY: "bottom",
 
-      // Future panel stacking rules relative to existing bottom-docked UI.
+      // Record panel offsets relative to existing bottom-docked UI.
       anchorAboveAudioPanel: true,
       anchorAboveQueuePanel: true,
     },
 
     launcherPlacement: {
-      // Future launcher anchor for the hidden record panel.
+      // Emits launcher edge variables; the unified launcher layout does not consume them.
       corner: "bottom-right",
     },
 
@@ -433,10 +433,10 @@ const CONFIG = deepFreeze({
     },
 
     launcherPulse: {
-      // Future recording-state pulse timing for the camera launcher.
+      // Recording-state pulse timing for the Record launcher.
       periodMs: 1400,
 
-      // Future pulse intensity bounds - consumed by UI animation, not runtime state.
+      // Pulse intensity bounds - consumed by UI animation, not runtime state.
       scaleMin: 1.0,
       scaleMax: 1.08,
       opacityMin: 0.78,

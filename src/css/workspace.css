@@ -1,6 +1,7 @@
-/* Build 115: expose the existing controls in a compact, keyboard-accessible workspace.
-   Layer order: canvas 0, hint 10, transport 20, queue/record 25–26, Visualizers/Analysis/Settings/Camera 30,
-   most recently opened panel 35, workspace launcher 40. */
+/* Compact, keyboard-accessible workspace. Base panel stacking runs above the
+   canvas and load hint: Audio, Queue, Record, then Visualizers/Analysis/Settings/Camera.
+   The workspace owner raises the active front panel with .panel-front on show,
+   pointer interaction or focus; the launcher stays above panels. Selectors own layer values. */
 :root { color-scheme: dark; --ui-accent: #9ee5cf; --ui-border: #ffffff24; }
 button, select, input { font: inherit; box-sizing: border-box; }
 button, select, input[type="text"], input[type="search"], input[type="number"] {

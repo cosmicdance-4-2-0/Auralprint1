@@ -96,8 +96,8 @@
       opacity: 0.38;
       cursor: not-allowed;
     }
-    /* Responsive panel layout on <=980px: clamp Visualizers/Bands/Orbs widths to viewport-safe bounds,
-       and anchor #scenePanel to the left edge (clear right anchor) so both side panels share alignment. */
+    /* Responsive layout on <=980px: clamp Visualizers/Settings/Camera widths to
+       viewport-safe bounds and align their left edges, clearing right anchors. */
     @media (max-width: 980px) {
       #visualizersPanel, #scenePanel, #cameraPanel { width: min(520px, calc(100vw - 2 * var(--ui-pad))); left: calc(var(--ui-pad) + var(--ui-safe-l)); right: auto; }
     }
@@ -132,7 +132,7 @@
         justify-self: start;
       }
     }
-    /* First-run hint: visible until audio is loaded */
+    /* First-run hint: hidden after a File/Mic/Stream session becomes active. */
     #loadHint {
       position: fixed;
       inset: 0;
@@ -158,16 +158,7 @@
       opacity: 0.25;
       letter-spacing: 0.08em;
     }
-    /* Z-index stack for all fixed panels (documented once, here):
-         canvas    : 0  (no z-index; sits behind everything)
-         loadHint  : 10 (full-screen hint overlay; below all UI)
-         audioPanel: 20 (bottom transport bar)
-         queuePanel: 25 (floats above audio panel; below side config panels)
-         recordPanel: 26 (dedicated recording panel; above queue, below side panels)
-         visualizersPanel: 30 (left visualizer configuration panel)
-         scenePanel: 30 (right config panel)
-         workspace launcher : 40 (always reachable; must clear all panels)
-    */
+    /* Workspace panel stacking and active-front ownership: see workspace.css. */
 
     /* Queue panel — floats above the audio panel, full-width like audio panel.
        Bottom offset is derived from audio dock height + one intentional gap. */
