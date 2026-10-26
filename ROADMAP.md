@@ -105,7 +105,7 @@ Accepted items (AUD-001/003/005, editor jump, Stream stereo, schema closure, vis
 
 ## Build 116: simulation world, camera and projection
 
-**Status: 116A, B, C, C.A and D implementation merged in PRs #68/#69/#71/#72/#73. The first forensic audit (#74) and remediations #75–#79 are merged. Documentation reconciliation is in progress; a second independent adversarial code audit remains pending. The owner has not authorized 116 RC #1 or public publication.** [Build 116 contract and validation](docs/development/build-116.md#116d-authored-scene-camera). Build 115 remains the public release.
+**Status: 116A, B, C, C.A and D implementation merged in PRs #67/#68/#69/#71/#72/#73. The first forensic audit (#74) and remediations #75–#79 are merged. Documentation reconciliation is in progress; a second independent adversarial code audit remains pending. The owner has not authorized 116 RC #1 or public publication.** [Build 116 contract and validation](docs/development/build-116.md#116d-authored-scene-camera). Build 115 remains the public release.
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
