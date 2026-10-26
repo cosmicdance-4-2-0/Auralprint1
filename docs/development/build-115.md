@@ -151,6 +151,8 @@ Original IDs/priorities/titles come from the immutable [October 6 audit](../audi
 
 ## Diagnostics and evidence
 
+Commit [`c7604b8`](https://github.com/cosmicdance-4-2-0/Auralprint1/commit/c7604b838b09617d7f24daafc20ebbcbdd0c467a) deliberately removed 344 generated diagnostic logs. Files named in the original inventories but absent from the current tree remain available at its parent, `bda0ea9d0a27d32c2b6a1ac558bedfc63525db06`: [October 9 results](https://github.com/cosmicdance-4-2-0/Auralprint1/tree/bda0ea9d0a27d32c2b6a1ac558bedfc63525db06/docs/audits/20261009-004238_materials/results) and [October 6 evidence](https://github.com/cosmicdance-4-2-0/Auralprint1/tree/bda0ea9d0a27d32c2b6a1ac558bedfc63525db06/docs/audits/evidence/2026-10-06_214431_PDT). The original reports, manifests and recorded hashes are unchanged; retrieve archived files from that revision rather than regenerating them.
+
 Version-specific counts, mutation outcomes, CI run IDs, native results and intermediate failures live in the reports above, not the ordinary README. Their links retain the observations without duplicating large logs. Optional browser probes require externally provisioned Playwright/Chromium, not new project dependencies. Run after building; report paths should target new scratch output, never overwrite historical evidence.
 
 | Historical diagnostic | Owning evidence / tooling selectors |
@@ -187,3 +189,5 @@ N.2's high-resolution VP8 resource guard and broader browser/device uncertaintie
 remain real; encoded payload is not total native memory. Build 117 retains broader
 resource/encoder/performance optimization. AUD-006 closure requires independent
 review; **Build 115N was withheld at this October 9 checkpoint**. This report did not authorize merge or shipment; final owner acceptance came later.
+
+The subsequent [N.3F closeout](../audits/remediations/115m-i-n3-aud006/closeout-n3f.md), merged in PR #60, records lossless Custom settings entry and its validation without changing the recorder policy or schema.
