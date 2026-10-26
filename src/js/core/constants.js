@@ -1,16 +1,16 @@
 /* =============================================================================
    Auralprint
-   0.1.16d
+   0.1.16e
 
-   Build 116D — Authored Scene camera and independent live camera
-   Independent world geometry; authored viewpoint; preset schema v12.
+   Build 116E — Compact schema-13 presets and native DEFLATE sharing
+   Canonical Scene configuration; frozen deltas; ordered band ranges.
    ========================================================================== */
 
 const TAU = Math.PI * 2;
 const RAD_TO_DEG = 180 / Math.PI;
 
 // Published schema 10 and accepted development schema 11 remain immutable.
-const PRESET_SCHEMA_VERSION = 12; // v12 = authored Scene camera
+const PRESET_SCHEMA_VERSION = 13; // v13 = frozen deltas and ordered band ranges
 const LEGACY_SCHEMA_V2 = 2;
 const LEGACY_SCHEMA_V3 = 3;
 const LEGACY_SCHEMA_V4 = 4;
@@ -21,5 +21,6 @@ const LEGACY_SCHEMA_V8 = 8;
 const LEGACY_SCHEMA_V9 = 9;
 const LEGACY_SCHEMA_V10 = 10;
 const LEGACY_SCHEMA_V11 = 11;
+const LEGACY_SCHEMA_V12 = 12;
 
-export { TAU, RAD_TO_DEG, PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11 };
+export { TAU, RAD_TO_DEG, PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V12 };

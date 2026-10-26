@@ -126,10 +126,13 @@ async function presetsPanel(page) {
 
 async function share(page) {
   await presetsPanel(page);
+  await page.evaluate(() => { document.getElementById('sceneStatus').textContent = ''; });
   await page.locator('#btnShare').click();
+  await page.waitForFunction(() => /^Share link /.test(document.getElementById('sceneStatus').textContent));
   const url = page.url();
-  assert.ok(new URL(url).hash.startsWith('#p='), 'Copy Share Link did not write a preset URL');
-  return { url, payload: JSON.parse(Buffer.from(new URL(url).hash.slice(3), 'base64url').toString('utf8')) };
+  assert.ok(new URL(url).hash.startsWith('#z='), 'Copy Share Link did not write a preset URL');
+  const { decodePrefsFromHash } = await import('../src/js/presets/url-preset.js');
+  return { url, payload: { schema: 13, prefs: await decodePrefsFromHash(new URL(url).hash) } };
 }
 
 async function editCamera(page, camera) {
@@ -179,7 +182,7 @@ async function exercise(browser, app, edition, defaults, errors) {
   const author = await boot(browser, app + hash(payload(authored)), authored, world, `${edition} schema-12 startup`, errors);
   const page = author.page;
   const initial = await share(page);
-  assert.equal(initial.payload.schema, 12);
+  assert.equal(initial.payload.schema, 13);
   assert.deepEqual(initial.payload.prefs.world, world, 'Decoded Scene world');
   cameraNear(initial.payload.prefs.sceneCamera, authored, 'Decoded authored camera');
   assert.deepEqual(initial.payload.prefs.orbs, [], 'Preset was not applied');
@@ -232,7 +235,7 @@ async function exercise(browser, app, edition, defaults, errors) {
     await presetsPanel(page);
     await page.evaluate(h => history.replaceState(null, '', location.pathname + h), invalid);
     await page.locator('#btnApplyUrl').click();
-    assert.match(await page.locator('#sceneStatus').innerText(), /No valid preset in URL/);
+    assert.match(await page.locator('#sceneStatus').innerText(), /Invalid preset|Unsupported preset/);
     assert.deepEqual(await read(page), beforeInvalid, 'Invalid import partially changed live camera/world');
     assert.deepEqual((await share(page)).payload, applied.payload, 'Invalid import partially changed preferences');
   }
@@ -258,7 +261,7 @@ async function exercise(browser, app, edition, defaults, errors) {
   const legacy = await boot(browser, app + hash({ schema: 11, prefs: legacyPrefs }), defaults, legacyPrefs.world,
     `${edition} schema-11 migration`, errors);
   const migrated = await share(legacy.page);
-  assert.equal(migrated.payload.schema, 12);
+  assert.equal(migrated.payload.schema, 13);
   assert.deepEqual(migrated.payload.prefs.world, legacyPrefs.world, 'Legacy world lost during migration');
   cameraNear(migrated.payload.prefs.sceneCamera, defaults, 'Legacy authored CONFIG defaults');
   await legacy.context.close();
@@ -296,7 +299,7 @@ async function exercise(browser, app, edition, defaults, errors) {
   let browser;
   try {
     await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
-    browser = await chromium.launch({ headless: true, timeout: 30_000 });
+    browser = await chromium.launch({ headless: true, timeout: 30_000, executablePath: process.env.AP_CHROMIUM_PATH });
     console.log(`Scene-camera smoke: ${version}, Chromium ${browser.version()}, portable + hosted HTTP`);
     const base = `http://127.0.0.1:${server.address().port}`;
     for (const [edition, file] of editions) await exercise(browser, base + file, edition, CONFIG.camera.defaults, errors);

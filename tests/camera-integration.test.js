@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { CONFIG } from "../src/js/core/config.js";
@@ -233,8 +234,8 @@ test("116B: camera stays runtime-only across schema-12 encoding, URL replacement
   preferences.camera = { ...camera };
   UrlPreset.writeHashFromPrefs();
   const payload = JSON.parse(Buffer.from(location.hash.slice(3), "base64url").toString("utf8"));
-  assert.equal(payload.schema, 12); assert.equal("camera" in payload.prefs, false);
-  assert.deepEqual(Object.keys(payload.prefs).sort(), ["audio", "bands", "orbs", "particleSafety", "sceneCamera", "timing", "visuals", "world"]);
+  assert.equal(payload.schema, 13); assert.equal("camera" in canonicalPrefs(payload), false);
+  assert.deepEqual(Object.keys(canonicalPrefs(payload)).sort(), ["audio", "bands", "orbs", "particleSafety", "sceneCamera", "timing", "visuals", "world"]);
   assert.equal(UrlPreset.applyFromLocationHash(), true); resolveSettings();
   assert.equal(state.camera, camera);
   assert.equal("camera" in preferences, false); assert.equal("camera" in runtime.settings, false);

@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -32,7 +33,7 @@ test("116A: resolution and codec share world normalization and isolate writable 
       resolveSettings();
       const expected = normalizeWorldSettings(world);
       assert.deepEqual(runtime.settings.world, expected);
-      assert.deepEqual(encodePresetPayload(preferences).prefs.world, expected);
+      assert.deepEqual(canonicalPrefs(encodePresetPayload(preferences)).world, expected);
       assert.notEqual(runtime.settings.world, preferences.world);
     }
   } finally { replacePreferences(previous); resolveSettings(); }
@@ -52,8 +53,8 @@ test("116A: published schema-10 fixture migrates all settings and spacing withou
   assert.deepEqual(next, expected);
   assert.deepEqual(old, snapshot);
   const encoded = encodePresetPayload(next);
-  assert.equal(encoded.schema, 12);
-  assert.deepEqual(encoded.prefs, expected);
+  assert.equal(encoded.schema, 13);
+  assert.deepEqual(canonicalPrefs(encoded), expected);
   assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)), expected);
 });
 
@@ -82,14 +83,14 @@ test("116A: current world-unit fields never inherit the retired pixel alias", ()
     const orb = { particles: { minPlacementDistanceUnits: value, minPlacementDistancePx: 8 } };
     assert.equal(normalizeOrbDef(orb, CONFIG.defaults.orbs[0]).particles.minPlacementDistanceUnits, expected);
     const payload = encodePresetPayload({ orbs: [orb], world: { widthUnits: 2400.5, heightUnits: 1600.25, camera: { zoom: 2 }, referenceSpanUnits: 7 } });
-    assert.deepEqual(payload.prefs.world, { widthUnits: 2400.5, heightUnits: 1600.25 });
-    assert.equal(payload.prefs.orbs[0].particles.minPlacementDistanceUnits, expected);
-    assert.equal("minPlacementDistancePx" in payload.prefs.orbs[0].particles, false);
-    assert.deepEqual(sanitizePreset(payload), payload.prefs);
+    assert.deepEqual(canonicalPrefs(payload).world, { widthUnits: 2400.5, heightUnits: 1600.25 });
+    assert.equal(canonicalPrefs(payload).orbs[0].particles.minPlacementDistanceUnits, expected);
+    assert.equal("minPlacementDistancePx" in canonicalPrefs(payload).orbs[0].particles, false);
+    assert.deepEqual(sanitizePreset(payload), canonicalPrefs(payload));
   }
 });
 
 test("116A: all supported schemas decode; future schemas stay rejected", () => {
-  for (let schema = 2; schema <= 12; schema++) assert.equal(decodePresetPayload({ schema, prefs: {} }).ok, true);
-  for (const schema of [1, 13, "12", 12.5]) assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
+  for (let schema = 2; schema <= 13; schema++) assert.equal(decodePresetPayload({ schema, prefs: {} }).ok, true);
+  for (const schema of [1, 14, "12", 12.5]) assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
 });

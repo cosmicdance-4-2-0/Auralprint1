@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -184,16 +185,16 @@ test("running spacing changes preserve particles and fractions, and paused runti
 });
 
 test("schema 11 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated", () => {
-  assert.equal(PRESET_SCHEMA_VERSION, 12);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
   assert.deepEqual(CONFIG.limits.particles.minPlacementDistanceUnits,{min:0,max:10,step:.1});
   assert.ok(Object.isFrozen(CONFIG.limits.particles.minPlacementDistanceUnits));
   const prefs=structuredClone(CONFIG.defaults); prefs.orbs[0].particles.minPlacementDistanceUnits=0; prefs.orbs[1].particles.minPlacementDistanceUnits=2.3;
   prefs.orbs[0].particles.overlapRadiusPx=10; prefs.orbs[0].particles.spatiallyRejectedDemand=123;
   const encoded=encodePresetPayload(prefs);
-  assert.equal(encoded.schema, 12); assert.deepEqual(encoded.prefs.orbs.map(o=>o.particles.minPlacementDistanceUnits),[0,2.3]);
-  assert.equal('overlapRadiusPx' in encoded.prefs.orbs[0].particles,false);
-  assert.equal('spatiallyRejectedDemand' in encoded.prefs.orbs[0].particles,false);
-  assert.deepEqual(sanitizePreset(encoded),encoded.prefs);
+  assert.equal(encoded.schema, 13); assert.deepEqual(canonicalPrefs(encoded).orbs.map(o=>o.particles.minPlacementDistanceUnits),[0,2.3]);
+  assert.equal('overlapRadiusPx' in canonicalPrefs(encoded).orbs[0].particles,false);
+  assert.equal('spatiallyRejectedDemand' in canonicalPrefs(encoded).orbs[0].particles,false);
+  assert.deepEqual(sanitizePreset(encoded),canonicalPrefs(encoded));
   for (const [value,expected] of [[undefined,.5],[null,.5],[NaN,.5],[Infinity,.5],[-Infinity,.5],['0',.5],[{},.5],[-1,0],[11,10],[0,0],[.1,.1]]) {
     const input={id:'A',particles:{minPlacementDistanceUnits:value,overlapRadiusPx:9}};
     assert.equal(normalizeOrbDef(input,CONFIG.defaults.orbs[0]).particles.minPlacementDistanceUnits,expected);

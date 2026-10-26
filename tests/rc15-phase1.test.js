@@ -1,3 +1,4 @@
+import { canonicalPrefs, canonicalPayload } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -56,15 +57,15 @@ test("RC-15 phase 1: current overlap input decodes, strips, and preserves all re
   assert.equal(decoded.ok, true);
   const next = sanitizePreset(decoded);
   assert.deepEqual(next, canonical);
-  assert.deepEqual(encodePresetPayload(next), { schema: 12, prefs: canonical });
-  assert.deepEqual(encodePresetPayload(dirty), { schema: 12, prefs: canonical });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 13, prefs: canonical });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 13, prefs: canonical });
   assert.deepEqual(dirty, snapshot);
   const fallback = { ...CONFIG.defaults.orbs[0], particles: dirty.orbs[0].particles };
   for (const orb of [...CONFIG.defaults.orbs, ...normalizeOrbCollection(dirty.orbs), normalizeOrbDef({}, fallback)]) {
     assert.equal("overlapRadiusPx" in orb.particles, false);
     assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistanceUnits"]);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 12);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
 });
 
 test("RC-15 phase 1: timing ceiling is frozen CONFIG authority across codec and preference resolution", () => {
@@ -78,7 +79,7 @@ test("RC-15 phase 1: timing ceiling is frozen CONFIG authority across codec and 
       const input = { timing: { maxDeltaTimeSec: requested } };
       assert.equal(normalizeMaxDeltaTimeSec(requested), expected);
       assert.equal(sanitizePreset({ schema: 11, prefs: input }).timing.maxDeltaTimeSec, expected);
-      assert.equal(encodePresetPayload(input).prefs.timing.maxDeltaTimeSec, expected);
+      assert.equal(canonicalPrefs(encodePresetPayload(input)).timing.maxDeltaTimeSec, expected);
       replacePreferences({ ...structuredClone(CONFIG.defaults), ...input });
       resolveSettings();
       assert.equal(runtime.settings.timing.maxDeltaTimeSec, expected);

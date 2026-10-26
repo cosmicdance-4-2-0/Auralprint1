@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
@@ -19,8 +20,8 @@ test('Angular alignment preserves the entire accepted startup Scene and every un
   delete limits.bands.frequencyHz;
   delete limits.motion.angularSpeedRadPerSec.min;delete limits.motion.angularSpeedRadPerSec.step;delete limits.bands.ringSpeedRadPerSec.step;
   assert.equal(digest(limits),'839c6a7d4d2a09e1a032b51ed3653148e88248367b31e3a74dbd96bc299b90b0');
-  assert.deepEqual(sanitizePreset({schema:12,prefs:{}}),CONFIG.defaults);
-  assert.deepEqual(encodePresetPayload(CONFIG.defaults).prefs,CONFIG.defaults);
+  assert.deepEqual(sanitizePreset({schema:13,prefs:{}}),CONFIG.defaults);
+  assert.deepEqual(canonicalPrefs(encodePresetPayload(CONFIG.defaults)),CONFIG.defaults);
 });
 
 test('Pi-derived half-degree grids reconstruct startup pi/2 and Ring TAU exactly',()=>{
@@ -45,7 +46,7 @@ for(const schema of [10,11,12])test(`Angular schema ${schema}: historical radian
     const prefs=sanitizePreset({schema,prefs:{orbs:[{id:'legacy',motion:{angularSpeedRadPerSec:speed}}],bands:{overlay:{ringSpeedRadPerSec:.123456}}}});
     assert.equal(prefs.orbs[0].motion.angularSpeedRadPerSec,speed);
     assert.equal(prefs.bands.overlay.ringSpeedRadPerSec,.123456);
-    assert.deepEqual(encodePresetPayload(prefs).prefs,prefs);
+    assert.deepEqual(canonicalPrefs(encodePresetPayload(prefs)),prefs);
   }
 });
 

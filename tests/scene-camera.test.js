@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -32,7 +33,7 @@ test("116D: schema 11 retains every historical field, world dimensions and unit 
   assert.deepEqual(next, { ...original, sceneCamera: CONFIG.defaults.sceneCamera });
   assert.deepEqual(original, before);
   const payload = encodePresetPayload(next);
-  assert.equal(payload.schema, 12);
+  assert.equal(payload.schema, 13);
   assert.deepEqual(sanitizePreset(decodePresetPayload(payload)), next);
 });
 
@@ -71,7 +72,7 @@ test("116D: schema 10 keeps pixel-spacing migration and default world despite in
 for (const invalid of [undefined, null, false, 4, "camera", [], [authored]]) {
   test(`116D: malformed camera container ${JSON.stringify(invalid)} defaults`, () => {
     assert.deepEqual(normalizeSceneCamera(invalid), CONFIG.defaults.sceneCamera);
-    assert.deepEqual(encodePresetPayload({ sceneCamera: invalid }).prefs.sceneCamera, CONFIG.defaults.sceneCamera);
+    assert.deepEqual(canonicalPrefs(encodePresetPayload({ sceneCamera: invalid })).sceneCamera, CONFIG.defaults.sceneCamera);
   });
 }
 for (const field of Object.keys(authored)) {
@@ -81,7 +82,7 @@ for (const field of Object.keys(authored)) {
       const camera = sanitizePreset({ schema: 12, prefs: { sceneCamera: incoming } }).sceneCamera;
       assert.deepEqual(camera, { ...authored, [field]: CONFIG.defaults.sceneCamera[field] });
       assert.notEqual(camera, incoming); assert.equal(Object.isFrozen(camera), true);
-      assert.deepEqual(encodePresetPayload({ sceneCamera: incoming }).prefs.sceneCamera, camera);
+      assert.deepEqual(canonicalPrefs(encodePresetPayload({ sceneCamera: incoming })).sceneCamera, camera);
     }
   });
 }
@@ -122,7 +123,7 @@ test("116D: capture, resolve, share and restore keep independent snapshots witho
   const wandering = state.camera;
   UrlPreset.writeHashFromPrefs();
   const payload = JSON.parse(Buffer.from(location.hash.slice(3), "base64url"));
-  assert.deepEqual(payload.prefs.sceneCamera, authored);
+  assert.deepEqual(canonicalPrefs(payload).sceneCamera, authored);
   assert.equal(state.camera, wandering);
   // The transport continues to replace preferences only; the caller resolves
   // before explicitly initializing the live view, at startup or in-session.
@@ -148,7 +149,7 @@ test("116D: large Scene URL preserves all admitted Orbs, world and authored view
   const prefs = fixture("schema-12-full"), seed = prefs.orbs[0];
   prefs.orbs = Array.from({ length: 512 }, (_, i) => ({ ...structuredClone(seed), id: `large-宇宙-${i}` }));
   replacePreferences(prefs); UrlPreset.writeHashFromPrefs();
-  assert.ok(location.hash.length > 300_000);
+  assert.ok(location.hash.length > 100_000);
   replacePreferences(structuredClone(CONFIG.defaults));
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences, prefs);

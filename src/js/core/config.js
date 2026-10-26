@@ -20,6 +20,17 @@ function defaultOrb(identity) {
    CONFIG — Canonical truth (never mutated)
    ========================================================================== */
 const CONFIG = deepFreeze({
+  // URL/protocol resource admission, not limits on Scene configuration itself.
+  // 64 MiB accommodates 4096 fully independent Orbs with all 256 selections
+  // (over one million assignments), full legacy fields and generous opaque IDs.
+  // Arbitrarily long identities still share this documented transport budget.
+  presets: {
+    maxJsonBytes: 64 * 1024 * 1024,
+    maxCompressedBytes: 64 * 1024 * 1024 + 64 * 1024,
+    maxEncodedChars: Math.ceil((64 * 1024 * 1024 + 64 * 1024) / 3) * 4,
+    maxStructureDepth: 16, // canonical Scene nesting is at most five containers
+    maxStructureNodes: 2_000_000, // includes maximum legacy numeric selections
+  },
   // Shared camera policy; live state and authored Scene state are independent.
   camera: {
     defaults: DEFAULT_CAMERA,

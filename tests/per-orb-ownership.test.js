@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { CONFIG } from "../src/js/core/config.js";
@@ -68,8 +69,8 @@ test("schema 10 round-trip preserves divergent Orbs and omits obsolete globals",
   replacePreferences(next); resolveSettings(); UrlPreset.writeHashFromPrefs();
   const payload = JSON.parse(Buffer.from(location.hash.slice(3), "base64url"));
   assert.equal(payload.schema, PRESET_SCHEMA_VERSION);
-  for (const key of ["motion", "particles", "trace"]) assert.equal(key in payload.prefs, false);
-  assert.equal("minRadiusFrac" in payload.prefs.audio, false);
+  for (const key of ["motion", "particles", "trace"]) assert.equal(key in canonicalPrefs(payload), false);
+  assert.equal("minRadiusFrac" in canonicalPrefs(payload).audio, false);
   replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings();
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.equal(preferences.orbs[0].motion.angularSpeedRadPerSec, .2);

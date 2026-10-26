@@ -13,14 +13,13 @@ const readPath=(object,keys)=>keys.reduce((o,k)=>o[k],object);
 const writePath=(object,keys,value)=>{readPath(object,keys.slice(0,-1))[keys.at(-1)]=value;};
 const onGrid=(value,{min,max,step})=>Number.isFinite(value)&&value>=min&&value<=max&&Math.abs((value-min)/step-Math.round((value-min)/step))<1e-9;
 async function share(page){
-  const prefs=await page.evaluate(()=>{
-    // Await this action's asynchronous clipboard feedback before the next
-    // import, so an older Share toast cannot overwrite the observed rejection.
+  await page.evaluate(()=>{
     document.getElementById('sceneStatus').textContent='';
-    document.getElementById('btnShare').click();return JSON.parse(atob(location.hash.slice(3).replace(/-/g,'+').replace(/_/g,'/'))).prefs;
+    document.getElementById('btnShare').click();
   });
   await page.waitForFunction(()=>/^Share link /.test(document.getElementById('sceneStatus').textContent));
-  return prefs;
+  const {decodePrefsFromHash}=await import('../src/js/presets/url-preset.js');
+  return decodePrefsFromHash(new URL(page.url()).hash);
 }
 async function apply(page,prefs){await page.evaluate(h=>{history.replaceState(null,'',location.pathname+h);document.getElementById('btnApplyUrl').click();},hash(prefs));await frames(page);}
 async function show(page,owner){await page.evaluate(owner=>{
@@ -41,9 +40,7 @@ async function reveal(page,item){
     if(!probe.observed.has(el)){
       probe.observed.add(el);el.addEventListener('input',()=>{
         if(el.disabled)return;
-        document.getElementById('btnShare').click();
-        const prefs=JSON.parse(atob(location.hash.slice(3).replace(/-/g,'+').replace(/_/g,'/'))).prefs;
-        probe.commits.push({value:item.path.reduce((o,key)=>o[key],prefs),limit:item.limit,selector:item.selector});
+        probe.commits.push({value:Number(el.value)/(item.scale||1),limit:item.limit,selector:item.selector});
       });
     }
   },item);return control;
@@ -210,7 +207,7 @@ async function sliders(page,fixture,cases){
     const control=await reveal(page,item);
     for(const fraction of [.373,.827]){
       const before=await share(page);await control.scrollIntoViewIfNeeded();const box=await control.boundingBox();
-      await page.mouse.move(box.x+box.width*.2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width*fraction,box.y+box.height/2,{steps:3});await page.mouse.up();
+      await page.mouse.move(box.x+box.width*.2,box.y+box.height/2);await page.mouse.down();for(let step=1;step<=3;step++){await page.mouse.move(box.x+box.width*(.2+(fraction-.2)*step/3),box.y+box.height/2);const intermediate=readPath(await share(page),item.path);assert.ok(onGrid(intermediate,item.limit),'Native drag committed an off-grid canonical value');}await page.mouse.up();
       await committed(page,control,before,item);
     }
     for(const key of ['Home','End']){const before=await share(page);await control.focus();await control.press(key);const value=await committed(page,control,before,item);if(item.path.at(-1)==='startAngleRad')assert.equal(value,0,'Phase Home/End must commit endpoint zero');}
@@ -241,7 +238,7 @@ async function sliders(page,fixture,cases){
   });
   let browser;
   try{
-    await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({headless:true});
+    await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({headless:true,executablePath:process.env.AP_CHROMIUM_PATH});
     console.log(`Editing smoke: ${version}, Chromium ${browser.version()}, ${sliderCases.length} sliders`);
     for(const dpr of (process.env.AP_DPRS||'1').split(',').map(Number))for(const [edition,file] of [['source','/source'],['portable',`/dist/auralprint_${version.slice(1)}.html`],['hosted','/dist/hosted/index.html']]){
       const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:dpr}),page=await context.newPage();page.setDefaultTimeout(10000);

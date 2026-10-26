@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createWaveformCoordinator} from '../src/js/audio/waveform-coordinator.js';
@@ -89,7 +90,7 @@ test('AUD-007 invalid profile/probe configuration refuses instead of unlimited f
 test('AUD-007 policy is frozen, pure and absent from scene schema-10 serialization',()=>{
  assert.equal(Object.isFrozen(CONFIG.waveform),true);assert.equal(Object.isFrozen(CONFIG.waveform.automaticProfiles[0]),true);assert.equal(Object.hasOwn(CONFIG.defaults,'waveform'),false);
  const before=JSON.stringify(CONFIG.defaults),r=evaluateWaveformPolicy(input());assert.equal(r.decision,'admit');assert.equal(JSON.stringify(CONFIG.defaults),before);
- const payload=encodePresetPayload({...CONFIG.defaults,waveform:CONFIG.waveform});assert.equal(payload.schema, 12);assert.equal(Object.hasOwn(payload.prefs,"waveform"),false);const encoded=JSON.stringify(payload);assert.doesNotMatch(encoded,/maxEncodedBytes|automaticProfiles|fallbackEstimatedChannels/);
+ const payload=encodePresetPayload({...CONFIG.defaults,waveform:CONFIG.waveform});assert.equal(payload.schema, 13);assert.equal(Object.hasOwn(canonicalPrefs(payload),"waveform"),false);const encoded=JSON.stringify(payload);assert.doesNotMatch(encoded,/maxEncodedBytes|automaticProfiles|fallbackEstimatedChannels/);
  let calls=0;const i=input({file:{arrayBuffer(){calls++;throw Error('forbidden read')}}});evaluateWaveformPolicy(i);assert.equal(calls,0);
  assert.equal(interpretWaveformMetadata(input({channelCount:3,metadataConfidence:'unknown'}),CONFIG.waveform).confidence,'estimated');
 });

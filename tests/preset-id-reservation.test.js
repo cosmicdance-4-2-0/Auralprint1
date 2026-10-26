@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { sanitizePreset, encodePresetPayload } from "../src/js/presets/preset-codec.js";
@@ -13,7 +14,7 @@ test("RC-09: URL import reserves later explicit identity before missing-ID fallb
     globalThis.location = { hash: "#p=" + Buffer.from(JSON.stringify({ schema: 10, prefs: { orbs: input } })).toString("base64url") };
     assert.equal(UrlPreset.applyFromLocationHash(), true);
     assert.deepEqual(preferences.orbs.map(({ id, chanId }) => ({ id, chanId })), [{ id: "ORB1", chanId: "R" }, { id: "ORB0", chanId: "C" }]);
-    assert.deepEqual(encodePresetPayload(preferences).prefs.orbs, preferences.orbs);
+    assert.deepEqual(canonicalPrefs(encodePresetPayload(preferences)).orbs, preferences.orbs);
   } finally { replacePreferences(previous); globalThis.location = previousLocation; }
 });
 
@@ -34,7 +35,7 @@ test("RC-09: collection owns missing/duplicate repair while valid opaque identit
     assert.equal(prefs.orbs.at(-2).chanId, "L");
     assert.notEqual(prefs.orbs.at(-2).id, "ORB0");
     assert.equal(prefs.orbs[0].id, "ORB9007199254740993");
-    assert.deepEqual(encodePresetPayload(prefs).prefs.orbs, prefs.orbs);
+    assert.deepEqual(canonicalPrefs(encodePresetPayload(prefs)).orbs, prefs.orbs);
     const originalIds = prefs.orbs.map(orb => orb.id);
     const added = createOrb(prefs.orbs);
     const duplicate = duplicateOrb(prefs.orbs, "ORB0");

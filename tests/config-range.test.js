@@ -1,3 +1,4 @@
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CONFIG } from '../src/js/core/config.js';
@@ -40,7 +41,7 @@ test('Schemas 10/11/12, defaults and share retain legacy off-grid values; no per
       if(item.path.at(-1)==='minPlacementDistanceUnits' && schema===10) prefs.orbs[0].particles.minPlacementDistancePx=item.legacy;
       else { let object=prefs;for(const key of item.path.slice(0,-1))object=object[key];object[item.path.at(-1)]=item.legacy; }
     }
-    const normalized=sanitizePreset({schema,prefs}),shared=encodePresetPayload(normalized).prefs;
+    const normalized=sanitizePreset({schema,prefs}),shared=canonicalPrefs(encodePresetPayload(normalized));
     assert.deepEqual(shared,normalized);
     for(const item of individualSliders)assert.equal(readPath(normalized,item.path),item.legacy);
     assert.equal(normalized.audio.rmsGain,.123456);assert.equal(normalized.bands.overlay.pointSizePx,3.456);

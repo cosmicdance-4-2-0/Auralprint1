@@ -4,6 +4,96 @@
 
 At accepted `main` [`e4495d8`](https://github.com/cosmicdance-4-2-0/Auralprint1/commit/e4495d8ceae3d33c6d8464c1b56a3cfe937cd2d5), the completed integration sequence is 116A foundation/integration (PRs [#67](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/67)/[#68](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/68)), B ([#69](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/69)), C ([#71](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/71)), C.A ([#72](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/72)) and D ([#73](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/73)). The first forensic audit ([#74](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/74)) and corrective PRs [#75](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/75)–[#79](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/79), including angular-step alignment in #78, are merged. The sections below retain their original decisions, validation and review stops; those stops describe historical checkpoints. [ROADMAP](../../ROADMAP.md#build-116-simulation-world-camera-and-projection) owns remaining acceptance and authorization gates. Build 116D remains unreleased.
 
+## 116E compact presets
+
+Proposed **Build 116E / `v0.1.16e`, schema 13**, based on accepted upstream `7550ccd3809a4af41f745f53449691744098a73e` (merged PR #84), on `feature/116e-compact-presets`. This is a representation/transport change. CONFIG defaults, canonical preferences, numerical precision, simulation, Build 118 spectral semantics, public Build 115 canon and schemas 2–12 retain their meanings. No 116 RC #1 or release approval is implied.
+
+### Wire and reconstruction
+
+The JSON envelope is exactly `{ "schema": 13, "prefs": <delta> }`. Existing field names remain unchanged. [The codec](../../src/js/presets/preset-codec.js) sanitizes canonical preferences before writing a delta. [The schema-13 literal](../../src/js/presets/schema-13-baseline.js) is a frozen compatibility baseline captured from accepted 116D, independent of future CONFIG defaults, including invalid-value fallbacks. It is not writable configuration. Tests fingerprint the literal and change factory defaults in an isolated source copy.
+
+Missing fields reconstruct from that baseline, never the recipient's Scene. Nested objects merge only accepted fields. `orbs` is a replacement array; `orbs: []` remains zero Orbs. Supplied collections retain explicit opaque IDs and order, with canonical missing/duplicate-ID repair. Per-position Orb fallback is frozen: zero-based even positions use R/phase 0, odd positions L/phase π, with the remaining frozen behavior values. Missing band assignment inherits that Orb's frozen empty selection; explicit empty range text also means full-channel targeting.
+
+[Ordered range grammar](../../src/js/presets/compact-preset.js): `selection := "" | item ("," item)*`; `item := uint | uint ":" uint`; `uint := "0" | [1-9][0-9]{0,2}`. ASCII only, no whitespace/coercion/leading zeroes; endpoints must be supported IDs 0–255. Ranges ascend strictly and are inclusive. `59:129` expands to 71 numeric indices. Only adjacent ascending values combine; first-occurrence uniqueness and selection order survive. Canonical application values remain numeric arrays. Legacy arrays never acquire range semantics.
+
+- `#p=`: unpadded Base64URL UTF-8 JSON, accepting schemas 2–13. Historical padded/standard Base64 input remains accepted.
+- `#z=`: unpadded Base64URL of **zlib-wrapped DEFLATE**, containing only schema-13 UTF-8 JSON. No byte guessing, aliases, shared Orb references, bitsets, precision reduction or external service.
+
+The [Compression Standard](https://compression.spec.whatwg.org/#supported-formats) defines `deflate` as RFC 1950 with an Adler-32 checksum. [CompressionStream](https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream/CompressionStream) and [DecompressionStream](https://developer.mozilla.org/en-US/docs/Web/API/DecompressionStream/DecompressionStream) document the native format. Construction and real streaming use are checked; the writer verifies its compressed output before updating the hash. Failed compression produces a complete schema-13 `#p` link with explicit feedback. A recipient without working decompression cannot consume `#z` and retains its current Scene. Older Auralprint builds cannot consume schema 13.
+
+### Admission and interfaces
+
+CONFIG owns the transport budgets below; they do not change Scene configuration admission. The measured maximum-count/full-band corpus occupies about 5.9 MB of full JSON, leaving substantial room within 64 MiB for independent settings and opaque IDs. Arbitrarily long identities still share the total transport budget. These are decoding bounds, not browser/service URL-length or device-performance promises.
+
+| Bound | Value / enforcement |
+| --- | --- |
+| Encoded token | 89,565,868 characters, excluding `#p=`/`#z=`, checked before Base64 decoding |
+| Compressed bytes | 67,174,400 (64 MiB + 64 KiB framing/headroom) |
+| JSON / decompressed bytes | 67,108,864 (64 MiB); cancel the reader on the first over-budget chunk, before collecting output |
+| JSON complexity | Depth 16 checked lexically before parsing; 2,000,000 visited values; cycles/accessors/custom record prototypes rejected for direct codec input |
+| Orbs | Existing CONFIG maximum 4,096, before replacement |
+| Range work | At most 256 attempted values per Orb and 1,048,576 total; validate all spans before output expansion; legacy array work also consumes the structure budget |
+
+Unknown compact keys, injected properties, invalid types/nonfinite numbers, unsupported frequencies, malformed ranges, invalid/truncated/checksum-failing streams and oversized structures fail before preference replacement. Existing normalization still owns clamps, enum policy, identity and ownership.
+
+`encodePresetPayload()` now returns the compact schema-13 envelope; `decodePresetPayload()` and `sanitizePreset()` retain the transport-independent full-canonical reconstruction pipeline for future JSON workflows. The synchronous `UrlPreset.applyFromLocationHash()` / `writeHashFromPrefs()` remain explicit `#p` operations. New `applyFromLocationHashAsync()` returns `{ok, stale}`; `writeCompressedHashFromPrefs()` returns framing/fallback/stale information. Pure transport helpers support tests and measurements.
+
+`main()` is now asynchronous: admission completes before camera restoration, subsystem initialization and the first application frame. A hash superseded during boot is retried. Interactive `#p` application remains synchronous; `#z` uses a request generation plus preference/hash checks. Settings edits, reset, drafts and camera input supersede pending imports. Share snapshots authored preferences independently of live navigation; newer import/share requests prevent stale URL writes. Where supported, promised clipboard Blob data starts during the original click. Clipboard failure reports the address-bar option; failed writes never report a successful copy.
+
+### Measurements and validation
+
+Node 24.19.0 native DEFLATE measurements; hash lengths include the three-character discriminator and Base64URL overhead. Compression implementations may emit different bytes/lengths. The attached Hero artifact was supplied externally and was not added to the repository; no Easter egg was implemented.
+
+| Corpus | Full JSON bytes | Full `#p` chars | Schema-13 `#p` chars | Schema-13 `#z` chars |
+| --- | ---: | ---: | ---: | ---: |
+| Factory defaults | 1,863 | 2,487 | 35 | 46 |
+| Minimal modified Scene | 1,863 | 2,487 | 87 | 93 |
+| Sparse reordered targets | 1,886 | 2,518 | 131 | 126 |
+| 64 independent Orbs | 36,019 | 48,029 | 17,750 | 2,469 |
+| Opaque reordered 16 Orbs | 9,607 | 12,813 | 4,438 | 858 |
+| Precision fixture | 2,475 | 3,303 | 3,165 | 1,301 |
+| 16 maximum reordered selections | 24,129 | 32,175 | 23,801 | 1,531 |
+| 4096 Orbs × 256 bands | 5,877,477 | 7,836,639 | 195,174 | 14,153 |
+| Synthetic contiguous 16 Orbs / 604 assignments | 11,613 | 15,487 | 4,450 | 871 |
+| Owner Hero (external, not a fixture) | 11,135 | 14,850 | 8,138 | 753 |
+
+The Hero result is about a **94.9%** reduction from 14,850 to 753 hash characters. Representative 16-Orb cases fit within a 2,000-character message budget here; larger/less-repetitive configurations have no universal length guarantee. Tiny deltas can be shorter uncompressed because DEFLATE framing has a fixed cost. Malformed/adversarial corpus cases are rejected in both framings by the benchmark and focused tests.
+
+Verification: **1,374 Node tests passed, one existing opt-in retention test skipped**, build and portable/hosted package verification passed. The mandatory Chromium camera and editing suites passed (editing covers source/portable/hosted). Compact-preset automation passed portable/hosted HTTP in Chromium **151.0.7922.173**, Firefox **157.0**, and Playwright WebKit **27.2**, with **18** producer/edition/consumer transfers, semantic equality and no page/console errors. It covers first-frame authored camera, identity/order/targets, invalid active imports, unsupported decompression, uncompressed fallback, clipboard denial and stale reset/import/edit/camera races. Node zlib interoperability is checked independently.
+
+Firefox and WebKit network-disabled portable `file://` checks passed. Chromium `file://` navigation was blocked by the managed environment's administrator policy. WebKit required locally extracted Linux libraries because system package installation was unavailable; the browser itself ran, while the installer-only ldconfig check was skipped for the local library location. These are Linux automation results, not Safari, physical-device, native clipboard-permission or artistic acceptance. Mandatory CI remains Chromium; Firefox/WebKit installation and reliability are not promoted to CI gates.
+
+Reproduce after the [standard README checks](../../README.md#developer-bootstrap):
+
+```sh
+node scripts/benchmark-presets.mjs
+# Optional owner artifact: AP_HERO_PRESET=/absolute/path/to/external-hash.txt
+npx playwright install --with-deps firefox webkit
+AP_BROWSER_ENGINES=chromium,firefox,webkit AP_CHECK_OFFLINE=1 \
+  AP_REPORT=/tmp/116e-browsers.json npm run test:browser:presets
+```
+
+`AP_CHROMIUM_PATH` optionally selects an installed Chromium executable. The benchmark accepts the external owner hash/JSON; the browser suite optionally accepts its external hash via `AP_HERO_PRESET`. Neither stores configuration in repository fixtures or reports. Invalid API/limit paths use focused mocks or isolated CONFIG copies; native interoperability compares settings, never compressed-byte identity.
+
+### 116E owner device matrix
+
+All physical rows are **pending owner execution**. For each run record date, engine/browser version, platform/device, portable or hosted edition, producer browser (for transfer), observed Pass/Fail and notes. Test available Chromium, Firefox and Safari devices; the owner determines acceptance.
+
+| Workflow | Expected result |
+| --- | --- |
+| Fresh compressed startup | Authored camera position/zoom/rotation and Scene apply before the first Scene frame |
+| Copy and reopen in the same browser | Complete `#z` link reconstructs the same canonical settings |
+| Copy in browser A, open in B | Same settings, mirrored Orb identities/order and contiguous/sparse/reordered targets; record both versions |
+| Real Hero with music and navigation | 16 intended Orbs, 8 R/8 L and 604 assignments; authored view stays independent of live movement |
+| Portable direct-file with networking disabled | Open, share, reopen and play local audio without adjacent assets; Chromium remains unverified here |
+| Uncompressed schema-13 compatibility link | `#p` imports without compression; factory test fragment: `#p=eyJzY2hlbWEiOjEzLCJwcmVmcyI6e319` |
+| Invalid link on a configured active Scene | Replace only the fragment with `#z=AAAA`; clear rejection, preferences/authored/live camera retained |
+| Clipboard denied/unavailable | No false copied message; complete usable URL remains available in the address bar |
+| Pending import followed by reset/edit/another import | Latest action wins, no delayed Scene/camera overwrite |
+| Existing older schema links | Known schema-10, schema-11 and original schema-12 links retain camera/world/spacing and targeting semantics; older fixtures remain covered by Node tests |
+
+Review stops at the draft PR. Owner browser/device/artistic evaluation, independent adversarial review and explicit 116 RC #1/release authorization remain outstanding.
+
 ## AUD-004 numerical stability and supported frequency domain
 
 Corrective baseline: accepted `main`
