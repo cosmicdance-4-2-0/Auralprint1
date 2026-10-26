@@ -17,7 +17,7 @@ function bindRange(control, limit) {
 
 // Owns Scene appearance, source behavior and scene-wide resource controls. Visibility/rendering stay
 // with their respective modules; persistence retains historical schema paths.
-function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, commitPreferences = () => {} } = {}) {
+function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, getTraceRenderStats, commitPreferences = () => {} } = {}) {
   let initializedOn = null;
   let lastSettingsRef = null;
   const worldFields = [
@@ -94,6 +94,12 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, co
         ui.selParticleColorSrc.appendChild(option);
       }
     }
+    // A requested snapshot explains degradation without adding per-frame DOM work.
+    ui.btnTraceRenderDiagnostics?.addEventListener("click", () => {
+      const stats = getTraceRenderStats?.();
+      if (!stats) return;
+      ui.traceRenderDiagnostics.textContent = `Last completed frame: ${stats.segmentStrokes} color/fade strokes drawn; ${stats.requestedSegmentStrokes} requested; limit ${stats.maxSegmentStrokesPerFrame}; ${stats.limitedOrbs} Orbs simplified. A batched fallback can preserve the full Trace when detail is limited.`;
+    });
     ui.chkClearQueueOnSourceExit.addEventListener("change", () => {
       const enabled = ui.chkClearQueueOnSourceExit.checked;
       if (preferences.audio.clearQueueOnSourceExit === enabled) return;

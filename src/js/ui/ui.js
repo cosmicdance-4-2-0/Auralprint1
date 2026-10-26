@@ -378,7 +378,7 @@ const UI = (() => {
   const cameraInteraction = createCameraInteraction({ fitView });
   const cameraControlsUi = createCameraControlsUi({ ui, interaction: cameraInteraction, fitView,
     commitPreferences: reason => applyPrefs(reason) });
-  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
+  const scenePanelUi = createScenePanelUi({ ui, preferences, getSettings: () => runtime.settings, getParticleStats: () => VisualizerRuntime.getParticleStats(), getTraceRenderStats: () => VisualizerRuntime.getTraceRenderStats(), commitPreferences: (reason) => applyPrefs(reason, { showStatus: sceneStatusToast }) });
   const analysisPanelUi = createAnalysisPanelUi({
     ui,
     commitPreferences: (reason, options = {}) => applyPrefs(reason, { ...options, showStatus: analysisStatus }),

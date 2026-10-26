@@ -92,13 +92,13 @@ function element(tag = "div") {
     appendChild(child) { this.children.push(child); return child; }
   };
 }
-function harness(getParticleStats) {
-  const ids = ["chkClearQueueOnSourceExit","numWorldWidth","valWorldWidth","worldWidthError","numWorldHeight","valWorldHeight","worldHeightError","clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
+function harness(getParticleStats, getTraceRenderStats) {
+  const ids = ["btnTraceRenderDiagnostics","traceRenderDiagnostics","chkClearQueueOnSourceExit","numWorldWidth","valWorldWidth","worldWidthError","numWorldHeight","valWorldHeight","worldHeightError","clrBg","valBg","clrParticle","valParticle","selParticleColorSrc","valParticleSrc","rngHueOff","valHueOff","rngSat","valSat","rngVal","valVal","numMaxActiveParticles","valMaxActiveParticles","maxActiveParticlesError","numMaxEmissionsPerFrame","valMaxEmissionsPerFrame","maxEmissionsPerFrameError","statParticleLive","statParticleEmitted","statParticleSpacingRejected","statParticleBudgetRejected","statParticleRateLimited","statParticleRetentionRejected","statParticleExpired","statParticleRetentionRetired"];
   const ui = Object.fromEntries(ids.map((id) => [id, element(id === "selParticleColorSrc" ? "select" : "div")]));
   ui.scenePanel = element();
   const preferences = structuredClone(CONFIG.defaults);
   let settings = structuredClone(CONFIG.defaults), commits = 0;
-  const panel = createScenePanelUi({ ui, preferences, getSettings: () => settings, getParticleStats, commitPreferences: () => { commits += 1; } });
+  const panel = createScenePanelUi({ ui, preferences, getSettings: () => settings, getParticleStats, getTraceRenderStats, commitPreferences: () => { commits += 1; } });
   return { ui, preferences, panel, commits: () => commits, replaceSettings(next) { settings = next; } };
 }
 
@@ -176,10 +176,10 @@ test("Scene controls mutate only historical schema-10 fields", () => {
   finally { globalThis.document = oldDocument; }
 });
 
-const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL", "rngMinPlacementDistance"];
+const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "chkFadeTrace", "rngFadeSegments", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL", "rngMinPlacementDistance"];
 const RING_CONTROL_IDS = ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"];
 
-test("Visualizers contains one inventory, Ring editor, Orb editor host, management and all 13 bulk fields", () => {
+test("Visualizers contains one inventory, Ring editor, Orb editor host, management and all 15 bulk fields", () => {
   for (const id of ["visualizerList", "visualizersStatus", "visualizerEditStatus", "spectralRingEditor", "orbEditorList", "btnVisualizersAddOrb", "btnResetVisuals", ...BULK_CONTROL_IDS, ...RING_CONTROL_IDS]) {
     const matches = templateNodes.filter((node) => node.attrs.id === id);
     assert.equal(matches.length, 1, `${id} must exist exactly once`);
@@ -306,4 +306,27 @@ test("116F: Scene Queue checkbox commits once and refresh follows canonical sett
     assert.equal(h.panel.refresh(), false);
     assert.equal(writes, 0);
   } finally { globalThis.document = old; }
+});
+
+test("116F: Trace work diagnostics snapshot only on request, with no repeated listeners or per-frame writes", () => {
+  const oldDocument = globalThis.document;
+  globalThis.document = {createElement: element};
+  let reads = 0;
+  try {
+    const h = harness(undefined, () => { reads++; return {segmentStrokes:32,requestedSegmentStrokes:960,maxSegmentStrokesPerFrame:32,limitedOrbs:16};});
+    h.panel.init();
+    for(let i=0;i<5;i++) h.panel.refresh();
+    assert.equal(reads,0); assert.equal(h.ui.traceRenderDiagnostics.textContent,"");
+    h.ui.btnTraceRenderDiagnostics.dispatch("click");
+    assert.equal(reads,1); assert.match(h.ui.traceRenderDiagnostics.textContent,/32 color\/fade strokes drawn; 960 requested; limit 32; 16 Orbs simplified/);
+    const text=h.ui.traceRenderDiagnostics.textContent;
+    h.panel.refresh(); h.panel.init(); h.panel.refresh();
+    assert.equal(reads,1); assert.equal(h.ui.traceRenderDiagnostics.textContent,text);
+    assert.equal(h.ui.btnTraceRenderDiagnostics.listenerCount("click"),1);
+    assert.equal(h.commits(),0);
+    for (const id of ["btnTraceRenderDiagnostics","traceRenderDiagnostics"]) {
+      const node=templateNodes.filter(n=>n.attrs.id===id); assert.equal(node.length,1);
+      assert.ok(node[0].ancestors.includes("performanceSection"));
+    }
+  } finally {globalThis.document=oldDocument;}
 });

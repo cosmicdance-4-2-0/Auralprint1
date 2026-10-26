@@ -1,4 +1,5 @@
 import { ParticleGovernor } from "./particle-governor.js";
+import { TraceRenderGovernor } from "./trace-render-governor.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
 import { assertRuntimeOrbAdmission } from "../core/orb-admission.js";
 import { TAU } from "../core/constants.js";
@@ -106,8 +107,10 @@ function createOrbVisualizer(orb) {
         motionDtSec,
       );
     },
-    render(renderer, frameContext) {
-      renderer.drawOrb(orb, frameContext.nowSec, frameContext.analysisFrame.spectrum.dominantIndex);
+    render(renderer, frameContext, traceWork) {
+      const strokes = renderer.drawOrb(orb, frameContext.nowSec, frameContext.analysisFrame.spectrum.dominantIndex,
+        traceWork?.quotaFor(orb));
+      traceWork?.record(strokes);
     },
     reset(reason) {
       if (reason === "visuals") orb.resetPhase();
@@ -121,6 +124,7 @@ function createVisualizerRuntime({
   createSpectralRing = createSpectralRingVisualizer,
   createOrb = createOrbVisualizer,
   particlePolicy,
+  traceRenderingPolicy,
   settingsRef = runtime,
 } = {}) {
   let visualizers = [];
@@ -128,8 +132,17 @@ function createVisualizerRuntime({
   // and follows runtime.settings through the same existing governor instance.
   const injectedPolicy = particlePolicy === undefined ? null : Object.freeze(normalizeParticleSafety(particlePolicy));
   const particleGovernor = new ParticleGovernor(injectedPolicy || settingsRef.settings?.particleSafety);
+  const traceWork = new TraceRenderGovernor(traceRenderingPolicy);
+  let lastSettingsSource = null;
+  let traceSettingsDirty = false;
   let lastPolicySource = null;
   function syncSettings(settings = settingsRef.settings) {
+    if (settings !== lastSettingsSource) {
+      lastSettingsSource = settings;
+      // UI resolves/synchronizes the runtime before synchronizing Orb definitions.
+      // Defer candidate inspection until render, after that synchronous pipeline.
+      traceSettingsDirty = true;
+    }
     const source = injectedPolicy || settings?.particleSafety;
     if (source === lastPolicySource) return false;
     lastPolicySource = source;
@@ -152,6 +165,8 @@ function createVisualizerRuntime({
     visualizers = [createSpectralRing()];
     for (const orb of orbs) visualizers.push(createOrbParticipant(orb));
     syncParticleTrails(orbs);
+    traceWork.setVisualizers(visualizers);
+    traceSettingsDirty = false;
     return visualizers;
   }
 
@@ -178,6 +193,8 @@ function createVisualizerRuntime({
     for (const removed of existing.values()) removed.dispose();
     visualizers = next;
     syncParticleTrails(orbs);
+    traceWork.setVisualizers(visualizers);
+    traceSettingsDirty = false;
     return visualizers;
   }
 
@@ -198,27 +215,34 @@ function createVisualizerRuntime({
   function render(renderer, frameContext) {
     syncSettings();
     renderer.clearFrame();
+    if (traceSettingsDirty) {
+      traceWork.setVisualizers(visualizers);
+      traceSettingsDirty = false;
+    }
+    traceWork.beginFrame();
     for (const visualizer of visualizers) {
-      if (visualizer.isVisible()) visualizer.render(renderer, frameContext);
+      if (visualizer.isVisible()) visualizer.render(renderer, frameContext, traceWork);
     }
   }
 
   function reset(reason) {
     syncSettings();
     for (const visualizer of visualizers) visualizer.reset(reason);
+    traceWork.clearStats();
   }
 
   function dispose() {
     for (const visualizer of visualizers) visualizer.dispose();
     visualizers = [];
     particleGovernor.dispose();
+    traceWork.dispose();
   }
 
   function getVisualizers() {
     return visualizers;
   }
 
-  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers, syncSettings, getParticleStats: () => particleGovernor.getStats() };
+  return { rebuild, reconcile, update, render, reset, dispose, getVisualizers, syncSettings, getParticleStats: () => particleGovernor.getStats(), getTraceRenderStats: () => traceWork.getStats() };
 }
 
 const VisualizerRuntime = createVisualizerRuntime();
