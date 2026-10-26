@@ -1,6 +1,8 @@
-// Optional native Chromium validation, external Playwright only (no npm dependency).
+// Optional historical RC-21/RC-22 Chromium probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
 // Source mode inspects live production objects; standalone mode uses public DOM
 // and Share persistence without exposing or altering the bundled runtime.
+// --baseline retains historical expectations; AP_PLAYWRIGHT_MODULE / AP_CHROMIUM_PATH select tooling.
 const fs = require('node:fs'), path = require('node:path'), http = require('node:http');
 const assert = require('node:assert/strict');
 const { chromium } = require(process.env.AP_PLAYWRIGHT_MODULE || 'playwright');

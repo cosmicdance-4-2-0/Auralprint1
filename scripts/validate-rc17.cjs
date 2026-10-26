@@ -1,5 +1,7 @@
-// Optional native Chromium evidence. Uses externally available Playwright;
-// intentionally not an npm dependency or part of the required Node test suite.
+// Optional historical RC-17 phase probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
+// --baseline / --expect-defect retain negative controls; this probe is outside the Node test suite.
+// AP_PLAYWRIGHT_MODULE / AP_CHROMIUM_PATH select tooling; AP_REPORT selects evidence output.
 const fs = require('node:fs'), path = require('node:path'), http = require('node:http');
 const assert = require('node:assert/strict');
 const { chromium } = require(process.env.AP_PLAYWRIGHT_MODULE || 'playwright');

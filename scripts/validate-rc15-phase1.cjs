@@ -1,4 +1,6 @@
-// Optional phase-1 browser regression; Playwright is not a project dependency.
+// Optional historical RC-15 phase-1 probe with schema-10 expectations.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
+// This is not a current-source gate. AP_PLAYWRIGHT_MODULE / AP_CHROMIUM_PATH select tooling.
 const { chromium } = require(process.env.AP_PLAYWRIGHT_MODULE || 'playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');

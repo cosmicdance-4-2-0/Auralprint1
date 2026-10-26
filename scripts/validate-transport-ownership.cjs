@@ -1,5 +1,5 @@
-// Optional native RC-04 probe using the source app, as in the historical audit.
-// Playwright remains developer tooling, outside project dependencies.
+// Optional historical RC-04 source-app probe; applicability depends on the checkpoint.
+// Playwright is a project dev dependency; Ubuntu CI requires test:browser and test:browser:editing.
 // RC04_PLAYWRIGHT_MODULE, RC04_CHROMIUM_PATH, RC04_REPORT select tooling/output.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
