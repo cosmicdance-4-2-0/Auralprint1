@@ -61,14 +61,19 @@ function rebaseVisualFrameClock() {
   state.time.lastTimestampMs = null;
 }
 
-function main() {
+async function main() {
   UI.setCssVarsFromConfig();
 
   state.canvas = document.getElementById("c");
   state.ctx = state.canvas.getContext("2d", { alpha: false });
 
   resolveSettings();
-  const presetApplied = UrlPreset.applyFromLocationHash();
+  // No subsystem initialization or application frame runs before a compressed
+  // preset finishes admission. If the hash changes while decoding, load the
+  // winning request before initializing the authored/live camera and runtimes.
+  let imported;
+  do { imported = await UrlPreset.applyFromLocationHashAsync(); } while (imported.stale);
+  const presetApplied = imported.ok;
   resolveSettings();
   if (presetApplied) restoreSceneCamera();
   InputSourceManager.init({

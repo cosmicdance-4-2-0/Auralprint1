@@ -460,6 +460,7 @@ const UI = (() => {
   }
 
   function applyPrefs(reason, options = {}) {
+    UrlPreset.cancelPendingImport();
     const { rebuildBandsOnDefinitionChange = false, showStatus = null, initializeCamera = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
@@ -490,6 +491,7 @@ const UI = (() => {
 
 
   function resetPrefs() {
+    UrlPreset.cancelPendingImport();
     replacePreferences(deepClone(CONFIG.defaults));
     applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
     analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
@@ -499,27 +501,55 @@ const UI = (() => {
   }
 
   async function shareLink() {
-    UrlPreset.writeHashFromPrefs();
-    const url = location.href;
+    const pending = UrlPreset.writeCompressedHashFromPrefs();
+    // Safari and other activation-sensitive clipboard implementations can
+    // accept a promised Blob while the original click is still active.
+    let promisedClipboard = null;
+    if (typeof globalThis.ClipboardItem === "function" && navigator.clipboard?.write) {
+      try {
+        const text = pending.then(result => {
+          if (result.stale) throw new Error("Share superseded");
+          return new Blob([location.href], { type: "text/plain" });
+        });
+        text.catch(() => {}); // Constructor/write may reject before observing it.
+        promisedClipboard = Promise.resolve(navigator.clipboard.write([
+          new ClipboardItem({ "text/plain": text }),
+        ])).then(() => true, () => false);
+      } catch { /* Continue with writeText/address-bar fallback. */ }
+    }
     try {
-      await navigator.clipboard.writeText(url);
-      sceneStatusToast("Share link copied to clipboard.", 4000);
+      const result = await pending;
+      if (result.stale) return;
+      let copied = promisedClipboard ? await promisedClipboard : false;
+      if (!copied) {
+        try { await navigator.clipboard.writeText(location.href); copied = true; }
+        catch { /* The valid complete link is already in the address bar. */ }
+      }
+      if (location.hash !== result.hash) return;
+      const fallback = result.fallback ? " Uncompressed schema-13 link: native DEFLATE unavailable." : "";
+      sceneStatusToast((copied ? "Share link copied to clipboard."
+        : "Share link written to URL — copy from address bar.") + fallback, 6000);
     } catch {
-      sceneStatusToast("Share link written to URL — copy from address bar.", 4000);
+      sceneStatusToast("Could not create share link. URL unchanged.", 4000);
     }
   }
 
   function applyUrlNow(showInvalid = true) {
-    const ok = UrlPreset.applyFromLocationHash();
-    if (ok) {
-      applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
-      analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
-      initOrbs();
-      resetVisualizers("visuals");
-      sceneStatusToast("Preset applied from URL.", 4000);
-    } else if (showInvalid || UrlPreset.getValidationMessage()) {
-      sceneStatusToast(UrlPreset.getValidationMessage() || "No valid preset in URL.", 4000);
+    function finish({ ok, stale }) {
+      if (stale) return;
+      if (ok) {
+        applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
+        analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
+        initOrbs();
+        resetVisualizers("visuals");
+        sceneStatusToast("Preset applied from URL.", 4000);
+      } else if (showInvalid || UrlPreset.getValidationMessage()) {
+        sceneStatusToast(UrlPreset.getValidationMessage() || "No valid preset in URL.", 4000);
+      }
     }
+    if (location.hash?.startsWith("#z=")) return UrlPreset.applyFromLocationHashAsync().then(finish);
+    // Keep the accepted synchronous #p interactive contract; only #z yields.
+    finish({ ok: UrlPreset.applyFromLocationHash(), stale: false });
   }
 
   function collectOperatorFacingControls() {
@@ -741,6 +771,7 @@ const UI = (() => {
 
   let recordingResourceControls = null;
   const wiredRecordingControls = new WeakSet();
+  const presetIntentDocuments = new WeakSet();
   function formatRecordingPrimaryStatus(recording) {
     if (!recording || !recording.hooksEnabled) return "Recording disabled";
     if (shouldSurfaceRecordingLastMessage(recording)) return recording.lastMessage;
@@ -1309,6 +1340,16 @@ const UI = (() => {
 
   function wireControls() {
     primeDomCache();
+
+    // User intent wins over pending imports, including live camera navigation
+    // and uncommitted control drafts. Register once per document, in capture
+    // phase so a new Apply click can start its own request after cancellation.
+    if (!presetIntentDocuments.has(document)) {
+      presetIntentDocuments.add(document);
+      for (const event of ["pointerdown", "click", "keydown", "input", "change", "wheel"]) {
+        document.addEventListener(event, UrlPreset.cancelPendingImport, { capture: true, passive: true });
+      }
+    }
 
     orbEditorUi.init();
     spectralRingEditorUi.init();
@@ -2024,7 +2065,11 @@ const UI = (() => {
     setCssVarsFromConfig,
     wireControls,
     refreshAllUiText,
-    updateCamera: cameraInteraction.tick,
+    updateCamera(elapsedSec) {
+      const changed = cameraInteraction.tick(elapsedSec);
+      if (changed) UrlPreset.cancelPendingImport();
+      return changed;
+    },
     refreshRecordingUi,
     getRecordingUiModel,
     dispatchSourceSwitchAction,

@@ -79,6 +79,7 @@ function validationText(error) {
 const UrlPreset = (() => {
   let validationMessage = "";
   let generation = 0;
+  let shareGeneration = 0;
   const cancelPendingImport = () => { generation++; };
   const signature = () => JSON.stringify(encodePresetPayload(preferences));
 
@@ -86,6 +87,7 @@ const UrlPreset = (() => {
   // an explicit uncompressed compatibility link. Async callers use the methods
   // below, which also accept #z without changing legacy migration semantics.
   function applyFromLocationHash() {
+    shareGeneration++;
     cancelPendingImport();
     validationMessage = "";
     try {
@@ -99,6 +101,7 @@ const UrlPreset = (() => {
 
   function applyFromLocationHashAsync() {
     if (!location.hash?.startsWith("#z=")) return Promise.resolve({ ok: applyFromLocationHash(), stale: false });
+    shareGeneration++;
     const request = ++generation, hash = location.hash, before = signature();
     validationMessage = "";
     const stale = () => request !== generation || location.hash !== hash || signature() !== before;
@@ -119,15 +122,17 @@ const UrlPreset = (() => {
   function writeHash(hash) { history.replaceState(null, "", location.pathname + location.search + hash); }
   function writeHashFromPrefs() {
     cancelPendingImport();
+    shareGeneration++;
     const hash = encodePrefsToHash(preferences);
     writeHash(hash);
     return hash;
   }
 
   async function writeCompressedHashFromPrefs() {
-    const request = ++generation, before = signature(), originalHash = location.hash;
+    cancelPendingImport();
+    const request = ++shareGeneration, before = signature(), originalHash = location.hash;
     const result = await encodeShareHash(preferences);
-    if (request !== generation || signature() !== before || location.hash !== originalHash) return { stale: true };
+    if (request !== shareGeneration || signature() !== before || location.hash !== originalHash) return { stale: true };
     writeHash(result.hash);
     return { ...result, stale: false };
   }

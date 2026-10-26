@@ -37,6 +37,13 @@ function decodeBandRanges(text, budget = { remaining: CONFIG.bandNames.length })
 }
 
 function encodeBandRanges(ids) {
+  if (!Array.isArray(ids) || ids.length > CONFIG.bandNames.length) throw presetError("invalid-band-range");
+  const unique = [], seen = new Set();
+  for (const id of ids) {
+    if (!Number.isInteger(id) || id < 0 || id >= CONFIG.bandNames.length) throw presetError("invalid-band-range");
+    if (!seen.has(id)) { seen.add(id); unique.push(id); }
+  }
+  ids = unique;
   const tokens = [];
   for (let i = 0; i < ids.length; i++) {
     const start = ids[i];

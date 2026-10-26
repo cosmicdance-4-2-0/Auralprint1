@@ -120,4 +120,8 @@ test('share snapshots before awaiting, preserves pathname/search, and cancels st
   const result=await UrlPreset.writeCompressedHashFromPrefs();assert.equal(result.compressed,true);
   assert.deepEqual(await decodePrefsFromHash(location.hash),preferences);
   assert.equal(location.pathname,'/portable.html');assert.equal(location.search,'?test');
+  // Live camera intent cancels an import, but Share still captures the authored
+  // Scene independently of movement that changes no persistent preferences.
+  const moving=UrlPreset.writeCompressedHashFromPrefs();UrlPreset.cancelPendingImport();
+  assert.equal((await moving).stale,false);
 }));

@@ -1,3 +1,4 @@
+import { inflateSync } from "node:zlib";
 import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -118,10 +119,11 @@ function createScrubberHarness() {
 }
 
 function decodePresetHash(hash) {
-  const token = hash.startsWith("#p=") ? hash.slice(3) : hash;
+  const token = /^#[pz]=/.test(hash) ? hash.slice(3) : hash;
   const padLength = (4 - (token.length % 4)) % 4;
   const b64 = token.replace(/-/g, "+").replace(/_/g, "/") + "=".repeat(padLength);
-  return JSON.parse(Buffer.from(b64, "base64").toString("utf8"));
+  const bytes = Buffer.from(b64, "base64");
+  return JSON.parse((hash.startsWith("#z=") ? inflateSync(bytes) : bytes).toString("utf8"));
 }
 
 function snapshotSourceAndAudioState() {
@@ -684,7 +686,7 @@ function createStubUiElement(tagName = "div") {
     },
     click() {
       if (this.disabled) return;
-      this.dispatch("click");
+      return this.dispatch("click");
     },
     appendChild(child) {
       if (child.parentNode) child.parentNode.children = child.parentNode.children.filter((entry) => entry !== child);
@@ -3191,11 +3193,10 @@ function settingsPresetHash(prefs) {
   return `#p=${Buffer.from(JSON.stringify({ schema: 12, prefs }), "utf8").toString("base64url")}`;
 }
 
-test("Copy Share Link writes the canonical schema-12 hash and reports only in Settings", async (t) => {
+test("Copy Share Link writes the compressed schema-13 hash and reports only in Settings", async (t) => {
   await withSettingsActionHarness(t, async ({ clipboard, location }) => {
-    const writeHash = t.mock.method(UrlPreset, "writeHashFromPrefs");
-    state.ui.btnShare.click();
-    await Promise.resolve();
+    const writeHash = t.mock.method(UrlPreset, "writeCompressedHashFromPrefs");
+    await state.ui.btnShare.click();
     assert.equal(writeHash.mock.calls.length, 1);
     assert.equal(decodePresetHash(location.hash).schema, 13);
     assert.equal(clipboard.copied, location.href);
@@ -3207,8 +3208,7 @@ test("Copy Share Link writes the canonical schema-12 hash and reports only in Se
 test("Share clipboard fallback retains the URL and reports only in Settings", async (t) => {
   await withSettingsActionHarness(t, async ({ location }) => {
     delete globalThis.navigator.clipboard;
-    state.ui.btnShare.click();
-    await Promise.resolve();
+    await state.ui.btnShare.click();
     assert.equal(decodePresetHash(location.hash).schema, 13);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3250,7 +3250,7 @@ test("missing and invalid URL presets report only in Settings and retain prefere
     for (const hash of ["", "#p=invalid"]) {
       location.hash = hash;
       state.ui.btnApplyUrl.click();
-      assert.equal(state.ui.sceneStatus.textContent, "No valid preset in URL.");
+      assert.equal(state.ui.sceneStatus.textContent, hash ? "Invalid preset in URL. Scene unchanged." : "No valid preset in URL.");
       assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
       assert.deepEqual(preferences, previous);
       assert.equal(state.camera, camera);
@@ -4169,7 +4169,7 @@ test('RC-15 phase 3: tooltip discovery indexes labels once while preserving asso
 });
 
 test('RC-15 budgets: committed Settings edits synchronize without recreating governor, Orb history or focus',async(t)=>{
-  await withSettingsActionHarness(t,({location})=>{
+  await withSettingsActionHarness(t,async({location})=>{
     const orb=state.orbs[0],g=orb.trail.governor;orb.trail.emitAt(0,0,0,{r:1,g:0,b:0});orb.trail.emitAccumulator=.75;
     const tail=orb.trail.particles.tail,phase=orb.angleRad,control=state.ui.numMaxActiveParticles;
     control.focus();control.value='65536';control.dispatch('change');
@@ -4177,7 +4177,7 @@ test('RC-15 budgets: committed Settings edits synchronize without recreating gov
     assert.equal(g.policy.maxActiveParticles,65536);assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(runtime.settings.particleSafety.maxActiveParticles,65536);
     control.value='';control.dispatch('change');assert.equal(preferences.particleSafety.maxActiveParticles,65536);assert.equal(control.getAttribute('aria-invalid'),'true');
     state.ui.numMaxEmissionsPerFrame.value='4096';state.ui.numMaxEmissionsPerFrame.dispatch('change');assert.equal(g.policy.maxEmissionsPerFrame,4096);
-    state.ui.btnShare.click();const payload=JSON.parse(Buffer.from(location.hash.slice(3),'base64url').toString('utf8'));assert.deepEqual(canonicalPrefs(payload).particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});
+    await state.ui.btnShare.click();const payload=decodePresetHash(location.hash);assert.deepEqual(canonicalPrefs(payload).particleSafety,{maxEmissionsPerFrame:4096,maxActiveParticles:65536});
     const imported=structuredClone(CONFIG.defaults);imported.particleSafety={maxEmissionsPerFrame:0,maxActiveParticles:0};location.hash=settingsPresetHash(imported);state.ui.btnApplyUrl.click();assert.deepEqual(g.policy,imported.particleSafety);assert.equal(g.activeParticles,0);assert.equal(state.ui.numMaxActiveParticles.value,'0');
     state.ui.btnResetPrefs.click();assert.deepEqual(g.policy,CONFIG.defaults.particleSafety);assert.equal(state.ui.numMaxActiveParticles.value,'16384');assert.equal(state.ui.numMaxEmissionsPerFrame.value,'512');
   });
@@ -4781,7 +4781,7 @@ for (const count of [0, 1, 2, 16]) test(`116D authoring through Camera UI preser
     assert.notEqual(preferences.sceneCamera, camera); assert.equal(state.camera, camera);
     assert.match(state.ui.sceneCameraStatus.textContent, /saved/);
     setCamera({ x: 800, zoom: .5, rotationRad: 2 });
-    state.ui.btnShare.click(); await Promise.resolve();
+    await state.ui.btnShare.click();
     assert.deepEqual(canonicalPrefs(decodePresetHash(location.hash)).sceneCamera, camera);
     const preset = structuredClone(preferences);
     state.ui.btnRestoreSceneView.click();
@@ -4832,5 +4832,49 @@ test('Angular alignment: startup, refresh, Share and deliberate speed editing re
     const expected=structuredClone(original);expected.orbs[0].motion.angularSpeedRadPerSec=preferences.orbs[0].motion.angularSpeedRadPerSec;
     assert.ok(Math.abs(expected.orbs[0].motion.angularSpeedRadPerSec*RAD_TO_DEG-90.5)<1e-12);assert.deepEqual(preferences,expected);
     assert.equal(state.orbs[1].motion.angularSpeedRadPerSec,Math.PI/2);
+  });
+});
+
+test('116E: promised clipboard starts during the click and reports success only after writing', async t => {
+  await withSettingsActionHarness(t, async ({location}) => {
+    let resolveShare, resolveClipboard, called=false, text;
+    const old=Object.getOwnPropertyDescriptor(globalThis,'ClipboardItem');
+    Object.defineProperty(globalThis,'ClipboardItem',{configurable:true,value:class {constructor(items){this.items=items;}}});
+    try {
+      t.mock.method(UrlPreset,'writeCompressedHashFromPrefs',()=>new Promise(resolve=>{resolveShare=resolve;}));
+      navigator.clipboard.write=items=>{called=true;text=items[0].items['text/plain'];return new Promise(resolve=>{resolveClipboard=resolve;});};
+      const pending=state.ui.btnShare.click();
+      assert.equal(called,true,'Clipboard write lost the original activation');
+      assert.doesNotMatch(state.ui.sceneStatus.textContent,/copied/);
+      location.href='https://example.test/#z=verified';location.hash='#z=verified';resolveShare({stale:false,fallback:false,hash:location.hash});
+      assert.equal(await (await text).text(),location.href);
+      assert.doesNotMatch(state.ui.sceneStatus.textContent,/copied/);
+      resolveClipboard();await pending;
+      assert.equal(state.ui.sceneStatus.textContent,'Share link copied to clipboard.');
+    } finally {if(old)Object.defineProperty(globalThis,'ClipboardItem',old);else delete globalThis.ClipboardItem;}
+  });
+});
+
+test('116E: rejected clipboard and unavailable compression preserve a usable compatibility URL with accurate feedback', async t => {
+  await withSettingsActionHarness(t, async ({location}) => {
+    const native=globalThis.CompressionStream;
+    try {
+      globalThis.CompressionStream=undefined;
+      navigator.clipboard.writeText=async()=>{throw new Error('activation expired');};
+      const before=structuredClone(preferences);await state.ui.btnShare.click();
+      assert.match(location.hash,/^#p=/);
+      assert.deepEqual(canonicalPrefs(decodePresetHash(location.hash)),before);
+      assert.match(state.ui.sceneStatus.textContent,/written to URL.*copy from address bar.*Uncompressed schema-13/);
+      assert.doesNotMatch(state.ui.sceneStatus.textContent,/copied to clipboard/);
+    } finally {globalThis.CompressionStream=native;}
+  });
+});
+
+test('116E: failed share leaves the old URL and does not report a clipboard success', async t => {
+  await withSettingsActionHarness(t, async ({location,clipboard}) => {
+    const before=location.href;
+    t.mock.method(UrlPreset,'writeCompressedHashFromPrefs',async()=>{throw new Error('admission failed');});
+    await state.ui.btnShare.click();assert.equal(location.href,before);assert.equal(clipboard.copied,'');
+    assert.equal(state.ui.sceneStatus.textContent,'Could not create share link. URL unchanged.');
   });
 });

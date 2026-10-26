@@ -7,7 +7,8 @@
     "watch": "node scripts/watch.mjs",
     "test": "node --test",
     "test:browser": "node scripts/smoke-scene-camera.cjs",
-    "test:browser:editing": "node scripts/smoke-editing.cjs"
+    "test:browser:editing": "node scripts/smoke-editing.cjs",
+    "test:browser:presets": "node scripts/smoke-compact-presets.cjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.5",

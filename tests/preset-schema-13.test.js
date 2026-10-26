@@ -58,6 +58,8 @@ for (const [ids,text] of [[[], ''],[[143],'143'],[[59,60,61],'59:61'],
 }
 test('13 ranges: duplicates preserve first occurrence; all permutations survive',()=>{
   assert.deepEqual(decodeBandRanges('3,1:4,0'),[3,1,2,4,0]);
+  assert.equal(encodeBandRanges([3,1,2,3,4,0]),'3,1:2,4,0');
+  for(const ids of [null, '1', [1,'2'], [NaN], [Infinity], [256], [-1], [1.5]]) assert.throws(()=>encodeBandRanges(ids));
   for(let offset=0;offset<256;offset++) {
     const ids=Array.from({length:256},(_,i)=>(i*73+offset)%256);
     assert.deepEqual(decodeBandRanges(encodeBandRanges(ids)),ids);
@@ -111,7 +113,8 @@ test('13 frozen literal fingerprint and future CONFIG factory-default independen
     const path=join(dir,'src/js/core/config.js');
     const source=readFileSync(path,'utf8').replace('volume: 1.0','volume: 0.25')
       .replace('widthUnits: 1000, heightUnits: 1000','widthUnits: 777, heightUnits: 888')
-      .replace('sizeMaxPx: 8','sizeMaxPx: 9').replace('const DEFAULT_CAMERA = { x: 0','const DEFAULT_CAMERA = { x: 222');
+      .replace('count: 256','count: 64').replace('maxEmissionsPerFrame: 512, maxActiveParticles: 16384','maxEmissionsPerFrame: 64, maxActiveParticles: 256')
+      .replace('repeatMode: "none"','repeatMode: "all"').replace('sizeMaxPx: 8','sizeMaxPx: 9').replace('const DEFAULT_CAMERA = { x: 0','const DEFAULT_CAMERA = { x: 222');
     writeFileSync(path,source);
     execFileSync(process.execPath,['--input-type=module','-e',`
       import assert from 'node:assert/strict';
@@ -120,6 +123,8 @@ test('13 frozen literal fingerprint and future CONFIG factory-default independen
       import {decodePresetPayload,sanitizePreset} from './src/js/presets/preset-codec.js';
       assert.notEqual(CONFIG.defaults.audio.volume,frozen.audio.volume);
       assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:{}})),frozen);
+      const invalid= {sceneCamera:{zoom:0},audio:{repeatMode:'invalid'},bands:{count:1},particleSafety:{maxEmissionsPerFrame:.5,maxActiveParticles:.5}};
+      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:invalid})),frozen);
     `],{cwd:dir});
   } finally {rmSync(dir,{recursive:true,force:true});}
 });

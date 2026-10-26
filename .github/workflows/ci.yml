@@ -45,6 +45,9 @@ jobs:
       - name: Verify Analysis drafts and CONFIG slider editing (Ubuntu only)
         if: runner.os == 'Linux'
         run: npm run test:browser:editing
+      - name: Verify compact preset transport and atomic imports (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: npm run test:browser:presets
       - name: Verify versioned artifact and untracked generated output
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

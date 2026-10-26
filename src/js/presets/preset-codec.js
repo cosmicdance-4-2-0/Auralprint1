@@ -11,6 +11,7 @@ import { assertOrbAdmission } from "../core/orb-admission.js";
 import { assertSupportedBandFrequencies } from "../core/band-frequency.js";
 import { compactPreferences, expandCompactPreferences } from "./compact-preset.js";
 import { assertPresetStructure } from "./preset-limits.js";
+import { SCHEMA_13_BASELINE } from "./schema-13-baseline.js";
 
 // Preset data contract, independent of URL/base64 or application state.
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
@@ -77,12 +78,12 @@ function encodePresetPayload(prefs) {
 }
 
 function sanitizePreset(decoded) {
-  return sanitizeCanonicalPreset(decoded.schema === PRESET_SCHEMA_VERSION
-    ? { schema: PRESET_SCHEMA_VERSION, prefs: expandCompactPreferences(decoded.prefs) }
-    : decoded);
+  return decoded.schema === PRESET_SCHEMA_VERSION
+    ? sanitizeCanonicalPreset({ schema: PRESET_SCHEMA_VERSION, prefs: expandCompactPreferences(decoded.prefs) }, SCHEMA_13_BASELINE)
+    : sanitizeCanonicalPreset(decoded);
 }
 
-function sanitizeCanonicalPreset(decoded) {
+function sanitizeCanonicalPreset(decoded, baseline = CONFIG.defaults) {
   const schema = decoded && Number.isInteger(decoded.schema) ? decoded.schema : PRESET_SCHEMA_VERSION;
   const incoming = schema === LEGACY_SCHEMA_V9
     ? recoverScene9Preferences(decoded.prefs)
@@ -91,9 +92,14 @@ function sanitizeCanonicalPreset(decoded) {
   assertSupportedBandFrequencies(incoming.bands);
   // Presets are full configuration snapshots. Always migrate/sanitize from
   // canonical defaults so older or partial payloads cannot inherit live state.
-  const next = deepClone(CONFIG.defaults);
+  const next = deepClone(baseline);
   if (schema >= LEGACY_SCHEMA_V11) next.world = normalizeWorldSettings(incoming.world);
-  if (schema >= LEGACY_SCHEMA_V12) next.sceneCamera = normalizeSceneCamera(incoming.sceneCamera);
+  if (schema >= LEGACY_SCHEMA_V12) {
+    const camera = incoming.sceneCamera;
+    next.sceneCamera = normalizeSceneCamera(baseline === CONFIG.defaults ? camera : {
+      ...camera, zoom: camera.zoom > 0 ? camera.zoom : baseline.sceneCamera.zoom,
+    });
+  }
 
   if (incoming.visuals) {
     if (isValidHexColor(incoming.visuals.backgroundColor)) next.visuals.backgroundColor = incoming.visuals.backgroundColor;
@@ -122,7 +128,9 @@ function sanitizeCanonicalPreset(decoded) {
   }
 
   if (incoming.bands) {
-    next.bands.count = normalizeBandCount(incoming.bands.count);
+    const count = incoming.bands.count, limits = CONFIG.limits.bands.count;
+    next.bands.count = Number.isInteger(count) && count >= limits.min && count <= limits.max
+      ? normalizeBandCount(count) : baseline.bands.count;
     if (Number.isFinite(incoming.bands.floorHz) && incoming.bands.floorHz > 0) {
       next.bands.floorHz = incoming.bands.floorHz;
     }
@@ -208,7 +216,11 @@ function sanitizeCanonicalPreset(decoded) {
   }
 
   next.timing.maxDeltaTimeSec = normalizeMaxDeltaTimeSec(incoming.timing?.maxDeltaTimeSec);
-  next.particleSafety = normalizeParticleSafety(incoming.particleSafety);
+  const safety = incoming.particleSafety;
+  next.particleSafety = normalizeParticleSafety({
+    maxEmissionsPerFrame: Number.isInteger(safety?.maxEmissionsPerFrame) ? safety.maxEmissionsPerFrame : baseline.particleSafety.maxEmissionsPerFrame,
+    maxActiveParticles: Number.isInteger(safety?.maxActiveParticles) ? safety.maxActiveParticles : baseline.particleSafety.maxActiveParticles,
+  });
 
   next.bands.ceilingHz = Math.max(next.bands.floorHz, next.bands.ceilingHz);
 
@@ -217,7 +229,7 @@ function sanitizeCanonicalPreset(decoded) {
     // Orb field sanitization rule (enforced on both encode and decode):
     // normalizeOrbDef and normalizeOrbCollection own Orb shape and identity.
     // Future persisted-field changes require a new schema and migration.
-    const defaults = CONFIG.defaults.orbs;
+    const defaults = baseline.orbs;
     next.orbs = normalizeOrbCollection(incoming.orbs.map((orb, i) => {
       const mappedOrb = (orb && typeof orb === "object") ? { ...orb } : orb;
       if (mappedOrb && !Array.isArray(mappedOrb.bandIds) && Array.isArray(mappedOrb.bandNames)) {
