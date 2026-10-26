@@ -13,7 +13,9 @@ import { assertSupportedBandFrequencies } from "../core/band-frequency.js";
 // Preset data contract, independent of URL/base64 or application state.
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
 // reference and explicitly named world-unit placement distance. Schema 12 adds
-// only the authored Scene camera; schemas 2–11 retain their input contracts.
+// only the authored Scene camera. Historical formats and migrations remain
+// supported, subject to current CONFIG-supported frequency admission across all
+// supported schemas; formerly admitted excessive frequencies may now be rejected.
 const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);

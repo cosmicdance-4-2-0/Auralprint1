@@ -594,7 +594,7 @@ const AudioEngine = (() => {
   return { loadFile, playPause, stop, unload, sample, applyPlaybackSettingsLive, applyAnalyserSettingsLive,
     attachSource,
     attachMediaStreamSource,
-    // Future recorder methods consume this descriptor only. They must not reach
+    // Recorder methods consume this descriptor only. They must not reach
     // into AudioEngine internals or mutate the playback/analyser graph directly.
     getRecorderTap() {
       const upstreamRecorderStream = readRecorderUpstreamStream();
@@ -612,8 +612,10 @@ const AudioEngine = (() => {
         },
       };
     },
-    // Exposed for Scrubber use only — reading/seeking currentTime/duration.
-    // Do not use this to attach new event listeners; use the _onTrackEnded hook instead.
+    // Scrubber uses this for seeking and scoped waveform-admission metadata handling.
+    // Metadata listeners must be removed or invalidated by their owning lifecycle.
+    // Transport EOF stays on _onTrackEnded; do not add competing ended listeners
+    // or duplicate track-advance behavior.
     getMediaEl() { return mediaEl; },
     get _onTrackEnded() { return _onTrackEnded; },
     set _onTrackEnded(fn) { _onTrackEnded = (typeof fn === "function") ? fn : null; },

@@ -82,8 +82,9 @@ test("Schema 9 — Scene-node historical format recovers the actual emitted loss
   assert.equal(preferences.bands.overlay.enabled, true);
   assert.equal(preferences.bands.overlay.alpha, .42);
   assert.equal(preferences.bands.overlay.lineWidthPx, 4);
-  // Node-relative centers used half the Scene bounds; schema-12 centers use
-  // min(canvas dimensions), so they have no direct configuration equivalent.
+  // Node-relative centers used half the Scene bounds; schema-12 centers use the
+  // independent world reference span. No direct modern equivalent is approved,
+  // so migration intentionally discards these abandoned coordinates.
   assert.equal(preferences.orbs[0].centerXFrac, 0);
   assert.equal(preferences.orbs[0].centerYFrac, 0);
   assert.equal("scene" in preferences, false);

@@ -6,7 +6,7 @@ import { recordingPolicySettings, prepareRecordingPolicy } from "./recording-pol
    Recorder Engine
    ========================================================================== */
 function createRecorderEngine() {
-  // RecorderEngine owns only future recording lifecycle orchestration.
+  // RecorderEngine owns recording lifecycle orchestration.
   // It must observe existing render/audio systems through injected read-only taps
   // and must not take ownership of playback, analysis, queue, or presets.
   // Integration map:
@@ -434,7 +434,7 @@ function createRecorderEngine() {
   }
 
   function commitStatus(status, action = null) {
-    // Canonical UI sync path: future recording UI reads state.recording only.
+    // Canonical UI sync path: recording UI reads state.recording only.
     // Keep engine-to-state projection here so DOM code never becomes a second source of truth.
     const recording = readStateRef();
     if (recording && typeof recording === "object") {
