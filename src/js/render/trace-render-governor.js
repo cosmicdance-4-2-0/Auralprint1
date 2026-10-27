@@ -30,7 +30,8 @@ class TraceRenderGovernor {
       this.entries.push(entry);
       this.byOrb.set(orb, entry);
     }
-    this.rotation = 0;
+    // Keep the next fair turn across settings refreshes and reconciliation.
+    // Otherwise continuous editing could repeatedly favor the first Orbs.
     this.clearStats();
   }
 
@@ -70,7 +71,7 @@ class TraceRenderGovernor {
   quotaFor(orb) { return this.byOrb.get(orb)?.quota || 0; }
   record(strokes) { if (Number.isFinite(strokes) && strokes > 0) this.stats.segmentStrokes += strokes; }
   getStats() { return { ...this.stats }; }
-  dispose() { this.setVisualizers([]); }
+  dispose() { this.setVisualizers([]); this.rotation = 0; }
 }
 
 export { TraceRenderGovernor, traceSegmentDemand };

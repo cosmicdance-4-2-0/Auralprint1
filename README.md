@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Proposed Build 116E (`v0.1.16e`), preset schema 13. Compact presets and native DEFLATE sharing extend the accepted 116D camera work; browser/device acceptance remains pending. The owner has not authorized 116 RC #1 or public publication. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+**Current source checkout:** Proposed Build 116F (`v0.1.16f`), preset schema 14. Opt-in Queue clearing, Trace fading and Particle Birth Color extend accepted 116E; review and browser/device acceptance remain pending. The owner has not authorized 116 RC #1 or public publication. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -33,18 +33,18 @@ Before the native browser checks, install Playwright's matching Chromium headles
 
 Build outputs:
 
-- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16e.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16f.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
 `npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; all three Chromium browser checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
 
-## Sharing in proposed Build 116E
+## Sharing in the Build 116 checkout
 
-**Copy Share Link** writes a compact schema-13 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-13 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
+**Copy Share Link** writes a compact schema-14 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-14 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
 
-Opening a compressed link requires working native DEFLATE decompression. Unsupported browsers retain the active Scene and show an explanation; an uncompressed link is the compatibility option. Schemas 2–12 retain their decoding meanings in this build. Older Auralprint builds cannot read schema 13. Link length depends on the Scene and the sharing service's limits.
+Opening a compressed link requires working native DEFLATE decompression. Unsupported browsers retain the active Scene and show an explanation; an uncompressed link is the compatibility option. Schemas 2–13 retain their decoding meanings in this build. New links require a build supporting schema 14. Link length depends on the Scene and the sharing service's limits.
 
 See [116E protocol, measurements, reproducible checks and owner device matrix](docs/development/build-116.md#116e-compact-presets). Optional Firefox/WebKit checks remain separate from mandatory Chromium CI.
 
@@ -61,6 +61,10 @@ The public Build 115 release provides:
 ## Using Auralprint
 
 Load audio in **File**, or select **Mic** / **Stream** with browser permission. **Audio** controls sources and playback; **Queue** controls the playlist; **Analysis** owns spectral configuration; **Visualizers** owns Orbs and the Spectral Ring; **Settings** owns Scene appearance, particle resources and presets; **Record** owns capture. The development checkout adds **Camera** for live view and authored Scene view actions. **H** hides/restores panels outside text inputs; **Space** pauses visual motion/emission while analysis and particle aging continue. **Reset Visuals** applies designed Orb phases and clears trails.
+
+**Queue source behavior:** Settings → Source Behavior → **Clear File Queue when switching sources** clears the File Queue only after a successful File → Mic or Stream transition. It defaults off and is saved in Scene presets, including shared links. Enabling it through an import affects future transitions; importing does not clear or serialize the Queue.
+
+**Trace presentation:** each Orb’s Trace section and Bulk Edit offer **Fade Trace**, **Fade Length** (1–1,000 visible segments, initially 5), and **Particle Birth Color**. Fading blends the oldest visible segments toward the Scene background; it does not add history. Particle Birth Color uses each contributing particle’s stored emission color. Both features can be combined and default to the existing unfaded dominant-band behavior. Settings → Performance → **Refresh Trace Work Diagnostics** explains any drawing-budget simplification for the last completed frame. Angular-travel Trace length is deferred to 116G.
 
 **Waveforms:** Audio → Waveforms has optional 4/8/15-minute stereo-equivalent workload profiles, separate encoded-input and estimated-PCM admission limits, and manual generation. Playback does not require waveform preparation. These limits do not bound total browser memory.
 

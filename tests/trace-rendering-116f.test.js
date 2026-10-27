@@ -229,3 +229,33 @@ for (const [label, coordinates] of [
     for (const arc of c.clipArcs) assert.ok(arc.every(Number.isFinite));
   } finally { orb.trail.dispose(); }
 }));
+
+
+test("combined mode coalescing never stretches fading past its configured visible segment window", () => withRenderer(() => {
+  const orb = orbFor(61, { lineColorMode: "particleBirth", fadeEnabled: true, fadeSegments: 5 });
+  try {
+    const c = canvas(); state.ctx = c.ctx;
+    assert.equal(Renderer.drawOrb(orb, 61, 0, 2), 2);
+    assert.equal(c.gradients.length, 1);
+    assert.deepEqual(c.gradients[0].coords, [0, 0, 50, 0], "fade ends after exactly five segments");
+    const single = canvas(); state.ctx = single.ctx;
+    assert.equal(Renderer.drawOrb(orb, 61, 0, 1), 1);
+    assert.equal(single.gradients.length, 0, "single birth group omits fade rather than extending its window");
+  } finally { orb.trail.dispose(); }
+}));
+
+
+test("continuous settings refresh cannot restart rendering fairness at the first Orb", () => {
+  const orbs = ["a", "b", "c"].map(id => orbFor(61, { lineColorMode: "particleBirth" }, id));
+  const governor = new TraceRenderGovernor({ maxSegmentStrokesPerFrame: 1 });
+  try {
+    const grants = [0, 0, 0];
+    for (let frame = 0; frame < 6; frame++) {
+      governor.setVisualizers(orbs.map(orb => ({ type: "orb", orb })));
+      governor.beginFrame();
+      orbs.forEach((orb, i) => { grants[i] += governor.quotaFor(orb); });
+    }
+    assert.deepEqual(grants, [2, 2, 2]);
+    governor.dispose(); assert.equal(governor.rotation, 0);
+  } finally { for (const orb of orbs) orb.trail.dispose(); }
+});

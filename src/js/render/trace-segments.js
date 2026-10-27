@@ -46,9 +46,16 @@ function drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, quota) {
     length++;
   }
   if (!drawable) return 0;
-  const fadeCount = trace.fadeEnabled ? Math.min(drawable, trace.fadeSegments) : 0;
+  let fadeCount = trace.fadeEnabled ? Math.min(drawable, trace.fadeSegments) : 0;
   const demand = birth ? drawable : fadeCount;
   const groups = Math.min(demand, Math.max(0, Math.floor(quota)));
+  // Keep the exact fade/solid boundary even when birth colors are coalesced.
+  // One available birth-color group cannot express both portions; in that case
+  // omit fading rather than extending its ramp into the solid visible Trace.
+  if (birth && groups === 1 && fadeCount < drawable) fadeCount = 0;
+  const fadeGroups = birth && fadeCount > 0 && fadeCount < drawable
+    ? Math.min(fadeCount, Math.max(1, Math.floor(groups * fadeCount / drawable))) : groups;
+  const solidGroups = groups - fadeGroups;
   const bg = fadeCount && groups ? hexToRgb01(runtime.settings.visuals.backgroundColor) : fixed;
   let segmentIndex = 0, currentGroup = -1, groupStart = 0, groupEnd = 0, colorIndex = 0;
   let startIndex = 0, endIndex = 0, strokes = 0;
@@ -128,7 +135,11 @@ function drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, quota) {
     if (!validPoint(i - 1) || !validPoint(i)) continue;
     let group;
     if (!groups) group = -2;
-    else if (birth) group = Math.min(groups - 1, Math.floor(segmentIndex * groups / drawable));
+    else if (birth && fadeCount > 0 && fadeCount < drawable) {
+      group = segmentIndex < fadeCount
+        ? Math.min(fadeGroups - 1, Math.floor(segmentIndex * fadeGroups / fadeCount))
+        : fadeGroups + Math.min(solidGroups - 1, Math.floor((segmentIndex - fadeCount) * solidGroups / (drawable - fadeCount)));
+    } else if (birth) group = Math.min(groups - 1, Math.floor(segmentIndex * groups / drawable));
     else group = segmentIndex < fadeCount ? Math.min(groups - 1, Math.floor(segmentIndex * groups / fadeCount)) : -2;
     if (group !== currentGroup) {
       finishGroup();
