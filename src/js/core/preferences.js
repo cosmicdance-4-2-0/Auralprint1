@@ -193,6 +193,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
   const traceSource = orb.trace && typeof orb.trace === "object" ? orb.trace : {};
   const traceFallback = fallback.trace && typeof fallback.trace === "object" ? fallback.trace : {};
   const mode = typeof traceSource.lineColorMode === "string" ? traceSource.lineColorMode : traceFallback.lineColorMode;
+  const lengthMode = typeof traceSource.lengthMode === "string" ? traceSource.lengthMode : traceFallback.lengthMode;
   const trace = {
     lines: typeof traceSource.lines === "boolean" ? traceSource.lines : !!traceFallback.lines,
     // Match the renderer's existing effective segment count; preserve all integers.
@@ -205,6 +206,11 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     fadeSegments: Math.round(clamp(Number.isFinite(traceSource.fadeSegments) ? traceSource.fadeSegments
       : (Number.isFinite(traceFallback.fadeSegments) ? traceFallback.fadeSegments : CONFIG.defaults.orbs[0].trace.fadeSegments),
     CONFIG.limits.trace.fadeSegments.min, CONFIG.limits.trace.fadeSegments.max)),
+    lengthMode: CONFIG.limits.trace.lengthModes.includes(lengthMode) ? lengthMode
+      : (CONFIG.limits.trace.lengthModes.includes(traceFallback.lengthMode) ? traceFallback.lengthMode : CONFIG.defaults.orbs[0].trace.lengthMode),
+    angularSpanDeg: clamp(Number.isFinite(traceSource.angularSpanDeg) ? traceSource.angularSpanDeg
+      : (Number.isFinite(traceFallback.angularSpanDeg) ? traceFallback.angularSpanDeg : CONFIG.defaults.orbs[0].trace.angularSpanDeg),
+    CONFIG.limits.trace.angularSpanDeg.min, CONFIG.limits.trace.angularSpanDeg.max),
   };
 
   return {

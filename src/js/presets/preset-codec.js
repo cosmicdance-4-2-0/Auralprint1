@@ -1,4 +1,4 @@
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V12, LEGACY_SCHEMA_V13 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V2, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V12, LEGACY_SCHEMA_V13, LEGACY_SCHEMA_V14 } from "../core/constants.js";
 import { clamp, deepClone, isValidHexColor } from "../core/utils.js";
 import { normalizeMaxDeltaTimeSec } from "../core/timing.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
@@ -9,6 +9,7 @@ import { sanitizeOrbBandIds, normalizeBandCount } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { assertOrbAdmission } from "../core/orb-admission.js";
 import { assertSupportedBandFrequencies } from "../core/band-frequency.js";
+import { SCHEMA_15_BASELINE } from "./schema-15-baseline.js";
 import { compactBaseline, compactPreferences, expandCompactPreferences } from "./compact-preset.js";
 import { assertPresetStructure } from "./preset-limits.js";
 
@@ -16,11 +17,12 @@ import { assertPresetStructure } from "./preset-limits.js";
 // Schema 10 is published and immutable. Schema 11 adds the authorized world
 // reference and explicitly named world-unit placement distance. Schema 12 adds
 // only the authored Scene camera. Schema 13 uses frozen deltas and ordered
-// band ranges. Schema 14 adds opt-in Queue and Trace presentation.
+// band ranges. Schema 14 adds opt-in Queue and Trace presentation; Schema 15
+// adds opt-in angular Trace length.
 // Historical formats and migrations remain
 // supported, subject to current CONFIG-supported frequency admission across all
 // supported schemas; formerly admitted excessive frequencies may now be rejected.
-const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V13, LEGACY_SCHEMA_V12, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
+const SUPPORTED_SCHEMAS = [PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V14, LEGACY_SCHEMA_V13, LEGACY_SCHEMA_V12, LEGACY_SCHEMA_V11, LEGACY_SCHEMA_V10, LEGACY_SCHEMA_V9, LEGACY_SCHEMA_V8, LEGACY_SCHEMA_V7, LEGACY_SCHEMA_V6, LEGACY_SCHEMA_V5, LEGACY_SCHEMA_V4, LEGACY_SCHEMA_V3, LEGACY_SCHEMA_V2];
 const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 
@@ -104,6 +106,10 @@ function sanitizeCanonicalPreset(decoded, baseline = CONFIG.defaults) {
         ? orb.trace.lineColorMode : "dominantBand",
     });
   }
+  if (schema <= LEGACY_SCHEMA_V14) {
+    const { lengthMode, angularSpanDeg } = SCHEMA_15_BASELINE.orbs[0].trace;
+    for (const orb of next.orbs) Object.assign(orb.trace, { lengthMode, angularSpanDeg });
+  }
   if (schema >= LEGACY_SCHEMA_V11) next.world = normalizeWorldSettings(incoming.world);
   if (schema >= LEGACY_SCHEMA_V12) {
     const camera = incoming.sceneCamera;
@@ -132,7 +138,7 @@ function sanitizeCanonicalPreset(decoded, baseline = CONFIG.defaults) {
 
     if (["none", "one", "all"].includes(incoming.audio.repeatMode)) next.audio.repeatMode = incoming.audio.repeatMode;
     else if (typeof incoming.audio.loop === "boolean") next.audio.repeatMode = incoming.audio.loop ? "one" : "none";
-    if (schema >= PRESET_SCHEMA_VERSION && typeof incoming.audio.clearQueueOnSourceExit === "boolean") {
+    if (schema >= LEGACY_SCHEMA_V14 && typeof incoming.audio.clearQueueOnSourceExit === "boolean") {
       next.audio.clearQueueOnSourceExit = incoming.audio.clearQueueOnSourceExit;
     }
     if (typeof incoming.audio.muted === "boolean") next.audio.muted = incoming.audio.muted;
@@ -280,6 +286,10 @@ function sanitizeCanonicalPreset(decoded, baseline = CONFIG.defaults) {
           lineColorMode: ["fixed", "lastParticle", "dominantBand"].includes(trace.lineColorMode)
             ? trace.lineColorMode : "dominantBand",
         };
+      }
+      if (schema <= LEGACY_SCHEMA_V14 && mappedOrb && typeof mappedOrb === "object") {
+        const { lengthMode, angularSpanDeg } = SCHEMA_15_BASELINE.orbs[0].trace;
+        mappedOrb.trace = { ...mappedOrb.trace, lengthMode, angularSpanDeg };
       }
       return mappedOrb;
     }), defaults);

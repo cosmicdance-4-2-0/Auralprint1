@@ -16,7 +16,7 @@ const compact = prefs => ({schema:13,prefs});
 const encode13 = prefs => {
   const historical = structuredClone(prefs);
   delete historical.audio.clearQueueOnSourceExit;
-  for (const orb of historical.orbs) { delete orb.trace.fadeEnabled; delete orb.trace.fadeSegments; }
+  for (const orb of historical.orbs) { delete orb.trace.fadeEnabled; delete orb.trace.fadeSegments; delete orb.trace.lengthMode; delete orb.trace.angularSpanDeg; }
   return compact(compactPreferences(historical, 13));
 };
 const migrated = prefs => sanitizePreset({schema:12,prefs});
@@ -131,7 +131,7 @@ test('13 frozen literal fingerprint and future CONFIG factory-default independen
       assert.notEqual(CONFIG.defaults.audio.volume,frozen.audio.volume);
       const expected = structuredClone(frozen);
       expected.audio.clearQueueOnSourceExit = false;
-      for (const orb of expected.orbs) Object.assign(orb.trace,{fadeEnabled:false,fadeSegments:5});
+      for (const orb of expected.orbs) Object.assign(orb.trace,{fadeEnabled:false,fadeSegments:5,lengthMode:"count",angularSpanDeg:360});
       assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:{}})),expected);
       const invalid= {sceneCamera:{zoom:0},audio:{repeatMode:'invalid'},bands:{count:1},particleSafety:{maxEmissionsPerFrame:.5,maxActiveParticles:.5}};
       assert.deepEqual(sanitizePreset(decodePresetPayload({schema:13,prefs:invalid})),expected);

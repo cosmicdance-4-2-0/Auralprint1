@@ -53,7 +53,7 @@ test("116A: published schema-10 fixture migrates all settings and spacing withou
   assert.deepEqual(next, expected);
   assert.deepEqual(old, snapshot);
   const encoded = encodePresetPayload(next);
-  assert.equal(encoded.schema, 14);
+  assert.equal(encoded.schema, 15);
   assert.deepEqual(canonicalPrefs(encoded), expected);
   assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)), expected);
 });
@@ -91,6 +91,6 @@ test("116A: current world-unit fields never inherit the retired pixel alias", ()
 });
 
 test("116A: all supported schemas decode; future schemas stay rejected", () => {
-  for (let schema = 2; schema <= 14; schema++) assert.equal(decodePresetPayload({ schema, prefs: {} }).ok, true);
-  for (const schema of [1, 15, "12", 12.5]) assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
+  for (let schema = 2; schema <= 15; schema++) assert.equal(decodePresetPayload({ schema, prefs: {} }).ok, true);
+  for (const schema of [1, 16, "12", 12.5]) assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
 });

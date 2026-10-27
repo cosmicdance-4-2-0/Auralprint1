@@ -46,7 +46,7 @@ test("RC-07: import and runtime share minimum/maximum validation without mutatin
     assert.ok(Object.is(preferences.bands.count, count));
     assert.equal(canonicalPrefs(encodePresetPayload(preferences)).bands.count, expected);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 14);
+  assert.equal(PRESET_SCHEMA_VERSION, 15);
 }));
 
 test("RC-07: every supported count/distribution covers 0 through Nyquist, including clamped ceilings", () => withSettings(() => {
@@ -97,7 +97,7 @@ for (const counts of [[256, 32, 256], [256, 3, 256], [3, 32, 3]]) {
         assert.equal(selected.energyOverride01, canonical.length ? (active.length ? .5 : 0) : null);
         assert.equal(selected.selectedDominantBandIndex, active[0] ?? null);
         const encoded = encodePresetPayload(preferences);
-        assert.equal(encoded.schema, 14); assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)).orbs[0], originalOrb);
+        assert.equal(encoded.schema, 15); assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)).orbs[0], originalOrb);
         globalThis.location = { hash: '#p=' + Buffer.from(JSON.stringify(encoded)).toString('base64url') };
         assert.equal(UrlPreset.applyFromLocationHash(), true); assert.deepEqual(preferences.orbs[0], originalOrb);
       }

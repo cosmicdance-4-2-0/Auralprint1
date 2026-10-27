@@ -9,7 +9,7 @@ const DEFAULT_ORB_BEHAVIOR = {
   motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
   response: { minRadiusFrac: 0.01, maxRadiusFrac: 0.80, waveformRadialDisplaceFrac: 0.10 },
   particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0, minPlacementDistanceUnits: 0.5 },
-  trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand", fadeEnabled: false, fadeSegments: 5 },
+  trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand", fadeEnabled: false, fadeSegments: 5, lengthMode: "count", angularSpanDeg: 360 },
 };
 
 function defaultOrb(identity) {
@@ -563,6 +563,9 @@ bands: {
     },
     timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC, motionDiscontinuitySec: 0.5 },
     trace: {
+      lengthModes: ["count", "angular"],
+      // Maximum retained rotation: one degree through ten revolutions.
+      angularSpanDeg: { min: 1, max: 3600, step: 1 },
       // Integer segment count; the maximum covers the entire longest visible Trace.
       fadeSegments: { min: 1, max: 1000, step: 1 },
       lineColorModes: ["fixed", "lastParticle", "dominantBand", "particleBirth"],

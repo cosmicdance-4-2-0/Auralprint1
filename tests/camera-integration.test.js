@@ -234,7 +234,7 @@ test("116B: camera stays runtime-only across schema-12 encoding, URL replacement
   preferences.camera = { ...camera };
   UrlPreset.writeHashFromPrefs();
   const payload = JSON.parse(Buffer.from(location.hash.slice(3), "base64url").toString("utf8"));
-  assert.equal(payload.schema, 14); assert.equal("camera" in canonicalPrefs(payload), false);
+  assert.equal(payload.schema, 15); assert.equal("camera" in canonicalPrefs(payload), false);
   assert.deepEqual(Object.keys(canonicalPrefs(payload)).sort(), ["audio", "bands", "orbs", "particleSafety", "sceneCamera", "timing", "visuals", "world"]);
   assert.equal(UrlPreset.applyFromLocationHash(), true); resolveSettings();
   assert.equal(state.camera, camera);

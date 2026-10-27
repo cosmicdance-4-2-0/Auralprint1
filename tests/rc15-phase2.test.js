@@ -58,7 +58,7 @@ test("RC-15 phase 2: default budgets are independent and frozen; governor state 
   assert.throws(() => { governor.policy = policy; }, TypeError);
   const dirty = structuredClone(CONFIG.defaults); dirty.particleSafety = policy;
   dirty.orbs[0].allocationCursor = 2; dirty.orbs[0].particles.activeCount = 123;
-  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 14, prefs: CONFIG.defaults });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 15, prefs: CONFIG.defaults });
 });
 
 for (const count of [0, 1, 2, 256, 4096]) {

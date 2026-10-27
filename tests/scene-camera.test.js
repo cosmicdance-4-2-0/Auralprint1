@@ -33,7 +33,7 @@ test("116D: schema 11 retains every historical field, world dimensions and unit 
   assert.deepEqual(next, with116FDefaults({ ...original, sceneCamera: CONFIG.defaults.sceneCamera }));
   assert.deepEqual(original, before);
   const payload = encodePresetPayload(next);
-  assert.equal(payload.schema, 14);
+  assert.equal(payload.schema, 15);
   assert.deepEqual(sanitizePreset(decodePresetPayload(payload)), next);
 });
 

@@ -92,19 +92,19 @@ test("Schema 9 — Scene-node historical format recovers the actual emitted loss
   assert.equal("scene" in preferences, false);
 }));
 
-test("schema constants preserve 14 and every supported legacy integer 2–13", () => {
-  assert.equal(constants.PRESET_SCHEMA_VERSION, 14);
-  for (let schema = 2; schema <= 13; schema++) assert.equal(constants[`LEGACY_SCHEMA_V${schema}`], schema);
+test("schema constants preserve 15 and every supported legacy integer 2–14", () => {
+  assert.equal(constants.PRESET_SCHEMA_VERSION, 15);
+  for (let schema = 2; schema <= 14; schema++) assert.equal(constants[`LEGACY_SCHEMA_V${schema}`], schema);
   assert.equal(constants.LEGACY_SCHEMA_V10, 10);
 });
 
 test("schema-12 fixture still covers every historical default with distinguishable legal values", () => {
-  // Keep the frozen historical fixture unchanged. Schema-14 tests independently
-  // cover the three newly persisted fields and their non-default values.
-  const added = ["audio.clearQueueOnSourceExit", "orbs[].trace.fadeEnabled", "orbs[].trace.fadeSegments"];
+  // Keep the frozen historical fixture unchanged. Schemas 14/15 tests independently
+  // cover the newer persisted fields and their non-default values.
+  const added = ["audio.clearQueueOnSourceExit", "orbs[].trace.fadeEnabled", "orbs[].trace.fadeSegments", "orbs[].trace.lengthMode", "orbs[].trace.angularSpanDeg"];
   assert.deepEqual(paths(historicalFull), paths(CONFIG.defaults).filter(path => !added.includes(path)));
   assert.equal(paths(historicalFull).length, 60);
-  for (const orb of historicalFull.orbs) assert.deepEqual(paths(orb), paths(CONFIG.defaults.orbs[0]).filter(path => !["trace.fadeEnabled", "trace.fadeSegments"].includes(path)));
+  for (const orb of historicalFull.orbs) assert.deepEqual(paths(orb), paths(CONFIG.defaults.orbs[0]).filter(path => !["trace.fadeEnabled", "trace.fadeSegments", "trace.lengthMode", "trace.angularSpanDeg"].includes(path)));
   for (const path of paths(historicalFull).filter((path) => !path.startsWith("orbs[]"))) {
     assert.notDeepEqual(readPath(historicalFull, path), readPath(CONFIG.defaults, path), path);
   }
@@ -115,7 +115,7 @@ test("schema-12 fixture still covers every historical default with distinguishab
 
 test("complete non-default schema-12 fixture round-trips every field through URL and canonical replacement", () => withUrl((location) => {
   const payload = roundTrip(full, location);
-  assert.deepEqual(canonicalPayload(payload), { schema: 14, prefs: full });
+  assert.deepEqual(canonicalPayload(payload), { schema: 15, prefs: full });
   assert.deepEqual(preferences, full);
   assert.deepEqual(preferences.orbs.map((orb) => orb.id), ["ORB-Z", "ORB-A", "CUSTOM-7"]);
   assert.deepEqual(Object.keys(payload).sort(), ["prefs", "schema"]);
@@ -159,7 +159,7 @@ test("schema-12 URL import preserves opaque identities including the Ring type n
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences.orbs.map((orb) => orb.id), ids);
   const expected = structuredClone(preferences);
-  assert.deepEqual(canonicalPayload(roundTrip(expected, location)), { schema: 14, prefs: expected });
+  assert.deepEqual(canonicalPayload(roundTrip(expected, location)), { schema: 15, prefs: expected });
   assert.deepEqual(preferences.orbs.map((orb) => orb.id), ids);
 }));
 
@@ -177,12 +177,12 @@ test("unknown fields at every nesting level are stripped on both encode and deco
   dirty.unknown = { marker: "UNKNOWN-ROOT" };
   for (const group of [dirty.visuals, dirty.audio, dirty.bands, dirty.bands.overlay, dirty.bands.rainbow, dirty.timing,
     ...dirty.orbs.flatMap((orb) => [orb, orb.motion, orb.response, orb.particles, orb.trace])]) group.unknown = "UNKNOWN-NESTED";
-  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 14, prefs: full });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 15, prefs: full });
   location.hash = rawHash({ schema: 12, prefs: dirty, unknown: true, runtime: { marker: true } });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences, full);
   UrlPreset.writeHashFromPrefs();
-  assert.deepEqual(canonicalPayload(decodeRawHash(location.hash)), { schema: 14, prefs: full });
+  assert.deepEqual(canonicalPayload(decodeRawHash(location.hash)), { schema: 15, prefs: full });
 }));
 
 test("runtime/session mutations and injected preference runtime fields never enter encoded payloads", () => withUrl((location) => {
@@ -223,7 +223,7 @@ test("runtime/session mutations and injected preference runtime fields never ent
     preferences.orbs[0].motion.lastTimestampMs = 42;
     UrlPreset.writeHashFromPrefs();
     assert.deepEqual(decodeRawHash(location.hash), before);
-    assert.deepEqual(canonicalPayload(before), { schema: 14, prefs: full });
+    assert.deepEqual(canonicalPayload(before), { schema: 15, prefs: full });
   } finally {
     for (const key of Object.keys(state)) delete state[key];
     Object.assign(state, oldState);
@@ -260,7 +260,7 @@ test("malformed values preserve existing clamps, defaults, enum rejection and de
     motion: { angularSpeedRadPerSec: CONFIG.limits.motion.angularSpeedRadPerSec.min },
     response: { minRadiusFrac: .01, maxRadiusFrac: 1, waveformRadialDisplaceFrac: .1 },
     particles: { emitPerSecond: 1000, sizeMaxPx: 2, sizeMinPx: 2, sizeToMinSec: 8, ttlSec: 8, minPlacementDistanceUnits: 0.5 },
-    trace: { lines: true, numLines: 1000, lineAlpha: 0, lineWidthPx: 6, lineColorMode: "dominantBand", fadeEnabled: false, fadeSegments: 5 } }];
+    trace: { lines: true, numLines: 1000, lineAlpha: 0, lineWidthPx: 6, lineColorMode: "dominantBand", fadeEnabled: false, fadeSegments: 5, lengthMode: "count", angularSpanDeg: 360 } }];
   location.hash = rawHash({ schema: 12, prefs: input });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
   assert.deepEqual(preferences, expected);
@@ -305,7 +305,7 @@ test("codec distinguishes malformed and unsupported payloads while URL failures 
   for (const payload of [null, [], {}, { schema: 12 }, { schema: 12, prefs: null }, { schema: 12, prefs: [] }, { schema: 12, prefs: true }]) {
     assert.deepEqual(decodePresetPayload(payload), { ok: false, code: "malformed-payload" });
   }
-  for (const schema of [1, 15, 0, "12", 12.5, undefined]) {
+  for (const schema of [1, 16, 0, "12", 12.5, undefined]) {
     assert.deepEqual(decodePresetPayload({ schema, prefs: {} }), { ok: false, code: "unsupported-schema" });
   }
   const before = structuredClone(preferences);
@@ -337,7 +337,7 @@ test("URL hash stays unpadded base64url UTF-8 JSON and preserves pathname/search
   const payload = roundTrip(next, location);
   assert.match(location.hash, /^#p=[A-Za-z0-9_-]+$/);
   assert.equal(writtenUrl, location.pathname + location.search + location.hash);
-  assert.deepEqual(canonicalPayload(payload), { schema: 14, prefs: next });
+  assert.deepEqual(canonicalPayload(payload), { schema: 15, prefs: next });
   assert.deepEqual(preferences, next);
 }));
 
@@ -363,7 +363,7 @@ for (const fixture of legacy) {
     if (fixture.schema <= 4) assert.deepEqual(preferences.orbs, CONFIG.defaults.orbs);
     UrlPreset.writeHashFromPrefs();
     const payload = decodeRawHash(location.hash);
-    assert.equal(payload.schema, 14);
+    assert.equal(payload.schema, 15);
     assert.deepEqual(canonicalPrefs(payload), preferences);
     assert.deepEqual(sanitizePreset(decodePresetPayload(payload)), preferences);
     assert.deepEqual(fixture, beforeInput);
@@ -519,7 +519,7 @@ test("encoding polluted current preferences strips legacy-only paths without ove
   prefs.bands.logSpacing = true;
   prefs.orbs[0].bandId = "C";
   prefs.orbs[0].bandNames = ["Eternal Core"];
-  assert.deepEqual(canonicalPayload(encodePresetPayload(prefs)), { schema: 14, prefs: full });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(prefs)), { schema: 15, prefs: full });
 });
 
 test("partial presets replace live preferences with canonical defaults for omitted settings", () => withUrl((location) => {

@@ -10,19 +10,19 @@ import { CONFIG } from '../src/js/core/config.js';
 import { normalizeOrbDef, preferences, replacePreferences, resolveSettings, runtime } from '../src/js/core/preferences.js';
 import { SCHEMA_13_BASELINE } from '../src/js/presets/schema-13-baseline.js';
 import { SCHEMA_14_BASELINE } from '../src/js/presets/schema-14-baseline.js';
-import { compactBaseline } from '../src/js/presets/compact-preset.js';
+import { compactBaseline, compactPreferences } from '../src/js/presets/compact-preset.js';
 import { encodePresetPayload, decodePresetPayload, sanitizePreset } from '../src/js/presets/preset-codec.js';
 import { encodePrefsToHash, encodeShareHash, decodePrefsFromHash, UrlPreset } from '../src/js/presets/url-preset.js';
 
 const wire = prefs => ({schema:14,prefs});
 const canonical = payload => {const decoded=decodePresetPayload(payload);assert.equal(decoded.ok,true,decoded.code);return sanitizePreset(decoded);};
 const zHash = payload => '#z='+deflateSync(Buffer.from(JSON.stringify(payload))).toString('base64url');
-const migrated13 = () => {const expected=structuredClone(SCHEMA_13_BASELINE);expected.audio.clearQueueOnSourceExit=false;for(const orb of expected.orbs)Object.assign(orb.trace,{fadeEnabled:false,fadeSegments:5});return expected;};
+const migrated13 = () => {const expected=structuredClone(SCHEMA_13_BASELINE);expected.audio.clearQueueOnSourceExit=false;for(const orb of expected.orbs)Object.assign(orb.trace,{fadeEnabled:false,fadeSegments:5,lengthMode:"count",angularSpanDeg:360});return expected;};
 
 test('14 defaults omit entirely and select a distinct frozen baseline',()=>{
   assert.equal(compactBaseline(13),SCHEMA_13_BASELINE);assert.equal(compactBaseline(14),SCHEMA_14_BASELINE);
-  assert.notEqual(compactBaseline(13),compactBaseline(14));assert.throws(()=>compactBaseline(15),{code:'unsupported-schema'});
-  assert.deepEqual(encodePresetPayload(CONFIG.defaults),wire({}));
+  assert.notEqual(compactBaseline(13),compactBaseline(14));assert.throws(()=>compactBaseline(16),{code:'unsupported-schema'});
+  assert.deepEqual(encodePresetPayload(CONFIG.defaults),{schema:15,prefs:{}});
   assert.deepEqual(canonical(wire({})),CONFIG.defaults);
   assert.deepEqual(canonical({schema:13,prefs:{}}),migrated13());
   assert.equal(Object.hasOwn(SCHEMA_13_BASELINE.audio,'clearQueueOnSourceExit'),false);
@@ -36,7 +36,13 @@ test('14 Queue and both Trace opt-ins round-trip independently and together in b
     prefs.orbs[0].id='opaque-宇宙';prefs.orbs[0].bandIds=[143,59,60,61,0,255];
     prefs.orbs[0].centerXFrac=.123456789012345;prefs.orbs[0].motion.angularSpeedRadPerSec=.123456789012345;
     const before=structuredClone(prefs),payload=encodePresetPayload(prefs);
-    assert.equal(payload.schema,14);assert.deepEqual(canonical(payload),prefs);assert.deepEqual(prefs,before);
+    assert.equal(payload.schema,15);assert.deepEqual(canonical(payload),prefs);assert.deepEqual(prefs,before);
+    const historical=structuredClone(prefs);
+    for(const orb of historical.orbs) {delete orb.trace.lengthMode;delete orb.trace.angularSpanDeg;}
+    const oldWire=wire(compactPreferences(historical,14));
+    assert.deepEqual(canonical(oldWire),prefs);
+    assert.deepEqual(await decodePrefsFromHash(zHash(oldWire)),prefs);
+    assert.deepEqual(await decodePrefsFromHash('#p='+Buffer.from(JSON.stringify(oldWire)).toString('base64url')),prefs);
     assert.deepEqual(await decodePrefsFromHash(encodePrefsToHash(prefs)),prefs);
     const compressed=await encodeShareHash(prefs);assert.equal(compressed.compressed,true);
     assert.deepEqual(await decodePrefsFromHash(compressed.hash),prefs);
@@ -46,7 +52,7 @@ test('14 Queue and both Trace opt-ins round-trip independently and together in b
 
 test('14 new defaults are independent deltas; false and selected Fade Length survive',()=>{
   const prefs=structuredClone(CONFIG.defaults);prefs.audio.clearQueueOnSourceExit=true;
-  assert.deepEqual(encodePresetPayload(prefs),wire({audio:{clearQueueOnSourceExit:true}}));
+  assert.deepEqual(encodePresetPayload(prefs),{schema:15,prefs:{audio:{clearQueueOnSourceExit:true}}});
   prefs.audio.clearQueueOnSourceExit=false;prefs.orbs[0].trace.fadeEnabled=true;
   const encoded=encodePresetPayload(prefs);
   assert.deepEqual(encoded.prefs.orbs[0],{id:'ORB0',trace:{fadeEnabled:true}});
@@ -76,7 +82,7 @@ test('14 rejects malformed types, unknown/executable fields and future schemas b
     {orbs:[{trace:{angularTravel:1}}]},JSON.parse('{"audio":{"__proto__":{"clearQueueOnSourceExit":true}}}')]) {
     assert.equal(decodePresetPayload(wire(prefs)).ok,false);
   }
-  assert.equal(decodePresetPayload({schema:15,prefs:{}}).code,'unsupported-schema');
+  assert.equal(decodePresetPayload({schema:16,prefs:{}}).code,'unsupported-schema');
   assert.equal(canonical(wire({orbs:[{trace:{lineColorMode:'future'}}]})).orbs[0].trace.lineColorMode,'dominantBand');
   assert.equal({}.clearQueueOnSourceExit,undefined);
   const saved={prefs:structuredClone(preferences),location:globalThis.location};
@@ -115,7 +121,7 @@ test('14 never serializes Queue files, names, cursor, source permissions or runt
   prefs.queue={files:[{name:'secret-track.wav',handle:'sensitive'}],cursor:7};prefs.recording={active:true};
   prefs.audio.files=[{name:'secret-track.wav'}];prefs.audio.cursor=7;prefs.audio.permissions={microphone:true};
   prefs.orbs[0].particles.history=[{rgbStart:[1,2,3],time:12}];prefs.orbs[0].trace.angularTravel=999;
-  const payload=encodePresetPayload(prefs);assert.deepEqual(payload,wire({}));
+  const payload=encodePresetPayload(prefs);assert.deepEqual(payload,{schema:15,prefs:{}});
   assert.doesNotMatch(JSON.stringify(payload),/secret-track|files|cursor|handle|permissions|history|angularTravel|recording/);
 });
 
@@ -135,7 +141,8 @@ test('14 frozen literal fingerprint and both compact baselines survive changed f
       import {SCHEMA_14_BASELINE as frozen} from './src/js/presets/schema-14-baseline.js';
       import {decodePresetPayload,sanitizePreset} from './src/js/presets/preset-codec.js';
       assert.equal(CONFIG.defaults.audio.clearQueueOnSourceExit,true);
-      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:14,prefs:{}})),frozen);
+      const migrated=structuredClone(frozen); for(const orb of migrated.orbs) Object.assign(orb.trace,{lengthMode:"count",angularSpanDeg:360});
+      assert.deepEqual(sanitizePreset(decodePresetPayload({schema:14,prefs:{}})),migrated);
       const old=sanitizePreset(decodePresetPayload({schema:13,prefs:{}}));
       assert.equal(old.audio.clearQueueOnSourceExit,false);assert.equal(old.orbs[0].trace.fadeEnabled,false);
       assert.equal(old.orbs[0].trace.fadeSegments,5);assert.equal(old.orbs[0].trace.lineColorMode,'dominantBand');

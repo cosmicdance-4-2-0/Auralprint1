@@ -1,6 +1,7 @@
 import { CONFIG } from "../core/config.js";
 import { deepClone } from "../core/utils.js";
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V13 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V13, LEGACY_SCHEMA_V14 } from "../core/constants.js";
+import { SCHEMA_15_BASELINE } from "./schema-15-baseline.js";
 import { SCHEMA_14_BASELINE } from "./schema-14-baseline.js";
 import { SCHEMA_13_BASELINE } from "./schema-13-baseline.js";
 import { presetError, assertPresetStructure } from "./preset-limits.js";
@@ -13,7 +14,8 @@ const isRecord = value => value !== null && typeof value === "object" && !Array.
 // or wire schema change the interpretation of an already shared link.
 function compactBaseline(schema) {
   if (schema === LEGACY_SCHEMA_V13) return SCHEMA_13_BASELINE;
-  if (schema === PRESET_SCHEMA_VERSION) return SCHEMA_14_BASELINE;
+  if (schema === LEGACY_SCHEMA_V14) return SCHEMA_14_BASELINE;
+  if (schema === PRESET_SCHEMA_VERSION) return SCHEMA_15_BASELINE;
   throw presetError("unsupported-schema");
 }
 

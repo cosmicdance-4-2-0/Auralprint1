@@ -32,7 +32,7 @@ test("AUD-004 CONFIG owns maximum; fractional/default/exact and adjacent limits"
   for(const [floorHz,ceilingHz] of [[20,22500],[.125,22500.125],[max,max],[20,adjacent(max,-1)],[Number.MIN_VALUE,max]]) {
     const input=structuredClone(CONFIG.defaults);Object.assign(input.bands,{floorHz,ceilingHz});
     const encoded=encodePresetPayload(input),decoded=decodePresetPayload(encoded);
-    assert.equal(encoded.schema,14);assert.equal(decoded.ok,true);
+    assert.equal(encoded.schema,15);assert.equal(decoded.ok,true);
     assert.deepEqual(sanitizePreset(decoded),input);
   }
 });

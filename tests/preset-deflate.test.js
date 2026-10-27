@@ -31,14 +31,14 @@ test('DEFLATE native writer and Node zlib interoperate semantically in both dire
   assert.deepEqual(await decodePrefsFromHash(encodePrefsToHash(prefs)),prefs);
 });
 
-test('missing, format-rejecting and asynchronously failing compression operations fall back to uncompressed 13',async()=>{
+test('missing, format-rejecting and asynchronously failing compression operations fall back to uncompressed current schema',async()=>{
   for(const name of ['CompressionStream','DecompressionStream']) {
     for(const value of [undefined,class {constructor(){throw new TypeError('format unsupported');}},
       class {constructor(){return new TransformStream({transform(){throw new Error('operation failed');}});}}]) {
       await api(name,value,async()=>{
         const result=await encodeShareHash(CONFIG.defaults);
         assert.equal(result.fallback,true);assert.equal(result.compressed,false);assert.match(result.hash,/^#p=/);
-        assert.equal(JSON.parse(Buffer.from(result.hash.slice(3),'base64url')).schema,14);
+        assert.equal(JSON.parse(Buffer.from(result.hash.slice(3),'base64url')).schema,15);
         assert.deepEqual(await decodePrefsFromHash(result.hash),CONFIG.defaults);
       });
     }

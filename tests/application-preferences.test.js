@@ -42,6 +42,6 @@ test("AUD-007 scene reset/resolution/serialization cannot change application sel
   const app = createApplicationPreferences({storage: () => store()}); app.set({selectedProfileId:"4m", aboveProfileBehavior:"skip"});
   const before = app.runtime.settings;
   replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings(); const payload = encodePresetPayload(preferences);
-  assert.equal(app.runtime.settings, before); assert.equal(payload.schema, 14);
+  assert.equal(app.runtime.settings, before); assert.equal(payload.schema, 15);
   assert.doesNotMatch(JSON.stringify(payload), /selectedProfileId|aboveProfileBehavior|waveform-preferences/);
 });

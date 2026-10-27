@@ -57,15 +57,15 @@ test("RC-15 phase 1: current overlap input decodes, strips, and preserves all re
   assert.equal(decoded.ok, true);
   const next = sanitizePreset(decoded);
   assert.deepEqual(next, canonical);
-  assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 14, prefs: canonical });
-  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 14, prefs: canonical });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 15, prefs: canonical });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 15, prefs: canonical });
   assert.deepEqual(dirty, snapshot);
   const fallback = { ...CONFIG.defaults.orbs[0], particles: dirty.orbs[0].particles };
   for (const orb of [...CONFIG.defaults.orbs, ...normalizeOrbCollection(dirty.orbs), normalizeOrbDef({}, fallback)]) {
     assert.equal("overlapRadiusPx" in orb.particles, false);
     assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistanceUnits"]);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 14);
+  assert.equal(PRESET_SCHEMA_VERSION, 15);
 });
 
 test("RC-15 phase 1: timing ceiling is frozen CONFIG authority across codec and preference resolution", () => {
