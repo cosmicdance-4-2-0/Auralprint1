@@ -6,6 +6,10 @@ import { state } from "../core/state.js";
 import { TrailSystem } from "./trail-system.js";
 import { ColorPolicy } from "./color-policy.js";
 
+// Reserve half of binary64's exact-integer significand for sub-radian
+// resolution. This is a representation guard, not a configurable history cap.
+const MAX_PRECISE_ANGULAR_TRAVEL_RAD = Math.sqrt(Number.MAX_SAFE_INTEGER);
+
 /* =============================================================================
    Orb
    ========================================================================== */
@@ -25,6 +29,12 @@ class Orb {
     this.particles = def.particles;
     this.trace = def.trace;
     this.angleRad = this.startAngleRad;
+    // Cumulative physical distance within the current runtime epoch. Nothing
+    // here is a preference or inferred from wrapped phase / retained particles.
+    this.angularTravelRad = 0;
+    this.angularTravelCompensation = 0;
+    this.angularTravelEpoch = null;
+    this.syncAngularTraceMode();
 
     this.trail = new TrailSystem();
 
@@ -35,7 +45,38 @@ class Orb {
   }
 
   resetPhase() { this.angleRad = this.startAngleRad; }
-  resetTrail() { this.trail.reset(); }
+  resetTrail() {
+    this.trail.reset();
+    this.resetAngularTravel();
+  }
+
+  syncAngularTraceMode() {
+    if (this.trace?.lengthMode === "angular") {
+      if (this.angularTravelEpoch === null) this.angularTravelEpoch = {};
+    } else {
+      this.angularTravelEpoch = null;
+    }
+  }
+
+  resetAngularTravel() {
+    this.angularTravelRad = 0;
+    this.angularTravelCompensation = 0;
+    this.angularTravelEpoch = this.trace?.lengthMode === "angular" ? {} : null;
+  }
+
+  addAngularTravel(distanceRad) {
+    // Compensated summation preserves repeated small accepted increments. At a
+    // rare precision boundary, begin a fresh epoch at the actual endpoint;
+    // particles stay retained but old stamps cannot fabricate compatible travel.
+    const adjusted = distanceRad - this.angularTravelCompensation;
+    const next = this.angularTravelRad + adjusted;
+    if (!Number.isFinite(next) || next < 0 || next > MAX_PRECISE_ANGULAR_TRAVEL_RAD) {
+      this.resetAngularTravel();
+      return;
+    }
+    this.angularTravelCompensation = (next - this.angularTravelRad) - adjusted;
+    this.angularTravelRad = next;
+  }
 
   syncFromDef(def) {
     this.chanId = normalizeOrbChannelId(def.chanId, def.bandId);
@@ -50,15 +91,18 @@ class Orb {
     this.response = def.response;
     this.particles = def.particles;
     this.trace = def.trace;
+    this.syncAngularTraceMode();
   }
 
   // Legacy direct callers omit motionDtSec and retain their supplied delta.
   // The application frame loop supplies independently bounded emission/motion.
   step(dtSec, nowSec, band, energyOverride01, globalDominantBandIndex, selectedDominantBandIndex = null, motionDtSec = dtSec) {
+    this.syncAngularTraceMode();
     const angleDelta = this.chirality * this.motion.angularSpeedRadPerSec * motionDtSec;
-    if (angleDelta !== 0) {
+    if (Number.isFinite(angleDelta) && angleDelta !== 0) {
       this.angleRad += angleDelta;
       this.angleRad = ((this.angleRad % TAU) + TAU) % TAU;
+      this.addAngularTravel(Math.abs(angleDelta));
     }
 
     const world = state.world;
@@ -93,7 +137,8 @@ class Orb {
       globalDominantBandIndex,
       selectedDominantBandIndex,
     );
-    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles);
+    this.trail.updateAndEmit(dtSec, nowSec, this.xSim, this.ySim, rgbStart, this.particles,
+      this.angularTravelRad, this.angularTravelEpoch);
   }
 }
 

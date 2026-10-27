@@ -10,7 +10,8 @@ class TrailSystem {
     this.pendingEmissions = 0;
     this.nextPending = null;
     this.priorityPrev = this.priorityNext = null;
-    this.emission = { xSim: 0, ySim: 0, nowSec: 0, rgbStart: null };
+    this.emission = { xSim: 0, ySim: 0, nowSec: 0, rgbStart: null,
+      angularTravelRad: 0, angularTravelEpoch: null };
     this.governor = new ParticleGovernor();
     this.standalone = true;
     this.governor.setTrails([this]);
@@ -28,7 +29,8 @@ class TrailSystem {
     previous.setTrails(previous.trails.filter(trail => trail !== this));
     this.standalone = false;
     this.emitAccumulator = Number.isFinite(fraction) && fraction >= 0 ? fraction % 1 : 0;
-    for (const p of history) this.emitAt(p.xSim, p.ySim, p.bornSec, p.rgbStart);
+    for (const p of history) this.emitAt(p.xSim, p.ySim, p.bornSec, p.rgbStart,
+      p.angularTravelRad, p.angularTravelEpoch);
   }
 
   reset() {
@@ -37,6 +39,8 @@ class TrailSystem {
     this.pendingEmissions = 0;
     this.nextPending = null;
     this.emission.rgbStart = null;
+    this.emission.angularTravelRad = 0;
+    this.emission.angularTravelEpoch = null;
   }
 
   dispose() {
@@ -47,11 +51,17 @@ class TrailSystem {
     this.governor.setTrails([this]);
   }
 
-  emitAt(xSim, ySim, nowSec, rgbStart) {
+  emitAt(xSim, ySim, nowSec, rgbStart, angularTravelRad, angularTravelEpoch) {
     if (!Number.isFinite(nowSec)) return;
     const node = { particle: { xSim, ySim, bornSec: nowSec, rgbStart }, trail: this,
       prev: null, next: null, heapIndex: -1, sequence: 0 };
     if (!this.governor.admit(node)) return false;
+    // Default count-only Scenes pay no per-particle property/storage cost.
+    if (Number.isFinite(angularTravelRad) && angularTravelRad >= 0 &&
+        angularTravelEpoch !== null && typeof angularTravelEpoch === "object") {
+      node.particle.angularTravelRad = angularTravelRad;
+      node.particle.angularTravelEpoch = angularTravelEpoch;
+    }
     this.particles.append(node);
     return true;
   }
@@ -68,7 +78,8 @@ class TrailSystem {
     }
   }
 
-  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings) {
+  updateAndEmit(dtSec, nowSec, emitterXSim, emitterYSim, rgbStart, particleSettings,
+    angularTravelRad = 0, angularTravelEpoch = null) {
     if (this.standalone) this.governor.beginFrame();
     const g = this.governor;
     this.expireParticles(nowSec, particleSettings.ttlSec);
@@ -107,6 +118,10 @@ class TrailSystem {
     }
     this.emission.xSim = emitterXSim; this.emission.ySim = emitterYSim;
     this.emission.nowSec = nowSec; this.emission.rgbStart = rgbStart;
+    // Capture the sampled endpoint now: the governor may admit it after a later
+    // Orb update/settings change. Never read a mutable Orb from finishFrame().
+    this.emission.angularTravelRad = angularTravelRad;
+    this.emission.angularTravelEpoch = angularTravelEpoch;
     if (this.standalone) g.finishFrame();
   }
 }

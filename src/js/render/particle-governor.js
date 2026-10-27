@@ -72,6 +72,7 @@ class ParticleGovernor {
     for (const key in this.stats) this.stats[key] = 0;
     for (const trail of this.trails) {
       trail.pendingEmissions = 0; trail.nextPending = null; trail.emission.rgbStart = null;
+      trail.emission.angularTravelRad = 0; trail.emission.angularTravelEpoch = null;
     }
     this.frameActive = true;
   }
@@ -95,7 +96,7 @@ class ParticleGovernor {
       const trail = head;
       this.stats.schedulingVisits++;
       const e = trail.emission;
-      trail.emitAt(e.xSim, e.ySim, e.nowSec, e.rgbStart);
+      trail.emitAt(e.xSim, e.ySim, e.nowSec, e.rgbStart, e.angularTravelRad, e.angularTravelEpoch);
       trail.pendingEmissions--;
       remaining--;
       this.servicePriority(trail);
@@ -112,6 +113,8 @@ class ParticleGovernor {
       trail.pendingEmissions = 0;
       trail.nextPending = null;
       trail.emission.rgbStart = null;
+      trail.emission.angularTravelRad = 0;
+      trail.emission.angularTravelEpoch = null;
     }
     this.frameActive = false;
   }
