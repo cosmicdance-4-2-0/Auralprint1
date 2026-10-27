@@ -1,6 +1,7 @@
 import { createRecordingResourcesControls } from "./recording-resources.js";
 import { clamp, fmt, deepClone } from "../core/utils.js";
 import { CONFIG } from "../core/config.js";
+import { PRESET_SCHEMA_VERSION } from "../core/constants.js";
 import { preferences, runtime, resolveSettings, replacePreferences, normalizeOrbDef } from "../core/preferences.js";
 import { normalizeOrbCollection } from "../core/orb-collection.js";
 import { state } from "../core/state.js";
@@ -526,7 +527,7 @@ const UI = (() => {
         catch { /* The valid complete link is already in the address bar. */ }
       }
       if (location.hash !== result.hash) return;
-      const fallback = result.fallback ? " Uncompressed schema-14 link: native DEFLATE unavailable." : "";
+      const fallback = result.fallback ? ` Uncompressed schema-${PRESET_SCHEMA_VERSION} link: native DEFLATE unavailable.` : "";
       sceneStatusToast((copied ? "Share link copied to clipboard."
         : "Share link written to URL — copy from address bar.") + fallback, 6000);
     } catch {

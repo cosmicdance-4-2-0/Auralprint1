@@ -30,11 +30,11 @@ function element(tag = "div") {
 function withEditor(callback) {
   const saved = { prefs: structuredClone(preferences), settings: runtime.settings, document: globalThis.document };
   globalThis.document = { createElement: element, activeElement: null };
-  const view = { orbEditorList: element() };
-  for (const name of ["chkFadeTrace", "rngFadeSegments", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin",
+  const view = { orbEditorList: element(), angularSpanError: element() };
+  for (const name of ["selTraceLengthMode", "numAngularSpanDeg", "chkFadeTrace", "rngFadeSegments", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin",
     "rngSizeToMin", "rngTTL", "rngMinPlacementDistance", "rngOmega", "rngWfDisp", "rngMinRad", "rngMaxRad"]) {
-    view[name] = element(); view[name].type = name.startsWith("chk") ? "checkbox" : name.startsWith("sel") ? "select" : "range";
-    view["val" + name.replace(/^(chk|rng|sel)/, "")] = element();
+    view[name] = element(); view[name].type = name.startsWith("chk") ? "checkbox" : name.startsWith("sel") ? "select" : name.startsWith("num") ? "number" : "range";
+    view["val" + name.replace(/^(chk|rng|sel|num)/, "")] = element();
   }
   replacePreferences(sanitizePreset({ schema: 10, prefs: { orbs: [{ id: "A", startAngleRad: 4 * Math.PI },
     { id: "B", startAngleRad: -Math.PI / 2 }, { id: "C", startAngleRad: 5 * Math.PI / 2 }] } }));

@@ -11,11 +11,11 @@ import { createOrbEditorUi, readBulkOrbValue } from "../src/js/ui/orb-editor.js"
 function element(tag="div") { const listeners=new Map(); return { tagName:tag.toUpperCase(), type:"", dataset:{}, children:[], parentNode:null, value:"", textContent:"", disabled:false, checked:false, indeterminate:false, attributes:{}, open:false,
  get options(){return this.tagName==="SELECT"?this.children:undefined}, get selectedIndex(){return this.tagName==="SELECT"?this.children.findIndex(option=>option.value===this.value):-1},
  addEventListener(n,f){const a=listeners.get(n)||[];a.push(f);listeners.set(n,a)}, dispatch(n,details={}){for(const f of listeners.get(n)||[])f({target:this,...details})}, dispatchEvent(event){this.dispatch(event.type,event);return true}, listenerCount(n){return (listeners.get(n)||[]).length}, append(...c){for(const x of c)this.appendChild(x)}, appendChild(c){return this.insertBefore(c,null)}, insertBefore(c,before){if(c.parentNode)c.parentNode.children=c.parentNode.children.filter(x=>x!==c);const index=before?this.children.indexOf(before):-1;if(index<0)this.children.push(c);else this.children.splice(index,0,c);c.parentNode=this;return c}, remove(){if(this.parentNode)this.parentNode.children=this.parentNode.children.filter(x=>x!==this);this.parentNode=null;this.removed=true}, focus(){document.activeElement=this}, scrollIntoView(){}, setAttribute(n,v){this.attributes[n]=String(v)}, getAttribute(n){return this.attributes[n]}, querySelector(){return null} }; }
-function ui() { const result={orbEditorList:element()}; for(const [n,t] of [["chkFadeTrace","checkbox"],["rngFadeSegments","range"],["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngMinPlacementDistance","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel)/,"")}`]=element(); } return result; }
+function ui() { const result={orbEditorList:element(),angularSpanError:element()}; for(const [n,t] of [["selTraceLengthMode","select"],["numAngularSpanDeg","number"],["chkFadeTrace","checkbox"],["rngFadeSegments","range"],["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngMinPlacementDistance","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel|num)/,"")}`]=element(); } return result; }
 function orb(id){return {...structuredClone(CONFIG.defaults.orbs[0]),id};}
 function harness(ids){ const old=structuredClone(preferences), oldDoc=globalThis.document; globalThis.document={activeElement:null,createElement:element}; replacePreferences({...structuredClone(CONFIG.defaults),orbs:ids.map(orb)});resolveSettings();const view=ui(),calls=[];const editor=createOrbEditorUi({ui:view,commitOrbChangeById:(...x)=>calls.push(x),commitPreferences:(...x)=>calls.push(x),showStatus:()=>{}});return {old,oldDoc,view,calls,editor,restore(){replacePreferences(old);resolveSettings();globalThis.document=oldDoc}}; }
 
-test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["chkFadeTrace","rngFadeSegments","chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngMinPlacementDistance","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
+test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["selTraceLengthMode","numAngularSpanDeg","chkFadeTrace","rngFadeSegments","chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngMinPlacementDistance","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
 
 test("editor reconciliation retains roots by ID, reorders nodes, and replaces only structural changes",()=>{const h=harness(["A","B","C"]);try{h.editor.init();const roots=new Map(["A","B","C"].map(id=>[id,h.editor.getController(id).root]));preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["C","A","B"]);for(const id of ["A","B","C"])assert.equal(h.editor.getController(id).root,roots.get(id));preferences.orbs.push(orb("D"));resolveSettings();h.editor.refresh();const dRoot=h.editor.getController("D").root;assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["C","A","B","D"]);for(const id of ["A","B","C"])assert.equal(h.editor.getController(id).root,roots.get(id));preferences.orbs=preferences.orbs.filter(item=>item.id!=="C");resolveSettings();h.editor.refresh();assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["A","B","D"]);assert.equal(h.editor.getController("A").root,roots.get("A"));assert.equal(h.editor.getController("B").root,roots.get("B"));assert.equal(h.editor.getController("C"),undefined);assert.equal(h.editor.getController("D").root,dRoot);}finally{h.restore()}});
 
@@ -312,5 +312,101 @@ test("116F Trace controls use CONFIG segments, stable identity, keyboard and can
     preferences.orbs = []; resolveSettings(); h.editor.refresh();
     assert.equal(h.view.chkFadeTrace.disabled,true); assert.equal(h.view.rngFadeSegments.disabled,true);
     const before = h.calls.length; h.view.chkFadeTrace.dispatch("change"); h.view.rngFadeSegments.dispatch("input"); assert.equal(h.calls.length,before);
+  } finally { h.restore(); }
+});
+
+
+test("116G angular controls use canonical degrees and preserve per-Orb identity and existing controls", () => {
+  const h = harness(["A", "B"]);
+  try {
+    h.editor.init(); const a = h.editor.getController("A"), b = h.editor.getController("B");
+    const limit = CONFIG.limits.trace.angularSpanDeg;
+    assert.deepEqual(a.lengthMode.options.map(option => [option.value,option.textContent]), [["count","Line Count"],["angular","Angular Span"]]);
+    assert.equal(a.lengthMode.value,"count"); assert.equal(a.angularSpan.type,"number");
+    assert.deepEqual([a.angularSpan.min,a.angularSpan.max], [limit.min,limit.max].map(String));
+    assert.equal(a.angularSpan.step,"any"); assert.equal(a.angularSpan.value,"360");
+    assert.equal(a.angularSpanValue.textContent,"360°"); assert.equal(a.angularSpan.getAttribute("aria-valuetext"),"360 degrees");
+    const walk = node => [node,...node.children.flatMap(walk)];
+    const all = walk(a.root), label = all.find(node => node.htmlFor === a.angularSpan.id);
+    assert.equal(label.textContent,"Angular Span (degrees)");
+    const helpId = a.angularSpan.getAttribute("aria-describedby").split(" ")[0];
+    assert.match(all.find(node => node.id === helpId).textContent,/maximum using retained particles.*Line Count remains the maximum.*both modes/);
+    assert.equal(a.angularSpanError.getAttribute("role"),"alert");
+    a.lengthMode.value="angular"; a.lengthMode.dispatch("change");
+    a.angularSpan.focus(); a.angularSpan.value="1080"; a.angularSpan.dispatch("change");
+    assert.equal(preferences.orbs[0].trace.lengthMode,"angular"); assert.equal(preferences.orbs[0].trace.angularSpanDeg,1080);
+    assert.equal(preferences.orbs[1].trace.lengthMode,"count"); assert.equal(preferences.orbs[1].trace.angularSpanDeg,360);
+    assert.equal(h.calls.at(-1)[0],"A");
+    preferences.orbs.reverse(); resolveSettings(); h.editor.refresh();
+    assert.equal(h.editor.getController("A"),a); assert.equal(h.editor.getController("B"),b);
+    assert.equal(document.activeElement,a.angularSpan); assert.equal(a.angularSpan.value,"1080");
+    assert.equal(a.numLines.disabled,false); assert.equal(a.fade.disabled,false); assert.equal(a.fadeSegments.disabled,false);
+    assert.equal(h.editor.init(),false);
+    assert.equal(a.lengthMode.listenerCount("change"),1); assert.equal(a.angularSpan.listenerCount("change"),1); assert.equal(a.angularSpan.listenerCount("keydown"),1);
+    assert.equal(new Set([a.lengthMode.id,a.angularSpan.id,b.lengthMode.id,b.angularSpan.id]).size,4);
+  } finally { h.restore(); }
+});
+
+test("116G numeric angular drafts reject malformed/out-of-domain values and CONFIG keys retain precision", () => {
+  const h = harness(["A", "B"]);
+  try {
+    preferences.orbs[0].trace.angularSpanDeg=180.123456789; resolveSettings(); h.editor.init();
+    const a=h.editor.getController("A"), other=structuredClone(preferences.orbs[1]);
+    assert.equal(a.angularSpan.value,"180.123456789"); assert.equal(a.angularSpanValue.textContent,"180.123456789°");
+    a.angularSpan.dispatch("change"); assert.equal(preferences.orbs[0].trace.angularSpanDeg,180.123456789);
+    for (const raw of ["", " ", "0", "3601", "Infinity", "NaN", "0x100", "180 degrees", "--1", "1e999"]) {
+      const before=structuredClone(preferences), calls=h.calls.length;
+      a.angularSpan.value=raw; a.angularSpan.dispatch("change");
+      assert.deepEqual(preferences,before,raw); assert.equal(h.calls.length,calls,raw);
+      assert.equal(a.angularSpan.getAttribute("aria-invalid"),"true");
+      assert.equal(a.angularSpanError.textContent,`Enter ${CONFIG.limits.trace.angularSpanDeg.min} to ${CONFIG.limits.trace.angularSpanDeg.max} degrees.`);
+      h.editor.refresh(); assert.equal(a.angularSpan.value,raw,"unchanged settings do not erase rejected draft");
+    }
+    a.angularSpan.value="180.25"; a.angularSpan.dispatch("change");
+    assert.equal(preferences.orbs[0].trace.angularSpanDeg,180.25); assert.equal(a.angularSpan.getAttribute("aria-invalid"),"false"); assert.equal(a.angularSpanError.textContent,"");
+    a.angularSpan.dispatch("keydown",{key:"ArrowUp",preventDefault(){}});
+    assert.equal(preferences.orbs[0].trace.angularSpanDeg,180.25+CONFIG.limits.trace.angularSpanDeg.step);
+    a.angularSpan.dispatch("keydown",{key:"ArrowDown",preventDefault(){}}); assert.equal(preferences.orbs[0].trace.angularSpanDeg,180.25);
+    a.angularSpan.dispatch("keydown",{key:"ArrowUp",ctrlKey:true,preventDefault(){assert.fail("modified key claimed");}});
+    assert.equal(preferences.orbs[0].trace.angularSpanDeg,180.25); assert.deepEqual(preferences.orbs[1],other);
+    for (const value of [CONFIG.limits.trace.angularSpanDeg.min,CONFIG.limits.trace.angularSpanDeg.max]) {
+      a.angularSpan.value=String(value); a.angularSpan.dispatch("change");
+      const calls=h.calls.length;
+      a.angularSpan.dispatch("keydown",{key:value===CONFIG.limits.trace.angularSpanDeg.min?"ArrowDown":"ArrowUp",preventDefault(){}});
+      assert.equal(preferences.orbs[0].trace.angularSpanDeg,value); assert.equal(h.calls.length,calls);
+    }
+    a.lengthMode.value="unknown"; const calls=h.calls.length; a.lengthMode.dispatch("change"); assert.equal(h.calls.length,calls);
+  } finally { h.restore(); }
+});
+
+test("116G Bulk mode and degrees represent mixed values without applying them, and imports/reset refresh controls", () => {
+  const h = harness(["A", "B"]);
+  try {
+    preferences.orbs[0].trace.lengthMode="angular"; preferences.orbs[0].trace.angularSpanDeg=180;
+    resolveSettings(); h.editor.init();
+    const select=h.view.selTraceLengthMode, input=h.view.numAngularSpanDeg;
+    assert.equal(select.value,""); assert.equal(h.view.valTraceLengthMode.textContent,"mixed");
+    assert.equal(select.children.find(option=>option.value==="").disabled,true);
+    assert.equal(input.value,""); assert.equal(input.placeholder,"mixed"); assert.equal(h.view.valAngularSpanDeg.textContent,"mixed");
+    assert.match(input.getAttribute("aria-valuetext"),/mixed; enter degrees/);
+    const before=structuredClone(preferences), calls=h.calls.length;
+    select.dispatch("change"); input.dispatch("change"); assert.deepEqual(preferences,before); assert.equal(h.calls.length,calls);
+    select.value="angular"; select.dispatch("change"); input.value="1080.5"; input.dispatch("change");
+    assert.ok(preferences.orbs.every(orb=>orb.trace.lengthMode==="angular"&&orb.trace.angularSpanDeg===1080.5));
+    resolveSettings(); h.editor.refresh(); assert.equal(select.value,"angular"); assert.equal(input.value,"1080.5"); assert.equal(h.view.valAngularSpanDeg.textContent,"1080.5°");
+    input.dispatch("keydown",{key:"ArrowUp",preventDefault(){}}); assert.ok(preferences.orbs.every(orb=>orb.trace.angularSpanDeg===1081.5));
+    assert.equal(h.editor.init(),false); assert.equal(select.listenerCount("change"),1); assert.equal(input.listenerCount("change"),1); assert.equal(input.listenerCount("keydown"),1);
+    const root=h.editor.getController("A").root, imported=structuredClone(preferences);
+    imported.orbs[0].trace.lengthMode="count"; imported.orbs[0].trace.angularSpanDeg=270.125;
+    replacePreferences(imported); resolveSettings(); h.editor.refresh();
+    const a=h.editor.getController("A"); assert.equal(a.root,root); assert.equal(a.lengthMode.value,"count"); assert.equal(a.angularSpan.value,"270.125");
+    replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings(); h.editor.refresh();
+    for(const orb of preferences.orbs){ const c=h.editor.getController(orb.id); assert.equal(c.lengthMode.value,"count"); assert.equal(c.angularSpan.value,"360"); }
+    assert.equal(select.value,"count"); assert.equal(input.value,"360");
+    preferences.orbs=[]; resolveSettings(); h.editor.refresh(); assert.equal(select.disabled,true); assert.equal(input.disabled,true); assert.equal(h.view.valAngularSpanDeg.textContent,"—");
+    const emptyCalls=h.calls.length; select.value="angular"; select.dispatch("change"); input.value="180"; input.dispatch("change"); assert.equal(h.calls.length,emptyCalls);
+    const template=readFileSync(new URL("../src/index.template.html",import.meta.url),"utf8");
+    assert.match(template,/label for="selTraceLengthMode">Trace Length Mode/); assert.match(template,/label for="numAngularSpanDeg">Angular Span \(degrees\)/);
+    assert.match(template,/id="numAngularSpanDeg" type="number" inputmode="decimal" aria-describedby="traceLengthHelp angularSpanError"/);
   } finally { h.restore(); }
 });

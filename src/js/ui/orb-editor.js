@@ -37,6 +37,9 @@ function formatOrbPhaseDegrees(radians) {
   return String(Number.isInteger(readable) && readable !== degrees ? degrees : readable);
 }
 
+const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
+const traceLengthLabel = mode => mode === "angular" ? "Angular Span" : "Line Count";
+
 let nextEditorToken = 0;
 function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus, onControlsChanged = () => {}, createBandPicker = createOrbBandPicker } = {}) {
   const controllers = new Map();
@@ -56,6 +59,53 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
   function rangeField(body, token, key, label, limit, title = "") { const control = range(limit), output = make("div", "val"); body.append(row(token, key, label, control, output, title)); return { control, output }; }
   function selectField(body, token, key, label, options) { const control = make("select"), output = make("div", "val"); for (const item of options) addOption(control, ...item); body.append(row(token, key, label, control, output)); return { control, output }; }
   function checkboxField(body, token, key, label) { const control = make("input"), output = make("div", "val"); control.type = "checkbox"; body.append(row(token, key, label, control, output)); return { control, output }; }
+
+  function angularField(body, token) {
+    const control = make("input"), output = make("div", "val"), error = make("p", "picker-error");
+    control.type = "number"; control.inputMode = "decimal";
+    error.id = `orb-editor-${token}-angular-span-error`; error.setAttribute("role", "alert");
+    body.append(row(token, "angular-span-deg", "Angular Span (degrees)", control, output), error);
+    return { control, output, error };
+  }
+  function readAngularSpan(control, error) {
+    const raw = control.value.trim(), value = DECIMAL.test(raw) ? Number(raw) : NaN;
+    const { min, max } = CONFIG.limits.trace.angularSpanDeg;
+    if (!Number.isFinite(value) || value < min || value > max) {
+      control.setAttribute("aria-invalid", "true");
+      error.textContent = `Enter ${min} to ${max} degrees.`;
+      return null;
+    }
+    control.setAttribute("aria-invalid", "false"); error.textContent = "";
+    return value;
+  }
+  function bindAngularSpan(control, error, commit) {
+    const limits = CONFIG.limits.trace.angularSpanDeg;
+    control.min = String(limits.min); control.max = String(limits.max);
+    // Numeric entry preserves canonical precision, as Camera does. Arrow keys
+    // own the CONFIG increment without forcing imported values onto a grid.
+    control.step = "any";
+    control.addEventListener("change", () => {
+      if (control.disabled) return;
+      const value = readAngularSpan(control, error); if (value !== null) commit(value);
+    });
+    control.addEventListener("keydown", event => {
+      if (control.disabled || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.isComposing) return;
+      const direction = event.key === "ArrowUp" ? 1 : event.key === "ArrowDown" ? -1 : 0;
+      if (!direction) return;
+      event.preventDefault();
+      const value = readAngularSpan(control, error); if (value === null) return;
+      const next = Math.max(limits.min, Math.min(limits.max, value + direction * limits.step));
+      if (next === value) return;
+      control.value = String(next); commit(next);
+    });
+  }
+  function syncAngularSpan(control, output, error, value, mixed = false) {
+    control.value = mixed ? "" : String(value);
+    control.placeholder = mixed ? "mixed" : "";
+    output.textContent = mixed ? "mixed" : `${value}°`;
+    control.setAttribute("aria-valuetext", mixed ? "mixed; enter degrees to apply to all Orbs" : `${value} degrees`);
+    control.setAttribute("aria-invalid", "false"); error.textContent = "";
+  }
 
   function createController(id) {
     const token = ++nextEditorToken;
@@ -101,7 +151,15 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
 
     const traceBody = make("div", "section-body");
     const linesField = checkboxField(traceBody, token, "lines", "Lines Enabled");
+    const lengthModeField = selectField(traceBody, token, "trace-length-mode", "Trace Length Mode", CONFIG.limits.trace.lengthModes.map(mode => [mode, traceLengthLabel(mode)]));
+    const angularSpanField = angularField(traceBody, token);
     const numLinesField = rangeField(traceBody, token, "line-count", "Line Count", CONFIG.limits.trace.numLines);
+    const lengthHelp = make("p", "section-description", "Angular Span is a maximum using retained particles, not a guaranteed history. Line Count remains the maximum number of Trace segments in both modes. Switching into Angular Span starts eligible samples from that point.");
+    lengthHelp.id = `orb-editor-${token}-trace-length-help`;
+    lengthModeField.control.setAttribute("aria-describedby", lengthHelp.id);
+    angularSpanField.control.setAttribute("aria-describedby", `${lengthHelp.id} ${angularSpanField.error.id}`);
+    numLinesField.control.setAttribute("aria-describedby", lengthHelp.id);
+    traceBody.appendChild(lengthHelp);
     const alphaField = rangeField(traceBody, token, "line-alpha", "Line Alpha", CONFIG.limits.trace.lineAlpha);
     const widthField = rangeField(traceBody, token, "line-width", "Line Width", CONFIG.limits.trace.lineWidthPx);
     const fadeField = checkboxField(traceBody, token, "fade-trace", "Fade Trace");
@@ -128,10 +186,14 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     for (const [field, group, key, reason] of [[speedField,"motion","angularSpeedRadPerSec","angular speed"],[minRadiusField,"response","minRadiusFrac","min radius"],[maxRadiusField,"response","maxRadiusFrac","max radius"],[waveformField,"response","waveformRadialDisplaceFrac","waveform displacement"],[emitField,"particles","emitPerSecond","emit rate"],[sizeMinField,"particles","sizeMinPx","minimum size"],[sizeMaxField,"particles","sizeMaxPx","maximum size"],[decayField,"particles","sizeToMinSec","size decay"],[ttlField,"particles","ttlSec","lifetime"],[spacingField,"particles","minPlacementDistanceUnits","minimum placement distance"],[numLinesField,"trace","numLines","line count"],[fadeSegmentsField,"trace","fadeSegments","fade length"],[alphaField,"trace","lineAlpha","line alpha"],[widthField,"trace","lineWidthPx","line width"]]) field.control.addEventListener("input", () => { const value = readConfigRange(field.control, editingBounds([findOrb()], group, key)); if (value !== null) commitNested(group, key, value, `${id} ${reason}`); });
     linesField.control.addEventListener("change", () => commitNested("trace", "lines", !!linesField.control.checked, `${id} lines`));
     fadeField.control.addEventListener("change", () => commitNested("trace", "fadeEnabled", !!fadeField.control.checked, `${id} fade trace`));
+    lengthModeField.control.addEventListener("change", () => {
+      if (CONFIG.limits.trace.lengthModes.includes(lengthModeField.control.value)) commitNested("trace", "lengthMode", lengthModeField.control.value, `${id} trace length mode`);
+    });
+    bindAngularSpan(angularSpanField.control, angularSpanField.error, value => commitNested("trace", "angularSpanDeg", value, `${id} angular span`));
     lineColorField.control.addEventListener("change", () => commitNested("trace", "lineColorMode", lineColorField.control.value, `${id} line color mode`));
     bands.addEventListener("change", () => { const parsed = parseBandSelection(bands.value, BAND_NAMES.length); bands.setAttribute("aria-invalid", parsed.error ? "true" : "false"); error.textContent = parsed.error; if (parsed.error) { bandValue.textContent = "Invalid indices"; showStatus(parsed.error); return; } commit("bandIds", parsed.ids, `${id} band indices`); });
     const picker = createBandPicker(pickerRoot, { orbLabel: `Orb ${id}`, onChange(ids) { bands.value = formatOrbBandIdsText(ids); bands.setAttribute("aria-invalid", "false"); error.textContent = ""; commit("bandIds", ids, `${id} bands`); }, formatRange: BandBank.formatBandRangeText, getActiveCount: () => runtime.settings.bands.count, describeBank: () => `${runtime.settings.bands.distributionMode.toUpperCase()} distribution · ${runtime.settings.bands.count} active bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}` });
-    return { id, root, summary, title, identity, chan: chanField.control, chanValue: chanField.output, bands, bandValue, error, chir: chirField.control, chirValue: chirField.output, phase: phaseField.control, phaseValue: phaseField.output, hue: hueField.control, hueValue: hueField.output, color: colorField.control, colorValue: colorField.output, x: xField.control, xValue: xField.output, y: yField.control, yValue: yField.output, speed: speedField.control, speedValue: speedField.output, minRadius: minRadiusField.control, minRadiusValue: minRadiusField.output, maxRadius: maxRadiusField.control, maxRadiusValue: maxRadiusField.output, waveform: waveformField.control, waveformValue: waveformField.output, emit: emitField.control, emitValue: emitField.output, sizeMin: sizeMinField.control, sizeMinValue: sizeMinField.output, sizeMax: sizeMaxField.control, sizeMaxValue: sizeMaxField.output, decay: decayField.control, decayValue: decayField.output, ttl: ttlField.control, ttlValue: ttlField.output, spacing: spacingField.control, spacingValue: spacingField.output, fade: fadeField.control, fadeValue: fadeField.output, fadeSegments: fadeSegmentsField.control, fadeSegmentsValue: fadeSegmentsField.output, lines: linesField.control, linesValue: linesField.output, numLines: numLinesField.control, numLinesValue: numLinesField.output, lineAlpha: alphaField.control, lineAlphaValue: alphaField.output, lineWidth: widthField.control, lineWidthValue: widthField.output, lineColor: lineColorField.control, lineColorValue: lineColorField.output, picker };
+    return { id, root, summary, title, identity, lengthMode: lengthModeField.control, lengthModeValue: lengthModeField.output, angularSpan: angularSpanField.control, angularSpanValue: angularSpanField.output, angularSpanError: angularSpanField.error, chan: chanField.control, chanValue: chanField.output, bands, bandValue, error, chir: chirField.control, chirValue: chirField.output, phase: phaseField.control, phaseValue: phaseField.output, hue: hueField.control, hueValue: hueField.output, color: colorField.control, colorValue: colorField.output, x: xField.control, xValue: xField.output, y: yField.control, yValue: yField.output, speed: speedField.control, speedValue: speedField.output, minRadius: minRadiusField.control, minRadiusValue: minRadiusField.output, maxRadius: maxRadiusField.control, maxRadiusValue: maxRadiusField.output, waveform: waveformField.control, waveformValue: waveformField.output, emit: emitField.control, emitValue: emitField.output, sizeMin: sizeMinField.control, sizeMinValue: sizeMinField.output, sizeMax: sizeMaxField.control, sizeMaxValue: sizeMaxField.output, decay: decayField.control, decayValue: decayField.output, ttl: ttlField.control, ttlValue: ttlField.output, spacing: spacingField.control, spacingValue: spacingField.output, fade: fadeField.control, fadeValue: fadeField.output, fadeSegments: fadeSegmentsField.control, fadeSegmentsValue: fadeSegmentsField.output, lines: linesField.control, linesValue: linesField.output, numLines: numLinesField.control, numLinesValue: numLinesField.output, lineAlpha: alphaField.control, lineAlphaValue: alphaField.output, lineWidth: widthField.control, lineWidthValue: widthField.output, lineColor: lineColorField.control, lineColorValue: lineColorField.output, picker };
   }
   const bindRange = (control, limit) => bindConfigRange(control, limit,
     limit === CONFIG.limits.orbs.startAngleRad || limit === CONFIG.limits.motion.angularSpeedRadPerSec ? RAD_TO_DEG : 1);
@@ -151,6 +213,8 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     set(c.minRadius,c.minRadiusValue,orb.response.minRadiusFrac); set(c.maxRadius,c.maxRadiusValue,orb.response.maxRadiusFrac); set(c.waveform,c.waveformValue,orb.response.waveformRadialDisplaceFrac);
     set(c.emit,c.emitValue,orb.particles.emitPerSecond,v=>`${v}/s`); set(c.sizeMin,c.sizeMinValue,orb.particles.sizeMinPx,v=>`${v}px`); set(c.sizeMax,c.sizeMaxValue,orb.particles.sizeMaxPx,v=>`${v}px`); set(c.decay,c.decayValue,orb.particles.sizeToMinSec,v=>`${v}s`); set(c.ttl,c.ttlValue,orb.particles.ttlSec,v=>`${v}s`);
     set(c.spacing,c.spacingValue,orb.particles.minPlacementDistanceUnits,v=>`${v} world units`);
+    setSelect(c.lengthMode,c.lengthModeValue,orb.trace.lengthMode);
+    syncAngularSpan(c.angularSpan,c.angularSpanValue,c.angularSpanError,orb.trace.angularSpanDeg);
     c.lines.checked = orb.trace.lines; c.lines.indeterminate = false; c.linesValue.textContent = orb.trace.lines ? "on" : "off";
     c.fade.checked = orb.trace.fadeEnabled; c.fade.indeterminate = false; c.fadeValue.textContent = orb.trace.fadeEnabled ? "on" : "off";
     set(c.fadeSegments,c.fadeSegmentsValue,orb.trace.fadeSegments,v=>`${v} segment${v === 1 ? "" : "s"}`);
@@ -194,22 +258,37 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
           control.setAttribute("aria-valuetext", `mixed; slider selection ${format(selection)}`);
         }
       } else {
-        control.value = model.mixed && control === ui.selLineColorMode ? "" : String(model.value);
+        control.value = model.mixed && (control === ui.selLineColorMode || control === ui.selTraceLengthMode) ? "" : String(model.value);
         output.textContent = model.mixed ? "mixed" : format(model.value);
       }
       if (control.type === "checkbox") { control.indeterminate = model.mixed; if (!model.mixed) control.checked = !!model.value; }
     };
+    bulk("trace","lengthMode",ui.selTraceLengthMode,ui.valTraceLengthMode,traceLengthLabel);
+    const angular = readBulkOrbValue(orbs,"trace","angularSpanDeg");
+    ui.numAngularSpanDeg.disabled = !angular.available;
+    if (angular.available) syncAngularSpan(ui.numAngularSpanDeg,ui.valAngularSpanDeg,ui.angularSpanError,angular.value,angular.mixed);
+    else {
+      ui.numAngularSpanDeg.value = ""; ui.numAngularSpanDeg.placeholder = "";
+      ui.numAngularSpanDeg.setAttribute("aria-valuetext", "No Orbs");
+      ui.numAngularSpanDeg.setAttribute("aria-invalid", "false");
+      ui.valAngularSpanDeg.textContent = "—"; ui.angularSpanError.textContent = "";
+    }
     bulk("trace","fadeEnabled",ui.chkFadeTrace,ui.valFadeTrace,v=>v?"on":"off"); bulk("trace","fadeSegments",ui.rngFadeSegments,ui.valFadeSegments,v=>`${v} segment${v === 1 ? "" : "s"}`);
     bulk("trace","lines",ui.chkLines,ui.valLines,v=>v?"on":"off"); bulk("trace","numLines",ui.rngNumLines,ui.valNumLines,String); bulk("trace","lineColorMode",ui.selLineColorMode,ui.valLineColorMode,String);
     for (const [g,f,c,o,format] of [["particles","emitPerSecond",ui.rngEmit,ui.valEmit,v=>`${v}/s`],["particles","sizeMaxPx",ui.rngSizeMax,ui.valSizeMax,v=>`${v}px`],["particles","sizeMinPx",ui.rngSizeMin,ui.valSizeMin,v=>`${v}px`],["particles","sizeToMinSec",ui.rngSizeToMin,ui.valSizeToMin,v=>`${v}s`],["particles","ttlSec",ui.rngTTL,ui.valTTL,v=>`${v}s`],["particles","minPlacementDistanceUnits",ui.rngMinPlacementDistance,ui.valMinPlacementDistance,v=>`${v} world units`],["motion","angularSpeedRadPerSec",ui.rngOmega,ui.valOmega,v=>`${v} rad/s (${fmt(v*RAD_TO_DEG,1)}°/s)`],["response","waveformRadialDisplaceFrac",ui.rngWfDisp,ui.valWfDisp,v=>String(v)],["response","minRadiusFrac",ui.rngMinRad,ui.valMinRad,v=>String(v)],["response","maxRadiusFrac",ui.rngMaxRad,ui.valMaxRad,v=>String(v)]]) bulk(g,f,c,o,format);
   }
   function init() {
     if (initializedOn === ui.orbEditorList) return false; initializedOn = ui.orbEditorList;
-    const mixedOption = make("option", "", "mixed");
-    mixedOption.value = "";
-    mixedOption.disabled = true;
-    ui.selLineColorMode.appendChild(mixedOption);
-    const bulk = (control,event,group,field,read,reason) => control.addEventListener(event,()=>{ if (control.disabled || (control === ui.selLineColorMode && control.value === "")) return; const value = control.type === "range" ? readConfigRange(control, editingBounds(preferences.orbs, group, field)) : read(control); if (value !== null && applyBulkOrbValue(preferences.orbs,group,field,value)) commitPreferences(reason); });
+    for (const mode of CONFIG.limits.trace.lengthModes) addOption(ui.selTraceLengthMode, mode, traceLengthLabel(mode));
+    for (const control of [ui.selLineColorMode, ui.selTraceLengthMode]) {
+      const mixedOption = make("option", "", "mixed");
+      mixedOption.value = ""; mixedOption.disabled = true; control.appendChild(mixedOption);
+    }
+    const bulk = (control,event,group,field,read,reason) => control.addEventListener(event,()=>{ if (control.disabled || ((control === ui.selLineColorMode || control === ui.selTraceLengthMode) && control.value === "")) return; const value = control.type === "range" ? readConfigRange(control, editingBounds(preferences.orbs, group, field)) : read(control); if (value !== null && applyBulkOrbValue(preferences.orbs,group,field,value)) commitPreferences(reason); });
+    bulk(ui.selTraceLengthMode,"change","trace","lengthMode",c=>CONFIG.limits.trace.lengthModes.includes(c.value)?c.value:null,"trace length mode");
+    bindAngularSpan(ui.numAngularSpanDeg, ui.angularSpanError, value => {
+      if (applyBulkOrbValue(preferences.orbs,"trace","angularSpanDeg",value)) commitPreferences("angular span");
+    });
     bindRange(ui.rngFadeSegments, CONFIG.limits.trace.fadeSegments);
     bulk(ui.chkFadeTrace,"change","trace","fadeEnabled",c=>!!c.checked,"fade trace");
     bulk(ui.rngFadeSegments,"input","trace","fadeSegments",c=>Number(c.value),"fade length");

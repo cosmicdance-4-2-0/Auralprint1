@@ -149,8 +149,20 @@
     </div>
 
     <div class="row">
-      <label for="rngNumLines">Line count</label>
-      <input id="rngNumLines" type="range" />
+      <label for="selTraceLengthMode">Trace Length Mode</label>
+      <select id="selTraceLengthMode" aria-describedby="traceLengthHelp"></select>
+      <div id="valTraceLengthMode" class="val"></div>
+    </div>
+    <div class="row">
+      <label for="numAngularSpanDeg">Angular Span (degrees)</label>
+      <input id="numAngularSpanDeg" type="number" inputmode="decimal" aria-describedby="traceLengthHelp angularSpanError" />
+      <div id="valAngularSpanDeg" class="val"></div>
+    </div>
+    <p id="angularSpanError" class="picker-error" role="alert"></p>
+    <p id="traceLengthHelp" class="section-description">Angular Span is a maximum using retained particles, not a guaranteed history. Line Count remains the maximum number of Trace segments in both modes. Switching into Angular Span starts eligible samples from that point.</p>
+    <div class="row">
+      <label for="rngNumLines">Line Count</label>
+      <input id="rngNumLines" type="range" aria-describedby="traceLengthHelp" />
       <div id="valNumLines" class="val"></div>
     </div>
 

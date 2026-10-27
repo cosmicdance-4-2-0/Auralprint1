@@ -94,6 +94,7 @@ function primeDomCache() {
     ui.valLines = document.getElementById("valLines");
     ui.rngNumLines = document.getElementById("rngNumLines");
     ui.valNumLines = document.getElementById("valNumLines");
+    for (const id of ["selTraceLengthMode", "valTraceLengthMode", "numAngularSpanDeg", "valAngularSpanDeg", "angularSpanError"]) ui[id] = document.getElementById(id);
     for (const id of ["chkFadeTrace", "valFadeTrace", "rngFadeSegments", "valFadeSegments"]) ui[id] = document.getElementById(id);
 
     ui.selLineColorMode = document.getElementById("selLineColorMode");
