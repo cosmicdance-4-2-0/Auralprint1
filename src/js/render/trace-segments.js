@@ -25,9 +25,9 @@ function mixedCss(points, index, background, amount, alpha) {
   return rgb01ToCss(mixed, alpha);
 }
 
-function drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, quota) {
+function drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, quota,
+  count = Math.min(particles.length, Math.ceil(trace.numLines) + 1)) {
   const points = getScratch();
-  const count = Math.min(particles.length, Math.ceil(trace.numLines) + 1);
   const birth = trace.lineColorMode === "particleBirth";
   const fixed = ColorPolicy.pickLineColorRgb01(particles, dominantBandIndex, birth ? "fixed" : trace.lineColorMode);
   let length = 0, drawable = 0, previousValid = false;

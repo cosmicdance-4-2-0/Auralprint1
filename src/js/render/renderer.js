@@ -7,6 +7,7 @@ import { Spaces } from "../core/spaces.js";
 import { ColorPolicy } from "./color-policy.js";
 import { CONFIG } from "../core/config.js";
 import { drawSegmentedTrace } from "./trace-segments.js";
+import { angularTracePointCount } from "./trace-selection.js";
 
 /* =============================================================================
    Renderer
@@ -20,10 +21,13 @@ const Renderer = (() => {
     ctx.fillRect(0, 0, state.widthPx, state.heightPx);
   }
 
-  function drawTrailLines(particles, dominantBandIndex, trace, segmentStrokeQuota) {
+  function drawTrailLines(orb, dominantBandIndex, segmentStrokeQuota) {
+    const particles = orb.trail.particles, trace = orb.trace;
     if (!trace.lines) return;
 
-    const neededPts = Math.min(particles?.length || 0, Math.ceil(trace.numLines) + 1);
+    const angular = trace.lengthMode === "angular";
+    const neededPts = angular ? angularTracePointCount(orb)
+      : Math.min(particles?.length || 0, Math.ceil(trace.numLines) + 1);
     if (!particles || particles.length < 2) return;
     if (!(neededPts >= 2)) return;
 
@@ -39,7 +43,7 @@ const Renderer = (() => {
     ctx.lineCap = "round";
 
     if (trace.fadeEnabled || trace.lineColorMode === "particleBirth") {
-      const strokes = drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, segmentStrokeQuota);
+      const strokes = drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, segmentStrokeQuota, neededPts);
       ctx.restore();
       return strokes;
     }
@@ -48,7 +52,7 @@ const Renderer = (() => {
     let first = true;
     for (const particle of particles.suffix(neededPts)) {
       const point = Spaces.simToScreen(particle.xSim, particle.ySim);
-      if (!point) { first = true; continue; }
+      if (!point || (angular && (!Number.isFinite(point.x) || !Number.isFinite(point.y)))) { first = true; continue; }
       if (first) { ctx.moveTo(point.x, point.y); first = false; }
       else ctx.lineTo(point.x, point.y);
     }
@@ -177,7 +181,7 @@ const Renderer = (() => {
 
   function drawOrb(orb, nowSec, dominantBandIndex, segmentStrokeQuota = CONFIG.traceRendering.maxSegmentStrokesPerFrame) {
     const particles = orb.trail.particles;
-    const strokes = drawTrailLines(particles, dominantBandIndex, orb.trace, segmentStrokeQuota);
+    const strokes = drawTrailLines(orb, dominantBandIndex, segmentStrokeQuota);
     drawParticles(particles, nowSec, orb.particles);
     return strokes || 0;
   }

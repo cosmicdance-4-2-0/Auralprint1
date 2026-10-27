@@ -1,9 +1,14 @@
 import { CONFIG } from "../core/config.js";
+import { angularTracePointCount } from "./trace-selection.js";
 
 function traceSegmentDemand(orb) {
   const trace = orb.trace;
   if (!trace?.lines || (!trace.fadeEnabled && trace.lineColorMode !== "particleBirth")) return 0;
-  const segments = Math.max(0, Math.min((orb.trail?.particles?.length || 0) - 1, Math.ceil(trace.numLines)));
+  // Projection gaps may further reduce actual work, as in count mode. Angular
+  // filtering is known before granting detail and never raises this upper bound.
+  const segments = trace.lengthMode === "angular"
+    ? Math.max(0, angularTracePointCount(orb) - 1)
+    : Math.max(0, Math.min((orb.trail?.particles?.length || 0) - 1, Math.ceil(trace.numLines)));
   return trace.lineColorMode === "particleBirth" ? segments : Math.min(segments, trace.fadeSegments);
 }
 
