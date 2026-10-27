@@ -38,9 +38,10 @@ Auralprint is an offline-capable FFT audio-analysis application with playback, v
 
 ### 2.1 Schema Discipline
 
-- Released schema **10** and accepted development schemas **11–13** are immutable; **12** owns authored
+- Released schema **10** and accepted development schemas **11–14** are immutable; **12** owns authored
   Scene camera and **13** frozen-default deltas/ordered band ranges. **14** adds opt-in Queue and Trace
-  presentation preferences with its own frozen decoding baseline. Never mutate the schema-13 baseline.
+  presentation preferences with its own frozen decoding baseline. **15** adds optional angular Trace length.
+  Never mutate the schema-13 or schema-14 baseline literals.
   Persisted-field/ownership/semantic changes require versioning and migration; never reuse schema numbers
   incompatibly.
 - Update the **complete pipeline**: CONFIG defaults/limits, `sanitizePreset()`, `normalize*()`,
@@ -50,7 +51,7 @@ Auralprint is an offline-capable FFT audio-analysis application with playback, v
 - [preset-codec.js](src/js/presets/preset-codec.js) owns encoding/decoding/migration/sanitation. `UrlPreset`
   is transport/preference replacement; callers resolve/synchronize. Invalid imports change neither preferences
   nor camera.
-- Preserve schemas **2–13** and approved migrations: both schema-9 forms with top-level precedence and
+- Preserve schemas **2–14** and approved migrations: both schema-9 forms with top-level precedence and
   abandoned Scene semantics discarded; schemas 2–10 default world/fixed one-world-unit-per-reference-CSS-pixel
   spacing; schema 11 world/unit spacing; schemas 2–11 factory camera, ignoring injected/historical camera
   fields. Never mutate input objects.

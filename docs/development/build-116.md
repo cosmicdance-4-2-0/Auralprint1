@@ -4,6 +4,84 @@
 
 At accepted `main` [`e4495d8`](https://github.com/cosmicdance-4-2-0/Auralprint1/commit/e4495d8ceae3d33c6d8464c1b56a3cfe937cd2d5), the completed integration sequence is 116A foundation/integration (PRs [#67](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/67)/[#68](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/68)), B ([#69](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/69)), C ([#71](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/71)), C.A ([#72](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/72)) and D ([#73](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/73)). The first forensic audit ([#74](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/74)) and corrective PRs [#75](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/75)–[#79](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/79), including angular-step alignment in #78, are merged. The sections below retain their original decisions, validation and review stops; those stops describe historical checkpoints. [ROADMAP](../../ROADMAP.md#build-116-simulation-world-camera-and-projection) owns remaining acceptance and authorization gates. Build 116D remains unreleased.
 
+## 116G angular Trace length
+
+Proposed development **`v0.1.16g`, schema 15**, based on accepted/fetched `main` **`26b3ed1a72d177278dc8214f43752da1246e1348`**, the merge of PR [#86](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/86). The clean checkout's earlier 116E HEAD was verified as an ancestor before creating `feature/116g-angular-trace` from accepted main. Implementation and draft delivery do not grant milestone acceptance, RC promotion or release authority. The 116F section below retains its original checkpoint and measurements.
+
+Canonical additions per Orb are `trace.lengthMode = "count"` and `trace.angularSpanDeg = 360`. CONFIG owns modes `count`/`angular` and span **1–3,600 degrees, arrow step 1**: a positive maximum from a fraction of a turn through ten revolutions. Numeric entry avoids a coarse wide-range slider; valid fractional canonical imports retain precision. The existing `trace.numLines` remains the only maximum segment count in both modes. Individual and Bulk controls use the established settings/identity pipeline and explain retained-history limits.
+
+`Orb.step()` sums `Math.abs(angleDelta)` for accepted finite movement using compensated summation, separately from wrapped phase. Reversals add distance; pause, zero movement and discarded timing discontinuities add none. Authored-phase edits preserve live phase/history; Reset Visuals applies design and clears history/travel, while track reset clears history/travel without changing phase. Counters and epoch tokens are runtime-only. A binary64 representation guard at `sqrt(Number.MAX_SAFE_INTEGER)` radians starts a fresh eligibility epoch at the actual endpoint instead of allowing overflow or large-counter precision loss; it does not create, remove or relabel retained particles.
+
+Only Angular-mode emissions receive numeric travel and an epoch token. `TrailSystem.updateAndEmit()` captures both beside the sampled position/color/time; deferred governor admission uses that snapshot. Supported governor transfers preserve stamps. Count-mode particles gain no metadata properties or additional retained records. Entering Angular starts a fresh epoch; older unstamped or previous-epoch particles still render as ordinary particles, but cannot join the new Trace. Count → Angular → Count → Angular never invents travel. Reset, retirement and disposal release particle metadata with its existing owner.
+
+Selection walks backward from the retained tail, bounded by `numLines + 1`, stopping at the first missing, incompatible, invalid, nonmonotonic or out-of-span stamp. The inclusive lower bound is **current Orb travel minus requested span**, independent of the newest emission. Only selected retained points are projected; invalid projections break adjacency. No older outside point or synthetic boundary point is added. Drawable segments then determine Fade positions and existing birth-color rendering. Ordinary single-color Angular uses a batched Canvas path; effect demand uses selected points as a safe upper bound before projection gaps, and detail strokes remain within the unchanged **2,048** frame budget. No TTL, retention, spacing or emission policy changes belong to 116G.
+
+Schema 15 has a new frozen literal. Explicit `LEGACY_SCHEMA_V14` selection protects Schema-14 Queue clearing, Fade and Birth Color; schemas 2–14 reconstruct with `count`/360°. Both Schema-13 and Schema-14 literals remain unchanged. Compressed schemas 13, 14 and 15 and uncompressed schemas 2–15 preserve existing framing, limits and atomic import behavior. Runtime counters/stamps never enter presets.
+
+### 116G rendering measurements
+
+The accepted 116F checkout was isolated at `26b3ed1` before renderer edits. Its unchanged `validate-116f.cjs --canvas-only` run measured mature defaults **2.4/16.7 ms**, sixteen 60-line Count **1.7–1.9/16.7**, Fade 5 **2.7/16.7**, Birth Color **7.4/100**, combined **7.3/100**, and 1,000-line Birth/combined **40.4–42.1/266.7–266.8** (submission/rAF medians). These precede the paired 116G comparison below; they do not establish a universal timing baseline.
+
+The [116G harness](../../scripts/validate-116g.cjs) loads complete accepted/current module trees against identical seeded retained geometry. Linux Chromium **151.0.7922.173**, 1,000×800, DPR 1, background `#24384d`; 35 rAF samples per first-run case. Both sides use the same instrumentation; timings include harness overhead and should be compared within this paired run. Cells show median **Canvas command submission / rAF interval**, in milliseconds, not GPU completion or FPS guarantees. Angular 360° selects half of a seeded 720° history; **full** uses 3,600° and selects every existing point. Particle counts remain 976 for sixteen 60-line cases and 16,016 for 1,000-line cases; factory mature history has 2,880.
+
+| Scene | Accepted 116F ms | 116G ms | Canvas strokes / clips |
+| --- | ---: | ---: | ---: |
+| Factory short | 0.2 / 16.7 | 0.2 / 16.7 | 2 / 0 |
+| Factory mature | 3.5 / 16.7 | 3.5 / 16.7 | 2 / 0 |
+| 16 × 60 Count | 2.3 / 16.7 | 2.4 / 16.7 | 16 / 0 |
+| 16 × 60 Fade 5 | 3.7 / 16.7 | 3.6 / 16.7 | 96 / 160 |
+| 16 × 60 Birth Color | 8.6 / 116.7 | 10.3 / 133.4 | 960 / 1,888 |
+| 16 × 60 Angular | — | 2.0 / 16.7 | 16 / 0 |
+| 16 × 60 Angular full | — | 1.9 / 16.7 | 16 / 0 |
+| 16 × 60 Angular + both effects | — | 9.2 / 83.4 | 480 / 928 |
+| 16 × 60 Angular full + both effects | — | 8.2 / 116.7 | 960 / 1,888 |
+| 16 × 1,000 Count | 35.7 / 66.7 | 36.1 / 66.7 | 16 / 0 |
+| 16 × 1,000 Angular | — | 33.8 / 66.6 | 16 / 0 |
+| 16 × 1,000 Birth Color | 47.0 / 283.4 | 46.4 / 299.9 | 2,048 / 4,064 |
+| 16 × 1,000 Angular + both effects | — | 48.1 / 300.0 | 2,048 / 4,064 |
+| 16 × 1,000 Angular full + both effects | — | 48.3 / 300.0 | 2,048 / 4,064 |
+| 16 × 60 Angular + both / budget 32 | — | 2.1 / 16.7 | 32 / 32 |
+| Same / budget 5 | — | 2.4 / 16.7 | 16 (5 detail) / 0 |
+| Same / budget 0 | — | 2.3 / 16.7 | 16 (0 detail) / 0 |
+
+Count paths matched accepted stroke, clip, projection and suffix counts. At sixteen × 60, Count projected **1,952** points and yielded **976** suffix points; Angular half **1,472/496**, full **1,952/976**. Untimed backward-link probes counted **960** for Count, **976/1,936** for Angular half/full, and **1,472/2,912** with Angular effects (selection plus governor demand). At 1,000 lines, Count used **32,032 projections / 16,000 backward reads**; Angular combined half **24,032/24,032**, full **32,032/48,032**. This exposes the extra bounded selection scans rather than hiding them in projection totals.
+
+First-run no-op Canvas render medians were accepted/current **0.0152/0.0116 ms** for two Count Orbs and **0.3364/0.3144** for sixteen; sixteen Angular half/full **0.2622/0.3202**. Actual runtime update with zero emission measured two Count **0.0020/0.0032**, sixteen Count **0.0138/0.0124**, and sixteen Angular **0.0078**. These small, JIT/noise-sensitive CPU probes are not speedup claims. Count particles retained their original four-property shape, with zero stamps; Angular particles added two optional properties sharing one epoch token. No new rendering/history arrays are retained, and the 116F numeric scratch capacity is unchanged. Browser heap attribution was not measured.
+
+Reversed-order sensitivity runs retain the first-run slowdown: 60-line Birth Color later measured accepted/current **10.6/9.0 ms** submission, **150/116.7 ms** rAF, and reversed current/accepted **8.8/8.5 ms**, **116.7/116.7 ms**. Count with both effects measured accepted/current **9.1/8.8 ms**, reversed **9.0/8.7 ms**, all **116.7 ms** rAF; full Angular combined measured **9.3/8.4 ms**, also **116.7 ms** rAF. At 1,000 lines, Count combined was accepted/current **46.1/46.3 ms**, reversed **46.2/46.3 ms**, with **283.4–300 ms** rAF. Full Angular combined slowed to **58.5/65.3 ms** submission and **383.3/400 ms** rAF. This stress limitation remains visible; the existing drawing budget is not a smooth-frame-rate guarantee.
+
+Bounded isolation measured 1,000-line no-op combined rendering at accepted/current Count **5.468/5.112 ms**, current Angular full **5.314 ms**; plain current Count/Angular full **3.318/3.566 ms**. Thus the added bounded scans account for roughly **0.2–0.25 ms** in this CPU probe, not the entire native slowdown. Complete Canvas method/property/gradient-stop sequences matched for accepted Count, current Count and full Angular combined: **120,962 commands**, **16 gradients**, SHA-256 `80dcfca776b37a9349cf58932733feff80af48bc5889b41a7866658401afea86`. The remaining native stress penalty is unresolved; raster, GC and scheduling contributions were not isolated. The second update probe measured two Count **0.0024/0.0024 ms**, sixteen Count **0.0082/0.0140**, and Angular **0.0080**, further demonstrating small-probe variability. Owner/device evaluation must include this stress case.
+
+Reproduce after the standard build, keeping the accepted worktree outside repository test discovery:
+
+```sh
+git worktree add --detach ../work/116f-baseline 26b3ed1a72d177278dc8214f43752da1246e1348
+AP_CHROMIUM_PATH=/usr/bin/chromium AP_REPORT=work/116g.json node scripts/validate-116g.cjs
+AP_CHROMIUM_PATH=/usr/bin/chromium AP_116G_CASES=sixteen-birth,sixteen-combined,sixteen-angular-combined-full,sixteen-max-combined,sixteen-max-angular-combined-full AP_116G_REPEATS=2 AP_REPORT=work/116g-repeats.json node scripts/validate-116g.cjs --canvas-only
+AP_CHROMIUM_PATH=/usr/bin/chromium AP_REPORT=work/116g-isolation.json node scripts/validate-116g.cjs --micro-only
+```
+
+`AP_116G_BASELINE` overrides the accepted worktree path; `--controls-only` needs no baseline. Reports include median/P95 timing summaries, CPU-probe samples, command counts, backward reads and stamp observations. The original first comparison and both repeat orders are retained in the measurements above.
+
+### 116G verification
+
+Linux toolchain: Node **24.19.0**, npm **11.9.0**, Python **3.12.14**, esbuild **0.25.12**, Playwright **1.64.1**, Chromium **151.0.7922.173**. Completed commands/results:
+
+- `npm ci --cache /workspace/Auralprint1/work/npm-cache` passed without dependency/lockfile changes.
+- `npm test` passed **1,506 tests**, zero failures; one existing opt-in retention test skipped (1,507 total).
+- `npm run build` and `python scripts/verify_distribution.py` passed for portable/relocatable hosted `v0.1.16g`.
+- `AP_CHROMIUM_PATH=/usr/bin/chromium npm run test:browser` passed the portable/hosted authored-camera gate.
+- `AP_CHROMIUM_PATH=/usr/bin/chromium AP_DPRS=1,2 npm run test:browser:editing` passed all 40 existing sliders plus drafts, frequency admission and ownership checks across source/portable/hosted at DPR 1/2.
+- `AP_CHROMIUM_PATH=/usr/bin/chromium npm run test:browser:presets` passed portable/hosted compressed startup, round trips, atomic errors, cancellation and compression/clipboard fallback.
+- `AP_CHROMIUM_PATH=/usr/bin/chromium node scripts/validate-116g.cjs`, the reversed-order cases and `--micro-only` passed. All six source/portable/hosted × DPR 1/2 native combinations passed, with zero page/console/HTTP errors, including actual emissions, transitions, individual/Bulk controls, drafts, import/reset, all ordinary colors, combined effects, nonblack background, alpha/CSS-DPR widths and zero unchanged-frame control mutations.
+- `AP_CHROMIUM_PATH=/usr/bin/chromium node scripts/validate-116f.cjs --controls-only` passed all six editions/DPRs, including Queue/source regressions; `--seam-only` passed retained birth-color stability and the native alpha/join pixel checks.
+- `node scripts/benchmark-presets.mjs` passed nine corpora and five adversarial rejections with writer schema 15. No owner Hero artifact was available.
+- `git diff --check` and protected-path comparison passed: Canon assets, historical fixtures/audits, Schema-13/14 literals and lockfile are unchanged.
+
+An initial aggregate test run was interrupted when it discovered the nested baseline checkout; that checkout was moved outside the repository before final validation. A stale Bulk inventory assertion was updated for the two added controls. The native harness also replaced an incorrect one-gradient-per-fade assumption with exact selected-geometry accounting for repeated emission positions, retaining the five fade groups and solid remainder assertions. The clean final runs above supersede those intermediate results.
+
+Only Linux Chromium over local HTTP was exercised. Firefox, Safari/WebKit, physical devices, native permission dialogs, assistive-technology users, direct-file/offline operation and long-duration artistic/device acceptance remain unverified. Existing 116F join/self-intersection qualifications remain; the unresolved maximum-span stress penalty above needs owner evaluation. 116G is proposed for draft review, not accepted or released.
+
 ## 116F opt-in Queue and Trace presentation
 
 Development **`v0.1.16f`, schema 14**, based on fetched accepted `main` **`33b696a94439d17e86ef26c04a416cbc430754d3`**, the merge of PR [#85](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/85). The branch is `feature/116f-queue-trace-options`; implementation is for draft review only. Build 115 canon and accepted schemas 11–13 remain immutable. The earlier 116E section records its original checkpoint; PR #85 is now merged, without implying release or physical-device certification.
