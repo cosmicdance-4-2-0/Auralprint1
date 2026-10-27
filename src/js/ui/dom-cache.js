@@ -17,9 +17,11 @@ function primeDomCache() {
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
     ui.scenePanel = document.getElementById("scenePanel");
+    ui.chkClearQueueOnSourceExit = document.getElementById("chkClearQueueOnSourceExit");
     for (const id of ["numWorldWidth", "valWorldWidth", "worldWidthError", "numWorldHeight", "valWorldHeight", "worldHeightError",
       "numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError",
       "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError",
+      "btnTraceRenderDiagnostics", "traceRenderDiagnostics",
       "statParticleLive", "statParticleEmitted", "statParticleSpacingRejected", "statParticleBudgetRejected",
       "statParticleRateLimited", "statParticleRetentionRejected", "statParticleExpired", "statParticleRetentionRetired"]) {
       ui[id] = document.getElementById(id);
@@ -92,6 +94,7 @@ function primeDomCache() {
     ui.valLines = document.getElementById("valLines");
     ui.rngNumLines = document.getElementById("rngNumLines");
     ui.valNumLines = document.getElementById("valNumLines");
+    for (const id of ["chkFadeTrace", "valFadeTrace", "rngFadeSegments", "valFadeSegments"]) ui[id] = document.getElementById(id);
 
     ui.selLineColorMode = document.getElementById("selLineColorMode");
     ui.valLineColorMode = document.getElementById("valLineColorMode");
@@ -214,6 +217,7 @@ function primeDomCache() {
 
     bindRange(ui.rngVol, CONFIG.ui.volume);
     bindRange(ui.rngNumLines, CONFIG.limits.trace.numLines);
+    bindRange(ui.rngFadeSegments, CONFIG.limits.trace.fadeSegments);
 
     bindRange(ui.rngEmit, CONFIG.limits.particles.emitPerSecond);
     bindRange(ui.rngSizeMax, CONFIG.limits.particles.sizeMaxPx);
@@ -231,6 +235,7 @@ function primeDomCache() {
     const lineModes = [
       { v: "fixed", t: "Scene Fixed Particle Color" },
       { v: "lastParticle", t: "Last Particle" },
+      { v: "particleBirth", t: "Particle Birth Color" },
       { v: "dominantBand", t: "Global Dominant Band" },
     ];
     for (const m of lineModes) {

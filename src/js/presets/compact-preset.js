@@ -1,11 +1,21 @@
 import { CONFIG } from "../core/config.js";
 import { deepClone } from "../core/utils.js";
+import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V13 } from "../core/constants.js";
+import { SCHEMA_14_BASELINE } from "./schema-14-baseline.js";
 import { SCHEMA_13_BASELINE } from "./schema-13-baseline.js";
 import { presetError, assertPresetStructure } from "./preset-limits.js";
 import { assertOrbAdmission } from "../core/orb-admission.js";
 
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const isRecord = value => value !== null && typeof value === "object" && !Array.isArray(value);
+
+// Select the decoding contract explicitly; never let a new factory default
+// or wire schema change the interpretation of an already shared link.
+function compactBaseline(schema) {
+  if (schema === LEGACY_SCHEMA_V13) return SCHEMA_13_BASELINE;
+  if (schema === PRESET_SCHEMA_VERSION) return SCHEMA_14_BASELINE;
+  throw presetError("unsupported-schema");
+}
 
 // Grammar (ASCII, no whitespace/coercion/leading zeroes):
 // selection := "" | item ("," item)*
@@ -69,19 +79,20 @@ function delta(value, baseline) {
   return out;
 }
 
-function compactPreferences(canonical) {
-  const out = delta(canonical, SCHEMA_13_BASELINE);
+function compactPreferences(canonical, schema = PRESET_SCHEMA_VERSION) {
+  const baseline = compactBaseline(schema);
+  const out = delta(canonical, baseline);
   // Arrays are replacement collections, never patches by ID. Always carry IDs
   // when present, even if they happen to equal the alternating factory IDs.
-  if (JSON.stringify(canonical.orbs) !== JSON.stringify(SCHEMA_13_BASELINE.orbs)) {
+  if (JSON.stringify(canonical.orbs) !== JSON.stringify(baseline.orbs)) {
     out.orbs = canonical.orbs.map((orb, index) => ({
-      ...delta(orb, SCHEMA_13_BASELINE.orbs[index % SCHEMA_13_BASELINE.orbs.length]), id: orb.id,
+      ...delta(orb, baseline.orbs[index % baseline.orbs.length]), id: orb.id,
     }));
   }
   return out;
 }
 
-function expand(delta, baseline, budget) {
+function expand(delta, baseline, budget, orbBaseline) {
   if (!isRecord(delta)) throw presetError("malformed-delta");
   const out = deepClone(baseline);
   for (const key of Object.keys(delta)) {
@@ -91,14 +102,14 @@ function expand(delta, baseline, budget) {
       if (!Array.isArray(value)) throw presetError("malformed-delta");
       assertOrbAdmission(value);
       out.orbs = value.map((orb, index) => {
-        const full = expand(orb, SCHEMA_13_BASELINE.orbs[index % SCHEMA_13_BASELINE.orbs.length], budget);
+        const full = expand(orb, orbBaseline[index % orbBaseline.length], budget, orbBaseline);
         // Identity repair belongs to the canonical collection normalizer; a
         // missing ID must not masquerade as an explicitly requested factory ID.
         if (!hasOwn(orb, "id")) delete full.id;
         return full;
       });
     } else if (key === "bandIds") out[key] = decodeBandRanges(value, budget);
-    else if (isRecord(base)) out[key] = expand(value, base, budget);
+    else if (isRecord(base)) out[key] = expand(value, base, budget, orbBaseline);
     else {
       if (typeof value !== typeof base || (typeof base === "number" && !Number.isFinite(value))) throw presetError("malformed-delta");
       out[key] = value;
@@ -107,11 +118,12 @@ function expand(delta, baseline, budget) {
   return out;
 }
 
-function expandCompactPreferences(prefs) {
+function expandCompactPreferences(prefs, schema = PRESET_SCHEMA_VERSION) {
   assertPresetStructure(prefs);
-  return expand(prefs, SCHEMA_13_BASELINE, {
+  const baseline = compactBaseline(schema);
+  return expand(prefs, baseline, {
     remaining: CONFIG.limits.orbs.maxCount * CONFIG.bandNames.length,
-  });
+  }, baseline.orbs);
 }
 
-export { compactPreferences, expandCompactPreferences, encodeBandRanges, decodeBandRanges };
+export { compactBaseline, compactPreferences, expandCompactPreferences, encodeBandRanges, decodeBandRanges };

@@ -38,7 +38,7 @@ test('missing, format-rejecting and asynchronously failing compression operation
       await api(name,value,async()=>{
         const result=await encodeShareHash(CONFIG.defaults);
         assert.equal(result.fallback,true);assert.equal(result.compressed,false);assert.match(result.hash,/^#p=/);
-        assert.equal(JSON.parse(Buffer.from(result.hash.slice(3),'base64url')).schema,13);
+        assert.equal(JSON.parse(Buffer.from(result.hash.slice(3),'base64url')).schema,14);
         assert.deepEqual(await decodePrefsFromHash(result.hash),CONFIG.defaults);
       });
     }

@@ -9,7 +9,7 @@ const DEFAULT_ORB_BEHAVIOR = {
   motion: { angularSpeedRadPerSec: Math.PI * 0.50 },
   response: { minRadiusFrac: 0.01, maxRadiusFrac: 0.80, waveformRadialDisplaceFrac: 0.10 },
   particles: { emitPerSecond: 240, sizeMaxPx: 8, sizeMinPx: 1, sizeToMinSec: 3.0, ttlSec: 6.0, minPlacementDistanceUnits: 0.5 },
-  trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand" },
+  trace: { lines: true, numLines: 10, lineAlpha: 0.35, lineWidthPx: 2, lineColorMode: "dominantBand", fadeEnabled: false, fadeSegments: 5 },
 };
 
 function defaultOrb(identity) {
@@ -20,6 +20,9 @@ function defaultOrb(identity) {
    CONFIG — Canonical truth (never mutated)
    ========================================================================== */
 const CONFIG = deepFreeze({
+  // Bounds optional segmented Trace strokes; legacy/solid batched paths stay unrestricted.
+  // 2048 admits sixteen fully populated 60-line birth-color Traces with headroom.
+  traceRendering: { maxSegmentStrokesPerFrame: 2048 },
   // URL/protocol resource admission, not limits on Scene configuration itself.
   // 64 MiB accommodates 4096 fully independent Orbs with all 256 selections
   // (over one million assignments), full legacy fields and generous opaque IDs.
@@ -472,6 +475,7 @@ const CONFIG = deepFreeze({
 
       // Playback knobs (do NOT affect analysis)
       repeatMode: "none",
+      clearQueueOnSourceExit: false,
       muted: false,
       volume: 1.0,
     },
@@ -559,6 +563,9 @@ bands: {
     },
     timing: { maxDeltaTimeSec: SIMULATION_MAX_DELTA_TIME_SEC, motionDiscontinuitySec: 0.5 },
     trace: {
+      // Integer segment count; the maximum covers the entire longest visible Trace.
+      fadeSegments: { min: 1, max: 1000, step: 1 },
+      lineColorModes: ["fixed", "lastParticle", "dominantBand", "particleBirth"],
       numLines: { min: 10, max: 1000, step: 10 },
       lineAlpha: { min: 0, max: 1, step: 0.01 },
       lineWidthPx: { min: 1, max: 6, step: 1 },

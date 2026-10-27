@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { compressDeflate } from '../src/js/presets/deflate-transport.js';
 import { CONFIG } from '../src/js/core/config.js';
+import { PRESET_SCHEMA_VERSION } from '../src/js/core/constants.js';
 import { sanitizePreset } from '../src/js/presets/preset-codec.js';
 import { encodePrefsToHash, encodeShareHash, decodePrefsFromHash } from '../src/js/presets/url-preset.js';
 
@@ -37,7 +38,7 @@ for(const [name,input] of corpus){
   assert.deepEqual(await decodePrefsFromHash(compressed.hash),prefs);
   results.push({name,orbs:prefs.orbs.length,assignments:prefs.orbs.reduce((n,o)=>n+o.bandIds.length,0),
     fullJsonBytes:Buffer.byteLength(fullJson),fullHashChars:3+Buffer.from(fullJson).toString('base64url').length,
-    schema13HashChars:uncompressed.length,deflateHashChars:compressed.hash.length});
+    compactHashChars:uncompressed.length,deflateHashChars:compressed.hash.length});
 }
 const rejectedInputs=[];
 for(const [name,json] of [
@@ -52,4 +53,4 @@ for(const [name,json] of [
   await assert.rejects(decodePrefsFromHash(plain));await assert.rejects(decodePrefsFromHash(compressed));
   rejectedInputs.push({name,jsonBytes:bytes.length,schema13HashChars:plain.length,deflateHashChars:compressed.length,rejected:true});
 }
-console.log(JSON.stringify({runtime:process.version,format:'hash lengths include #p=/#z= and unpadded Base64URL overhead',results,rejectedInputs},null,2));
+console.log(JSON.stringify({runtime:process.version,writerSchema:PRESET_SCHEMA_VERSION,format:'hash lengths include #p=/#z= and unpadded Base64URL overhead',results,rejectedInputs},null,2));
