@@ -410,3 +410,30 @@ test("116G Bulk mode and degrees represent mixed values without applying them, a
     assert.match(template,/id="numAngularSpanDeg" type="number" inputmode="decimal" aria-describedby="traceLengthHelp angularSpanError"/);
   } finally { h.restore(); }
 });
+
+
+test("116G focused numeric drafts survive unrelated refreshes while canonical changes and explicit replacements win", () => {
+  const h=harness(["A","B"]), oldEdges=state.bands.lowHz;
+  try {
+    h.editor.init(); const a=h.editor.getController("A");
+    a.angularSpan.focus(); a.angularSpan.value="12e"; a.angularSpan.dispatch("change");
+    assert.equal(a.angularSpan.getAttribute("aria-invalid"),"true");
+    preferences.orbs[1].trace.fadeEnabled=true; resolveSettings(); h.editor.refresh();
+    state.bands.lowHz=[...oldEdges]; h.editor.refresh();
+    assert.equal(a.angularSpan.value,"12e"); assert.equal(a.angularSpan.getAttribute("aria-invalid"),"true");
+    assert.match(a.angularSpanError.textContent,/Enter .* degrees/);
+    preferences.orbs[0].trace.angularSpanDeg=180; resolveSettings(); h.editor.refresh();
+    assert.equal(a.angularSpan.value,"180"); assert.equal(a.angularSpan.getAttribute("aria-invalid"),"false");
+    a.angularSpan.value="270.5"; preferences.orbs.reverse(); resolveSettings(); h.editor.refresh();
+    assert.equal(a.angularSpan.value,"270.5"); assert.equal(preferences.orbs.find(orb=>orb.id==="A").trace.angularSpanDeg,180);
+    h.editor.refresh(runtime.settings,{replaceDrafts:true}); assert.equal(a.angularSpan.value,"180");
+    const bulk=h.view.numAngularSpanDeg; bulk.focus(); bulk.value="1080.25";
+    preferences.audio.playbackVolume=.4; resolveSettings(); h.editor.refresh();
+    assert.equal(bulk.value,"1080.25");
+    h.editor.refresh(runtime.settings,{replaceDrafts:true}); assert.equal(bulk.value,""); assert.equal(bulk.placeholder,"mixed");
+    a.angularSpan.focus(); a.angularSpan.value="bad"; a.angularSpan.dispatch("change");
+    const replacement=structuredClone(preferences); replacePreferences(replacement); resolveSettings();
+    h.editor.refresh(runtime.settings,{replaceDrafts:true});
+    assert.equal(a.angularSpan.value,"180"); assert.equal(a.angularSpan.getAttribute("aria-invalid"),"false"); assert.equal(a.angularSpanError.textContent,"");
+  } finally { state.bands.lowHz=oldEdges; h.restore(); }
+});

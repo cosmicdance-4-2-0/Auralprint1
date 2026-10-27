@@ -462,7 +462,7 @@ const UI = (() => {
 
   function applyPrefs(reason, options = {}) {
     UrlPreset.cancelPendingImport();
-    const { rebuildBandsOnDefinitionChange = false, showStatus = null, initializeCamera = false } = options;
+    const { rebuildBandsOnDefinitionChange = false, showStatus = null, initializeCamera = false, replaceOrbDrafts = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
@@ -483,7 +483,7 @@ const UI = (() => {
 
     AudioEngine.applyAnalyserSettingsLive();
     AudioEngine.applyPlaybackSettingsLive();
-    orbEditorUi.refresh();
+    orbEditorUi.refresh(runtime.settings, { replaceDrafts: replaceOrbDrafts });
     scenePanelUi.refresh(runtime.settings);
     cameraControlsUi.refresh();
 
@@ -494,7 +494,7 @@ const UI = (() => {
   function resetPrefs() {
     UrlPreset.cancelPendingImport();
     replacePreferences(deepClone(CONFIG.defaults));
-    applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
+    applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true, replaceOrbDrafts: true });
     analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
     initOrbs();
     resetVisualizers("visuals");
@@ -539,7 +539,7 @@ const UI = (() => {
     function finish({ ok, stale }) {
       if (stale) return;
       if (ok) {
-        applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
+        applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true, replaceOrbDrafts: true });
         analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
         initOrbs();
         resetVisualizers("visuals");

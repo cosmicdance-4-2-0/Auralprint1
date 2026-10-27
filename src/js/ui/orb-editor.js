@@ -43,6 +43,7 @@ const traceLengthLabel = mode => mode === "angular" ? "Angular Span" : "Line Cou
 let nextEditorToken = 0;
 function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferences, showStatus, onControlsChanged = () => {}, createBandPicker = createOrbBandPicker } = {}) {
   const controllers = new Map();
+  const angularModels = new WeakMap();
   let initializedOn = null;
   let lastSettingsRef = null;
   let lastBandEdgesRef = null;
@@ -99,7 +100,13 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
       control.value = String(next); commit(next);
     });
   }
-  function syncAngularSpan(control, output, error, value, mixed = false) {
+  function syncAngularSpan(control, output, error, value, mixed = false, replaceDrafts = false) {
+    const canonical = mixed ? null : value, previous = angularModels.get(control);
+    angularModels.set(control, canonical);
+    // A focused draft belongs to its editor across unrelated settings/band
+    // refreshes. Imports/reset explicitly replace drafts; changed canonical
+    // values also win immediately, including updates from Bulk Edit.
+    if (!replaceDrafts && previous === canonical && document.activeElement === control) return;
     control.value = mixed ? "" : String(value);
     control.placeholder = mixed ? "mixed" : "";
     output.textContent = mixed ? "mixed" : `${value}°`;
@@ -197,7 +204,7 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
   }
   const bindRange = (control, limit) => bindConfigRange(control, limit,
     limit === CONFIG.limits.orbs.startAngleRad || limit === CONFIG.limits.motion.angularSpeedRadPerSec ? RAD_TO_DEG : 1);
-  function syncController(c, orb, position) {
+  function syncController(c, orb, position, replaceDrafts) {
     const set = syncConfigRange;
     const setSelect = (control, output, value) => {
       control.value = String(value);
@@ -214,7 +221,7 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     set(c.emit,c.emitValue,orb.particles.emitPerSecond,v=>`${v}/s`); set(c.sizeMin,c.sizeMinValue,orb.particles.sizeMinPx,v=>`${v}px`); set(c.sizeMax,c.sizeMaxValue,orb.particles.sizeMaxPx,v=>`${v}px`); set(c.decay,c.decayValue,orb.particles.sizeToMinSec,v=>`${v}s`); set(c.ttl,c.ttlValue,orb.particles.ttlSec,v=>`${v}s`);
     set(c.spacing,c.spacingValue,orb.particles.minPlacementDistanceUnits,v=>`${v} world units`);
     setSelect(c.lengthMode,c.lengthModeValue,orb.trace.lengthMode);
-    syncAngularSpan(c.angularSpan,c.angularSpanValue,c.angularSpanError,orb.trace.angularSpanDeg);
+    syncAngularSpan(c.angularSpan,c.angularSpanValue,c.angularSpanError,orb.trace.angularSpanDeg,false,replaceDrafts);
     c.lines.checked = orb.trace.lines; c.lines.indeterminate = false; c.linesValue.textContent = orb.trace.lines ? "on" : "off";
     c.fade.checked = orb.trace.fadeEnabled; c.fade.indeterminate = false; c.fadeValue.textContent = orb.trace.fadeEnabled ? "on" : "off";
     set(c.fadeSegments,c.fadeSegmentsValue,orb.trace.fadeSegments,v=>`${v} segment${v === 1 ? "" : "s"}`);
@@ -223,23 +230,23 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     c.bandValue.textContent = c.bands.getAttribute("aria-invalid") === "true" ? "Invalid indices" : describeBandTargets(orb.bandIds, runtime.settings.bands.count);
     c.bands.setAttribute("aria-description", `Authored indices 0–${BAND_NAMES.length - 1}; active indices 0–${runtime.settings.bands.count - 1}. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.`); c.picker?.sync(orb.bandIds);
   }
-  function refresh(settings = runtime.settings) {
-    const bandEdgesRef = state.bands.lowHz; if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
+  function refresh(settings = runtime.settings, { replaceDrafts = false } = {}) {
+    const bandEdgesRef = state.bands.lowHz; if (!replaceDrafts && settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
     lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; let controlsChanged = false; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
     const ids = new Set(orbs.map(orb => orb.id));
     for (const [id, controller] of controllers) if (!ids.has(id)) { controller.root.remove(); controllers.delete(id); controlsChanged = true; }
     orbs.forEach((orb, position) => {
       let controller = controllers.get(orb.id);
       if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); controlsChanged = true; }
-      syncController(controller, orb, position);
+      syncController(controller, orb, position, replaceDrafts);
       const currentNode = ui.orbEditorList.children[position];
       if (currentNode !== controller.root) ui.orbEditorList.insertBefore(controller.root, currentNode || null);
     });
-    refreshBulk(orbs);
+    refreshBulk(orbs, replaceDrafts);
     if (controlsChanged) onControlsChanged();
     return controllers;
   }
-  function refreshBulk(orbs) {
+  function refreshBulk(orbs, replaceDrafts) {
     const bulk = (group, field, control, output, format) => {
       const model = readBulkOrbValue(orbs, group, field);
       control.disabled = !model.available;
@@ -266,7 +273,7 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     bulk("trace","lengthMode",ui.selTraceLengthMode,ui.valTraceLengthMode,traceLengthLabel);
     const angular = readBulkOrbValue(orbs,"trace","angularSpanDeg");
     ui.numAngularSpanDeg.disabled = !angular.available;
-    if (angular.available) syncAngularSpan(ui.numAngularSpanDeg,ui.valAngularSpanDeg,ui.angularSpanError,angular.value,angular.mixed);
+    if (angular.available) syncAngularSpan(ui.numAngularSpanDeg,ui.valAngularSpanDeg,ui.angularSpanError,angular.value,angular.mixed,replaceDrafts);
     else {
       ui.numAngularSpanDeg.value = ""; ui.numAngularSpanDeg.placeholder = "";
       ui.numAngularSpanDeg.setAttribute("aria-valuetext", "No Orbs");

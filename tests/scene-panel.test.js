@@ -176,10 +176,10 @@ test("Scene controls mutate only historical schema-10 fields", () => {
   finally { globalThis.document = oldDocument; }
 });
 
-const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "chkFadeTrace", "rngFadeSegments", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL", "rngMinPlacementDistance"];
+const BULK_CONTROL_IDS = ["rngOmega", "rngMinRad", "rngMaxRad", "rngWfDisp", "chkLines", "rngNumLines", "selTraceLengthMode", "numAngularSpanDeg", "chkFadeTrace", "rngFadeSegments", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin", "rngSizeToMin", "rngTTL", "rngMinPlacementDistance"];
 const RING_CONTROL_IDS = ["chkBandOverlay", "chkBandConnect", "rngBandAlpha", "rngBandPoint", "rngBandOverlayMinRad", "rngBandOverlayMaxRad", "rngBandOverlayWfDisp", "rngBandLineAlpha", "rngBandLineWidth", "selRingPhaseMode", "rngRingSpeed"];
 
-test("Visualizers contains one inventory, Ring editor, Orb editor host, management and all 15 bulk fields", () => {
+test("Visualizers contains one inventory, Ring editor, Orb editor host, management and all 17 bulk fields", () => {
   for (const id of ["visualizerList", "visualizersStatus", "visualizerEditStatus", "spectralRingEditor", "orbEditorList", "btnVisualizersAddOrb", "btnResetVisuals", ...BULK_CONTROL_IDS, ...RING_CONTROL_IDS]) {
     const matches = templateNodes.filter((node) => node.attrs.id === id);
     assert.equal(matches.length, 1, `${id} must exist exactly once`);
