@@ -155,6 +155,13 @@
     </div>
 
     <div class="row">
+      <label for="rngFadeSegments">Fade Length</label>
+      <input id="rngFadeSegments" type="range" aria-describedby="traceFadeHelp" />
+      <div id="valFadeSegments" class="val"></div>
+    </div>
+    <p id="traceFadeHelp" class="section-description">Fade the oldest visible Trace segments toward the Scene background. 0 is Off. Positive values count drawable segments, up to the available visible Trace.</p>
+
+    <div class="row">
       <label for="selLineColorMode">Line color mode</label>
       <select id="selLineColorMode"></select>
       <div id="valLineColorMode" class="val"></div>

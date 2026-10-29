@@ -4,6 +4,7 @@ import { runtime } from "../core/preferences.js";
 import { worldUnitsFromFraction } from "../core/world-geometry.js";
 import { state } from "../core/state.js";
 import { Spaces } from "../core/spaces.js";
+import { drawFadedTrace } from "./trace-fade.js";
 import { ColorPolicy } from "./color-policy.js";
 
 /* =============================================================================
@@ -35,6 +36,12 @@ const Renderer = (() => {
     ctx.lineWidth = trace.lineWidthPx * state.dpr;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
+
+    if (trace.fadeSegments > 0) {
+      drawFadedTrace(ctx, particles, rgb, trace);
+      ctx.restore();
+      return;
+    }
 
     ctx.beginPath();
     let first = true;

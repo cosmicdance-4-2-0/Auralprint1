@@ -200,6 +200,9 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     lineAlpha: nestedNumber("trace", "lineAlpha", CONFIG.limits.trace.lineAlpha),
     lineWidthPx: nestedNumber("trace", "lineWidthPx", CONFIG.limits.trace.lineWidthPx),
     lineColorMode: ["fixed", "lastParticle", "dominantBand"].includes(mode) ? mode : "dominantBand",
+    fadeSegments: Math.round(clamp(Number.isFinite(traceSource.fadeSegments) ? traceSource.fadeSegments
+      : (Number.isFinite(traceFallback.fadeSegments) ? traceFallback.fadeSegments : CONFIG.defaults.orbs[0].trace.fadeSegments),
+    CONFIG.limits.trace.fadeSegments.min, CONFIG.limits.trace.fadeSegments.max)),
   };
 
   return {

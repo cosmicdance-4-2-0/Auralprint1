@@ -93,6 +93,8 @@ function primeDomCache() {
     ui.valLines = document.getElementById("valLines");
     ui.rngNumLines = document.getElementById("rngNumLines");
     ui.valNumLines = document.getElementById("valNumLines");
+    ui.rngFadeSegments = document.getElementById("rngFadeSegments");
+    ui.valFadeSegments = document.getElementById("valFadeSegments");
 
     ui.selLineColorMode = document.getElementById("selLineColorMode");
     ui.valLineColorMode = document.getElementById("valLineColorMode");
@@ -215,6 +217,7 @@ function primeDomCache() {
 
     bindRange(ui.rngVol, CONFIG.ui.volume);
     bindRange(ui.rngNumLines, CONFIG.limits.trace.numLines);
+    bindRange(ui.rngFadeSegments, CONFIG.limits.trace.fadeSegments);
 
     bindRange(ui.rngEmit, CONFIG.limits.particles.emitPerSecond);
     bindRange(ui.rngSizeMax, CONFIG.limits.particles.sizeMaxPx);
