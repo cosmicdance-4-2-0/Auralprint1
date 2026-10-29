@@ -1,0 +1,130 @@
+import { CONFIG } from "../core/config.js";
+import { hexToRgb01, rgb01ToCss } from "../core/utils.js";
+import { runtime } from "../core/preferences.js";
+import { state } from "../core/state.js";
+import { Spaces } from "../core/spaces.js";
+
+// Lazy, fixed-capacity scratch holds only projected numbers, never particles or
+// retained history. One projection pass counts the actual drawable segments so
+// missing points do not consume fade length. The solid remainder stays one continuous stroke across valid runs.
+let scratch = null;
+function getScratch() {
+  if (!scratch) {
+    const capacity = Math.ceil(CONFIG.limits.trace.numLines.max) + 1;
+    scratch = { x: new Float64Array(capacity), y: new Float64Array(capacity) };
+  }
+  return scratch;
+}
+const mixed = { r: 0, g: 0, b: 0 };
+function mixedCss(color, background, amount, alpha) {
+  mixed.r = background.r + (color.r - background.r) * amount;
+  mixed.g = background.g + (color.g - background.g) * amount;
+  mixed.b = background.b + (color.b - background.b) * amount;
+  return rgb01ToCss(mixed, alpha);
+}
+
+function drawFadedTrace(ctx, particles, fixed, trace) {
+  const points = getScratch();
+  const count = Math.min(particles.length, Math.ceil(trace.numLines) + 1);
+  let length = 0, drawable = 0, previousValid = false;
+  for (const particle of particles.suffix(count)) {
+    const p = Spaces.simToScreen(particle?.xSim, particle?.ySim);
+    const valid = !!p && Number.isFinite(p.x) && Number.isFinite(p.y);
+    points.x[length] = valid ? p.x : NaN;
+    points.y[length] = valid ? p.y : NaN;
+    if (valid && previousValid) drawable++;
+    previousValid = valid;
+    length++;
+  }
+  if (!drawable) return 0;
+  const fadeCount = Math.min(drawable, trace.fadeSegments);
+  const bg = hexToRgb01(runtime.settings.visuals.backgroundColor);
+  let segmentIndex = 0, currentGroup = -1, groupStart = 0, groupEnd = 0;
+  let startIndex = 0, endIndex = 0, strokes = 0;
+  const amount = ordinal => fadeCount ? Math.min(1, ordinal / fadeCount) : 1;
+  const validPoint = index => index >= 0 && index < length && Number.isFinite(points.x[index]);
+  function clipJoin(index, after) {
+    if (!validPoint(index - 1) || !validPoint(index + 1)) return;
+    const x = points.x[index], y = points.y[index];
+    const ax = x - points.x[index - 1], ay = y - points.y[index - 1];
+    const bx = points.x[index + 1] - x, by = points.y[index + 1] - y;
+    const a = Math.hypot(ax, ay), b = Math.hypot(bx, by);
+    if (!a || !b) return;
+    const nx = ax / a + bx / b, ny = ay / a + by / b;
+    // An exact reversal has no unique bisector; preserve its natural overlap.
+    if (!nx && !ny) return;
+    const angle = Math.atan2(ny, nx) + (after ? Math.PI / 2 : -Math.PI / 2);
+    ctx.beginPath();
+    ctx.rect(0, 0, state.widthPx, state.heightPx);
+    ctx.moveTo(x + ctx.lineWidth * Math.cos(angle), y + ctx.lineWidth * Math.sin(angle));
+    ctx.arc(x, y, ctx.lineWidth, angle, angle + Math.PI);
+    ctx.closePath();
+    // Remove the unwanted half of this join neighborhood, leaving all distant
+    // geometry intact. Sequential clips make overlapping neighborhoods intersect.
+    ctx.clip("evenodd");
+  }
+  let extensionX = 0, extensionY = 0;
+  function extension(from, toward) {
+    const x = points.x[from], y = points.y[from];
+    const dx = points.x[toward] - x, dy = points.y[toward] - y;
+    const distance = Math.hypot(dx, dy);
+    const t = distance ? Math.min(1, ctx.lineWidth / (2 * distance)) : 0;
+    extensionX = x + dx * t;
+    extensionY = y + dy * t;
+  }
+  function finishGroup() {
+    if (currentGroup === -1) return;
+    const startX = points.x[startIndex], startY = points.y[startIndex];
+    const endX = points.x[endIndex], endY = points.y[endIndex];
+    const faded = groupStart < fadeCount;
+    ctx.save();
+    clipJoin(startIndex, true);
+    clipJoin(endIndex, false);
+    ctx.beginPath();
+    if (validPoint(startIndex - 1)) {
+      extension(startIndex, startIndex - 1);
+      ctx.moveTo(extensionX, extensionY);
+      ctx.lineTo(startX, startY);
+    } else ctx.moveTo(startX, startY);
+    let connected = true;
+    for (let i = startIndex + 1; i <= endIndex; i++) {
+      if (!validPoint(i)) { connected = false; continue; }
+      if (connected) ctx.lineTo(points.x[i], points.y[i]);
+      else { ctx.moveTo(points.x[i], points.y[i]); connected = true; }
+    }
+    if (validPoint(endIndex + 1)) {
+      extension(endIndex, endIndex + 1);
+      ctx.lineTo(extensionX, extensionY);
+    }
+    if (faded && (startX !== endX || startY !== endY)) {
+      const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
+      gradient.addColorStop(0, mixedCss(fixed, bg, amount(groupStart), trace.lineAlpha));
+      gradient.addColorStop(1, mixedCss(fixed, bg, amount(groupEnd), trace.lineAlpha));
+      ctx.strokeStyle = gradient;
+    } else {
+      ctx.strokeStyle = mixedCss(fixed, bg, faded ? amount(groupEnd) : 1, trace.lineAlpha);
+    }
+    ctx.stroke();
+    ctx.restore();
+    if (currentGroup >= 0) strokes++;
+  }
+  // A local angle-bisector partition shares round-join coverage between adjacent
+  // paths instead of drawing their alpha twice. Each group adds at most two small
+  // clips and two half-width neighbor extensions; no offscreen surface is used.
+  for (let i = 1; i < length; i++) {
+    if (!validPoint(i - 1) || !validPoint(i)) continue;
+    const group = segmentIndex < fadeCount ? segmentIndex : -2;
+    if (group !== currentGroup) {
+      finishGroup();
+      currentGroup = group;
+      groupStart = segmentIndex;
+      startIndex = i - 1;
+    }
+    endIndex = i;
+    groupEnd = ++segmentIndex;
+  }
+  finishGroup();
+  return strokes;
+}
+
+export { drawFadedTrace };

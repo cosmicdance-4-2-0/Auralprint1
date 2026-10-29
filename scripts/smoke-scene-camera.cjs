@@ -132,7 +132,7 @@ async function share(page) {
   const url = page.url();
   assert.ok(new URL(url).hash.startsWith('#z='), 'Copy Share Link did not write a preset URL');
   const { decodePrefsFromHash } = await import('../src/js/presets/url-preset.js');
-  return { url, payload: { schema: 13, prefs: await decodePrefsFromHash(new URL(url).hash) } };
+  return { url, payload: { schema: 16, prefs: await decodePrefsFromHash(new URL(url).hash) } };
 }
 
 async function editCamera(page, camera) {
@@ -182,7 +182,7 @@ async function exercise(browser, app, edition, defaults, errors) {
   const author = await boot(browser, app + hash(payload(authored)), authored, world, `${edition} schema-12 startup`, errors);
   const page = author.page;
   const initial = await share(page);
-  assert.equal(initial.payload.schema, 13);
+  assert.equal(initial.payload.schema, 16);
   assert.deepEqual(initial.payload.prefs.world, world, 'Decoded Scene world');
   cameraNear(initial.payload.prefs.sceneCamera, authored, 'Decoded authored camera');
   assert.deepEqual(initial.payload.prefs.orbs, [], 'Preset was not applied');
@@ -261,7 +261,7 @@ async function exercise(browser, app, edition, defaults, errors) {
   const legacy = await boot(browser, app + hash({ schema: 11, prefs: legacyPrefs }), defaults, legacyPrefs.world,
     `${edition} schema-11 migration`, errors);
   const migrated = await share(legacy.page);
-  assert.equal(migrated.payload.schema, 13);
+  assert.equal(migrated.payload.schema, 16);
   assert.deepEqual(migrated.payload.prefs.world, legacyPrefs.world, 'Legacy world lost during migration');
   cameraNear(migrated.payload.prefs.sceneCamera, defaults, 'Legacy authored CONFIG defaults');
   await legacy.context.close();

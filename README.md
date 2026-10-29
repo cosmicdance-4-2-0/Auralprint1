@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Proposed Build 116E (`v0.1.16e`), preset schema 13. Compact presets and native DEFLATE sharing extend the accepted 116D camera work; browser/device acceptance remains pending. The owner has not authorized 116 RC #1 or public publication. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+**Current source checkout:** Build 116 feature candidate (`v0.1.16-candidate`), preset schema 16, based on accepted 116E. It adds optional File Queue clearing and numeric Trace fading. RC promotion and public publication remain unauthorized. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -25,6 +25,7 @@ python scripts/verify_distribution.py
 npm run test:browser
 npm run test:browser:editing
 npm run test:browser:presets
+node scripts/validate-116-candidate.cjs
 ```
 
 Do not run test and build concurrently: tests temporarily rename build directories.
@@ -33,18 +34,18 @@ Before the native browser checks, install Playwright's matching Chromium headles
 
 Build outputs:
 
-- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16e.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16-candidate.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
-`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; all three Chromium browser checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
+`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; the three standard Chromium browser checks and focused Queue/Trace checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
 
-## Sharing in proposed Build 116E
+## Sharing in the Build 116 candidate
 
-**Copy Share Link** writes a compact schema-13 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-13 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
+**Copy Share Link** writes a compact schema-16 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-16 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
 
-Opening a compressed link requires working native DEFLATE decompression. Unsupported browsers retain the active Scene and show an explanation; an uncompressed link is the compatibility option. Schemas 2–12 retain their decoding meanings in this build. Older Auralprint builds cannot read schema 13. Link length depends on the Scene and the sharing service's limits.
+Opening a compressed link requires working native DEFLATE decompression. Unsupported browsers retain the active Scene and show an explanation; an uncompressed link is the compatibility option. Schemas 2–13 retain their decoding meanings. Experimental schemas 14/15 are reserved and rejected without changing the Scene. Older builds cannot read schema 16. Link length depends on the Scene and the sharing service's limits.
 
 See [116E protocol, measurements, reproducible checks and owner device matrix](docs/development/build-116.md#116e-compact-presets). Optional Firefox/WebKit checks remain separate from mandatory Chromium CI.
 
@@ -67,6 +68,12 @@ Load audio in **File**, or select **Mic** / **Stream** with browser permission. 
 **Recording:** choose a browser-supported WebM/MP4 format, frame rate and optional source audio. Start capture, then Stop and download the latest export. Record → Settings defaults to **Balanced** (five-minute automatic Stop, encoded-data admission limits). **Custom** allows independent Off settings; **Unrestricted** disables application size, chunk and duration restrictions. Neither mode eliminates browser/device limits. Recording settings persist locally, outside Scene presets. Cancel Current Capture preserves the previous successful export.
 
 Firefox does not supply shared-display audio for Stream mode; Stream requires an audio track and rejects video-only sessions. File and Mic are separate workflows. Browser/codec support and native permissions vary; see the [release qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
+
+## Queue and Trace in the Build 116 candidate
+
+Settings → Source Behavior offers **Clear File Queue when switching sources**, off by default. It clears only after an accepted File-to-Mic/Stream switch; failed, cancelled or superseded requests and intervening Queue changes preserve files. The choice is saved in Scene presets; Queue contents remain runtime-only.
+
+Individual and Bulk Orb Trace editors offer **Fade Length**: **0 / Off** preserves the established continuous stroke; **1–20** fades that many oldest visible drawable segments toward the Scene background, using the available count for short histories. Mixed Bulk values remain unchanged until edited. The twenty-segment limit is a feature bound, not a frame-rate guarantee.
 
 ## Camera in the Build 116 checkout
 

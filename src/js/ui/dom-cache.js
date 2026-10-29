@@ -17,6 +17,7 @@ function primeDomCache() {
     ui.analysisStatus = document.getElementById("analysisStatus");
     ui.btnHideAnalysis = document.getElementById("btnHideAnalysis");
     ui.scenePanel = document.getElementById("scenePanel");
+    ui.chkClearQueueOnSourceExit = document.getElementById("chkClearQueueOnSourceExit");
     for (const id of ["numWorldWidth", "valWorldWidth", "worldWidthError", "numWorldHeight", "valWorldHeight", "worldHeightError",
       "numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError",
       "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError",
@@ -92,6 +93,8 @@ function primeDomCache() {
     ui.valLines = document.getElementById("valLines");
     ui.rngNumLines = document.getElementById("rngNumLines");
     ui.valNumLines = document.getElementById("valNumLines");
+    ui.rngFadeSegments = document.getElementById("rngFadeSegments");
+    ui.valFadeSegments = document.getElementById("valFadeSegments");
 
     ui.selLineColorMode = document.getElementById("selLineColorMode");
     ui.valLineColorMode = document.getElementById("valLineColorMode");
@@ -214,6 +217,7 @@ function primeDomCache() {
 
     bindRange(ui.rngVol, CONFIG.ui.volume);
     bindRange(ui.rngNumLines, CONFIG.limits.trace.numLines);
+    bindRange(ui.rngFadeSegments, CONFIG.limits.trace.fadeSegments);
 
     bindRange(ui.rngEmit, CONFIG.limits.particles.emitPerSecond);
     bindRange(ui.rngSizeMax, CONFIG.limits.particles.sizeMaxPx);

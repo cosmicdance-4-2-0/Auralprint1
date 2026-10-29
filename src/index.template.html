@@ -155,6 +155,13 @@
     </div>
 
     <div class="row">
+      <label for="rngFadeSegments">Fade Length</label>
+      <input id="rngFadeSegments" type="range" aria-describedby="traceFadeHelp" />
+      <div id="valFadeSegments" class="val"></div>
+    </div>
+    <p id="traceFadeHelp" class="section-description">Fade the oldest visible Trace segments toward the Scene background. 0 is Off. Positive values count drawable segments, up to the available visible Trace.</p>
+
+    <div class="row">
       <label for="selLineColorMode">Line color mode</label>
       <select id="selLineColorMode"></select>
       <div id="valLineColorMode" class="val"></div>
@@ -280,6 +287,13 @@
   <div id="scenePanel" class="panel" style="display:none" role="region" aria-label="Scene Settings">
     <div class="panel-header"><div><h2 class="panel-title">Scene Settings</h2><p class="panel-description">Configure shared appearance, scene-wide defaults, and presets.</p></div><button id="btnHideScene" aria-label="Hide Scene Settings panel">Hide</button></div>
     <div class="muted panel-status" id="sceneStatus">Shared scene settings and preset controls.</div>
+    <details class="settings-section"><summary>Source Behavior</summary><div class="section-body">
+      <div class="row">
+        <label for="chkClearQueueOnSourceExit">Clear File Queue when switching sources</label>
+        <input id="chkClearQueueOnSourceExit" type="checkbox" aria-describedby="clearQueueOnSourceExitHelp" />
+      </div>
+      <p id="clearQueueOnSourceExitHelp" class="section-description">Clears the File Queue after successfully switching to Mic or Stream. This choice is saved in presets, including shared presets.</p>
+    </div></details>
     <details id="worldSection" class="settings-section" open><summary>Simulation World</summary><div class="section-body">
       <p id="worldDimensionsHelp" class="section-description">World dimensions set the reference size for Orb and Ring proportions. Points and particles can exist beyond these dimensions. The default view fits the shorter world dimension to the shorter viewport dimension. Changing world dimensions during a session changes Orb and Ring geometry. Existing particles remain at their original world positions, so trails may appear discontinuous.</p>
       <div class="row">

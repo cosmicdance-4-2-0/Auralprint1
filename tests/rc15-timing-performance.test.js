@@ -136,7 +136,7 @@ test("direct Orb and frame callers retain default delta convention; explicit mot
 test("motion policy is ephemeral; schema-10 budgets/spacing persist with no new timing field",()=>{
   const prefs=structuredClone(CONFIG.defaults);prefs.particleSafety={maxEmissionsPerFrame:16384,maxActiveParticles:1048576};prefs.orbs[0].particles.minPlacementDistanceUnits=0;
   prefs.timing.motionDtSec=.2;prefs.timing.motionDiscontinuitySec=.5;prefs.orbs[0].particles.overlapRadiusPx=1;
-  const payload=encodePresetPayload(prefs);assert.equal(payload.schema, 13);assert.deepEqual(canonicalPrefs(payload).timing,{maxDeltaTimeSec:1/30});assert.deepEqual(canonicalPrefs(payload).particleSafety,prefs.particleSafety);assert.equal(canonicalPrefs(payload).orbs[0].particles.minPlacementDistanceUnits,0);assert.equal('overlapRadiusPx' in canonicalPrefs(payload).orbs[0].particles,false);assert.deepEqual(sanitizePreset(payload),canonicalPrefs(payload));
+  const payload=encodePresetPayload(prefs);assert.equal(payload.schema, 16);assert.deepEqual(canonicalPrefs(payload).timing,{maxDeltaTimeSec:1/30});assert.deepEqual(canonicalPrefs(payload).particleSafety,prefs.particleSafety);assert.equal(canonicalPrefs(payload).orbs[0].particles.minPlacementDistanceUnits,0);assert.equal('overlapRadiusPx' in canonicalPrefs(payload).orbs[0].particles,false);assert.deepEqual(sanitizePreset(payload),canonicalPrefs(payload));
 });
 
 test("smaller selected emission delta never slows independent motion",()=>{
