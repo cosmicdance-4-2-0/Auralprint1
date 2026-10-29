@@ -146,7 +146,9 @@ for(const field of ['floor','ceiling']) for(const draft of ['37.125','','1e','-'
     assert.equal(input.value,draft);assert.equal(document.activeElement,input);assert.equal(input.selectionStart,1);assert.equal(input.selectionEnd,3);assert.equal(ui.valRmsGain.textContent,'2');assert.match(ui.bandMeta.textContent,/Configured floor/);
     ui.analysisPanel.style.display='none';panel.refresh();ui.analysisPanel.style.display='block';panel.refresh(null,true);assert.equal(input.value,draft);
     active=structuredClone(active);active.bands.floorHz=55;active.bands.ceilingHz=18000;Object.assign(prefs.bands,active.bands);
+    ui.analysisStatus.textContent='Old validation error';
     panel.syncControls(active,{replaceDrafts:true});assert.equal(input.value,field==='floor'?'55':'18000');
+    assert.equal(ui.analysisStatus.textContent,'');
     input.dispatch('blur');input.dispatch('change');input.dispatch('change');assert.equal(commits,0);
     input.value=field==='floor'?'55.125':'18000.125';input.dispatch('input');input.dispatch('change');input.dispatch('blur');input.dispatch('change');assert.equal(commits,1,'single established change commit; fractional Hz remains admissible');
     for(const invalid of ['', '1e', '-1', field==='floor'?'99999':'1']) { const before=structuredClone(prefs);input.value=invalid;input.dispatch('change');assert.deepEqual(prefs,before);assert.equal(commits,1); }

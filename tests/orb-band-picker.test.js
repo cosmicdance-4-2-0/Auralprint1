@@ -72,6 +72,25 @@ test('AUD-003: active ranges reject unavailable indices and retain inactive sele
   assert.equal(h.last.getAttribute('aria-invalid'), 'false');
 });
 
+test('AUD116-003: explicit replacement discards rejected and uncommitted picker ranges without replacing controls', t => {
+  const h = activePicker(t, [0, 1], 32), first = h.first, last = h.last;
+  for (const targets of [[12, 13], [12, 13], [2, 9], []]) {
+    first.value = '-1'; last.value = '7'; first.dispatchEvent({ type: 'input' }); h.apply.click(); first.focus();
+    h.picker.sync(targets);
+    assert.equal(first.value, '-1'); assert.equal(first.getAttribute('aria-invalid'), 'true');
+    h.picker.sync(targets, { replaceDrafts: true });
+    assert.equal(h.first, first); assert.equal(h.last, last); assert.equal(h.dom.document.activeElement, first);
+    assert.equal(first.value, targets.length === 2 && targets[1] === targets[0] + 1 ? String(targets[0]) : '');
+    assert.equal(last.value, targets.length === 2 && targets[1] === targets[0] + 1 ? String(targets[1]) : '');
+    assert.equal(first.getAttribute('aria-invalid'), 'false'); assert.equal(last.getAttribute('aria-invalid'), 'false');
+    assert.equal(h.details.children[4].textContent, '');
+    first.dispatchEvent({ type: 'blur' }); first.dispatchEvent({ type: 'change' });
+    assert.deepEqual(h.selected, [0, 1], 'replacement synchronization and late events never commit');
+    first.value = '7'; first.dispatchEvent({ type: 'input' });
+    h.picker.sync(targets, { replaceDrafts: true }); assert.notEqual(first.value, '7');
+  }
+});
+
 test('AUD-003: count changes retain row/control identity, focus and search/range drafts and reactivate choices', t => {
   const h = activePicker(t, [5, 100, 255], 256), row = h.list.children[0], search = h.search;
   h.search.value = '255'; h.search.focus(); h.setCount(32);

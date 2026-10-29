@@ -126,13 +126,23 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     for (const [field, group, key, reason] of [[speedField,"motion","angularSpeedRadPerSec","angular speed"],[minRadiusField,"response","minRadiusFrac","min radius"],[maxRadiusField,"response","maxRadiusFrac","max radius"],[waveformField,"response","waveformRadialDisplaceFrac","waveform displacement"],[emitField,"particles","emitPerSecond","emit rate"],[sizeMinField,"particles","sizeMinPx","minimum size"],[sizeMaxField,"particles","sizeMaxPx","maximum size"],[decayField,"particles","sizeToMinSec","size decay"],[ttlField,"particles","ttlSec","lifetime"],[spacingField,"particles","minPlacementDistanceUnits","minimum placement distance"],[numLinesField,"trace","numLines","line count"],[fadeSegmentsField,"trace","fadeSegments","fade length"],[alphaField,"trace","lineAlpha","line alpha"],[widthField,"trace","lineWidthPx","line width"]]) field.control.addEventListener("input", () => { const value = readConfigRange(field.control, editingBounds([findOrb()], group, key)); if (value !== null) commitNested(group, key, value, `${id} ${reason}`); });
     linesField.control.addEventListener("change", () => commitNested("trace", "lines", !!linesField.control.checked, `${id} lines`));
     lineColorField.control.addEventListener("change", () => commitNested("trace", "lineColorMode", lineColorField.control.value, `${id} line color mode`));
-    bands.addEventListener("change", () => { const parsed = parseBandSelection(bands.value, BAND_NAMES.length); bands.setAttribute("aria-invalid", parsed.error ? "true" : "false"); error.textContent = parsed.error; if (parsed.error) { bandValue.textContent = "Invalid indices"; showStatus(parsed.error); return; } commit("bandIds", parsed.ids, `${id} band indices`); });
+    bands.addEventListener("change", () => {
+      const parsed = parseBandSelection(bands.value, BAND_NAMES.length);
+      bands.setAttribute("aria-invalid", parsed.error ? "true" : "false"); error.textContent = parsed.error;
+      if (parsed.error) { bandValue.textContent = "Invalid indices"; showStatus(parsed.error); return; }
+      bandValue.textContent = describeBandTargets(parsed.ids, runtime.settings.bands.count);
+      // A delayed change after replacement (or an already committed edit) reads
+      // the canonical control value and must not commit the same targets again.
+      const orb = findOrb();
+      if (!orb || (parsed.ids.length === orb.bandIds.length && parsed.ids.every((value, index) => value === orb.bandIds[index]))) return;
+      commit("bandIds", parsed.ids, `${id} band indices`);
+    });
     const picker = createBandPicker(pickerRoot, { orbLabel: `Orb ${id}`, onChange(ids) { bands.value = formatOrbBandIdsText(ids); bands.setAttribute("aria-invalid", "false"); error.textContent = ""; commit("bandIds", ids, `${id} bands`); }, formatRange: BandBank.formatBandRangeText, getActiveCount: () => runtime.settings.bands.count, describeBank: () => `${runtime.settings.bands.distributionMode.toUpperCase()} distribution · ${runtime.settings.bands.count} active bands · ${Number.isFinite(state.bands.meta.nyquistHz) ? "ranges limited to the active Nyquist frequency" : "configured ranges; connect audio for the active frequency limit"}` });
     return { id, root, summary, title, identity, chan: chanField.control, chanValue: chanField.output, bands, bandValue, error, chir: chirField.control, chirValue: chirField.output, phase: phaseField.control, phaseValue: phaseField.output, hue: hueField.control, hueValue: hueField.output, color: colorField.control, colorValue: colorField.output, x: xField.control, xValue: xField.output, y: yField.control, yValue: yField.output, speed: speedField.control, speedValue: speedField.output, minRadius: minRadiusField.control, minRadiusValue: minRadiusField.output, maxRadius: maxRadiusField.control, maxRadiusValue: maxRadiusField.output, waveform: waveformField.control, waveformValue: waveformField.output, emit: emitField.control, emitValue: emitField.output, sizeMin: sizeMinField.control, sizeMinValue: sizeMinField.output, sizeMax: sizeMaxField.control, sizeMaxValue: sizeMaxField.output, decay: decayField.control, decayValue: decayField.output, ttl: ttlField.control, ttlValue: ttlField.output, spacing: spacingField.control, spacingValue: spacingField.output, fadeSegments: fadeSegmentsField.control, fadeSegmentsValue: fadeSegmentsField.output, lines: linesField.control, linesValue: linesField.output, numLines: numLinesField.control, numLinesValue: numLinesField.output, lineAlpha: alphaField.control, lineAlphaValue: alphaField.output, lineWidth: widthField.control, lineWidthValue: widthField.output, lineColor: lineColorField.control, lineColorValue: lineColorField.output, picker };
   }
   const bindRange = (control, limit) => bindConfigRange(control, limit,
     limit === CONFIG.limits.orbs.startAngleRad || limit === CONFIG.limits.motion.angularSpeedRadPerSec ? RAD_TO_DEG : 1);
-  function syncController(c, orb, position) {
+  function syncController(c, orb, position, { replaceDrafts = false } = {}) {
     const set = syncConfigRange;
     const setSelect = (control, output, value) => {
       control.value = String(value);
@@ -151,22 +161,30 @@ function createOrbEditorUi({ ui = state.ui, commitOrbChangeById, commitPreferenc
     c.lines.checked = orb.trace.lines; c.lines.indeterminate = false; c.linesValue.textContent = orb.trace.lines ? "on" : "off";
     set(c.fadeSegments,c.fadeSegmentsValue,orb.trace.fadeSegments,v=>v === 0 ? "Off" : `${v} segment${v === 1 ? "" : "s"}`);
     set(c.numLines,c.numLinesValue,orb.trace.numLines); set(c.lineAlpha,c.lineAlphaValue,orb.trace.lineAlpha); set(c.lineWidth,c.lineWidthValue,orb.trace.lineWidthPx,v=>`${v}px`); setSelect(c.lineColor,c.lineColorValue,orb.trace.lineColorMode);
-    if (document.activeElement !== c.bands && c.bands.getAttribute("aria-invalid") !== "true") { c.bands.value = formatOrbBandIdsText(orb.bandIds); c.error.textContent = ""; }
+    if (replaceDrafts || (document.activeElement !== c.bands && c.bands.getAttribute("aria-invalid") !== "true")) { c.bands.value = formatOrbBandIdsText(orb.bandIds); c.bands.setAttribute("aria-invalid", "false"); c.error.textContent = ""; }
     c.bandValue.textContent = c.bands.getAttribute("aria-invalid") === "true" ? "Invalid indices" : describeBandTargets(orb.bandIds, runtime.settings.bands.count);
-    c.bands.setAttribute("aria-description", `Authored indices 0–${BAND_NAMES.length - 1}; active indices 0–${runtime.settings.bands.count - 1}. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.`); c.picker?.sync(orb.bandIds);
+    c.bands.setAttribute("aria-description", `Authored indices 0–${BAND_NAMES.length - 1}; active indices 0–${runtime.settings.bands.count - 1}. Higher authored indices stay inactive until the band count increases. Editing this field explicitly replaces all targets; blank uses full spectrum.`); c.picker?.sync(orb.bandIds, { replaceDrafts });
   }
-  function refresh(settings = runtime.settings) {
-    const bandEdgesRef = state.bands.lowHz; if (settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
+  function refresh(settings = runtime.settings, { replaceDrafts = false } = {}) {
+    const bandEdgesRef = state.bands.lowHz; if (!replaceDrafts && settings === lastSettingsRef && bandEdgesRef === lastBandEdgesRef) return controllers;
     lastSettingsRef = settings; lastBandEdgesRef = bandEdgesRef; let controlsChanged = false; const orbs = Array.isArray(settings?.orbs) ? settings.orbs : [];
     const ids = new Set(orbs.map(orb => orb.id));
     for (const [id, controller] of controllers) if (!ids.has(id)) { controller.root.remove(); controllers.delete(id); controlsChanged = true; }
     orbs.forEach((orb, position) => {
       let controller = controllers.get(orb.id);
       if (!controller) { controller = createController(orb.id); controllers.set(orb.id, controller); controlsChanged = true; }
-      syncController(controller, orb, position);
-      const currentNode = ui.orbEditorList.children[position];
-      if (currentNode !== controller.root) ui.orbEditorList.insertBefore(controller.root, currentNode || null);
+      syncController(controller, orb, position, { replaceDrafts });
     });
+    // Moving a focused subtree with insertBefore disconnects native focus. Keep
+    // that card connected and order its siblings around it, from right to left.
+    let focusedRoot = document.activeElement;
+    while (focusedRoot && focusedRoot.parentNode !== ui.orbEditorList) focusedRoot = focusedRoot.parentNode;
+    let next = null;
+    for (let position = orbs.length - 1; position >= 0; position--) {
+      const root = controllers.get(orbs[position].id).root;
+      if (root !== focusedRoot && (root.parentNode !== ui.orbEditorList || root.nextElementSibling !== next)) ui.orbEditorList.insertBefore(root, next);
+      next = root;
+    }
     refreshBulk(orbs);
     if (controlsChanged) onControlsChanged();
     return controllers;

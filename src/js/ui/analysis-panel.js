@@ -35,6 +35,7 @@ function createAnalysisPanelUi({
   function syncControls(settings = getSettings(), { replaceDrafts = false } = {}) {
     if (!settings || (!replaceDrafts && settings === lastSettingsRef)) return false;
     lastSettingsRef = settings;
+    if (replaceDrafts) status("");
     const a=settings.audio, b=settings.bands;
     syncConfigRange(ui.rngRmsGain,ui.valRmsGain,a.rmsGain);
     syncConfigRange(ui.rngSmooth,ui.valSmooth,a.smoothingTimeConstant);
