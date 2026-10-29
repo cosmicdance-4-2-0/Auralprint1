@@ -173,6 +173,13 @@ async function run(page, edition, base) {
   await dispatch('touchMove', [point(22, .6)]); await at('ending A retains B drag', 6);
   await dispatch('touchEnd', []);
 
+  await dispatch('touchStart', [point(23, .2)]);
+  await dispatch('touchStart', [point(23, .2), point(24, .9, outsideY)]);
+  check(edition + ' outside contact start is unconsumed', (await lastTouch()).prevented, false);
+  await dispatch('touchEnd', [point(24, .9, outsideY)]);
+  await dispatch('touchMove', [point(23, .6)]); await at('scrubber first survives outside contact add/end', 6);
+  await dispatch('touchEnd', []);
+
   // CDP rejects selective touchCancel, so supply its DOM payload explicitly
   // while keeping the native initiating contact and native moves.
   await dispatch('touchStart', [point(34, .2)]);
