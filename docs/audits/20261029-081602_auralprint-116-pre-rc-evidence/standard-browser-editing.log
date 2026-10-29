@@ -1,0 +1,18 @@
+
+> test:browser:editing
+> node scripts/smoke-editing.cjs
+
+Editing smoke: v0.1.16-candidate, Chromium 151.0.7922.173, 40 sliders
+PASS source DPR 1: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint
+PASS source DPR 1: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext 44100 Hz
+PASS source DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+PASS source DPR 1: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock
+PASS portable DPR 1: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint
+PASS portable DPR 1: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext 44100 Hz
+PASS portable DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+PASS portable DPR 1: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock
+PASS hosted DPR 1: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint
+PASS hosted DPR 1: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext 44100 Hz
+PASS hosted DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+PASS hosted DPR 1: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock
+PASS editing smoke

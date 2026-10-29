@@ -1,0 +1,150 @@
+{
+  "browser": "151.0.7922.173",
+  "audio": {
+    "summaries": [
+      {
+        "rate": 44100,
+        "channels": {
+          "L": {
+            "rms": 0.10142022029791645,
+            "peakHz": 371.44775390625,
+            "bandEnergiesFinite": true
+          },
+          "R": {
+            "rms": 0.10144602379884113,
+            "peakHz": 1130.4931640625,
+            "bandEnergiesFinite": true
+          },
+          "C": {
+            "rms": 0.08272736965378255,
+            "peakHz": 371.44775390625,
+            "bandEnergiesFinite": true
+          }
+        }
+      },
+      {
+        "rate": 44100,
+        "channels": {
+          "L": {
+            "rms": 0.17694588186769297,
+            "peakHz": 376.8310546875,
+            "bandEnergiesFinite": true
+          },
+          "R": {
+            "rms": 0.1767845021822946,
+            "peakHz": 1125.10986328125,
+            "bandEnergiesFinite": true
+          },
+          "C": {
+            "rms": 0.12487982389003119,
+            "peakHz": 1125.10986328125,
+            "bandEnergiesFinite": true
+          }
+        }
+      },
+      {
+        "rate": 44100,
+        "channels": {
+          "L": {
+            "rms": 0.1766153427248036,
+            "peakHz": 376.8310546875,
+            "bandEnergiesFinite": true
+          },
+          "R": {
+            "rms": 0.17677167299863175,
+            "peakHz": 1125.10986328125,
+            "bandEnergiesFinite": true
+          },
+          "C": {
+            "rms": 0.1250041334912695,
+            "peakHz": 1125.10986328125,
+            "bandEnergiesFinite": true
+          }
+        }
+      },
+      {
+        "rate": 44100,
+        "channels": {
+          "L": {
+            "rms": 0.1768056490951617,
+            "peakHz": 376.8310546875,
+            "bandEnergiesFinite": true
+          },
+          "R": {
+            "rms": 0.17677214653125217,
+            "peakHz": 1125.10986328125,
+            "bandEnergiesFinite": true
+          },
+          "C": {
+            "rms": 0.12504913538467372,
+            "peakHz": 1125.10986328125,
+            "bandEnergiesFinite": true
+          }
+        }
+      }
+    ],
+    "readyAfterUnload": false
+  },
+  "editions": [
+    {
+      "edition": "portable",
+      "dpr": 1,
+      "offlineInteraction": true,
+      "state": {
+        "width": 375,
+        "height": 667,
+        "overflow": false,
+        "camera": "0"
+      },
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "edition": "hosted",
+      "dpr": 1,
+      "offlineInteraction": true,
+      "state": {
+        "width": 375,
+        "height": 667,
+        "overflow": false,
+        "camera": "0"
+      },
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "edition": "portable",
+      "dpr": 2,
+      "offlineInteraction": true,
+      "state": {
+        "width": 750,
+        "height": 1334,
+        "overflow": false,
+        "camera": "0"
+      },
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "edition": "hosted",
+      "dpr": 2,
+      "offlineInteraction": true,
+      "state": {
+        "width": 750,
+        "height": 1334,
+        "overflow": false,
+        "camera": "0"
+      },
+      "errors": [],
+      "failed": [],
+      "external": []
+    }
+  ],
+  "directFile": {
+    "boot": false,
+    "error": "page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///workspace/Auralprint1/dist/auralprint_0.1.16-candidate.html"
+  }
+}

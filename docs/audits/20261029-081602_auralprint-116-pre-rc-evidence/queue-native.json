@@ -1,0 +1,649 @@
+{
+  "browser": "151.0.7922.173",
+  "results": [
+    {
+      "case": "Mic/success",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "mic",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "granted",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "ready": true,
+        "tracks": [
+          [
+            "live"
+          ]
+        ],
+        "status": "Microphone live: MediaStreamAudioDestinationNode - Bands: mono-ish (L≈R)"
+      }
+    },
+    {
+      "case": "Mic/denied",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "mic",
+          "status": "error",
+          "label": "Microphone",
+          "permission": {
+            "mic": "denied",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "mic-denied",
+          "errorMessage": "Microphone permission denied.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": false,
+        "tracks": [],
+        "status": "Microphone permission denied."
+      }
+    },
+    {
+      "case": "Mic/queue-replaced",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "mic",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "granted",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "new.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "ready": true,
+        "tracks": [
+          [
+            "live"
+          ]
+        ],
+        "status": "Microphone live: MediaStreamAudioDestinationNode - Bands: mono-ish (L≈R)"
+      }
+    },
+    {
+      "case": "Mic/file-return",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "prompt",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": false,
+        "tracks": [
+          [
+            "ended"
+          ]
+        ],
+        "status": "File mode ready. Select a queued file or load audio files."
+      }
+    },
+    {
+      "case": "Mic/other-source-wins",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "stream",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "prompt",
+            "stream": "granted"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": 2
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": true,
+        "tracks": [
+          [
+            "live"
+          ],
+          [
+            "ended"
+          ]
+        ],
+        "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: mono-ish (L≈R)"
+      }
+    },
+    {
+      "case": "Mic/ended-before-delivery",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "granted",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "mic-ended",
+          "errorMessage": "Microphone input ended. Select Mic to reconnect.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": false,
+        "tracks": [
+          [
+            "ended"
+          ]
+        ],
+        "status": "File mode ready. Microphone input ended. Select Mic to reconnect."
+      }
+    },
+    {
+      "case": "Stream/success",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "stream",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "unknown",
+            "stream": "granted"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": 2
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [],
+          "cursor": -1,
+          "length": 0
+        },
+        "ready": true,
+        "tracks": [
+          [
+            "live"
+          ]
+        ],
+        "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: mono-ish (L≈R)"
+      }
+    },
+    {
+      "case": "Stream/denied",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "stream",
+          "status": "error",
+          "label": "Shared stream",
+          "permission": {
+            "mic": "unknown",
+            "stream": "unknown"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "stream-denied-or-cancelled",
+          "errorMessage": "Stream share was cancelled or denied.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": false,
+        "tracks": [],
+        "status": "Stream share was cancelled or denied."
+      }
+    },
+    {
+      "case": "Stream/queue-replaced",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "stream",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "unknown",
+            "stream": "granted"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": 2
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "new.wav",
+              "active": true
+            }
+          ],
+          "cursor": 0,
+          "length": 1
+        },
+        "ready": true,
+        "tracks": [
+          [
+            "live"
+          ]
+        ],
+        "status": "Stream live: MediaStreamAudioDestinationNode - Capture: 2ch - Bands: mono-ish (L≈R)"
+      }
+    },
+    {
+      "case": "Stream/file-return",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "prompt"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": false,
+        "tracks": [
+          [
+            "ended"
+          ]
+        ],
+        "status": "File mode ready. Select a queued file or load audio files."
+      }
+    },
+    {
+      "case": "Stream/other-source-wins",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "mic",
+          "status": "active",
+          "label": "MediaStreamAudioDestinationNode",
+          "permission": {
+            "mic": "granted",
+            "stream": "prompt"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "",
+          "errorMessage": "",
+          "sessionActive": true,
+          "streamMeta": {
+            "hasAudio": true,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": true,
+        "tracks": [
+          [
+            "live"
+          ],
+          [
+            "ended"
+          ]
+        ],
+        "status": "Microphone live: MediaStreamAudioDestinationNode - Bands: mono-ish (L≈R)"
+      }
+    },
+    {
+      "case": "Stream/ended-before-delivery",
+      "passed": true,
+      "result": {
+        "source": {
+          "kind": "none",
+          "status": "idle",
+          "label": "",
+          "permission": {
+            "mic": "unknown",
+            "stream": "granted"
+          },
+          "support": {
+            "mic": true,
+            "stream": true
+          },
+          "errorCode": "stream-ended",
+          "errorMessage": "Shared stream ended. Select Stream to share again.",
+          "sessionActive": false,
+          "streamMeta": {
+            "hasAudio": false,
+            "hasVideo": false,
+            "audioChannelCount": null
+          }
+        },
+        "audio": {
+          "isLoaded": false,
+          "isPlaying": false,
+          "filename": "",
+          "transportError": ""
+        },
+        "queue": {
+          "items": [
+            {
+              "index": 0,
+              "name": "first.wav",
+              "active": true
+            },
+            {
+              "index": 1,
+              "name": "second.wav",
+              "active": false
+            }
+          ],
+          "cursor": 0,
+          "length": 2
+        },
+        "ready": false,
+        "tracks": [
+          [
+            "ended"
+          ]
+        ],
+        "status": "File mode ready. Shared stream ended. Select Stream to share again."
+      }
+    },
+    {
+      "case": "scrubber-right-button",
+      "passed": true,
+      "observedTime": 5.109008,
+      "classification": "minor seeking behavior; acceptance ambiguous"
+    }
+  ]
+}

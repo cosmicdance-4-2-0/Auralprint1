@@ -1,0 +1,23 @@
+{
+  "browser": "151.0.7922.173",
+  "dpr": 2,
+  "nativeHeldKeys": true,
+  "largeDeltaCapped": true,
+  "blurClearsHeldKeys": true,
+  "nativePointerCapture": true,
+  "resizeDuringDrag": true,
+  "wheelWorldAnchor": true,
+  "cameraResetClearsHeldKeys": true,
+  "syntheticPointerCancel": true,
+  "invariant": {
+    "sceneUnchanged": true,
+    "phaseUnchanged": true,
+    "particleIdentity": true,
+    "particlePosition": [
+      17,
+      19
+    ],
+    "dragging": "false"
+  },
+  "pageerrors": []
+}

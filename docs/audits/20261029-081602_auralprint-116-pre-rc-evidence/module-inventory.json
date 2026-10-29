@@ -1,0 +1,443 @@
+{
+  "reachable": 65,
+  "all": 65,
+  "unreachable": [],
+  "groups": {
+    "audio": [
+      "analysis-frame",
+      "audio-engine",
+      "band-bank-controller",
+      "band-bank",
+      "input-source-manager",
+      "queue",
+      "scrubber",
+      "waveform-admission",
+      "waveform-coordinator",
+      "waveform-extractor",
+      "waveform-metadata",
+      "waveform-policy"
+    ],
+    "core": [
+      "application-preferences",
+      "band-frequency",
+      "camera-fit",
+      "camera-projection",
+      "camera-state",
+      "config",
+      "constants",
+      "orb-admission",
+      "orb-collection",
+      "particle-safety",
+      "preferences",
+      "spaces",
+      "state",
+      "timing",
+      "utils",
+      "world-geometry",
+      "world-settings"
+    ],
+    ".": [
+      "main"
+    ],
+    "presets": [
+      "compact-preset",
+      "deflate-transport",
+      "preset-codec",
+      "preset-limits",
+      "schema-13-baseline",
+      "schema-16-baseline",
+      "url-preset"
+    ],
+    "recording": [
+      "recorder-engine",
+      "recording-policy"
+    ],
+    "render": [
+      "camera-fit-content",
+      "color-policy",
+      "orb-runtime",
+      "orb",
+      "particle-governor",
+      "particle-list",
+      "renderer",
+      "trace-fade",
+      "trail-system",
+      "visualizer-runtime"
+    ],
+    "ui": [
+      "analysis-panel",
+      "camera-actions",
+      "camera-controls",
+      "camera-interaction",
+      "config-range",
+      "dom-cache",
+      "orb-band-picker",
+      "orb-editor",
+      "recording-resources",
+      "scene-camera-actions",
+      "scene-panel",
+      "spectral-ring-editor",
+      "ui",
+      "visualizers-panel",
+      "waveform-options",
+      "workspace"
+    ]
+  },
+  "edges": {
+    "main.js": [
+      "core/timing.js",
+      "core/config.js",
+      "core/preferences.js",
+      "core/state.js",
+      "core/spaces.js",
+      "presets/url-preset.js",
+      "audio/band-bank-controller.js",
+      "audio/audio-engine.js",
+      "audio/analysis-frame.js",
+      "audio/input-source-manager.js",
+      "audio/scrubber.js",
+      "render/renderer.js",
+      "recording/recorder-engine.js",
+      "ui/ui.js",
+      "ui/scene-camera-actions.js",
+      "render/orb-runtime.js",
+      "render/visualizer-runtime.js"
+    ],
+    "render/visualizer-runtime.js": [
+      "render/particle-governor.js",
+      "core/particle-safety.js",
+      "core/orb-admission.js",
+      "core/constants.js",
+      "core/preferences.js",
+      "core/state.js",
+      "core/utils.js"
+    ],
+    "core/utils.js": [],
+    "core/state.js": [
+      "core/config.js",
+      "core/camera-state.js"
+    ],
+    "core/camera-state.js": [
+      "core/config.js",
+      "core/constants.js"
+    ],
+    "core/constants.js": [],
+    "core/config.js": [
+      "core/constants.js",
+      "core/utils.js"
+    ],
+    "core/preferences.js": [
+      "core/timing.js",
+      "core/particle-safety.js",
+      "core/world-settings.js",
+      "core/world-geometry.js",
+      "core/camera-state.js",
+      "core/state.js",
+      "core/config.js",
+      "core/constants.js",
+      "core/orb-admission.js",
+      "core/band-frequency.js",
+      "core/utils.js"
+    ],
+    "core/band-frequency.js": [
+      "core/config.js"
+    ],
+    "core/orb-admission.js": [
+      "core/config.js"
+    ],
+    "core/world-geometry.js": [],
+    "core/world-settings.js": [
+      "core/config.js",
+      "core/utils.js"
+    ],
+    "core/particle-safety.js": [
+      "core/config.js"
+    ],
+    "core/timing.js": [
+      "core/config.js"
+    ],
+    "render/particle-governor.js": [
+      "core/particle-safety.js"
+    ],
+    "render/orb-runtime.js": [
+      "core/preferences.js",
+      "core/orb-collection.js",
+      "core/state.js",
+      "core/orb-admission.js",
+      "render/orb.js",
+      "render/visualizer-runtime.js"
+    ],
+    "render/orb.js": [
+      "core/utils.js",
+      "core/constants.js",
+      "core/preferences.js",
+      "core/world-geometry.js",
+      "core/state.js",
+      "render/trail-system.js",
+      "render/color-policy.js"
+    ],
+    "render/color-policy.js": [
+      "core/utils.js",
+      "core/preferences.js",
+      "audio/band-bank.js"
+    ],
+    "audio/band-bank.js": [
+      "core/utils.js",
+      "core/constants.js",
+      "core/preferences.js",
+      "core/state.js"
+    ],
+    "render/trail-system.js": [
+      "core/config.js",
+      "core/preferences.js",
+      "render/particle-governor.js",
+      "render/particle-list.js"
+    ],
+    "render/particle-list.js": [],
+    "core/orb-collection.js": [
+      "core/config.js",
+      "core/preferences.js",
+      "core/orb-admission.js"
+    ],
+    "ui/scene-camera-actions.js": [
+      "core/preferences.js",
+      "core/state.js",
+      "core/camera-state.js"
+    ],
+    "ui/ui.js": [
+      "ui/recording-resources.js",
+      "core/utils.js",
+      "core/config.js",
+      "core/preferences.js",
+      "core/orb-collection.js",
+      "core/state.js",
+      "presets/url-preset.js",
+      "audio/band-bank-controller.js",
+      "audio/queue.js",
+      "audio/audio-engine.js",
+      "audio/scrubber.js",
+      "audio/input-source-manager.js",
+      "render/color-policy.js",
+      "render/visualizer-runtime.js",
+      "recording/recorder-engine.js",
+      "render/orb-runtime.js",
+      "ui/dom-cache.js",
+      "ui/workspace.js",
+      "ui/orb-editor.js",
+      "ui/visualizers-panel.js",
+      "ui/analysis-panel.js",
+      "ui/spectral-ring-editor.js",
+      "ui/scene-panel.js",
+      "ui/camera-controls.js",
+      "ui/camera-interaction.js",
+      "ui/camera-actions.js",
+      "ui/scene-camera-actions.js"
+    ],
+    "ui/camera-actions.js": [
+      "core/config.js",
+      "core/constants.js",
+      "core/state.js",
+      "core/camera-projection.js",
+      "core/camera-fit.js",
+      "core/preferences.js",
+      "render/camera-fit-content.js"
+    ],
+    "render/camera-fit-content.js": [
+      "core/world-geometry.js",
+      "core/preferences.js"
+    ],
+    "core/camera-fit.js": [],
+    "core/camera-projection.js": [
+      "core/camera-state.js"
+    ],
+    "ui/camera-interaction.js": [
+      "core/config.js",
+      "core/constants.js",
+      "core/state.js",
+      "core/spaces.js",
+      "ui/camera-actions.js"
+    ],
+    "core/spaces.js": [
+      "core/state.js",
+      "core/camera-projection.js"
+    ],
+    "ui/camera-controls.js": [
+      "core/config.js",
+      "core/constants.js",
+      "core/state.js",
+      "ui/camera-actions.js",
+      "core/preferences.js",
+      "ui/scene-camera-actions.js"
+    ],
+    "ui/scene-panel.js": [
+      "core/config.js",
+      "core/particle-safety.js",
+      "core/world-settings.js",
+      "core/utils.js"
+    ],
+    "ui/spectral-ring-editor.js": [
+      "core/config.js",
+      "core/constants.js",
+      "ui/config-range.js"
+    ],
+    "ui/config-range.js": [],
+    "ui/analysis-panel.js": [
+      "ui/config-range.js",
+      "core/utils.js",
+      "core/config.js",
+      "core/band-frequency.js",
+      "core/preferences.js",
+      "core/state.js",
+      "audio/band-bank.js"
+    ],
+    "ui/visualizers-panel.js": [],
+    "ui/orb-editor.js": [
+      "ui/config-range.js",
+      "core/utils.js",
+      "core/constants.js",
+      "core/config.js",
+      "core/preferences.js",
+      "core/state.js",
+      "audio/band-bank.js",
+      "ui/orb-band-picker.js"
+    ],
+    "ui/orb-band-picker.js": [
+      "core/preferences.js"
+    ],
+    "ui/workspace.js": [
+      "core/state.js"
+    ],
+    "ui/dom-cache.js": [
+      "core/config.js",
+      "core/state.js"
+    ],
+    "recording/recorder-engine.js": [
+      "core/config.js",
+      "core/state.js",
+      "recording/recording-policy.js"
+    ],
+    "recording/recording-policy.js": [
+      "core/config.js"
+    ],
+    "audio/input-source-manager.js": [
+      "core/state.js",
+      "audio/audio-engine.js"
+    ],
+    "audio/audio-engine.js": [
+      "core/utils.js",
+      "core/config.js",
+      "core/preferences.js",
+      "core/state.js",
+      "audio/band-bank-controller.js",
+      "audio/band-bank.js"
+    ],
+    "audio/band-bank-controller.js": [
+      "core/config.js",
+      "core/preferences.js",
+      "audio/band-bank.js"
+    ],
+    "audio/scrubber.js": [
+      "core/utils.js",
+      "core/preferences.js",
+      "core/state.js",
+      "audio/audio-engine.js",
+      "audio/waveform-admission.js",
+      "audio/waveform-extractor.js",
+      "ui/waveform-options.js"
+    ],
+    "ui/waveform-options.js": [
+      "core/config.js",
+      "core/application-preferences.js"
+    ],
+    "core/application-preferences.js": [
+      "core/config.js",
+      "audio/waveform-policy.js"
+    ],
+    "audio/waveform-policy.js": [
+      "core/config.js",
+      "audio/waveform-metadata.js"
+    ],
+    "audio/waveform-metadata.js": [],
+    "audio/waveform-extractor.js": [
+      "core/config.js"
+    ],
+    "audio/waveform-admission.js": [
+      "core/config.js",
+      "core/application-preferences.js",
+      "audio/waveform-policy.js",
+      "audio/waveform-metadata.js",
+      "audio/waveform-coordinator.js",
+      "audio/waveform-extractor.js"
+    ],
+    "audio/waveform-coordinator.js": [],
+    "audio/queue.js": [],
+    "presets/url-preset.js": [
+      "core/preferences.js",
+      "core/config.js",
+      "core/constants.js",
+      "presets/preset-codec.js",
+      "core/band-frequency.js",
+      "presets/preset-limits.js",
+      "presets/deflate-transport.js"
+    ],
+    "presets/deflate-transport.js": [
+      "core/config.js",
+      "presets/preset-limits.js"
+    ],
+    "presets/preset-limits.js": [
+      "core/config.js"
+    ],
+    "presets/preset-codec.js": [
+      "core/constants.js",
+      "core/utils.js",
+      "core/timing.js",
+      "core/particle-safety.js",
+      "core/camera-state.js",
+      "core/world-settings.js",
+      "core/config.js",
+      "core/preferences.js",
+      "core/orb-collection.js",
+      "core/orb-admission.js",
+      "core/band-frequency.js",
+      "presets/compact-preset.js",
+      "presets/preset-limits.js"
+    ],
+    "presets/compact-preset.js": [
+      "core/config.js",
+      "core/utils.js",
+      "core/constants.js",
+      "presets/schema-16-baseline.js",
+      "presets/schema-13-baseline.js",
+      "presets/preset-limits.js",
+      "core/orb-admission.js"
+    ],
+    "presets/schema-13-baseline.js": [
+      "core/utils.js"
+    ],
+    "presets/schema-16-baseline.js": [
+      "core/utils.js"
+    ],
+    "ui/recording-resources.js": [
+      "core/config.js",
+      "recording/recording-policy.js"
+    ],
+    "render/renderer.js": [
+      "core/utils.js",
+      "core/constants.js",
+      "core/preferences.js",
+      "core/world-geometry.js",
+      "core/state.js",
+      "core/spaces.js",
+      "render/trace-fade.js",
+      "render/color-policy.js"
+    ],
+    "render/trace-fade.js": [
+      "core/config.js",
+      "core/utils.js",
+      "core/preferences.js",
+      "core/state.js",
+      "core/spaces.js"
+    ],
+    "audio/analysis-frame.js": []
+  }
+}

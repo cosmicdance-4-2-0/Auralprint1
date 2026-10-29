@@ -1,0 +1,7 @@
+{
+  "seed": "0xa116cafe",
+  "particleFrames": 10000,
+  "particleLifecycleTransitions": 345,
+  "projectionCases": 10000,
+  "fitCases": 10000
+}

@@ -1,0 +1,56 @@
+2026-10-29T06:42:05.7269548Z ℹ skipped 1
+2026-10-29T06:42:05.7269809Z ℹ todo 0
+2026-10-29T06:42:05.7270140Z ℹ duration_ms 15576.693432
+2026-10-29T06:42:05.7270338Z
+2026-10-29T06:42:05.7270485Z ✖ failing tests:
+2026-10-29T06:42:05.7270654Z
+2026-10-29T06:42:05.7270905Z test at tests/watch-integration.test.js:233:13
+2026-10-29T06:42:05.7271760Z ✖ duplicate saves do not assemble again and Python assemblers never overlap (793.166272ms)
+2026-10-29T06:42:05.7272555Z   AssertionError [ERR_ASSERTION]: Duplicate saves launched an assembler
+2026-10-29T06:42:05.7273065Z   + actual - expected
+2026-10-29T06:42:05.7273525Z   ... Skipped lines
+2026-10-29T06:42:05.7273800Z
+2026-10-29T06:42:05.7274051Z     'start 2930\n' +
+2026-10-29T06:42:05.7274346Z       'end 2930\n' +
+2026-10-29T06:42:05.7274621Z       'start 2969\n' +
+2026-10-29T06:42:05.7275064Z       'end 2969\n' +
+2026-10-29T06:42:05.7275337Z       'start 2986\n' +
+2026-10-29T06:42:05.7275622Z   ...
+2026-10-29T06:42:05.7275867Z       'start 3044\n' +
+2026-10-29T06:42:05.7276133Z   +   'end 3044\n' +
+2026-10-29T06:42:05.7276376Z   +   'start 3048\n' +
+2026-10-29T06:42:05.7276644Z   +   'end 3048\n' +
+2026-10-29T06:42:05.7276917Z   +   'start 3050\n' +
+2026-10-29T06:42:05.7277205Z   +   'end 3050\n' +
+2026-10-29T06:42:05.7277472Z   +   'start 3052\n' +
+2026-10-29T06:42:05.7277744Z   +   'end 3052\n'
+2026-10-29T06:42:05.7278005Z   -   'end 3044\n'
+2026-10-29T06:42:05.7278306Z
+2026-10-29T06:42:05.7278907Z       at TestContext.<anonymous> (file:///home/runner/work/Auralprint1/Auralprint1/tests/watch-integration.test.js:243:14)
+2026-10-29T06:42:05.7279419Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-29T06:42:05.7279975Z       at async TestContext.<anonymous> (file:///home/runner/work/Auralprint1/Auralprint1/tests/watch-integration.test.js:233:5)
+2026-10-29T06:42:05.7280552Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-29T06:42:05.7280990Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+2026-10-29T06:42:05.7281357Z     generatedMessage: false,
+2026-10-29T06:42:05.7281587Z     code: 'ERR_ASSERTION',
+2026-10-29T06:42:05.7283412Z     actual: 'start 2930\nend 2930\nstart 2969\nend 2969\nstart 2986\nend 2986\nstart 2989\nend 2989\nstart 2992\nend 2992\nstart 2995\nend 2995\nstart 2999\nend 2999\nstart 3002\nend 3002\nstart 3005\nend 3005\nstart 3008\nend 3008\nstart 3011\nend 3011\nstart 3014\nend 3014\nstart 3017\nend 3017\nstart 3020\nend 3020\nstart 3022\nend 3022\nstart 3025\nend 3025\nstart 3028\nend 3028\nstart 3030\nend 3030\nstart 3033\nend 3033\nstart 3036\nend 3036\nstart 3038\nend 3038\nstart 3041\nend 3041\nstart 3044\nend 3044\nstart 3048\nend 3048\nstart 3050\nend 3050\nstart 3052\nend 3052\n',
+2026-10-29T06:42:05.7286257Z     expected: 'start 2930\nend 2930\nstart 2969\nend 2969\nstart 2986\nend 2986\nstart 2989\nend 2989\nstart 2992\nend 2992\nstart 2995\nend 2995\nstart 2999\nend 2999\nstart 3002\nend 3002\nstart 3005\nend 3005\nstart 3008\nend 3008\nstart 3011\nend 3011\nstart 3014\nend 3014\nstart 3017\nend 3017\nstart 3020\nend 3020\nstart 3022\nend 3022\nstart 3025\nend 3025\nstart 3028\nend 3028\nstart 3030\nend 3030\nstart 3033\nend 3033\nstart 3036\nend 3036\nstart 3038\nend 3038\nstart 3041\nend 3041\nstart 3044\nend 3044\n',
+2026-10-29T06:42:05.7287567Z     operator: 'strictEqual',
+2026-10-29T06:42:05.7287780Z     diff: 'simple'
+2026-10-29T06:42:05.7287965Z   }
+2026-10-29T06:42:05.7422188Z ##[error]Process completed with exit code 1.
+2026-10-29T06:42:05.7551441Z Post job cleanup.
+2026-10-29T06:42:05.8245150Z [command]/usr/bin/git version
+2026-10-29T06:42:05.8287485Z git version 2.56.0
+2026-10-29T06:42:05.8316692Z Temporarily overriding HOME='/home/runner/work/_temp/4743fceb-f37b-4232-a6ee-d4566f6bd964' before making global git config changes
+2026-10-29T06:42:05.8317834Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T06:42:05.8320541Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Auralprint1/Auralprint1
+2026-10-29T06:42:05.8355181Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T06:42:05.8385095Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T06:42:05.8643076Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T06:42:05.8666781Z http.https://github.com/.extraheader
+2026-10-29T06:42:05.8675367Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-29T06:42:05.8707161Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T06:42:05.8975996Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T06:42:05.9008769Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T06:42:05.9383961Z Cleaning up orphan processes

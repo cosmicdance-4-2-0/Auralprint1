@@ -1,0 +1,23 @@
+{
+  "auditedCommit": "31dd5b2c7f9562602670dd2ebcc334d76c37f099",
+  "platform": "Node v24.19.0; source modules; native Node DEFLATE stream",
+  "completed": {
+    "command": "timeout 10s node --max-old-space-size=256 work/presets/probe.mjs identity-expansion 2000 4096",
+    "exitCode": 0,
+    "digits": 2000,
+    "count": 4096,
+    "inputJsonBytes": 14330,
+    "hashChars": 125,
+    "identityCharacters": 8208383,
+    "maxJsonBytes": 67108864,
+    "durationMs": 221,
+    "uniqueIds": 4096,
+    "memoryMiB": 24
+  },
+  "boundedTimeout": {
+    "command": "timeout 10s node --max-old-space-size=384 work/presets/probe.mjs identity-expansion 20000 4096",
+    "exitCode": 124,
+    "stdout": "",
+    "interpretation": "Decode did not settle within the external ten-second bound. No successful normalized result, browser freeze, OOM, or subsequent share rejection was observed for this case."
+  }
+}

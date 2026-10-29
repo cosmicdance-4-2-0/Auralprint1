@@ -1,0 +1,584 @@
+{
+  "browser": "151.0.7922.173",
+  "bandBeforeReset": {
+    "value": "invalid",
+    "invalid": "true",
+    "focused": false,
+    "readout": "Invalid indices",
+    "error": [
+      "Use whole band indices from 0 to 255, separated by commas. Leave blank for full spectrum."
+    ]
+  },
+  "bandAfterReset": {
+    "value": "invalid",
+    "invalid": "true",
+    "focused": false,
+    "readout": "Invalid indices",
+    "error": [
+      "Use whole band indices from 0 to 255, separated by commas. Leave blank for full spectrum."
+    ]
+  },
+  "canonicalBands": [],
+  "bandAfterImport": {
+    "control": {
+      "value": "invalid",
+      "invalid": "true",
+      "focused": false,
+      "readout": "Invalid indices",
+      "error": [
+        "Use whole band indices from 0 to 255, separated by commas. Leave blank for full spectrum."
+      ]
+    },
+    "canonical": [
+      12,
+      13
+    ]
+  },
+  "bandAfterChooserControl": {
+    "control": {
+      "value": "",
+      "invalid": "false",
+      "focused": false,
+      "readout": "Full spectrum · channel energy",
+      "error": [
+        ""
+      ]
+    },
+    "canonical": []
+  },
+  "worldBeforeReset": {
+    "value": "-1",
+    "invalid": "true",
+    "focused": false,
+    "readout": "1000 world units",
+    "error": [
+      "World dimensions set the reference size for Orb and Ring proportions. Points and particles can exist beyond these dimensions. The default view fits the shorter world dimension to the shorter viewport dimension. Changing world dimensions during a session changes Orb and Ring geometry. Existing particles remain at their original world positions, so trails may appear discontinuous.",
+      "Enter a number from 1 to 1000000 world units."
+    ]
+  },
+  "worldAfterReset": {
+    "value": "-1",
+    "invalid": "true",
+    "focused": false,
+    "readout": "1000 world units",
+    "error": [
+      "World dimensions set the reference size for Orb and Ring proportions. Points and particles can exist beyond these dimensions. The default view fits the shorter world dimension to the shorter viewport dimension. Changing world dimensions during a session changes Orb and Ring geometry. Existing particles remain at their original world positions, so trails may appear discontinuous.",
+      "Enter a number from 1 to 1000000 world units."
+    ]
+  },
+  "canonicalWorld": {
+    "widthUnits": 1000,
+    "heightUnits": 1000
+  },
+  "resourcesAfterReset": {
+    "value": "-1",
+    "invalid": "true",
+    "focused": false,
+    "readout": "Selected: 16384",
+    "error": [
+      "Maximum number of particles retained across all Orbs. Older particles are retired when the scene reaches this limit. Higher values increase memory and rendering costs.",
+      "Enter a whole number from 0 to 1048576."
+    ]
+  },
+  "sceneColorBefore": {
+    "canonical": {
+      "hueOffsetDeg": 12.5,
+      "saturation": 0.375,
+      "value": 0.425
+    },
+    "controls": [
+      {
+        "id": "rngHueOff",
+        "value": "13",
+        "invalid": null,
+        "focused": false,
+        "readout": "12.5°",
+        "nativeAria": null
+      },
+      {
+        "id": "rngSat",
+        "value": "0.38",
+        "invalid": null,
+        "focused": false,
+        "readout": "0.38",
+        "nativeAria": null
+      },
+      {
+        "id": "rngVal",
+        "value": "0.43",
+        "invalid": null,
+        "focused": false,
+        "readout": "0.42",
+        "nativeAria": null
+      }
+    ]
+  },
+  "sceneHueAfterArrow": {
+    "canonical": {
+      "hueOffsetDeg": 14,
+      "saturation": 0.375,
+      "value": 0.425
+    },
+    "control": {
+      "value": "14",
+      "invalid": null,
+      "focused": true,
+      "readout": "14°"
+    }
+  },
+  "layouts": [
+    {
+      "name": "Visualizers",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 300,
+        "height": 247,
+        "scrollWidth": 298,
+        "clientWidth": 298
+      },
+      "documentOverflow": false,
+      "visibleControls": 605
+    },
+    {
+      "name": "Analysis",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 300,
+        "height": 247,
+        "scrollWidth": 298,
+        "clientWidth": 298
+      },
+      "documentOverflow": false,
+      "visibleControls": 7
+    },
+    {
+      "name": "Scene",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 300,
+        "height": 247,
+        "scrollWidth": 298,
+        "clientWidth": 298
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Camera",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 300,
+        "height": 247,
+        "scrollWidth": 298,
+        "clientWidth": 298
+      },
+      "documentOverflow": false,
+      "visibleControls": 21
+    },
+    {
+      "name": "Audio",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "panel": {
+        "x": 10,
+        "y": 267.5,
+        "width": 300,
+        "height": 232.5,
+        "scrollWidth": 298,
+        "clientWidth": 298
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Visualizers",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 384,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 605
+    },
+    {
+      "name": "Analysis",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 384,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 7
+    },
+    {
+      "name": "Scene",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 384,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Camera",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 384,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 21
+    },
+    {
+      "name": "Audio",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "panel": {
+        "x": 10,
+        "y": 404.5,
+        "width": 355,
+        "height": 194.5,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Visualizers",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 400,
+        "height": 128,
+        "scrollWidth": 398,
+        "clientWidth": 398
+      },
+      "documentOverflow": false,
+      "visibleControls": 605
+    },
+    {
+      "name": "Analysis",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "panel": {
+        "x": 97,
+        "y": 10,
+        "width": 560,
+        "height": 128,
+        "scrollWidth": 558,
+        "clientWidth": 558
+      },
+      "documentOverflow": false,
+      "visibleControls": 7
+    },
+    {
+      "name": "Scene",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 400,
+        "height": 128,
+        "scrollWidth": 398,
+        "clientWidth": 398
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Camera",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 400,
+        "height": 128,
+        "scrollWidth": 398,
+        "clientWidth": 398
+      },
+      "documentOverflow": false,
+      "visibleControls": 21
+    },
+    {
+      "name": "Audio",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "panel": {
+        "x": 10,
+        "y": 148.5,
+        "width": 647,
+        "height": 158.5,
+        "scrollWidth": 645,
+        "clientWidth": 645
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Visualizers",
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 400,
+        "height": 75,
+        "scrollWidth": 398,
+        "clientWidth": 398
+      },
+      "documentOverflow": false,
+      "visibleControls": 605
+    },
+    {
+      "name": "Analysis",
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 548,
+        "height": 75,
+        "scrollWidth": 546,
+        "clientWidth": 546
+      },
+      "documentOverflow": false,
+      "visibleControls": 7
+    },
+    {
+      "name": "Scene",
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 400,
+        "height": 75,
+        "scrollWidth": 398,
+        "clientWidth": 398
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Camera",
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 400,
+        "height": 75,
+        "scrollWidth": 398,
+        "clientWidth": 398
+      },
+      "documentOverflow": false,
+      "visibleControls": 21
+    },
+    {
+      "name": "Audio",
+      "viewport": {
+        "width": 568,
+        "height": 320
+      },
+      "panel": {
+        "x": 10,
+        "y": 95.5,
+        "width": 548,
+        "height": 156.5,
+        "scrollWidth": 546,
+        "clientWidth": 546
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Visualizers",
+      "viewport": {
+        "width": 375,
+        "height": 260
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 22,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 605
+    },
+    {
+      "name": "Analysis",
+      "viewport": {
+        "width": 375,
+        "height": 260
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 22,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 7
+    },
+    {
+      "name": "Scene",
+      "viewport": {
+        "width": 375,
+        "height": 260
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 22,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    },
+    {
+      "name": "Camera",
+      "viewport": {
+        "width": 375,
+        "height": 260
+      },
+      "panel": {
+        "x": 10,
+        "y": 10,
+        "width": 355,
+        "height": 22,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 21
+    },
+    {
+      "name": "Audio",
+      "viewport": {
+        "width": 375,
+        "height": 260
+      },
+      "panel": {
+        "x": 10,
+        "y": -2.5,
+        "width": 355,
+        "height": 194.5,
+        "scrollWidth": 353,
+        "clientWidth": 353
+      },
+      "documentOverflow": false,
+      "visibleControls": 15
+    }
+  ],
+  "focusAfterRemove": {
+    "id": "",
+    "action": "edit",
+    "orb": "ORB1"
+  },
+  "zeroOrbs": {
+    "editors": 0,
+    "inventory": "1 visualizer · 0 Orbs",
+    "disabledBulk": true
+  },
+  "addFromZero": 1,
+  "identitySafe": {
+    "unexpectedImages": 0,
+    "ids": [
+      "orb-editor-4-bands",
+      "orb-editor-4-center-x",
+      "orb-editor-4-center-y"
+    ]
+  },
+  "identityPrompt": "Remove Orb 1 (spectral-ring)? This cannot be undone.",
+  "identityAfterRemove": {
+    "orbs": [
+      "<img src=x onerror=alert(1)>"
+    ],
+    "ringRows": 1
+  },
+  "oneDuplicateAfter20Toggles": 1,
+  "errors": []
+}

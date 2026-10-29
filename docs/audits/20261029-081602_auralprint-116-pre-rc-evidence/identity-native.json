@@ -1,0 +1,52 @@
+[
+  {
+    "name": "ordinary",
+    "digits": 1,
+    "count": 4096,
+    "prefix": "ORB",
+    "inputJsonBytes": 12331,
+    "hashChars": 119,
+    "wallMs": 461.258963,
+    "completed": true,
+    "durationMs": 451,
+    "identityCharacters": 27589,
+    "ticks": 2
+  },
+  {
+    "name": "opaque-long",
+    "digits": 20000,
+    "count": 4096,
+    "prefix": "X",
+    "inputJsonBytes": 32328,
+    "hashChars": 142,
+    "wallMs": 202.81677800000034,
+    "completed": true,
+    "durationMs": 199.09999999997672,
+    "identityCharacters": 47556,
+    "ticks": 0
+  },
+  {
+    "name": "numeric-small-collection",
+    "digits": 20000,
+    "count": 2,
+    "prefix": "ORB",
+    "inputJsonBytes": 20048,
+    "hashChars": 130,
+    "wallMs": 70.6222499999999,
+    "completed": true,
+    "durationMs": 23.100000000093132,
+    "identityCharacters": 40007,
+    "ticks": 0
+  },
+  {
+    "name": "numeric-large-collection",
+    "digits": 20000,
+    "count": 4096,
+    "prefix": "ORB",
+    "inputJsonBytes": 32330,
+    "hashChars": 147,
+    "wallMs": 6000.764577999999,
+    "completed": false,
+    "externalDeadlineMs": 6000
+  }
+]
