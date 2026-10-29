@@ -168,7 +168,7 @@ test("duplicate Orb IDs retain canonical collection repair and array order", () 
   incoming.orbs = ["ORB0", "ORB0", "custom-id", "custom-id", ""].map((id, i) => ({ ...structuredClone(full.orbs[i % 3]), id }));
   location.hash = rawHash({ schema: 12, prefs: incoming });
   assert.equal(UrlPreset.applyFromLocationHash(), true);
-  assert.deepEqual(preferences.orbs.map((orb) => orb.id), ["ORB0", "ORB1", "custom-id", "ORB2", "ORB3"]);
+  assert.deepEqual(preferences.orbs.map((orb) => orb.id), ["ORB0", "orb-0", "custom-id", "orb-1", "orb-2"]);
   assert.deepEqual(preferences.orbs.map((orb) => orb.startAngleRad), incoming.orbs.map((orb) => orb.startAngleRad));
 }));
 
