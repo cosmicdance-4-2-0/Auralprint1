@@ -97,21 +97,22 @@ test('RC-15 phase 3: Add/Duplicate refuse at cap before reading identities; no p
     assert.equal(preferences.orbs,prefRef);assert.equal(runtime.settings,settings);assert.equal(VisualizerRuntime.getVisualizers(),adapters);
     assert.equal(state.orbs[0],source);assert.equal(source.angleRad,1.25);assert.equal(source.trail.particles.head,node);assert.equal(source.trail.emitAccumulator,.5);
     const under=defs(cap-1),ids=under.map(o=>o.id);const added=createOrb(under);
-    assert.equal(added.id,`ORB${cap-1}`);assert.deepEqual(under.slice(0,-1).map(o=>o.id),ids);assert.equal(duplicateOrb(under,ids[0]),null);
+    assert.match(added.id,/^orb-[0-9a-z]+$/);assert.ok(!ids.includes(added.id));assert.deepEqual(under.slice(0,-1).map(o=>o.id),ids);assert.equal(duplicateOrb(under,ids[0]),null);
   }finally{VisualizerRuntime.dispose();restore();}
 });
 
-test('RC-15 phase 3: duplicate-heavy repair is linear in identity reads and preserves late IDs/huge suffixes',()=>{
+test('RC-15 phase 3: duplicate-heavy repair is linear in identity reads and preserves late/huge IDs',()=>{
   let reads=0;const huge='ORB'+'9'.repeat(400);
   const input=Array.from({length:cap},(_,i)=>({get id(){reads++;return i===cap-1?'HISTORICAL-Z':huge;},chanId:i%2?'L':'R',hueOffsetDeg:37}));
   const normalized=normalizeOrbCollection(input);
   assert.ok(reads<=20*cap,`identity reads ${reads} exceed linear reservation bound`);
-  assert.equal(normalized[0].id,huge);assert.equal(normalized[1].id,'ORB1'+'0'.repeat(400));
+  assert.equal(normalized[0].id,huge);
+  assert.ok(normalized.slice(1,-1).every(o=>/^orb-[0-9a-z]+$/.test(o.id)&&o.id.length<=4+cap.toString(36).length));
   assert.equal(normalized.at(-1).id,'HISTORICAL-Z');assert.equal(new Set(normalized.map(o=>o.id)).size,cap);
   assert.ok(normalized.every((o,i)=>o.chanId===(i%2?'L':'R')&&o.hueOffsetDeg===37));
   assert.deepEqual(normalizeOrbCollection(normalized),normalized);
-  const late=normalizeOrbCollection([{}, {id:'ORB00042'},{id:'ORB43'},{id:'opaque-🎵'},{id:'ORB43'},{}]);
-  assert.deepEqual(late.map(o=>o.id),['ORB44','ORB00042','ORB43','opaque-🎵','ORB45','ORB46']);
+  const late=normalizeOrbCollection([{}, {id:'ORB00042'},{id:'ORB43'},{id:'opaque-🎵'},{id:'ORB43'},{},{id:'orb-0'}]);
+  assert.deepEqual(late.map(o=>o.id),['orb-1','ORB00042','ORB43','opaque-🎵','orb-2','orb-3','orb-0']);
 });
 
 test('RC-15 phase 3: runtime admission fails before disposal, construction, synchronization or history loss',()=>{

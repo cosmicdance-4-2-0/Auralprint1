@@ -1,9 +1,11 @@
 import { canonicalPrefs, canonicalPayload } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
-import { Worker } from "node:worker_threads";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-import { allocateOrbId, createOrb, duplicateOrb, normalizeOrbCollection } from "../src/js/core/orb-collection.js";
+import { createOrb, duplicateOrb, normalizeOrbCollection } from "../src/js/core/orb-collection.js";
+import { CONFIG } from "../src/js/core/config.js";
 import { PRESET_SCHEMA_VERSION } from "../src/js/core/constants.js";
 import { preferences, replacePreferences, resolveSettings, runtime } from "../src/js/core/preferences.js";
 import { state } from "../src/js/core/state.js";
@@ -13,107 +15,69 @@ import { createRuntimeOrb, duplicateRuntimeOrb, initOrbs } from "../src/js/rende
 import { VisualizerRuntime } from "../src/js/render/visualizer-runtime.js";
 
 const HUGE_ID = "ORB9007199254740992";
-const HUGE_NEXT = "ORB9007199254740993";
+const OTHER_HUGE_ID = "ORB9007199254740993";
 const payload = (ids) => ({ schema: 11, prefs: { orbs: ids.map((id) => ({ id })) } });
 const idsOf = (orbs) => orbs.map((orb) => orb.id);
 
-test("RC-01: timeout-protected allocation/import gate and direct huge-ID regressions", async (t) => {
-  // Run every dangerous boundary in a killable worker BEFORE direct tests.
-  // Restoring the Number allocator fails this gate without entering a hanging
-  // synchronous unit test. Do not move huge-ID tests outside this guard.
-  const collectionUrl = new URL("../src/js/core/orb-collection.js", import.meta.url).href;
-  const codecUrl = new URL("../src/js/presets/preset-codec.js", import.meta.url).href;
-  const urlPresetUrl = new URL("../src/js/presets/url-preset.js", import.meta.url).href;
-  const preferencesUrl = new URL("../src/js/core/preferences.js", import.meta.url).href;
-  const worker = new Worker(new URL("data:text/javascript," + encodeURIComponent(`
-    import assert from "node:assert/strict";
-    import { parentPort } from "node:worker_threads";
-    import { allocateOrbId, createOrb, duplicateOrb } from ${JSON.stringify(collectionUrl)};
-    import { decodePresetPayload, sanitizePreset } from ${JSON.stringify(codecUrl)};
-    import { UrlPreset } from ${JSON.stringify(urlPresetUrl)};
-    import { preferences } from ${JSON.stringify(preferencesUrl)};
-    const id = ${JSON.stringify(HUGE_ID)};
-    parentPort.postMessage("before allocation");
-    assert.equal(allocateOrbId([{ id }]), ${JSON.stringify(HUGE_NEXT)});
-    const payload = { schema: 11, prefs: { orbs: [{ id }, { id }] } };
-    parentPort.postMessage("before sanitation");
-    assert.equal(new Set(sanitizePreset(decodePresetPayload(payload)).orbs.map(o => o.id)).size, 2);
-    parentPort.postMessage("before URL import");
-    globalThis.location = { hash: "#p=" + Buffer.from(JSON.stringify(payload)).toString("base64url") };
-    assert.equal(UrlPreset.applyFromLocationHash(), true);
-    parentPort.postMessage("before Add");
-    assert.equal(createOrb(preferences.orbs).id, "ORB9007199254740994");
-    parentPort.postMessage("before Duplicate");
-    assert.equal(duplicateOrb(preferences.orbs, id).id, "ORB9007199254740995");
-    assert.equal(new Set(preferences.orbs.map(o => o.id)).size, 4);
-    parentPort.postMessage("completed");
-  `)));
-  let timer;
-  let phase = "startup";
-  try {
-    await new Promise((resolve, reject) => {
-      timer = setTimeout(() => reject(new Error(`Huge-ID worker timed out after 3000 ms (${phase})`)), 3000);
-      worker.on("message", (message) => {
-        phase = message;
-        if (message === "completed") resolve();
-      });
-      worker.once("error", reject);
-      worker.once("exit", (code) => {
-        if (phase !== "completed") reject(new Error(`Huge-ID worker exited ${code} (${phase})`));
-      });
+test("RC-01 / AUD116-001: bounded allocation/import gate and huge-ID ownership regressions", async (t) => {
+  // Dangerous inputs stay in a separate heap-limited process. Both a completed
+  // sentinel and clean exit are required before running direct integration tests.
+  const child = spawn(process.execPath, [
+    "--max-old-space-size=192",
+    fileURLToPath(new URL("../scripts/test-support/orb-id-boundary.mjs", import.meta.url)),
+  ], { stdio: ["ignore", "pipe", "pipe", "ipc"] });
+  let phase = "startup", completed = null, output = "", timedOut = false;
+  const timeoutMs = 30_000;
+  await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => { timedOut = true; child.kill("SIGKILL"); }, timeoutMs);
+    for (const stream of [child.stdout, child.stderr]) stream.on("data", chunk => {
+      output = (output + chunk.toString()).slice(-16_384);
     });
-  } finally {
-    clearTimeout(timer);
-    await worker.terminate();
-  }
-
-  for (const [id, expected] of [
-    ["ORB9007199254740990", "ORB9007199254740991"],
-    ["ORB9007199254740991", HUGE_ID],
-    [HUGE_ID, HUGE_NEXT],
-    [HUGE_NEXT, "ORB9007199254740994"],
-    ["ORB9999999999999999999999999999999999999999", "ORB10000000000000000000000000000000000000000"],
-    // Number would overflow to Infinity here; canonical IDs still stay exact.
-    ["ORB" + "9".repeat(400), "ORB1" + "0".repeat(400)],
-  ]) {
-    await t.test(`exact allocation after ${id.length > 60 ? "a 400-digit suffix" : id}`, () => {
-      const orbs = [{ id }, { id: "HISTORICAL-Z" }];
-      const snapshot = structuredClone(orbs);
-      const allocated = allocateOrbId(orbs);
-      assert.equal(typeof allocated, "string");
-      assert.match(allocated, /^ORB(?:0|[1-9]\d*)$/);
-      assert.equal(allocated, expected);
-      assert.ok(!idsOf(orbs).includes(allocated));
-      assert.deepEqual(orbs, snapshot);
+    child.on("message", message => {
+      if (message.phase) phase = message.phase;
+      if (message.completed === true) completed = message;
     });
-  }
+    child.once("error", error => { clearTimeout(timer); reject(error); });
+    child.once("close", (code, signal) => {
+      clearTimeout(timer);
+      if (timedOut) reject(new Error(`Orb identity child timed out after ${timeoutMs} ms (${phase})`));
+      else if (code !== 0 || signal || !completed) reject(new Error(`Orb identity child did not complete: exit=${code}, signal=${signal}, phase=${phase}\n${output}`));
+      else resolve();
+    });
+  });
+  assert.equal(completed.count, CONFIG.limits.orbs.maxCount);
+  assert.ok(completed.cases >= 15);
+  t.diagnostic(JSON.stringify(completed));
 
+  // Exact numeric successors were superseded by the owner-approved opaque-ID
+  // contract. The child retains all former unsafe-Number/overflow boundaries and
+  // adds the 20,000-digit amplification case, preserving identity and termination.
   await t.test("duplicate huge identities repair deterministically without changing order or stealing explicit IDs", () => {
-    assert.deepEqual(idsOf(normalizeOrbCollection([{ id: HUGE_ID }, { id: HUGE_ID }])), [HUGE_ID, HUGE_NEXT]);
+    assert.deepEqual(idsOf(normalizeOrbCollection([{ id: HUGE_ID }, { id: HUGE_ID }])), [HUGE_ID, "orb-0"]);
     const input = [
       { id: HUGE_ID, chanId: "R" },
       { id: HUGE_ID, chanId: "L" },
       { chanId: "C" },
-      { id: HUGE_NEXT, chanId: "R" },
+      { id: OTHER_HUGE_ID, chanId: "R" },
       { id: "HISTORICAL-Z", chanId: "L" },
     ];
     const snapshot = structuredClone(input);
     const repaired = normalizeOrbCollection(input);
-    assert.deepEqual(idsOf(repaired), [HUGE_ID, "ORB9007199254740994", "ORB9007199254740995", HUGE_NEXT, "HISTORICAL-Z"]);
+    assert.deepEqual(idsOf(repaired), [HUGE_ID, "orb-0", "orb-1", OTHER_HUGE_ID, "HISTORICAL-Z"]);
     assert.deepEqual(repaired.map((orb) => orb.chanId), input.map((orb) => orb.chanId));
     assert.deepEqual(normalizeOrbCollection(input), repaired);
     assert.deepEqual(normalizeOrbCollection(repaired), repaired);
     assert.deepEqual(input, snapshot);
   });
 
-  await t.test("audited schema-10 payload decodes, sanitizes and re-encodes with string identities", () => {
+  await t.test("historical schema-11 payload decodes, sanitizes and re-encodes with string identities", () => {
     const input = payload([HUGE_ID, HUGE_ID]);
     const snapshot = structuredClone(input);
     const decoded = decodePresetPayload(input);
     assert.equal(decoded.ok, true);
     assert.equal(decoded.schema, 11);
     const next = sanitizePreset(decoded);
-    assert.deepEqual(idsOf(next.orbs), [HUGE_ID, HUGE_NEXT]);
+    assert.deepEqual(idsOf(next.orbs), [HUGE_ID, "orb-0"]);
     assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 16, prefs: next });
     assert.deepEqual(canonicalPrefs(JSON.parse(JSON.stringify(encodePresetPayload(next)))), next);
     assert.equal(PRESET_SCHEMA_VERSION, 16);
@@ -125,8 +89,8 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
       const next = sanitizePreset(decodePresetPayload(payload([HUGE_ID])));
       const source = structuredClone(next.orbs[0]);
       const created = operation(next.orbs);
-      assert.equal(created.id, HUGE_NEXT);
-      assert.deepEqual(idsOf(next.orbs), [HUGE_ID, HUGE_NEXT]);
+      assert.equal(created.id, "orb-0");
+      assert.deepEqual(idsOf(next.orbs), [HUGE_ID, "orb-0"]);
       assert.deepEqual(next.orbs[0], source);
     });
   }
@@ -145,15 +109,15 @@ test("RC-01: timeout-protected allocation/import gate and direct huge-ID regress
         // Use the raw supported transport, avoiding encode-time pre-sanitation.
         location.hash = "#p=" + Buffer.from(JSON.stringify(payload(ids)), "utf8").toString("base64url");
         assert.equal(UrlPreset.applyFromLocationHash(), true);
-        assert.deepEqual(idsOf(preferences.orbs), ids.length === 1 ? [HUGE_ID] : [HUGE_ID, HUGE_NEXT]);
+        assert.deepEqual(idsOf(preferences.orbs), ids.length === 1 ? [HUGE_ID] : [HUGE_ID, "orb-0"]);
         resolveSettings();
         initOrbs();
         const source = state.orbs[0];
         source.angleRad = 1.25;
         const added = createRuntimeOrb();
         const duplicated = duplicateRuntimeOrb(HUGE_ID);
-        assert.match(added.id, /^ORB[1-9]\d*$/);
-        assert.match(duplicated.id, /^ORB[1-9]\d*$/);
+        assert.match(added.id, /^orb-[0-9a-z]+$/);
+        assert.match(duplicated.id, /^orb-[0-9a-z]+$/);
         assert.equal(new Set(idsOf(preferences.orbs)).size, ids.length + 2);
         assert.equal(state.orbs[0], source);
         assert.equal(source.id, HUGE_ID);

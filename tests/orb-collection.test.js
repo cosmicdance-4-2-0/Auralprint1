@@ -12,19 +12,22 @@ function defs(ids) {
   return ids.map((id, i) => ({ ...structuredClone(CONFIG.defaults.orbs[i % 2]), id }));
 }
 
-test("generated IDs retain ordinary and sparse max-suffix allocation", () => {
-  assert.equal(allocateOrbId([]), "ORB0");
-  assert.equal(allocateOrbId(defs(["ORB0", "ORB1"])), "ORB2");
-  assert.equal(allocateOrbId(defs(["ORB0", "ORB42"])), "ORB43");
-  assert.equal(allocateOrbId(defs(["ORB00042", "ORB43"])), "ORB44");
+test("generated IDs use the first free local name without interpreting existing IDs", () => {
+  for (const ids of [[], ["ORB0", "ORB1"], ["ORB0", "ORB42"], ["ORB00042", "ORB43"], ["orb-00", "orb-Z", "orb-1e30"]]) {
+    const input = defs(ids), before = structuredClone(input);
+    assert.equal(allocateOrbId(input), "orb-0");
+    assert.deepEqual(input, before);
+  }
+  assert.equal(allocateOrbId(defs(["orb-0", "orb-2"])), "orb-1");
+  assert.equal(allocateOrbId(defs(Array.from({ length: 11 }, (_, i) => `orb-${i.toString(36)}`))), "orb-b");
 });
 
 test("opaque string identities remain unchanged and allow Add and Duplicate", () => {
-  const ids = ["HISTORICAL-Z", "spectral-ring", "CUSTOM-7", "ORB", "ORB1e30", "ORB-1", "宇宙-🎵"];
+  const ids = ["ORB0", "ORB1", "ORB9007199254740992", "HISTORICAL-Z", "spectral-ring", "CUSTOM-7", "ORB", "ORB1e30", "ORB-1", "宇宙-🎵"];
   const orbs = normalizeOrbCollection(defs(ids));
   assert.deepEqual(orbs.map((orb) => orb.id), ids);
-  assert.equal(createOrb(orbs).id, "ORB0");
-  assert.equal(duplicateOrb(orbs, "spectral-ring").id, "ORB1");
+  assert.equal(createOrb(orbs).id, "orb-0");
+  assert.equal(duplicateOrb(orbs, "spectral-ring").id, "orb-1");
   assert.equal(orbs.find((orb) => orb.id === "spectral-ring").id, "spectral-ring");
 });
 
@@ -32,7 +35,7 @@ test("collection identity repair reserves later explicit identities", () => {
   const incoming = [{ chanId: "R" }, { id: "ORB0", chanId: "C" }, { id: "HISTORICAL-Z", chanId: "C" }];
   const snapshot = structuredClone(incoming);
   const orbs = normalizeOrbCollection(incoming);
-  assert.deepEqual(orbs.map((orb) => orb.id), ["ORB1", "ORB0", "HISTORICAL-Z"]);
+  assert.deepEqual(orbs.map((orb) => orb.id), ["orb-0", "ORB0", "HISTORICAL-Z"]);
   assert.deepEqual(orbs.map((orb) => orb.chanId), ["R", "C", "C"]);
   assert.deepEqual(incoming, snapshot);
 });
@@ -47,7 +50,7 @@ test("Orb collection normalization allows zero/one/N, preserves order, and repai
     { ...CONFIG.defaults.orbs[1], id: "custom-id" },
     { ...CONFIG.defaults.orbs[0], id: "" },
   ]);
-  assert.deepEqual(normalized.map((orb) => orb.id), ["ORB0", "ORB1", "custom-id", "ORB2", "ORB3"]);
+  assert.deepEqual(normalized.map((orb) => orb.id), ["ORB0", "orb-0", "custom-id", "orb-1", "orb-2"]);
   assert.equal(new Set(normalized.map((orb) => orb.id)).size, normalized.length);
   assert.notEqual(normalized[0].motion, normalized[1].motion);
   assert.notEqual(normalized[0].bandIds, normalized[1].bandIds);
@@ -56,17 +59,63 @@ test("Orb collection normalization allows zero/one/N, preserves order, and repai
 
 test("collection create, duplicate, find, and remove preserve stable identity and deep ownership", () => {
   const orbs = normalizeOrbCollection(defs(["ORB0", "ORB2"]));
-  assert.equal(allocateOrbId(orbs), "ORB3");
+  assert.equal(allocateOrbId(orbs), "orb-0");
   const created = createOrb(orbs);
-  assert.equal(created.id, "ORB3");
+  assert.equal(created.id, "orb-0");
   const duplicate = duplicateOrb(orbs, "ORB0");
-  assert.equal(duplicate.id, "ORB4");
-  assert.deepEqual(orbs.map((orb) => orb.id), ["ORB0", "ORB4", "ORB2", "ORB3"]);
+  assert.equal(duplicate.id, "orb-1");
+  assert.deepEqual(orbs.map((orb) => orb.id), ["ORB0", "orb-1", "ORB2", "orb-0"]);
   for (const key of ["motion", "response", "particles", "trace", "bandIds"]) assert.notEqual(duplicate[key], orbs[0][key]);
   assert.equal(findOrbById(orbs, "ORB2").id, "ORB2");
   assert.equal(removeOrb(orbs, "ORB2"), true);
   assert.equal(removeOrb(orbs, "missing"), false);
-  assert.deepEqual(orbs.map((orb) => orb.id), ["ORB0", "ORB4", "ORB3"]);
+  assert.deepEqual(orbs.map((orb) => orb.id), ["ORB0", "orb-1", "orb-0"]);
+});
+
+test("later generator-like IDs keep their first owner through deterministic nonmutating repair", () => {
+  const input = ["alpha", undefined, "orb-0", "alpha", "orb-2", undefined].map((id, i) => ({
+    id, hueOffsetDeg: i + .123456789, chanId: i % 2 ? "R" : "L",
+  }));
+  const before = structuredClone(input), normalized = normalizeOrbCollection(input);
+  assert.deepEqual(normalized.map(orb => orb.id), ["alpha", "orb-1", "orb-0", "orb-3", "orb-2", "orb-4"]);
+  assert.deepEqual(normalized.map(orb => [orb.chanId, orb.hueOffsetDeg]), input.map(orb => [orb.chanId, orb.hueOffsetDeg]));
+  assert.deepEqual(normalizeOrbCollection(input), normalized);
+  assert.deepEqual(normalizeOrbCollection(normalized), normalized);
+  assert.deepEqual(input, before);
+});
+
+test("invalid IDs repair under the existing validity rule; accepted strings stay exact", () => {
+  const invalid = [undefined, null, 0, false, {}, [], "", " ", " padded "];
+  const explicit = ["opaque string", "内側-🎵", "orb-00", "orb-a", "spectral-ring"];
+  const normalized = normalizeOrbCollection([...invalid, ...explicit].map(id => ({ id })));
+  assert.deepEqual(normalized.slice(0, invalid.length).map(orb => orb.id), invalid.map((_, i) => `orb-${i.toString(36)}`));
+  assert.deepEqual(normalized.slice(invalid.length).map(orb => orb.id), explicit);
+  assert.equal(new Set(normalized.map(orb => orb.id)).size, normalized.length);
+  assert.deepEqual(normalizeOrbCollection([{ id: "one" }]).map(orb => orb.id), ["one"]);
+});
+
+test("removal and reorder preserve survivors while Add reuses a free local identity", () => {
+  const orbs = normalizeOrbCollection([{}, {}, {}]), [a, b, c] = orbs;
+  assert.equal(removeOrb(orbs, b.id), true);
+  orbs.reverse();
+  const added = createOrb(orbs);
+  assert.equal(added.id, b.id);
+  assert.deepEqual(orbs, [c, a, added]);
+  const copy = duplicateOrb(orbs, a.id), snapshot = structuredClone(a);
+  const next = createOrb(orbs);
+  assert.notEqual(next.id, copy.id);
+  assert.deepEqual(a, snapshot);
+  assert.equal(new Set(orbs.map(orb => orb.id)).size, orbs.length);
+});
+
+test("a full generated namespace collection remains stable and capacity refuses additions", () => {
+  const ids = Array.from({ length: CONFIG.limits.orbs.maxCount }, (_, i) => `orb-${i.toString(36)}`);
+  const orbs = normalizeOrbCollection(defs(ids));
+  assert.deepEqual(orbs.map(orb => orb.id), ids);
+  assert.deepEqual(normalizeOrbCollection(orbs), orbs);
+  assert.equal(createOrb(orbs), null);
+  assert.equal(duplicateOrb(orbs, ids[0]), null);
+  assert.equal(allocateOrbId(orbs), `orb-${ids.length.toString(36)}`);
 });
 
 test("ID-aware Orb reconciliation preserves survivors and freshens additions across zero/one/N", () => {
@@ -124,6 +173,11 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     assert.equal(state.orbs[0], a);
     assert.equal(a.angleRad, 1.25);
     assert.equal(VisualizerRuntime.getVisualizers()[1], aAdapter);
+    const createdRuntime = state.orbs.at(-1);
+    const createdAdapter = VisualizerRuntime.getVisualizers().at(-1);
+    createdRuntime.angleRad = 2.5;
+    createdRuntime.trail.emitAt(3, 4, 0, { history: "removed" });
+    createdRuntime.trail.emitAccumulator = .75;
 
     const duplicate = duplicateRuntimeOrb("A");
     assert.ok(duplicate);
@@ -141,6 +195,24 @@ test("runtime collection APIs mutate preferences and reconcile Orbs and adapters
     assert.equal(preferences.orbs.some((orb) => orb.id === created.id), false);
     assert.equal(state.orbs.find((orb) => orb.id === "A"), a);
     assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "A"), aAdapter);
+    // Reusing a freed local name must create new ownership after reconciliation.
+    const replacement = createRuntimeOrb();
+    assert.equal(replacement.id, created.id);
+    const replacementRuntime = state.orbs.find((orb) => orb.id === replacement.id);
+    assert.notEqual(replacementRuntime, createdRuntime);
+    assert.notEqual(replacementRuntime.trail, createdRuntime.trail);
+    assert.deepEqual(Array.from(replacementRuntime.trail.particles), []);
+    assert.equal(replacementRuntime.trail.emitAccumulator, 0);
+    assert.equal(replacementRuntime.angleRad, replacementRuntime.startAngleRad);
+    assert.notEqual(VisualizerRuntime.getVisualizers().find((v) => v.id === replacement.id), createdAdapter);
+    assert.equal(state.orbs.find((orb) => orb.id === "A"), a);
+    assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "A"), aAdapter);
+    assert.equal(a.trail.particles.at(0).rgbStart.history, "source");
+    assert.equal(a.trail.emitAccumulator, .5);
+    assert.equal(state.orbs.find((orb) => orb.id === "B"), b);
+    assert.equal(VisualizerRuntime.getVisualizers().find((v) => v.id === "B"), bAdapter);
+    assert.equal(b.trail.emitAccumulator, 9);
+    assert.deepEqual(Array.from(state.orbs.find((orb) => orb.id === duplicate.id).trail.particles), []);
     assert.equal(removeRuntimeOrb("unknown"), false);
     assert.equal(state.orbs.find((orb) => orb.id === "B"), b);
     for (const id of [...preferences.orbs.map((orb) => orb.id)]) assert.equal(removeRuntimeOrb(id), true);
