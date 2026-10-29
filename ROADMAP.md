@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 26, 2026. **Current public release: Release 4 / Build 115 (`v0.1.15`), schema 10. Current development: proposed Build 116F (`v0.1.16f`), schema 14, extending accepted 116E; review and milestone acceptance remain pending.**
+Updated: October 26, 2026. **Current public release: Release 4 / Build 115 (`v0.1.15`), schema 10. Current development: proposed Build 116E (`v0.1.16e`), schema 13, extending merged 116D; acceptance remains pending.**
 
 This document owns the plan, milestone acceptance and deferrals. [README](README.md) owns current capabilities, user instructions and [developer verification](README.md#developer-bootstrap); [AGENTS](AGENTS.md) owns engineering policy. The [Build 115](docs/development/build-115.md) and [Build 116](docs/development/build-116.md) worklogs own completed stages, corrective history and evidence. [Release comparisons](docs/development/build-115-release-delta.md) distinguish public Build 113 from internal Build 114.
 
@@ -19,7 +19,7 @@ All 15 delivery stages are complete. **The owner accepted Build 115 for Release 
 
 - Orb channel selects waveform, full-channel energy and selected-band energy. Empty targets use full-channel energy; nonempty targets average the selected channel's energies. Global spectrum/dominant remain real combined C. Inherited dominant color follows an Orb's target; explicit dominant remains global C.
 - Designed phase is canonical radians in `[0, TAU)`, displayed in degrees. Editing preserves live history; Reset Visuals applies design and clears trails; track reset clears trails without changing phase. Pause stops Orb/free Ring motion/emission while analysis and TTL aging continue.
-- Published schema 10 and accepted development schema 11 are immutable; schema 12 is the immutable authored-camera format; schema 13 adds frozen deltas and ordered ranges without changing canonical Scene configuration. Schema 14 adds opt-in Queue and Trace preferences against a distinct frozen baseline; schema 13 remains unchanged. Future persisted changes require versioning/migration under [AGENTS](AGENTS.md#21-schema-discipline). Legacy support and CONFIG → preferences → runtime.settings → state remain protected.
+- Published schema 10 and accepted development schema 11 are immutable; schema 12 is the immutable authored-camera format; schema 13 adds frozen deltas and ordered ranges without changing canonical Scene configuration. Future persisted changes require versioning/migration under [AGENTS](AGENTS.md#21-schema-discipline). Legacy support and CONFIG → preferences → runtime.settings → state remain protected.
 - Selected particle budgets are enforced without hidden default ceilings. Zero emission preserves history; zero retention clears/rejects it. Nonzero spacing filters new same-Orb placements, never deletes nearby history. Emission work has an immutable 1/30 s ceiling; ordinary motion integrates visible elapsed time up to the 0.5 s discontinuity threshold.
 - The 4,096-Orb admission ceiling and expert particle maxima are operational bounds, not safe-device/FPS claims. Audio, source, recorder, Nyquist, and shared portable/hosted build ownership remain protected.
 - Recorder correctness and prior-export preservation remain mandatory; encoded-data limits do not bound total browser memory.
@@ -36,16 +36,13 @@ Build 115's accepted items (AUD-001/003/005, editor jump, Stream stereo, schema 
 
 ## Build 116: simulation world, camera and projection
 
-**Status: Proposed Build 116F (`v0.1.16f`, schema 14) adds opt-in Queue clearing, Trace fading and Particle Birth Color to accepted 116E (PR #85, `33b696a`). It remains unreleased; implementation review, an independent adversarial audit and owner browser/device acceptance are pending. The owner has not authorized 116 RC #1 or public publication.** Build 115 remains the public release. See the [accepted integration history](docs/development/build-116.md#accepted-integration-history) and [116D contract and validation](docs/development/build-116.md#116d-authored-scene-camera).
+**Status: Proposed Build 116E (`v0.1.16e`, schema 13) adds compact preset representation and native DEFLATE sharing to merged 116D and its first-audit remediations. It remains unreleased; an independent adversarial audit and owner browser/device acceptance are pending. The owner has not authorized 116 RC #1 or public publication.** Build 115 remains the public release. See the [accepted integration history](docs/development/build-116.md#accepted-integration-history) and [116D contract and validation](docs/development/build-116.md#116d-authored-scene-camera).
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
 Acceptance gates:
 
-- Verify schema-14 defaults/deltas, compressed and uncompressed round trips, and frozen schema-13 reconstruction; retain schemas 2–13, ordered selections, native DEFLATE bounds and canonical numerical precision.
-- Verify the Scene Queue policy clears only after an accepted File → Mic/Stream success; failed, stale, cancelled or recording-locked attempts and preset imports preserve the runtime Queue.
-- Verify per-Orb and Bulk Trace fading over oldest visible segments, nonblack backgrounds and stored Particle Birth Color, including their combined mode and unchanged legacy rendering.
-- Bound new segmented rendering work through CONFIG, preserve composition and fair allocation, expose diagnostics, and record stroke/frame-time comparisons without claiming an FPS guarantee.
+- Verify schema-13 frozen-default reconstruction, ordered contiguous/sparse/reordered selections, native DEFLATE framing and bounded streaming decode; retain schemas 2–12 and canonical numerical precision.
 - Verify compressed startup before the first application frame, stale-import cancellation and accurate compression/clipboard fallback.
 - Run the Chromium preset gate and optional Firefox/WebKit interoperability checks as tooling permits; execute the [116E physical-device matrix](docs/development/build-116.md#116e-owner-device-matrix), including Safari and direct-file/offline checks. Linux WebKit automation does not certify physical Safari.
 - Complete documentation reconciliation.
@@ -58,8 +55,6 @@ Acceptance gates:
 - Pan, zoom, rotation, reset and the inverse coordinate transform are deterministic and accessible; camera reset returns to a documented default and interactive controls avoid transport, seek, drag/drop and panel gesture conflicts.
 - Schema 12 persists only the explicitly saved `sceneCamera`; `state.camera` remains the live performance view. Copy Share Link does not capture movement. Startup and URL import initialize the live camera from the normalized authored view; schemas 2–11 initialize factory defaults. Schema-11 world geometry and unit spacing survive migration. World and authored-camera settings traverse the canonical preferences pipeline.
 - World-unit particle spacing and CSS-screen-sized particle/Trace/Ring presentation retain explicit semantics; camera transforms must not silently change emission decisions. Resize, high-DPI, history retention, recording, hosted and single-file behavior pass regression validation.
-
-**116G deferral:** actual angular-travel Trace length, angular-span persistence, travel counters and independent Trace history are excluded from 116F. Broader performance tuning retains its Build 117 scope.
 
 Owner acceptance requires physical evaluation; automated and synthetic compatibility checks do not replace it. Camera interaction tuning and CSS-screen-sized marks retain their provisional status pending that evaluation.
 

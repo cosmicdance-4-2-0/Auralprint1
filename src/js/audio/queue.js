@@ -9,12 +9,10 @@ const Queue = (() => {
   // Each item: { file: File, name: string }
   let _items = [];
   let _cursor = -1; // -1 = nothing loaded
-  let _revision = 0; // Runtime mutation fence; never persisted.
 
   // Add a file to the end of the queue. Returns the new item index.
   function add(file) {
     _items.push({ file, name: file.name });
-    _revision += 1;
     return _items.length - 1;
   }
 
@@ -27,7 +25,6 @@ const Queue = (() => {
   function remove(index) {
     if (index < 0 || index >= _items.length) return null;
     _items.splice(index, 1);
-    _revision += 1;
     if (_items.length === 0) {
       _cursor = -1;
       return null;
@@ -45,14 +42,12 @@ const Queue = (() => {
   function clear() {
     _items = [];
     _cursor = -1;
-    _revision += 1;
   }
 
   // Move cursor to index and return that file, or null if out of range.
   function goTo(index) {
     if (index < 0 || index >= _items.length) return null;
     _cursor = index;
-    _revision += 1;
     return _items[_cursor].file;
   }
 
@@ -60,7 +55,6 @@ const Queue = (() => {
   function next() {
     if (!canNext()) return null;
     _cursor += 1;
-    _revision += 1;
     return _items[_cursor].file;
   }
 
@@ -68,7 +62,6 @@ const Queue = (() => {
   function prev() {
     if (!canPrev()) return null;
     _cursor -= 1;
-    _revision += 1;
     return _items[_cursor].file;
   }
 
@@ -98,7 +91,6 @@ const Queue = (() => {
     }
 
     if (currentItem) _cursor = _items.indexOf(currentItem);
-    _revision += 1;
     return true;
   }
 
@@ -112,11 +104,10 @@ const Queue = (() => {
   }
 
   return { add, remove, clear, goTo, next, prev, current, entryAt, currentEntry, canNext, canPrev, shuffle, snapshot,
-    get revision() { return _revision; },
     get length() { return _items.length; },
     get currentIndex() { return _cursor; },
     // Direct cursor write — used when add() triggers the first auto-play.
-    setCursor(i) { if (i >= 0 && i < _items.length) { _cursor = i; _revision += 1; } },
+    setCursor(i) { if (i >= 0 && i < _items.length) _cursor = i; },
   };
 })();
 

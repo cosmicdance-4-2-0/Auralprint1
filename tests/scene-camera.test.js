@@ -1,4 +1,4 @@
-import { canonicalPrefs, with116FDefaults } from "./helpers/preset-semantics.js";
+import { canonicalPrefs } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -30,10 +30,10 @@ function scene(run) {
 test("116D: schema 11 retains every historical field, world dimensions and unit spacing", () => {
   const original = fixture("schema-11-full"), before = structuredClone(original);
   const next = sanitizePreset(decodePresetPayload({ schema: 11, prefs: original }));
-  assert.deepEqual(next, with116FDefaults({ ...original, sceneCamera: CONFIG.defaults.sceneCamera }));
+  assert.deepEqual(next, { ...original, sceneCamera: CONFIG.defaults.sceneCamera });
   assert.deepEqual(original, before);
   const payload = encodePresetPayload(next);
-  assert.equal(payload.schema, 14);
+  assert.equal(payload.schema, 13);
   assert.deepEqual(sanitizePreset(decodePresetPayload(payload)), next);
 });
 
@@ -146,7 +146,7 @@ test("116D: preference replacement detaches and normalizes an injected live came
 }));
 
 test("116D: large Scene URL preserves all admitted Orbs, world and authored view", () => scene(() => {
-  const prefs = with116FDefaults(fixture("schema-12-full")), seed = prefs.orbs[0];
+  const prefs = fixture("schema-12-full"), seed = prefs.orbs[0];
   prefs.orbs = Array.from({ length: 512 }, (_, i) => ({ ...structuredClone(seed), id: `large-宇宙-${i}` }));
   replacePreferences(prefs); UrlPreset.writeHashFromPrefs();
   assert.ok(location.hash.length > 100_000);

@@ -29,7 +29,7 @@ test("version metadata and schema remain aligned", () => {
   const constants = readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.match(version, /^v[0-9][A-Za-z0-9.\-]*$/);
   assert.ok(constants.includes(`   Auralprint\n   ${version.slice(1)}\n`), "Source header must match root version");
-  assert.equal(PRESET_SCHEMA_VERSION, 14);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
 });
 
 test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
@@ -3193,12 +3193,12 @@ function settingsPresetHash(prefs) {
   return `#p=${Buffer.from(JSON.stringify({ schema: 12, prefs }), "utf8").toString("base64url")}`;
 }
 
-test("Copy Share Link writes the compressed schema-14 hash and reports only in Settings", async (t) => {
+test("Copy Share Link writes the compressed schema-13 hash and reports only in Settings", async (t) => {
   await withSettingsActionHarness(t, async ({ clipboard, location }) => {
     const writeHash = t.mock.method(UrlPreset, "writeCompressedHashFromPrefs");
     await state.ui.btnShare.click();
     assert.equal(writeHash.mock.calls.length, 1);
-    assert.equal(decodePresetHash(location.hash).schema, 14);
+    assert.equal(decodePresetHash(location.hash).schema, 13);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3209,7 +3209,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
   await withSettingsActionHarness(t, async ({ location }) => {
     delete globalThis.navigator.clipboard;
     await state.ui.btnShare.click();
-    assert.equal(decodePresetHash(location.hash).schema, 14);
+    assert.equal(decodePresetHash(location.hash).schema, 13);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
@@ -4864,7 +4864,7 @@ test('116E: rejected clipboard and unavailable compression preserve a usable com
       const before=structuredClone(preferences);await state.ui.btnShare.click();
       assert.match(location.hash,/^#p=/);
       assert.deepEqual(canonicalPrefs(decodePresetHash(location.hash)),before);
-      assert.match(state.ui.sceneStatus.textContent,/written to URL.*copy from address bar.*Uncompressed schema-14/);
+      assert.match(state.ui.sceneStatus.textContent,/written to URL.*copy from address bar.*Uncompressed schema-13/);
       assert.doesNotMatch(state.ui.sceneStatus.textContent,/copied to clipboard/);
     } finally {globalThis.CompressionStream=native;}
   });
@@ -4877,281 +4877,4 @@ test('116E: failed share leaves the old URL and does not report a clipboard succ
     await state.ui.btnShare.click();assert.equal(location.href,before);assert.equal(clipboard.copied,'');
     assert.equal(state.ui.sceneStatus.textContent,'Could not create share link. URL unchanged.');
   });
-});
-
-// Exercise the UI policy against the actual InputSourceManager cancellation and
-// commit lifecycle; only native capture/attachment and recorder side effects are
-// substituted. Queue contents remain real runtime entries throughout.
-async function with116fSourceExit({ enabled = true, sourceKind = "file", phase = "idle", capture, attach, unsupported = false } = {}, run) {
-  const previousPrefs = structuredClone(preferences);
-  const originalManager = Object.fromEntries(["activateMic", "activateStream", "teardownActiveSource"].map(key => [key, InputSourceManager[key]]));
-  const originalRecorder = { onTransportMutation: RecorderEngine.onTransportMutation, getSupportStatus: RecorderEngine.getSupportStatus };
-  const captures = [], mutations = [], streams = [];
-  function liveStream(kind) {
-    const audio = Object.assign(new EventTarget(), { id: `${kind}-${streams.length}`, label: kind, readyState: "live",
-      stop() { this.readyState = "ended"; }, getSettings() { return { channelCount: 2 }; } });
-    const stream = Object.assign(new EventTarget(), { getTracks() { return [audio]; }, getAudioTracks() { return [audio]; }, getVideoTracks() { return []; } });
-    streams.push(stream);
-    return stream;
-  }
-  const devices = unsupported ? {} : {
-    getUserMedia() { captures.push("mic"); return capture ? capture("mic", liveStream) : Promise.resolve(liveStream("mic")); },
-    getDisplayMedia() { captures.push("stream"); return capture ? capture("stream", liveStream) : Promise.resolve(liveStream("stream")); },
-  };
-  const manager = createInputSourceManager({ stateRef: state, mediaDevices: devices, audioEngine: {
-    unload() {}, async attachMediaStreamSource(stream, options) {
-      if (attach) return attach(stream, options);
-      return options.isCurrent();
-    },
-  } });
-  Object.assign(InputSourceManager, Object.fromEntries(Object.keys(originalManager).map(key => [key, manager[key]])));
-  RecorderEngine.onTransportMutation = (...args) => { mutations.push(args); return { ok: true }; };
-  RecorderEngine.getSupportStatus = () => ({ ok: true });
-  preferences.audio.clearQueueOnSourceExit = enabled;
-  try {
-    await withUiWireHarnessState({ sourceState: { kind: sourceKind, status: sourceKind === "none" ? "idle" : "active", sessionActive: sourceKind !== "none",
-      support: { mic: true, stream: true } }, audioState: { isLoaded: sourceKind === "file", isPlaying: false, filename: "old.wav" },
-      recordingState: { phase }, queueNames: ["old.wav", "next.wav"], currentIndex: 0, queueVisible: true },
-    async h => {
-      const entries = [Queue.entryAt(0), Queue.entryAt(1)];
-      try { await run({ ...h, manager, entries, captures, mutations, liveStream }); }
-      finally { await manager.teardownActiveSource({ reason: "116f-test-cleanup" }); }
-    });
-  } finally {
-    Object.assign(InputSourceManager, originalManager);
-    Object.assign(RecorderEngine, originalRecorder);
-    replacePreferences(previousPrefs); resolveSettings();
-  }
-}
-
-function pending116fCapture() {
-  let resolve, reject;
-  const promise = new Promise((yes, no) => { resolve = yes; reject = no; });
-  return { promise, resolve, reject };
-}
-
-for (const kind of ["mic", "stream"]) {
-  for (const enabled of [false, true]) {
-    test(`116F: ${enabled ? "enabled" : "disabled"} Queue policy after accepted File → ${kind}`, async () => {
-      const held = pending116fCapture();
-      await with116fSourceExit({ enabled, capture: () => held.promise }, async ({ liveStream, entries, mutations }) => {
-        assert.equal(state.ui.chkClearQueueOnSourceExit.checked, enabled);
-        const pending = UI.dispatchSourceSwitchAction(kind);
-        assert.equal(state.source.status, "requesting");
-        assert.equal(Queue.length, 2, "permission dialog never clears Queue");
-        held.resolve(liveStream(kind));
-        assert.equal(await pending, true);
-        assert.equal(state.source.kind, kind);
-        assert.equal(state.source.status, "active");
-        assert.equal(Queue.length, enabled ? 0 : 2);
-        if (!enabled) assert.equal(Queue.entryAt(0), entries[0]);
-        assert.equal(state.ui.queueList.children.length, enabled ? 0 : 2);
-        UI.refreshAllUiText();
-        assert.equal(state.ui.btnPrev.disabled, true);
-        assert.equal(state.ui.btnNext.disabled, true);
-        assert.match(state.ui.audioStatus.textContent, kind === "mic" ? /Microphone live/ : /Stream live/);
-        assert.equal(mutations.filter(([event]) => event === "audio-unloaded").length, 1);
-        assert.equal(state.audio.isLoaded, false);
-        assert.equal(state.audio.filename, "");
-      });
-    });
-  }
-  for (const failure of ["denied", "cancelled", "unsupported", "attach-failed", "attach-cancelled", "no-audio"]) {
-    test(`116F: ${kind} ${failure} preserves Queue`, async () => {
-      await with116fSourceExit({ unsupported: failure === "unsupported",
-        capture: (target, liveStream) => {
-          if (failure === "denied" || failure === "cancelled") return Promise.reject(Object.assign(new Error("cancelled"), { name: failure === "denied" ? "NotAllowedError" : "AbortError" }));
-          if (failure === "no-audio") return Promise.resolve({ getTracks() { return []; }, getAudioTracks() { return []; } });
-          return Promise.resolve(liveStream(target));
-        }, attach: () => {
-          if (failure === "attach-failed") throw new Error("attachment failed");
-          return false;
-        } }, async ({ entries }) => {
-        assert.equal(await UI.dispatchSourceSwitchAction(kind), false);
-        assert.equal(Queue.length, 2);
-        assert.equal(Queue.entryAt(0), entries[0]);
-        assert.equal(Queue.entryAt(1), entries[1]);
-      });
-    });
-  }
-  test(`116F: returning to File cancels pending ${kind} without clearing a newer Queue`, async () => {
-    const held = pending116fCapture();
-    await with116fSourceExit({ capture: () => held.promise }, async ({ liveStream }) => {
-      const pending = UI.dispatchSourceSwitchAction(kind);
-      assert.equal(await UI.dispatchSourceSwitchAction("file"), true);
-      Queue.clear(); Queue.add({ name: "replacement.wav" }); Queue.setCursor(0);
-      const replacement = Queue.currentEntry();
-      held.resolve(liveStream(kind));
-      assert.equal(await pending, false);
-      assert.equal(state.source.kind, "none");
-      assert.equal(Queue.length, 1);
-      assert.equal(Queue.currentEntry(), replacement);
-    });
-  });
-  test(`116F: a newer Queue mutation during ${kind} activation preserves all entries`, async () => {
-    const held = pending116fCapture();
-    await with116fSourceExit({ capture: () => held.promise }, async ({ liveStream, entries }) => {
-      const pending = UI.dispatchSourceSwitchAction(kind);
-      Queue.add({ name: "new-intent.wav" });
-      held.resolve(liveStream(kind));
-      assert.equal(await pending, true);
-      assert.equal(Queue.length, 3);
-      assert.equal(Queue.entryAt(0), entries[0]);
-    });
-  });
-  test(`116F: ${kind} success that ended before UI continuation preserves Queue`, async () => {
-    const held = pending116fCapture();
-    await with116fSourceExit({ capture: () => held.promise }, async ({ liveStream, manager, entries }) => {
-      const original = InputSourceManager[kind === "mic" ? "activateMic" : "activateStream"];
-      InputSourceManager[kind === "mic" ? "activateMic" : "activateStream"] = async () => {
-        const result = await original();
-        await manager.teardownActiveSource({ reason: "ended-before-ui" });
-        return result;
-      };
-      const pending = UI.dispatchSourceSwitchAction(kind);
-      held.resolve(liveStream(kind));
-      assert.equal(await pending, true, "activation had succeeded before ending");
-      assert.equal(state.source.kind, "none");
-      assert.equal(Queue.entryAt(0), entries[0]);
-    });
-  });
-}
-
-for (const phase of ["recording", "finalizing"]) {
-  test(`116F: ${phase} source lock preserves Queue without starting capture`, async () => {
-    await with116fSourceExit({ phase }, async ({ entries, captures, mutations }) => {
-      assert.equal(await UI.dispatchSourceSwitchAction("mic"), false);
-      assert.equal(await UI.dispatchSourceSwitchAction("stream"), false);
-      assert.deepEqual(captures, []); assert.deepEqual(mutations, []);
-      assert.equal(Queue.entryAt(0), entries[0]);
-    });
-  });
-}
-
-for (const [from, to] of [["mic", "mic"], ["stream", "stream"], ["mic", "stream"], ["stream", "mic"], ["mic", "file"], ["stream", "file"], ["file", "file"]]) {
-  test(`116F: ${from} → ${to} never applies File-exit Queue clearance`, async () => {
-    await with116fSourceExit({ sourceKind: from }, async ({ entries }) => {
-      await UI.dispatchSourceSwitchAction(to);
-      assert.equal(Queue.entryAt(0), entries[0]);
-      assert.equal(Queue.length, 2);
-    });
-  });
-}
-
-test("116F: a newer live-source choice invalidates the departing File policy", async () => {
-  const held = pending116fCapture();
-  await with116fSourceExit({ capture: (kind, liveStream) => kind === "mic" ? held.promise : Promise.resolve(liveStream(kind)) }, async ({ liveStream, entries }) => {
-    const pending = UI.dispatchSourceSwitchAction("mic");
-    assert.equal(await UI.dispatchSourceSwitchAction("stream"), true);
-    held.resolve(liveStream("mic"));
-    assert.equal(await pending, false);
-    assert.equal(state.source.kind, "stream");
-    assert.equal(Queue.entryAt(0), entries[0]);
-  });
-});
-
-test("116F: shared preset and reset synchronize Queue policy without serializing or deleting runtime Queue", async () => {
-  const previousLocation = globalThis.location;
-  globalThis.location = { pathname: "/", search: "", hash: `#p=${Buffer.from(JSON.stringify({ schema: 14, prefs: { audio: { clearQueueOnSourceExit: true } } })).toString("base64url")}` };
-  try {
-    await with116fSourceExit({ enabled: false }, async ({ entries }) => {
-      await state.ui.btnApplyUrl.dispatch("click");
-      assert.equal(preferences.audio.clearQueueOnSourceExit, true);
-      assert.equal(state.ui.chkClearQueueOnSourceExit.checked, true);
-      assert.equal(Queue.entryAt(0), entries[0]);
-      const payload = JSON.stringify((await import("../src/js/presets/preset-codec.js")).encodePresetPayload(preferences));
-      assert.ok(!payload.includes("old.wav"));
-      assert.ok(!payload.includes("next.wav"));
-      assert.ok(!payload.includes("cursor"));
-      await state.ui.btnResetPrefs.dispatch("click");
-      assert.equal(preferences.audio.clearQueueOnSourceExit, false);
-      assert.equal(state.ui.chkClearQueueOnSourceExit.checked, false);
-      assert.equal(Queue.entryAt(0), entries[0]);
-      assert.equal(await UI.dispatchSourceSwitchAction("mic"), true);
-      assert.equal(Queue.entryAt(0), entries[0], "reset disables future automatic clearing");
-    });
-  } finally { globalThis.location = previousLocation; }
-});
-
-for (const initiallyEnabled of [false, true]) {
-  test(`116F: Queue policy captured as ${initiallyEnabled} applies only to its transition`, async () => {
-    const held = pending116fCapture();
-    await with116fSourceExit({ enabled: initiallyEnabled, capture: () => held.promise }, async ({ liveStream }) => {
-      const pending = UI.dispatchSourceSwitchAction("mic");
-      preferences.audio.clearQueueOnSourceExit = !initiallyEnabled;
-      UI.applyPrefs();
-      assert.equal(Queue.length, 2);
-      held.resolve(liveStream("mic"));
-      assert.equal(await pending, true);
-      assert.equal(Queue.length, initiallyEnabled ? 0 : 2);
-    });
-  });
-}
-
-for (const kind of ["mic", "stream"]) {
-  test(`116F: stale successful ${kind} UI continuation cannot clear the reaccepted same source`, async () => {
-    const released = pending116fCapture(), accepted = pending116fCapture();
-    await with116fSourceExit({}, async ({ entries }) => {
-      const method = kind === "mic" ? "activateMic" : "activateStream";
-      const original = InputSourceManager[method];
-      let first = true;
-      InputSourceManager[method] = async () => {
-        const result = await original();
-        if (first) {
-          first = false;
-          accepted.resolve();
-          await released.promise;
-        }
-        return result;
-      };
-      const obsolete = UI.dispatchSourceSwitchAction(kind);
-      await accepted.promise;
-      assert.equal(Queue.length, 2);
-      await UI.dispatchSourceSwitchAction("file");
-      preferences.audio.clearQueueOnSourceExit = false; UI.applyPrefs();
-      assert.equal(await UI.dispatchSourceSwitchAction(kind), true);
-      released.resolve();
-      assert.equal(await obsolete, true, "old manager success is historical, not current UI intent");
-      assert.equal(state.source.kind, kind);
-      assert.equal(Queue.entryAt(0), entries[0]);
-      assert.equal(Queue.length, 2);
-    });
-  });
-  test(`116F: leaving ${kind} during pending attachment preserves Queue`, async () => {
-    const held = pending116fCapture(), entered = pending116fCapture();
-    await with116fSourceExit({ attach: async (_stream, options) => {
-      entered.resolve(); await held.promise; return options.isCurrent();
-    } }, async ({ entries }) => {
-      const pending = UI.dispatchSourceSwitchAction(kind);
-      await entered.promise;
-      assert.equal(Queue.length, 2);
-      await UI.dispatchSourceSwitchAction("file");
-      held.resolve();
-      assert.equal(await pending, false);
-      assert.equal(Queue.entryAt(0), entries[0]);
-    });
-  });
-}
-
-test("116F: shared preset enables future Queue clearance while legacy import restores disabled policy", async () => {
-  const previousLocation = globalThis.location;
-  const hash = payload => `#p=${Buffer.from(JSON.stringify(payload)).toString("base64url")}`;
-  globalThis.location = { pathname: "/", search: "", hash: hash({ schema: 14, prefs: { audio: { clearQueueOnSourceExit: true } } }) };
-  try {
-    await with116fSourceExit({ enabled: false }, async ({ entries }) => {
-      await state.ui.btnApplyUrl.dispatch("click");
-      assert.equal(Queue.entryAt(0), entries[0]);
-      assert.equal(await UI.dispatchSourceSwitchAction("stream"), true);
-      assert.equal(Queue.length, 0, "imported opt-in affects the next source exit");
-    });
-    globalThis.location.hash = hash({ schema: 13, prefs: {} });
-    await with116fSourceExit({ enabled: true }, async ({ entries }) => {
-      await state.ui.btnApplyUrl.dispatch("click");
-      assert.equal(preferences.audio.clearQueueOnSourceExit, false);
-      assert.equal(state.ui.chkClearQueueOnSourceExit.checked, false);
-      assert.equal(Queue.entryAt(0), entries[0]);
-      assert.equal(await UI.dispatchSourceSwitchAction("mic"), true);
-      assert.equal(Queue.entryAt(0), entries[0]);
-    });
-  } finally { globalThis.location = previousLocation; }
 });

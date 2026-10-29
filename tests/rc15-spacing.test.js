@@ -185,13 +185,13 @@ test("running spacing changes preserve particles and fractions, and paused runti
 });
 
 test("schema 11 spacing round trip, absent and invalid values, and obsolete overlap remains unrelated", () => {
-  assert.equal(PRESET_SCHEMA_VERSION, 14);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
   assert.deepEqual(CONFIG.limits.particles.minPlacementDistanceUnits,{min:0,max:10,step:.1});
   assert.ok(Object.isFrozen(CONFIG.limits.particles.minPlacementDistanceUnits));
   const prefs=structuredClone(CONFIG.defaults); prefs.orbs[0].particles.minPlacementDistanceUnits=0; prefs.orbs[1].particles.minPlacementDistanceUnits=2.3;
   prefs.orbs[0].particles.overlapRadiusPx=10; prefs.orbs[0].particles.spatiallyRejectedDemand=123;
   const encoded=encodePresetPayload(prefs);
-  assert.equal(encoded.schema, 14); assert.deepEqual(canonicalPrefs(encoded).orbs.map(o=>o.particles.minPlacementDistanceUnits),[0,2.3]);
+  assert.equal(encoded.schema, 13); assert.deepEqual(canonicalPrefs(encoded).orbs.map(o=>o.particles.minPlacementDistanceUnits),[0,2.3]);
   assert.equal('overlapRadiusPx' in canonicalPrefs(encoded).orbs[0].particles,false);
   assert.equal('spatiallyRejectedDemand' in canonicalPrefs(encoded).orbs[0].particles,false);
   assert.deepEqual(sanitizePreset(encoded),canonicalPrefs(encoded));

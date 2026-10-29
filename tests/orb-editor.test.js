@@ -11,11 +11,11 @@ import { createOrbEditorUi, readBulkOrbValue } from "../src/js/ui/orb-editor.js"
 function element(tag="div") { const listeners=new Map(); return { tagName:tag.toUpperCase(), type:"", dataset:{}, children:[], parentNode:null, value:"", textContent:"", disabled:false, checked:false, indeterminate:false, attributes:{}, open:false,
  get options(){return this.tagName==="SELECT"?this.children:undefined}, get selectedIndex(){return this.tagName==="SELECT"?this.children.findIndex(option=>option.value===this.value):-1},
  addEventListener(n,f){const a=listeners.get(n)||[];a.push(f);listeners.set(n,a)}, dispatch(n,details={}){for(const f of listeners.get(n)||[])f({target:this,...details})}, dispatchEvent(event){this.dispatch(event.type,event);return true}, listenerCount(n){return (listeners.get(n)||[]).length}, append(...c){for(const x of c)this.appendChild(x)}, appendChild(c){return this.insertBefore(c,null)}, insertBefore(c,before){if(c.parentNode)c.parentNode.children=c.parentNode.children.filter(x=>x!==c);const index=before?this.children.indexOf(before):-1;if(index<0)this.children.push(c);else this.children.splice(index,0,c);c.parentNode=this;return c}, remove(){if(this.parentNode)this.parentNode.children=this.parentNode.children.filter(x=>x!==this);this.parentNode=null;this.removed=true}, focus(){document.activeElement=this}, scrollIntoView(){}, setAttribute(n,v){this.attributes[n]=String(v)}, getAttribute(n){return this.attributes[n]}, querySelector(){return null} }; }
-function ui() { const result={orbEditorList:element()}; for(const [n,t] of [["chkFadeTrace","checkbox"],["rngFadeSegments","range"],["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngMinPlacementDistance","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel)/,"")}`]=element(); } return result; }
+function ui() { const result={orbEditorList:element()}; for(const [n,t] of [["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngMinPlacementDistance","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel)/,"")}`]=element(); } return result; }
 function orb(id){return {...structuredClone(CONFIG.defaults.orbs[0]),id};}
 function harness(ids){ const old=structuredClone(preferences), oldDoc=globalThis.document; globalThis.document={activeElement:null,createElement:element}; replacePreferences({...structuredClone(CONFIG.defaults),orbs:ids.map(orb)});resolveSettings();const view=ui(),calls=[];const editor=createOrbEditorUi({ui:view,commitOrbChangeById:(...x)=>calls.push(x),commitPreferences:(...x)=>calls.push(x),showStatus:()=>{}});return {old,oldDoc,view,calls,editor,restore(){replacePreferences(old);resolveSettings();globalThis.document=oldDoc}}; }
 
-test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["chkFadeTrace","rngFadeSegments","chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngMinPlacementDistance","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
+test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngMinPlacementDistance","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
 
 test("editor reconciliation retains roots by ID, reorders nodes, and replaces only structural changes",()=>{const h=harness(["A","B","C"]);try{h.editor.init();const roots=new Map(["A","B","C"].map(id=>[id,h.editor.getController(id).root]));preferences.orbs=[preferences.orbs[2],preferences.orbs[0],preferences.orbs[1]];resolveSettings();h.editor.refresh();assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["C","A","B"]);for(const id of ["A","B","C"])assert.equal(h.editor.getController(id).root,roots.get(id));preferences.orbs.push(orb("D"));resolveSettings();h.editor.refresh();const dRoot=h.editor.getController("D").root;assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["C","A","B","D"]);for(const id of ["A","B","C"])assert.equal(h.editor.getController(id).root,roots.get(id));preferences.orbs=preferences.orbs.filter(item=>item.id!=="C");resolveSettings();h.editor.refresh();assert.deepEqual(h.view.orbEditorList.children.map(n=>n.dataset.orbId),["A","B","D"]);assert.equal(h.editor.getController("A").root,roots.get("A"));assert.equal(h.editor.getController("B").root,roots.get("B"));assert.equal(h.editor.getController("C"),undefined);assert.equal(h.editor.getController("D").root,dRoot);}finally{h.restore()}});
 
@@ -61,7 +61,7 @@ test("minimum placement distance controls bind by ID, report world units and mix
 });
 
 test("RC-11: mixed Bulk select represents no concrete value and applies every concrete choice once", () => {
-  for (const value of ["fixed", "lastParticle", "dominantBand", "particleBirth"]) {
+  for (const value of ["fixed", "lastParticle", "dominantBand"]) {
     const h = harness(["A", "B"]);
     try {
       h.editor.init();
@@ -269,48 +269,4 @@ test('Mixed angular Bulk refresh preserves canonical radians and describes its d
     h.view.rngOmega.dispatch('keydown',{key:'ArrowLeft',preventDefault(){}});
     assert.ok(preferences.orbs.every(o=>Math.abs(o.motion.angularSpeedRadPerSec*RAD_TO_DEG-89.5)<1e-12));
   }finally{h.restore()}
-});
-
-test("116F Trace controls use CONFIG segments, stable identity, keyboard and canonical mixed Bulk ownership", () => {
-  const h = harness(["A", "B"]);
-  try {
-    h.editor.init(); const a = h.editor.getController("A"), b = h.editor.getController("B");
-    assert.equal(a.fade.checked, false); assert.equal(a.fadeSegments.value, "5");
-    const limit = CONFIG.limits.trace.fadeSegments;
-    assert.deepEqual([a.fadeSegments.min, a.fadeSegments.max, a.fadeSegments.step], [limit.min,limit.max,limit.step].map(String));
-    assert.equal(a.fadeSegmentsValue.textContent, "5 segments");
-    assert.equal(a.fadeSegments.getAttribute("aria-valuetext"), "5 segments");
-    assert.ok(a.lineColor.options.some(option => option.value === "particleBirth" && option.textContent === "Particle Birth Color"));
-    a.fade.checked = true; a.fade.dispatch("change");
-    a.lineColor.value = "particleBirth"; a.lineColor.dispatch("change");
-    a.fadeSegments.focus(); a.fadeSegments.dispatch("keydown", {key:"ArrowRight", preventDefault(){}});
-    assert.equal(preferences.orbs[0].trace.fadeSegments, 6);
-    assert.equal(preferences.orbs[1].trace.fadeSegments, 5);
-    assert.equal(preferences.orbs[0].trace.fadeEnabled, true);
-    assert.equal(preferences.orbs[1].trace.fadeEnabled, false);
-    assert.equal(preferences.orbs[0].trace.lineColorMode, "particleBirth");
-    preferences.orbs.reverse(); resolveSettings(); h.editor.refresh();
-    assert.equal(h.editor.getController("A"), a); assert.equal(document.activeElement, a.fadeSegments);
-    assert.equal(h.view.chkFadeTrace.indeterminate, true);
-    assert.equal(h.view.valFadeTrace.textContent, "mixed");
-    assert.equal(h.view.valFadeSegments.textContent, "mixed");
-    assert.match(h.view.rngFadeSegments.getAttribute("aria-valuetext"), /^mixed; slider selection \d+ segments/);
-    h.view.chkFadeTrace.checked = true; h.view.chkFadeTrace.dispatch("change");
-    h.view.rngFadeSegments.value = "1"; h.view.rngFadeSegments.dispatch("input");
-    resolveSettings(); h.editor.refresh();
-    assert.ok(preferences.orbs.every(orb => orb.trace.fadeEnabled && orb.trace.fadeSegments === 1));
-    assert.equal(h.view.chkFadeTrace.indeterminate, false);
-    assert.equal(a.fadeSegmentsValue.textContent, "1 segment");
-    assert.equal(b.fade.checked, true); assert.equal(h.view.valFadeSegments.textContent, "1 segment");
-    assert.equal(h.editor.init(), false);
-    for (const control of [a.fade, h.view.chkFadeTrace]) assert.equal(control.listenerCount("change"), 1);
-    for (const control of [a.fadeSegments, h.view.rngFadeSegments]) {
-      assert.equal(control.listenerCount("input"), 1); assert.equal(control.listenerCount("keydown"), 1);
-    }
-    replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings(); h.editor.refresh();
-    for (const orb of preferences.orbs) { const c = h.editor.getController(orb.id); assert.equal(c.fade.checked,false); assert.equal(c.fadeSegments.value,"5"); assert.equal(c.lineColor.value,"dominantBand"); }
-    preferences.orbs = []; resolveSettings(); h.editor.refresh();
-    assert.equal(h.view.chkFadeTrace.disabled,true); assert.equal(h.view.rngFadeSegments.disabled,true);
-    const before = h.calls.length; h.view.chkFadeTrace.dispatch("change"); h.view.rngFadeSegments.dispatch("input"); assert.equal(h.calls.length,before);
-  } finally { h.restore(); }
 });

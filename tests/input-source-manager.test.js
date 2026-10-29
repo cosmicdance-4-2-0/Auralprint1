@@ -978,7 +978,7 @@ test("URL preset serialization excludes runtime source state", () => {
     const payload = decodePresetHash(locationStub.hash);
     assert.ok(payload && canonicalPrefs(payload));
     assert.equal(Object.prototype.hasOwnProperty.call(canonicalPrefs(payload), "source"), false);
-    assert.equal(payload.schema, 14);
+    assert.equal(payload.schema, 13);
     assert.doesNotMatch(JSON.stringify(payload), /audioChannelCount/);
   } finally {
     state.source.kind = previousSource.kind;

@@ -15,9 +15,9 @@ function bindRange(control, limit) {
   control.step = String(limit.step);
 }
 
-// Owns Scene appearance, source behavior and scene-wide resource controls. Visibility/rendering stay
+// Owns Scene appearance and scene-wide resource controls. Visibility/rendering stay
 // with their respective modules; persistence retains historical schema paths.
-function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, getTraceRenderStats, commitPreferences = () => {} } = {}) {
+function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, commitPreferences = () => {} } = {}) {
   let initializedOn = null;
   let lastSettingsRef = null;
   const worldFields = [
@@ -94,18 +94,6 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, ge
         ui.selParticleColorSrc.appendChild(option);
       }
     }
-    // A requested snapshot explains degradation without adding per-frame DOM work.
-    ui.btnTraceRenderDiagnostics?.addEventListener("click", () => {
-      const stats = getTraceRenderStats?.();
-      if (!stats) return;
-      ui.traceRenderDiagnostics.textContent = `Last completed frame: ${stats.segmentStrokes} color/fade strokes drawn; ${stats.requestedSegmentStrokes} requested; limit ${stats.maxSegmentStrokesPerFrame}; ${stats.limitedOrbs} Orbs simplified. A batched fallback can preserve the full Trace when detail is limited.`;
-    });
-    ui.chkClearQueueOnSourceExit.addEventListener("change", () => {
-      const enabled = ui.chkClearQueueOnSourceExit.checked;
-      if (preferences.audio.clearQueueOnSourceExit === enabled) return;
-      preferences.audio.clearQueueOnSourceExit = enabled;
-      commitPreferences("File Queue source-exit policy");
-    });
     ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; commitPreferences("scene background"); });
     ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; commitPreferences("scene fixed particle color"); });
     ui.selParticleColorSrc.addEventListener("change", () => { preferences.bands.particleColorSource = ui.selParticleColorSrc.value; commitPreferences("scene default Orb particle source"); });
@@ -135,7 +123,6 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, ge
       if (changed) { control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = ""; }
       ui[outputId].textContent = `Selected: ${value}`;
     }
-    ui.chkClearQueueOnSourceExit.checked = settings.audio.clearQueueOnSourceExit === true;
     ui.clrBg.value = settings.visuals.backgroundColor; ui.valBg.textContent = settings.visuals.backgroundColor;
     ui.clrParticle.value = settings.visuals.particleColor; ui.valParticle.textContent = settings.visuals.particleColor;
     ui.selParticleColorSrc.value = settings.bands.particleColorSource;

@@ -52,27 +52,3 @@ test("AUD-001: shuffle and navigation preserve entry handles and method return c
   assert.equal(Queue.currentEntry(), null);
   assert.equal(Queue.entryAt(0), null);
 });
-
-test("116F: Queue mutation revision fences newer runtime content and navigation", () => {
-  Queue.clear();
-  let revision = Queue.revision;
-  const changed = action => { action(); assert.ok(Queue.revision > revision); revision = Queue.revision; };
-  const unchanged = action => { action(); assert.equal(Queue.revision, revision); };
-  changed(() => Queue.add({ name: "one.wav" }));
-  changed(() => Queue.add({ name: "two.wav" }));
-  changed(() => Queue.add({ name: "three.wav" }));
-  changed(() => Queue.setCursor(0));
-  changed(() => Queue.next());
-  changed(() => Queue.prev());
-  changed(() => Queue.goTo(2));
-  changed(() => Queue.shuffle());
-  changed(() => Queue.remove(0));
-  unchanged(() => Queue.remove(99));
-  unchanged(() => Queue.goTo(-1));
-  unchanged(() => Queue.setCursor(-1));
-  changed(() => Queue.clear());
-  unchanged(() => Queue.next());
-  unchanged(() => Queue.prev());
-  unchanged(() => Queue.shuffle());
-  assert.equal(Object.hasOwn(Queue.snapshot(), "revision"), false);
-});

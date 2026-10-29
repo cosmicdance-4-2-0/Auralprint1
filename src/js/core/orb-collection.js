@@ -30,7 +30,7 @@ function allocateOrbId(orbs = []) {
   return `ORB${largestOrbSuffix(orbs) + 1n}`;
 }
 
-function normalizeOrbCollection(incoming, fallbackOrbs = CONFIG.defaults.orbs) {
+function normalizeOrbCollection(incoming) {
   if (!Array.isArray(incoming)) return [];
   assertOrbAdmission(incoming);
   const normalized = [];
@@ -39,7 +39,7 @@ function normalizeOrbCollection(incoming, fallbackOrbs = CONFIG.defaults.orbs) {
   // suffix; repair never scans/copies the collection for each missing/duplicate ID.
   let nextSuffix = largestOrbSuffix(incoming) + 1n;
   for (let index = 0; index < incoming.length; index++) {
-    const fallback = fallbackOrbs[index % fallbackOrbs.length];
+    const fallback = CONFIG.defaults.orbs[index % CONFIG.defaults.orbs.length];
     const candidate = incoming[index];
     const requestedId = candidate && candidate.id;
     const id = isValidOrbId(requestedId) && !used.has(requestedId)

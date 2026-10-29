@@ -5,8 +5,6 @@ import { worldUnitsFromFraction } from "../core/world-geometry.js";
 import { state } from "../core/state.js";
 import { Spaces } from "../core/spaces.js";
 import { ColorPolicy } from "./color-policy.js";
-import { CONFIG } from "../core/config.js";
-import { drawSegmentedTrace } from "./trace-segments.js";
 
 /* =============================================================================
    Renderer
@@ -20,7 +18,7 @@ const Renderer = (() => {
     ctx.fillRect(0, 0, state.widthPx, state.heightPx);
   }
 
-  function drawTrailLines(particles, dominantBandIndex, trace, segmentStrokeQuota) {
+  function drawTrailLines(particles, dominantBandIndex, trace) {
     if (!trace.lines) return;
 
     const neededPts = Math.min(particles?.length || 0, Math.ceil(trace.numLines) + 1);
@@ -37,12 +35,6 @@ const Renderer = (() => {
     ctx.lineWidth = trace.lineWidthPx * state.dpr;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-
-    if (trace.fadeEnabled || trace.lineColorMode === "particleBirth") {
-      const strokes = drawSegmentedTrace(ctx, particles, dominantBandIndex, trace, segmentStrokeQuota);
-      ctx.restore();
-      return strokes;
-    }
 
     ctx.beginPath();
     let first = true;
@@ -175,11 +167,10 @@ const Renderer = (() => {
     ctx.restore();
   }
 
-  function drawOrb(orb, nowSec, dominantBandIndex, segmentStrokeQuota = CONFIG.traceRendering.maxSegmentStrokesPerFrame) {
+  function drawOrb(orb, nowSec, dominantBandIndex) {
     const particles = orb.trail.particles;
-    const strokes = drawTrailLines(particles, dominantBandIndex, orb.trace, segmentStrokeQuota);
+    drawTrailLines(particles, dominantBandIndex, orb.trace);
     drawParticles(particles, nowSec, orb.particles);
-    return strokes || 0;
   }
 
   // Renderer exposes the canonical display canvas and read-only render information.

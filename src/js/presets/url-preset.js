@@ -1,13 +1,13 @@
 import { preferences, replacePreferences } from "../core/preferences.js";
 import { CONFIG } from "../core/config.js";
-import { PRESET_SCHEMA_VERSION, LEGACY_SCHEMA_V13 } from "../core/constants.js";
+import { PRESET_SCHEMA_VERSION } from "../core/constants.js";
 import { encodePresetPayload, decodePresetPayload, sanitizePreset } from "./preset-codec.js";
 import { frequencyLimitMessage } from "../core/band-frequency.js";
 import { parsePresetJson, presetError } from "./preset-limits.js";
 import { compressDeflate, decompressDeflate } from "./deflate-transport.js";
 
-// #p = Base64URL UTF-8 JSON (schemas 2–14).
-// #z = Base64URL zlib-wrapped DEFLATE of schema-13 or schema-14 UTF-8 JSON.
+// #p = Base64URL UTF-8 JSON (schemas 2–13).
+// #z = Base64URL zlib-wrapped DEFLATE of schema-13 UTF-8 JSON only.
 // The codec owns configuration; this module owns framing and atomic replacement.
 function base64UrlEncode(bytes) {
   const chunks = [];
@@ -50,7 +50,7 @@ async function encodeShareHash(prefs) {
 
 function decodeJsonBytes(bytes, compressed) {
   const payload = parsePresetJson(new TextDecoder("utf-8", { fatal: compressed }).decode(bytes));
-  if (compressed && ![LEGACY_SCHEMA_V13, PRESET_SCHEMA_VERSION].includes(payload?.schema)) throw presetError("unsupported-compressed-schema");
+  if (compressed && payload?.schema !== PRESET_SCHEMA_VERSION) throw presetError("unsupported-compressed-schema");
   const decoded = decodePresetPayload(payload);
   if (!decoded.ok) throw presetError(decoded.code);
   return sanitizePreset(decoded);
@@ -69,7 +69,7 @@ async function decodePrefsFromHash(hash) {
 
 function validationText(error) {
   if (error.code === "unsupported-frequency") return frequencyLimitMessage();
-  if (error.code === "unsupported-compression") return "This browser cannot decompress native DEFLATE presets. Open this link in a supported browser or request an uncompressed schema-14 link.";
+  if (error.code === "unsupported-compression") return "This browser cannot decompress native DEFLATE presets. Open this link in a supported browser or request an uncompressed schema-13 link.";
   if (error.code === "async-import-required") return "Compressed presets require asynchronous import.";
   if (error.code === "preset-too-large" || error.code === "preset-too-complex" || error.code === "band-work-exceeded") return "Preset exceeds the supported decoding resource limits. Scene unchanged.";
   if (error.code === "unsupported-schema" || error.code === "unsupported-compressed-schema") return "Unsupported preset schema. Scene unchanged.";

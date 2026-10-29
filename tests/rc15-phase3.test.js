@@ -219,7 +219,7 @@ test('RC-15 phase 3: governed preset round-trip keeps schema 10 and omits live s
     s.v.update(s.context);const prefs={...structuredClone(CONFIG.defaults),orbs:s.orbs};
     prefs.orbs[0].particles.overlapRadiusPx=10;prefs.orbs[0].activeParticles=99;
     const encoded=encodePresetPayload(prefs),again=encodePresetPayload(sanitizePreset(decodePresetPayload(encoded)));
-    assert.deepEqual(again,encoded);assert.equal(encoded.schema, 14);
+    assert.deepEqual(again,encoded);assert.equal(encoded.schema, 13);
     const json=JSON.stringify(encoded);for(const field of ['overlapRadiusPx','governor','emitAccumulator','priorityNext','activeParticles','heapIndex'])assert.ok(!json.includes(field));
     assert.equal(canonicalPrefs(encoded).orbs.length,2);
   }finally{s.v.dispose();}

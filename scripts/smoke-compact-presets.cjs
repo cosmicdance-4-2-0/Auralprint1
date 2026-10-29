@@ -69,7 +69,7 @@ async function delayDecode(page){await page.evaluate(()=>{
         await apply(page,'#z=AAAA');assert.deepEqual(await decodePrefsFromHash(await share(page)),prefs);
         await page.evaluate(()=>{compactSmoke.native=window.DecompressionStream;window.DecompressionStream=undefined;});
         await apply(page,initial);assert.match(await page.locator('#sceneStatus').textContent(),/cannot decompress native DEFLATE/);
-        const fallback=await share(page);assert.match(fallback,/^#p=/);assert.match(await page.locator('#sceneStatus').textContent(),/Uncompressed schema-14/);
+        const fallback=await share(page);assert.match(fallback,/^#p=/);assert.match(await page.locator('#sceneStatus').textContent(),/Uncompressed schema-13/);
         assert.deepEqual(await decodePrefsFromHash(fallback),prefs);
         await page.evaluate(()=>{window.DecompressionStream=compactSmoke.native;});
         // Deliberately suspend native output, then let a reset/new import/edit win.

@@ -47,8 +47,6 @@ function resolveSettings() {
   assertOrbAdmission(preferences.orbs);
   assertSupportedBandFrequencies(preferences.bands);
   runtime.settings = deepClone(preferences);
-  runtime.settings.audio.clearQueueOnSourceExit = typeof preferences.audio?.clearQueueOnSourceExit === "boolean"
-    ? preferences.audio.clearQueueOnSourceExit : CONFIG.defaults.audio.clearQueueOnSourceExit;
   runtime.settings.world = normalizeWorldSettings(preferences.world);
   runtime.settings.sceneCamera = normalizeSceneCamera(preferences.sceneCamera);
   const { widthUnits, heightUnits } = runtime.settings.world;
@@ -199,12 +197,7 @@ function normalizeOrbDef(incomingOrb, fallbackOrb) {
     numLines: Math.ceil(nestedNumber("trace", "numLines", CONFIG.limits.trace.numLines)),
     lineAlpha: nestedNumber("trace", "lineAlpha", CONFIG.limits.trace.lineAlpha),
     lineWidthPx: nestedNumber("trace", "lineWidthPx", CONFIG.limits.trace.lineWidthPx),
-    lineColorMode: CONFIG.limits.trace.lineColorModes.includes(mode) ? mode : "dominantBand",
-    fadeEnabled: typeof traceSource.fadeEnabled === "boolean" ? traceSource.fadeEnabled
-      : (typeof traceFallback.fadeEnabled === "boolean" ? traceFallback.fadeEnabled : CONFIG.defaults.orbs[0].trace.fadeEnabled),
-    fadeSegments: Math.round(clamp(Number.isFinite(traceSource.fadeSegments) ? traceSource.fadeSegments
-      : (Number.isFinite(traceFallback.fadeSegments) ? traceFallback.fadeSegments : CONFIG.defaults.orbs[0].trace.fadeSegments),
-    CONFIG.limits.trace.fadeSegments.min, CONFIG.limits.trace.fadeSegments.max)),
+    lineColorMode: ["fixed", "lastParticle", "dominantBand"].includes(mode) ? mode : "dominantBand",
   };
 
   return {

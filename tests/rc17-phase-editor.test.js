@@ -31,7 +31,7 @@ function withEditor(callback) {
   const saved = { prefs: structuredClone(preferences), settings: runtime.settings, document: globalThis.document };
   globalThis.document = { createElement: element, activeElement: null };
   const view = { orbEditorList: element() };
-  for (const name of ["chkFadeTrace", "rngFadeSegments", "chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin",
+  for (const name of ["chkLines", "rngNumLines", "selLineColorMode", "rngEmit", "rngSizeMax", "rngSizeMin",
     "rngSizeToMin", "rngTTL", "rngMinPlacementDistance", "rngOmega", "rngWfDisp", "rngMinRad", "rngMaxRad"]) {
     view[name] = element(); view[name].type = name.startsWith("chk") ? "checkbox" : name.startsWith("sel") ? "select" : "range";
     view["val" + name.replace(/^(chk|rng|sel)/, "")] = element();

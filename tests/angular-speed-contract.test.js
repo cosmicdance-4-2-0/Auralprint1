@@ -13,17 +13,11 @@ const orb=CONFIG.limits.motion.angularSpeedRadPerSec,ring=CONFIG.limits.bands.ri
 
 test('Angular alignment preserves the entire accepted startup Scene and every unrelated CONFIG limit',()=>{
   // Snapshots captured from accepted main 7a9f967, before this pass's changes.
-  const defaults=structuredClone(CONFIG.defaults);
-  // 116F explicitly adds opt-in fields; retain the original fingerprint for
-  // every previously accepted default rather than changing the frozen value.
-  delete defaults.audio.clearQueueOnSourceExit;
-  for (const orb of defaults.orbs) { delete orb.trace.fadeEnabled; delete orb.trace.fadeSegments; }
-  assert.equal(digest(defaults),'81bc92485e95cd1e1d9446a54b7f2c714e2d341ac3e20ccc54ddfe76fdf70e2b');
+  assert.equal(digest(CONFIG.defaults),'81bc92485e95cd1e1d9446a54b7f2c714e2d341ac3e20ccc54ddfe76fdf70e2b');
   const limits=structuredClone(CONFIG.limits);
   // AUD-004 separately authorizes the frequency domain; retain the original
   // snapshot's protection for every pre-existing unrelated limit.
   delete limits.bands.frequencyHz;
-  delete limits.trace.fadeSegments; delete limits.trace.lineColorModes;
   delete limits.motion.angularSpeedRadPerSec.min;delete limits.motion.angularSpeedRadPerSec.step;delete limits.bands.ringSpeedRadPerSec.step;
   assert.equal(digest(limits),'839c6a7d4d2a09e1a032b51ed3653148e88248367b31e3a74dbd96bc299b90b0');
   assert.deepEqual(sanitizePreset({schema:13,prefs:{}}),CONFIG.defaults);

@@ -1,4 +1,4 @@
-import { canonicalPrefs, canonicalPayload, with116FDefaults } from "./helpers/preset-semantics.js";
+import { canonicalPrefs, canonicalPayload } from "./helpers/preset-semantics.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -48,7 +48,7 @@ test("RC-15 phase 1: trail reset clears retained particles and fractional emissi
 });
 
 test("RC-15 phase 1: current overlap input decodes, strips, and preserves all remaining fields", () => {
-  const canonical = with116FDefaults({ sceneCamera: structuredClone(CONFIG.defaults.sceneCamera), ...JSON.parse(readFileSync(new URL("./fixtures/schema-11-full.json", import.meta.url), "utf8")) });
+  const canonical = { sceneCamera: structuredClone(CONFIG.defaults.sceneCamera), ...JSON.parse(readFileSync(new URL("./fixtures/schema-11-full.json", import.meta.url), "utf8")) };
   const dirty = structuredClone(canonical);
   dirty.orbs.forEach((orb, i) => { orb.particles.overlapRadiusPx = i + 2; orb.particles.unknown = true; });
   dirty.unknown = true;
@@ -57,15 +57,15 @@ test("RC-15 phase 1: current overlap input decodes, strips, and preserves all re
   assert.equal(decoded.ok, true);
   const next = sanitizePreset(decoded);
   assert.deepEqual(next, canonical);
-  assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 14, prefs: canonical });
-  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 14, prefs: canonical });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(next)), { schema: 13, prefs: canonical });
+  assert.deepEqual(canonicalPayload(encodePresetPayload(dirty)), { schema: 13, prefs: canonical });
   assert.deepEqual(dirty, snapshot);
   const fallback = { ...CONFIG.defaults.orbs[0], particles: dirty.orbs[0].particles };
   for (const orb of [...CONFIG.defaults.orbs, ...normalizeOrbCollection(dirty.orbs), normalizeOrbDef({}, fallback)]) {
     assert.equal("overlapRadiusPx" in orb.particles, false);
     assert.deepEqual(Object.keys(orb.particles), ["emitPerSecond", "sizeMaxPx", "sizeMinPx", "sizeToMinSec", "ttlSec", "minPlacementDistanceUnits"]);
   }
-  assert.equal(PRESET_SCHEMA_VERSION, 14);
+  assert.equal(PRESET_SCHEMA_VERSION, 13);
 });
 
 test("RC-15 phase 1: timing ceiling is frozen CONFIG authority across codec and preference resolution", () => {

@@ -190,10 +190,8 @@ async function sliders(page,fixture,cases){
   for(const item of cases){
     const control=await reveal(page,item),ui=await inspect(control);
     assert.deepEqual([ui.min,ui.max,ui.step],[String(item.limit.min*(item.scale||1)),String(item.limit.max*(item.scale||1)),String(item.limit.step*(item.scale||1))],item.selector);
-    assert.equal(ui.invalid,false);
-    if (!onGrid(item.legacy,item.limit)) { assert.match(ui.text,/Current .*slider selection .*edit to apply/,item.selector);assert.match(ui.aria,/Current .*slider selection/,item.selector); }
-    else { assert.match(ui.text,/5 segments/);assert.equal(ui.aria,ui.text); }
-    assert.ok(await control.evaluate((el,offGrid)=>{const out=el.parentElement.querySelector('.val');return (!offGrid||getComputedStyle(out).whiteSpace==='normal')&&out.scrollWidth<=out.clientWidth+1;},!onGrid(item.legacy,item.limit)),`${item.selector} readout is clipped`);
+    assert.equal(ui.invalid,false);assert.match(ui.text,/Current .*slider selection .*edit to apply/,item.selector);assert.match(ui.aria,/Current .*slider selection/,item.selector);
+    assert.ok(await control.evaluate(el=>{const out=el.parentElement.querySelector('.val');return getComputedStyle(out).whiteSpace==='normal'&&out.scrollWidth<=out.clientWidth+1;}),'Discrepancy readout is clipped');
     assert.equal(readPath(await share(page),item.path),item.legacy,'Refresh quantized import');
   }
   assert.equal(discovered,cases.reduce((sum,item)=>sum+(item.owner==='Orb'?fixture.orbs.length:1),0),'Numeric slider inventory is incomplete');
@@ -202,7 +200,7 @@ async function sliders(page,fixture,cases){
       await apply(page,fixture);const control=await reveal(page,item),before=await share(page);await control.focus();
       await control.press(key);const value=await committed(page,control,before,item);
       const index=(item.legacy-item.limit.min)/item.limit.step;
-      const selected=item.limit.min+(onGrid(item.legacy,item.limit)?Math.round(index)+direction:direction>0?Math.ceil(index):Math.floor(index))*item.limit.step;
+      const selected=item.limit.min+(direction>0?Math.ceil(index):Math.floor(index))*item.limit.step;
       near(value,selected);assert.ok(await control.evaluate(el=>document.activeElement===el),'Arrow edit lost focus');
     }
     // Native pointer dragging uses the real range, at two non-grid fractions.
