@@ -96,6 +96,8 @@ async function run(page, edition, base) {
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await move(.8, 0); await at('focus does not restore drag', 2);
   await page.mouse.up();
+  await press(); await page.evaluate(() => window.dispatchEvent(new Event('blur')));
+  await move(.8, 1); await at('blur cancels before released-button fallback', 2); await page.mouse.up();
   await press(.3); await move(.6); await at('fresh held drag', 6);
   await move(.7, 1, outsideY); await at('held drag outside canvas', 7);
   await page.mouse.move(x(.7), outsideY); await page.mouse.up();

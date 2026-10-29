@@ -108,7 +108,7 @@ for (const terminal of ["blur", "hidden", "no-buttons", "mouseup", "reset", "loa
       assert.equal(h.seeks, seeks, "cancellation itself must not seek");
       h.doc.hidden = false; h.doc.dispatchEvent(new Event("visibilitychange"));
       h.win.dispatchEvent(new Event("focus"));
-      h.move(.8, { buttons: 0 }); h.move(.8);
+      h.move(.8); h.move(.8, { buttons: 0 });
       assert.equal(h.media.currentTime, 2, "focus/held movement cannot restore abandoned ownership");
       h.press(.4); h.move(.6);
       assert.equal(h.media.currentTime, 6);
