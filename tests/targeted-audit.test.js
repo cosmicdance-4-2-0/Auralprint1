@@ -29,7 +29,7 @@ test("version metadata and schema remain aligned", () => {
   const constants = readFileSync(new URL("../src/js/core/constants.js", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.match(version, /^v[0-9][A-Za-z0-9.\-]*$/);
   assert.ok(constants.includes(`   Auralprint\n   ${version.slice(1)}\n`), "Source header must match root version");
-  assert.equal(PRESET_SCHEMA_VERSION, 13);
+  assert.equal(PRESET_SCHEMA_VERSION, 16);
 });
 
 test("per-Orb commits use one canonical runtime sync and Orb editor refresh authority", () => {
@@ -3193,12 +3193,12 @@ function settingsPresetHash(prefs) {
   return `#p=${Buffer.from(JSON.stringify({ schema: 12, prefs }), "utf8").toString("base64url")}`;
 }
 
-test("Copy Share Link writes the compressed schema-13 hash and reports only in Settings", async (t) => {
+test("Copy Share Link writes the compressed schema-16 hash and reports only in Settings", async (t) => {
   await withSettingsActionHarness(t, async ({ clipboard, location }) => {
     const writeHash = t.mock.method(UrlPreset, "writeCompressedHashFromPrefs");
     await state.ui.btnShare.click();
     assert.equal(writeHash.mock.calls.length, 1);
-    assert.equal(decodePresetHash(location.hash).schema, 13);
+    assert.equal(decodePresetHash(location.hash).schema, 16);
     assert.equal(clipboard.copied, location.href);
     assert.equal(state.ui.sceneStatus.textContent, "Share link copied to clipboard.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
@@ -3209,7 +3209,7 @@ test("Share clipboard fallback retains the URL and reports only in Settings", as
   await withSettingsActionHarness(t, async ({ location }) => {
     delete globalThis.navigator.clipboard;
     await state.ui.btnShare.click();
-    assert.equal(decodePresetHash(location.hash).schema, 13);
+    assert.equal(decodePresetHash(location.hash).schema, 16);
     assert.equal(state.ui.sceneStatus.textContent, "Share link written to URL — copy from address bar.");
     assert.equal(state.ui.visualizerEditStatus.textContent, "Choose a visualizer to shape its response.");
   });
@@ -4864,7 +4864,7 @@ test('116E: rejected clipboard and unavailable compression preserve a usable com
       const before=structuredClone(preferences);await state.ui.btnShare.click();
       assert.match(location.hash,/^#p=/);
       assert.deepEqual(canonicalPrefs(decodePresetHash(location.hash)),before);
-      assert.match(state.ui.sceneStatus.textContent,/written to URL.*copy from address bar.*Uncompressed schema-13/);
+      assert.match(state.ui.sceneStatus.textContent,/written to URL.*copy from address bar.*Uncompressed schema-16/);
       assert.doesNotMatch(state.ui.sceneStatus.textContent,/copied to clipboard/);
     } finally {globalThis.CompressionStream=native;}
   });
@@ -5110,3 +5110,49 @@ for (const kind of ["mic", "stream"]) {
     });
   });
 }
+
+test("116F: shared preset and reset synchronize Queue policy without serializing or deleting runtime Queue", async () => {
+  const previousLocation = globalThis.location;
+  globalThis.location = { pathname: "/", search: "", hash: `#p=${Buffer.from(JSON.stringify({ schema: 16, prefs: { audio: { clearQueueOnSourceExit: true } } })).toString("base64url")}` };
+  try {
+    await with116fSourceExit({ enabled: false }, async ({ entries }) => {
+      await state.ui.btnApplyUrl.dispatch("click");
+      assert.equal(preferences.audio.clearQueueOnSourceExit, true);
+      assert.equal(state.ui.chkClearQueueOnSourceExit.checked, true);
+      assert.equal(Queue.entryAt(0), entries[0]);
+      const payload = JSON.stringify((await import("../src/js/presets/preset-codec.js")).encodePresetPayload(preferences));
+      assert.ok(!payload.includes("old.wav"));
+      assert.ok(!payload.includes("next.wav"));
+      assert.ok(!payload.includes("cursor"));
+      await state.ui.btnResetPrefs.dispatch("click");
+      assert.equal(preferences.audio.clearQueueOnSourceExit, false);
+      assert.equal(state.ui.chkClearQueueOnSourceExit.checked, false);
+      assert.equal(Queue.entryAt(0), entries[0]);
+      assert.equal(await UI.dispatchSourceSwitchAction("mic"), true);
+      assert.equal(Queue.entryAt(0), entries[0], "reset disables future automatic clearing");
+    });
+  } finally { globalThis.location = previousLocation; }
+});
+
+test("116F: shared preset enables future Queue clearance while legacy import restores disabled policy", async () => {
+  const previousLocation = globalThis.location;
+  const hash = payload => `#p=${Buffer.from(JSON.stringify(payload)).toString("base64url")}`;
+  globalThis.location = { pathname: "/", search: "", hash: hash({ schema: 16, prefs: { audio: { clearQueueOnSourceExit: true } } }) };
+  try {
+    await with116fSourceExit({ enabled: false }, async ({ entries }) => {
+      await state.ui.btnApplyUrl.dispatch("click");
+      assert.equal(Queue.entryAt(0), entries[0]);
+      assert.equal(await UI.dispatchSourceSwitchAction("stream"), true);
+      assert.equal(Queue.length, 0, "imported opt-in affects the next source exit");
+    });
+    globalThis.location.hash = hash({ schema: 13, prefs: {} });
+    await with116fSourceExit({ enabled: true }, async ({ entries }) => {
+      await state.ui.btnApplyUrl.dispatch("click");
+      assert.equal(preferences.audio.clearQueueOnSourceExit, false);
+      assert.equal(state.ui.chkClearQueueOnSourceExit.checked, false);
+      assert.equal(Queue.entryAt(0), entries[0]);
+      assert.equal(await UI.dispatchSourceSwitchAction("mic"), true);
+      assert.equal(Queue.entryAt(0), entries[0]);
+    });
+  } finally { globalThis.location = previousLocation; }
+});

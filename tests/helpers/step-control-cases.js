@@ -20,8 +20,9 @@ export const individualSliders = [
   orb('line-count',['trace','numLines'],l.trace.numLines,16),
   orb('line-alpha',['trace','lineAlpha'],l.trace.lineAlpha,.123456),
   orb('line-width',['trace','lineWidthPx'],l.trace.lineWidthPx,2.34567),
+  orb('fade-segments',['trace','fadeSegments'],l.trace.fadeSegments,5),
 ];
-const bulkIds = ['rngOmega','', '', '', '', 'rngMinRad','rngMaxRad','rngWfDisp','rngEmit','rngSizeMin','rngSizeMax','rngSizeToMin','rngTTL','rngMinPlacementDistance','rngNumLines'];
+const bulkIds = ['rngOmega','', '', '', '', 'rngMinRad','rngMaxRad','rngWfDisp','rngEmit','rngSizeMin','rngSizeMax','rngSizeToMin','rngTTL','rngMinPlacementDistance','rngNumLines','','','rngFadeSegments'];
 export const bulkSliders = individualSliders.flatMap((item,i)=>bulkIds[i] ? [{...item,selector:'#'+bulkIds[i],owner:'Bulk'}] : []);
 export const analysisSliders = [
   ['rngRmsGain','rmsGain',.123456], ['rngSmooth','smoothingTimeConstant',.123456],

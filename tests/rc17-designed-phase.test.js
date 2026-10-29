@@ -68,7 +68,7 @@ for (let schema = 2; schema <= 10; schema++) test(`RC-17 presets: schema ${schem
   assert.deepEqual(next.orbs[0].bandIds, [7, 3, 0]); assert.equal(next.orbs[0].hueOffsetDeg, 42);
   assert.deepEqual(next.particleSafety, canonicalPrefs(payload).particleSafety);
   assert.ok(!("unknown" in next) && !("unknown" in next.orbs[3]));
-  const encoded = encodePresetPayload(next); assert.equal(encoded.schema, 13);
+  const encoded = encodePresetPayload(next); assert.equal(encoded.schema, 16);
   assert.deepEqual(sanitizePreset(decodePresetPayload(encoded)), next);
   assert.notEqual(next.orbs[0].motion, next.orbs[1].motion);
   // Missing, invalid and explicit zero respect corresponding collection defaults.
@@ -123,7 +123,7 @@ function withScene(callback) {
 }
 
 test("RC-17 URL/replacement: import/export preserve precise phase, canonical shape and independent runtime history", () => withScene(() => {
-  assert.equal(PRESET_SCHEMA_VERSION, 13);
+  assert.equal(PRESET_SCHEMA_VERSION, 16);
   location.hash = rawHash({ schema: 11, prefs: { orbs: [{ id: "A", startAngleRad: 4 * Math.PI },
     { id: "B", startAngleRad: 1.5 / RAD_TO_DEG }] } });
   assert.equal(UrlPreset.applyFromLocationHash(), true); resolveSettings(); initOrbs();
@@ -143,7 +143,7 @@ test("RC-17 URL/replacement: import/export preserve precise phase, canonical sha
   assert.notEqual(copy, a); assert.equal(copy.angleRad, Math.PI / 2); assert.equal(copy.startAngleRad, a.startAngleRad);
   assert.equal(copy.trail.particles.length, 0); assert.equal(a.trail.particles.tail, tail);
   const before = structuredClone(preferences);
-  location.hash = rawHash({ schema: 14, prefs: {} }); assert.equal(UrlPreset.applyFromLocationHash(), false);
+  location.hash = rawHash({ schema: 15, prefs: {} }); assert.equal(UrlPreset.applyFromLocationHash(), false);
   assert.deepEqual(preferences, before);
   replacePreferences(structuredClone(CONFIG.defaults)); resolveSettings(); initOrbs(); resetOrbsToDesignedPhases();
   assert.deepEqual(preferences, CONFIG.defaults); assert.deepEqual(state.orbs.map(o => o.angleRad), [0, Math.PI]);

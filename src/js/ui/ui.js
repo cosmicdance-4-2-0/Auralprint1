@@ -526,7 +526,7 @@ const UI = (() => {
         catch { /* The valid complete link is already in the address bar. */ }
       }
       if (location.hash !== result.hash) return;
-      const fallback = result.fallback ? " Uncompressed schema-13 link: native DEFLATE unavailable." : "";
+      const fallback = result.fallback ? " Uncompressed schema-16 link: native DEFLATE unavailable." : "";
       sceneStatusToast((copied ? "Share link copied to clipboard."
         : "Share link written to URL — copy from address bar.") + fallback, 6000);
     } catch {

@@ -36,14 +36,14 @@ test('Schemas 10/11/12, defaults and share retain legacy off-grid values; no per
     const prefs=structuredClone(CONFIG.defaults);
     prefs.audio.rmsGain=.123456;prefs.audio.smoothingTimeConstant=.123456;
     prefs.bands.overlay.pointSizePx=3.456;prefs.bands.overlay.ringSpeedRadPerSec=2*Math.PI;
-    for(const item of individualSliders) {
+    for(const item of individualSliders.filter(item=>item.path.at(-1)!=='fadeSegments')) {
       // Schema 10 uses the historical spacing name, handled separately below.
       if(item.path.at(-1)==='minPlacementDistanceUnits' && schema===10) prefs.orbs[0].particles.minPlacementDistancePx=item.legacy;
       else { let object=prefs;for(const key of item.path.slice(0,-1))object=object[key];object[item.path.at(-1)]=item.legacy; }
     }
     const normalized=sanitizePreset({schema,prefs}),shared=canonicalPrefs(encodePresetPayload(normalized));
     assert.deepEqual(shared,normalized);
-    for(const item of individualSliders)assert.equal(readPath(normalized,item.path),item.legacy);
+    for(const item of individualSliders.filter(item=>item.path.at(-1)!=='fadeSegments'))assert.equal(readPath(normalized,item.path),item.legacy);
     assert.equal(normalized.audio.rmsGain,.123456);assert.equal(normalized.bands.overlay.pointSizePx,3.456);
     assert.equal(normalized.bands.overlay.ringSpeedRadPerSec,2*Math.PI);
   }
