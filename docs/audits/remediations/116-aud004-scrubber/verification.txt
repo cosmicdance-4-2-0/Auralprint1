@@ -1,0 +1,104 @@
+Environment: Linux; Node v24.19.0; npm 11.9.0; Python 3.12.14; Chromium 151.0.7922.173
+Dependencies: npm ci --offline --cache /workspace/auralprint-environment/npm-cache --no-audit --no-fund (locked)
+Build/test shells sourced /workspace/auralprint-environment/activate.sh; browser commands used AP_CHROMIUM_PATH=/usr/bin/chromium.
+
+node --test tests/scrubber-drag-ownership.test.js tests/scrubber-coordinator.test.js: PASS
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 178.78791
+
+npm test: PASS (application/test commit e6183a69f099fa68cd738f79c52acdefcdcf92a1)
+ℹ tests 1493
+ℹ pass 1492
+ℹ fail 0
+ℹ skipped 1
+ℹ duration_ms 28617.040787
+One existing opt-in million-particle retention test skipped. Watcher passing here does not resolve AUD116-006.
+
+npm run build: PASS, exit 0 (executed sequentially in this order after npm test)
+
+python scripts/verify_distribution.py: PASS, exit 0 (executed sequentially in this order after npm test)
+{
+  "auralprint_0.1.16-candidate.html": {
+    "bytes": 579369,
+    "sha256": "ec680ea2b8cbc660c4b4576eb3023a34426e339747649094f35b7ea30ad6b092"
+  },
+  "hosted/apple-touch-icon.png": {
+    "bytes": 21085,
+    "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+  },
+  "hosted/favicon-96x96.png": {
+    "bytes": 9034,
+    "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817"
+  },
+  "hosted/favicon.ico": {
+    "bytes": 15086,
+    "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f"
+  },
+  "hosted/favicon.svg": {
+    "bytes": 1121,
+    "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16"
+  },
+  "hosted/index.html": {
+    "bytes": 578200,
+    "sha256": "4f1ccc1dd8b495b377a654ea055b5d9bb9fc8485e2302baf708bdf5f6ab24384"
+  },
+  "hosted/site.webmanifest": {
+    "bytes": 517,
+    "sha256": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495"
+  },
+  "hosted/web-app-manifest-192x192.png": {
+    "bytes": 22773,
+    "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991"
+  },
+  "hosted/web-app-manifest-512x512.png": {
+    "bytes": 105356,
+    "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+  }
+}
+
+
+npm run test:browser: PASS, exit 0 (executed sequentially in this order after npm test)
+PASS portable: schema-12 authored camera before first rendered frame; nondefault world
+PASS portable: live/authored ownership, share, restore
+PASS portable: UI capture, share, isolated fresh recipient and independent navigation
+PASS portable: in-session application and invalid-import atomicity
+PASS portable: C/F, restore and isolated schema-11 migration to CONFIG camera defaults
+PASS hosted: 7 relative HTML/manifest resources fetched in Chromium
+PASS hosted: schema-12 authored camera before first rendered frame; nondefault world
+PASS hosted: live/authored ownership, share, restore
+PASS hosted: UI capture, share, isolated fresh recipient and independent navigation
+PASS hosted: in-session application and invalid-import atomicity
+PASS hosted: C/F, restore and isolated schema-11 migration to CONFIG camera defaults
+PASS scene-camera smoke (12.20s)
+
+npm run test:browser:editing: PASS, exit 0 (executed sequentially in this order after npm test)
+PASS source DPR 1: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint
+PASS source DPR 1: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext 44100 Hz
+PASS source DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+PASS source DPR 1: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock
+PASS portable DPR 1: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint
+PASS portable DPR 1: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext 44100 Hz
+PASS portable DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+PASS portable DPR 1: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock
+PASS hosted DPR 1: exact startup/Share, angular half-degree units, matching Orb/Bulk and exact Ring endpoint
+PASS hosted DPR 1: CONFIG frequency domain, atomic import/edit rejection, all distributions and actual AudioContext 44100 Hz
+PASS hosted DPR 1: delayed real File, valid/invalid drafts, commits, hide/reveal, explicit replacement, late events
+PASS hosted DPR 1: all CONFIG limits/steps, legacy readout/ARIA, arrows, pointer drag, Home/End, owner validation, isolation and Ring lock
+PASS editing smoke
+
+npm run test:browser:presets: PASS, exit 0 (executed sequentially in this order after npm test)
+Chromium portable/hosted HTTP; compact transport/interoperability; errors=[]; offline=[] (not tested).
+
+node scripts/validate-116-candidate.cjs: PASS, exit 0 (executed sequentially in this order after npm test)
+Source/portable/hosted DPR 1/2 controls and native Canvas comparisons; errors=[].
+
+AP_REPO_ROOT=/workspace/aud004-baseline AP_SCRUBBER_EDITIONS=isolated node scripts/validate-116-scrubber.cjs --observe: EXPECTED FAILURE, exit 1; 11 cancellation assertions fail; native controls pass; errors=[]
+node scripts/validate-116-scrubber.cjs: PASS, exit 0; corrected commit e6183a69f099fa68cd738f79c52acdefcdcf92a1; isolated/source/portable/hosted; 104 position observations; failures=[]; errors=[]
+The full Node suite passed again after strengthening the blur assertion to precede any no-button event. Build/browser gates passed on identical runtime source (unchanged since a4bf94feb587edcf4253f7ed6a73ac678db1db9d). Initial sandbox npm ci failed with child-process EPERM; identical locked install passed with additional native process/network access.
+Native harness bring-up failures: HTTP metadata-only fixture initially sought to zero; changed to the original Blob fixture. preventDefault was initially observed before production window handlers; final evidence reads retained events after dispatch. Neither required an application change or weaker expectations.
