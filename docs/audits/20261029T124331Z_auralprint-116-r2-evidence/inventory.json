@@ -1,0 +1,567 @@
+{
+  "baseline": "332d1cd312f0060cd043f1dc48a001c662b3788f",
+  "reachableModules": 65,
+  "moduleEdges": {
+    "src/js/audio/analysis-frame.js": [],
+    "src/js/audio/audio-engine.js": [
+      "src/js/core/utils.js",
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/audio/band-bank-controller.js",
+      "src/js/audio/band-bank.js"
+    ],
+    "src/js/audio/band-bank-controller.js": [
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/audio/band-bank.js"
+    ],
+    "src/js/audio/band-bank.js": [
+      "src/js/core/utils.js",
+      "src/js/core/constants.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js"
+    ],
+    "src/js/audio/input-source-manager.js": [
+      "src/js/core/state.js",
+      "src/js/audio/audio-engine.js"
+    ],
+    "src/js/audio/queue.js": [],
+    "src/js/audio/scrubber.js": [
+      "src/js/core/utils.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/audio/audio-engine.js",
+      "src/js/audio/waveform-admission.js",
+      "src/js/audio/waveform-extractor.js",
+      "src/js/ui/waveform-options.js"
+    ],
+    "src/js/audio/waveform-admission.js": [
+      "src/js/core/config.js",
+      "src/js/core/application-preferences.js",
+      "src/js/audio/waveform-policy.js",
+      "src/js/audio/waveform-metadata.js",
+      "src/js/audio/waveform-coordinator.js",
+      "src/js/audio/waveform-extractor.js"
+    ],
+    "src/js/audio/waveform-coordinator.js": [],
+    "src/js/audio/waveform-extractor.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/audio/waveform-metadata.js": [],
+    "src/js/audio/waveform-policy.js": [
+      "src/js/core/config.js",
+      "src/js/audio/waveform-metadata.js"
+    ],
+    "src/js/core/application-preferences.js": [
+      "src/js/core/config.js",
+      "src/js/audio/waveform-policy.js"
+    ],
+    "src/js/core/band-frequency.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/core/camera-fit.js": [],
+    "src/js/core/camera-projection.js": [
+      "src/js/core/camera-state.js"
+    ],
+    "src/js/core/camera-state.js": [
+      "src/js/core/config.js",
+      "src/js/core/constants.js"
+    ],
+    "src/js/core/config.js": [
+      "src/js/core/constants.js",
+      "src/js/core/utils.js"
+    ],
+    "src/js/core/constants.js": [],
+    "src/js/core/orb-admission.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/core/orb-collection.js": [
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/core/orb-admission.js"
+    ],
+    "src/js/core/particle-safety.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/core/preferences.js": [
+      "src/js/core/timing.js",
+      "src/js/core/particle-safety.js",
+      "src/js/core/world-settings.js",
+      "src/js/core/world-geometry.js",
+      "src/js/core/camera-state.js",
+      "src/js/core/state.js",
+      "src/js/core/config.js",
+      "src/js/core/constants.js",
+      "src/js/core/orb-admission.js",
+      "src/js/core/band-frequency.js",
+      "src/js/core/utils.js"
+    ],
+    "src/js/core/spaces.js": [
+      "src/js/core/state.js",
+      "src/js/core/camera-projection.js"
+    ],
+    "src/js/core/state.js": [
+      "src/js/core/config.js",
+      "src/js/core/camera-state.js"
+    ],
+    "src/js/core/timing.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/core/utils.js": [],
+    "src/js/core/world-geometry.js": [],
+    "src/js/core/world-settings.js": [
+      "src/js/core/config.js",
+      "src/js/core/utils.js"
+    ],
+    "src/js/main.js": [
+      "src/js/core/timing.js",
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/core/spaces.js",
+      "src/js/presets/url-preset.js",
+      "src/js/audio/band-bank-controller.js",
+      "src/js/audio/audio-engine.js",
+      "src/js/audio/analysis-frame.js",
+      "src/js/audio/input-source-manager.js",
+      "src/js/audio/scrubber.js",
+      "src/js/render/renderer.js",
+      "src/js/recording/recorder-engine.js",
+      "src/js/ui/ui.js",
+      "src/js/ui/scene-camera-actions.js",
+      "src/js/render/orb-runtime.js",
+      "src/js/render/visualizer-runtime.js"
+    ],
+    "src/js/presets/compact-preset.js": [
+      "src/js/core/config.js",
+      "src/js/core/utils.js",
+      "src/js/core/constants.js",
+      "src/js/presets/schema-16-baseline.js",
+      "src/js/presets/schema-13-baseline.js",
+      "src/js/presets/preset-limits.js",
+      "src/js/core/orb-admission.js"
+    ],
+    "src/js/presets/deflate-transport.js": [
+      "src/js/core/config.js",
+      "src/js/presets/preset-limits.js"
+    ],
+    "src/js/presets/preset-codec.js": [
+      "src/js/core/constants.js",
+      "src/js/core/utils.js",
+      "src/js/core/timing.js",
+      "src/js/core/particle-safety.js",
+      "src/js/core/camera-state.js",
+      "src/js/core/world-settings.js",
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/core/orb-collection.js",
+      "src/js/core/orb-admission.js",
+      "src/js/core/band-frequency.js",
+      "src/js/presets/compact-preset.js",
+      "src/js/presets/preset-limits.js"
+    ],
+    "src/js/presets/preset-limits.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/presets/schema-13-baseline.js": [
+      "src/js/core/utils.js"
+    ],
+    "src/js/presets/schema-16-baseline.js": [
+      "src/js/core/utils.js"
+    ],
+    "src/js/presets/url-preset.js": [
+      "src/js/core/preferences.js",
+      "src/js/core/config.js",
+      "src/js/core/constants.js",
+      "src/js/presets/preset-codec.js",
+      "src/js/core/band-frequency.js",
+      "src/js/presets/preset-limits.js",
+      "src/js/presets/deflate-transport.js"
+    ],
+    "src/js/recording/recorder-engine.js": [
+      "src/js/core/config.js",
+      "src/js/core/state.js",
+      "src/js/recording/recording-policy.js"
+    ],
+    "src/js/recording/recording-policy.js": [
+      "src/js/core/config.js"
+    ],
+    "src/js/render/camera-fit-content.js": [
+      "src/js/core/world-geometry.js",
+      "src/js/core/preferences.js"
+    ],
+    "src/js/render/color-policy.js": [
+      "src/js/core/utils.js",
+      "src/js/core/preferences.js",
+      "src/js/audio/band-bank.js"
+    ],
+    "src/js/render/orb-runtime.js": [
+      "src/js/core/preferences.js",
+      "src/js/core/orb-collection.js",
+      "src/js/core/state.js",
+      "src/js/core/orb-admission.js",
+      "src/js/render/orb.js",
+      "src/js/render/visualizer-runtime.js"
+    ],
+    "src/js/render/orb.js": [
+      "src/js/core/utils.js",
+      "src/js/core/constants.js",
+      "src/js/core/preferences.js",
+      "src/js/core/world-geometry.js",
+      "src/js/core/state.js",
+      "src/js/render/trail-system.js",
+      "src/js/render/color-policy.js"
+    ],
+    "src/js/render/particle-governor.js": [
+      "src/js/core/particle-safety.js"
+    ],
+    "src/js/render/particle-list.js": [],
+    "src/js/render/renderer.js": [
+      "src/js/core/utils.js",
+      "src/js/core/constants.js",
+      "src/js/core/preferences.js",
+      "src/js/core/world-geometry.js",
+      "src/js/core/state.js",
+      "src/js/core/spaces.js",
+      "src/js/render/trace-fade.js",
+      "src/js/render/color-policy.js"
+    ],
+    "src/js/render/trace-fade.js": [
+      "src/js/core/config.js",
+      "src/js/core/utils.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/core/spaces.js"
+    ],
+    "src/js/render/trail-system.js": [
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/render/particle-governor.js",
+      "src/js/render/particle-list.js"
+    ],
+    "src/js/render/visualizer-runtime.js": [
+      "src/js/render/particle-governor.js",
+      "src/js/core/particle-safety.js",
+      "src/js/core/orb-admission.js",
+      "src/js/core/constants.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/core/utils.js"
+    ],
+    "src/js/ui/analysis-panel.js": [
+      "src/js/ui/config-range.js",
+      "src/js/core/utils.js",
+      "src/js/core/config.js",
+      "src/js/core/band-frequency.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/audio/band-bank.js"
+    ],
+    "src/js/ui/camera-actions.js": [
+      "src/js/core/config.js",
+      "src/js/core/constants.js",
+      "src/js/core/state.js",
+      "src/js/core/camera-projection.js",
+      "src/js/core/camera-fit.js",
+      "src/js/core/preferences.js",
+      "src/js/render/camera-fit-content.js"
+    ],
+    "src/js/ui/camera-controls.js": [
+      "src/js/core/config.js",
+      "src/js/core/constants.js",
+      "src/js/core/state.js",
+      "src/js/ui/camera-actions.js",
+      "src/js/core/preferences.js",
+      "src/js/ui/scene-camera-actions.js"
+    ],
+    "src/js/ui/camera-interaction.js": [
+      "src/js/core/config.js",
+      "src/js/core/constants.js",
+      "src/js/core/state.js",
+      "src/js/core/spaces.js",
+      "src/js/ui/camera-actions.js"
+    ],
+    "src/js/ui/config-range.js": [],
+    "src/js/ui/dom-cache.js": [
+      "src/js/core/config.js",
+      "src/js/core/state.js"
+    ],
+    "src/js/ui/orb-band-picker.js": [
+      "src/js/core/preferences.js"
+    ],
+    "src/js/ui/orb-editor.js": [
+      "src/js/ui/config-range.js",
+      "src/js/core/utils.js",
+      "src/js/core/constants.js",
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/audio/band-bank.js",
+      "src/js/ui/orb-band-picker.js"
+    ],
+    "src/js/ui/recording-resources.js": [
+      "src/js/core/config.js",
+      "src/js/recording/recording-policy.js"
+    ],
+    "src/js/ui/scene-camera-actions.js": [
+      "src/js/core/preferences.js",
+      "src/js/core/state.js",
+      "src/js/core/camera-state.js"
+    ],
+    "src/js/ui/scene-panel.js": [
+      "src/js/core/config.js",
+      "src/js/core/particle-safety.js",
+      "src/js/core/world-settings.js",
+      "src/js/ui/config-range.js"
+    ],
+    "src/js/ui/spectral-ring-editor.js": [
+      "src/js/core/config.js",
+      "src/js/core/constants.js",
+      "src/js/ui/config-range.js"
+    ],
+    "src/js/ui/ui.js": [
+      "src/js/ui/recording-resources.js",
+      "src/js/core/utils.js",
+      "src/js/core/config.js",
+      "src/js/core/preferences.js",
+      "src/js/core/orb-collection.js",
+      "src/js/core/state.js",
+      "src/js/presets/url-preset.js",
+      "src/js/audio/band-bank-controller.js",
+      "src/js/audio/queue.js",
+      "src/js/audio/audio-engine.js",
+      "src/js/audio/scrubber.js",
+      "src/js/audio/input-source-manager.js",
+      "src/js/render/color-policy.js",
+      "src/js/render/visualizer-runtime.js",
+      "src/js/recording/recorder-engine.js",
+      "src/js/render/orb-runtime.js",
+      "src/js/ui/dom-cache.js",
+      "src/js/ui/workspace.js",
+      "src/js/ui/orb-editor.js",
+      "src/js/ui/visualizers-panel.js",
+      "src/js/ui/analysis-panel.js",
+      "src/js/ui/spectral-ring-editor.js",
+      "src/js/ui/scene-panel.js",
+      "src/js/ui/camera-controls.js",
+      "src/js/ui/camera-interaction.js",
+      "src/js/ui/camera-actions.js",
+      "src/js/ui/scene-camera-actions.js"
+    ],
+    "src/js/ui/visualizers-panel.js": [],
+    "src/js/ui/waveform-options.js": [
+      "src/js/core/config.js",
+      "src/js/core/application-preferences.js"
+    ],
+    "src/js/ui/workspace.js": [
+      "src/js/core/state.js"
+    ]
+  },
+  "esbuildInputs": [
+    "src/js/audio/analysis-frame.js",
+    "src/js/audio/audio-engine.js",
+    "src/js/audio/band-bank-controller.js",
+    "src/js/audio/band-bank.js",
+    "src/js/audio/input-source-manager.js",
+    "src/js/audio/queue.js",
+    "src/js/audio/scrubber.js",
+    "src/js/audio/waveform-admission.js",
+    "src/js/audio/waveform-coordinator.js",
+    "src/js/audio/waveform-extractor.js",
+    "src/js/audio/waveform-metadata.js",
+    "src/js/audio/waveform-policy.js",
+    "src/js/core/application-preferences.js",
+    "src/js/core/band-frequency.js",
+    "src/js/core/camera-fit.js",
+    "src/js/core/camera-projection.js",
+    "src/js/core/camera-state.js",
+    "src/js/core/config.js",
+    "src/js/core/constants.js",
+    "src/js/core/orb-admission.js",
+    "src/js/core/orb-collection.js",
+    "src/js/core/particle-safety.js",
+    "src/js/core/preferences.js",
+    "src/js/core/spaces.js",
+    "src/js/core/state.js",
+    "src/js/core/timing.js",
+    "src/js/core/utils.js",
+    "src/js/core/world-geometry.js",
+    "src/js/core/world-settings.js",
+    "src/js/main.js",
+    "src/js/presets/compact-preset.js",
+    "src/js/presets/deflate-transport.js",
+    "src/js/presets/preset-codec.js",
+    "src/js/presets/preset-limits.js",
+    "src/js/presets/schema-13-baseline.js",
+    "src/js/presets/schema-16-baseline.js",
+    "src/js/presets/url-preset.js",
+    "src/js/recording/recorder-engine.js",
+    "src/js/recording/recording-policy.js",
+    "src/js/render/camera-fit-content.js",
+    "src/js/render/color-policy.js",
+    "src/js/render/orb-runtime.js",
+    "src/js/render/orb.js",
+    "src/js/render/particle-governor.js",
+    "src/js/render/particle-list.js",
+    "src/js/render/renderer.js",
+    "src/js/render/trace-fade.js",
+    "src/js/render/trail-system.js",
+    "src/js/render/visualizer-runtime.js",
+    "src/js/ui/analysis-panel.js",
+    "src/js/ui/camera-actions.js",
+    "src/js/ui/camera-controls.js",
+    "src/js/ui/camera-interaction.js",
+    "src/js/ui/config-range.js",
+    "src/js/ui/dom-cache.js",
+    "src/js/ui/orb-band-picker.js",
+    "src/js/ui/orb-editor.js",
+    "src/js/ui/recording-resources.js",
+    "src/js/ui/scene-camera-actions.js",
+    "src/js/ui/scene-panel.js",
+    "src/js/ui/spectral-ring-editor.js",
+    "src/js/ui/ui.js",
+    "src/js/ui/visualizers-panel.js",
+    "src/js/ui/waveform-options.js",
+    "src/js/ui/workspace.js"
+  ],
+  "entryPoints": [
+    "src/index.template.html",
+    "version",
+    "package.json",
+    "package-lock.json",
+    ".github/workflows/ci.yml",
+    "src/css/analysis-panel.css",
+    "src/css/audio-panel.css",
+    "src/css/base.css",
+    "src/css/camera-panel.css",
+    "src/css/panels.css",
+    "src/css/queue-panel.css",
+    "src/css/record-panel.css",
+    "src/css/scene-panel.css",
+    "src/css/visualizers-panel.css",
+    "src/css/workspace.css",
+    "scripts/assemble_single_file.py",
+    "scripts/benchmark-presets.mjs",
+    "scripts/build.mjs",
+    "scripts/distribution.py",
+    "scripts/measure-particle-governance.mjs",
+    "scripts/measure-rc15-admission.mjs",
+    "scripts/measure-rc15-budgets.mjs",
+    "scripts/measure-rc15-frame.mjs",
+    "scripts/measure-rc15-review.mjs",
+    "scripts/measure-rc15-spacing.mjs",
+    "scripts/measure-rc15-timing.mjs",
+    "scripts/measure-release-resources.mjs",
+    "scripts/validate-rc15-analysis.mjs",
+    "scripts/validate-rc15-churn.mjs",
+    "scripts/validate-rc15-clock.mjs",
+    "scripts/validate-rc15-history.mjs",
+    "scripts/validate-rc16-rc18.mjs",
+    "scripts/validate-rc17.mjs",
+    "scripts/verify_distribution.py",
+    "scripts/watch.mjs"
+  ],
+  "sha256": {
+    ".github/workflows/ci.yml": "ea34c05f777536ae2e7712c14252dd22cb74d5ab4090daad9a187137aca5e7a6",
+    "package-lock.json": "d16004559be0e214f2ac0371f6eba9385950724f540506cf2e3714cf07ff4a83",
+    "package.json": "dfdb0a3945aa7e2371df760fe2c15bdcfd8ff728880363a127d261fc7b7dc4f0",
+    "scripts/assemble_single_file.py": "a8e82f8540396a8fe56742bc4babc964f7df27c3e79e8c870357bb714e16e2ae",
+    "scripts/benchmark-presets.mjs": "661ba9566ef4fd2f7a506f306d3757bdcd3f1197fc365c80e29522d05fdc71de",
+    "scripts/build.mjs": "89b471975566bac9bc1936257ac33b917a0176d0b5ab3de9f7e1f551aef6f314",
+    "scripts/distribution.py": "e70850e5561ae3afcae720bde5b8c3bd1dbd9cb77b5d97bccf3ef002797f9aec",
+    "scripts/measure-particle-governance.mjs": "d5d11b51a228e5259900a7f206ef4a1b2ab021e136db2ca03e768a7ae3fea8b1",
+    "scripts/measure-rc15-admission.mjs": "ff08136625e2e5fb6ce933234d5d3f78cabf3f86d56bd7a39d045d647bd92b47",
+    "scripts/measure-rc15-budgets.mjs": "cfe5cceb23bf44c801d9ce3a7e51426fa80a5163624e3b3b10c0abc756483cf7",
+    "scripts/measure-rc15-frame.mjs": "476b6f5dc91280e45c3e33fdd771fa1b6c6cc3f0a72124e727d7f58ee99dcf46",
+    "scripts/measure-rc15-review.mjs": "9780731c91a198f72cc8541b5941bca08cd00a6ab927684699708ddf397a95df",
+    "scripts/measure-rc15-spacing.mjs": "9befc0c7c92026dbba4000327de1866b5593352dc63b22d4e8fa6182a494f273",
+    "scripts/measure-rc15-timing.mjs": "6935f5ad0bb0aed92849a2e61e92d446bdf496ea960eb4259aef4313637099e4",
+    "scripts/measure-release-resources.mjs": "69587c96e070963664f8d48cf99baf995a020ee72fa48a9ca917e286b5ddcbf4",
+    "scripts/validate-rc15-analysis.mjs": "952700b4353d2133c501a8c31b855c2bfde2171dcc33000b08e84d63cb63048f",
+    "scripts/validate-rc15-churn.mjs": "4549f3436b6fb7d957f6fbd4c30f44dd6a03a70cb8bc6bf9d5ef78ed9aed84a8",
+    "scripts/validate-rc15-clock.mjs": "89d77211b6b50520528d24c6fb98f22b51d8d0c21ee0b4df1fdbbf1e0056bcd4",
+    "scripts/validate-rc15-history.mjs": "f1d048748b110b5fa208578a4ad2eee62362d865e1ffe46adad8e43693b0fdb8",
+    "scripts/validate-rc16-rc18.mjs": "ccf4c74568e3558d47fabd2cb5dc28ff7267dc04b1760d4c13f0d922629a0137",
+    "scripts/validate-rc17.mjs": "2ac460a608c310a50be41db0e397b0fa82293060abf46c7520a9473a1e131e5a",
+    "scripts/verify_distribution.py": "39163049d4b6b9e07279e5d40d08b81e9060af3860be3e526522410d76f4ca93",
+    "scripts/watch.mjs": "8add9e93ccab17edd5169eebfbae7f67a46d56dee64a9ae05e703d67a9eaf291",
+    "src/css/analysis-panel.css": "e3a32d9911487d91e419d4dab908282b33d098f0ef58b630f25380eabd2fb27f",
+    "src/css/audio-panel.css": "b68ae95d900eb3ecd0d98a33cb20a8743bd6708f1d7430390010ee09419ef77d",
+    "src/css/base.css": "e0250ea23b58d0ca3dbc376891198d1cf79bf097fea60d4cd4a4718aeed1b42d",
+    "src/css/camera-panel.css": "5194fb8dbf986ab97d18a0ff51c91e6c563ba672a92f3d605414cf89e74f2fa7",
+    "src/css/panels.css": "e7cf69315dcc6d2cfb6322187940e2d9f1b728f9c07e59e54d8ad44bf6f88692",
+    "src/css/queue-panel.css": "d5e140b37b028eb5319b01dca6931b130eabe1044390a7806f3627495429acaa",
+    "src/css/record-panel.css": "68be7fc1bd8027ebf2a53112c633231a53531123be1e6ea1108bba31f5f732a8",
+    "src/css/scene-panel.css": "e9947731b2d9cfc7e08830474fe2ce1f1076c128abac66e44c0d50a2a4ae6197",
+    "src/css/visualizers-panel.css": "beae0f0ef54e0c0b699c98fd7b9bf40f70758bdbd45ef02fe6d883efc5bdf175",
+    "src/css/workspace.css": "ae3b716fcfd416bff34711d22ba56eba795f380508666574b2ea20ae12e51409",
+    "src/index.template.html": "3bb8a2754e2bd34148f025cbda79580de36d2647ea7341ece652edbcaa511ca4",
+    "src/js/audio/analysis-frame.js": "6d7a08c1342031ad47a6238017b9a384eafb3067896e5269083b548a9aa82ea2",
+    "src/js/audio/audio-engine.js": "107fc947f5095e0cbab538211cb0e7033fc2596faf60747949ed9a9bfc5e7215",
+    "src/js/audio/band-bank-controller.js": "bc8391f6d5926f6244795ef3af668fd44942868f98d19bddac9604feab6e532d",
+    "src/js/audio/band-bank.js": "e7800426c5ac37a947da7d97598672a29469349608de5a418507f8202532ce12",
+    "src/js/audio/input-source-manager.js": "6b3c6b8ac3c1fe012823fea0dc801e629c09351854a3edb8fe92c93e93d74a1e",
+    "src/js/audio/queue.js": "676d6600e8b681ca8ab1023bef65d31f03f491122ad181cadd95445e42611702",
+    "src/js/audio/scrubber.js": "8d3d41b3c02d538eba9571d2e104fa1fd929af1d200616717949faadaf7f3d1b",
+    "src/js/audio/waveform-admission.js": "679704f5e96e4835e719c4d46da7b0c3c223ece5c57edcee1c419637653545c3",
+    "src/js/audio/waveform-coordinator.js": "71de335ae1a82a292daf3cee80fe7ac65a811bbede46b6b06fd8f4c657d23304",
+    "src/js/audio/waveform-extractor.js": "c4e67cfa44b6bb6fb96e6629fee09ba886b955e9c314879de5d984ba551f9ff4",
+    "src/js/audio/waveform-metadata.js": "bf9d4fc9ade3f9fd25aa6dfb75415b780585706a2e63174833d46edf57205276",
+    "src/js/audio/waveform-policy.js": "f8773aa3a8e57a01c397f74448ba2241637f6a7b55a67a070f23dbe812ace486",
+    "src/js/core/application-preferences.js": "7b37798a9bd1afd2fbbe9873e89dea2d61c8b90fdcbbcc6c0e20d244f2cd0aeb",
+    "src/js/core/band-frequency.js": "d56401e31514c2c408d63180ea736b3e7dee44a755b27ab952a79930e1563026",
+    "src/js/core/camera-fit.js": "a0b49970e991da59b3407c54451459bca70965f115b6a700ec2a8b43167aebdc",
+    "src/js/core/camera-projection.js": "54e8ba0bd98e1e74cb8bb260b86627bea20d21ccd6a0900de148eb753695e3be",
+    "src/js/core/camera-state.js": "70aaea53e7e893014e52f5b05b563908b472f29c4e9d2d371127325c7427ba18",
+    "src/js/core/config.js": "24a243a2576ff1180e4ddb5e1c6d15949ac338949a0b0bb51f00caeafcd10ef1",
+    "src/js/core/constants.js": "2d7a767df2c0165735cf8e1ab97d2a2c053c1981cadb826117887aed1729d1de",
+    "src/js/core/orb-admission.js": "4601f41cb8ec69f4e5395c735667fc3eb16b56d85f3764d625b5f6e44101b224",
+    "src/js/core/orb-collection.js": "21cd26be748451efed8fbe58f74fa1fcb40d43d98192a6d223ab46330196af1d",
+    "src/js/core/particle-safety.js": "757714a4777be21a84de048995b08663700a54606e8888a55e656dc83493df32",
+    "src/js/core/preferences.js": "8394d912be527cfff72476fbf35163232e55eaa06adb0b46bea9ab40fb8c81c4",
+    "src/js/core/spaces.js": "08d5627955c737f794189a1abe3e97592021848071c521b49c604a971e809afb",
+    "src/js/core/state.js": "b228e5b9351a86ad8352fd7fab2e810cd5acfc50a22fa20d0e837bff5ee2ceff",
+    "src/js/core/timing.js": "4332892367329c277f4dc31d8ea029470618635e0763a150ed45f0167fdfde34",
+    "src/js/core/utils.js": "6947d4e7ca5d6a1a2a518b01d5fd13312f4e50ef97123d63dba3872695e5c509",
+    "src/js/core/world-geometry.js": "5e12d477b2c514ab082c75815394063c6fcdc3005d5a16ba4986596e6e718631",
+    "src/js/core/world-settings.js": "5d4430fd9c05f664317ba52187ec53c5a493192c1b71b028a8ea0ad5f15155e6",
+    "src/js/main.js": "425dc3853351907eace36801c3e37b2f9306b652ed2a8fd68a577ad0ad3405f2",
+    "src/js/presets/compact-preset.js": "e543ee9b8fceacc6d99b03d22f62976ee734eaf90321e1fbd7bc092b9f4aee5a",
+    "src/js/presets/deflate-transport.js": "811145ff590aed4bb0c75f8d07b9480a083c5bd1e882492c489d65f3e66ce5c8",
+    "src/js/presets/preset-codec.js": "db1840f56b6568eb4fd0201b0b54449cb4eba237235c392a27502d6f66fa1ae9",
+    "src/js/presets/preset-limits.js": "ca30e5d90586a2020b68796f8bba78bbc3870c6b6136d02b4e05c9c62f08f2f7",
+    "src/js/presets/schema-13-baseline.js": "b0b0e37366344775e1eb189524345ee5946267d7ccfa70e45857499a876f8111",
+    "src/js/presets/schema-16-baseline.js": "9c9a60dee341bdd0ef866d0275d138a6750e8e0dffae328bca0c663a88feacac",
+    "src/js/presets/url-preset.js": "57f07915ce334bd62c0e909f8c66a5793a0626d46fd47f534382dbb5b2138899",
+    "src/js/recording/recorder-engine.js": "92120d06bc8b74a8759b818d671c2101429a18692e8fd31264fd6ebdb924cb70",
+    "src/js/recording/recording-policy.js": "4e4b324beca1c2ab029e6f1f453e14e04c26275cc6601ea17bec6571bc79ed23",
+    "src/js/render/camera-fit-content.js": "a08833caeec542ec589643737802ea0c1592b82deec25e094ea82eaf350990c0",
+    "src/js/render/color-policy.js": "e811378a8784a7b54ae79a7a1d20417e9aa7adbae3a67abe02871f57a90b27a2",
+    "src/js/render/orb-runtime.js": "281e24602042b1bf5445b5954c7a214ce7ec6ea986672d85ec5d3b30f60c38c9",
+    "src/js/render/orb.js": "5525a315a5fac45d37a07b2d485fac105de5b6097abdbac39ddcb5d58ab6d58a",
+    "src/js/render/particle-governor.js": "8305876a9e70d4fce8e7a0a9bd6817c209920bbbdf21b59b50293d7cb2f42cca",
+    "src/js/render/particle-list.js": "76adcbd54a14b8bb07417c3081be6e848c189b7c815ac5271ac5047c5611c165",
+    "src/js/render/renderer.js": "cc4cfba9cc396987524d2a84723fe45aaf7f34ccfebffaddbe3873e2b2070eb9",
+    "src/js/render/trace-fade.js": "31b9eb32baa792eb2227abf605dd7fcd2af0138b1bb838087e4944ad2f3bdf8b",
+    "src/js/render/trail-system.js": "3452fd951846828ab741b7a9f99d4925a8405df5b9405438d2414a2c72d9ea2c",
+    "src/js/render/visualizer-runtime.js": "da8b33971b7184a166f38fc7adfafc9b49343b2b0ccf5f115282ccaa570dece2",
+    "src/js/ui/analysis-panel.js": "f9880e072fb75d82069ad078705322830855f4ed2591d126705c7a594b7b7b30",
+    "src/js/ui/camera-actions.js": "a764876f6ad496901f7309fa08d8461a56a50238a5a032830018cafb7b3b0202",
+    "src/js/ui/camera-controls.js": "715255c01e985d7d8cef8ab81aa8e99cf56d8d30dbc1b85c2e273651d7637470",
+    "src/js/ui/camera-interaction.js": "291705a5f7edbb57e09c79b469214f0ea52cbdfd567471f2d51497684e40b346",
+    "src/js/ui/config-range.js": "abdf6ada49304a7ca21bfdb165dcca1849819e6f1ee5c89a3a9dbade1b8addd2",
+    "src/js/ui/dom-cache.js": "08f3405928ef4ea06e959044a99da307ed261c3bc44c7e21ad5fc14907a816fa",
+    "src/js/ui/orb-band-picker.js": "ac9b0bab5222029b846ffc976147be52b836fb3fb337636d0e2c60e6b6a332ab",
+    "src/js/ui/orb-editor.js": "4e4d6b0f2c5e64a12edc5161039b9892703d4aa127d169c91cbdd3623f05ec23",
+    "src/js/ui/recording-resources.js": "58ed26c3127931c1decec38d6453f354b5d4f470488ffd4e529d62ca8a6da16d",
+    "src/js/ui/scene-camera-actions.js": "8edf7fd0291617b55cc6ba9aebadfc94c1c0391f46104841c8dc85df9a6ad84c",
+    "src/js/ui/scene-panel.js": "f75d91cbadea974e1b69db17047cf815b5cb664eab61b876002569aae5fb0a06",
+    "src/js/ui/spectral-ring-editor.js": "0411ab596133ac84b2d3449cf4159cf1f4bacdf0ce7a2f572781826adb61682a",
+    "src/js/ui/ui.js": "47c2c7859d51522ce076a330a23007009505122395f564efde3a3bd4018abcb0",
+    "src/js/ui/visualizers-panel.js": "ec9ec0e9a288ad8ba52064a34cfc00f53f5d8accfc21818d390095e268356e40",
+    "src/js/ui/waveform-options.js": "df2c110d19f9268f01d2cdee2a4b80ec1cc4de39ab3e4a33bd0ef4058020dee0",
+    "src/js/ui/workspace.js": "19df7c9bce7a473bccbbc6bd1a76fb85b2c3a897b6123e6528afd55f2b01862d",
+    "version": "0ba29c0ab05192e1db6a61d85431d6151823991cf60268d7a5ba8067ea96cd62"
+  }
+}

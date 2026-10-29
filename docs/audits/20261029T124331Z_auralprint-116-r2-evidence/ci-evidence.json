@@ -1,0 +1,64 @@
+{
+  "failures": [
+    {
+      "run": 40830745837,
+      "job": 123304144625,
+      "sha": "644266857be379991361cf3662236d185d876ff4",
+      "attempt": 1,
+      "url": "https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/40830745837/attempts/1",
+      "assertionExcerpt": [
+        "2026-10-29T06:42:05.7270905Z test at tests/watch-integration.test.js:233:13",
+        "2026-10-29T06:42:05.7271760Z \u2716 duplicate saves do not assemble again and Python assemblers never overlap (793.166272ms)",
+        "2026-10-29T06:42:05.7272555Z   AssertionError [ERR_ASSERTION]: Duplicate saves launched an assembler",
+        "2026-10-29T06:42:05.7273065Z   + actual - expected",
+        "2026-10-29T06:42:05.7273525Z   ... Skipped lines",
+        "2026-10-29T06:42:05.7273800Z   ",
+        "2026-10-29T06:42:05.7274051Z     'start 2930\\n' +",
+        "2026-10-29T06:42:05.7274346Z       'end 2930\\n' +",
+        "2026-10-29T06:42:05.7274621Z       'start 2969\\n' +",
+        "2026-10-29T06:42:05.7275064Z       'end 2969\\n' +",
+        "2026-10-29T06:42:05.7275337Z       'start 2986\\n' +",
+        "2026-10-29T06:42:05.7275622Z   ...",
+        "2026-10-29T06:42:05.7275867Z       'start 3044\\n' +",
+        "2026-10-29T06:42:05.7276133Z   +   'end 3044\\n' +",
+        "2026-10-29T06:42:05.7276376Z   +   'start 3048\\n' +",
+        "2026-10-29T06:42:05.7276644Z   +   'end 3048\\n' +",
+        "2026-10-29T06:42:05.7276917Z   +   'start 3050\\n' +",
+        "2026-10-29T06:42:05.7277205Z   +   'end 3050\\n' +"
+      ]
+    },
+    {
+      "run": 40873236076,
+      "job": 123445385390,
+      "sha": "332d1cd312f0060cd043f1dc48a001c662b3788f",
+      "attempt": 1,
+      "url": "https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/40873236076/attempts/1",
+      "assertionExcerpt": [
+        "2026-10-29T12:26:40.5763521Z test at tests/watch-integration.test.js:233:13",
+        "2026-10-29T12:26:40.5764047Z \u2716 duplicate saves do not assemble again and Python assemblers never overlap (730.39023ms)",
+        "2026-10-29T12:26:40.5764552Z   AssertionError [ERR_ASSERTION]: Duplicate saves launched an assembler",
+        "2026-10-29T12:26:40.5764887Z   + actual - expected",
+        "2026-10-29T12:26:40.5765097Z   ... Skipped lines",
+        "2026-10-29T12:26:40.5765288Z   ",
+        "2026-10-29T12:26:40.5765467Z     'start 2819\\n' +",
+        "2026-10-29T12:26:40.5765663Z       'end 2819\\n' +",
+        "2026-10-29T12:26:40.5765845Z       'start 2827\\n' +",
+        "2026-10-29T12:26:40.5766043Z       'end 2827\\n' +",
+        "2026-10-29T12:26:40.5766230Z       'start 2858\\n' +",
+        "2026-10-29T12:26:40.5766408Z   ...",
+        "2026-10-29T12:26:40.5766583Z       'start 2959\\n' +",
+        "2026-10-29T12:26:40.5766790Z   +   'end 2959\\n' +",
+        "2026-10-29T12:26:40.5766984Z   +   'start 2963\\n' +",
+        "2026-10-29T12:26:40.5767174Z   +   'end 2963\\n'",
+        "2026-10-29T12:26:40.5767354Z   -   'end 2959\\n'",
+        "2026-10-29T12:26:40.5767533Z   "
+      ]
+    }
+  ],
+  "latestRerun": {
+    "attempt": 2,
+    "sha": "332d1cd312f0060cd043f1dc48a001c662b3788f",
+    "conclusion": "success",
+    "causality": "A passing rerun does not identify the original failure cause."
+  }
+}

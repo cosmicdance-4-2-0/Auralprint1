@@ -1,0 +1,14 @@
+{
+  "samePackagedFiles": 9,
+  "sha256": {
+    "dist/auralprint_0.1.16-candidate.html": "ec680ea2b8cbc660c4b4576eb3023a34426e339747649094f35b7ea30ad6b092",
+    "dist/hosted/index.html": "4f1ccc1dd8b495b377a654ea055b5d9bb9fc8485e2302baf708bdf5f6ab24384",
+    "dist/hosted/web-app-manifest-512x512.png": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568",
+    "dist/hosted/site.webmanifest": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495",
+    "dist/hosted/favicon-96x96.png": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817",
+    "dist/hosted/favicon.svg": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16",
+    "dist/hosted/web-app-manifest-192x192.png": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991",
+    "dist/hosted/favicon.ico": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f",
+    "dist/hosted/apple-touch-icon.png": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+  }
+}

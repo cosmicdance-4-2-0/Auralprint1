@@ -1,0 +1,808 @@
+{
+  "browser": "151.0.7922.173",
+  "checks": [
+    "opaque compressed startup exact",
+    "opaque recompression exact",
+    "84 complex reorder lifecycles",
+    "offgrid import/unrelated edit false/0.10000000000000002",
+    "exact readout 0.10000000000000002",
+    "ARIA matches 0.10000000000000002",
+    "native first left 0.10000000000000002",
+    "offgrid import/unrelated edit false/0.37499999999999994",
+    "exact readout 0.37499999999999994",
+    "ARIA matches 0.37499999999999994",
+    "native first left 0.37499999999999994",
+    "offgrid import/unrelated edit false/0.37500000000000006",
+    "exact readout 0.37500000000000006",
+    "ARIA matches 0.37500000000000006",
+    "native first left 0.37500000000000006",
+    "offgrid import/unrelated edit true/0.10000000000000002",
+    "exact readout 0.10000000000000002",
+    "ARIA matches 0.10000000000000002",
+    "native first left 0.10000000000000002",
+    "offgrid import/unrelated edit true/0.37499999999999994",
+    "exact readout 0.37499999999999994",
+    "ARIA matches 0.37499999999999994",
+    "native first left 0.37499999999999994",
+    "offgrid import/unrelated edit true/0.37500000000000006",
+    "exact readout 0.37500000000000006",
+    "ARIA matches 0.37500000000000006",
+    "native first left 0.37500000000000006",
+    "source single touch control",
+    "portable single touch control",
+    "hosted single touch control",
+    "first initialization Repeat negative control",
+    "return Repeat off",
+    "no page errors"
+  ],
+  "observations": [
+    {
+      "complexReorder": [
+        {
+          "target": "R0",
+          "permutations": 28,
+          "blurs": 0,
+          "caret": [
+            1,
+            5,
+            "backward"
+          ],
+          "sameRuntime": true,
+          "sameHistory": true
+        },
+        {
+          "target": "R5",
+          "permutations": 28,
+          "blurs": 0,
+          "caret": [
+            1,
+            5,
+            "backward"
+          ],
+          "sameRuntime": true,
+          "sameHistory": true
+        },
+        {
+          "target": "R11",
+          "permutations": 28,
+          "blurs": 0,
+          "caret": [
+            1,
+            5,
+            "backward"
+          ],
+          "sameRuntime": true,
+          "sameHistory": true
+        }
+      ]
+    },
+    {
+      "edition": "source",
+      "multitouch": {
+        "single": 1.999999,
+        "singleMoved": 6,
+        "expectedSecondStart": 8,
+        "secondStart": 0.999999,
+        "expectedOutsideMovement": 8,
+        "outsideMoved": 3,
+        "expectedRemainingDrag": 6,
+        "ownerAfterOtherEnd": 3,
+        "expectedOwnerFirstRemainingDrag": 6,
+        "ownerFirstOtherEnd": 1.999999,
+        "events": [
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 1,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 1,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 2,
+                "x": 125.21562194824219,
+                "y": 693.5,
+                "target": "c"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 2,
+                "x": 125.21562194824219,
+                "y": 693.5,
+                "target": "c"
+              },
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 2,
+                "x": 333.6468811035156,
+                "y": 693.5,
+                "target": "c"
+              },
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 3,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              4
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              },
+              {
+                "id": 5,
+                "x": 958.9406127929688,
+                "y": 693.5,
+                "target": "c"
+              }
+            ],
+            "changed": [
+              5
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              5
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 4,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              4
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "edition": "portable",
+      "multitouch": {
+        "single": 1.999999,
+        "singleMoved": 6,
+        "expectedSecondStart": 8,
+        "secondStart": 0.999999,
+        "expectedOutsideMovement": 8,
+        "outsideMoved": 3,
+        "expectedRemainingDrag": 6,
+        "ownerAfterOtherEnd": 3,
+        "expectedOwnerFirstRemainingDrag": 6,
+        "ownerFirstOtherEnd": 1.999999,
+        "events": [
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 1,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 1,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 2,
+                "x": 125.21562194824219,
+                "y": 693.5,
+                "target": "c"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 2,
+                "x": 125.21562194824219,
+                "y": 693.5,
+                "target": "c"
+              },
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 2,
+                "x": 333.6468811035156,
+                "y": 693.5,
+                "target": "c"
+              },
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 3,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              4
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              },
+              {
+                "id": 5,
+                "x": 958.9406127929688,
+                "y": 693.5,
+                "target": "c"
+              }
+            ],
+            "changed": [
+              5
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              5
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 4,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              4
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "edition": "hosted",
+      "multitouch": {
+        "single": 1.999999,
+        "singleMoved": 6,
+        "expectedSecondStart": 8,
+        "secondStart": 0.999999,
+        "expectedOutsideMovement": 8,
+        "outsideMoved": 3,
+        "expectedRemainingDrag": 6,
+        "ownerAfterOtherEnd": 3,
+        "expectedOwnerFirstRemainingDrag": 6,
+        "ownerFirstOtherEnd": 1.999999,
+        "events": [
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 1,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 1,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              1
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 2,
+                "x": 125.21562194824219,
+                "y": 693.5,
+                "target": "c"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 2,
+                "x": 125.21562194824219,
+                "y": 693.5,
+                "target": "c"
+              },
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 2,
+                "x": 333.6468811035156,
+                "y": 693.5,
+                "target": "c"
+              },
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 3,
+                "x": 854.7249755859375,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              2
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 3,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              3
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              4
+            ]
+          },
+          {
+            "type": "touchstart",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              },
+              {
+                "id": 5,
+                "x": 958.9406127929688,
+                "y": 693.5,
+                "target": "c"
+              }
+            ],
+            "changed": [
+              5
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "c",
+            "touches": [
+              {
+                "id": 4,
+                "x": 229.43124389648438,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              5
+            ]
+          },
+          {
+            "type": "touchmove",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [
+              {
+                "id": 4,
+                "x": 646.2937622070312,
+                "y": 741.5,
+                "target": "scrubberCanvas"
+              }
+            ],
+            "changed": [
+              4
+            ]
+          },
+          {
+            "type": "touchend",
+            "trusted": true,
+            "target": "scrubberCanvas",
+            "touches": [],
+            "changed": [
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "publicUiReinit": {
+        "calls": 2,
+        "firstBootRepeat": "one",
+        "beforeReinitRepeat": "none",
+        "expectedAfterOneClick": "one",
+        "actualAfterOneClick": "all",
+        "pauseBefore": false,
+        "expectedAfterSpace": true,
+        "pauseAfter": true,
+        "reachability": "UI.wireControls public lifecycle seam; production boot calls once"
+      }
+    }
+  ],
+  "errors": []
+}

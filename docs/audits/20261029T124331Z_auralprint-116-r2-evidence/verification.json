@@ -1,0 +1,154 @@
+{
+  "baseline": "332d1cd312f0060cd043f1dc48a001c662b3788f",
+  "tree": "045b81d9b82915652c89e29a562f939fee279eb0",
+  "branch": "audit/116-post-remediation-hostile-2",
+  "version": "v0.1.16-candidate",
+  "writerSchema": 16,
+  "environment": {
+    "os": "Debian GNU/Linux 13",
+    "kernel": "Linux 6.18.55 x86_64",
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "python": "3.12.14",
+    "esbuild": "0.25.12",
+    "playwright": "1.64.1",
+    "chromium": "151.0.7922.173",
+    "browserPath": "/usr/bin/chromium"
+  },
+  "node": {
+    "command": "npm test",
+    "exitCode": 0,
+    "pass": 1492,
+    "fail": 0,
+    "skip": 1,
+    "tests": 1493,
+    "durationMs": 27991.172379
+  },
+  "gates": [
+    {
+      "command": "npm ci --offline --cache /workspace/auralprint-environment/npm-cache",
+      "exitCode": 0,
+      "scope": "Locked installation; initial restricted spawn failure excluded"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "scope": "Twice; nine packaged files byte-identical"
+    },
+    {
+      "command": "python3 scripts/verify_distribution.py",
+      "exitCode": 0,
+      "scope": "Twice; nine packaged files"
+    },
+    {
+      "command": "npm run test:browser",
+      "exitCode": 0,
+      "scope": "Portable/hosted authored camera"
+    },
+    {
+      "command": "npm run test:browser:editing",
+      "exitCode": 0,
+      "scope": "Source/portable/hosted; 40 sliders; DPR1"
+    },
+    {
+      "command": "npm run test:browser:presets",
+      "exitCode": 0,
+      "scope": "Chromium only; offline matrix empty"
+    },
+    {
+      "command": "node scripts/validate-116-orb-ids.cjs",
+      "exitCode": 0,
+      "scope": "15 native bounded cases"
+    },
+    {
+      "command": "node scripts/validate-116-ui-state.cjs",
+      "exitCode": 0,
+      "scope": "105 observations; zero failures/errors"
+    },
+    {
+      "command": "node scripts/validate-116-scrubber.cjs",
+      "exitCode": 0,
+      "scope": "104 positions in four fixtures/editions; zero failures/errors"
+    },
+    {
+      "command": "node scripts/validate-116-candidate.cjs",
+      "exitCode": 0,
+      "scope": "Six edition/DPR controls; two Canvas reports; zero errors"
+    },
+    {
+      "command": "node scripts/benchmark-presets.mjs",
+      "exitCode": 0,
+      "scope": "Full current corpus"
+    },
+    {
+      "command": "node scripts/validate-recording-export.cjs",
+      "exitCode": 0,
+      "scope": "Two successful exports around acquisition failure; previous success retained"
+    },
+    {
+      "command": "node scripts/validate-recorder-disposal.cjs",
+      "exitCode": 0,
+      "scope": "Three scenarios"
+    },
+    {
+      "command": "node scripts/validate-live-source-ownership.cjs",
+      "exitCode": 0,
+      "scope": "Six scenarios"
+    },
+    {
+      "command": "node scripts/validate-file-cancellation.cjs",
+      "exitCode": 0,
+      "scope": "Nine scenarios"
+    },
+    {
+      "command": "node scripts/validate-transport-ownership.cjs",
+      "exitCode": 0,
+      "scope": "Ten scenarios"
+    },
+    {
+      "command": "node scripts/validate-finalizing-eof.cjs",
+      "exitCode": 0,
+      "scope": "Eight scenarios"
+    },
+    {
+      "command": "node scripts/validate-workspace-focus.cjs",
+      "exitCode": 0,
+      "scope": "Eleven scenarios"
+    },
+    {
+      "command": "node scripts/validate-touch-seek.cjs",
+      "exitCode": 0,
+      "scope": "Six scenarios"
+    },
+    {
+      "command": "node scripts/validate-stream-stereo.cjs --chromium=/usr/bin/chromium",
+      "exitCode": 0,
+      "scope": "Native generated streams + File; no display permission capture"
+    }
+  ],
+  "independent": {
+    "pureChecks": 8695,
+    "nativeControlChecks": 33,
+    "complexReorders": 84,
+    "verifiedDefectFamilies": 2,
+    "watcherOrdinarySequences": 6,
+    "watcherControlledFailure": "Expected one assertion plus containing test; historical cause unresolved"
+  },
+  "notRun": [
+    "Opt-in million-retention Node case",
+    "Firefox/WebKit: executables absent",
+    "Physical Safari",
+    "Physical capture devices/permission dialogs",
+    "Physical touch/OS focus loss",
+    "Direct-file launch blocked by administrator",
+    "Long recording sessions",
+    "Screen reader",
+    "Subjective positive-fade quality",
+    "Windows/macOS native execution"
+  ],
+  "protectedCanon": {
+    "path": "docs/Canon/0.1.15/auralprint_0.1.15.html",
+    "gitBlob": "fb539ed8e03f8bd0c62951bff9f4a73ee802b11b",
+    "sha256": "13144f403f92088228630f40cc10d9770d34fc182e5ff9d061b81541e33f8741"
+  }
+}
