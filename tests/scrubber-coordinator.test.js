@@ -103,7 +103,7 @@ for (const gesture of ["mouse", "touch"]) test(`AUD116-004 ${gesture} cancellati
   Object.assign(state.recording, { phase: "recording" });
   const audio = structuredClone(state.audio), source = structuredClone(state.source), recording = structuredClone(state.recording);
   t.after(() => Object.assign(state.recording, oldRecording));
-  const touch = (target, type, x) => { const e = new Event(type, { cancelable: true }); e.touches = [{ clientX: x }]; target.dispatchEvent(e); return e; };
+  const touch = (target, type, x) => { const e = new Event(type, { cancelable: true }); e.changedTouches = e.touches = [{ identifier: 0, clientX: x }]; target.dispatchEvent(e); return e; };
   for (let cycle = 0; cycle < 10; cycle++) {
     if (gesture === "mouse") mouse(h.surface, "mousedown", 25);
     else touch(h.surface, "touchstart", 25);
