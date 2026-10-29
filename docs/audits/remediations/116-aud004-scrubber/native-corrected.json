@@ -1,0 +1,2729 @@
+{
+  "sourceCommit": "e6183a69f099fa68cd738f79c52acdefcdcf92a1",
+  "browser": "151.0.7922.173",
+  "platform": "linux",
+  "editions": [
+    {
+      "edition": "isolated",
+      "observations": [
+        {
+          "name": "original initial press",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "blur itself does not seek",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "original abandoned movement",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "focus does not restore drag",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "fresh held drag",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "held drag outside canvas",
+          "actual": 7,
+          "expected": 7
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "actual": 7,
+          "expected": 7
+        },
+        {
+          "name": "missing mouseup without blur",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "consecutive cancel 0",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 0",
+          "actual": 5,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 1",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 1",
+          "actual": 5,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 2",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 2",
+          "actual": 5,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 3",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 3",
+          "actual": 5,
+          "expected": 5
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "middle initiating bit required",
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "right initiating bit required",
+          "actual": 4,
+          "expected": 4
+        },
+        {
+          "name": "touch press",
+          "actual": 2,
+          "expected": 2
+        },
+        {
+          "name": "touch move",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "actual": 3,
+          "expected": 3
+        }
+      ],
+      "events": [
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "focus",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchcancel",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        }
+      ]
+    },
+    {
+      "edition": "source",
+      "observations": [
+        {
+          "name": "original initial press",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "blur itself does not seek",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "original abandoned movement",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "focus does not restore drag",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "fresh held drag",
+          "actual": 5.996946,
+          "expected": 6
+        },
+        {
+          "name": "held drag outside canvas",
+          "actual": 6.994705,
+          "expected": 7
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "actual": 6.994705,
+          "expected": 7
+        },
+        {
+          "name": "missing mouseup without blur",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive cancel 0",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 0",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 1",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 1",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 2",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 2",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 3",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 3",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "middle initiating bit required",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "right initiating bit required",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "touch press",
+          "actual": 1.999999,
+          "expected": 2
+        },
+        {
+          "name": "touch move",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "actual": 3,
+          "expected": 3
+        }
+      ],
+      "events": [
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "focus",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchcancel",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        }
+      ]
+    },
+    {
+      "edition": "portable",
+      "observations": [
+        {
+          "name": "original initial press",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "blur itself does not seek",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "original abandoned movement",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "focus does not restore drag",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "fresh held drag",
+          "actual": 5.996946,
+          "expected": 6
+        },
+        {
+          "name": "held drag outside canvas",
+          "actual": 6.994705,
+          "expected": 7
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "actual": 6.994705,
+          "expected": 7
+        },
+        {
+          "name": "missing mouseup without blur",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive cancel 0",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 0",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 1",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 1",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 2",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 2",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 3",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 3",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "middle initiating bit required",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "right initiating bit required",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "touch press",
+          "actual": 1.999999,
+          "expected": 2
+        },
+        {
+          "name": "touch move",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "actual": 3,
+          "expected": 3
+        }
+      ],
+      "events": [
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "focus",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchcancel",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        }
+      ]
+    },
+    {
+      "edition": "hosted",
+      "observations": [
+        {
+          "name": "original initial press",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "blur itself does not seek",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "original abandoned movement",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "focus does not restore drag",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "fresh held drag",
+          "actual": 5.996946,
+          "expected": 6
+        },
+        {
+          "name": "held drag outside canvas",
+          "actual": 6.994705,
+          "expected": 7
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "actual": 6.994705,
+          "expected": 7
+        },
+        {
+          "name": "missing mouseup without blur",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive cancel 0",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 0",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 1",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 1",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 2",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 2",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "consecutive cancel 3",
+          "actual": 1.995517,
+          "expected": 2
+        },
+        {
+          "name": "consecutive recovery 3",
+          "actual": 4.999188,
+          "expected": 5
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "middle initiating bit required",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "right initiating bit required",
+          "actual": 3.991035,
+          "expected": 4
+        },
+        {
+          "name": "touch press",
+          "actual": 1.999999,
+          "expected": 2
+        },
+        {
+          "name": "touch move",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "actual": 6,
+          "expected": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "actual": 3,
+          "expected": 3
+        }
+      ],
+      "events": [
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "focus",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "blur",
+          "trusted": false,
+          "prevented": false,
+          "canvas": false
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 4,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousedown",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 2,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 1,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mouseup",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true
+        },
+        {
+          "type": "touchcancel",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true
+        },
+        {
+          "type": "mousemove",
+          "trusted": true,
+          "buttons": 0,
+          "prevented": false,
+          "canvas": true
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "qualification": "Real paused 10-second HTMLMediaElement and production Scrubber. Mouse/touch input is CDP/Playwright; blur and focus signals are explicitly dispatched, as in the original audit. Headless tab switching did not deliver native blur. Physical OS focus loss, missing mouseup incidence, physical touch, Windows, Firefox/WebKit and direct-file/offline behavior are not certified."
+}

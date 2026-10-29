@@ -100,11 +100,11 @@ function createScrubberHarness() {
       if (windowListeners.get(type) === handler) windowListeners.delete(type);
     },
   };
-  globalThis.document = {
+  globalThis.document = Object.assign(new EventTarget(), {
     getElementById(id) {
       return id === "scrubberTime" ? scrubberTime : null;
     },
-  };
+  });
 
   return {
     canvas,
