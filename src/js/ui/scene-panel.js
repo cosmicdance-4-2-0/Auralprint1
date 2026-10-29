@@ -1,7 +1,7 @@
 import { CONFIG } from "../core/config.js";
 import { normalizeParticleSafety } from "../core/particle-safety.js";
 import { normalizeWorldSettings } from "../core/world-settings.js";
-import { fmt } from "../core/utils.js";
+import { bindConfigRange, readConfigRange, syncConfigRange } from "./config-range.js";
 
 const SOURCE_LABELS = {
   fixed: "Fixed Scene Color",
@@ -83,9 +83,9 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, co
         commitPreferences(key === "maxActiveParticles" ? "maximum live particles" : "maximum emissions per update");
       });
     }
-    bindRange(ui.rngHueOff, CONFIG.limits.sceneColor.hueOffsetDeg);
-    bindRange(ui.rngSat, CONFIG.limits.sceneColor.saturation);
-    bindRange(ui.rngVal, CONFIG.limits.sceneColor.value);
+    bindConfigRange(ui.rngHueOff, CONFIG.limits.sceneColor.hueOffsetDeg);
+    bindConfigRange(ui.rngSat, CONFIG.limits.sceneColor.saturation);
+    bindConfigRange(ui.rngVal, CONFIG.limits.sceneColor.value);
     if (!ui.selParticleColorSrc.options.length) {
       for (const value of CONFIG.limits.sceneColor.particleColorSources) {
         const option = document.createElement("option");
@@ -103,28 +103,33 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, co
     ui.clrBg.addEventListener("input", () => { preferences.visuals.backgroundColor = ui.clrBg.value; commitPreferences("scene background"); });
     ui.clrParticle.addEventListener("input", () => { preferences.visuals.particleColor = ui.clrParticle.value; commitPreferences("scene fixed particle color"); });
     ui.selParticleColorSrc.addEventListener("change", () => { preferences.bands.particleColorSource = ui.selParticleColorSrc.value; commitPreferences("scene default Orb particle source"); });
-    ui.rngHueOff.addEventListener("input", () => { preferences.bands.rainbow.hueOffsetDeg = Number(ui.rngHueOff.value); commitPreferences("scene palette hue offset"); });
-    ui.rngSat.addEventListener("input", () => { preferences.bands.rainbow.saturation = Number(ui.rngSat.value); commitPreferences("scene palette saturation"); });
-    ui.rngVal.addEventListener("input", () => { preferences.bands.rainbow.value = Number(ui.rngVal.value); commitPreferences("scene palette brightness"); });
+    for (const [control, key, reason] of [[ui.rngHueOff, "hueOffsetDeg", "hue offset"], [ui.rngSat, "saturation", "saturation"], [ui.rngVal, "value", "brightness"]]) {
+      control.addEventListener("input", () => {
+        const value = readConfigRange(control);
+        if (value === null) return;
+        preferences.bands.rainbow[key] = value;
+        commitPreferences(`scene palette ${reason}`);
+      });
+    }
     refresh();
     return true;
   }
 
-  function refresh(settings = getSettings?.()) {
+  function refresh(settings = getSettings?.(), { replaceDrafts = false } = {}) {
     refreshDiagnostics();
-    if (!settings || settings === lastSettingsRef) return false;
+    if (!settings || (!replaceDrafts && settings === lastSettingsRef)) return false;
     const previous = lastSettingsRef;
     lastSettingsRef = settings;
     for (const [key, inputId, outputId, errorId] of worldFields) {
       const control = ui[inputId], value = settings.world[key];
-      const changed = previous?.world?.[key] !== value;
+      const changed = replaceDrafts || previous?.world?.[key] !== value;
       if (changed || (document.activeElement !== control && control.getAttribute("aria-invalid") !== "true")) control.value = String(value);
       if (changed) { control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = ""; }
       ui[outputId].textContent = `${value} world units`;
     }
     for (const [key, inputId, outputId, errorId] of resources) {
       const control = ui[inputId], value = settings.particleSafety[key];
-      const changed = previous?.particleSafety?.[key] !== value;
+      const changed = replaceDrafts || previous?.particleSafety?.[key] !== value;
       if (changed || (document.activeElement !== control && control.getAttribute("aria-invalid") !== "true")) control.value = String(value);
       if (changed) { control.setAttribute("aria-invalid", "false"); ui[errorId].textContent = ""; }
       ui[outputId].textContent = `Selected: ${value}`;
@@ -134,9 +139,9 @@ function createScenePanelUi({ ui, preferences, getSettings, getParticleStats, co
     ui.clrParticle.value = settings.visuals.particleColor; ui.valParticle.textContent = settings.visuals.particleColor;
     ui.selParticleColorSrc.value = settings.bands.particleColorSource;
     ui.valParticleSrc.textContent = ui.selParticleColorSrc.options?.[ui.selParticleColorSrc.selectedIndex]?.textContent || settings.bands.particleColorSource;
-    ui.rngHueOff.value = String(settings.bands.rainbow.hueOffsetDeg); ui.valHueOff.textContent = `${settings.bands.rainbow.hueOffsetDeg}°`;
-    ui.rngSat.value = String(settings.bands.rainbow.saturation); ui.valSat.textContent = fmt(settings.bands.rainbow.saturation, 2);
-    ui.rngVal.value = String(settings.bands.rainbow.value); ui.valVal.textContent = fmt(settings.bands.rainbow.value, 2);
+    syncConfigRange(ui.rngHueOff, ui.valHueOff, settings.bands.rainbow.hueOffsetDeg, value => `${value}°`);
+    syncConfigRange(ui.rngSat, ui.valSat, settings.bands.rainbow.saturation);
+    syncConfigRange(ui.rngVal, ui.valVal, settings.bands.rainbow.value);
     return true;
   }
 

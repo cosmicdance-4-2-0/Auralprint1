@@ -127,7 +127,7 @@ function createOrbBandPicker(container, { orbLabel, onChange, formatRange, descr
     filterRows();
   }
 
-  function sync(ids) {
+  function sync(ids, { replaceDrafts = false } = {}) {
     selected = [...ids];
     const previousCount = activeCount;
     activeCount = getActiveCount();
@@ -136,8 +136,12 @@ function createOrbBandPicker(container, { orbLabel, onChange, formatRange, descr
     for (const input of [first, last]) input.setAttribute("aria-description", `Active band indices 0–${activeCount - 1}. Inactive authored targets are kept.`);
     bank.textContent = describeBank();
     full.setAttribute("aria-pressed", selected.length ? "false" : "true");
+    if (replaceDrafts) {
+      rangeDraft = false; error.textContent = "";
+      first.setAttribute("aria-invalid", "false"); last.setAttribute("aria-invalid", "false");
+    }
     // Preserve range drafts while typing. Sparse subsets must not look like a range.
-    if (document.activeElement !== first && document.activeElement !== last && !rangeDraft && first.getAttribute("aria-invalid") !== "true") {
+    if (replaceDrafts || (document.activeElement !== first && document.activeElement !== last && !rangeDraft && first.getAttribute("aria-invalid") !== "true")) {
       const sorted = selected.filter(index => index < activeCount).sort((a, b) => a - b);
       const contiguous = sorted.length && sorted[sorted.length - 1] - sorted[0] + 1 === sorted.length;
       first.value = contiguous ? String(sorted[0]) : "";

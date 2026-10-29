@@ -9,11 +9,63 @@ import { state } from "../src/js/core/state.js";
 import { createOrbEditorUi, readBulkOrbValue } from "../src/js/ui/orb-editor.js";
 
 function element(tag="div") { const listeners=new Map(); return { tagName:tag.toUpperCase(), type:"", dataset:{}, children:[], parentNode:null, value:"", textContent:"", disabled:false, checked:false, indeterminate:false, attributes:{}, open:false,
+ get nextElementSibling(){return this.parentNode?.children[this.parentNode.children.indexOf(this)+1] ?? null},
  get options(){return this.tagName==="SELECT"?this.children:undefined}, get selectedIndex(){return this.tagName==="SELECT"?this.children.findIndex(option=>option.value===this.value):-1},
  addEventListener(n,f){const a=listeners.get(n)||[];a.push(f);listeners.set(n,a)}, dispatch(n,details={}){for(const f of listeners.get(n)||[])f({target:this,...details})}, dispatchEvent(event){this.dispatch(event.type,event);return true}, listenerCount(n){return (listeners.get(n)||[]).length}, append(...c){for(const x of c)this.appendChild(x)}, appendChild(c){return this.insertBefore(c,null)}, insertBefore(c,before){if(c.parentNode)c.parentNode.children=c.parentNode.children.filter(x=>x!==c);const index=before?this.children.indexOf(before):-1;if(index<0)this.children.push(c);else this.children.splice(index,0,c);c.parentNode=this;return c}, remove(){if(this.parentNode)this.parentNode.children=this.parentNode.children.filter(x=>x!==this);this.parentNode=null;this.removed=true}, focus(){document.activeElement=this}, scrollIntoView(){}, setAttribute(n,v){this.attributes[n]=String(v)}, getAttribute(n){return this.attributes[n]}, querySelector(){return null} }; }
 function ui() { const result={orbEditorList:element()}; for(const [n,t] of [["rngFadeSegments","range"],["chkLines","checkbox"],["rngNumLines","range"],["selLineColorMode","select"],["rngEmit","range"],["rngSizeMax","range"],["rngSizeMin","range"],["rngSizeToMin","range"],["rngTTL","range"],["rngMinPlacementDistance","range"],["rngOmega","range"],["rngWfDisp","range"],["rngMinRad","range"],["rngMaxRad","range"]]) { result[n]=element(); result[n].type=t; result[`val${n.replace(/^(chk|rng|sel)/,"")}`]=element(); } return result; }
 function orb(id){return {...structuredClone(CONFIG.defaults.orbs[0]),id};}
 function harness(ids){ const old=structuredClone(preferences), oldDoc=globalThis.document; globalThis.document={activeElement:null,createElement:element}; replacePreferences({...structuredClone(CONFIG.defaults),orbs:ids.map(orb)});resolveSettings();const view=ui(),calls=[];const editor=createOrbEditorUi({ui:view,commitOrbChangeById:(...x)=>calls.push(x),commitPreferences:(...x)=>calls.push(x),showStatus:()=>{}});return {old,oldDoc,view,calls,editor,restore(){replacePreferences(old);resolveSettings();globalThis.document=oldDoc}}; }
+
+test("AUD116-003: surviving Orb replacement clears rejected and uncommitted drafts even at the same settings reference", () => {
+  const h = harness(["A", "B"]);
+  try {
+    h.editor.init(); const c = h.editor.getController("A");
+    for (const ids of [[12, 13], [12, 13], []]) {
+      c.bands.focus(); c.bands.value = "invalid"; c.bands.dispatch("change");
+      assert.equal(c.bands.getAttribute("aria-invalid"), "true"); assert.ok(c.error.textContent);
+      preferences.orbs[0].bandIds = ids; resolveSettings(); h.editor.refresh();
+      assert.equal(c.bands.value, "invalid", "ordinary refresh preserves rejection feedback");
+      h.editor.refresh(runtime.settings, { replaceDrafts: true });
+      assert.equal(c.bands.value, ids.join(", ")); assert.equal(c.bands.getAttribute("aria-invalid"), "false");
+      assert.equal(c.error.textContent, ""); assert.doesNotMatch(c.bandValue.textContent, /Invalid/);
+      c.bands.dispatch("blur"); c.bands.dispatch("change"); c.bands.dispatch("change"); assert.equal(h.calls.length, 0);
+      c.bands.value = "invalid"; c.bands.dispatch("change"); c.bands.value = ids.join(", "); c.bands.dispatch("change");
+      assert.doesNotMatch(c.bandValue.textContent, /Invalid/); assert.equal(c.error.textContent, ""); assert.equal(h.calls.length, 0);
+      c.bands.value = "7, 9";
+      h.editor.refresh(runtime.settings, { replaceDrafts: true });
+      c.bands.dispatch("change"); assert.equal(h.calls.length, 0, "replacement cancels uncommitted valid text too");
+    }
+    c.bands.value = "7, 9"; c.bands.dispatch("change"); c.bands.dispatch("blur"); c.bands.dispatch("change");
+    assert.equal(h.calls.length, 1); assert.equal(h.calls[0][0], "A"); assert.deepEqual(preferences.orbs[0].bandIds, [7, 9]);
+    preferences.orbs = [preferences.orbs[1]]; resolveSettings(); h.editor.refresh(runtime.settings, { replaceDrafts: true });
+    assert.equal(h.editor.getController("A"), undefined); assert.ok(c.root.removed);
+  } finally { h.restore(); }
+});
+
+test("native-style detach focus loss: every three-Orb permutation keeps focused card connected, caret/draft/listeners intact", () => {
+  const orders = [["A","B","C"], ["A","C","B"], ["B","A","C"], ["B","C","A"], ["C","A","B"], ["C","B","A"]];
+  for (const focused of ["A", "B", "C"]) for (const draft of ["invalid", "7, 9"]) {
+    const h = harness(["A", "B", "C"]);
+    try {
+      h.editor.init(); const c = h.editor.getController(focused), byId = new Map(preferences.orbs.map(o => [o.id, o]));
+      c.bands.focus(); c.bands.value = draft; c.bands.selectionStart = 1; c.bands.selectionEnd = 3;
+      const insert = h.view.orbEditorList.insertBefore.bind(h.view.orbEditorList);
+      h.view.orbEditorList.insertBefore = (node, before) => {
+        for (let active = document.activeElement; active; active = active.parentNode) {
+          if (active === node) { document.activeElement = null; break; }
+        }
+        return insert(node, before);
+      };
+      for (const order of orders) {
+        preferences.orbs = order.map(id => byId.get(id)); resolveSettings(); h.editor.refresh();
+        assert.deepEqual(h.view.orbEditorList.children.map(n => n.dataset.orbId), order);
+        assert.equal(h.editor.getController(focused), c); assert.equal(document.activeElement, c.bands);
+        assert.equal(c.bands.value, draft); assert.equal(c.bands.selectionStart, 1); assert.equal(c.bands.selectionEnd, 3);
+        assert.equal(c.bands.listenerCount("change"), 1); assert.equal(h.calls.length, 0);
+      }
+    } finally { h.restore(); }
+  }
+});
 
 test("dynamic editor supports zero, one, and N Orbs and disables bulk at zero",()=>{for(const ids of [[],["A"],["A","B","C","D","E","F","G"]]){const h=harness(ids);try{h.editor.init();assert.equal(h.editor.refresh().size,ids.length);assert.equal(h.view.orbEditorList.children.length,ids.length);assert.equal(h.view.rngEmit.disabled,ids.length===0);for (const key of ["rngFadeSegments","chkLines","rngNumLines","selLineColorMode","rngEmit","rngSizeMax","rngSizeMin","rngSizeToMin","rngTTL","rngMinPlacementDistance","rngOmega","rngWfDisp","rngMinRad","rngMaxRad"]) assert.equal(h.view[key].disabled,ids.length===0,key);}finally{h.restore()}}});
 

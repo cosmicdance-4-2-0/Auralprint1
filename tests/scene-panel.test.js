@@ -88,7 +88,8 @@ function element(tag = "div") {
     get options() { return this.tagName === "SELECT" ? this.children : undefined; },
     get selectedIndex() { return this.tagName === "SELECT" ? this.children.findIndex((option) => option.value === this.value) : -1; },
     addEventListener(name, fn) { const list = listeners.get(name) || []; list.push(fn); listeners.set(name, list); },
-    dispatch(name) { for (const fn of listeners.get(name) || []) fn({ target: this }); },
+    dispatch(name, details = {}) { for (const fn of listeners.get(name) || []) fn({ target: this, ...details }); },
+    dispatchEvent(event) { this.dispatch(event.type, event); return true; },
     appendChild(child) { this.children.push(child); return child; }
   };
 }
@@ -101,6 +102,56 @@ function harness(getParticleStats) {
   const panel = createScenePanelUi({ ui, preferences, getSettings: () => settings, getParticleStats, commitPreferences: () => { commits += 1; } });
   return { ui, preferences, panel, commits: () => commits, replaceSettings(next) { settings = next; } };
 }
+
+test("AUD116-002: Scene palette retains canonical precision and uses the shared editing grid", () => {
+  const oldDocument = globalThis.document; globalThis.document = { createElement: tag => element(tag) };
+  try {
+    const h = harness(); h.panel.init(); h.panel.init();
+    const fields = [["hueOffsetDeg", "rngHueOff", "valHueOff", 12.5, 12, 13], ["saturation", "rngSat", "valSat", .375, .37, .38], ["value", "rngVal", "valVal", .425, .42, .43]];
+    for (const [key, input, output, canonical, left, right] of fields) {
+      const control = h.ui[input], limit = CONFIG.limits.sceneColor[key];
+      assert.deepEqual([control.min, control.max, control.step], [limit.min, limit.max, limit.step].map(String));
+      assert.equal(control.listenerCount("input"), 1); assert.equal(control.listenerCount("keydown"), 1);
+      for (const [arrow, expected] of [["ArrowLeft", left], ["ArrowRight", right]]) {
+        h.preferences.bands.rainbow[key] = canonical;
+        h.replaceSettings(structuredClone(h.preferences));
+        const before = structuredClone(h.preferences), count = h.commits(); h.panel.refresh(); h.panel.refresh();
+        assert.deepEqual(h.preferences, before); assert.equal(h.commits(), count);
+        assert.match(h.ui[output].textContent, new RegExp(`Current ${canonical}.*slider selection`));
+        assert.equal(control.getAttribute("aria-valuetext"), h.ui[output].textContent);
+        control.dispatch("keydown", { key: arrow, preventDefault() {} });
+        assert.equal(h.preferences.bands.rainbow[key], expected); assert.equal(h.commits(), count + 1);
+        h.replaceSettings(structuredClone(h.preferences)); h.panel.refresh();
+        assert.equal(Number(control.value), expected); assert.doesNotMatch(h.ui[output].textContent, /Current/);
+      }
+      control.value = String(left + limit.step / 3); control.dispatch("input");
+      assert.equal(h.preferences.bands.rainbow[key], left, "input admission uses CONFIG grid");
+    }
+  } finally { globalThis.document = oldDocument; }
+});
+
+for (const [group, key, input, output, error] of [
+  ["world", "widthUnits", "numWorldWidth", "valWorldWidth", "worldWidthError"],
+  ["world", "heightUnits", "numWorldHeight", "valWorldHeight", "worldHeightError"],
+  ["particleSafety", "maxActiveParticles", "numMaxActiveParticles", "valMaxActiveParticles", "maxActiveParticlesError"],
+  ["particleSafety", "maxEmissionsPerFrame", "numMaxEmissionsPerFrame", "valMaxEmissionsPerFrame", "maxEmissionsPerFrameError"],
+]) test(`AUD116-003: ${key} replacement clears same-value rejected and active drafts, fencing delayed change`, () => {
+  const oldDocument = globalThis.document; globalThis.document = { createElement: tag => element(tag) };
+  try {
+    const h = harness(); h.panel.init(); const control = h.ui[input], canonical = h.preferences[group][key];
+    for (const draft of ["-1", "", String(canonical + 1)]) {
+      control.focus(); control.value = draft;
+      if (draft === "-1") control.dispatch("change");
+      const settings = structuredClone(h.preferences); h.replaceSettings(settings); h.panel.refresh();
+      assert.equal(control.value, draft, "ordinary unrelated refresh retains the draft");
+      assert.equal(h.panel.refresh(settings, { replaceDrafts: true }), true, "replacement bypasses reference guard");
+      assert.equal(control.value, String(canonical)); assert.equal(control.getAttribute("aria-invalid"), "false");
+      assert.equal(h.ui[error].textContent, ""); assert.ok(h.ui[output].textContent.includes(String(canonical)));
+      control.dispatch("blur"); control.dispatch("change"); control.dispatch("change");
+      assert.equal(h.commits(), 0); assert.equal(h.preferences[group][key], canonical);
+    }
+  } finally { globalThis.document = oldDocument; }
+});
 
 test("116A: world controls have one Scene owner and accessible units/help/errors", () => {
   for (const [input, error] of [["numWorldWidth", "worldWidthError"], ["numWorldHeight", "worldHeightError"]]) {

@@ -461,7 +461,7 @@ const UI = (() => {
 
   function applyPrefs(reason, options = {}) {
     UrlPreset.cancelPendingImport();
-    const { rebuildBandsOnDefinitionChange = false, showStatus = null, initializeCamera = false } = options;
+    const { rebuildBandsOnDefinitionChange = false, showStatus = null, initializeCamera = false, replaceDrafts = false } = options;
     const prevBandDefKey = BandBankController.readBandDefKey(runtime.settings);
 
     preferences.orbs = normalizeOrbCollection(preferences.orbs);
@@ -482,8 +482,14 @@ const UI = (() => {
 
     AudioEngine.applyAnalyserSettingsLive();
     AudioEngine.applyPlaybackSettingsLive();
-    orbEditorUi.refresh();
-    scenePanelUi.refresh(runtime.settings);
+    orbEditorUi.refresh(runtime.settings, { replaceDrafts });
+    scenePanelUi.refresh(runtime.settings, { replaceDrafts });
+    if (replaceDrafts) {
+      analysisPanelUi.syncControls(runtime.settings, { replaceDrafts });
+      if (_visualizerEditStatusToastTimer !== null) clearTimeout(_visualizerEditStatusToastTimer);
+      _visualizerEditStatusToastTimer = null;
+      ui.visualizerEditStatus.textContent = STATUS_DEFAULT_VISUALIZER_EDIT;
+    }
     cameraControlsUi.refresh();
 
     if (reason && typeof showStatus === "function") showStatus(`Updated: ${reason}`);
@@ -493,8 +499,7 @@ const UI = (() => {
   function resetPrefs() {
     UrlPreset.cancelPendingImport();
     replacePreferences(deepClone(CONFIG.defaults));
-    applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
-    analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
+    applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true, replaceDrafts: true });
     initOrbs();
     resetVisualizers("visuals");
     sceneStatusToast("All settings reset.", 4000);
@@ -538,8 +543,7 @@ const UI = (() => {
     function finish({ ok, stale }) {
       if (stale) return;
       if (ok) {
-        applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true });
-        analysisPanelUi.syncControls(runtime.settings, { replaceDrafts: true });
+        applyPrefs(null, { rebuildBandsOnDefinitionChange: true, initializeCamera: true, replaceDrafts: true });
         initOrbs();
         resetVisualizers("visuals");
         sceneStatusToast("Preset applied from URL.", 4000);
