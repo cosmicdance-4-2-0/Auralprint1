@@ -472,6 +472,7 @@ const CONFIG = deepFreeze({
 
       // Playback knobs (do NOT affect analysis)
       repeatMode: "none",
+      clearQueueOnSourceExit: false,
       muted: false,
       volume: 1.0,
     },

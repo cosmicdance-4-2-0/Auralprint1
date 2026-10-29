@@ -47,6 +47,8 @@ function resolveSettings() {
   assertOrbAdmission(preferences.orbs);
   assertSupportedBandFrequencies(preferences.bands);
   runtime.settings = deepClone(preferences);
+  runtime.settings.audio.clearQueueOnSourceExit = typeof preferences.audio?.clearQueueOnSourceExit === "boolean"
+    ? preferences.audio.clearQueueOnSourceExit : CONFIG.defaults.audio.clearQueueOnSourceExit;
   runtime.settings.world = normalizeWorldSettings(preferences.world);
   runtime.settings.sceneCamera = normalizeSceneCamera(preferences.sceneCamera);
   const { widthUnits, heightUnits } = runtime.settings.world;
