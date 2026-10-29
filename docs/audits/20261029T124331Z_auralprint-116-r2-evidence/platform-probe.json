@@ -1,0 +1,6 @@
+{
+  "browser": "151.0.7922.173",
+  "file": {
+    "blockedOrFailed": "page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///workspace/Auralprint1/dist/auralprint_0.1.16-candidate.html\nCall log:\n\u001b[2m  - navigating to \"file:///workspace/Auralprint1/dist/auralprint_0.1.16-candidate.html\", waiting until \"load\"\u001b[22m\n"
+  }
+}

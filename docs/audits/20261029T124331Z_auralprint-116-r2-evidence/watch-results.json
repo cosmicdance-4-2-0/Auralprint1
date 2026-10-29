@@ -1,0 +1,276 @@
+{
+  "ordinaryRuns": [
+    {
+      "mode": "idle",
+      "round": 0,
+      "exitCode": 0,
+      "duplicateAt": 1793277897220,
+      "duringWindow": [
+        {
+          "offsetMs": 0,
+          "event": "duplicate-begin",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 1,
+          "event": "duplicate-end",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 53,
+          "event": "candidate",
+          "signature": "28e940287b756941754c4c0ac8f474f5feaec9729bdb3e9672f5d8f83b1a5fd6",
+          "lastSuccess": "28e940287b756941754c4c0ac8f474f5feaec9729bdb3e9672f5d8f83b1a5fd6"
+        }
+      ]
+    },
+    {
+      "mode": "idle",
+      "round": 1,
+      "exitCode": 0,
+      "duplicateAt": 1793277908481,
+      "duringWindow": [
+        {
+          "offsetMs": 0,
+          "event": "duplicate-begin",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 1,
+          "event": "duplicate-end",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 54,
+          "event": "candidate",
+          "signature": "254becc049a98411589ee143061e808b6f252241e31bef5e2dea36ca559cc923",
+          "lastSuccess": "254becc049a98411589ee143061e808b6f252241e31bef5e2dea36ca559cc923"
+        }
+      ]
+    },
+    {
+      "mode": "idle",
+      "round": 2,
+      "exitCode": 0,
+      "duplicateAt": 1793277919998,
+      "duringWindow": [
+        {
+          "offsetMs": 0,
+          "event": "duplicate-begin",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 0,
+          "event": "duplicate-end",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 53,
+          "event": "candidate",
+          "signature": "0f591e940cc6f95378a64209731122a0c14b07397daa8385c79a87b8e8244671",
+          "lastSuccess": "0f591e940cc6f95378a64209731122a0c14b07397daa8385c79a87b8e8244671"
+        }
+      ]
+    },
+    {
+      "mode": "cpu-2",
+      "round": 0,
+      "exitCode": 0,
+      "duplicateAt": 1793278437186,
+      "duringWindow": [
+        {
+          "offsetMs": 0,
+          "event": "duplicate-begin",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 0,
+          "event": "duplicate-end",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 55,
+          "event": "candidate",
+          "signature": "ca25a79597ef319281b182c3f16bc53e3b93323834e6d5bb3161494dd84f7ec6",
+          "lastSuccess": "ca25a79597ef319281b182c3f16bc53e3b93323834e6d5bb3161494dd84f7ec6"
+        }
+      ]
+    },
+    {
+      "mode": "cpu-2",
+      "round": 1,
+      "exitCode": 0,
+      "duplicateAt": 1793278449328,
+      "duringWindow": [
+        {
+          "offsetMs": 0,
+          "event": "duplicate-begin",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 1,
+          "event": "duplicate-end",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 54,
+          "event": "candidate",
+          "signature": "980b8d8535a55378e21aac44b7aa8ac2cc5d650a66e79f361602463972bb563b",
+          "lastSuccess": "980b8d8535a55378e21aac44b7aa8ac2cc5d650a66e79f361602463972bb563b"
+        }
+      ]
+    },
+    {
+      "mode": "idle-python-timestamps",
+      "round": 0,
+      "exitCode": 0,
+      "duplicateAt": 1793309944492,
+      "duringWindow": [
+        {
+          "offsetMs": 0,
+          "event": "duplicate-begin",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 0,
+          "event": "duplicate-end",
+          "signature": null,
+          "lastSuccess": null
+        },
+        {
+          "offsetMs": 53,
+          "event": "candidate",
+          "signature": "604c423888ee2e251bfe1069aabb9c1f0632b24540897dee24f65908fa34ba3e",
+          "lastSuccess": "604c423888ee2e251bfe1069aabb9c1f0632b24540897dee24f65908fa34ba3e"
+        }
+      ]
+    }
+  ],
+  "ordinaryNodeTestCounts": {
+    "pass": 150,
+    "fail": 0,
+    "skip": 0
+  },
+  "controlled": {
+    "mode": "90 ms open-truncate/write scheduling gap",
+    "exitCode": 1,
+    "nodeTestCounts": {
+      "pass": 23,
+      "fail": 2,
+      "skip": 0,
+      "qualification": "One intentional assertion failure plus its containing test."
+    },
+    "previousSignature": "fee686a0ec94b088bb2483eb434fdd0861a30cee75cae572a1943416686da3ea",
+    "transientSignature": "8b550ba966c486f14756e1f139545d0abe2f9516c266dcdf0a5d6b06427b9bf9",
+    "changedInputs": [
+      {
+        "path": "index.template.html",
+        "before": {
+          "bytes": 36856,
+          "hash": "ba4df18fa95a959eb9543c24f44e4d2040af21d844f9d32b5a60772626ef6274"
+        },
+        "captured": {
+          "bytes": 0,
+          "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "timeline": [
+      {
+        "offsetMs": 0,
+        "pid": 17677,
+        "event": "duplicate-begin"
+      },
+      {
+        "offsetMs": 54,
+        "pid": 17684,
+        "event": "candidate",
+        "signature": "8b550ba966c486f14756e1f139545d0abe2f9516c266dcdf0a5d6b06427b9bf9",
+        "lastSuccess": "fee686a0ec94b088bb2483eb434fdd0861a30cee75cae572a1943416686da3ea"
+      },
+      {
+        "offsetMs": 56,
+        "pid": 17684,
+        "event": "assembler-start",
+        "signature": "8b550ba966c486f14756e1f139545d0abe2f9516c266dcdf0a5d6b06427b9bf9"
+      },
+      {
+        "offsetMs": 87,
+        "pid": 17777,
+        "event": "python-start"
+      },
+      {
+        "offsetMs": 91,
+        "pid": 17677,
+        "event": "duplicate-end"
+      },
+      {
+        "offsetMs": 95,
+        "pid": 17777,
+        "event": "python-end"
+      },
+      {
+        "offsetMs": 102,
+        "pid": 17684,
+        "event": "transaction-error",
+        "message": "Assembler assemble_single_file.py (/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3) exited with code 1"
+      },
+      {
+        "offsetMs": 106,
+        "pid": 17684,
+        "event": "candidate",
+        "signature": "fee686a0ec94b088bb2483eb434fdd0861a30cee75cae572a1943416686da3ea",
+        "lastSuccess": "fee686a0ec94b088bb2483eb434fdd0861a30cee75cae572a1943416686da3ea"
+      },
+      {
+        "offsetMs": 696,
+        "pid": 17677,
+        "event": "duplicate-outputs"
+      }
+    ],
+    "successfulPublicationsBefore": 19,
+    "successfulPublicationsAfter": 19,
+    "outputBefore": [
+      {
+        "path": "dist/auralprint_0.1.15-aud011-final.html",
+        "exists": true,
+        "bytes": 579767,
+        "sha256": "efc02365336ad99c9bd380c8afdc7c26f44bfb95f61c655aae0b36fe58617acc"
+      },
+      {
+        "path": "dist/hosted/index.html",
+        "exists": true,
+        "bytes": 578534,
+        "sha256": "dae87d7cf96881c87eb0d2639ca3f1edaf6292e85955e08e7dfd2fa3ccfe4f67"
+      }
+    ],
+    "outputAfter": [
+      {
+        "path": "dist/auralprint_0.1.15-aud011-final.html",
+        "exists": true,
+        "bytes": 579767,
+        "sha256": "efc02365336ad99c9bd380c8afdc7c26f44bfb95f61c655aae0b36fe58617acc"
+      },
+      {
+        "path": "dist/hosted/index.html",
+        "exists": true,
+        "bytes": 578534,
+        "sha256": "dae87d7cf96881c87eb0d2639ca3f1edaf6292e85955e08e7dfd2fa3ccfe4f67"
+      }
+    ],
+    "sameOutputs": true,
+    "verifiedPackagedFiles": 9
+  },
+  "historicalCause": "unresolved"
+}
