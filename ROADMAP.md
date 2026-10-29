@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 26, 2026. **Current public release: Release 4 / Build 115 (`v0.1.15`), schema 10. Current development: proposed Build 116E (`v0.1.16e`), schema 13, extending merged 116D; acceptance remains pending.**
+Updated: October 28, 2026. **Current public release: Release 4 / Build 115 (`v0.1.15`), schema 10. Current development: Build 116 feature candidate (`v0.1.16-candidate`), schema 16, based on accepted 116E; acceptance remains pending.**
 
 This document owns the plan, milestone acceptance and deferrals. [README](README.md) owns current capabilities, user instructions and [developer verification](README.md#developer-bootstrap); [AGENTS](AGENTS.md) owns engineering policy. The [Build 115](docs/development/build-115.md) and [Build 116](docs/development/build-116.md) worklogs own completed stages, corrective history and evidence. [Release comparisons](docs/development/build-115-release-delta.md) distinguish public Build 113 from internal Build 114.
 
@@ -36,12 +36,14 @@ Build 115's accepted items (AUD-001/003/005, editor jump, Stream stereo, schema 
 
 ## Build 116: simulation world, camera and projection
 
-**Status: Proposed Build 116E (`v0.1.16e`, schema 13) adds compact preset representation and native DEFLATE sharing to merged 116D and its first-audit remediations. It remains unreleased; an independent adversarial audit and owner browser/device acceptance are pending. The owner has not authorized 116 RC #1 or public publication.** Build 115 remains the public release. See the [accepted integration history](docs/development/build-116.md#accepted-integration-history) and [116D contract and validation](docs/development/build-116.md#116d-authored-scene-camera).
+**Status: Build 116 feature candidate (`v0.1.16-candidate`, schema 16) adds only opt-in File Queue clearing and numeric Trace fade length 0–20 to restored 116E. Experimental 116F/G branches remain preserved; schema 14/15 imports are rejected.** Documentation reconciliation, independent hostile audit, remediation and owner acceptance remain pending. Build 115 remains the public release; no RC or Canon promotion is complete. See the [candidate contract](docs/development/build-116.md#116-feature-candidate).
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
 Acceptance gates:
 
+- Verify Queue completion/mutation fencing and Fade 0 pixel/path parity; evaluate positive fades, joins and overlaps on owner devices.
+- Verify schema-16 compact/DEFLATE round trips and atomic rejection of reserved schemas 14/15 while preserving schemas 2–13.
 - Verify schema-13 frozen-default reconstruction, ordered contiguous/sparse/reordered selections, native DEFLATE framing and bounded streaming decode; retain schemas 2–12 and canonical numerical precision.
 - Verify compressed startup before the first application frame, stale-import cancellation and accurate compression/clipboard fallback.
 - Run the Chromium preset gate and optional Firefox/WebKit interoperability checks as tooling permits; execute the [116E physical-device matrix](docs/development/build-116.md#116e-owner-device-matrix), including Safari and direct-file/offline checks. Linux WebKit automation does not certify physical Safari.

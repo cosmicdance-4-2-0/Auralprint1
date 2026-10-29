@@ -48,6 +48,11 @@ jobs:
       - name: Verify compact preset transport and atomic imports (Ubuntu only)
         if: runner.os == 'Linux'
         run: npm run test:browser:presets
+      - name: Verify File Queue and bounded Trace fade (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: |
+          git fetch --no-tags --depth=1 origin 33b696a94439d17e86ef26c04a416cbc430754d3 2b53501fe09a9a87688c02487f7e5849f866a51d
+          node scripts/validate-116-candidate.cjs
       - name: Verify versioned artifact and untracked generated output
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

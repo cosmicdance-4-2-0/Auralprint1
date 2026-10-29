@@ -21,7 +21,14 @@ async function share(page){
   const {decodePrefsFromHash}=await import('../src/js/presets/url-preset.js');
   return decodePrefsFromHash(new URL(page.url()).hash);
 }
-async function apply(page,prefs){await page.evaluate(h=>{history.replaceState(null,'',location.pathname+h);document.getElementById('btnApplyUrl').click();},hash(prefs));await frames(page);}
+async function apply(page,prefs){
+  // Complete editing fixtures use the current wire shape; partial legacy probes
+  // retain schema 12. Compact raw values so rejection probes still reach import.
+  const {compactPreferences}=await import('../src/js/presets/compact-preset.js');
+  const h=prefs.world&&prefs.audio&&Array.isArray(prefs.orbs)
+    ? '#p='+Buffer.from(JSON.stringify({schema:16,prefs:compactPreferences(prefs)})).toString('base64url') : hash(prefs);
+  await page.evaluate(h=>{history.replaceState(null,'',location.pathname+h);document.getElementById('btnApplyUrl').click();},h);await frames(page);
+}
 async function show(page,owner){await page.evaluate(owner=>{
   const panel=['Analysis','Audio'].includes(owner)?owner:'Visualizers';
   for(const name of ['Audio','Analysis','Visualizers','Scene','Camera','Queue','Record']){
@@ -47,7 +54,7 @@ async function reveal(page,item){
 }
 async function inspect(control){return control.evaluate(el=>({value:Number(el.value),min:el.min,max:el.max,step:el.step,invalid:el.validity.stepMismatch,disabled:el.disabled,focused:document.activeElement===el,text:el.parentElement.querySelector('.val').textContent,aria:el.getAttribute('aria-valuetext')}));}
 function isolated(before,after,item){const expected=structuredClone(before);const value=readPath(after,item.path);assert.ok(onGrid(value,item.limit),`${item.selector} committed off-grid ${value}`);writePath(expected,item.path,value);if(item.owner==='Bulk')for(let i=1;i<expected.orbs.length;i++)writePath(expected,['orbs',i,...item.path.slice(2)],value);assert.deepEqual(after,expected,`${item.selector} changed unrelated Scene fields`);return value;}
-async function committed(page,control,before,item){await frames(page);const after=await share(page),value=isolated(before,after,item),ui=await inspect(control);near(ui.value,value*(item.scale||1));assert.equal(ui.invalid,false);assert.doesNotMatch(ui.text,/Current .*slider selection/);near(parseFloat(ui.text),item.path.at(-1)==='startAngleRad'?value*180/Math.PI:value);assert.ok(ui.aria);return value;}
+async function committed(page,control,before,item){await frames(page);const after=await share(page),value=isolated(before,after,item),ui=await inspect(control);near(ui.value,value*(item.scale||1));assert.equal(ui.invalid,false);assert.doesNotMatch(ui.text,/Current .*slider selection/);if(item.path.at(-1)==='fadeSegments'&&value===0)assert.equal(ui.text,'Off');else near(parseFloat(ui.text),item.path.at(-1)==='startAngleRad'?value*180/Math.PI:value);assert.ok(ui.aria);return value;}
 function wav(){const data=Buffer.alloc(44+48000*2*3);data.write('RIFF');data.writeUInt32LE(data.length-8,4);data.write('WAVEfmt ',8);data.writeUInt32LE(16,16);data.writeUInt16LE(1,20);data.writeUInt16LE(1,22);data.writeUInt32LE(48000,24);data.writeUInt32LE(96000,28);data.writeUInt16LE(2,32);data.writeUInt16LE(16,34);data.write('data',36);data.writeUInt32LE(data.length-44,40);for(let i=44;i<data.length;i+=2)data.writeInt16LE(Math.round(Math.sin(i*.03)*1000),i);return data;}
 async function drafts(page,fixture){
   for(const [id,draft] of [['inpBandFloorHz','37.125'],['inpBandFloorHz',''],['inpBandCeilingHz','22000.125'],['inpBandCeilingHz','']]){
