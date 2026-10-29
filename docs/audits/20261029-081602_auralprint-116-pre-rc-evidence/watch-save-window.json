@@ -1,0 +1,17 @@
+{
+  "node": "v24.19.0",
+  "platform": "linux",
+  "atomicDuplicate": {
+    "successes": 0,
+    "launches": 0
+  },
+  "exposedTruncation": {
+    "extraLaunches": 1,
+    "successes": 0,
+    "preservedOutput": true,
+    "finalBytesEqual": true,
+    "packagingRejectedEmpty": true
+  },
+  "qualification": "Controlled save syscall window; not proof this caused the historic Ubuntu failure.",
+  "log": "[watch] watching JS/CSS dependencies, template, version and flat branding inputs\n[watch] build finished, watching for changes...\n[watch] build finished, watching for changes...\n[watch] assembling v0.1.16-candidate\n[watch] assembled /tmp/auralprint-save-window-PXmxNG/dist/auralprint_0.1.16-candidate.html and /tmp/auralprint-save-window-PXmxNG/dist/hosted (v0.1.16-candidate; inputs 4a742aeaeda62884b7af1ae92810404b7cb11ef5a00d5fe5b98e329f5f21c72e)\n[watch] assembling v0.1.16-candidate\nDistribution packaging failed: Missing or duplicate CSS marker in template\n[watch] assembly failed: Assembler assemble_single_file.py (python) exited with code 1\n"
+}

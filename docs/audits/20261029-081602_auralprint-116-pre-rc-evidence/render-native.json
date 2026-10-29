@@ -1,0 +1,81 @@
+{
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+  "fade0Comparisons": 264,
+  "positiveFadeDraws": 1056,
+  "straightGradientSamples": 12,
+  "fullHistoryDraws": 10,
+  "timings": [
+    {
+      "dpr": 1,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 0,
+      "elapsedMs": 16.699999999953434
+    },
+    {
+      "dpr": 1,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 1,
+      "elapsedMs": 26.5
+    },
+    {
+      "dpr": 1,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 5,
+      "elapsedMs": 62.40000000002328
+    },
+    {
+      "dpr": 1,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 10,
+      "elapsedMs": 85.59999999997672
+    },
+    {
+      "dpr": 1,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 20,
+      "elapsedMs": 14.900000000023283
+    },
+    {
+      "dpr": 2,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 0,
+      "elapsedMs": 65.89999999996508
+    },
+    {
+      "dpr": 2,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 1,
+      "elapsedMs": 32.79999999998836
+    },
+    {
+      "dpr": 2,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 5,
+      "elapsedMs": 14.400000000023283
+    },
+    {
+      "dpr": 2,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 10,
+      "elapsedMs": 86
+    },
+    {
+      "dpr": 2,
+      "orbs": 16,
+      "pointsEach": 1001,
+      "fade": 20,
+      "elapsedMs": 72.80000000004657
+    }
+  ],
+  "pageerrors": [],
+  "failedRequests": []
+}

@@ -1,0 +1,312 @@
+{
+  "version": "v0.1.16-candidate",
+  "baseline": "33b696a94439d17e86ef26c04a416cbc430754d3",
+  "browser": "151.0.7922.173",
+  "platform": "linux",
+  "editions": [
+    {
+      "edition": "source",
+      "dpr": 1,
+      "keyboard": true,
+      "individualAndBulk": true,
+      "mixedUncommitted": true,
+      "stableIdentityAndFocus": true,
+      "zeroOrbs": true,
+      "reset": true,
+      "legacyImport": true,
+      "reservedSchemaAtomic": true,
+      "unchangedFrameDomMutations": 0,
+      "queue": {
+        "realFileObjects": true,
+        "defaultOffPreserves": true,
+        "syntheticMicAndStreamSuccess": true,
+        "importOnlyFutureBehavior": true,
+        "syntheticPermissionDenial": true,
+        "pendingAndCancelledActivation": true,
+        "qualification": "Generated Web Audio MediaStreams replace native permission dialogs; actual AudioEngine attachment and UI source handlers execute."
+      }
+    },
+    {
+      "edition": "portable",
+      "dpr": 1,
+      "keyboard": true,
+      "individualAndBulk": true,
+      "mixedUncommitted": true,
+      "stableIdentityAndFocus": true,
+      "zeroOrbs": true,
+      "reset": true,
+      "legacyImport": true,
+      "reservedSchemaAtomic": true,
+      "unchangedFrameDomMutations": 0,
+      "queue": {
+        "realFileObjects": true,
+        "defaultOffPreserves": true,
+        "syntheticMicAndStreamSuccess": true,
+        "importOnlyFutureBehavior": true,
+        "syntheticPermissionDenial": true,
+        "pendingAndCancelledActivation": true,
+        "qualification": "Generated Web Audio MediaStreams replace native permission dialogs; actual AudioEngine attachment and UI source handlers execute."
+      }
+    },
+    {
+      "edition": "hosted",
+      "dpr": 1,
+      "keyboard": true,
+      "individualAndBulk": true,
+      "mixedUncommitted": true,
+      "stableIdentityAndFocus": true,
+      "zeroOrbs": true,
+      "reset": true,
+      "legacyImport": true,
+      "reservedSchemaAtomic": true,
+      "unchangedFrameDomMutations": 0,
+      "queue": {
+        "realFileObjects": true,
+        "defaultOffPreserves": true,
+        "syntheticMicAndStreamSuccess": true,
+        "importOnlyFutureBehavior": true,
+        "syntheticPermissionDenial": true,
+        "pendingAndCancelledActivation": true,
+        "qualification": "Generated Web Audio MediaStreams replace native permission dialogs; actual AudioEngine attachment and UI source handlers execute."
+      }
+    },
+    {
+      "edition": "source",
+      "dpr": 2,
+      "keyboard": true,
+      "individualAndBulk": true,
+      "mixedUncommitted": true,
+      "stableIdentityAndFocus": true,
+      "zeroOrbs": true,
+      "reset": true,
+      "legacyImport": true,
+      "reservedSchemaAtomic": true,
+      "unchangedFrameDomMutations": 0,
+      "queue": null
+    },
+    {
+      "edition": "portable",
+      "dpr": 2,
+      "keyboard": true,
+      "individualAndBulk": true,
+      "mixedUncommitted": true,
+      "stableIdentityAndFocus": true,
+      "zeroOrbs": true,
+      "reset": true,
+      "legacyImport": true,
+      "reservedSchemaAtomic": true,
+      "unchangedFrameDomMutations": 0,
+      "queue": null
+    },
+    {
+      "edition": "hosted",
+      "dpr": 2,
+      "keyboard": true,
+      "individualAndBulk": true,
+      "mixedUncommitted": true,
+      "stableIdentityAndFocus": true,
+      "zeroOrbs": true,
+      "reset": true,
+      "legacyImport": true,
+      "reservedSchemaAtomic": true,
+      "unchangedFrameDomMutations": 0,
+      "queue": null
+    }
+  ],
+  "canvas": [
+    {
+      "dpr": 1,
+      "zeroCases": 84,
+      "positiveCases": 336,
+      "pixelDifferences": 0,
+      "zeroReference": "accepted 116E renderer",
+      "positiveReference": "116F single-color join handling, constrained here to 1/5/10/20",
+      "defaultScenes": [
+        {
+          "mature": false,
+          "retained": 24,
+          "calls": {
+            "beginPath": 26,
+            "moveTo": 2,
+            "lineTo": 20,
+            "stroke": 2
+          },
+          "pixelDifferences": 0
+        },
+        {
+          "mature": true,
+          "retained": 2880,
+          "calls": {
+            "beginPath": 2882,
+            "moveTo": 2,
+            "lineTo": 20,
+            "stroke": 2
+          },
+          "pixelDifferences": 0
+        }
+      ],
+      "boundary": {
+        "background": [
+          36,
+          56,
+          77,
+          255
+        ],
+        "solid": [
+          109,
+          103,
+          87,
+          255
+        ],
+        "inside": [
+          109,
+          103,
+          87,
+          255
+        ],
+        "outside": [
+          83,
+          87,
+          83,
+          255
+        ]
+      },
+      "multiple": [
+        {
+          "orbs": 2,
+          "points": 75,
+          "fade": 0,
+          "calls": {
+            "beginPath": 152,
+            "moveTo": 2,
+            "lineTo": 148,
+            "stroke": 2
+          }
+        },
+        {
+          "orbs": 16,
+          "points": 1001,
+          "fade": 20,
+          "calls": {
+            "beginPath": 16992,
+            "moveTo": 976,
+            "clip": 640,
+            "lineTo": 16640,
+            "createLinearGradient": 320,
+            "stroke": 336
+          }
+        },
+        {
+          "orbs": 4096,
+          "points": 2,
+          "fade": 20,
+          "calls": {
+            "beginPath": 12288,
+            "moveTo": 4096,
+            "lineTo": 4096,
+            "createLinearGradient": 4096,
+            "stroke": 4096
+          }
+        }
+      ]
+    },
+    {
+      "dpr": 2,
+      "zeroCases": 84,
+      "positiveCases": 336,
+      "pixelDifferences": 0,
+      "zeroReference": "accepted 116E renderer",
+      "positiveReference": "116F single-color join handling, constrained here to 1/5/10/20",
+      "defaultScenes": [
+        {
+          "mature": false,
+          "retained": 24,
+          "calls": {
+            "beginPath": 26,
+            "moveTo": 2,
+            "lineTo": 20,
+            "stroke": 2
+          },
+          "pixelDifferences": 0
+        },
+        {
+          "mature": true,
+          "retained": 2880,
+          "calls": {
+            "beginPath": 2882,
+            "moveTo": 2,
+            "lineTo": 20,
+            "stroke": 2
+          },
+          "pixelDifferences": 0
+        }
+      ],
+      "boundary": {
+        "background": [
+          36,
+          56,
+          77,
+          255
+        ],
+        "solid": [
+          109,
+          103,
+          87,
+          255
+        ],
+        "inside": [
+          109,
+          103,
+          87,
+          255
+        ],
+        "outside": [
+          89,
+          90,
+          84,
+          255
+        ]
+      },
+      "multiple": [
+        {
+          "orbs": 2,
+          "points": 75,
+          "fade": 0,
+          "calls": {
+            "beginPath": 152,
+            "moveTo": 2,
+            "lineTo": 148,
+            "stroke": 2
+          }
+        },
+        {
+          "orbs": 16,
+          "points": 1001,
+          "fade": 20,
+          "calls": {
+            "beginPath": 16992,
+            "moveTo": 976,
+            "clip": 640,
+            "lineTo": 16640,
+            "createLinearGradient": 320,
+            "stroke": 336
+          }
+        },
+        {
+          "orbs": 4096,
+          "points": 2,
+          "fade": 20,
+          "calls": {
+            "beginPath": 12288,
+            "moveTo": 4096,
+            "lineTo": 4096,
+            "createLinearGradient": 4096,
+            "stroke": 4096
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "screenshotsRetained": "untracked work/116-candidate; omitted from compact audit evidence"
+}

@@ -1,0 +1,114 @@
+{
+  "createdUtc": "2026-10-29T08:16:02.441311+00:00",
+  "repository": "cosmicdance-4-2-0/Auralprint1",
+  "auditedCommit": "31dd5b2c7f9562602670dd2ebcc334d76c37f099",
+  "auditedTree": "dc36c37073fe9f74067577c77ae320d124c5d95b",
+  "auditBranch": "audit/116-pre-rc-hostile",
+  "version": "v0.1.16-candidate",
+  "writerSchema": 16,
+  "os": "Debian13.6 Linux6.18.55 x86_64",
+  "node": "24.19.0",
+  "npm": "11.9.0",
+  "python": "3.12.14",
+  "esbuild": "0.25.12",
+  "playwright": "1.64.1",
+  "chromium": "151.0.7922.173",
+  "standardVerification": {
+    "npmCi": {
+      "result": "pass",
+      "substitution": "--offline --cache /workspace/auralprint-environment/npm-cache"
+    },
+    "npmTest": {
+      "exit": 0,
+      "tests": 1456,
+      "pass": 1455,
+      "fail": 0,
+      "skip": 1,
+      "durationMs": 27668.903734
+    },
+    "build": {
+      "exit": 0
+    },
+    "distributionVerifier": {
+      "exit": 0
+    },
+    "cameraGate": {
+      "exit": 0,
+      "editions": [
+        "portable",
+        "hosted"
+      ],
+      "browserOverride": "/usr/bin/chromium"
+    },
+    "editingGate": {
+      "exit": 0,
+      "editions": [
+        "source",
+        "portable",
+        "hosted"
+      ],
+      "dprs": [
+        1
+      ],
+      "sliders": 40
+    },
+    "presetGate": {
+      "exit": 0,
+      "engines": [
+        "chromium"
+      ]
+    },
+    "candidateGate": {
+      "exit": 0,
+      "editions": [
+        "source",
+        "portable",
+        "hosted"
+      ],
+      "dprs": [
+        1,
+        2
+      ]
+    }
+  },
+  "additional": {
+    "leadIdentityNode": {
+      "inputDigits": 20000,
+      "orbs": 4096,
+      "externalTimeoutSeconds": 12,
+      "exit": 124,
+      "completedOutput": false
+    },
+    "leadIdentitySmall": {
+      "inputDigits": 4000,
+      "orbs": 4096,
+      "inputJsonBytes": 16330,
+      "hashChars": 127,
+      "identityCharacters": 16400383,
+      "durationMs": 478,
+      "reportedHeapMiB": 43
+    },
+    "isolatedWatcherRuns": 6,
+    "testsPerIsolatedWatcherRun": 25,
+    "allPassed": true,
+    "doubleBuildPackagedBytesEqual": true,
+    "directFile": "ERR_BLOCKED_BY_ADMINISTRATOR"
+  },
+  "findings": {
+    "high": 1,
+    "low": 3,
+    "informational": 2,
+    "rcBlockers": [
+      "AUD116-001"
+    ],
+    "suitableForRc": false
+  },
+  "limitations": [
+    "system Chromium substitution",
+    "synthetic acquisition and explicit events identified in each probe",
+    "no physical devices or Safari/Firefox/WebKit certification",
+    "offline-after-load only",
+    "direct-file blocked by environment",
+    "no long-duration/native-total-memory certification"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "cycles": [
+    {
+      "start": true,
+      "phase": "complete",
+      "bytes": 69616,
+      "type": "video/webm",
+      "nativeState": "inactive",
+      "videoWidth": 640,
+      "videoHeight": 360,
+      "renderEnded": "ended",
+      "upstreamState": "live"
+    },
+    {
+      "start": true,
+      "phase": "complete",
+      "bytes": 59779,
+      "type": "video/webm",
+      "nativeState": "inactive",
+      "videoWidth": 640,
+      "videoHeight": 360,
+      "renderEnded": "ended",
+      "upstreamState": "live"
+    },
+    {
+      "start": true,
+      "phase": "complete",
+      "bytes": 63108,
+      "type": "video/webm",
+      "nativeState": "inactive",
+      "videoWidth": 320,
+      "videoHeight": 700,
+      "renderEnded": "ended",
+      "upstreamState": "live"
+    }
+  ],
+  "acquisitionFailure": {
+    "ok": false,
+    "code": "render-capture-unavailable",
+    "phase": "error",
+    "retained": true,
+    "retainedBytes": 63108,
+    "previousRevoked": false
+  },
+  "afterCancel": {
+    "phase": "cancelled",
+    "retained": true,
+    "retainedBytes": 63108,
+    "nativeState": "inactive",
+    "renderEnded": "ended",
+    "upstreamState": "live"
+  },
+  "afterDispose": {
+    "ok": true,
+    "phase": "disabled",
+    "nativeState": "inactive",
+    "renderEnded": "ended",
+    "upstreamState": "live",
+    "lastExportUrl": null,
+    "oldUrlRevoked": true
+  },
+  "fileCleanupControl": {
+    "phase": "complete",
+    "code": "complete",
+    "trackState": "ended",
+    "exportBytes": 22921
+  },
+  "failedCleanup": {
+    "phase": "complete",
+    "code": "complete",
+    "recorderEnabled": true,
+    "nativeShutdown": "confirmed-stopped",
+    "oldTapTrackState": "live",
+    "previousExportReplaced": true,
+    "previousExportRevoked": true,
+    "retry": true,
+    "exportBytes": 41500
+  },
+  "created": 6,
+  "revoked": 6,
+  "consoleErrors": [
+    "[RecorderEngine] render-capture-unavailable Error: Canvas capture did not provide a video stream.\n    at createRecorderError (http://127.0.0.1:39433/src/js/recording/recorder-engine.js:308:17)\n    at Object.start (http://127.0.0.1:39433/src/js/recording/recorder-engine.js:1270:47)\n    at eval (eval at evaluate (:370:30), <anonymous>:40:32)\n    at async <anonymous>:396:30"
+  ],
+  "pageErrors": []
+}

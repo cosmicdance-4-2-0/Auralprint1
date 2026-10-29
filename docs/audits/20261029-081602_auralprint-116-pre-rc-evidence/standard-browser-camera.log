@@ -1,0 +1,17 @@
+
+> test:browser
+> node scripts/smoke-scene-camera.cjs
+
+Scene-camera smoke: v0.1.16-candidate, Chromium 151.0.7922.173, portable + hosted HTTP
+PASS portable: schema-12 authored camera before first rendered frame; nondefault world
+PASS portable: live/authored ownership, share, restore
+PASS portable: UI capture, share, isolated fresh recipient and independent navigation
+PASS portable: in-session application and invalid-import atomicity
+PASS portable: C/F, restore and isolated schema-11 migration to CONFIG camera defaults
+PASS hosted: 7 relative HTML/manifest resources fetched in Chromium
+PASS hosted: schema-12 authored camera before first rendered frame; nondefault world
+PASS hosted: live/authored ownership, share, restore
+PASS hosted: UI capture, share, isolated fresh recipient and independent navigation
+PASS hosted: in-session application and invalid-import atomicity
+PASS hosted: C/F, restore and isolated schema-11 migration to CONFIG camera defaults
+PASS scene-camera smoke (19.54s)

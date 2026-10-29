@@ -1,0 +1,10 @@
+{
+  "currentFrameRingLock": true,
+  "selectedChannelEnergy": true,
+  "pauseExpiresHistory": true,
+  "pausedFreeRing": true,
+  "trackResetPreservesPhase": true,
+  "visualResetUsesDesignedPhase": true,
+  "disposeBalancesAccounting": true,
+  "invalidProjectionCases": 46
+}

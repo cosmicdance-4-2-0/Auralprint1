@@ -1,0 +1,8 @@
+{
+  "before": 2,
+  "after": 8,
+  "control": 8,
+  "paused": true,
+  "errors": [],
+  "qualification": "Production Scrubber and real native HTMLMediaElement; public AudioEngine.getMediaEl seam supplies paused file. Blur is explicitly dispatched; subsequent no-button movement is CDP input. Physical OS loss of mouseup is not certified."
+}
