@@ -2,7 +2,13 @@
 
 ## Build 116 (unreleased)
 
-- **Live-input recovery (AUD-001).** Microphone/shared-stream audio that ends
+- **Independent world and Camera.** World geometry and retained trails stay in world units across viewport/DPR changes. Camera controls add pan, pointer-centered zoom, rotation, reset and one-shot Fit View.
+- **Authored Scene views.** Save and restore a Scene viewpoint independently of live navigation; shared presets include the saved view.
+- **Compact preset links.** Smaller schema-16 links use frozen-default deltas, ordered band ranges and native DEFLATE, with an uncompressed fallback. Supported legacy presets retain their meaning.
+- **Optional Queue clearing.** Settings can clear the File Queue after a successful accepted switch to Mic/Stream. The Scene preference defaults off; failed or superseded requests and intervening Queue changes preserve files.
+- **Trace Fade Length.** Individual and Bulk editors fade the oldest visible drawable segments over 1–20 whole segments. The default 0 / Off preserves the continuous stroke.
+- **Numeric controls.** Sliders follow CONFIG editing steps; Orb and Ring angular speeds use 0.5°/s steps. Analysis frequency drafts survive unrelated refreshes. Configured frequencies are limited to 384,000 Hz, with effective analysis still bounded by source Nyquist.
+- **Live-input recovery.** Microphone/shared-stream audio that ends
   during acquisition or graph setup no longer appears live. The same source
   button permits an intentional retry, and obsolete cleanup preserves newer inputs.
 

@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Build 116 feature candidate (`v0.1.16-candidate`), preset schema 16, based on accepted 116E. It adds optional File Queue clearing and numeric Trace fading. RC promotion and public publication remain unauthorized. See the [Build 116 acceptance gates](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+**Current source checkout:** Build 116 merged feature candidate ([PR #88](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/88)), `v0.1.16-candidate`, preset schema 16. It adds viewport-independent world geometry, Camera controls and authored Scene views, compact preset sharing, optional File Queue clearing and numeric Trace fading. RC gates remain open; see [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -73,11 +73,11 @@ Firefox does not supply shared-display audio for Stream mode; Stream requires an
 
 Settings → Source Behavior offers **Clear File Queue when switching sources**, off by default. It clears only after an accepted File-to-Mic/Stream switch; failed, cancelled or superseded requests and intervening Queue changes preserve files. The choice is saved in Scene presets; Queue contents remain runtime-only.
 
-Individual and Bulk Orb Trace editors offer **Fade Length**: **0 / Off** preserves the established continuous stroke; **1–20** fades that many oldest visible drawable segments toward the Scene background, using the available count for short histories. Mixed Bulk values remain unchanged until edited. The twenty-segment limit is a feature bound, not a frame-rate guarantee.
+Individual and Bulk Orb Trace editors offer **Fade Length** in whole segments: **0 / Off** (default) preserves the established continuous stroke; **1–20** fades that many oldest visible drawable segments toward the Scene background, using the available count for short histories. Mixed Bulk values remain unchanged until edited. The twenty-segment limit is a feature bound, not a frame-rate guarantee.
 
 ## Camera in the Build 116 checkout
 
-Build 116 separates the simulation world from the viewport. Configurable world dimensions define Orb/Ring reference geometry, **not** clipping/collision bounds; particle placement spacing uses world units independently of viewport/DPR. Camera movement changes the view, preserving simulation and retained history; marks retain CSS-screen sizing.
+Build 116 separates the simulation world from the viewport. Settings → **Simulation World** dimensions define Orb/Ring reference geometry, **not** clipping/collision bounds; particle placement spacing uses world units independently of viewport/DPR. Camera movement changes the view, preserving simulation and retained history; marks retain CSS-screen sizing.
 
 The live performance view is separate from the authored Scene viewpoint. **Save Current View as Scene View** explicitly persists the live pose into the Scene; **Restore Scene View** stops input and restores that authored view to the live camera. **Copy Share Link** serializes the authored Scene, including its saved viewpoint; live navigation never implicitly saves or shares its current pose.
 
