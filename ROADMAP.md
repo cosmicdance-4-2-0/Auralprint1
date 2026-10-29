@@ -1,6 +1,6 @@
 # Auralprint development roadmap
 
-Updated: October 28, 2026. **Current public release: Release 4 / Build 115 (`v0.1.15`), schema 10. Current development: Build 116 feature candidate (`v0.1.16-candidate`), schema 16, based on accepted 116E; acceptance remains pending.**
+Updated: October 29, 2026. **Current public release: Release 4 / Build 115 (`v0.1.15`), schema 10. Current development: Build 116 merged feature candidate (`v0.1.16-candidate`), schema 16; RC gates remain open.**
 
 This document owns the plan, milestone acceptance and deferrals. [README](README.md) owns current capabilities, user instructions and [developer verification](README.md#developer-bootstrap); [AGENTS](AGENTS.md) owns engineering policy. The [Build 115](docs/development/build-115.md) and [Build 116](docs/development/build-116.md) worklogs own completed stages, corrective history and evidence. [Release comparisons](docs/development/build-115-release-delta.md) distinguish public Build 113 from internal Build 114.
 
@@ -36,7 +36,7 @@ Build 115's accepted items (AUD-001/003/005, editor jump, Stream stereo, schema 
 
 ## Build 116: simulation world, camera and projection
 
-**Status: Build 116 feature candidate (`v0.1.16-candidate`, schema 16) adds only opt-in File Queue clearing and numeric Trace fade length 0–20 to restored 116E. Experimental 116F/G branches remain preserved; schema 14/15 imports are rejected.** Documentation reconciliation, independent hostile audit, remediation and owner acceptance remain pending. Build 115 remains the public release; no RC or Canon promotion is complete. See the [candidate contract](docs/development/build-116.md#116-feature-candidate).
+**Status: merged feature candidate ([PR #88](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/88)), awaiting RC gates.** Build 116 includes independent world geometry, live Camera controls, authored Scene views, compact preset sharing, opt-in File Queue clearing and numeric Trace fade length 0–20. Particle Birth Color and Angular Trace are excluded. The writer uses schema 16; experimental schemas 14/15 are reserved and rejected. Build 115 remains the public release; Build 116 has no RC or Canon acceptance. See the [candidate contract](docs/development/build-116.md#116-feature-candidate).
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
@@ -47,13 +47,14 @@ Acceptance gates:
 - Verify schema-13 frozen-default reconstruction, ordered contiguous/sparse/reordered selections, native DEFLATE framing and bounded streaming decode; retain schemas 2–12 and canonical numerical precision.
 - Verify compressed startup before the first application frame, stale-import cancellation and accurate compression/clipboard fallback.
 - Run the Chromium preset gate and optional Firefox/WebKit interoperability checks as tooling permits; execute the [116E physical-device matrix](docs/development/build-116.md#116e-owner-device-matrix), including Safari and direct-file/offline checks. Linux WebKit automation does not certify physical Safari.
-- Complete documentation reconciliation.
-- Complete an independent post-remediation adversarial code audit.
-- Correct any newly demonstrated release blockers.
+- Complete documentation reconciliation and review.
+- Investigate the Ubuntu watcher-test failure in [post-merge CI attempt 1](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/40830745837/attempts/1): duplicate saves launched additional Python assemblers. Attempt 2 passed on the same SHA; the original failure remains unresolved, without a confirmed regression or flakiness diagnosis.
+- Complete an independent hostile audit.
+- Remediate demonstrated release blockers and verify the corrections through follow-up review.
 - Obtain owner evaluation and real-world acceptance.
 - Obtain explicit owner authorization before 116 RC #1 promotion, release, tagging, deployment or public publication.
 - World dimensions can be configured independently of browser dimensions; changing viewport size, devicePixelRatio, pan, zoom or camera rotation must not mutate Orb locations/phases, retained particle coordinates, Ring geometry, analysis or playback.
-- Default framing should approximate the familiar Build 115 appearance; explicitly test loaded schema-10 presets and legacy migration. The first persisted world configuration requires schema 11, CONFIG defaults/limits, codec migration and all preset/UI owners. Freeze no new preset semantics prematurely.
+- Verify familiar Build 115 default framing and loaded schema-10 presets. Preserve schema-11 world geometry and the fixed legacy pixel-to-world spacing migration.
 - Pan, zoom, rotation, reset and the inverse coordinate transform are deterministic and accessible; camera reset returns to a documented default and interactive controls avoid transport, seek, drag/drop and panel gesture conflicts.
 - Schema 12 persists only the explicitly saved `sceneCamera`; `state.camera` remains the live performance view. Copy Share Link does not capture movement. Startup and URL import initialize the live camera from the normalized authored view; schemas 2–11 initialize factory defaults. Schema-11 world geometry and unit spacing survive migration. World and authored-camera settings traverse the canonical preferences pipeline.
 - World-unit particle spacing and CSS-screen-sized particle/Trace/Ring presentation retain explicit semantics; camera transforms must not silently change emission decisions. Resize, high-DPI, history retention, recording, hosted and single-file behavior pass regression validation.
