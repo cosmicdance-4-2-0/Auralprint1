@@ -19,7 +19,8 @@ const Scrubber = (() => {
   let _canvas = null;
   let _ctx2d = null;
   let _waveform = null;    // Float32Array of normalised peak samples, or null
-  let _dragging = false;
+  let _dragging = null; // null | mouse | touch
+  let _dragButton = 0;
   let _waveformStatus = "empty"; // empty | waiting | decoding | ready | unavailable
   let _waveformDetail = null;
   let _controls = null;
@@ -36,21 +37,26 @@ const Scrubber = (() => {
 
   function init(canvasEl) {
     _interactionCleanup?.();
-    _dragging = false;
+    cancelDrag();
     _canvas = canvasEl;
     _ctx2d = _canvas.getContext("2d");
     _canvas.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("blur", cancelDrag);
     _canvas.addEventListener("touchstart", onTouchStart, { passive: false });
     window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
     const interactionWindow = window;
+    const interactionDocument = document;
+    const onVisibilityChange = () => { if (interactionDocument.hidden) cancelDrag(); };
+    interactionDocument.addEventListener("visibilitychange", onVisibilityChange);
     _interactionCleanup = () => {
       canvasEl.removeEventListener("mousedown", onMouseDown);
       canvasEl.removeEventListener("touchstart", onTouchStart);
-      for (const [type,handler] of [["mousemove",onMouseMove],["mouseup",onMouseUp],["touchmove",onTouchMove],["touchend",onTouchEnd],["touchcancel",onTouchEnd]]) interactionWindow.removeEventListener(type,handler);
+      for (const [type,handler] of [["mousemove",onMouseMove],["mouseup",onMouseUp],["blur",cancelDrag],["touchmove",onTouchMove],["touchend",onTouchEnd],["touchcancel",onTouchEnd]]) interactionWindow.removeEventListener(type,handler);
+      interactionDocument.removeEventListener("visibilitychange", onVisibilityChange);
     };
     _controls?.dispose();
     _controls = createWaveformControls({generate:waveformAdmission.generate});
@@ -60,13 +66,13 @@ const Scrubber = (() => {
   // Playback never awaits optional extraction. The coordinator alone owns work
   // admission; this module only presents the current result and seek timeline.
   async function loadFile(file, identity = {}) {
-    _dragging = false;
+    cancelDrag();
     _waveform = null;
     return waveformAdmission.loadFile(file, {media:getMediaEl(), ...identity});
   }
 
   function reset() {
-    _dragging = false;
+    cancelDrag();
     waveformAdmission.reset();
   }
 
@@ -237,25 +243,38 @@ const Scrubber = (() => {
     return clamp((t.clientX - rect.left) / rect.width, 0, 1);
   }
 
-  function onMouseDown(e) { _dragging = true; seekToFraction(fractionFromEvent(e)); }
-  function onMouseMove(e) { if (_dragging) seekToFraction(fractionFromEvent(e)); }
-  function onMouseUp()    { _dragging = false; }
+  function cancelDrag() { _dragging = null; _dragButton = 0; }
+
+  function onMouseDown(e) {
+    _dragging = "mouse";
+    // MouseEvent.button order differs from the buttons bitfield for middle/right.
+    // Keep existing nonprimary-button seeking, tracking whichever button began it.
+    _dragButton = e.button === 1 ? 4 : e.button === 2 ? 2 : 1 << e.button;
+    seekToFraction(fractionFromEvent(e));
+  }
+  function onMouseMove(e) {
+    if (_dragging !== "mouse") return;
+    if (!(e.buttons & _dragButton)) { cancelDrag(); return; }
+    seekToFraction(fractionFromEvent(e));
+  }
+  function onMouseUp() { if (_dragging === "mouse") cancelDrag(); }
 
   function onTouchStart(e) {
     const frac = fractionFromTouch(e);
     if (frac == null) return;
     e.preventDefault();
-    _dragging = true;
+    _dragging = "touch";
+    _dragButton = 0;
     seekToFraction(frac);
   }
   function onTouchMove(e)  {
-    if (!_dragging) return;
+    if (_dragging !== "touch") return;
     const frac = fractionFromTouch(e);
     if (frac == null) return;
     e.preventDefault();
     seekToFraction(frac);
   }
-  function onTouchEnd()    { _dragging = false; }
+  function onTouchEnd() { if (_dragging === "touch") cancelDrag(); }
 
   return { init, loadFile, reset, draw };
 })();
