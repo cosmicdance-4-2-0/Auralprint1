@@ -6,6 +6,9 @@ const { chromium } = require('playwright');
 const root = path.resolve(__dirname, '..');
 const version = fs.readFileSync(path.join(root, 'version'), 'utf8').trim();
 const output = path.resolve(process.env.AP_REPORT || path.join(root, 'work/116-accessibility/native.json'));
+const QUEUE_PLAYBACK_PROGRESS_SECONDS = .15;
+// Allow slow CI five seconds to advance 150 ms; the watchdog must not depend on RAF.
+const QUEUE_PLAYBACK_TIMEOUT_MS = 5_000;
 const report = { version, browser: '', cases: [], errors: [],
   qualification: 'Linux headless Chromium; trusted keyboard/mouse input and real WAV playback over local HTTP. Mic/Stream use generated MediaStreams, unavailable metadata is injected, and the finalization lock is projected through production UI in the source edition. Physical touch, OS permission dialogs, screen-reader speech, Windows, Firefox and Safari are not certified.' };
 function wav(seconds) {
@@ -43,6 +46,46 @@ async function unavailable(slider) {
 async function visibleFocus(locator) {
   assert.equal(await locator.evaluate(el => el === document.activeElement && el.matches(':focus-visible')
     && getComputedStyle(el).outlineStyle === 'solid' && parseFloat(getComputedStyle(el).outlineWidth) > 0), true);
+}
+// Self-contained for page.evaluate(); Node regressions exercise the same callback.
+function observeQueuePlaybackProgress({ progressSeconds, timeoutMs }) {
+  return new Promise((resolve, reject) => {
+    const media = activeMedia(), start = media.currentTime, target = start + progressSeconds;
+    let count = 0, frameId = null, timeoutId = null, settled = false;
+    const observer = new MutationObserver(records => { count += records.length; });
+    function finish(error) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      count += observer.takeRecords().length;
+      observer.disconnect();
+      if (error) reject(error); else resolve(count);
+    }
+    function sample() {
+      frameId = null;
+      if (settled) return;
+      try {
+        if (media.currentTime >= target) finish();
+        else frameId = requestAnimationFrame(sample);
+      } catch (error) { finish(error); }
+    }
+    try {
+      observer.observe(document.getElementById('queueList'), { subtree: true, attributes: true, childList: true, characterData: true });
+      timeoutId = setTimeout(() => {
+        try {
+          finish(new Error(`Queue playback progress timed out after ${timeoutMs} ms: start=${start} s, observed=${media.currentTime} s, targetProgress=${progressSeconds} s, target=${target} s`));
+        } catch (error) { finish(error); }
+      }, timeoutMs);
+      frameId = requestAnimationFrame(sample);
+    } catch (error) { finish(error); }
+  });
+}
+async function assertQueueUnchangedDuringPlayback(page) {
+  const mutations = await page.evaluate(observeQueuePlaybackProgress, {
+    progressSeconds: QUEUE_PLAYBACK_PROGRESS_SECONDS, timeoutMs: QUEUE_PLAYBACK_TIMEOUT_MS,
+  });
+  assert.equal(mutations, 0);
 }
 async function run(page, edition, width, base) {
   const entry = { edition, width, checks: [] }; report.cases.push(entry);
@@ -144,14 +187,7 @@ async function run(page, edition, width, base) {
   await page.waitForFunction(() => document.getElementById('btnPlay').textContent === 'Pause'
     && document.getElementById('scrubberCanvas').getAttribute('aria-disabled') === 'false');
   await frames(page); checked('native Space activates Play');
-  const mutations = await page.evaluate(async () => {
-    let count = 0; const observer = new MutationObserver(records => { count += records.length; });
-    observer.observe(document.getElementById('queueList'), { subtree: true, attributes: true, childList: true, characterData: true });
-    const start = activeMedia().currentTime;
-    while (activeMedia().currentTime < start + .15) await new Promise(resolve => requestAnimationFrame(resolve));
-    observer.disconnect(); return count;
-  });
-  assert.equal(mutations, 0); checked('ordinary playback causes zero Queue DOM/ARIA writes');
+  await assertQueueUnchangedDuringPlayback(page); checked('ordinary playback causes zero Queue DOM/ARIA writes');
   assert.ok(Number(await slider.getAttribute('aria-valuenow')) > 0); checked('playback updates slider');
   const layout = await page.locator('.queue-item').evaluate(row => {
     const play = row.querySelector('.q-play'), name = row.querySelector('.q-name'), remove = row.querySelector('.q-remove');
@@ -215,7 +251,8 @@ async function run(page, edition, width, base) {
   await page.locator('#btnClearQueue').focus(); await page.keyboard.press('Space'); await frames(page);
   await unavailable(slider); assert.equal(await page.evaluate(() => document.activeElement.id), 'btnHideQueue'); checked('Clear resets slider and preserves focus');
 }
-(async () => {
+module.exports = { assertQueueUnchangedDuringPlayback, QUEUE_PLAYBACK_PROGRESS_SECONDS, QUEUE_PLAYBACK_TIMEOUT_MS };
+if (require.main === module) (async () => {
   let browser;
   fs.mkdirSync(path.dirname(output), { recursive: true });
   try {
