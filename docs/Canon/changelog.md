@@ -18,8 +18,6 @@ Compared with public Build 115 (`v0.1.15`, schema 10). Build 116 remains a featu
 
 ---
 
-The older comparisons below retain their historical build-to-build scope and commentary.
-
 ## v110 → v111
 
 ### New Features
