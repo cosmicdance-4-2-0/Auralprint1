@@ -1,8 +1,8 @@
 /* =============================================================================
    Auralprint
-   0.1.16-rc.1
+   0.1.16-rc.2
 
-   Build 116 RC #1 — Queue policy and numeric Trace fade
+   Build 116 RC #2 — Queue policy, Trace fade and accessible playback controls
    Canonical Scene configuration; frozen deltas; ordered band ranges.
    ========================================================================== */
 
