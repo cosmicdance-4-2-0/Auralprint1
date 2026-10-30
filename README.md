@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Build 116 merged feature candidate ([PR #88](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/88)), `v0.1.16-candidate`, preset schema 16. It adds viewport-independent world geometry, Camera controls and authored Scene views, compact preset sharing, optional File Queue clearing and numeric Trace fading. RC gates remain open; see [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection).
+**Current source checkout:** Build 116 **RC #1** (owner-authorized October 29, 2026), `v0.1.16-rc.1`, preset schema 16. It adds viewport-independent world geometry, Camera controls and authored Scene views, compact preset sharing, optional File Queue clearing and numeric Trace fading. Public release/Canon is **not** authorized. See [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection) for RC acceptance and platform limits.
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -34,14 +34,14 @@ Before the native browser checks, install Playwright's matching Chromium headles
 
 Build outputs:
 
-- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16-candidate.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16-rc.1.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
 `npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; the three standard Chromium browser checks and focused Queue/Trace checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
 
-## Sharing in the Build 116 candidate
+## Sharing in Build 116 RC #1
 
 **Copy Share Link** writes a compact schema-16 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-16 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
 
@@ -69,7 +69,7 @@ Load audio in **File**, or select **Mic** / **Stream** with browser permission. 
 
 Firefox does not supply shared-display audio for Stream mode; Stream requires an audio track and rejects video-only sessions. File and Mic are separate workflows. Browser/codec support and native permissions vary; see the [release qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-## Queue and Trace in the Build 116 candidate
+## Queue and Trace in Build 116 RC #1
 
 Settings → Source Behavior offers **Clear File Queue when switching sources**, off by default. It clears only after an accepted File-to-Mic/Stream switch; failed, cancelled or superseded requests and intervening Queue changes preserve files. The choice is saved in Scene presets; Queue contents remain runtime-only.
 
