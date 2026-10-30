@@ -71,6 +71,9 @@ function createScrubberHarness() {
     fill() {},
   };
   const canvas = {
+    attributes: new Map(),
+    getAttribute(name) { return this.attributes.get(name) ?? null; },
+    setAttribute(name, value) { this.attributes.set(name, String(value)); },
     clientWidth: 160,
     clientHeight: 32,
     width: 0,
@@ -1865,7 +1868,7 @@ test("UI clears retained live-input errors when removing the last queued file re
 
     state.ui.btnToggleQueue.dispatch("click");
     const lastRow = getElement("queueList").children[0];
-    const removeBtn = lastRow.children[2];
+    const removeBtn = lastRow.querySelector(".q-remove");
     removeBtn.dispatch("click");
     UI.refreshAllUiText();
 
@@ -2420,7 +2423,7 @@ test("UI finalizing locks destructive file transport actions while leaving non-d
     state.ui.btnToggleQueue.dispatch("click");
     const queueRows = getElement("queueList").children;
     const activeRow = queueRows[1];
-    const removeBtn = activeRow.children[2];
+    const removeBtn = activeRow.querySelector(".q-remove");
 
     assert.equal(state.ui.btnLoad.disabled, true);
     assert.equal(state.ui.btnPrev.disabled, true);
@@ -2436,7 +2439,7 @@ test("UI finalizing locks destructive file transport actions while leaving non-d
     assert.equal(state.ui.btnShuffle.disabled, false);
     assert.equal(state.ui.btnToggleQueue.disabled, false);
 
-    assert.equal(activeRow.getAttribute("aria-disabled"), "true");
+    assert.equal(activeRow.querySelector(".q-play").disabled, true);
     assert.match(activeRow.title, /Track changes are unavailable while recording finalizes/);
     assert.equal(removeBtn.disabled, true);
     assert.match(removeBtn.title, /Track changes are unavailable while recording finalizes/);
@@ -2476,12 +2479,12 @@ test("UI refreshes an already-open queue when recording enters finalizing", asyn
     UI.refreshAllUiText();
 
     const firstRow = getElement("queueList").children[0];
-    const firstRemoveBtn = firstRow.children[2];
+    const firstRemoveBtn = firstRow.querySelector(".q-remove");
 
-    assert.equal(firstRow.getAttribute("aria-disabled"), "true");
+    assert.equal(firstRow.querySelector(".q-play").disabled, true);
     assert.equal(firstRemoveBtn.disabled, true);
 
-    firstRow.dispatch("click");
+    firstRow.querySelector(".q-play").dispatch("click");
     firstRemoveBtn.dispatch("click");
     await Promise.resolve();
 
@@ -2522,9 +2525,9 @@ test("UI re-enables an already-open queue when recording leaves finalizing", asy
     UI.refreshAllUiText();
 
     const firstRow = getElement("queueList").children[0];
-    const firstRemoveBtn = firstRow.children[2];
+    const firstRemoveBtn = firstRow.querySelector(".q-remove");
 
-    assert.equal(firstRow.getAttribute("aria-disabled"), "false");
+    assert.equal(firstRow.querySelector(".q-play").disabled, false);
     assert.equal(firstRemoveBtn.disabled, false);
 
     firstRemoveBtn.dispatch("click");
@@ -2569,7 +2572,7 @@ test("UI finalizing blocks destructive file transport interactions and keeps fil
     const queueList = getElement("queueList");
     const queueRows = queueList.children;
     const firstRow = queueRows[0];
-    const firstRemoveBtn = firstRow.children[2];
+    const firstRemoveBtn = firstRow.querySelector(".q-remove");
     const initialQueueNames = Queue.snapshot().items.map((item) => item.name);
 
     state.ui.btnLoad.dispatch("click");
@@ -2578,7 +2581,7 @@ test("UI finalizing blocks destructive file transport interactions and keeps fil
     state.ui.btnPrev.dispatch("click");
     state.ui.btnNext.dispatch("click");
     state.ui.btnClearQueue.dispatch("click");
-    firstRow.dispatch("click");
+    firstRow.querySelector(".q-play").dispatch("click");
     firstRemoveBtn.dispatch("click");
     state.canvas.dispatch("drop", {
       dataTransfer: {
@@ -3755,27 +3758,27 @@ test("RC-13: queue removal retains neighboring action focus and empty queue rest
   await withRc02FileWorkflow(t, {}, async ({ ingest, getElement }) => {
     await ingest(["A.wav", "B.wav", "C.wav"]);
     const list = getElement("queueList");
-    list.children[1].children[2].focus();
-    await list.children[1].children[2].dispatch("click");
+    list.children[1].querySelector(".q-remove").focus();
+    await list.children[1].querySelector(".q-remove").dispatch("click");
     assert.deepEqual(Queue.snapshot().items.map(item => item.name), ["A.wav", "C.wav"]);
-    assert.equal(document.activeElement, list.children[1].children[2]);
+    assert.equal(document.activeElement, list.children[1].querySelector(".q-remove"));
     await document.activeElement.dispatch("click");
-    assert.equal(document.activeElement, list.children[0].children[2]);
+    assert.equal(document.activeElement, list.children[0].querySelector(".q-remove"));
     await document.activeElement.dispatch("click");
     assert.equal(Queue.length, 0);
     assert.equal(document.activeElement, getElement("btnHideQueue"));
   });
 });
 
-test("RC-13: queue activation/refresh preserves row focus and never steals outside focus", async t => {
+test("RC-13: queue activation/refresh preserves Play focus and never steals outside focus", async t => {
   await withRc02FileWorkflow(t, {}, async ({ ingest, getElement }) => {
     await ingest(["A.wav", "B.wav"]);
     let list = getElement("queueList");
-    list.children[1].focus();
-    await list.children[1].dispatch("click");
+    list.children[1].querySelector(".q-play").focus();
+    await list.children[1].querySelector(".q-play").dispatch("click");
     for (let i = 0; i < 10; i++) await Promise.resolve();
     UI.refreshAllUiText();
-    assert.equal(document.activeElement, list.children[1]);
+    assert.equal(document.activeElement, list.children[1].querySelector(".q-play"));
     getElement("btnLoad").focus();
     await ingest(["C.wav"]);
     assert.equal(document.activeElement, getElement("btnLoad"));
@@ -3783,6 +3786,69 @@ test("RC-13: queue activation/refresh preserves row focus and never steals outsi
     await getElement("btnClearQueue").dispatch("click");
     assert.equal(document.activeElement, getElement("btnHideQueue"));
     assert.equal(Queue.length, 0);
+  });
+});
+
+test("F-02: Queue rows hold distinct sibling native buttons; Remove never selects or plays", async t => {
+  await withRc02FileWorkflow(t, {}, async ({ ingest, getElement, mutations }) => {
+    await ingest(["same.wav", "same.wav", "same.wav"]);
+    const list = getElement("queueList"), row = list.children[1];
+    const play = row.querySelector(".q-play"), remove = row.querySelector(".q-remove");
+    assert.equal(row.getAttribute("role"), null);
+    assert.equal(row.getAttribute("tabindex"), null);
+    assert.deepEqual(row.children, [play, remove]);
+    assert.equal(play.tagName, "BUTTON"); assert.equal(remove.tagName, "BUTTON");
+    assert.equal(play.type, "button"); assert.equal(remove.type, "button");
+    assert.equal(play.getAttribute("aria-label"), "Play queue item 2: same.wav");
+    assert.equal(remove.getAttribute("aria-label"), "Remove queue item 2: same.wav");
+    assert.equal(play.querySelector("button"), null);
+    const entries = [0, 1, 2].map(index => Queue.entryAt(index));
+    const media = AudioEngine.getMediaEl(), starts = mutations.filter(x => x.kind === "track-change-start").length;
+    remove.focus(); await remove.click();
+    assert.equal(Queue.currentEntry(), entries[0]);
+    assert.equal(Queue.entryAt(1), entries[2]);
+    assert.equal(AudioEngine.getMediaEl(), media);
+    assert.equal(mutations.filter(x => x.kind === "track-change-start").length, starts);
+    assert.equal(document.activeElement, list.children[1].querySelector(".q-remove"));
+  });
+});
+
+for (const action of [".q-play", ".q-remove"]) {
+  test(`F-02: ${action} focus follows the surviving entry through same-name removal and reorder`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ ingest, getElement }) => {
+      await ingest(["same.wav", "same.wav", "same.wav", "same.wav"]);
+      const list = getElement("queueList"), focusedEntry = Queue.entryAt(2);
+      list.children[2].querySelector(action).focus();
+      // Removing another entry through the API isolates focus restoration from click focus.
+      Queue.remove(0); UI.refreshRecordingUi();
+      assert.equal(Queue.entryAt(1), focusedEntry);
+      assert.equal(document.activeElement, list.children[1].querySelector(action));
+      t.mock.method(Math, "random", () => 0);
+      await getElement("btnShuffle").dispatch("click");
+      const index = [0, 1, 2].find(index => Queue.entryAt(index) === focusedEntry);
+      assert.equal(document.activeElement, list.children[index].querySelector(action));
+    });
+  });
+}
+
+test("F-02: ordinary playback refreshes retain Queue nodes, focus and accessibility attributes", async t => {
+  await withRc02FileWorkflow(t, {}, async ({ ingest, getElement }) => {
+    await ingest(["A.wav", "B.wav"]);
+    const list = getElement("queueList"), rows = [...list.children];
+    const button = rows[1].querySelector(".q-play"); button.focus();
+    let writes = 0;
+    for (const row of rows) for (const control of row.children) {
+      const set = control.setAttribute;
+      t.mock.method(control, "setAttribute", function (...args) { writes++; return set.apply(this, args); });
+    }
+    for (let i = 0; i < 50; i++) {
+      AudioEngine.getMediaEl().currentTime = i;
+      state.audio.isPlaying = i % 2 === 0;
+      UI.refreshAllUiText();
+    }
+    assert.deepEqual(list.children, rows);
+    assert.equal(document.activeElement, button);
+    assert.equal(writes, 0);
   });
 });
 
@@ -3833,7 +3899,7 @@ for (const removal of ["clear", "final-remove"]) {
       await entered.promise;
       assert.equal(Queue.length, 1);
       if (removal === "clear") await getElement("btnClearQueue").dispatch("click");
-      else await getElement("queueList").children[0].children[2].dispatch("click");
+      else await getElement("queueList").children[0].querySelector(".q-remove").dispatch("click");
       assertRc02Empty();
       const notifications = mutations.length;
       resume.resolve();
@@ -4091,7 +4157,7 @@ for (const change of ["queue-file", "media-element", "live-workflow", "teardown"
       if (change === "teardown") await InputSourceManager.teardownActiveSource({ reason: "test-owner-change" });
       state.recording.phase = "complete";
       if (change === "clear") await getElement("btnClearQueue").dispatch("click");
-      if (change === "replacement") await getElement("queueList").children[1].dispatch("click");
+      if (change === "replacement") await getElement("queueList").children[1].querySelector(".q-play").dispatch("click");
       await rc05Settle();
       const before = { cursor: Queue.currentIndex, audio: { ...state.audio }, loads: [...scrubberLoads], count: mutations.length };
       UI.refreshRecordingUi();
@@ -4204,7 +4270,7 @@ for (const identity of ["distinct", "same-name", "same-file"]) {
       const oldEntry = Queue.currentEntry(), successor = Queue.entryAt(1);
       assert.equal(AudioEngine.getMediaEl(), null, "A is genuinely pending before allocation");
       assert.equal(state.audio.isLoaded, false);
-      await getElement("queueList").children[0].children[2].dispatch("click");
+      await getElement("queueList").children[0].querySelector(".q-remove").dispatch("click");
       assert.equal(Queue.currentEntry(), successor);
       assert.notEqual(Queue.currentEntry(), oldEntry);
       assert.equal(mutations.filter(x => x.kind === "track-change-start").length, 2, "removal must synchronously authorize a successor request");
@@ -4239,11 +4305,11 @@ for (const autoPlay of [true, false]) {
       audioEngineHarnessContext.state = "suspended"; hold = true;
       // Loaded A removal gives B the actual intent. B removal must use that
       // pending request's intent, even though teardown makes isPlaying false.
-      await getElement("queueList").children[0].children[2].dispatch("click");
+      await getElement("queueList").children[0].querySelector(".q-remove").dispatch("click");
       await entered.promise;
       assert.equal(Queue.current().name, "B.wav");
       assert.equal(state.audio.isPlaying, false);
-      await getElement("queueList").children[0].children[2].dispatch("click");
+      await getElement("queueList").children[0].querySelector(".q-remove").dispatch("click");
       await waitForActivations(2);
       const winner = AudioEngine.getMediaEl();
       assert.equal(Queue.current().name, "C.wav");
@@ -4268,10 +4334,10 @@ for (const removedIndex of [0, 2]) {
     }, async ({ ingest, getElement, waitForActivations }) => {
       await ingest(["A.wav", "B.wav", "C.wav"]);
       audioEngineHarnessContext.state = "suspended"; hold = true;
-      await getElement("queueList").children[1].dispatch("click");
+      await getElement("queueList").children[1].querySelector(".q-play").dispatch("click");
       await entered.promise;
       const selected = Queue.currentEntry();
-      await getElement("queueList").children[removedIndex].children[2].dispatch("click");
+      await getElement("queueList").children[removedIndex].querySelector(".q-remove").dispatch("click");
       assert.equal(Queue.currentEntry(), selected);
       resume.resolve(); await waitForActivations(2);
       assert.equal(state.source.status, "active");
@@ -4293,8 +4359,8 @@ test("AUD-001: A to B to C supersession authorizes only C", async t => {
   }, async ({ ingest, getElement, waitForActivations, waitForCompletions, mutations }) => {
     const pending = ingest(["A.wav", "B.wav", "C.wav"]);
     await entered.promise;
-    await getElement("queueList").children[1].dispatch("click");
-    await getElement("queueList").children[2].dispatch("click");
+    await getElement("queueList").children[1].querySelector(".q-play").dispatch("click");
+    await getElement("queueList").children[2].querySelector(".q-play").dispatch("click");
     await waitForCompletions(1);
     assert.equal(state.audio.filename, "C.wav");
     const winner = AudioEngine.getMediaEl(), notifications = mutations.length;
@@ -4319,7 +4385,7 @@ for (const outcome of ["resolve", "reject"]) {
       const pending = ingest(["A.wav", "B.wav"]);
       await entered.promise;
       assert.equal(state.audio.isLoaded, false);
-      await getElement("queueList").children[0].children[2].dispatch("click");
+      await getElement("queueList").children[0].querySelector(".q-remove").dispatch("click");
       await waitForCompletions(1);
       const winner = AudioEngine.getMediaEl(), loser = audio.mediaElements[0];
       assert.notEqual(winner, loser);
@@ -4375,7 +4441,7 @@ for (const identity of ["same-name", "same-file"]) {
       // normal row selection also supersedes the numerical request ID.
       Queue.goTo(1);
       assert.equal(AudioEngine._isLoadRequestCurrent(id), false, "File/name equality cannot authorize a different entry");
-      await getElement("queueList").children[1].dispatch("click");
+      await getElement("queueList").children[1].querySelector(".q-play").dispatch("click");
       await waitForCompletions(1);
       const winner = AudioEngine.getMediaEl();
       resume.resolve(); await pending;
@@ -4397,9 +4463,9 @@ for (const path of ["picker", "drop", "next", "prev", "row", "shortcut-next", "s
         if (path === "prev" || path === "shortcut-prev") await getElement("btnNext").dispatch("click");
         fail = true; audioEngineHarnessContext.state = "suspended";
         if (path === "next" || path === "prev") await getElement(path === "next" ? "btnNext" : "btnPrev").dispatch("click");
-        else if (path === "row") await getElement("queueList").children[1].dispatch("click");
+        else if (path === "row") await getElement("queueList").children[1].querySelector(".q-play").dispatch("click");
         else if (path === "shortcut-next" || path === "shortcut-prev") dispatchWindow("keydown", { code: path === "shortcut-next" ? "KeyN" : "KeyP", target: state.canvas });
-        else if (path === "remove-successor") await getElement("queueList").children[0].children[2].dispatch("click");
+        else if (path === "remove-successor") await getElement("queueList").children[0].querySelector(".q-remove").dispatch("click");
         else {
           const repeat = preferences.audio.repeatMode;
           preferences.audio.repeatMode = path === "repeat-one" ? "one" : "none";
@@ -4423,7 +4489,7 @@ for (const path of ["picker", "drop", "next", "prev", "row", "shortcut-next", "s
       assert.match(state.ui.audioStatus.textContent, /UI startup refused/);
       fail = false;
       const completions = mutations.filter(x => x.kind === "track-change-complete").length;
-      await getElement("queueList").children[Queue.currentIndex].dispatch("click");
+      await getElement("queueList").children[Queue.currentIndex].querySelector(".q-play").dispatch("click");
       await waitForCompletions(completions + 1);
       assert.equal(state.source.status, "active");
       assert.equal(state.audio.transportError, "");
@@ -4441,7 +4507,7 @@ for (const action of ["current", "clear", "replacement"]) {
       const pending = getElement("btnPlay").dispatch("click"); await entered.promise;
       if (action === "clear") await getElement("btnClearQueue").dispatch("click");
       else if (action === "replacement") {
-        await getElement("queueList").children[1].dispatch("click"); await waitForCompletions(2);
+        await getElement("queueList").children[1].querySelector(".q-play").dispatch("click"); await waitForCompletions(2);
         state.audio.transportError = "winner-owned error";
       }
       const audioState = state.audio, writes = [];
@@ -4502,7 +4568,7 @@ for (const path of ["picker", "drop"]) {
       assert.equal(mutations.filter(x => x.kind === "track-change-failed").length, 1);
       assert.equal(mutations.filter(x => x.kind === "track-change-complete").length, 0);
       assert.deepEqual(scrubberLoads, []); assert.equal(Queue.current().name, "corrupt.wav");
-      await getElement("queueList").children[0].dispatch("click");
+      await getElement("queueList").children[0].querySelector(".q-play").dispatch("click");
       await waitForCompletions(1);
       assert.equal(state.source.status, "active"); assert.equal(state.audio.filename, "corrupt.wav");
       assert.notEqual(AudioEngine.getMediaEl(), failed); assert.equal(state.audio.transportError, "");

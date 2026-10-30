@@ -27,7 +27,7 @@
  <div id="audioPanel" class="panel">
   <!-- Scrubber row: waveform/seek canvas, time, conditional Generate and Waveforms options. -->
   <div id="scrubberRow">
-    <canvas id="scrubberCanvas" width="1" height="36"></canvas>
+    <canvas id="scrubberCanvas" width="1" height="36" role="slider" tabindex="-1" aria-label="Playback position" aria-disabled="true" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext="Playback unavailable"></canvas>
     <span id="scrubberTime" class="muted">--:-- / --:--</span>
     <button id="btnGenerateWaveform" type="button" aria-label="Generate waveform for current track" hidden>Generate</button>
     <button id="btnWaveformOptions" type="button" popovertarget="waveformOptions" aria-controls="waveformOptions" aria-expanded="false" aria-label="Waveform options">Waveforms</button>

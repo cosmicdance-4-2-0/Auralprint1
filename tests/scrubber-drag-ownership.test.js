@@ -23,7 +23,7 @@ function touchEvent(type, changed, active = changed) {
 }
 function canvas() {
   return Object.assign(new EventTarget(), { clientWidth: 100, clientHeight: 36, width: 100, height: 36,
-    getBoundingClientRect: () => ({ left: 0, width: 100 }),
+    getAttribute(name) { return this.attributes?.[name] ?? null; }, setAttribute(name, value) { (this.attributes ??= {})[name] = String(value); }, getBoundingClientRect: () => ({ left: 0, width: 100 }),
     getContext: () => new Proxy({}, { get: () => () => {}, set: () => true }),
   });
 }
@@ -154,7 +154,7 @@ test("AUD116-004: mouse and touch movement consume only their own initiating ges
 test("AUD116-004: same/replacement canvas and window/document listener ownership remains bounded", t => {
   const h = mouseHarness(t);
   const initial = [h.surface.listenerCount(), h.win.listenerCount(), h.doc.listenerCount()];
-  assert.deepEqual(initial, [2, 6, 1]);
+  assert.deepEqual(initial, [3, 6, 1]);
   for (let i = 0; i < 20; i++) Scrubber.init(h.surface);
   assert.deepEqual([h.surface.listenerCount(), h.win.listenerCount(), h.doc.listenerCount()], initial);
   const nextSurface = Object.assign(trackedTarget(), canvas());
@@ -295,6 +295,6 @@ for (const terminal of ["reset", "load", "init", "blur", "hidden"]) {
     h.win.dispatchEvent(touchEvent("touchend", [[12, .8]], [[13, .4]]));
     h.win.dispatchEvent(touchEvent("touchmove", [[13, .6]]));
     assert.equal(h.media.currentTime, 6);
-    assert.deepEqual([h.surface.listenerCount(), h.win.listenerCount(), h.doc.listenerCount()], [2, 6, 1]);
+    assert.deepEqual([h.surface.listenerCount(), h.win.listenerCount(), h.doc.listenerCount()], [3, 6, 1]);
   });
 }

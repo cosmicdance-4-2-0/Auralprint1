@@ -1700,15 +1700,17 @@ const UI = (() => {
       if (file) loadAndPlay(file);
     }
 
-    /* Queue panel renderer — rebuilds list DOM from Queue.snapshot().
-       each row is keyboard-reachable and declared as a button-like activator. */
+    const queueRowEntries = new WeakMap();
+    // Non-interactive rows contain sibling native Play and Remove buttons.
     function refreshQueuePanel() {
       if (!ui.queueList) return;
       const snap = Queue.snapshot();
       const focused = document.activeElement;
       const oldRows = Array.from(ui.queueList.children);
       const focusIndex = oldRows.findIndex(row => row.contains(focused));
-      const focusWasRemove = focusIndex >= 0 && oldRows[focusIndex].children[2] === focused;
+      const focusWasRemove = focusIndex >= 0 && oldRows[focusIndex].querySelector(".q-remove") === focused;
+      const focusEntry = focusIndex >= 0 ? queueRowEntries.get(oldRows[focusIndex]) : null;
+      let survivingFocusRow = null;
       const clearedFocus = snap.length === 0 && focused === ui.btnClearQueue;
       const fileTransportMutationLocked = isFinalizingFileTransportLocked();
       const allowQueueInteraction = isFileWorkflowMode(state.source) && !fileTransportMutationLocked;
@@ -1724,18 +1726,22 @@ const UI = (() => {
       for (const item of snap.items) {
         const itemIsActive = shouldShowActiveQueueItem(state.source, state.audio, item);
         const row = document.createElement("div");
+        const entry = Queue.entryAt(item.index);
+        queueRowEntries.set(row, entry);
+        if (entry === focusEntry) survivingFocusRow = row;
         row.className = "queue-item" + (itemIsActive ? " active" : "");
         row.title = fileTransportMutationLocked ? `${item.name} - ${queueLockText}` : item.name;
-        row.tabIndex = allowQueueInteraction ? 0 : -1;
-        row.setAttribute("role", "button");
-        row.setAttribute(
+        const playBtn = document.createElement("button");
+        playBtn.type = "button";
+        playBtn.className = "q-play";
+        playBtn.disabled = !allowQueueInteraction;
+        playBtn.setAttribute(
           "aria-label",
           allowQueueInteraction
             ? `Play queue item ${item.index + 1}: ${item.name}`
-            : `Queue item ${item.index + 1}: ${item.name}. ${fileTransportMutationLocked ? queueLockText : readFileModeOnlyAffordanceText("Queue")}`
+            : `Play queue item ${item.index + 1}: ${item.name}. ${fileTransportMutationLocked ? queueLockText : readFileModeOnlyAffordanceText("Queue")}`
         );
-        row.setAttribute("aria-current", itemIsActive ? "true" : "false");
-        row.setAttribute("aria-disabled", allowQueueInteraction ? "false" : "true");
+        playBtn.setAttribute("aria-current", itemIsActive ? "true" : "false");
 
         const idx = document.createElement("span");
         idx.className = "q-idx";
@@ -1746,21 +1752,14 @@ const UI = (() => {
         name.textContent = item.name;
 
         const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
         removeBtn.className = "q-remove";
         removeBtn.textContent = "×";
         removeBtn.title = fileTransportMutationLocked ? queueLockText : "Remove from queue";
         removeBtn.disabled = !allowQueueInteraction;
-        removeBtn.addEventListener("keydown", (e) => {
+        removeBtn.setAttribute("aria-label", `Remove queue item ${item.index + 1}: ${item.name}`);
+        removeBtn.addEventListener("click", () => {
           if (isQueueInteractionBlocked()) return;
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            e.stopPropagation();
-            removeBtn.click();
-          }
-        });
-        removeBtn.addEventListener("click", (e) => {
-          if (isQueueInteractionBlocked()) return;
-          e.stopPropagation(); // prevent row click-to-jump
           const removedEntry = Queue.entryAt(item.index);
           const ownsRequest = activeFileRequest?.entry === removedEntry
             && isCurrentFileRequest(activeFileRequest.requestId);
@@ -1785,29 +1784,23 @@ const UI = (() => {
           refreshQueuePanel();
         });
 
-        row.appendChild(idx);
-        row.appendChild(name);
+        playBtn.appendChild(idx);
+        playBtn.appendChild(name);
+        row.appendChild(playBtn);
         row.appendChild(removeBtn);
 
-        // Row activation: click or keyboard (Enter/Space) jumps to that track.
-        row.addEventListener("click", () => {
+        // Native buttons provide Tab/Enter/Space without custom keyboard dispatch.
+        playBtn.addEventListener("click", () => {
           if (isQueueInteractionBlocked()) return;
           activateQueueRow(item.index);
-        });
-        row.addEventListener("keydown", (e) => {
-          if (isQueueInteractionBlocked()) return;
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            activateQueueRow(item.index);
-          }
         });
 
         ui.queueList.appendChild(row);
       }
       if ((focusIndex >= 0 || clearedFocus) && workspace.isPanelVisible(ui.queuePanel)) {
-        const row = ui.queueList.children[Math.min(focusIndex, snap.length - 1)];
+        const row = survivingFocusRow || ui.queueList.children[Math.min(focusIndex, snap.length - 1)];
         const target = row && allowQueueInteraction
-          ? (focusWasRemove ? row.children[2] : row)
+          ? row.querySelector(focusWasRemove ? ".q-remove" : ".q-play")
           : ui.btnHideQueue;
         target?.focus();
       }
@@ -2035,7 +2028,7 @@ const UI = (() => {
       function hasFocusedInteractiveTarget(event) {
         const target = event.target;
         if (!(target instanceof Element)) return false;
-        if (target.closest('input, select, textarea, button, summary, [contenteditable="true"], [role="button"]')) return true;
+        if (target.closest('input, select, textarea, button, summary, [contenteditable="true"], [role="button"], [role="slider"]')) return true;
         return false;
       }
 
