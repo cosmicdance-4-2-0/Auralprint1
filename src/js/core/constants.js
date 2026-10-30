@@ -1,8 +1,8 @@
 /* =============================================================================
    Auralprint
-   0.1.16-candidate
+   0.1.16-rc.1
 
-   Build 116 feature candidate — Queue policy and numeric Trace fade
+   Build 116 RC #1 — Queue policy and numeric Trace fade
    Canonical Scene configuration; frozen deltas; ordered band ranges.
    ========================================================================== */
 
