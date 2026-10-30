@@ -2,7 +2,7 @@ import { CONFIG } from "../core/config.js";
 import { RAD_TO_DEG } from "../core/constants.js";
 import { state, setCamera, resetCamera } from "../core/state.js";
 import { Spaces } from "../core/spaces.js";
-import { panCamera, zoomCamera, rotateCamera, moveCameraFrame } from "./camera-actions.js";
+import { panCamera, zoomCamera, rotateCamera, manipulateCamera, moveCameraFrame } from "./camera-actions.js";
 
 const HELD_KEYS = { w: 1, s: 2, a: 4, d: 8, q: 16, e: 32 };
 
@@ -21,7 +21,8 @@ function clientToCanvas(canvas, clientX, clientY) {
 function createCameraInteraction({ fitView = () => {} } = {}) {
   let canvas = null;
   let enabled = CONFIG.camera.interaction.enabledByDefault;
-  let drag = null;
+  const contacts = new Map();
+  let cancelling = false;
   let heldKeys = 0, shiftHeld = false;
   let cssWidth = 0, cssHeight = 0, sizeObserver = null;
   let speeds = Object.freeze({
@@ -70,20 +71,28 @@ function createCameraInteraction({ fitView = () => {} } = {}) {
       speeds.panSpeedCssPxPerSec * elapsed, cssWidth, cssHeight);
   }
 
+  function releaseContact(target, id) {
+    try {
+      if (target?.hasPointerCapture(id)) target.releasePointerCapture(id);
+    } catch { /* Capture may already be unavailable on a detached canvas. */ }
+  }
+
   function cancelDrag() {
-    const previous = drag;
-    drag = null;
-    canvas?.setAttribute("data-camera-dragging", "false");
-    if (previous && canvas?.hasPointerCapture(previous.id)) {
-      canvas.releasePointerCapture(previous.id);
-    }
+    if (cancelling) return;
+    cancelling = true;
+    const target = canvas, ids = [...contacts.keys()];
+    // Fence ownership before native release can reenter lostpointercapture.
+    contacts.clear();
+    target?.setAttribute("data-camera-dragging", "false");
+    try { for (const id of ids) releaseContact(target, id); }
+    finally { cancelling = false; }
   }
 
   function syncMode() {
     if (!canvas) return;
     canvas.setAttribute("data-camera-interaction", String(enabled));
     canvas.setAttribute("aria-description", enabled
-      ? "Camera mode on. Hold W A S D to move and Q E to turn; Shift boosts speed. Drag to pan; wheel to zoom at the pointer. Arrow keys pan; plus and minus zoom; brackets rotate; C or Home resets camera; F fits the world; Escape exits camera mode."
+      ? "Camera mode on. Hold W A S D to move and Q E to turn; Shift boosts speed. Drag or use one finger to pan; use two fingers to pan, pinch and twist the scene. Wheel zooms at the pointer. Arrow keys pan; plus and minus zoom; brackets rotate; C or Home resets camera; F fits the world; Escape exits camera mode."
       : "Camera mode off. Enable direct manipulation in the Camera workspace panel.");
   }
 
@@ -94,9 +103,23 @@ function createCameraInteraction({ fitView = () => {} } = {}) {
   }
 
   function moveDrag(event) {
+    const drag = contacts.get(event.pointerId);
     const beforePx = clientToCanvas(canvas, drag.clientX, drag.clientY);
     const afterPx = clientToCanvas(canvas, event.clientX, event.clientY);
     if (!beforePx || !afterPx) { cancelDrag(); return; }
+    if (contacts.size === 2) {
+      const other = [...contacts.values()].find(contact => contact !== drag);
+      const otherPx = clientToCanvas(canvas, other.clientX, other.clientY);
+      if (!otherPx) { cancelDrag(); return; }
+      // Compare the same two identities before/after each event. Degenerate
+      // pairs rebase without a pose change, so separating coincident fingers
+      // recovers without a jump.
+      if (event.clientX !== drag.clientX || event.clientY !== drag.clientY) {
+        manipulateCamera(beforePx, otherPx, afterPx, otherPx);
+      }
+      drag.clientX = event.clientX; drag.clientY = event.clientY;
+      return;
+    }
     // Invert both positions through the current projection. This also handles
     // intervening zoom, rotation, world edits, CSS layout and viewport resizing.
     const before = Spaces.screenToSim(beforePx.x, beforePx.y);
@@ -110,33 +133,47 @@ function createCameraInteraction({ fitView = () => {} } = {}) {
   }
 
   function pointerDown(event) {
-    if (!enabled || drag || !event.isPrimary || event.button !== 0
+    if (!enabled || cancelling || contacts.has(event.pointerId) || event.button !== 0
       || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (contacts.size) {
+      // A nonprimary second finger is admitted only to an owned touch gesture.
+      // Mouse/pen streams and a third contact cannot change its membership.
+      if (contacts.size !== 1 || event.pointerType !== "touch"
+        || contacts.values().next().value.type !== "touch") return;
+    } else if (!event.isPrimary) return;
     const point = clientToCanvas(canvas, event.clientX, event.clientY);
     if (!point || !Spaces.screenToSim(point.x, point.y)) return;
     canvas.focus({ preventScroll: true });
-    try { canvas.setPointerCapture(event.pointerId); }
+    try {
+      canvas.setPointerCapture(event.pointerId);
+      if (!canvas.hasPointerCapture(event.pointerId)) return;
+    }
     catch { return; } // Detached or no longer active: never start an unowned drag.
-    drag = { id: event.pointerId, clientX: event.clientX, clientY: event.clientY };
+    if (event.pointerType === "touch") clearHeldKeys();
+    contacts.set(event.pointerId, { type: event.pointerType, clientX: event.clientX, clientY: event.clientY });
     canvas.setAttribute("data-camera-dragging", "true");
     event.preventDefault();
   }
 
   function pointerMove(event) {
-    if (!drag || event.pointerId !== drag.id) return;
-    if (!(event.buttons & 1)) { cancelDrag(); return; }
+    if (!contacts.has(event.pointerId)) return;
+    if (!(event.buttons & 1)) { pointerCancel(event); return; }
     event.preventDefault();
     moveDrag(event);
   }
 
   function pointerUp(event) {
-    if (!drag || event.pointerId !== drag.id) return;
+    if (!contacts.has(event.pointerId)) return;
     moveDrag(event);
-    cancelDrag();
+    pointerCancel(event);
   }
 
   function pointerCancel(event) {
-    if (drag && event.pointerId === drag.id) cancelDrag();
+    if (!contacts.delete(event.pointerId)) return;
+    // The survivor already holds its latest client position, never the initial
+    // pan origin. Releasing either finger therefore needs no pose adjustment.
+    canvas.setAttribute("data-camera-dragging", String(contacts.size > 0));
+    releaseContact(canvas, event.pointerId);
   }
 
   function wheel(event) {
@@ -156,6 +193,7 @@ function createCameraInteraction({ fitView = () => {} } = {}) {
     const factor = exponent <= Math.log(minimumFactor) ? minimumFactor
       : exponent >= Math.log(maximumFactor) ? maximumFactor : Math.exp(exponent);
     event.preventDefault();
+    if (contacts.values().next().value?.type === "touch") cancelInput();
     zoomCamera(factor, point);
   }
 
