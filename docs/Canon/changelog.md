@@ -2,7 +2,7 @@
 
 ## Build 116 (unreleased)
 
-Compared with public Build 115 (`v0.1.15`, schema 10). Build 116 RC #1 was authorized October 29, 2026; post-RC #1 accessibility corrections merged in PR #101. RC #2 is planned but not yet promoted. Canon/public release acceptance remains pending.
+Compared with public Build 115 (`v0.1.15`, schema 10). Build 116 RC #1 was authorized October 29, 2026; post-RC #1 accessibility corrections merged in PR #101. RC #2 (`v0.1.16-rc.2`, schema 16) was authorized October 30, 2026. Canon/public release acceptance remains pending.
 
 - **Independent world and Camera.** World geometry and retained trails stay in world units across viewport/DPR changes. Camera controls add pan, pointer-centered zoom, rotation, reset and one-shot Fit View.
 - **Authored Scene views.** Save and restore a Scene viewpoint independently of live navigation; shared presets include the saved view.

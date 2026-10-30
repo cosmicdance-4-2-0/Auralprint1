@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Build 116, `v0.1.16-rc.1`, preset schema 16. RC #1 was owner-authorized October 29, 2026 at `cd0622fd7061`; subsequent accessibility corrections merged in [PR #101](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/101) at `6984fb4e62aa`. The current source is **not** the original RC #1 artifact; RC #2 is planned but not yet promoted. Build 116 adds independent world geometry, Camera and authored Scene views, compact sharing, optional File Queue clearing and Trace fading. Public release/Canon is **not** authorized. See [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection) for acceptance and platform limits.
+**Current source checkout:** Build 116 **RC #2** (owner-authorized October 30, 2026), `v0.1.16-rc.2`, preset schema 16. RC #1 remains the original October 29 checkpoint at `cd0622fd7061`; RC #2 follows merged [accessibility PR #101](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/101) and [documentation PR #102](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/102). Build 116 adds independent world geometry, Camera and authored Scene views, compact sharing, optional File Queue clearing and Trace fading. Public release/Canon is **not** authorized. See [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection) for acceptance and platform limits.
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -35,14 +35,14 @@ Before the native browser checks, install Playwright's matching Chromium headles
 
 Build outputs:
 
-- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16-rc.1.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
+- **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16-rc.2.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
 `npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; the three standard Chromium browser checks and focused Queue/Trace and accessibility checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
 
-## Sharing in Build 116 RC #1
+## Sharing in Build 116
 
 **Copy Share Link** writes a compact schema-16 link using native DEFLATE (`#z=`) when compression and decompression work. It shares the authored Scene view. If compression is unavailable, it writes an uncompressed schema-16 link (`#p=`) and explains the fallback. If clipboard access fails, copy the complete link from the address bar.
 
@@ -72,7 +72,7 @@ In the current Build 116 checkout, Tab to the playback-position scrubber to seek
 
 Firefox does not supply shared-display audio for Stream mode; Stream requires an audio track and rejects video-only sessions. File and Mic are separate workflows. Browser/codec support and native permissions vary; see the [release qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-## Queue and Trace in Build 116 RC #1
+## Queue and Trace in Build 116
 
 Settings → Source Behavior offers **Clear File Queue when switching sources**, off by default. It clears only after an accepted File-to-Mic/Stream switch; failed, cancelled or superseded requests and intervening Queue changes preserve files. The choice is saved in Scene presets; Queue contents remain runtime-only.
 
