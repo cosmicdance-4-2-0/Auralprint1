@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 4 / Build 115 (`v0.1.15`), preset schema 10. [Canonical portable HTML](docs/Canon/0.1.15/auralprint_0.1.15.html); [release acceptance and platform qualifications](ROADMAP.md#build-115-release-acceptance-and-qualifications).
 
-**Current source checkout:** Build 116 **RC #1** (owner-authorized October 29, 2026), `v0.1.16-rc.1`, preset schema 16. It adds viewport-independent world geometry, Camera controls and authored Scene views, compact preset sharing, optional File Queue clearing and numeric Trace fading. Public release/Canon is **not** authorized. See [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection) for RC acceptance and platform limits.
+**Current source checkout:** Build 116, `v0.1.16-rc.1`, preset schema 16. RC #1 was owner-authorized October 29, 2026 at `cd0622fd7061`; subsequent accessibility corrections merged in [PR #101](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/101) at `6984fb4e62aa`. The current source is **not** the original RC #1 artifact; RC #2 is planned but not yet promoted. Build 116 adds independent world geometry, Camera and authored Scene views, compact sharing, optional File Queue clearing and Trace fading. Public release/Canon is **not** authorized. See [ROADMAP](ROADMAP.md#build-116-simulation-world-camera-and-projection) for acceptance and platform limits.
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -26,6 +26,7 @@ npm run test:browser
 npm run test:browser:editing
 npm run test:browser:presets
 node scripts/validate-116-candidate.cjs
+node scripts/validate-116-accessibility.cjs
 ```
 
 Do not run test and build concurrently: tests temporarily rename build directories.
@@ -37,7 +38,7 @@ Build outputs:
 - **Portable:** `dist/auralprint_<version-without-leading-v>.html`, derived from the root [version](version) file (this checkout: `dist/auralprint_0.1.16-rc.1.html`); application JS/CSS and favicon embedded. The immutable [public Build 115 HTML](docs/Canon/0.1.15/auralprint_0.1.15.html) is stored separately.
 - **Hosted:** `dist/hosted/index.html` plus the included icons and `site.webmanifest`. Deploy the whole directory, including at subdirectory paths, with appropriate MIME types.
 
-`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; the three standard Chromium browser checks and focused Queue/Trace checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
+`npm run watch` watches JS/CSS, the HTML template, root `version`, and branding inputs. Build and watch share the distribution contract. CI runs Node tests, build and distribution verification on Ubuntu and Windows; the three standard Chromium browser checks and focused Queue/Trace and accessibility checks are mandatory on Ubuntu. Chromium CI uses local HTTP and does not certify Windows browser interaction, Firefox, Safari, physical devices, native audio permissions, direct `file://` operation or offline launch.
 
 The portable file is designed to run without adjacent assets. Direct local-file usage has owner-reported browser coverage, but fully network-disabled operation remains an open acceptance check. Hosted packaging does not provide a service worker or offline caching.
 
@@ -62,6 +63,8 @@ The public Build 115 release provides:
 ## Using Auralprint
 
 Load audio in **File**, or select **Mic** / **Stream** with browser permission. **Audio** controls sources and playback; **Queue** controls the playlist; **Analysis** owns spectral configuration; **Visualizers** owns Orbs and the Spectral Ring; **Settings** owns Scene appearance, particle resources and presets; **Record** owns capture. The development checkout adds **Camera** for live view and authored Scene view actions. **H** hides/restores panels outside text inputs; **Space** pauses visual motion/emission while analysis and particle aging continue. **Reset Visuals** applies designed Orb phases and clears trails.
+
+In the current Build 116 checkout, Tab to the playback-position scrubber to seek with arrows (5 seconds, or 30 with Shift), Home or End. Queue rows have separately focusable Play and Remove buttons. These controls were corrected after RC #1 in PR #101.
 
 **Waveforms:** Audio → Waveforms has optional 4/8/15-minute stereo-equivalent workload profiles, separate encoded-input and estimated-PCM admission limits, and manual generation. Playback does not require waveform preparation. These limits do not bound total browser memory.
 
