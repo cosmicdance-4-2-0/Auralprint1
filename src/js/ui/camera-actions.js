@@ -70,6 +70,33 @@ function zoomCamera(factor, backingPoint = null) {
   return commitCamera({ zoom, x: camera.x + (before.x - after.x), y: camera.y + (before.y - after.y) });
 }
 
+// Pointer pairs are in projection/backing coordinates, just like wheel anchors.
+// Solve the full pose before committing: a rejected inverse or translation must
+// never leave zoom/rotation applied on their own.
+function manipulateCamera(beforeA, beforeB, afterA, afterB) {
+  const midpoint = (a, b) => ({ x: a.x * .5 + b.x * .5, y: a.y * .5 + b.y * .5 });
+  const beforeMid = midpoint(beforeA, beforeB), afterMid = midpoint(afterA, afterB);
+  const dx0 = beforeB.x - beforeA.x, dy0 = beforeB.y - beforeA.y;
+  const dx1 = afterB.x - afterA.x, dy1 = afterB.y - afterA.y;
+  const distance0 = Math.hypot(dx0, dy0), distance1 = Math.hypot(dx1, dy1);
+  if (![dx0, dy0, dx1, dy1, distance0, distance1].every(Number.isFinite)
+    || distance0 <= 0 || distance1 <= 0) return false;
+  const factor = distance1 / distance0;
+  if (!Number.isFinite(factor) || factor <= 0) return false;
+  const delta = Math.atan2(dy1, dx1) - Math.atan2(dy0, dx0);
+  const turn = Math.atan2(Math.sin(delta), Math.cos(delta));
+  const camera = state.camera, limits = CONFIG.limits.camera.zoom;
+  const zoom = factor >= limits.max / camera.zoom ? limits.max
+    : factor <= limits.min / camera.zoom ? limits.min : camera.zoom * factor;
+  // Backing +Y points down: positive pair angle and positive camera rotation
+  // both turn the displayed scene clockwise.
+  const proposed = { ...camera, zoom, rotationRad: camera.rotationRad + turn };
+  const before = viewportToWorld(beforeMid.x, beforeMid.y, state, state.world, camera);
+  const after = viewportToWorld(afterMid.x, afterMid.y, state, state.world, proposed);
+  if (!before || !after) return false;
+  return commitCamera({ ...proposed, x: camera.x + (before.x - after.x), y: camera.y + (before.y - after.y) });
+}
+
 // An explicit one-shot query. Neither drawing nor the animation callback calls
 // this collector: retained history is traversed only when the operator asks.
 function fitCamera(analysisFrame = null) {
@@ -89,4 +116,4 @@ function fitCamera(analysisFrame = null) {
     reason: applied ? result.reason : "invalid-geometry" };
 }
 
-export { panCamera, rotateCamera, zoomCamera, moveCameraFrame, fitCamera };
+export { panCamera, rotateCamera, zoomCamera, manipulateCamera, moveCameraFrame, fitCamera };
