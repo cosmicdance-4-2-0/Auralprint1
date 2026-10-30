@@ -2,7 +2,7 @@
 
 ## Build 116 (unreleased)
 
-Compared with public Build 115 (`v0.1.15`, schema 10). Build 116 remains a feature candidate; RC and Canon acceptance are pending.
+Compared with public Build 115 (`v0.1.15`, schema 10). Build 116 RC #1 was authorized October 29, 2026; post-RC #1 accessibility corrections merged in PR #101. RC #2 is planned but not yet promoted. Canon/public release acceptance remains pending.
 
 - **Independent world and Camera.** World geometry and retained trails stay in world units across viewport/DPR changes. Camera controls add pan, pointer-centered zoom, rotation, reset and one-shot Fit View.
 - **Authored Scene views.** Save and restore a Scene viewpoint independently of live navigation; shared presets include the saved view.
@@ -12,6 +12,7 @@ Compared with public Build 115 (`v0.1.15`, schema 10). Build 116 remains a featu
 - **Numeric controls.** Sliders follow CONFIG editing steps; Orb and Ring angular speeds use 0.5°/s steps. Scene palette controls distinguish saved fractions from their editing selection. Analysis frequency drafts survive unrelated refreshes. Configured frequencies are limited to 384,000 Hz, with effective analysis bounded by the active AudioContext's Nyquist limit.
 - **Preset loading.** Repairing missing or duplicate Orb identities no longer multiplies long numeric IDs. Valid, unique explicit IDs are preserved.
 - **Seeking.** Scrubber drags cancel on window focus loss or released mouse buttons; touch seeking follows the initiating contact.
+- **Keyboard and Queue accessibility.** Playback position now supports a focusable slider with arrow/Home/End seeking and updated time values; Queue rows expose separate native Play and Remove buttons (post-RC #1, PR #101).
 - **Live-input recovery.** Microphone/shared-stream audio that ends
   during acquisition or graph setup no longer appears live. The same source
   button permits an intentional retry, and obsolete cleanup preserves newer inputs.
