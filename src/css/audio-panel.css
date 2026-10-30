@@ -16,9 +16,7 @@
 }
 
     #audioPanel .track { min-width: 0; }
-    /* Scrubber row — second row inside #audioPanel.
-       grid-column: 1 / -1 spans all 10 columns so the scrubber fills the full width.
-       The canvas element draws: waveform overview + live playhead + seek affordance. */
+    /* Full-width waveform/seek row; grid-column spans every audio-panel column. */
 	
 	#scrubberRow {
 		grid-column: 1 / -1;
