@@ -43,7 +43,7 @@ test("116A: malformed fractions and overflowing coordinates fail explicitly", ()
 test("116A: neither camera nor canvas dimensions participate in world geometry", () => {
   const world = createWorldGeometry(1024, 1024);
   const x = worldPointFromFractions(world, .75, -.25);
-  // Viewport dimensions will be supplied to a later projection stage;
+  // Viewport dimensions belong to projection;
   // changing them has no input path into the world geometry module.
   for (const viewport of [{ widthPx: 640, heightPx: 480, dpr: 1 },
     { widthPx: 3840, heightPx: 2160, dpr: 2 }]) {

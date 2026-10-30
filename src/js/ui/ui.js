@@ -558,7 +558,6 @@ const UI = (() => {
   }
 
   function collectOperatorFacingControls() {
-    // 112 
     // This intentionally excludes buttons and transport-only affordances.
     const selectors = [
       "#audioPanel input",
@@ -1657,8 +1656,8 @@ const UI = (() => {
         if (file) loadAndPlay(file);
         return;
       }
-      // mode=none at queue end: playback ends, but active recording continues
-      // until the user explicitly stops it.
+      // Queue exhaustion ends playback without stopping active capture.
+      // RecorderEngine retains its own Stop and resource-policy handling.
       RecorderEngine.onTransportMutation("audio-unloaded", {
         reason: "track-ended-no-next",
       });

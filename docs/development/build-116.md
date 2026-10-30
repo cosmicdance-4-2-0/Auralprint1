@@ -14,6 +14,22 @@ Schema 16 owns a separate frozen decoding literal. Schemas 2–13 migrate with q
 
 Reproduce focused browser evidence after the standard README checks with `node scripts/validate-116-candidate.cjs` (`AP_CHROMIUM_PATH` optionally selects an installed Chromium). It checks source/portable/hosted controls, generated live-source transitions, DPR 1/2 native pixels against 116E for Fade 0 and F single-color joins at 1/5/10/20, gaps, short histories, backgrounds, camera transforms and Orb limits. Reports and screenshots go to `work/116-candidate/`; generated Web Audio streams do not certify native permissions or devices. [PR #88](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/88) records candidate evidence and platform/owner qualifications. RC/Canon acceptance remains pending.
 
+## Pre-RC audit dispositions
+
+The [pre-RC hostile audit](../audits/20261029-081602_auralprint-116-pre-rc-hostile-audit.md) (PR #90) and [post-remediation audit](../audits/20261029T124331Z_auralprint-116-post-remediation-hostile-2.md) (PR #94) are merged historical evidence. The following corrections are merged through `1c7fdccd1d7fe085510e4bce6a41750afea5289c`; version and writer remain `v0.1.16-candidate` / schema 16.
+
+| Finding | Merged correction / evidence |
+| --- | --- |
+| AUD116-001: numeric Orb-ID amplification | PR #91: bounded short generated IDs preserve explicit opaque identities. [Remediation](../audits/remediations/116-aud001/opaque-orb-ids.md). |
+| AUD116-002/003: palette precision, stale replacement drafts and editor focus | PR #92: reuse CONFIG editing controls, propagate explicit replacement intent and keep focused editor cards connected. [Remediation](../audits/remediations/116-aud002-aud003-ui-state/20261029-ui-state.md). |
+| AUD116-004: abandoned mouse seek | PR #93: cancel on blur/hidden state or loss of the initiating mouse button. [Remediation](../audits/remediations/116-aud004-scrubber/README.md). |
+| AUD116-R2-001: touch seek ownership | PR #95: retain the initiating contact; unrelated contacts cannot seek or end its gesture. [Remediation](../audits/remediations/116-r2-001-touch-ownership/README.md). |
+| AUD116-R2-002: repeated UI wiring | PR #96: retain one File/EOF coordinator and stable callbacks; rebind its listeners to recached controls. [Remediation](../audits/remediations/116-r2-002-ui-coordinator/README.md). |
+
+PR #94 challenged PRs #91–#93 and found the two R2 defects subsequently corrected by #95/#96. These merges do not establish RC acceptance. Native evidence covers the recorded Linux Chromium paths; physical touch, owner devices, other engines and subjective positive-fade acceptance remain separate checks.
+
+AUD116-006 / R2-003 remains unresolved. The post-remediation audit records both original Ubuntu CI failures, passing identical-SHA reruns and an interrupted-save model that reproduces the assertion without changing published outputs. That model does not establish the original cause. AUD116-005's injected File-tap cleanup refusal remains deferred to [Build 117](../../ROADMAP.md#outstanding-ux-and-resource-work). [ROADMAP](../../ROADMAP.md#build-116-simulation-world-camera-and-projection) owns release gates and owner decisions.
+
 ## 116E compact presets
 
 Historical **Build 116E / `v0.1.16e`, schema 13** checkpoint, merged in [PR #85](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/85), based on accepted upstream `7550ccd3809a4af41f745f53449691744098a73e` (merged PR #84), on `feature/116e-compact-presets`. The schema-13 protocol and measurements below describe that checkpoint; the [current candidate](#116-feature-candidate) writes schema 16. This representation/transport change preserved CONFIG defaults, canonical preferences, numerical precision, simulation, Build 118 spectral semantics, public Build 115 canon and schemas 2–12. No 116 RC #1 or release approval is implied.

@@ -153,7 +153,7 @@ Original IDs/priorities/titles come from the immutable [October 6 audit](../audi
 
 Commit [`c7604b8`](https://github.com/cosmicdance-4-2-0/Auralprint1/commit/c7604b838b09617d7f24daafc20ebbcbdd0c467a) deliberately removed 344 generated diagnostic logs. Files named in the original inventories but absent from the current tree remain available at its parent, `bda0ea9d0a27d32c2b6a1ac558bedfc63525db06`: [October 9 results](https://github.com/cosmicdance-4-2-0/Auralprint1/tree/bda0ea9d0a27d32c2b6a1ac558bedfc63525db06/docs/audits/20261009-004238_materials/results) and [October 6 evidence](https://github.com/cosmicdance-4-2-0/Auralprint1/tree/bda0ea9d0a27d32c2b6a1ac558bedfc63525db06/docs/audits/evidence/2026-10-06_214431_PDT). The original reports, manifests and recorded hashes are unchanged; retrieve archived files from that revision rather than regenerating them.
 
-Version-specific counts, mutation outcomes, CI run IDs, native results and intermediate failures live in the reports above, not the ordinary README. Their links retain the observations without duplicating large logs. Optional browser probes require externally provisioned Playwright/Chromium, not new project dependencies. Run after building; report paths should target new scratch output, never overwrite historical evidence.
+Version-specific counts, mutation outcomes, CI run IDs, native results and intermediate failures live in the reports above. Optional historical browser probes can use the project's locked Playwright dependency and an installed Chromium, with the tooling overrides listed below. Check each probe's baseline-specific expectations before running it after a build; write new results to scratch output, never over historical evidence. [README](../../README.md#developer-bootstrap) owns current required checks.
 
 | Historical diagnostic | Owning evidence / tooling selectors |
 | --- | --- |
@@ -169,7 +169,7 @@ Version-specific counts, mutation outcomes, CI run IDs, native results and inter
 
 The owner accepted Build 115 as Release 4 on October 20, 2026 following extended local testing and public RC feedback. The [roadmap qualifications](../../ROADMAP.md#build-115-release-acceptance-and-qualifications) record limits of that acceptance, including Firefox Stream audio. The [release comparison](build-115-release-delta.md) distinguishes public Build 113 from internal Build 114; the canonical changelog follows the existing `v114 → v115` chronological format.
 
-The [editorial integrity report](115m-i-e-documentation-review.md) records this pass's scope and validation. Canonical distributions, canonical changelog, original audit, remediation reports and evidence logs remain unchanged.
+The [I.E editorial integrity report](115m-i-e-documentation-review.md) records the earlier documentation checkpoint's scope and validation. Canonical distributions, changelog, audits and remediation evidence were unchanged in that pass.
 
 ## 115M.I.N.3 — October 9 AUD-006 corrective implementation
 

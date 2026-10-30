@@ -36,21 +36,19 @@ Build 115's accepted items (AUD-001/003/005, editor jump, Stream stereo, schema 
 
 ## Build 116: simulation world, camera and projection
 
-**Status: merged feature candidate ([PR #88](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/88)), awaiting RC gates.** Build 116 includes independent world geometry, live Camera controls, authored Scene views, compact preset sharing, opt-in File Queue clearing and numeric Trace fade length 0–20. Particle Birth Color and Angular Trace are excluded. The writer uses schema 16; experimental schemas 14/15 are reserved and rejected. Build 115 remains the public release; Build 116 has no RC or Canon acceptance. See the [candidate contract](docs/development/build-116.md#116-feature-candidate).
+**Status: merged feature candidate, with hostile audits and corrective PRs through #96 merged; RC gates remain open.** Build 116 includes independent world geometry, live Camera controls, authored Scene views, compact preset sharing, opt-in File Queue clearing and numeric Trace fade length 0–20. Particle Birth Color and Angular Trace are excluded. The writer uses schema 16; experimental schemas 14/15 are reserved and rejected. Build 115 remains the public release; Build 116 has no RC or Canon acceptance. See the [candidate contract](docs/development/build-116.md#116-feature-candidate) and [audit dispositions](docs/development/build-116.md#pre-rc-audit-dispositions).
 
 World geometry is an independent reference coordinate system, not the window's dimensions. World width/height define proportional Orb and Ring geometry; they do **not** impose clipping, collision, automatic particle retirement, or camera movement limits. Viewport/DPR concern presentation, not world state.
 
 Acceptance gates:
 
 - Verify Queue completion/mutation fencing and Fade 0 pixel/path parity; evaluate positive fades, joins and overlaps on owner devices.
-- Verify schema-16 compact/DEFLATE round trips and atomic rejection of reserved schemas 14/15 while preserving schemas 2–13.
-- Verify schema-13 frozen-default reconstruction, ordered contiguous/sparse/reordered selections, native DEFLATE framing and bounded streaming decode; retain schemas 2–12 and canonical numerical precision.
+- Verify schema-16 round trips, schema-13 frozen-default reconstruction, ordered contiguous/sparse/reordered selections, native DEFLATE framing and bounded streaming decode. Preserve schemas 2–13 and canonical numerical precision; reject reserved schemas 14/15 atomically.
 - Verify compressed startup before the first application frame, stale-import cancellation and accurate compression/clipboard fallback.
 - Run the Chromium preset gate and optional Firefox/WebKit interoperability checks as tooling permits; execute the [116E physical-device matrix](docs/development/build-116.md#116e-owner-device-matrix), including Safari and direct-file/offline checks. Linux WebKit automation does not certify physical Safari.
 - Complete documentation reconciliation and review.
-- Investigate the Ubuntu watcher-test failure in [post-merge CI attempt 1](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/40830745837/attempts/1): duplicate saves launched additional Python assemblers. Attempt 2 passed on the same SHA; the original failure remains unresolved, without a confirmed regression or flakiness diagnosis.
-- Complete an independent hostile audit.
-- Remediate demonstrated release blockers and verify the corrections through follow-up review.
+- Resolve or explicitly disposition AUD116-006 / R2-003: Ubuntu duplicate-save assertions failed in [run 40830745837](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/40830745837/attempts/1) and [run 40873236076](https://github.com/cosmicdance-4-2-0/Auralprint1/actions/runs/40873236076/attempts/1). Identical-SHA reruns passed. Controlled interrupted saves reproduce the assertion without incorrect publication; the original CI cause remains unresolved.
+- Review the merged hostile audits and [corrective evidence](docs/development/build-116.md#pre-rc-audit-dispositions) for RC acceptance. Remediate any further demonstrated release blockers and verify corrections through follow-up review.
 - Obtain owner evaluation and real-world acceptance.
 - Obtain explicit owner authorization before 116 RC #1 promotion, release, tagging, deployment or public publication.
 - World dimensions can be configured independently of browser dimensions; changing viewport size, devicePixelRatio, pan, zoom or camera rotation must not mutate Orb locations/phases, retained particle coordinates, Ring geometry, analysis or playback.
@@ -83,6 +81,7 @@ Acceptance gates:
 | Broader constrained-hardware performance / resource hardening | Build 117; RC-15 corrective work is closed, and broader tuning is deferred |
 | Broader source/load lifecycle hardening (October 6 AUD-006) | Build 117; demonstrated RC-02–RC-05 concurrency/EOF defects are closed |
 | Broader recorder memory / encoder optimization (October 6 AUD-009) | Build 117; October 9 AUD-006 bounded application policy is implemented and merged through N.3F (PRs #59/#60). Encoded payload does not bound total browser memory; N.2 high-resolution VP8 reached its diagnostic resource guard. |
+| Injected File-tap cleanup refusal (AUD116-005) | Build 117 hardening, as retained in [PR #94](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/94). Native failure reachability remains unestablished; this is separate from the unresolved Build 116 watcher gate. |
 | Remaining allocations / hidden UI refresh / channel-complete analysis cost (AUD-012) | Build 117; direct Trace suffix traversal and demonstrated quadratic editor/tooltip work have already been corrected |
 
 ## Build 118: richer spectral selection
