@@ -5159,3 +5159,103 @@ test("116F: shared preset enables future Queue clearance while legacy import res
     });
   } finally { globalThis.location = previousLocation; }
 });
+
+// AUD116-R2-002 uses the existing transport harness and real coordinator paths.
+for (const entry of ["picker", "drop"]) {
+  test(`AUD116-R2-002: repeated wiring admits one ${entry} batch and one action per control`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ ingest, getElement, scrubberLoads, mutations }) => {
+      for (let i = 0; i < 6; i++) UI.wireControls();
+      preferences.audio.repeatMode = "none";
+      for (const mode of ["one", "all", "none", "one", "all", "none"]) {
+        await getElement("btnRepeat").dispatch("click");
+        assert.equal(preferences.audio.repeatMode, mode);
+      }
+      await ingest(["A.wav", "B.wav", "C.wav"], entry);
+      assert.equal(Queue.length, 3);
+      assert.deepEqual(scrubberLoads, ["A.wav"]);
+      await getElement("btnNext").dispatch("click");
+      assert.equal(Queue.currentIndex, 1);
+      await getElement("btnPrev").dispatch("click");
+      assert.equal(Queue.currentIndex, 0);
+      await getElement("btnPlay").dispatch("click");
+      assert.equal(state.audio.isPlaying, false);
+      await getElement("btnPlay").dispatch("click");
+      assert.equal(state.audio.isPlaying, true);
+      assert.deepEqual(scrubberLoads, ["A.wav", "B.wav", "A.wav"]);
+      assert.equal(mutations.filter(x => x.kind === "track-change-start").length, 3);
+      const stop = t.mock.method(AudioEngine, "stop");
+      await getElement("btnStop").dispatch("click");
+      assert.equal(stop.mock.callCount(), 1);
+    });
+  });
+}
+
+for (const boundary of ["resume", "play"]) {
+  for (const outcome of ["complete", "clear", "replacement"]) {
+    test(`AUD116-R2-002: pending ${boundary} File survives rewiring and ${outcome} retains request authority`, async t => {
+      const entered = rc02Deferred(), release = rc02Deferred();
+      await withRc02FileWorkflow(t, boundary === "resume" ? {
+        contextState: "suspended", onResume() { entered.resolve(); return release.promise; },
+      } : {}, async ({ audio, ingest, getElement, scrubberLoads, mutations }) => {
+        if (boundary === "play") {
+          const play = audio.audioEl.play.bind(audio.audioEl);
+          audio.audioEl.play = async () => { entered.resolve(); await release.promise; return play(); };
+        }
+        const pending = ingest(["A.wav"]);
+        await entered.promise;
+        const guard = AudioEngine._isLoadRequestCurrent, ended = AudioEngine._onTrackEnded;
+        const requestId = mutations.find(x => x.kind === "track-change-start").details.requestId;
+        const entry = Queue.currentEntry();
+        for (let i = 0; i < 6; i++) UI.wireControls();
+        assert.equal(AudioEngine._isLoadRequestCurrent, guard);
+        assert.equal(AudioEngine._onTrackEnded, ended);
+        assert.equal(guard(requestId), true);
+        assert.equal(Queue.currentEntry(), entry);
+        assert.equal(mutations.filter(x => x.kind === "track-change-start").length, 1);
+        if (outcome !== "complete") await getElement("btnClearQueue").dispatch("click");
+        if (outcome === "replacement") {
+          // Restore ordinary activation so B wins before the held A settles.
+          audio.audioEl.play = () => { audio.audioEl.paused = false; audio.audioEl.dispatch("play"); return Promise.resolve(); };
+          const replacement = ingest(["B.wav"]);
+          release.resolve(); await replacement;
+        } else release.resolve();
+        await pending;
+        if (outcome === "complete") {
+          assert.equal(guard(requestId), true);
+          assert.equal(state.audio.filename, "A.wav");
+          assert.deepEqual(scrubberLoads, ["A.wav"]);
+          assert.equal(mutations.filter(x => x.kind === "track-change-complete").length, 1);
+        } else {
+          assert.equal(guard(requestId), false);
+          assert.deepEqual(scrubberLoads, outcome === "replacement" ? ["B.wav"] : []);
+          assert.equal(state.audio.filename, outcome === "replacement" ? "B.wav" : "");
+          assert.equal(Queue.length, outcome === "replacement" ? 1 : 0);
+        }
+      });
+    });
+  }
+}
+
+for (const repeat of ["none", "one", "all"]) {
+  test(`AUD116-R2-002: rewiring preserves deferred EOF (${repeat}) through recording finalization`, async t => {
+    await withRc02FileWorkflow(t, {}, async ({ audio, ingest, scrubberLoads, mutations, getElement }) => {
+      await ingest(["A.wav", "B.wav"]);
+      if (repeat === "all") await getElement("btnNext").dispatch("click");
+      preferences.audio.repeatMode = repeat;
+      state.recording.phase = "finalizing";
+      rc05End(audio);
+      const starts = mutations.filter(x => x.kind === "track-change-start").length;
+      for (let i = 0; i < 5; i++) UI.wireControls();
+      assert.equal(mutations.filter(x => x.kind === "track-change-start").length, starts);
+      // Repeat is captured at EOF; later preference changes cannot replace it.
+      preferences.audio.repeatMode = repeat === "one" ? "none" : "one";
+      state.recording.phase = "complete";
+      UI.refreshRecordingUi(); await rc05Settle();
+      assert.equal(state.audio.filename, repeat === "none" ? "B.wav" : "A.wav");
+      assert.equal(mutations.filter(x => x.kind === "track-change-start").length, starts + 1);
+      const completed = [...scrubberLoads];
+      for (let i = 0; i < 5; i++) { UI.wireControls(); UI.refreshAllUiText(); }
+      await rc05Settle(); assert.deepEqual(scrubberLoads, completed);
+    });
+  });
+}

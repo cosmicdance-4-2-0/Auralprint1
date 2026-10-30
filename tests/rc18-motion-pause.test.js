@@ -27,13 +27,14 @@ for (const phaseMode of ["free", "orb"]) test(`RC-18: production Space/callback 
     VisualizerRuntime: { update(frame) { lastFrame = frame; v.update(frame); }, render() {} },
     Renderer: {}, UI: { updateCamera() {}, refreshAllUiText() {} }, Scrubber: { draw() {} },
     window: { addEventListener(_event, handler) { shortcut = handler; } }, hasFocusedInteractiveTarget: () => false,
+    listen(target, event, handler) { target.addEventListener(event, handler); },
   });
   // Execute the real callback and real shortcut body; boot/DOM seams are stubbed.
   const main = readFileSync(new URL("../src/js/main.js", import.meta.url), "utf8")
     .replace(/^import .*;\r?\n/gm, "").replace(/^main\(\);$/m, "").replace(/^export .*;$/m, "");
   vm.runInContext(main, context);
   const ui = readFileSync(new URL("../src/js/ui/ui.js", import.meta.url), "utf8");
-  const start = ui.indexOf('window.addEventListener("keydown", (e) => {');
+  const start = ui.indexOf('listen(window, "keydown", (e) => {');
   const end = ui.indexOf("// Track navigation", start);
   assert.ok(start >= 0 && end > start);
   vm.runInContext(ui.slice(start, end) + "});", context);

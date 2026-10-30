@@ -235,6 +235,7 @@ const UI = (() => {
   const ui = state.ui;
   let sourceSwitchDispatcher = async () => false;
   let maybeConsumePendingTrackEnd = () => {};
+  let rebindCoordinatorControls = null;
 
   function readRecordPanelEdgeVars() {
     const placement = CONFIG.recording && CONFIG.recording.panelPlacement
@@ -774,7 +775,6 @@ const UI = (() => {
   }
 
   let recordingResourceControls = null;
-  const wiredRecordingControls = new WeakSet();
   const presetIntentDocuments = new WeakSet();
   function formatRecordingPrimaryStatus(recording) {
     if (!recording || !recording.hooksEnabled) return "Recording disabled";
@@ -1365,6 +1365,22 @@ const UI = (() => {
     initConfigTooltips();
 
 
+    // Recache and feature initialization remain repeatable. Only the coordinator
+    // owns File requests and deferred EOF work, for the lifetime of this UI.
+    if (!rebindCoordinatorControls) rebindCoordinatorControls = createControlCoordinator();
+    rebindCoordinatorControls();
+    wireConfigTooltipFeedbackEvents();
+    workspace.init({ onRefreshQueuePanel: queuePanelRefresher });
+    analysisPanelUi.init();
+    recordingResourceControls = createRecordingResourcesControls();
+    refreshRecordingUi();
+
+    // Startup decodes before the controls exist. Retain its domain rejection
+    // for the established preset status owner once wiring is complete.
+    if (UrlPreset.getValidationMessage()) sceneStatusToast(UrlPreset.getValidationMessage(), 4000);
+  }
+
+  function createControlCoordinator() {
     /* -------------------------------------------------------------------------
        clearAudioState() — canonical clean-slate reset for all stop/clear paths.
 
@@ -1606,8 +1622,6 @@ const UI = (() => {
        Single source of truth for queue-aware repeat behavior on natural track end.
        The hook survives teardown() intentionally — registered once at boot,
        must persist across track loads. Documented in 111c/111d. */
-    AudioEngine._isLoadRequestCurrent = isCurrentFileRequest;
-
     function enqueueFileBatch(files) {
       const wasEmpty = Queue.length === 0;
       const firstIndex = Queue.length;
@@ -1663,7 +1677,7 @@ const UI = (() => {
       applyTrackEndedPolicy(pending);
     };
 
-    AudioEngine._onTrackEnded = () => {
+    function onTrackEnded() {
       const context = {
         file: Queue.current(),
         entry: Queue.currentEntry(),
@@ -1676,7 +1690,7 @@ const UI = (() => {
         return;
       }
       applyTrackEndedPolicy(context);
-    };
+    }
 
     function activateQueueRow(trackIndex) {
       if (isFinalizingFileTransportLocked()) {
@@ -1802,288 +1816,289 @@ const UI = (() => {
     }
     queuePanelRefresher = refreshQueuePanel;
 
-    wireConfigTooltipFeedbackEvents();
-    workspace.init({ onRefreshQueuePanel: refreshQueuePanel });
-    analysisPanelUi.init();
-    recordingResourceControls = createRecordingResourcesControls();
-    refreshRecordingUi();
-
-    if (ui.btnRecordStart && !wiredRecordingControls.has(ui.btnRecordStart)) {
-      wiredRecordingControls.add(ui.btnRecordStart);
-    if (ui.btnRecordCancel) ui.btnRecordCancel.addEventListener("click", () => {
-      dispatchRecordingAction("cancel");
-      // The terminal action is now disabled; keep keyboard focus in Record.
-      (state.recording.lastExportUrl ? ui.btnRecordDownloadLast
-        : state.recording.recorderEnabled !== false ? ui.btnRecordStart : ui.btnHideRecord)?.focus();
-    });
-    if (ui.btnRecordStart) ui.btnRecordStart.addEventListener("click", () => {
-      dispatchRecordingAction("start");
-    });
-    if (ui.btnRecordStop) ui.btnRecordStop.addEventListener("click", () => {
-      dispatchRecordingAction("stop");
-    });
-    if (ui.selRecordMime) ui.selRecordMime.addEventListener("change", () => {
-      dispatchRecordingAction("selectMime", { mimeType: ui.selRecordMime.value });
-    });
-    if (ui.chkRecordIncludeAudio) ui.chkRecordIncludeAudio.addEventListener("change", () => {
-      dispatchRecordingAction("setIncludeAudio", { enabled: ui.chkRecordIncludeAudio.checked });
-    });
-    if (ui.selRecordTargetFps) ui.selRecordTargetFps.addEventListener("change", () => {
-      dispatchRecordingAction("setTargetFps", { fps: Number(ui.selRecordTargetFps.value) });
-    });
-    if (ui.btnRecordDownloadLast) ui.btnRecordDownloadLast.addEventListener("click", () => {
-      downloadLastRecording();
-    });
-
+    // Rebind only our listeners after recaching: surviving controls stay bounded,
+    // replaced controls work, and detached controls lose coordinator authority.
+    // The request/EOF closure and callback identities are retained across calls.
+    const listenerCleanups = [];
+    function listen(target, event, handler, options) {
+      target.addEventListener(event, handler, options);
+      listenerCleanups.push(() => target.removeEventListener(event, handler, options));
     }
+    return () => {
+      for (const cleanup of listenerCleanups) cleanup();
+      listenerCleanups.length = 0;
+      AudioEngine._isLoadRequestCurrent = isCurrentFileRequest;
+      AudioEngine._onTrackEnded = onTrackEnded;
 
-    function toastFileModeOnlyAction() {
-      audioStatusToast("Switch to File mode to use file playback controls.", 2500);
-    }
-
-    /* Events */
-    if (ui.btnSourceFile) ui.btnSourceFile.addEventListener("click", () => {
-      dispatchSourceSwitchAction("file");
-    });
-    if (ui.btnSourceMic) ui.btnSourceMic.addEventListener("click", () => {
-      dispatchSourceSwitchAction("mic");
-    });
-    if (ui.btnSourceStream) ui.btnSourceStream.addEventListener("click", () => {
-      dispatchSourceSwitchAction("stream");
-    });
-
-    // fileInput.value reset (checklist 3.7): cleared before every picker open so
-    // the same file can be loaded a second time. The drag-drop path uses
-    // dataTransfer.files directly — it never touches fileInput — so no reset
-    // is needed there. This is the only fileInput add path; invariant maintained.
-    ui.btnLoad.addEventListener("click", () => {
-      if (!isFileWorkflowMode(state.source)) {
-        toastFileModeOnlyAction();
-        return;
-      }
-      if (isFinalizingFileTransportLocked()) {
-        toastFinalizingTransportLock();
-        return;
-      }
-      ui.fileInput.value = "";
-      ui.fileInput.click();
-    });
-
-    ui.fileInput.addEventListener("change", async () => {
-      if (!isFileWorkflowMode(state.source)) {
-        toastFileModeOnlyAction();
-        return;
-      }
-      if (isFinalizingFileTransportLocked()) {
-        toastFinalizingTransportLock();
-        return;
-      }
-      const files = Array.from(ui.fileInput.files || []);
-      if (!files.length) return;
-
-      await enqueueFileBatch(files);
-    });
-
-    ui.btnPlay.addEventListener("click", async () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      const target = AudioEngine.getMediaEl();
-      try {
-        await AudioEngine.playPause();
-      } catch (err) {
-        // Contain an unexpected engine rejection at this UI boundary without
-        // unloading a recoverable File or reporting an obsolete operation.
-        if (!target || AudioEngine.getMediaEl() !== target) return;
-        state.audio.isPlaying = !target.paused;
-        state.audio.transportError = `Playback failed: ${err?.message || err?.name || "unknown error"}`;
-      }
-      if (!target || AudioEngine.getMediaEl() !== target) return;
-      if (state.audio.transportError) audioStatusToast(state.audio.transportError, 6000);
-    });
-    ui.btnStop.addEventListener("click", () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      AudioEngine.stop();
-      state.audio.transportError = "";
-    });
-
-    function pickManualPrevFile() {
-      if (Queue.canPrev()) return Queue.prev();
-      if (preferences.audio.repeatMode === "all" && Queue.length > 1) return Queue.goTo(Queue.length - 1);
-      return null;
-    }
-
-    function pickManualNextFile() {
-      if (Queue.canNext()) return Queue.next();
-      if (preferences.audio.repeatMode === "all" && Queue.length > 1) return Queue.goTo(0);
-      return null;
-    }
-
-    ui.btnPrev.addEventListener("click", async () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      if (isFinalizingFileTransportLocked()) {
-        toastFinalizingTransportLock();
-        return;
-      }
-      const file = pickManualPrevFile();
-      if (file) await loadAndPlay(file);
-    });
-    ui.btnNext.addEventListener("click", async () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      if (isFinalizingFileTransportLocked()) {
-        toastFinalizingTransportLock();
-        return;
-      }
-      const file = pickManualNextFile();
-      if (file) await loadAndPlay(file);
-    });
-
-    ui.btnToggleQueue.addEventListener("click", () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      if (workspace.isPanelVisible(ui.queuePanel)) workspace.hideQueuePanel(); else workspace.showQueuePanel();
-    });
-
-
-    ui.btnClearQueue.addEventListener("click", () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      if (isFinalizingFileTransportLocked()) {
-        toastFinalizingTransportLock();
-        return;
-      }
-      // Cancel file activation, clear queue, then release source and reset state.
-      resetEmptyFileWorkflowState("queue-cleared"); // sets isLoaded/isPlaying/filename, resets scrubber + trails
-      RecorderEngine.onTransportMutation("audio-unloaded", {
-        reason: "queue-cleared",
+      if (ui.btnRecordCancel) listen(ui.btnRecordCancel, "click", () => {
+        dispatchRecordingAction("cancel");
+        // The terminal action is now disabled; keep keyboard focus in Record.
+        (state.recording.lastExportUrl ? ui.btnRecordDownloadLast
+          : state.recording.recorderEnabled !== false ? ui.btnRecordStart : ui.btnHideRecord)?.focus();
       });
-      refreshQueuePanel();
-    });
-
-    ui.btnRepeat.addEventListener("click", () => {
-      if (!isFileWorkflowMode(state.source)) return;
-      const mode = preferences.audio.repeatMode;
-      preferences.audio.repeatMode = mode === "none" ? "one" : (mode === "one" ? "all" : "none");
-      applyPrefs("repeat", { showStatus: audioStatusToast });
-    });
-    if (ui.btnShuffle) {
-      ui.btnShuffle.addEventListener("click", () => {
-        if (!isFileWorkflowMode(state.source)) return;
-        if (Queue.shuffle()) refreshQueuePanel();
+      if (ui.btnRecordStart) listen(ui.btnRecordStart, "click", () => {
+        dispatchRecordingAction("start");
       });
-    }
-    ui.chkMute.addEventListener("change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute", { showStatus: audioStatusToast }); });
+      if (ui.btnRecordStop) listen(ui.btnRecordStop, "click", () => {
+        dispatchRecordingAction("stop");
+      });
+      if (ui.selRecordMime) listen(ui.selRecordMime, "change", () => {
+        dispatchRecordingAction("selectMime", { mimeType: ui.selRecordMime.value });
+      });
+      if (ui.chkRecordIncludeAudio) listen(ui.chkRecordIncludeAudio, "change", () => {
+        dispatchRecordingAction("setIncludeAudio", { enabled: ui.chkRecordIncludeAudio.checked });
+      });
+      if (ui.selRecordTargetFps) listen(ui.selRecordTargetFps, "change", () => {
+        dispatchRecordingAction("setTargetFps", { fps: Number(ui.selRecordTargetFps.value) });
+      });
+      if (ui.btnRecordDownloadLast) listen(ui.btnRecordDownloadLast, "click", () => {
+        downloadLastRecording();
+      });
 
-    ui.rngVol.addEventListener("input", () => {
-      preferences.audio.volume = Number(ui.rngVol.value);
-      applyPrefs("volume (playback only)", { showStatus: audioStatusToast });
-    });
-
-
-    ui.btnShare.addEventListener("click", shareLink);
-    ui.btnApplyUrl.addEventListener("click", applyUrlNow);
-    ui.btnResetPrefs.addEventListener("click", resetPrefs);
-    ui.btnResetVisuals.addEventListener("click", () => { resetVisualizers("visuals"); visualizerEditStatusToast("Visuals reset."); });
-
-
-    /* Drag-drop onto canvas — multi-file entry point.
-       All dropped audio files are enqueued. If the queue was empty before the
-       drop, the first file starts playing immediately. Additional files append
-       silently. MIME metadata is only a hint; the media decoder owns support
-       decisions and reports unsupported/unreadable files through load errors. */
-    state.canvas.addEventListener("dragover", (e) => {
-      e.preventDefault(); // required to allow drop
-      e.dataTransfer.dropEffect = "copy";
-    });
-    state.canvas.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      if (!isFileWorkflowMode(state.source)) {
-        toastFileModeOnlyAction();
-        return;
-      }
-      if (isFinalizingFileTransportLocked()) {
-        toastFinalizingTransportLock();
-        return;
-      }
-      const files = Array.from(e.dataTransfer.files);
-      if (!files.length) return;
-      await enqueueFileBatch(files);
-    });
-
-    // Safety net: dropping files outside the canvas should never navigate away.
-    // Canvas keeps ownership of the actual queue add/load behavior above.
-    window.addEventListener("dragover", (e) => {
-      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault();
-    });
-    window.addEventListener("drop", (e) => {
-      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault();
-    });
-
-    function hasFocusedInteractiveTarget(event) {
-      const target = event.target;
-      if (!(target instanceof Element)) return false;
-      if (target.closest('input, select, textarea, button, summary, [contenteditable="true"], [role="button"]')) return true;
-      return false;
-    }
-
-    // Global shortcuts are intentionally suppressed while a control has focus,
-    // so typing/adjusting controls never triggers transport/panel side effects.
-    window.addEventListener("keydown", (e) => {
-      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (hasFocusedInteractiveTarget(e)) return;
-
-      if (e.code === "KeyH") {
-        workspace.togglePanels();
-        return;
-      }
-      if (e.code === "Space") {
-        e.preventDefault();
-        state.time.simPaused = !state.time.simPaused;
-        return;
-      }
-      if (e.code === "KeyR") {
-        resetVisualizers("visuals");
-        return;
+      function toastFileModeOnlyAction() {
+        audioStatusToast("Switch to File mode to use file playback controls.", 2500);
       }
 
-      // Track navigation — N: next, P: prev (Repeat=All wraps at boundaries).
-      if (e.code === "KeyN") {
-        if (!isFileWorkflowMode(state.source)) return;
+      /* Events */
+      if (ui.btnSourceFile) listen(ui.btnSourceFile, "click", () => {
+        dispatchSourceSwitchAction("file");
+      });
+      if (ui.btnSourceMic) listen(ui.btnSourceMic, "click", () => {
+        dispatchSourceSwitchAction("mic");
+      });
+      if (ui.btnSourceStream) listen(ui.btnSourceStream, "click", () => {
+        dispatchSourceSwitchAction("stream");
+      });
+
+      // fileInput.value reset (checklist 3.7): cleared before every picker open so
+      // the same file can be loaded a second time. The drag-drop path uses
+      // dataTransfer.files directly — it never touches fileInput — so no reset
+      // is needed there. This is the only fileInput add path; invariant maintained.
+      listen(ui.btnLoad, "click", () => {
+        if (!isFileWorkflowMode(state.source)) {
+          toastFileModeOnlyAction();
+          return;
+        }
         if (isFinalizingFileTransportLocked()) {
           toastFinalizingTransportLock();
           return;
         }
-        const file = pickManualNextFile();
-        if (file) loadAndPlay(file);
-        return;
+        ui.fileInput.value = "";
+        ui.fileInput.click();
+      });
+
+      listen(ui.fileInput, "change", async () => {
+        if (!isFileWorkflowMode(state.source)) {
+          toastFileModeOnlyAction();
+          return;
+        }
+        if (isFinalizingFileTransportLocked()) {
+          toastFinalizingTransportLock();
+          return;
+        }
+        const files = Array.from(ui.fileInput.files || []);
+        if (!files.length) return;
+
+        await enqueueFileBatch(files);
+      });
+
+      listen(ui.btnPlay, "click", async () => {
+        if (!isFileWorkflowMode(state.source)) return;
+        const target = AudioEngine.getMediaEl();
+        try {
+          await AudioEngine.playPause();
+        } catch (err) {
+          // Contain an unexpected engine rejection at this UI boundary without
+          // unloading a recoverable File or reporting an obsolete operation.
+          if (!target || AudioEngine.getMediaEl() !== target) return;
+          state.audio.isPlaying = !target.paused;
+          state.audio.transportError = `Playback failed: ${err?.message || err?.name || "unknown error"}`;
+        }
+        if (!target || AudioEngine.getMediaEl() !== target) return;
+        if (state.audio.transportError) audioStatusToast(state.audio.transportError, 6000);
+      });
+      listen(ui.btnStop, "click", () => {
+        if (!isFileWorkflowMode(state.source)) return;
+        AudioEngine.stop();
+        state.audio.transportError = "";
+      });
+
+      function pickManualPrevFile() {
+        if (Queue.canPrev()) return Queue.prev();
+        if (preferences.audio.repeatMode === "all" && Queue.length > 1) return Queue.goTo(Queue.length - 1);
+        return null;
       }
-      if (e.code === "KeyP") {
+
+      function pickManualNextFile() {
+        if (Queue.canNext()) return Queue.next();
+        if (preferences.audio.repeatMode === "all" && Queue.length > 1) return Queue.goTo(0);
+        return null;
+      }
+
+      listen(ui.btnPrev, "click", async () => {
         if (!isFileWorkflowMode(state.source)) return;
         if (isFinalizingFileTransportLocked()) {
           toastFinalizingTransportLock();
           return;
         }
         const file = pickManualPrevFile();
-        if (file) loadAndPlay(file);
-        return;
-      }
-
-      // Seek — arrow keys ±5 seconds, Shift+arrows ±30 seconds.
-      // preventDefault stops page scroll.
-      if (e.code === "ArrowRight" || e.code === "ArrowLeft") {
+        if (file) await loadAndPlay(file);
+      });
+      listen(ui.btnNext, "click", async () => {
         if (!isFileWorkflowMode(state.source)) return;
-        e.preventDefault();
-        const el = AudioEngine.getMediaEl();
-        if (el && Number.isFinite(el.duration)) {
-          const step = e.shiftKey ? 30 : 5;
-          const delta = (e.code === "ArrowRight" ? step : -step);
-          el.currentTime = clamp(el.currentTime + delta, 0, el.duration);
+        if (isFinalizingFileTransportLocked()) {
+          toastFinalizingTransportLock();
+          return;
         }
+        const file = pickManualNextFile();
+        if (file) await loadAndPlay(file);
+      });
+
+      listen(ui.btnToggleQueue, "click", () => {
+        if (!isFileWorkflowMode(state.source)) return;
+        if (workspace.isPanelVisible(ui.queuePanel)) workspace.hideQueuePanel(); else workspace.showQueuePanel();
+      });
+
+
+      listen(ui.btnClearQueue, "click", () => {
+        if (!isFileWorkflowMode(state.source)) return;
+        if (isFinalizingFileTransportLocked()) {
+          toastFinalizingTransportLock();
+          return;
+        }
+        // Cancel file activation, clear queue, then release source and reset state.
+        resetEmptyFileWorkflowState("queue-cleared"); // sets isLoaded/isPlaying/filename, resets scrubber + trails
+        RecorderEngine.onTransportMutation("audio-unloaded", {
+          reason: "queue-cleared",
+        });
+        refreshQueuePanel();
+      });
+
+      listen(ui.btnRepeat, "click", () => {
+        if (!isFileWorkflowMode(state.source)) return;
+        const mode = preferences.audio.repeatMode;
+        preferences.audio.repeatMode = mode === "none" ? "one" : (mode === "one" ? "all" : "none");
+        applyPrefs("repeat", { showStatus: audioStatusToast });
+      });
+      if (ui.btnShuffle) {
+        listen(ui.btnShuffle, "click", () => {
+          if (!isFileWorkflowMode(state.source)) return;
+          if (Queue.shuffle()) refreshQueuePanel();
+        });
       }
-    }, { passive: false });
+      listen(ui.chkMute, "change", () => { preferences.audio.muted = !!ui.chkMute.checked; applyPrefs("mute", { showStatus: audioStatusToast }); });
 
-    window.addEventListener("hashchange", () => applyUrlNow(false));
-    // Startup decodes before the controls exist. Retain its domain rejection
-    // for the established preset status owner once wiring is complete.
-    if (UrlPreset.getValidationMessage()) sceneStatusToast(UrlPreset.getValidationMessage(), 4000);
+      listen(ui.rngVol, "input", () => {
+        preferences.audio.volume = Number(ui.rngVol.value);
+        applyPrefs("volume (playback only)", { showStatus: audioStatusToast });
+      });
 
-  } // end wireControls
+
+      listen(ui.btnShare, "click", shareLink);
+      listen(ui.btnApplyUrl, "click", applyUrlNow);
+      listen(ui.btnResetPrefs, "click", resetPrefs);
+      listen(ui.btnResetVisuals, "click", () => { resetVisualizers("visuals"); visualizerEditStatusToast("Visuals reset."); });
+
+
+      /* Drag-drop onto canvas — multi-file entry point.
+         All dropped audio files are enqueued. If the queue was empty before the
+         drop, the first file starts playing immediately. Additional files append
+         silently. MIME metadata is only a hint; the media decoder owns support
+         decisions and reports unsupported/unreadable files through load errors. */
+      listen(state.canvas, "dragover", (e) => {
+        e.preventDefault(); // required to allow drop
+        e.dataTransfer.dropEffect = "copy";
+      });
+      listen(state.canvas, "drop", async (e) => {
+        e.preventDefault();
+        if (!isFileWorkflowMode(state.source)) {
+          toastFileModeOnlyAction();
+          return;
+        }
+        if (isFinalizingFileTransportLocked()) {
+          toastFinalizingTransportLock();
+          return;
+        }
+        const files = Array.from(e.dataTransfer.files);
+        if (!files.length) return;
+        await enqueueFileBatch(files);
+      });
+
+      // Safety net: dropping files outside the canvas should never navigate away.
+      // Canvas keeps ownership of the actual queue add/load behavior above.
+      listen(window, "dragover", (e) => {
+        if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault();
+      });
+      listen(window, "drop", (e) => {
+        if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault();
+      });
+
+      function hasFocusedInteractiveTarget(event) {
+        const target = event.target;
+        if (!(target instanceof Element)) return false;
+        if (target.closest('input, select, textarea, button, summary, [contenteditable="true"], [role="button"]')) return true;
+        return false;
+      }
+
+      // Global shortcuts are intentionally suppressed while a control has focus,
+      // so typing/adjusting controls never triggers transport/panel side effects.
+      listen(window, "keydown", (e) => {
+        if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+        if (hasFocusedInteractiveTarget(e)) return;
+
+        if (e.code === "KeyH") {
+          workspace.togglePanels();
+          return;
+        }
+        if (e.code === "Space") {
+          e.preventDefault();
+          state.time.simPaused = !state.time.simPaused;
+          return;
+        }
+        if (e.code === "KeyR") {
+          resetVisualizers("visuals");
+          return;
+        }
+
+        // Track navigation — N: next, P: prev (Repeat=All wraps at boundaries).
+        if (e.code === "KeyN") {
+          if (!isFileWorkflowMode(state.source)) return;
+          if (isFinalizingFileTransportLocked()) {
+            toastFinalizingTransportLock();
+            return;
+          }
+          const file = pickManualNextFile();
+          if (file) loadAndPlay(file);
+          return;
+        }
+        if (e.code === "KeyP") {
+          if (!isFileWorkflowMode(state.source)) return;
+          if (isFinalizingFileTransportLocked()) {
+            toastFinalizingTransportLock();
+            return;
+          }
+          const file = pickManualPrevFile();
+          if (file) loadAndPlay(file);
+          return;
+        }
+
+        // Seek — arrow keys ±5 seconds, Shift+arrows ±30 seconds.
+        // preventDefault stops page scroll.
+        if (e.code === "ArrowRight" || e.code === "ArrowLeft") {
+          if (!isFileWorkflowMode(state.source)) return;
+          e.preventDefault();
+          const el = AudioEngine.getMediaEl();
+          if (el && Number.isFinite(el.duration)) {
+            const step = e.shiftKey ? 30 : 5;
+            const delta = (e.code === "ArrowRight" ? step : -step);
+            el.currentTime = clamp(el.currentTime + delta, 0, el.duration);
+          }
+        }
+      }, { passive: false });
+
+      listen(window, "hashchange", () => applyUrlNow(false));
+    };
+  } // end createControlCoordinator
 
   return {
     setCssVarsFromConfig,
