@@ -489,3 +489,25 @@ test("116 touch: navigation preserves authored Scene, world, visual history, ana
   assert.deepEqual(preferences, prefs); assert.equal(preferences.sceneCamera, scene);
   fields.forEach((key, i) => { assert.equal(state[key], identities[i], key); assert.deepEqual(state[key], snapshots[i], key); });
 }));
+
+test("116 touch: degenerate projection skips the complete pair update and rebases before recovery", () => harness(({ canvas, interaction }) => {
+  interaction.setEnabled(true); pair(canvas);
+  setCamera({ x: 125, y: -375, zoom: 3, rotationRad: .52 });
+  const camera = state.camera, width = state.widthPx;
+  state.widthPx = 0; touch(canvas, "pointermove", 22, 410, 210); assert.equal(state.camera, camera);
+  state.widthPx = width;
+  touch(canvas, "pointermove", 22, 410, 210); assert.equal(state.camera, camera, "invalid interval does not accumulate motion");
+  touch(canvas, "pointermove", 22, 420, 220); assert.notEqual(state.camera, camera);
+}));
+
+test("116 touch: mouse and pen keep captured pan across wheel zoom and retain primary-button admission", () => harness(({ canvas, interaction, captures, worldAt }) => {
+  interaction.setEnabled(true);
+  for (const pointerType of ["mouse", "pen"]) {
+    canvas.emit("pointerdown", { pointerType, isPrimary: false }); assert.equal(captures.size, 0);
+    canvas.emit("pointerdown", { pointerType }); canvas.emit("wheel", { deltaY: -50 });
+    assert.deepEqual([...captures], [1]);
+    const anchor = worldAt(300, 150);
+    canvas.emit("pointermove", { pointerType, clientX: 320, clientY: 170 }); pointClose(worldAt(320, 170), anchor);
+    canvas.emit("pointerup", { pointerType, clientX: 320, clientY: 170, buttons: 0 }); assert.equal(captures.size, 0);
+  }
+}));
