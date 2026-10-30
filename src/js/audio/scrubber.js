@@ -21,6 +21,7 @@ const Scrubber = (() => {
   let _waveform = null;    // Float32Array of normalised peak samples, or null
   let _dragging = null; // null | mouse | touch
   let _dragButton = 0;
+  let _dragTouchId = null;
   let _waveformStatus = "empty"; // empty | waiting | decoding | ready | unavailable
   let _waveformDetail = null;
   let _controls = null;
@@ -235,17 +236,26 @@ const Scrubber = (() => {
     return clamp((e.clientX - rect.left) / rect.width, 0, 1);
   }
 
-  function fractionFromTouch(e) {
+  function fractionFromTouch(touch) {
     if (!_canvas) return null;
     const rect = _canvas.getBoundingClientRect();
-    const t = e && e.touches && e.touches[0];
-    if (!t || !rect.width) return null;
-    return clamp((t.clientX - rect.left) / rect.width, 0, 1);
+    if (!touch || !rect.width) return null;
+    return clamp((touch.clientX - rect.left) / rect.width, 0, 1);
   }
 
-  function cancelDrag() { _dragging = null; _dragButton = 0; }
+  function ownedChangedTouch(e) {
+    const changed = e.changedTouches;
+    for (let i = 0; i < changed.length; i++) {
+      const touch = changed[i];
+      if (touch.identifier === _dragTouchId) return touch;
+    }
+    return null;
+  }
+
+  function cancelDrag() { _dragging = null; _dragButton = 0; _dragTouchId = null; }
 
   function onMouseDown(e) {
+    _dragTouchId = null;
     _dragging = "mouse";
     // MouseEvent.button order differs from the buttons bitfield for middle/right.
     // Keep existing nonprimary-button seeking, tracking whichever button began it.
@@ -260,21 +270,26 @@ const Scrubber = (() => {
   function onMouseUp() { if (_dragging === "mouse") cancelDrag(); }
 
   function onTouchStart(e) {
-    const frac = fractionFromTouch(e);
+    // touches includes contacts that began elsewhere. Acquire only a new
+    // contact delivered to this canvas, and retain it until its own end/cancel.
+    const touch = e.changedTouches[0];
+    const frac = fractionFromTouch(touch);
     if (frac == null) return;
     e.preventDefault();
+    if (_dragging === "touch") return;
     _dragging = "touch";
     _dragButton = 0;
+    _dragTouchId = touch.identifier;
     seekToFraction(frac);
   }
   function onTouchMove(e)  {
     if (_dragging !== "touch") return;
-    const frac = fractionFromTouch(e);
+    const frac = fractionFromTouch(ownedChangedTouch(e));
     if (frac == null) return;
     e.preventDefault();
     seekToFraction(frac);
   }
-  function onTouchEnd() { if (_dragging === "touch") cancelDrag(); }
+  function onTouchEnd(e) { if (_dragging === "touch" && ownedChangedTouch(e)) cancelDrag(); }
 
   return { init, loadFile, reset, draw };
 })();

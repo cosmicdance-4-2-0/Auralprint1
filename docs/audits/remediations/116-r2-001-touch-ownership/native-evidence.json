@@ -1,0 +1,1755 @@
+{
+  "harness": "scripts/validate-116-scrubber.cjs",
+  "harnessSha256": "b6b146e207742b1620f8104bb5eb3ad15d4cf336be868ed6528498c6b7f8cf54",
+  "browser": "156.0.8078.4",
+  "platform": "linux",
+  "qualification": "Real paused 10-second HTMLMediaElement and production Scrubber. Mouse/touch input is CDP/Playwright; blur/focus and selective touchcancel are explicitly dispatched. CDP only supports cancellation of all contacts. Reinitialization and direct reset/load seams are exercised in source/isolated editions; built editions use public File/Queue reset/load actions. Physical OS focus loss, missing mouseup incidence, physical touch, Windows, Firefox/WebKit and direct-file/offline behavior are not certified.",
+  "baseline": {
+    "sha": "c145cb207838e010068d98145b4aeea7a1b67082",
+    "scrubberBlob": "7262b2e39b7a75b5308c3ce5d10039b3d74d36fc",
+    "workingTree": "",
+    "passed": 197,
+    "failed": 40,
+    "errors": []
+  },
+  "corrected": {
+    "sha": "22dad1502a997773ea86900de90869fe9f8973d1",
+    "scrubberBlob": "653b4ad683dde219af9012fd53da16b8e42941cf",
+    "workingTree": "",
+    "passed": 237,
+    "failed": 0,
+    "errors": []
+  },
+  "editions": [
+    {
+      "edition": "isolated",
+      "observations": [
+        {
+          "name": "original initial press",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "blur itself does not seek",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "original abandoned movement",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "focus does not restore drag",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "fresh held drag",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "held drag outside canvas",
+          "expectedBefore": 7,
+          "before": 7,
+          "expectedAfter": 7,
+          "after": 7
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "expectedBefore": 7,
+          "before": 7,
+          "expectedAfter": 7,
+          "after": 7
+        },
+        {
+          "name": "missing mouseup without blur",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "consecutive cancel 0",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "consecutive recovery 0",
+          "expectedBefore": 5,
+          "before": 5,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "consecutive cancel 1",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "consecutive recovery 1",
+          "expectedBefore": 5,
+          "before": 5,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "consecutive cancel 2",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "consecutive recovery 2",
+          "expectedBefore": 5,
+          "before": 5,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "consecutive cancel 3",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "consecutive recovery 3",
+          "expectedBefore": 5,
+          "before": 5,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 4,
+          "expectedAfter": 4,
+          "after": 4
+        },
+        {
+          "name": "middle initiating bit required",
+          "expectedBefore": 4,
+          "before": 4,
+          "expectedAfter": 4,
+          "after": 4
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 4,
+          "expectedAfter": 4,
+          "after": 4
+        },
+        {
+          "name": "right initiating bit required",
+          "expectedBefore": 4,
+          "before": 4,
+          "expectedAfter": 4,
+          "after": 4
+        },
+        {
+          "name": "touch press",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "touch move",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "expectedBefore": 3,
+          "before": 3,
+          "expectedAfter": 3,
+          "after": 3
+        },
+        {
+          "name": "outside first: B owns initial seek",
+          "expectedBefore": 8,
+          "before": 1,
+          "expectedAfter": 8,
+          "after": 8
+        },
+        {
+          "name": "outside A movement cannot seek stationary B",
+          "expectedBefore": 8,
+          "before": 3,
+          "expectedAfter": 8,
+          "after": 8
+        },
+        {
+          "name": "ending A retains B drag",
+          "expectedBefore": 6,
+          "before": 3,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "scrubber first survives outside contact add/end",
+          "expectedBefore": 6,
+          "before": 2,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "unrelated explicit cancel preserves native owner",
+          "expectedBefore": 6,
+          "before": 2,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "owned explicit cancel ignores subsequent native move",
+          "expectedBefore": 6,
+          "before": 2,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "second scrubber contact cannot replace owner",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "second scrubber contact cannot seek",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "scrubber first survives unrelated end",
+          "expectedBefore": 5,
+          "before": 2,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "owned native cancellation retains last seek",
+          "expectedBefore": 5,
+          "before": 2,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "fresh touch after native cancel",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "simultaneous move follows initiating contact",
+          "expectedBefore": 4,
+          "before": 4,
+          "expectedAfter": 4,
+          "after": 4
+        },
+        {
+          "name": "remaining contact cannot inherit ended owner",
+          "expectedBefore": 4,
+          "before": 4,
+          "expectedAfter": 4,
+          "after": 4
+        },
+        {
+          "name": "rapid unrelated changes retain owner",
+          "expectedBefore": 7,
+          "before": 3,
+          "expectedAfter": 7,
+          "after": 7
+        },
+        {
+          "name": "reset cancels active touch",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "reset fresh touch recovers",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "load cancels active touch",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "load fresh touch recovers",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "init cancels active touch",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "init fresh touch recovers",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        }
+      ]
+    },
+    {
+      "edition": "source",
+      "observations": [
+        {
+          "name": "original initial press",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "blur itself does not seek",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "original abandoned movement",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "focus does not restore drag",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "fresh held drag",
+          "expectedBefore": 6,
+          "before": 5.996946,
+          "expectedAfter": 6,
+          "after": 5.996946
+        },
+        {
+          "name": "held drag outside canvas",
+          "expectedBefore": 7,
+          "before": 6.994705,
+          "expectedAfter": 7,
+          "after": 6.994705
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "expectedBefore": 7,
+          "before": 6.994705,
+          "expectedAfter": 7,
+          "after": 6.994705
+        },
+        {
+          "name": "missing mouseup without blur",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive cancel 0",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 0",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 1",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 1",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 2",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 2",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 3",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 3",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "middle initiating bit required",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "right initiating bit required",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "touch press",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "touch move",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "expectedBefore": 3,
+          "before": 3,
+          "expectedAfter": 3,
+          "after": 3
+        },
+        {
+          "name": "outside first: B owns initial seek",
+          "expectedBefore": 8,
+          "before": 0.999999,
+          "expectedAfter": 8,
+          "after": 7.999999
+        },
+        {
+          "name": "outside A movement cannot seek stationary B",
+          "expectedBefore": 8,
+          "before": 3,
+          "expectedAfter": 8,
+          "after": 7.999999
+        },
+        {
+          "name": "ending A retains B drag",
+          "expectedBefore": 6,
+          "before": 3,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "scrubber first survives outside contact add/end",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "unrelated explicit cancel preserves native owner",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "owned explicit cancel ignores subsequent native move",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "second scrubber contact cannot replace owner",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "second scrubber contact cannot seek",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "scrubber first survives unrelated end",
+          "expectedBefore": 5,
+          "before": 1.999999,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "owned native cancellation retains last seek",
+          "expectedBefore": 5,
+          "before": 1.999999,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "fresh touch after native cancel",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "simultaneous move follows initiating contact",
+          "expectedBefore": 4,
+          "before": 3.999999,
+          "expectedAfter": 4,
+          "after": 3.999999
+        },
+        {
+          "name": "remaining contact cannot inherit ended owner",
+          "expectedBefore": 4,
+          "before": 3.999999,
+          "expectedAfter": 4,
+          "after": 3.999999
+        },
+        {
+          "name": "rapid unrelated changes retain owner",
+          "expectedBefore": 7,
+          "before": 3,
+          "expectedAfter": 7,
+          "after": 7
+        },
+        {
+          "name": "reset cancels active touch",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "reset fresh touch recovers",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "load cancels active touch",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "load fresh touch recovers",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "init cancels active touch",
+          "expectedBefore": 2,
+          "before": 2,
+          "expectedAfter": 2,
+          "after": 2
+        },
+        {
+          "name": "init fresh touch recovers",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "UI File load abandons old contact",
+          "expectedBefore": 0.010667,
+          "before": 0.010667,
+          "expectedAfter": 0.020144,
+          "after": 0.020144
+        },
+        {
+          "name": "UI File load fresh touch recovers false",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "UI reset/unload and File load abandons old contact",
+          "expectedBefore": 10,
+          "before": 10,
+          "expectedAfter": 0.013333,
+          "after": 0.013333
+        },
+        {
+          "name": "UI File load fresh touch recovers true",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        }
+      ],
+      "beforePrimaryTrace": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": false,
+          "canvas": false,
+          "touches": [
+            {
+              "id": 11,
+              "x": 117.21562194824219,
+              "y": 708.5,
+              "target": "c"
+            }
+          ],
+          "changed": [
+            11
+          ]
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true,
+          "touches": [
+            {
+              "id": 11,
+              "x": 117.21562194824219,
+              "y": 708.5,
+              "target": "c"
+            },
+            {
+              "id": 22,
+              "x": 790.7249755859375,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            22
+          ]
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": true,
+          "canvas": false,
+          "touches": [
+            {
+              "id": 11,
+              "x": 309.6468811035156,
+              "y": 708.5,
+              "target": "c"
+            },
+            {
+              "id": 22,
+              "x": 790.7249755859375,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            11
+          ]
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": false,
+          "touches": [
+            {
+              "id": 22,
+              "x": 790.7249755859375,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            11
+          ]
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true,
+          "touches": [
+            {
+              "id": 22,
+              "x": 598.2937622070312,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            22
+          ]
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true,
+          "touches": [],
+          "changed": [
+            22
+          ]
+        }
+      ],
+      "afterPrimaryTrace": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": false,
+          "canvas": false,
+          "touches": [
+            {
+              "id": 11,
+              "x": 117.21562194824219,
+              "y": 708.5,
+              "target": "c"
+            }
+          ],
+          "changed": [
+            11
+          ]
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true,
+          "touches": [
+            {
+              "id": 11,
+              "x": 117.21562194824219,
+              "y": 708.5,
+              "target": "c"
+            },
+            {
+              "id": 22,
+              "x": 790.7249755859375,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            22
+          ]
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": false,
+          "canvas": false,
+          "touches": [
+            {
+              "id": 11,
+              "x": 309.6468811035156,
+              "y": 708.5,
+              "target": "c"
+            },
+            {
+              "id": 22,
+              "x": 790.7249755859375,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            11
+          ]
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": false,
+          "touches": [
+            {
+              "id": 22,
+              "x": 790.7249755859375,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            11
+          ]
+        },
+        {
+          "type": "touchmove",
+          "trusted": true,
+          "prevented": true,
+          "canvas": true,
+          "touches": [
+            {
+              "id": 22,
+              "x": 598.2937622070312,
+              "y": 741.5,
+              "target": "scrubberCanvas"
+            }
+          ],
+          "changed": [
+            22
+          ]
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "prevented": false,
+          "canvas": true,
+          "touches": [],
+          "changed": [
+            22
+          ]
+        }
+      ]
+    },
+    {
+      "edition": "portable",
+      "observations": [
+        {
+          "name": "original initial press",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "blur itself does not seek",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "original abandoned movement",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "focus does not restore drag",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "fresh held drag",
+          "expectedBefore": 6,
+          "before": 5.996946,
+          "expectedAfter": 6,
+          "after": 5.996946
+        },
+        {
+          "name": "held drag outside canvas",
+          "expectedBefore": 7,
+          "before": 6.994705,
+          "expectedAfter": 7,
+          "after": 6.994705
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "expectedBefore": 7,
+          "before": 6.994705,
+          "expectedAfter": 7,
+          "after": 6.994705
+        },
+        {
+          "name": "missing mouseup without blur",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive cancel 0",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 0",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 1",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 1",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 2",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 2",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 3",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 3",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "middle initiating bit required",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "right initiating bit required",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "touch press",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "touch move",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "expectedBefore": 3,
+          "before": 3,
+          "expectedAfter": 3,
+          "after": 3
+        },
+        {
+          "name": "outside first: B owns initial seek",
+          "expectedBefore": 8,
+          "before": 0.999999,
+          "expectedAfter": 8,
+          "after": 7.999999
+        },
+        {
+          "name": "outside A movement cannot seek stationary B",
+          "expectedBefore": 8,
+          "before": 3,
+          "expectedAfter": 8,
+          "after": 7.999999
+        },
+        {
+          "name": "ending A retains B drag",
+          "expectedBefore": 6,
+          "before": 3,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "scrubber first survives outside contact add/end",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "unrelated explicit cancel preserves native owner",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "owned explicit cancel ignores subsequent native move",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "second scrubber contact cannot replace owner",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "second scrubber contact cannot seek",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "scrubber first survives unrelated end",
+          "expectedBefore": 5,
+          "before": 1.999999,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "owned native cancellation retains last seek",
+          "expectedBefore": 5,
+          "before": 1.999999,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "fresh touch after native cancel",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "simultaneous move follows initiating contact",
+          "expectedBefore": 4,
+          "before": 3.999999,
+          "expectedAfter": 4,
+          "after": 3.999999
+        },
+        {
+          "name": "remaining contact cannot inherit ended owner",
+          "expectedBefore": 4,
+          "before": 3.999999,
+          "expectedAfter": 4,
+          "after": 3.999999
+        },
+        {
+          "name": "rapid unrelated changes retain owner",
+          "expectedBefore": 7,
+          "before": 3,
+          "expectedAfter": 7,
+          "after": 7
+        },
+        {
+          "name": "UI File load abandons old contact",
+          "expectedBefore": 0.021333,
+          "before": 0.021333,
+          "expectedAfter": 0,
+          "after": 0
+        },
+        {
+          "name": "UI File load fresh touch recovers false",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "UI reset/unload and File load abandons old contact",
+          "expectedBefore": 10,
+          "before": 10,
+          "expectedAfter": 0.013333,
+          "after": 0.013333
+        },
+        {
+          "name": "UI File load fresh touch recovers true",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        }
+      ]
+    },
+    {
+      "edition": "hosted",
+      "observations": [
+        {
+          "name": "original initial press",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "blur itself does not seek",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "original abandoned movement",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "focus does not restore drag",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "blur cancels before released-button fallback",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "fresh held drag",
+          "expectedBefore": 6,
+          "before": 5.996946,
+          "expectedAfter": 6,
+          "after": 5.996946
+        },
+        {
+          "name": "held drag outside canvas",
+          "expectedBefore": 7,
+          "before": 6.994705,
+          "expectedAfter": 7,
+          "after": 6.994705
+        },
+        {
+          "name": "mouseup outside ends drag",
+          "expectedBefore": 7,
+          "before": 6.994705,
+          "expectedAfter": 7,
+          "after": 6.994705
+        },
+        {
+          "name": "missing mouseup without blur",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "held bit cannot resurrect cancelled drag",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive cancel 0",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 0",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 1",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 1",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 2",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 2",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "consecutive cancel 3",
+          "expectedBefore": 2,
+          "before": 1.995517,
+          "expectedAfter": 2,
+          "after": 1.995517
+        },
+        {
+          "name": "consecutive recovery 3",
+          "expectedBefore": 5,
+          "before": 4.999188,
+          "expectedAfter": 5,
+          "after": 4.999188
+        },
+        {
+          "name": "middle held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "middle initiating bit required",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "right held drag retains existing behavior",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "right initiating bit required",
+          "expectedBefore": 4,
+          "before": 3.991035,
+          "expectedAfter": 4,
+          "after": 3.991035
+        },
+        {
+          "name": "touch press",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "touch move",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchend ends drag",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "touchcancel ends drag",
+          "expectedBefore": 3,
+          "before": 3,
+          "expectedAfter": 3,
+          "after": 3
+        },
+        {
+          "name": "outside first: B owns initial seek",
+          "expectedBefore": 8,
+          "before": 0.999999,
+          "expectedAfter": 8,
+          "after": 7.999999
+        },
+        {
+          "name": "outside A movement cannot seek stationary B",
+          "expectedBefore": 8,
+          "before": 3,
+          "expectedAfter": 8,
+          "after": 7.999999
+        },
+        {
+          "name": "ending A retains B drag",
+          "expectedBefore": 6,
+          "before": 3,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "scrubber first survives outside contact add/end",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "unrelated explicit cancel preserves native owner",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "owned explicit cancel ignores subsequent native move",
+          "expectedBefore": 6,
+          "before": 1.999999,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "second scrubber contact cannot replace owner",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "second scrubber contact cannot seek",
+          "expectedBefore": 2,
+          "before": 1.999999,
+          "expectedAfter": 2,
+          "after": 1.999999
+        },
+        {
+          "name": "scrubber first survives unrelated end",
+          "expectedBefore": 5,
+          "before": 1.999999,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "owned native cancellation retains last seek",
+          "expectedBefore": 5,
+          "before": 1.999999,
+          "expectedAfter": 5,
+          "after": 5
+        },
+        {
+          "name": "fresh touch after native cancel",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "simultaneous move follows initiating contact",
+          "expectedBefore": 4,
+          "before": 3.999999,
+          "expectedAfter": 4,
+          "after": 3.999999
+        },
+        {
+          "name": "remaining contact cannot inherit ended owner",
+          "expectedBefore": 4,
+          "before": 3.999999,
+          "expectedAfter": 4,
+          "after": 3.999999
+        },
+        {
+          "name": "rapid unrelated changes retain owner",
+          "expectedBefore": 7,
+          "before": 3,
+          "expectedAfter": 7,
+          "after": 7
+        },
+        {
+          "name": "UI File load abandons old contact",
+          "expectedBefore": 0.01102,
+          "before": 0.01102,
+          "expectedAfter": 0.012971,
+          "after": 0.012971
+        },
+        {
+          "name": "UI File load fresh touch recovers false",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        },
+        {
+          "name": "UI reset/unload and File load abandons old contact",
+          "expectedBefore": 0,
+          "before": 0,
+          "expectedAfter": 0.019545,
+          "after": 0.019545
+        },
+        {
+          "name": "UI File load fresh touch recovers true",
+          "expectedBefore": 6,
+          "before": 6,
+          "expectedAfter": 6,
+          "after": 6
+        }
+      ]
+    }
+  ],
+  "baselineFailures": [
+    {
+      "name": "isolated outside first: B owns initial seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated outside A movement cannot seek stationary B",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated unrelated move is unconsumed",
+      "actual": true,
+      "expected": false
+    },
+    {
+      "name": "isolated ending A retains B drag",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated scrubber first survives outside contact add/end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated unrelated explicit cancel preserves native owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated owned explicit cancel ignores subsequent native move",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated scrubber first survives unrelated end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated owned native cancellation retains last seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "isolated rapid unrelated changes retain owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source outside first: B owns initial seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source outside A movement cannot seek stationary B",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source unrelated move is unconsumed",
+      "actual": true,
+      "expected": false
+    },
+    {
+      "name": "source ending A retains B drag",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source scrubber first survives outside contact add/end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source unrelated explicit cancel preserves native owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source owned explicit cancel ignores subsequent native move",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source scrubber first survives unrelated end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source owned native cancellation retains last seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "source rapid unrelated changes retain owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable outside first: B owns initial seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable outside A movement cannot seek stationary B",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable unrelated move is unconsumed",
+      "actual": true,
+      "expected": false
+    },
+    {
+      "name": "portable ending A retains B drag",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable scrubber first survives outside contact add/end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable unrelated explicit cancel preserves native owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable owned explicit cancel ignores subsequent native move",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable scrubber first survives unrelated end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable owned native cancellation retains last seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "portable rapid unrelated changes retain owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted outside first: B owns initial seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted outside A movement cannot seek stationary B",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted unrelated move is unconsumed",
+      "actual": true,
+      "expected": false
+    },
+    {
+      "name": "hosted ending A retains B drag",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted scrubber first survives outside contact add/end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted unrelated explicit cancel preserves native owner",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted owned explicit cancel ignores subsequent native move",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted scrubber first survives unrelated end",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted owned native cancellation retains last seek",
+      "actual": false,
+      "expected": true
+    },
+    {
+      "name": "hosted rapid unrelated changes retain owner",
+      "actual": false,
+      "expected": true
+    }
+  ],
+  "correctedFailures": [],
+  "traceScope": "All media observations retained. Primary outside-first source touch trace retained; unrelated mouse event payloads omitted."
+}

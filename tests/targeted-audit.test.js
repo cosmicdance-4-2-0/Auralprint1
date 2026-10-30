@@ -1100,7 +1100,8 @@ test("scrubber touchmove does not cancel window scrolling outside an active drag
 
     let prevented = false;
     harness.windowListeners.get("touchmove")({
-      touches: [{ clientX: 70 }],
+      touches: [{ identifier: 0, clientX: 70 }],
+      changedTouches: [{ identifier: 0, clientX: 70 }],
       preventDefault() { prevented = true; },
     });
 
@@ -1123,16 +1124,18 @@ test("scrubber active touch drag still prevents default and seeks", () => {
 
     let startPrevented = false;
     harness.canvasListeners.get("touchstart")({
-      touches: [{ clientX: 60 }],
+      touches: [{ identifier: 0, clientX: 60 }],
+      changedTouches: [{ identifier: 0, clientX: 60 }],
       preventDefault() { startPrevented = true; },
     });
 
     let movePrevented = false;
     harness.windowListeners.get("touchmove")({
-      touches: [{ clientX: 90 }],
+      touches: [{ identifier: 0, clientX: 90 }],
+      changedTouches: [{ identifier: 0, clientX: 90 }],
       preventDefault() { movePrevented = true; },
     });
-    harness.windowListeners.get("touchend")({});
+    harness.windowListeners.get("touchend")({ touches: [], changedTouches: [{ identifier: 0, clientX: 90 }] });
 
     assert.equal(startPrevented, true);
     assert.equal(movePrevented, true);

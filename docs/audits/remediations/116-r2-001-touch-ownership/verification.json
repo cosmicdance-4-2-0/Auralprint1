@@ -1,0 +1,541 @@
+{
+  "testedSha": "22dad1502a997773ea86900de90869fe9f8973d1",
+  "startedUtc": "2026-10-29T23:00:31.762301+00:00",
+  "commands": [
+    {
+      "name": "focused-native",
+      "command": "node scripts/validate-116-scrubber.cjs",
+      "exitCode": 0,
+      "seconds": 12.865,
+      "logSha256": "398b8b37cab737b28ff0790c0bbc1db03a472c31ff5e28fcf2af0ae24f89a817"
+    },
+    {
+      "name": "npm-test",
+      "command": "npm test",
+      "exitCode": 0,
+      "seconds": 21.298,
+      "logSha256": "8f4313fee30fb5ceb916af8f78debfb4fd23f79dca32735344656efcd6d2c47e"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "seconds": 0.171,
+      "logSha256": "0f3a16acc44fa908bcbdaccfb10619546ca473b5f3019db528042869345e81a8"
+    },
+    {
+      "name": "distribution",
+      "command": "python scripts/verify_distribution.py",
+      "exitCode": 0,
+      "seconds": 0.048,
+      "logSha256": "15ee174ec4812f9890d68e1bf5b3f83807e35e8d1e8ec4e9cf8b3f35f1482d0e"
+    },
+    {
+      "name": "browser",
+      "command": "npm run test:browser",
+      "exitCode": 0,
+      "seconds": 6.834,
+      "logSha256": "f8f13a7e904d1c51d0693a85b4c3fc1d061e42a46223a08e42856abd1b34c99b"
+    },
+    {
+      "name": "browser-editing",
+      "command": "npm run test:browser:editing",
+      "exitCode": 0,
+      "seconds": 138.802,
+      "logSha256": "e0c6b685d053d4490843ee74d84931f1d80b61bee8681a7a3cb3cfd1aece880b"
+    },
+    {
+      "name": "browser-presets",
+      "command": "npm run test:browser:presets",
+      "exitCode": 0,
+      "seconds": 2.41,
+      "logSha256": "7a6f37f20e58e36d2b8ec0aed6041e15b1daf992c8a8a1cdc8be1c14336cfe83"
+    },
+    {
+      "name": "scrubber",
+      "command": "node scripts/validate-116-scrubber.cjs",
+      "exitCode": 0,
+      "seconds": 13.701,
+      "logSha256": "b20ee144900aba4746b88c0fbd8b388e814c2f89fa5edff0d243428a26a27d7f"
+    },
+    {
+      "name": "candidate",
+      "command": "node scripts/validate-116-candidate.cjs",
+      "exitCode": 0,
+      "seconds": 60.611,
+      "logSha256": "1de2c72855782cee7c09168d94b43d69cbc13817c8768f80355cdc645440269b"
+    }
+  ],
+  "nodeFocused": {
+    "command": "node --test tests/scrubber-drag-ownership.test.js tests/scrubber-coordinator.test.js tests/scrubber-waveform.test.js tests/targeted-audit.test.js",
+    "tests": 294,
+    "pass": 294,
+    "fail": 0,
+    "skipped": 0
+  },
+  "nodeFull": {
+    "tests": 1503,
+    "pass": 1502,
+    "fail": 0,
+    "skipped": 1
+  },
+  "nativeBefore": {
+    "sha": "c145cb207838e010068d98145b4aeea7a1b67082",
+    "passed": 197,
+    "failed": 40
+  },
+  "nativeAfter": {
+    "sha": "22dad1502a997773ea86900de90869fe9f8973d1",
+    "passed": 237,
+    "failed": 0,
+    "errors": []
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "playwright": "1.64.1",
+    "esbuild": "0.25.12",
+    "chromium": "156.0.8078.4",
+    "platform": "linux"
+  },
+  "distribution": {
+    "auralprint_0.1.16-candidate.html": {
+      "bytes": 579761,
+      "sha256": "c073b4555eeca86c396a9fdede2fe04e796af49656d6059d7903b2e6ad67a11b"
+    },
+    "hosted/apple-touch-icon.png": {
+      "bytes": 21085,
+      "sha256": "d81a6025dd4b21484bcbe975c0bd2e6db2fdb61a1437e1112849ef58ab016bfc"
+    },
+    "hosted/favicon-96x96.png": {
+      "bytes": 9034,
+      "sha256": "63c77536989a01479a37f41930989232d589710e83a3e706b9b1fe7b02301817"
+    },
+    "hosted/favicon.ico": {
+      "bytes": 15086,
+      "sha256": "9800272423a8511e334311af34c9ca6e55aa4fa6051d6f4bf355af8189d7e92f"
+    },
+    "hosted/favicon.svg": {
+      "bytes": 1121,
+      "sha256": "f3e95bf3acd93122339066956ec52a048b36f176864255f84f4c45fefc22dd16"
+    },
+    "hosted/index.html": {
+      "bytes": 578592,
+      "sha256": "167e0250f4aeff2b93d15aeb4c67fcc06191868fa0e6c0ea4c649981cd123853"
+    },
+    "hosted/site.webmanifest": {
+      "bytes": 517,
+      "sha256": "73dd427c1ba3897e29ba69a325e1220520f6ff8fccd45f661a2365e656b23495"
+    },
+    "hosted/web-app-manifest-192x192.png": {
+      "bytes": 22773,
+      "sha256": "b73872f891fdb6cb32eb57c67beb9ea3e940b1722cf5912c60bcb9185a537991"
+    },
+    "hosted/web-app-manifest-512x512.png": {
+      "bytes": 105356,
+      "sha256": "451750c8f7eebabce053802ebf3e17e447f84daf339f09fa0d43288d7f773568"
+    }
+  },
+  "editing": {
+    "version": "v0.1.16-candidate",
+    "browser": "156.0.8078.4",
+    "frequenciesOnly": false,
+    "results": [
+      {
+        "edition": "source",
+        "dpr": 1,
+        "sliders": 40,
+        "actualSampleRate": 44100
+      },
+      {
+        "edition": "portable",
+        "dpr": 1,
+        "sliders": 40,
+        "actualSampleRate": 44100
+      },
+      {
+        "edition": "hosted",
+        "dpr": 1,
+        "sliders": 40,
+        "actualSampleRate": 44100
+      }
+    ],
+    "errors": []
+  },
+  "presets": {
+    "version": "v0.1.16-candidate",
+    "platform": "linux",
+    "results": [
+      {
+        "engine": "chromium",
+        "version": "156.0.8078.4",
+        "edition": "portable",
+        "cases": [
+          "compressed-first-frame",
+          "share-reopen",
+          "clipboard-denied",
+          "invalid-active-scene",
+          "unsupported-decompression",
+          "uncompressed-fallback",
+          "stale-reset",
+          "stale-newer-import",
+          "stale-user-edit",
+          "stale-user-camera",
+          "legacy-12"
+        ]
+      },
+      {
+        "engine": "chromium",
+        "version": "156.0.8078.4",
+        "edition": "hosted",
+        "cases": [
+          "compressed-first-frame",
+          "share-reopen",
+          "clipboard-denied",
+          "invalid-active-scene",
+          "unsupported-decompression",
+          "uncompressed-fallback",
+          "stale-reset",
+          "stale-newer-import",
+          "stale-user-edit",
+          "stale-user-camera",
+          "legacy-12"
+        ]
+      }
+    ],
+    "interoperability": [
+      {
+        "producer": "chromium",
+        "producerEdition": "portable",
+        "consumer": "chromium"
+      },
+      {
+        "producer": "chromium",
+        "producerEdition": "hosted",
+        "consumer": "chromium"
+      }
+    ],
+    "offline": [],
+    "errors": []
+  },
+  "candidate": {
+    "version": "v0.1.16-candidate",
+    "baseline": "33b696a94439d17e86ef26c04a416cbc430754d3",
+    "browser": "156.0.8078.4",
+    "platform": "linux",
+    "editions": [
+      {
+        "edition": "source",
+        "dpr": 1,
+        "keyboard": true,
+        "individualAndBulk": true,
+        "mixedUncommitted": true,
+        "stableIdentityAndFocus": true,
+        "zeroOrbs": true,
+        "reset": true,
+        "legacyImport": true,
+        "reservedSchemaAtomic": true,
+        "unchangedFrameDomMutations": 0,
+        "queue": {
+          "realFileObjects": true,
+          "defaultOffPreserves": true,
+          "syntheticMicAndStreamSuccess": true,
+          "importOnlyFutureBehavior": true,
+          "syntheticPermissionDenial": true,
+          "pendingAndCancelledActivation": true,
+          "qualification": "Generated Web Audio MediaStreams replace native permission dialogs; actual AudioEngine attachment and UI source handlers execute."
+        }
+      },
+      {
+        "edition": "portable",
+        "dpr": 1,
+        "keyboard": true,
+        "individualAndBulk": true,
+        "mixedUncommitted": true,
+        "stableIdentityAndFocus": true,
+        "zeroOrbs": true,
+        "reset": true,
+        "legacyImport": true,
+        "reservedSchemaAtomic": true,
+        "unchangedFrameDomMutations": 0,
+        "queue": {
+          "realFileObjects": true,
+          "defaultOffPreserves": true,
+          "syntheticMicAndStreamSuccess": true,
+          "importOnlyFutureBehavior": true,
+          "syntheticPermissionDenial": true,
+          "pendingAndCancelledActivation": true,
+          "qualification": "Generated Web Audio MediaStreams replace native permission dialogs; actual AudioEngine attachment and UI source handlers execute."
+        }
+      },
+      {
+        "edition": "hosted",
+        "dpr": 1,
+        "keyboard": true,
+        "individualAndBulk": true,
+        "mixedUncommitted": true,
+        "stableIdentityAndFocus": true,
+        "zeroOrbs": true,
+        "reset": true,
+        "legacyImport": true,
+        "reservedSchemaAtomic": true,
+        "unchangedFrameDomMutations": 0,
+        "queue": {
+          "realFileObjects": true,
+          "defaultOffPreserves": true,
+          "syntheticMicAndStreamSuccess": true,
+          "importOnlyFutureBehavior": true,
+          "syntheticPermissionDenial": true,
+          "pendingAndCancelledActivation": true,
+          "qualification": "Generated Web Audio MediaStreams replace native permission dialogs; actual AudioEngine attachment and UI source handlers execute."
+        }
+      },
+      {
+        "edition": "source",
+        "dpr": 2,
+        "keyboard": true,
+        "individualAndBulk": true,
+        "mixedUncommitted": true,
+        "stableIdentityAndFocus": true,
+        "zeroOrbs": true,
+        "reset": true,
+        "legacyImport": true,
+        "reservedSchemaAtomic": true,
+        "unchangedFrameDomMutations": 0,
+        "queue": null
+      },
+      {
+        "edition": "portable",
+        "dpr": 2,
+        "keyboard": true,
+        "individualAndBulk": true,
+        "mixedUncommitted": true,
+        "stableIdentityAndFocus": true,
+        "zeroOrbs": true,
+        "reset": true,
+        "legacyImport": true,
+        "reservedSchemaAtomic": true,
+        "unchangedFrameDomMutations": 0,
+        "queue": null
+      },
+      {
+        "edition": "hosted",
+        "dpr": 2,
+        "keyboard": true,
+        "individualAndBulk": true,
+        "mixedUncommitted": true,
+        "stableIdentityAndFocus": true,
+        "zeroOrbs": true,
+        "reset": true,
+        "legacyImport": true,
+        "reservedSchemaAtomic": true,
+        "unchangedFrameDomMutations": 0,
+        "queue": null
+      }
+    ],
+    "canvas": [
+      {
+        "dpr": 1,
+        "zeroCases": 84,
+        "positiveCases": 336,
+        "pixelDifferences": 0,
+        "zeroReference": "accepted 116E renderer",
+        "positiveReference": "116F single-color join handling, constrained here to 1/5/10/20",
+        "defaultScenes": [
+          {
+            "mature": false,
+            "retained": 24,
+            "calls": {
+              "beginPath": 26,
+              "moveTo": 2,
+              "lineTo": 20,
+              "stroke": 2
+            },
+            "pixelDifferences": 0
+          },
+          {
+            "mature": true,
+            "retained": 2880,
+            "calls": {
+              "beginPath": 2882,
+              "moveTo": 2,
+              "lineTo": 20,
+              "stroke": 2
+            },
+            "pixelDifferences": 0
+          }
+        ],
+        "boundary": {
+          "background": [
+            36,
+            56,
+            77,
+            255
+          ],
+          "solid": [
+            109,
+            103,
+            87,
+            255
+          ],
+          "inside": [
+            109,
+            103,
+            87,
+            255
+          ],
+          "outside": [
+            83,
+            87,
+            83,
+            255
+          ]
+        },
+        "multiple": [
+          {
+            "orbs": 2,
+            "points": 75,
+            "fade": 0,
+            "calls": {
+              "beginPath": 152,
+              "moveTo": 2,
+              "lineTo": 148,
+              "stroke": 2
+            }
+          },
+          {
+            "orbs": 16,
+            "points": 1001,
+            "fade": 20,
+            "calls": {
+              "beginPath": 16992,
+              "moveTo": 976,
+              "clip": 640,
+              "lineTo": 16640,
+              "createLinearGradient": 320,
+              "stroke": 336
+            }
+          },
+          {
+            "orbs": 4096,
+            "points": 2,
+            "fade": 20,
+            "calls": {
+              "beginPath": 12288,
+              "moveTo": 4096,
+              "lineTo": 4096,
+              "createLinearGradient": 4096,
+              "stroke": 4096
+            }
+          }
+        ]
+      },
+      {
+        "dpr": 2,
+        "zeroCases": 84,
+        "positiveCases": 336,
+        "pixelDifferences": 0,
+        "zeroReference": "accepted 116E renderer",
+        "positiveReference": "116F single-color join handling, constrained here to 1/5/10/20",
+        "defaultScenes": [
+          {
+            "mature": false,
+            "retained": 24,
+            "calls": {
+              "beginPath": 26,
+              "moveTo": 2,
+              "lineTo": 20,
+              "stroke": 2
+            },
+            "pixelDifferences": 0
+          },
+          {
+            "mature": true,
+            "retained": 2880,
+            "calls": {
+              "beginPath": 2882,
+              "moveTo": 2,
+              "lineTo": 20,
+              "stroke": 2
+            },
+            "pixelDifferences": 0
+          }
+        ],
+        "boundary": {
+          "background": [
+            36,
+            56,
+            77,
+            255
+          ],
+          "solid": [
+            109,
+            103,
+            87,
+            255
+          ],
+          "inside": [
+            109,
+            103,
+            87,
+            255
+          ],
+          "outside": [
+            89,
+            90,
+            84,
+            255
+          ]
+        },
+        "multiple": [
+          {
+            "orbs": 2,
+            "points": 75,
+            "fade": 0,
+            "calls": {
+              "beginPath": 152,
+              "moveTo": 2,
+              "lineTo": 148,
+              "stroke": 2
+            }
+          },
+          {
+            "orbs": 16,
+            "points": 1001,
+            "fade": 20,
+            "calls": {
+              "beginPath": 16992,
+              "moveTo": 976,
+              "clip": 640,
+              "lineTo": 16640,
+              "createLinearGradient": 320,
+              "stroke": 336
+            }
+          },
+          {
+            "orbs": 4096,
+            "points": 2,
+            "fade": 20,
+            "calls": {
+              "beginPath": 12288,
+              "moveTo": 4096,
+              "lineTo": 4096,
+              "createLinearGradient": 4096,
+              "stroke": 4096
+            }
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "initialRun": {
+    "sha": "1c9e3142527247e2965c5d1c1f501c59f96bb8ed",
+    "node": {
+      "pass": 1501,
+      "fail": 1,
+      "skipped": 1
+    },
+    "failure": "Legacy targeted-audit active-touch fixture omitted changedTouches. Fixture payload corrected; expected assertions unchanged. All final gates rerun on testedSha."
+  }
+}
