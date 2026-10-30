@@ -244,7 +244,9 @@ const Scrubber = (() => {
   }
 
   function ownedChangedTouch(e) {
-    for (const touch of e.changedTouches) {
+    const changed = e.changedTouches;
+    for (let i = 0; i < changed.length; i++) {
+      const touch = changed[i];
       if (touch.identifier === _dragTouchId) return touch;
     }
     return null;

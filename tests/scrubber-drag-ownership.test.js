@@ -192,6 +192,42 @@ test("AUD116-R2-001: acquire newly starting contact, ignoring earlier outside co
   assert.equal(h.media.currentTime, 6); assert.equal(owned.defaultPrevented, true);
 });
 
+test("AUD116-R2-001: non-iterable TouchList preserves initiating-contact ownership", t => {
+  const h = mouseHarness(t);
+  function dispatch(target, type, changed, active = changed) {
+    const e = touchEvent(type, [], active);
+    const list = { length: changed.length, item(index) { return this[index] ?? null; } };
+    changed.forEach(([identifier, fraction], index) => { list[index] = { identifier, clientX: fraction * 100 }; });
+    assert.equal(Array.isArray(list), false);
+    assert.equal(Symbol.iterator in list, false);
+    e.changedTouches = list;
+    target.dispatchEvent(e);
+    return e;
+  }
+
+  for (const terminal of ["touchend", "touchcancel"]) {
+    const start = dispatch(h.surface, "touchstart", [[0, .2]], [[9, .8], [0, .2]]);
+    assert.equal(start.defaultPrevented, true); assert.equal(h.media.currentTime, 2);
+    const move = dispatch(h.win, "touchmove", [[9, .9], [0, .6]], [[9, .9], [0, .6]]);
+    assert.equal(move.defaultPrevented, true); assert.equal(h.media.currentTime, 6);
+    const seeks = h.seeks;
+    const unrelated = dispatch(h.win, "touchmove", [[9, .7]], [[9, .7], [0, .6]]);
+    assert.equal(unrelated.defaultPrevented, false); assert.equal(h.seeks, seeks);
+    dispatch(h.win, terminal, [[9, .7]], [[0, .6]]);
+    dispatch(h.win, "touchmove", [[0, .5]]);
+    assert.equal(h.media.currentTime, 5, "unrelated termination retains ownership");
+    dispatch(h.win, terminal, [[0, .5]], []);
+    const endedSeeks = h.seeks;
+    const stale = dispatch(h.win, "touchmove", [[0, .8]]);
+    assert.equal(stale.defaultPrevented, false); assert.equal(h.seeks, endedSeeks);
+    const fresh = dispatch(h.surface, "touchstart", [[10, .3]]);
+    assert.equal(fresh.defaultPrevented, true); assert.equal(h.media.currentTime, 3);
+    dispatch(h.win, "touchmove", [[10, .4]]);
+    assert.equal(h.media.currentTime, 4);
+    dispatch(h.win, "touchend", [[10, .4]], []);
+  }
+});
+
 for (const terminal of ["touchend", "touchcancel"]) {
   test(`AUD116-R2-001: unrelated ${terminal} retains the owner; owned termination permits a fresh gesture`, t => {
     const h = mouseHarness(t);
