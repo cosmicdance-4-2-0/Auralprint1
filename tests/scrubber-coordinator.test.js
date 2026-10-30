@@ -13,7 +13,7 @@ function harness(t) {
   let writes=0, text="", rects=[];
   const time={get textContent(){return text},set textContent(v){writes++;text=v}};
   const ctx=new Proxy({clearRect(){rects=[]},fillRect(...args){rects.push(args)}},{get:(o,k)=>o[k]||(()=>{}),set:(o,k,v)=>(o[k]=v,true)});
-  const win=new EventTarget(), surface=Object.assign(new EventTarget(),{clientWidth:100,clientHeight:36,width:100,height:36,getContext:()=>ctx,getBoundingClientRect:()=>({left:0,width:100})});
+  const win=new EventTarget(), surface=Object.assign(new EventTarget(),{clientWidth:100,clientHeight:36,width:100,height:36,getAttribute(name) { return this.attributes?.[name] ?? null; }, setAttribute(name, value) { (this.attributes ??= {})[name] = String(value); }, getContext:()=>ctx,getBoundingClientRect:()=>({left:0,width:100})});
   for(const target of [win,surface]) {
     const add=target.addEventListener;
     target.addEventListener=function(type,...args){listeners.push(type);return add.call(this,type,...args)};

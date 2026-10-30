@@ -68,9 +68,10 @@ async function snapshot(page) {
     await page.keyboard.press('Enter'); assert.equal((await snapshot(page)).id, 'btnHideQueue'); assert.equal(await page.locator('.queue-item').count(), 0);
     cases.push({ kind: 'empty-queue-hide-focus', focused: await snapshot(page) });
     await page.locator('#fileInput').setInputFiles(['A.wav', 'B.wav'].map(payload)); await page.waitForFunction(() => !document.querySelector('#btnPlay').disabled);
-    await page.locator('.queue-item').nth(1).focus(); await page.keyboard.press('Enter');
-    await page.waitForFunction(() => document.querySelector('.queue-item[aria-current="true"] .q-name')?.textContent === 'B.wav');
-    focused = await snapshot(page); assert.ok(focused.className.includes('queue-item')); assert.ok(focused.rowText.includes('B.wav'));
+    // Retain historical row support while current Queue uses a native Play button.
+    await page.locator('.q-play, .queue-item[role="button"]').nth(1).focus(); await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.querySelector('.q-play[aria-current="true"] .q-name, .queue-item[aria-current="true"] .q-name')?.textContent === 'B.wav');
+    focused = await snapshot(page); assert.ok(focused.className === 'q-play' || focused.className.includes('queue-item')); assert.ok(focused.rowText.includes('B.wav'));
     cases.push({ kind: 'activation-retains-row-focus', focused });
     await page.locator('#btnOpenScene').click(); const outside = await snapshot(page);
     await page.locator('#fileInput').setInputFiles([payload('C.wav')]);

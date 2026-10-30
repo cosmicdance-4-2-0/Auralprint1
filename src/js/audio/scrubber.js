@@ -9,7 +9,7 @@ import { createWaveformControls } from "../ui/waveform-options.js";
 /* =============================================================================
    Scrubber
    Draws waveform overview + played progress + live playhead on #scrubberCanvas.
-   Handles click/drag seeking.
+   Handles click/drag and keyboard seeking with playback slider semantics.
    Waveform admission coordinates bounded metadata probing and optional decoding
    separately from playback; the overview renders when extraction completes.
    Presents admission/extraction status without owning playback or source lifetime.
@@ -41,6 +41,7 @@ const Scrubber = (() => {
     cancelDrag();
     _canvas = canvasEl;
     _ctx2d = _canvas.getContext("2d");
+    _canvas.addEventListener("keydown", onKeyDown);
     _canvas.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
@@ -54,6 +55,7 @@ const Scrubber = (() => {
     const onVisibilityChange = () => { if (interactionDocument.hidden) cancelDrag(); };
     interactionDocument.addEventListener("visibilitychange", onVisibilityChange);
     _interactionCleanup = () => {
+      canvasEl.removeEventListener("keydown", onKeyDown);
       canvasEl.removeEventListener("mousedown", onMouseDown);
       canvasEl.removeEventListener("touchstart", onTouchStart);
       for (const [type,handler] of [["mousemove",onMouseMove],["mouseup",onMouseUp],["blur",cancelDrag],["touchmove",onTouchMove],["touchend",onTouchEnd],["touchcancel",onTouchEnd]]) interactionWindow.removeEventListener(type,handler);
@@ -62,6 +64,7 @@ const Scrubber = (() => {
     _controls?.dispose();
     _controls = createWaveformControls({generate:waveformAdmission.generate});
     _controls.update(_waveformStatus, _waveformDetail);
+    syncPlaybackAccessibility();
   }
 
   // Playback never awaits optional extraction. The coordinator alone owns work
@@ -69,12 +72,15 @@ const Scrubber = (() => {
   async function loadFile(file, identity = {}) {
     cancelDrag();
     _waveform = null;
+    syncPlaybackAccessibility();
     return waveformAdmission.loadFile(file, {media:getMediaEl(), ...identity});
   }
 
   function reset() {
     cancelDrag();
     waveformAdmission.reset();
+    // Track reset precedes source teardown. Clear the previous timeline now.
+    syncPlaybackAccessibility(null);
   }
 
   // AudioEngine exposes the media element for seeking and scoped metadata
@@ -88,6 +94,44 @@ const Scrubber = (() => {
     const m = Math.floor(sec / 60);
     const s = Math.floor(sec % 60);
     return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  function getSeekablePlayback() {
+    const el = getMediaEl();
+    return state.source.kind === "file" && state.source.status === "active"
+      && state.audio.isLoaded && el && Number.isFinite(el.duration) && el.duration > 0
+      && Number.isFinite(el.currentTime) ? el : null;
+  }
+
+  function syncPlaybackAccessibility(el = getSeekablePlayback()) {
+    if (!_canvas) return;
+    const now = el ? clamp(el.currentTime, 0, el.duration) : 0;
+    const sync = (name, value) => {
+      const text = String(value);
+      if (_canvas.getAttribute(name) !== text) _canvas.setAttribute(name, text);
+    };
+    sync("tabindex", el ? 0 : -1);
+    sync("aria-disabled", el ? "false" : "true");
+    sync("aria-valuemin", 0);
+    sync("aria-valuemax", el ? el.duration : 0);
+    sync("aria-valuenow", now);
+    sync("aria-valuetext", el ? `${formatTime(now)} of ${formatTime(el.duration)}` : "Playback unavailable");
+  }
+
+  function onKeyDown(e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    const key = e.key;
+    if (!["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp", "Home", "End"].includes(key)) return;
+    // Own slider keys even if playback became unavailable while focused.
+    e.preventDefault();
+    e.stopPropagation();
+    const el = getSeekablePlayback();
+    if (!el) { syncPlaybackAccessibility(null); return; }
+    const step = e.shiftKey ? 30 : 5;
+    const target = key === "Home" ? 0 : key === "End" ? el.duration
+      : el.currentTime + (key === "ArrowLeft" || key === "ArrowDown" ? -step : step);
+    el.currentTime = clamp(target, 0, el.duration);
+    syncPlaybackAccessibility(el);
   }
 
   function readLiveSourceTimeText(sourceState = state.source) {
@@ -108,6 +152,8 @@ const Scrubber = (() => {
   }
 
   function draw() {
+    // Accessibility stays current even when the canvas is hidden or has no size.
+    syncPlaybackAccessibility();
     if (!_canvas || !_ctx2d) return;
 
     // Sync canvas pixel dimensions to CSS dimensions each frame.
@@ -229,6 +275,7 @@ const Scrubber = (() => {
     const el = getMediaEl();
     if (!el || !Number.isFinite(el.duration) || el.duration <= 0) return;
     el.currentTime = clamp(frac, 0, 1) * el.duration;
+    syncPlaybackAccessibility();
   }
 
   function fractionFromEvent(e) {
