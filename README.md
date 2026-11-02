@@ -4,7 +4,7 @@ Offline-capable audio analysis, playback, visualization, and recording. Spectral
 
 **Current public release:** Release 5 / Build 116 (`v0.1.16`), preset schema 16. [Canonical portable HTML](docs/Canon/0.1.16/auralprint_0.1.16.html); [acceptance and platform qualifications](ROADMAP.md#build-116-simulation-world-camera-and-projection).
 
-**Current source checkout:** Build 116 / Release 5, promoted from owner-accepted RC #2 ([PR #103](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/103)); only release identity, the archived artifact and release documentation differ. Build 116 adds world/Camera separation, authored Scene views, compact sharing, optional File Queue clearing and Trace fading. Build 117 optimization research is not part of Release 5.
+**Current source checkout:** Build 117 development begins with a [Visualizer module discovery proof](docs/development/build-117-visualizer-modules.md), retaining Build 116's application behavior and schema. Release 5 remains the immutable owner-accepted Build 116 reference ([PR #103](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/103)). Module discovery does not activate new Scene content; Orb/Ring migration and performance acceptance remain open.
 
 - [ROADMAP](ROADMAP.md): current scope, future builds, acceptance gates and deferrals.
 - [AGENTS](AGENTS.md): binding architecture and development contracts.
@@ -27,6 +27,7 @@ npm run test:browser:editing
 npm run test:browser:presets
 node scripts/validate-116-candidate.cjs
 node scripts/validate-116-accessibility.cjs
+node scripts/validate-117-visualizer-modules.mjs
 ```
 
 Do not run test and build concurrently: tests temporarily rename build directories.

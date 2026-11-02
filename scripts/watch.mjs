@@ -5,6 +5,7 @@ import { readFileSync, readdirSync, watch, writeFileSync, renameSync, mkdirSync,
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { visualizerSnapshotMatches } from "./visualizer-discovery.mjs";
 import {
   assembleSingleFile, collectFatalWarnings, describeEsbuildWarning,
   createCssBuildOptions, createJsBuildOptions, ensureBuildDirs, paths,
@@ -132,7 +133,8 @@ async function main() {
     // Validate version for every candidate, even before deduplication.
     const metadata = readVersionMetadata();
     const extra = assemblyInputs();
-    const sources = new Map([...js.sources, ...css.sources]);
+    const discovery = session.discovery;
+    const sources = new Map([...js.sources, ...css.sources, ...discovery.files]);
     const inputs = new Map([...sources, ...extra]);
     if (metadata.versionTag !== extra.get(paths.versionFile).toString("utf8").trim()) {
       session.queue();
@@ -140,8 +142,8 @@ async function main() {
     }
     // A source save can precede esbuild's next notification. Never publish old
     // bundles under a newly selected version while awaiting that rebuild.
-    if (!inputsMatch(inputs)) return;
-    const signature = fingerprint(inputs);
+    if (!inputsMatch(inputs) || !visualizerSnapshotMatches(discovery)) return;
+    const signature = fingerprint(inputs) + JSON.stringify([...discovery.directories]);
     if (signature === lastSuccess) return;
 
     const stage = await mkdtemp(path.join(paths.buildDir, "watch-"));
@@ -171,6 +173,7 @@ async function main() {
       // whose native/esbuild notifications have not arrived yet.
       if (stopping) return;
       if (session.building.size || session.results.js !== js || session.results.css !== css ||
+          session.discovery !== discovery || !visualizerSnapshotMatches(discovery) ||
           !inputsMatch(inputs) || fingerprint(assemblyInputs()) !== fingerprint(extra)) {
         console.log(`[watch] superseded ${metadata.versionTag}; awaiting current inputs`);
         session.queue();
@@ -246,7 +249,9 @@ async function main() {
       watchers.push(watcher);
     }
     for (const [kind, options] of [["js", createJsBuildOptions], ["css", createCssBuildOptions]]) {
-      const context = await esbuild.context(options({ write: false, plugins: [watchPlugin(kind, session)] }));
+      const context = await esbuild.context(options({ write: false, plugins: [watchPlugin(kind, session)],
+        ...(kind === "js" ? { visualizerSnapshot: snapshot => { session.discovery = snapshot; } } : {}),
+      }));
       // A signal can arrive while context creation is still awaiting esbuild.
       if (stopping) { await context.dispose(); return { close: shutdown }; }
       contexts.push(context);
