@@ -1,12 +1,14 @@
-# Auralprint Build 117 — Development Specification (Draft 1)
+# Auralprint Build 117 — Development Specification (Draft 2)
 
 **Target:** Build 117 (`v0.1.17` when designated); **theme:** Quality of Life · UX Overhaul · Optimize · Harden.  
-**Basis:** owner-approved dependency order, 2026-11-01 discussion, current `Auralprint1/main` (`8c21846d4433376fc4568bc51810075fb42385c7`), `ROADMAP.md`, `AGENTS.md`, and the merged `117-comprehensive-performance-audit.md`.  
-**Status:** proposed normative specification for owner approval; not a release authorization or permission for an unrestricted refactor. No implementation or acceptance is implied by this draft. On acceptance, link it from `ROADMAP.md` (which remains the scope/acceptance authority); do not create competing policy ownership.
+**Basis:** owner-approved dependency order from 2026-11-01 and architecture-first clarification from 2026-11-02; original source reference `8c21846d4433376fc4568bc51810075fb42385c7`, `ROADMAP.md`, `AGENTS.md`, and the merged `117-comprehensive-performance-audit.md`. Current pinned references are in the [preparation checkpoint](build-117-architecture-preparation.md#reference-and-scope).
+**Status:** design requirements and implementation plan for review; detailed contracts remain proposals. `ROADMAP.md` owns scope and acceptance and already links this draft as review material. Owner direction to overhaul both cores does not approve an ABI, unrestricted refactor, milestone promotion or release.
 
 ## 1. Objective
 
 Make the capabilities shipped through Build 116 more usable, efficient, extensible, and reliable. Prefer removal of unnecessary work and friction over additional end-user features. Each change must justify its runtime cost, complexity, ownership, and regression exposure.
+
+**Architecture-first mission:** establish shipped 116 as the comparison reference, design fully modular Analysis and Visualization cores, prove compatibility in small passes, then optimize and refine the experience. Both cores must support replaceable implementations through explicit interfaces. Prepare for later dynamic BandBank bucketing and a future TemporalEngine without implementing their features or selecting their APIs now. The eventual QOL/UX/performance outcomes do not make UI polish or micro-optimization the first task.
 
 **Success** means users can complete existing tasks more easily, ordinary and demanding scenes behave at least as correctly as Canon 116, resource and lifecycle behavior is more predictable, and verified improvements are supported by reproducible evidence rather than intuition. A faster microbenchmark alone is not sufficient.
 
@@ -21,7 +23,7 @@ Make the capabilities shipped through Build 116 more usable, efficient, extensib
 
 ## 3. In scope and boundaries
 
-**Required workstreams:** measurement and architecture inventory; browser/mode compatibility; source/recorder/Watcher diagnosis and hardening; data-processing and simulation optimization; procedural rendering and frame pacing; Visualizer extensibility; efficient UI projection; Visualizers/Queue/narrow-screen UX; general QOL; integrated accessibility/regression/device validation.
+**Required workstreams:** complete/qualified 116 reference; modular Analysis and Visualization design and staged migration; browser/mode compatibility; source/recorder/Watcher diagnosis and hardening; data-processing and simulation optimization; procedural rendering and frame pacing; efficient UI projection; Visualizers/Queue/narrow-screen UX; general QOL; integrated accessibility/regression/device validation.
 
 **Explicitly parked:** Simple/Advanced presentation modes, the separate mobile-site alternative, and any policy that makes the default experience intentionally hide advanced capabilities. Responsive usability remains in scope **without** deciding presentation modes.
 
@@ -29,16 +31,20 @@ Make the capabilities shipped through Build 116 more usable, efficient, extensib
 
 **Candidate, not guaranteed implementation:** The sixteen `AUD117-*` performance findings are investigation inputs. A candidate is implemented only after demonstrating benefit at acceptable fidelity, memory, and complexity cost. Findings with negative or inconclusive results can be closed as *rejected with evidence*.
 
+**Held candidate:** PR #109 remains on hold and outside the accepted source. Direct drawing, commands/batches, scratch surfaces and hybrids remain rendering alternatives requiring comparative fidelity, resource and pacing evidence. Neither commands nor extra canvases imply a performance gain. The [preparation checkpoint](build-117-architecture-preparation.md) records the current review stops.
+
 ## 4. Dependency-ordered execution plan
 
 These stages are the approved **dependency order**, not an inflexible mandate that all work in one stage must stop before another begins. Each stage has a reviewable output and owner acceptance. Work on a protected subsystem must include its own tests immediately; final validation is not the first regression gate.
 
+The November 2 clarification retains the stage identifiers while making both cores explicit: Stage 0 reference review and Stage 1 contract/migration-plan approval precede broad production migration; isolated proof assignments remain separate. Architecture research and independent diagnostics may continue while device evidence is outstanding. Do not treat the ordering as authority to start the next stage.
+
 | Stage | Goal / principal work | Exit evidence |
 | --- | --- | --- |
 | **0 — Reference and measurement** | Pin Canon 116 and current main; define deterministic workloads including factory, common, Hero when owner-supplied, high-Orb, dense particles, fade 0/5/20, camera, Queue, source/recording; instrument p50/p95 intervals, callback buckets, startup/edit latency, memory and long frames across available browsers/devices. | Reproduction recipe, environments, clear baseline limitations and protected-behavior comparison. Existing 117 audit is input, not a substitute for owner-device measurements. |
-| **1 — Architecture/dependency mapping** | Inventory producers/consumers, settings ownership, update cadences, allocation hotspots, lifecycle boundaries, UI capabilities and actual control requirements; **define the Visualizer abstraction** and assess its compatibility. | Dependency map, risk/decision register, proposed versioned Visualizer contract and approved implementation gates; no broad implementation rewrite. |
+| **1 — Architecture/dependency mapping** | Map both Analysis and Visualization producers/consumers, settings, cadences, allocation/lifecycle boundaries and UI capabilities; propose versioned contracts and compatibility adapters for both cores. | Dependency/decision register, lifecycle and data-lifetime design, alternatives, migration/rollback plan and owner-approved implementation gates; no broad implementation rewrite. |
 | **2 — Source and lifecycle hardening** | Firefox display-capture audio handling; capability-aware source controls; Mic/Stream/File transitions; cleanup ownership; recorder memory/native finalization diagnostics and injected File-tap cleanup refusal. | Supported/unsupported/uncertain capability matrix, correct error/cleanup behavior, reproducible negative paths and cross-source/recording regression tests. |
-| **3 — Analysis/data efficiency** | Same-File waveform peaks reuse; FFT band planning; selected-band computation; transaction-local preset work; distinguish necessary producer contracts from truly unused work. | Correct L/R/C data and unchanged preset meaning; measured improvements or documented negative outcomes; bounded caches with invalidation and admission. |
+| **3 — Analysis modularization and data efficiency** | After contract approval, prove and migrate replaceable producer/derived-data boundaries in small passes. Evaluate waveform reuse, FFT planning, selected-band computation and preset transactions separately from structural parity. | Independent module proof, valid/fresh borrowed data across source/settings changes, L/R/C and preset parity; bounded lifetime/caches. Optimization claims need matched measurements after the structural gate. |
 | **3.5 — Visualizer architecture migration** | After 1's contract is approved and 3's upstream data requirements are stable, implement deterministic build discovery and generic runtime integration; migrate Orb/Ring while preserving their behavior. | Contract tests, dynamic registry proof via a small independent example, current Scene/preset equivalence and no runtime external modules. This is a **gate before major Visualizer-specific simulation/render and UI redesign**, not necessarily before unrelated standalone optimizations. |
 | **4 — Simulation/resources** | Remove avoidable per-object derivation; bound/adapt retirement and reset; preserve Clock/Governor ownership, particle ordering, TTL, spacing, emission and pause semantics. | Deterministic parity, no hidden admission changes, bounded worst-case work/memory and measurable result where optimization is adopted. |
 | **5 — Rendering/frame pacing** | Procedural particle presentation, Trace composition, Ring geometry, prepared projections, scene-visibility/size research; measure end-to-end p95 and browser/native effects. | Pixel/compositing/Camera/recording checks for accepted optimizations and improved realistic frame pacing; rejected approaches documented. |
@@ -51,6 +57,18 @@ These stages are the approved **dependency order**, not an inflexible mandate th
 **Parallel tracks:** Watcher `AUD116-006/R2-003` (intermittent Ubuntu duplicate saves) and Windows child-process termination are **distinct unresolved diagnostic risks**, investigated alongside Stages 1–6 without weakening assertions. Browser/physical hardware coverage, automated regression, documentation of decisions and accessibility checks continue throughout.
 
 ## 5. Visualizer contract — design requirements (`117-ARCH-VIZ`)
+
+### Analysis prerequisite (`117-ARCH-ANALYSIS`, design requirements only)
+
+The two cores must agree on a producer/consumer boundary before the Visualizer host freezes its services:
+
+- Separate acquisition/Web Audio ownership, sample production, spectral definitions, aggregation and derived products. Define metadata/units, validity, freshness, timestamps/clock domains and borrowed-array lifetime; `AnalysisFrame` identity is not a freshness key.
+- Preserve genuine L/R/C outputs with zero Visualizers, current combined-C and selected-band semantics, actual-sample-rate/Nyquist behavior and schema-16 band references. Inventory current count/name/selection assumptions; replacing the implementation must not reinterpret published IDs.
+- Specify admission, settings invalidation, buffer replacement, partial creation, error/reset/disposal and owned cleanup. Compare borrowed views, explicit snapshots and cached derivations with bounded costs; choose none implicitly.
+- Demonstrate an independent derived-data module and replacement producer behind the reviewed boundary without changing unrelated consumers or central type dispatch. Record what still requires orchestration changes instead of claiming full modularity from file separation.
+- Describe how a later time-aware consumer could obtain time/freshness information; do not add history retention, temporal analysis or a TemporalEngine API in this pass. Dynamic bucketing remains future work.
+
+The [source map and decision register](build-117-architecture-preparation.md#current-dependencies-source-proven) distinguish present behavior from these design requirements. Incompatible interfaces need explicit versioning, compatibility and deprecation decisions before implementation.
 
 ### 5.1 Intended result
 
@@ -124,9 +142,9 @@ Do **not** invent numerical FPS/memory targets without a measured reference and 
 
 ## 10. Immediate first milestone (117-0/1)
 
-**Deliverable:** a repository-visible architecture/dependency map and benchmark plan, **not** production code migration. Identify all real Visualizer service/ownership dependencies, unresolved contract decisions, work saved by likely interface changes, and protected fixtures. Present an ordered list of small implementation candidates with cost, proof requirements and owner decision points.
+**Deliverable:** a repository-visible map of both cores and a baseline completion plan, **not** production code migration. Identify Analysis and Visualizer service/ownership dependencies, unresolved contract decisions, work saved by likely interface changes, and protected fixtures. Present bounded assignments with proof requirements and owner decision points; merged B0–B2 does not close Stage 0.
 
-**Stage 1 decision gate:** Approve/revise the Visualizer type-vs-instance model, mandatory/optional capabilities, dependency/update ordering, host service boundaries, sizing units and persistence strategy **before** starting Stage 3.5 migration or Stage 7 UX design.
+**Stage 1 decision gate:** Approve/revise Analysis product lifetime/freshness/clock and band-definition boundaries together with the Visualizer type/instance model, capabilities, dependency/resource/composition ordering, host services, sizing and persistence boundary. Review migration and rollback before implementing either core's new contract or starting Stage 7 UX design. Reference acceptance, isolated proofs, migration, optimization and UI/integration are separate gates; no merge or promotion is implied by completing this document.
 
 ---
 
