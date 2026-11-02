@@ -1,0 +1,42 @@
+name: Build 117 baseline
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/benchmark-117.mjs'
+      - 'scripts/benchmark-117/**'
+      - 'tests/benchmark-117.test.js'
+      - '.github/workflows/benchmark-117.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium --only-shell
+      - name: Exercise harness before collecting baseline
+        run: node scripts/benchmark-117.mjs --quick --out .build/benchmark-117-smoke --cases B0-stereo-hidden-paused,B1-free,B1-orb,B2-16-hidden,B2-256-revealed
+      - name: Measure B0/B1/B2 in both built editions
+        run: node scripts/benchmark-117.mjs --out .build/benchmark-117-ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baseline-117-${{ github.event.pull_request.head.sha }}
+          path: .build/benchmark-117-*/results.json
+          include-hidden-files: true

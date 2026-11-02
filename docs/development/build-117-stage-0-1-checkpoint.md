@@ -6,6 +6,8 @@
 
 **Release reference:** immutable Canon `docs/Canon/0.1.16/auralprint_0.1.16.html`, SHA-256 `a7ccb6d0cffdc6641f7cc08fbce71b7087196b962267efae663819b2701d89db`; writer schema 16. The development `version` remains `v0.1.16`; do not advance it on this pass.
 
+**Follow-on measurement pass:** [B0/B1/B2 baseline harness and evidence](build-117-baseline.md). The observations below retain their original checkpoint context; the follow-on pass does not approve the Visualizer contract or close all Stage 0 coverage.
+
 Authority: [AGENTS.md](../../AGENTS.md), [ROADMAP.md](../../ROADMAP.md), [117 spec draft](auralprint-build-117-spec-draft.md), and [117 performance audit](../audits/117-comprehensive-performance-audit.md). ROADMAP links the draft and checkpoint as review material; the draft remains unapproved. PR #106's hosted metadata packaging is already in the base; do not redo it.
 
 ## 1. Observed topology (source-proven)
