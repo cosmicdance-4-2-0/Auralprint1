@@ -60,6 +60,7 @@ export function createVisualizerHost({ catalog, drawing, services = {}, barriers
   const failures = [];
   const manifests = catalog.types.map(type => type.manifest);
   const plan = planVisualizerUpdates(manifests, barriers);
+  const resourceBarriers = plan.filter(node => node.barrier).map(node => node.barrier);
   schedule = plan.filter(node => node.barrier);
 
   function report(record, operation, error) {
@@ -168,6 +169,12 @@ export function createVisualizerHost({ catalog, drawing, services = {}, barriers
         counts.set(definition.typeId, count);
         if (type.manifest.multiplicity === "single" && count > 1) throw new Error("Singleton Visualizer admission exceeded");
         if ([...retired].some(record => record.typeId === definition.typeId && record.instanceId === definition.instanceId)) throw new Error("Visualizer cleanup is unresolved");
+        // 117-3.5a contract review: a singleton owns its slot through teardown.
+        // Staging another identity before removal would overlap its resources.
+        if (type.manifest.multiplicity === "single" && (
+          records.some(record => record.typeId === definition.typeId && record.instanceId !== definition.instanceId) ||
+          [...retired].some(record => record.typeId === definition.typeId)
+        )) throw new Error("Singleton Visualizer identity is still owned; remove and confirm cleanup before replacement");
         return { type, definition: { typeId: definition.typeId, instanceId: definition.instanceId,
           settings: frozenCopy(definition.settings ?? {}), visible: definition.visible ?? true,
           outputExtent: outputExtent(definition.outputExtent) } };
@@ -202,7 +209,7 @@ export function createVisualizerHost({ catalog, drawing, services = {}, barriers
         currentFrame = frame;
         // Barrier errors are host failures and abort dependent work; they are
         // never attributed to another instance or silently treated as success.
-        for (const barrier of barriers) if (barrier.begin) syncResult(barrier.begin(frame));
+        for (const barrier of resourceBarriers) if (barrier.begin) syncResult(barrier.begin(frame));
         for (const node of schedule) {
           if (node.barrier) syncResult(node.barrier.commit(frame));
           else dispatch(node, "update");

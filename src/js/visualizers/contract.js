@@ -29,8 +29,21 @@ export function validateVisualizerManifest(value) {
   return Object.freeze({ ...value, capabilities: Object.freeze([...value.capabilities]), updateAfter, optionalUpdateAfter });
 }
 
-// The caller supplies composition order as the tie breaker. Shared commits are
-// explicit graph nodes; dependency ordering never changes drawing order.
+function snapshotResourceBarrier(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid Visualizer resource barrier");
+  const { id, afterTypes, beforeTypes, begin, commit } = value;
+  if (typeof id !== "string" || !TYPE_ID.test(id) || typeof commit !== "function" ||
+      (begin !== undefined && typeof begin !== "function")) throw new Error("Invalid Visualizer resource barrier");
+  // Keep opaque callback-owned service references, but snapshot every field that
+  // determines dispatch/topology. The caller's declarations remain writable.
+  return Object.freeze({ ...value, id, begin, commit,
+    afterTypes: identifiers(afterTypes, "afterTypes"),
+    beforeTypes: identifiers(beforeTypes, "beforeTypes"),
+  });
+}
+
+// Type declaration order breaks dependency ties; instances of each type retain
+// composition order. Shared commits are explicit graph nodes. Drawing is separate.
 export function planVisualizerUpdates(manifests, barriers = []) {
   const nodes = new Map(manifests.map(manifest => [`type:${manifest.typeId}`, { typeId: manifest.typeId }]));
   if (nodes.size !== manifests.length) throw new Error("Duplicate Visualizer typeId");
@@ -43,13 +56,13 @@ export function planVisualizerUpdates(manifests, barriers = []) {
     for (const id of manifest.updateAfter) edge(`type:${id}`, `type:${manifest.typeId}`);
     for (const id of manifest.optionalUpdateAfter) if (nodes.has(`type:${id}`)) edge(`type:${id}`, `type:${manifest.typeId}`);
   }
-  for (const barrier of barriers) {
+  for (const declaration of barriers) {
+    const barrier = snapshotResourceBarrier(declaration);
     const id = `barrier:${barrier.id}`;
-    if (typeof barrier.id !== "string" || !TYPE_ID.test(barrier.id) || nodes.has(id) || typeof barrier.commit !== "function" ||
-        (barrier.begin !== undefined && typeof barrier.begin !== "function")) throw new Error("Invalid Visualizer resource barrier");
+    if (nodes.has(id)) throw new Error("Duplicate Visualizer resource barrier");
     nodes.set(id, { barrier }); edges.set(id, new Set());
-    for (const type of identifiers(barrier.afterTypes, "afterTypes")) edge(`type:${type}`, id);
-    for (const type of identifiers(barrier.beforeTypes, "beforeTypes")) edge(id, `type:${type}`);
+    for (const type of barrier.afterTypes) edge(`type:${type}`, id);
+    for (const type of barrier.beforeTypes) edge(id, `type:${type}`);
   }
   const result = [];
   const pending = new Map(nodes);
@@ -58,7 +71,7 @@ export function planVisualizerUpdates(manifests, barriers = []) {
     if (!ready) throw new Error("Cyclic Visualizer update dependencies");
     result.push(pending.get(ready)); pending.delete(ready);
   }
-  return result;
+  return Object.freeze(result.map(node => Object.freeze(node)));
 }
 
 export function createVisualizerCatalog(definitions) {
