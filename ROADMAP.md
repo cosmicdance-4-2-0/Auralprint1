@@ -62,9 +62,11 @@ The owner accepted the available Windows/Android Camera experience and requested
 
 ## Build 117: UX and performance hardening
 
-**Approved separate packaging pass:** For future builds, target the official `https://auralprint.idiw.net/` root in the hosted edition, generate complete social metadata from source branding, and package/verify its OG image. Keep portable HTML location-independent and do not alter Build 116 Canon. This is independent of the rendering optimization passes.
+**Completed separate packaging pass ([PR #106](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/106)):** The hosted edition targets the official `https://auralprint.idiw.net/` root, generates social metadata from source branding, and packages/verifies its OG image. Portable HTML remains location-independent; Build 116 Canon is unchanged. Do not schedule this work again as a rendering optimization.
 
 **Status: planned; targeted fixes may accompany their owning milestone.**
+
+The [Stage 0/1 checkpoint](docs/development/build-117-stage-0-1-checkpoint.md) records the source map, baseline correctness evidence, benchmark plan and proposed Visualizer contract. It and the [117 specification](docs/development/auralprint-build-117-spec-draft.md) remain review proposals; these links do not approve the contract, broaden scope or mark measurement/migration complete.
 
 Measure rendering and analysis on constrained hardware, reduce unnecessary hidden-panel updates, and address interaction problems found during Build 115/116 use. Preserve useful tooltips, reset behavior, and recoverable panel visibility.
 
