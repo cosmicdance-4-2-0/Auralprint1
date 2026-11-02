@@ -119,7 +119,7 @@ try {
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
     const base = `http://127.0.0.1:${server.address().port}`;
     report.status = 'running'; await save();
-    const run = async (spec, edition, repetition, mode) => {
+    const run = async (spec, edition, repetition, mode, purpose = 'baseline', comparisonPosition = null) => {
       const context = await browser.newContext({ viewport: protocol.viewport, deviceScaleFactor: protocol.dpr });
       const page = await context.newPage(), errors = [];
       page.setDefaultTimeout(protocol.timeoutMs);
@@ -127,9 +127,9 @@ try {
       page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
       page.on('requestfailed', request => errors.push(`${request.url()}: ${request.failure()?.errorText}`));
       page.on('response', response => { if (response.status() >= 400) errors.push(`HTTP ${response.status()} ${response.url()}`); });
-      const result = { case: spec.id, edition, repetition, mode, errors };
+      const result = { case: spec.id, edition, repetition, mode, purpose, comparisonPosition, errors };
       // Save a failed run's context as well as successful runs; never erase prior evidence.
-      (mode === 'interval' ? report.observerComparison : report.results).push(result);
+      (purpose === 'observer-control' ? report.observerComparison : report.results).push(result);
       try {
         await page.addInitScript(installObserver);
         const appPath = mode === 'buckets' ? '/diagnostic.html' : '/' + artifacts[edition];
@@ -199,11 +199,13 @@ try {
       for (const edition of editions) for (const spec of cases) await run(spec, edition, repetition, 'callback');
     }
     // Separate attribution run: its timings are never pooled with built pacing.
-    for (const spec of cases) await run(spec, 'instrumented-portable', 1, 'buckets');
+    for (const spec of cases) await run(spec, 'instrumented-portable', 1, 'buckets', 'attribution');
     // Balanced interval-only / timed / timed / interval-only observer comparison.
     const overheadCase = cases.find(c => c.id === 'B0-none-hidden-running');
     if (overheadCase) for (let block = 1; block <= sampling.repeats; block++) {
-      for (const mode of ['interval', 'callback', 'callback', 'interval']) await run(overheadCase, 'portable', block, mode);
+      for (const [position, mode] of ['interval', 'callback', 'callback', 'interval'].entries()) {
+        await run(overheadCase, 'portable', block, mode, 'observer-control', position + 1);
+      }
     }
     const offline = await browser.newContext({ offline: true, viewport: protocol.viewport });
     try {

@@ -105,6 +105,12 @@ test('117 observer leaves unrelated callbacks and application exceptions intact'
   assert.equal(s.context.ap117Observer.callbacks, 0);
 });
 
+test('117 media-clock observer preserves the native play promise and receiver', async () => {
+  const s = scheduler(), media = new s.context.HTMLMediaElement();
+  assert.equal(await media.play(), 'played');
+  assert.equal(s.context.ap117Observer.mediaElement, media);
+});
+
 test('117 interval-only control omits callback timing and diagnostic hooks remain separate', async () => {
   const s = scheduler();
   function onAnimationFrame() { s.context.requestAnimationFrame(onAnimationFrame); s.advance(3); }
