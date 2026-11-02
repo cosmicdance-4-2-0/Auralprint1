@@ -64,16 +64,20 @@ The owner accepted the available Windows/Android Camera experience and requested
 
 **Completed separate packaging pass ([PR #106](https://github.com/cosmicdance-4-2-0/Auralprint1/pull/106)):** The hosted edition targets the official `https://auralprint.idiw.net/` root, generates social metadata from source branding, and packages/verifies its OG image. Portable HTML remains location-independent; Build 116 Canon is unchanged. Do not schedule this work again as a rendering optimization.
 
-**Status: planned; targeted fixes may accompany their owning milestone.**
+**Status: architecture-first preparation; full Stage 0 baseline and Stage 1 contract acceptance remain open.** Owner clarification, November 2, 2026: modularize both the **Analysis core** and **Visualization core**, preserving shipped Build 116 behavior. Establish the reference, agree on versioned boundaries and a staged migration plan, then prove isolated modules and migrate before major optimization and UX work. Prepare extension boundaries for later dynamic BandBank bucketing and TemporalEngine; those future features are not authorized in 117.
 
 The [Stage 0/1 checkpoint](docs/development/build-117-stage-0-1-checkpoint.md) records the source map, baseline correctness evidence, benchmark plan and proposed Visualizer contract. It and the [117 specification](docs/development/auralprint-build-117-spec-draft.md) remain review proposals; these links do not approve the contract, broaden scope or mark measurement/migration complete.
 
-The [B0/B1/B2 baseline harness](docs/development/build-117-baseline.md) supplies repeatable factory, zero-Orb/Ring and editor-scaling measurements. Device/Hero, deeper rendering/lifecycle workloads and Visualizer-contract acceptance remain open.
+The [baseline completion ledger](docs/development/build-117-baseline.md#baseline-completion-ledger) distinguishes accepted B0/B1/B2 evidence from outstanding B3–B7, Hero and device coverage. The [architecture preparation checkpoint](docs/development/build-117-architecture-preparation.md) pins the accepted source, maps both cores and defines bounded next assignments and review stops. Documentation readiness is not baseline or architecture acceptance.
+
+**PR #109 is on hold by owner direction.** Its discovery/host implementation and scratch-canvas drawing contract are unmerged candidates, not the accepted baseline. Reconciliation, activation, migration and a final rendering strategy require separate assignments/decisions. Work starts from accepted `v117_dev`, not that PR.
 
 Measure rendering and analysis on constrained hardware, reduce unnecessary hidden-panel updates, and address interaction problems found during Build 115/116 use. Preserve useful tooltips, reset behavior, and recoverable panel visibility.
 
 Acceptance gates:
 
+- Explicitly review the complete or owner-qualified Canon 116 reference before broad migration. Approve Analysis and Visualization contracts, compatibility adapters, ownership, failure behavior and rollback boundaries before implementation; preserve existing roadmap stage identifiers when assigning work.
+- Demonstrate a replaceable Analysis producer/derived-data boundary and independently discovered Visualizer type in bounded proofs. Modularity, behavioral parity and measured performance are separate review criteria; none substitutes for the others.
 - Establish and record representative device, audio, viewport, FFT, and particle settings before comparing performance.
 - Prevent unbounded work and new per-frame allocations; show an actionable explanation for any user-visible performance limit.
 - Repeated source changes, queue operations, panel toggles, and recording cycles do not accumulate listeners or retain obsolete media resources.

@@ -4,6 +4,51 @@ Reference: `v117_dev` `e6533e86330c13afaa9ca4168c078875f533c0cf`, including merg
 
 This is the isolated **B0/B1/B2** pass from the [architecture checkpoint](build-117-stage-0-1-checkpoint.md#3-reproducible-benchmark-plan-measurement-implementation-pending). It does not approve the Visualizer contract or close all Stage 0 device/lifecycle coverage.
 
+## Baseline completion ledger
+
+**Reviewed November 2, 2026:** accepted `v117_dev` is `dfb57e59b7d22a94be1c768ffc905141ec274ad3` (merged #108). The [preparation checkpoint](build-117-architecture-preparation.md#reference-and-scope) records independently checked source/artifact identity. PR #109 is excluded and on hold. The original B0–B2 observations below remain unchanged; this ledger adds no new browser measurements.
+
+| Coverage | Evidence at the accepted source | Remaining acceptance work |
+| --- | --- | --- |
+| Canon/source provenance | Canon hash verified; all 93 implementation-file hashes in the archived result match this source | Pin source, harness and exact artifacts for every new run; moving `main` is not a reference identifier |
+| B0 factory; B1 zero-Orb Ring; B2 editor scaling | Raw software-Chromium reference and separate pinned-browser CI evidence below | Retain environment/observer qualifications; these cases do not cover either core's entire architecture |
+| B3 particles/aging | Recipe only; executable harness currently supports B0–B2 | Initial populations 1,000/8,000/16,384; TTL 6/60/600; aging-only and churn; actual admission/age/population history, reset and retention behavior |
+| B4 Trace | Recipe only | Identical 16 × 1,001-point histories, Fade 0/5/20; joins/overlaps, native pixels and capture parity; callback and rAF costs |
+| B5 Camera/viewport/DPR | Recipe and protected correctness tests; no new workload measurements | B0/B4 at both declared viewports and DPR 1/2; world/history and CSS-size invariance, Fit and authored/live separation; gestures separately |
+| B6 Queue/waveform/sources | Recipe and existing regression tests | Same-File identity at 100/1,000/5,000 entries; task latency/peaks/occupancy; native capability and injected failure results distinguished |
+| B7 recording/lifetime | Recipe and existing regression tests | Matched supported format; five capture cycles and separate 60-minute soak; prior export, owned cleanup, actual finalization and memory limitations |
+| Owner Hero | No exact supplied preset in this reference | Preserve supplied preset/audio hashes and configuration; no invented substitute |
+| Representative devices | Software worker evidence; historical owner functional reports are separate | Record actual device/browser/backend, narrow/touch and capture/accessibility coverage. Native Safari and unavailable devices remain untested |
+
+**Stage 0 is open.** Owner review must accept the complete reference or explicitly record each qualification. Unit tests, a successful harness run, documentation completion or acceptance of one workload cannot promote the whole stage. Modularity, behavioral parity and speed remain separate criteria.
+
+## Next measurement assignments and stop points
+
+Use the existing [B3–B7 recipes](build-117-stage-0-1-checkpoint.md#3-reproducible-benchmark-plan-measurement-implementation-pending); keep their numerical choices as recorded experiment inputs, not application policy or device performance targets. The next coding assignment is **B3/B4 harness preparation and evidence**, followed by separately reviewable B5, B6 and B7 passes. This document prepares those assignments; it does not implement them.
+
+1. **B3/B4 setup review, before collecting timings:** freeze canonical schema-16 settings, seeded geometry/birth-time hashes, selected resource policy, source/panel state, setup order and observation class. `TrailSystem.emitAt()` uses owned retention admission but does not exercise ordinary spacing/fair emission scheduling; report that distinction. Seed outside an active governor frame and verify admitted counts; measure normal emission separately. Aging continues through warmup, so initial population is never reported as a steady-state population.
+2. **Resolve artifact access honestly:** the current in-memory diagnostic entry can reach runtime objects; the shipped bundle does not expose a public history-seeding API. A seeded diagnostic run must identify its modified artifact and remain diagnostic evidence. Pair it with normal built-artifact pacing under public controls, or propose and review another setup method with its cost. Do not add a production test hook, patch Canon, force clocks or relabel diagnostic timings as shipped-artifact pacing.
+3. **Review B3/B4 results before B5:** include raw pacing, seeded-history assertions, native pixel comparisons and observer overhead. Freeze/step deterministic time only in a separately labelled fidelity test; real-time pacing runs retain native clocks. A missing comparison or unsupported setup remains unverified, not a performance result.
+4. **B5:** reuse the reviewed histories and pose recipe, saving actual applied poses and resize/DPR events. Programmatic viewport/Camera replay does not establish physical touch behavior.
+5. **B6:** separate Queue/task timing, optional waveform occupancy and real permission/source transitions. Preserve request/entry identity and winning-source cleanup; injected denied/no-track cases do not certify a browser's native capture capability.
+6. **B7:** preserve the specified Stop/Cancel schedule and previous export across cycles. Record requested and actual codec/FPS/dimensions, source changes, cleanup outcome and policy-triggered Stops. Do not coerce an unsupported codec into a supposedly comparable run or infer total memory from encoded bytes/JS heap.
+
+Each assignment stops at an evidence review and a bounded PR. Production migration, source fixes, new policies and renderer changes need their own authorized pass. Hero/device work can proceed independently; unavailable hardware does not block synthetic workload preparation.
+
+### Evidence required for each workload
+
+| Record | Required content |
+| --- | --- |
+| Identity | Exact release/source/harness commits, dirty state/diff where applicable, edition and actual artifact hashes; preserve existing archives |
+| Inputs | Audio bytes/hash and position, full canonical settings plus schema-16 round-trip/hash, actual sample rate/FFT/bands, histories/populations, Camera, viewport/DPR, visibility and source/recording state |
+| Environment | OS/device, browser/version, headless/headed, rendering backend, actual codec/capture support; unknown fields explicit |
+| Observation class | Unmodified built pacing, instrumented attribution, observer control, deterministic fidelity, injected lifecycle test or physical-device observation; never pool these |
+| Samples | Raw callback durations and rAF intervals, elapsed/media times, admitted/retained populations, per-run nearest-rank p50/p95, stated long-interval threshold and counts, failures and timeouts |
+| Cost and parity | Observer/control comparison, allocations/JS heap with native/GPU/DOM exclusions, expected/actual lifecycle ownership, pixel/task/capture checks and unexplained differences |
+| Disposition | Repetitions and variability; pass/fail/unverified per criterion; owner-approved exception only when explicitly granted; remaining evidence and next stop |
+
+Use the implemented 60-warmup/240-sample/three-repetition protocol for reference pacing unless a workload-specific duration is declared and justified; B7 needs its longer schedule. For later candidate comparisons, balance baseline/candidate order using the checkpoint plan and report the exact order. Compare identical workloads/environments/editions, retaining both the fixed 116 reference and the immediate pre-change 117 reference. A short `--quick` run remains smoke evidence. No FPS or memory acceptance threshold is invented here.
+
 ## Run
 
 After the [normal sequential checks](../../README.md#developer-bootstrap) and Playwright browser installation:
