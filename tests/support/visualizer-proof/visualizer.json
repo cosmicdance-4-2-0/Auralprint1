@@ -1,0 +1,8 @@
+{
+  "contractVersion": 1,
+  "typeId": "proof-marker",
+  "name": "Static module proof",
+  "description": "Test-only non-audio world path; never default scene content.",
+  "multiplicity": "multiple",
+  "capabilities": []
+}

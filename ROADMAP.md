@@ -68,6 +68,8 @@ The owner accepted the available Windows/Android Camera experience and requested
 
 The [Stage 0/1 checkpoint](docs/development/build-117-stage-0-1-checkpoint.md) records the source map, baseline correctness evidence, benchmark plan and proposed Visualizer contract. It and the [117 specification](docs/development/auralprint-build-117-spec-draft.md) remain review proposals; these links do not approve the contract, broaden scope or mark measurement/migration complete.
 
+The owner authorized starting the modular rewrite. The [117-3.5a discovery proof](docs/development/build-117-visualizer-modules.md) defines a candidate module ABI, shared build/watch discovery and an isolated non-audio activation/drawing check. Orb/Ring migration, upstream analysis review, remaining baseline measurements and architectural acceptance are still open.
+
 Measure rendering and analysis on constrained hardware, reduce unnecessary hidden-panel updates, and address interaction problems found during Build 115/116 use. Preserve useful tooltips, reset behavior, and recoverable panel visibility.
 
 Acceptance gates:

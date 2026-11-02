@@ -56,6 +56,9 @@ jobs:
       - name: Verify accessible playback and Queue controls (Ubuntu only)
         if: runner.os == 'Linux'
         run: node scripts/validate-116-accessibility.cjs
+      - name: Verify Visualizer module discovery and isolated drawing (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: node scripts/validate-117-visualizer-modules.mjs
       - name: Verify versioned artifact and untracked generated output
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

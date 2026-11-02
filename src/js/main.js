@@ -15,6 +15,11 @@ import { UI } from "./ui/ui.js";
 import { restoreSceneCamera } from "./ui/scene-camera-actions.js";
 import { initOrbs } from "./render/orb-runtime.js";
 import { VisualizerRuntime } from "./render/visualizer-runtime.js";
+import { visualizerTypes } from "./visualizers/catalog.js";
+import { createVisualizerModules } from "./visualizers/modules.js";
+
+// 117-3.5a: validate discovered factories without activating new scene content.
+let visualizerModules;
 
 /* =============================================================================
    Boot / loop
@@ -62,6 +67,7 @@ function rebaseVisualFrameClock() {
 }
 
 async function main() {
+  visualizerModules = createVisualizerModules(visualizerTypes);
   UI.setCssVarsFromConfig();
 
   state.canvas = document.getElementById("c");
@@ -114,4 +120,4 @@ async function main() {
 
 main();
 
-export { onAnimationFrame, main };
+export { onAnimationFrame, main, visualizerModules };

@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createVisualizerDiscoveryPlugin } from "./visualizer-discovery.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(scriptPath);
@@ -90,6 +91,7 @@ function assertNoFatalWarnings(result, label) {
 }
 
 function createJsBuildOptions(extra = {}) {
+  const { plugins = [], visualizerSnapshot, ...overrides } = extra;
   return {
     entryPoints: [paths.jsEntry],
     outfile: paths.jsBundle,
@@ -100,7 +102,8 @@ function createJsBuildOptions(extra = {}) {
     metafile: true,
     minify: false,
     logLevel: "info",
-    ...extra,
+    ...overrides,
+    plugins: [createVisualizerDiscoveryPlugin({ rootDir: projectRoot, onSnapshot: visualizerSnapshot }), ...plugins],
   };
 }
 
