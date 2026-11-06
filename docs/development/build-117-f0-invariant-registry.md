@@ -1,9 +1,13 @@
 # Build 117 F0 — Canon 116 invariant and boundary registry
 
-**Status:** F0 review candidate; not owner acceptance of Stage 0, Stage 1, an interface/ABI, or a release.  
-**Prepared:** 2026-11-06, Axiom (Kestrel engineering role).  
-**Accepted development source:** `v117_dev@ff547056542a10e3fbf1ae2010248d4558e55dda`; this F0 branch was created from that exact commit.  
-**Behavioral reference:** immutable Build 116 / Release 5 (`v0.1.16`, preset writer schema 16), `docs/Canon/0.1.16/auralprint_0.1.16.html`. Previously verified SHA-256: `a7ccb6d0cffdc6641f7cc08fbce71b7087196b962267efae663819b2701d89db`. **The checksum is cited from existing reviewed documentation, not independently recomputed in this pass.**  
+**Status:** F0 review candidate; not owner acceptance of Stage 0, Stage 1, an interface/ABI, or a release.
+
+**Prepared:** 2026-11-06, Axiom (Kestrel engineering role).
+
+**Accepted development source:** `v117_dev@ff547056542a10e3fbf1ae2010248d4558e55dda`; this F0 branch was created from that exact commit.
+
+**Behavioral reference:** immutable Build 116 / Release 5 (`v0.1.16`, preset writer schema 16), `docs/Canon/0.1.16/auralprint_0.1.16.html`. Previously verified SHA-256: `a7ccb6d0cffdc6641f7cc08fbce71b7087196b962267efae663819b2701d89db`. **The checksum is cited from existing reviewed documentation, not independently recomputed in this pass.**
+
 **Authority:** [AGENTS](../../AGENTS.md) governs engineering invariants; [ROADMAP](../../ROADMAP.md) owns scope, acceptance and deferrals; [117 architecture preparation](build-117-architecture-preparation.md), [117 baseline](build-117-baseline.md), and the [117 specification draft](auralprint-build-117-spec-draft.md) provide prior source maps, coverage and *proposals*. Source owns implementation truth.
 
 ## Purpose and classification
