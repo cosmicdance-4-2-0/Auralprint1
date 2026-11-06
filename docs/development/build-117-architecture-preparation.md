@@ -98,3 +98,6 @@ Local verification on Linux, Node 24.22.1, npm 11.9.0 and Python 3.12.14:
 The PR records the delivered commit and CI state. Historical Watcher duplicate-save, Windows child-survival/rename causes and platform qualifications remain open; no claim of repair follows from a passing check.
 
 The reviewable result is a documentation branch from accepted work. The next stop is owner review of this reconciliation and the B3/B4 assignment, with detailed architecture decisions still open. No merge, deployment, Canon change or milestone promotion is included.
+## Follow-on F0 invariant registry (November 6, 2026; review candidate)
+
+The [F0 Canon 116 invariant and boundary registry](build-117-f0-invariant-registry.md) maps protected source owners, falsifying counterexamples, existing regression-test pointers, and unresolved cross-boundary proof obligations. It is a later, documentation-only review artifact: it does not retroactively change this November 2 checkpoint's evidence, close Stage 0, approve Stage 1 contracts, integrate held PR #109, or authorize migration. AGENTS and ROADMAP remain authoritative.
