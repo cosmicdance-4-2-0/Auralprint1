@@ -98,3 +98,6 @@ Local verification on Linux, Node 24.22.1, npm 11.9.0 and Python 3.12.14:
 The PR records the delivered commit and CI state. Historical Watcher duplicate-save, Windows child-survival/rename causes and platform qualifications remain open; no claim of repair follows from a passing check.
 
 The reviewable result is a documentation branch from accepted work. The next stop is owner review of this reconciliation and the B3/B4 assignment, with detailed architecture decisions still open. No merge, deployment, Canon change or milestone promotion is included.
+## Follow-on F1 Analysis contract (November 6, 2026; review candidate)
+
+The [F1 Analysis reader, definition and freshness contract](build-117-f1-analysis-contract.md) is a separate documentation-only proposal prepared against the same accepted `v117_dev` source. It specifies borrowed-view lifetime, source/publication/definition revision candidates, failure/transaction rules, compatibility adapters and independent proof cases. It **does not** constitute owner approval, prove an isolated implementation, advance Stage 0/1/3, authorize consumer migrations, or incorporate held PR #109. This November 2 source map and its historical evidence remain unchanged; AGENTS and ROADMAP retain authority.
